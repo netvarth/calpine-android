@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3BCCA5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#3BCCA5</color>
+    <color name="text_hint_color">#cfcfcf</color>
+    <color name="action_header">#B3AE80</color>
+    <color name="app_background">#ffffff</color>
+    <color name="home_background">#F2EDB6</color>
+    <color name="input_border">#dddddd</color>
+    <color name="app_theme">#F3EDB6</color>
+
+<!--    Tab-->
+    <color name="tab_disable">#979797</color>
+    <color name="tab_enable">#FFFFFF</color>
+    <color name="tab_checked">#00AEF2</color>
+    <color name="tab_unchecked">#3E4A59</color>
+    <color name="button_background">#7a7a7a</color>
+
+ <!--   Login screen-->
+    <color name="title_grey">#3E4A59</color>
+    <color name="sec_title_grey">#78849E</color>
+    <color name="title_consu">#00AEF2</color>
+    <color name="btn_chekin">#1873F2</color>
+    <color name="edittxt_line">#3BCCA5</color>
+
+    <color name="hometopbar">#14000000</color>
+   <!-- <color name="title_subtitle_grey">#707070</color>-->
+
+    <color name="app_background_opaque">#99ffffff</color>
+
+    <color name="black">#CC000000</color>
+    <color name="spinnerbg">#F2F2F2</color>
+
+    <color name="title_grey_light">#993E4A59</color>
+    <color name="view_border">#1A3E4A59</color>
+    <color name="bg_opennow">#333BCCA5</color>
+    <color name="violet">#6065FF</color>
+    <color name="txtcoloractive_in">#99FFFFFF</color>
+    <color name="yellow">#FFF1A8</color>
+
+
+</resources>

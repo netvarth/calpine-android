@@ -1,0 +1,266 @@
+package com.netvarth.youneverwait.model;
+
+import java.util.ArrayList;
+
+/**
+ * Created by sharmila on 25/7/18.
+ */
+
+public class SearchListModel {
+
+    String id;
+    String Logo;
+    String title;
+    String sector;
+    String place1;
+    String uniqueid;
+    String rating;
+    String QId;
+    String mLoc;
+    String avail_date;
+    String parking_type_location1;
+    String firstaid_location1;
+    String traumacentre_location1;
+    String docambulance_location1;
+    String always_open_location1;
+
+    public String getParking_type_location1() {
+        return parking_type_location1;
+    }
+
+    public void setParking_type_location1(String parking_type_location1) {
+        this.parking_type_location1 = parking_type_location1;
+    }
+
+    public String getFirstaid_location1() {
+        return firstaid_location1;
+    }
+
+    public void setFirstaid_location1(String firstaid_location1) {
+        this.firstaid_location1 = firstaid_location1;
+    }
+
+    public String getTraumacentre_location1() {
+        return traumacentre_location1;
+    }
+
+    public void setTraumacentre_location1(String traumacentre_location1) {
+        this.traumacentre_location1 = traumacentre_location1;
+    }
+
+    public String getDocambulance_location1() {
+        return docambulance_location1;
+    }
+
+    public void setDocambulance_location1(String docambulance_location1) {
+        this.docambulance_location1 = docambulance_location1;
+    }
+
+    public String getAlways_open_location1() {
+        return always_open_location1;
+    }
+
+    public void setAlways_open_location1(String always_open_location1) {
+        this.always_open_location1 = always_open_location1;
+    }
+
+    public String getPhysiciansemergencyservices_location1() {
+        return physiciansemergencyservices_location1;
+    }
+
+    public void setPhysiciansemergencyservices_location1(String physiciansemergencyservices_location1) {
+        this.physiciansemergencyservices_location1 = physiciansemergencyservices_location1;
+    }
+
+    public String getDentistemergencyservices_location1() {
+        return dentistemergencyservices_location1;
+    }
+
+    public void setDentistemergencyservices_location1(String dentistemergencyservices_location1) {
+        this.dentistemergencyservices_location1 = dentistemergencyservices_location1;
+    }
+
+    String physiciansemergencyservices_location1;
+    String dentistemergencyservices_location1;
+
+
+
+    public String getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
+    }
+
+    String qualification;
+
+    public String getSpecialization_displayname() {
+        return specialization_displayname;
+    }
+
+    public void setSpecialization_displayname(String specialization_displayname) {
+        this.specialization_displayname = specialization_displayname;
+    }
+
+    String specialization_displayname;
+
+    public String getShow_waiting_time() {
+        return show_waiting_time;
+    }
+
+    public void setShow_waiting_time(String show_waiting_time) {
+        this.show_waiting_time = show_waiting_time;
+    }
+
+    public int getQueueWaitingTime() {
+        return queueWaitingTime;
+    }
+
+    public void setQueueWaitingTime(int queueWaitingTime) {
+        this.queueWaitingTime = queueWaitingTime;
+    }
+
+    public String getServiceTime() {
+        return serviceTime;
+    }
+
+    public void setServiceTime(String serviceTime) {
+        this.serviceTime = serviceTime;
+    }
+
+    String show_waiting_time;
+    int queueWaitingTime;
+    String serviceTime;
+
+    public ArrayList getServices() {
+        return services;
+    }
+
+    public void setServices(ArrayList services) {
+        this.services = services;
+    }
+
+    private ArrayList services;
+
+    public String getFuture_checkins() {
+        return future_checkins;
+    }
+
+    public void setFuture_checkins(String future_checkins) {
+        this.future_checkins = future_checkins;
+    }
+
+    public String getOnline_checkins() {
+        return online_checkins;
+    }
+
+    public void setOnline_checkins(String online_checkins) {
+        this.online_checkins = online_checkins;
+    }
+
+    String future_checkins;
+    String online_checkins;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getLogo() {
+        return Logo;
+    }
+
+    public void setLogo(String logo) {
+        Logo = logo;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
+
+    public String getPlace1() {
+        return place1;
+    }
+
+    public void setPlace1(String place1) {
+        this.place1 = place1;
+    }
+
+    public String getUniqueid() {
+        return uniqueid;
+    }
+
+    public void setUniqueid(String uniqueid) {
+        this.uniqueid = uniqueid;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public String getQId() {
+        return QId;
+    }
+
+    public void setQId(String QId) {
+        this.QId = QId;
+    }
+
+    public String getmLoc() {
+        return mLoc;
+    }
+
+    public void setmLoc(String mLoc) {
+        this.mLoc = mLoc;
+    }
+
+    public String getAvail_date() {
+        return avail_date;
+    }
+
+    public void setAvail_date(String avail_date) {
+        this.avail_date = avail_date;
+    }
+
+    public ArrayList getBusiness_hours1() {
+        return business_hours1;
+    }
+
+    public void setBusiness_hours1(ArrayList business_hours1) {
+        this.business_hours1 = business_hours1;
+    }
+
+    ArrayList business_hours1;
+
+    public boolean isIsopen() {
+        return isopen;
+    }
+
+    public void setIsopen(boolean isopen) {
+        this.isopen = isopen;
+    }
+
+    boolean isopen;
+}
+
+

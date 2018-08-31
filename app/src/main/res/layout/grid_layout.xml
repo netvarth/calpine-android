@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/default_padding"
+    android:layout_marginRight="@dimen/default_padding"
+    android:layout_marginTop="@dimen/padding5"
+    android:layout_marginBottom="@dimen/padding5"
+    android:background="@color/app_background"
+    card_view:cardCornerRadius="10dp">
+<LinearLayout
+    android:id="@+id/mGrid"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@drawable/input_border_roundedbox"
+    android:padding="@dimen/default_padding"
+    android:orientation="vertical">
+    <ImageView
+        android:id="@+id/android_gridview_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/android_gridview_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/title_grey"
+        android:textSize="@dimen/txtsize_title_small" />
+</LinearLayout>
+</android.support.v7.widget.CardView>
+

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.netvarth.youneverwait">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--Permission for checking whether wifi is enabled -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+
+    <!--Permission for checking for SMS -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+
+    <application
+        android:name=".common.MyApplication"
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/MyMaterialTheme">
+
+        <activity
+            android:name=".activities.Splash"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.netvarth.youneverwait.activities.Register"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.netvarth.youneverwait.activities.Signup"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.netvarth.youneverwait.activities.VerifyOtp"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.netvarth.youneverwait.activities.Password"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.netvarth.youneverwait.activities.Home"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.netvarth.youneverwait.activities.Login"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.netvarth.youneverwait.activities.ResetOtp"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.netvarth.youneverwait.activities.SwipeGalleryImage"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.netvarth.youneverwait.Fragment.SearchDetailViewFragment"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.netvarth.youneverwait.activities.SearchServiceActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.netvarth.youneverwait.activities.SearchListActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.netvarth.youneverwait.activities.SearchLocationActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.netvarth.youneverwait.activities.CheckIn"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.netvarth.youneverwait.activities.CheckinFamilyMember"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.netvarth.youneverwait.activities.MessageActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.netvarth.youneverwait.activities.DetailInboxList"
+            android:screenOrientation="portrait"></activity>
+        <receiver
+            android:name="com.netvarth.youneverwait.service.SmsBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

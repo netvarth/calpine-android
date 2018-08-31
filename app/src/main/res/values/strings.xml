@@ -1,0 +1,87 @@
+<resources>
+    <string name="app_name">YouNeverWait</string>
+    <string name="layout_button_ok">Ok</string>
+    <string name="submit">Submit</string>
+    <string name="hint_mobile">Enter Your Mobile Number</string>
+    <string name="hint_lastname">Last Name</string>
+    <string name="hint_firstname">First Name</string>
+    <string name="signup">SignUp</string>
+    <string name="hint_pwd">New Password</string>
+    <string name="hint_conf_pwd">Confirm Password</string>
+    <string name="verify">Verify</string>
+    <string name="hint_otp">Enter Otp Received</string>
+<!--Error dialog-->
+    <string name="dialog_no_network_text">Please check your internet connection</string>
+    <string name="dialog_time_out_text">Sorry,failed to establish a connection to the server</string>
+    <string name="dialog_server_down_text">Error connecting to server. Please try again</string>
+    <string name="alertdialog_title_error">Error</string>
+    <string name="dialog_log_in" />
+    <string name="agree_policy">I Agree Terms of Service  and Privacy Policy</string>
+    <string name="btnlogin">Login</string>
+    <string name="send">Send</string>
+    <string name="enterEmail">Enter Your Email</string>
+    <string name="err_msg_phone">Phone number should have 10 digits</string>
+    <string name="err_msg_password">Confirm Password</string>
+    <string name="err_pwd_valid">Must have atleast one uppercase letter,atleast one number and min 8 characters</string>
+    <string name="tab1">Home</string>
+    <string name="tab2">Checkins</string>
+    <string name="tab3">Favourites</string>
+    <string name="tab4">Inbox</string>
+    <string name="tab5">Profile</string>
+    <string name="phonenumber">Phone Number</string>
+    <string name="email">Email</string>
+    <string name="gender">Gender</string>
+    <string name="dob">Date of Birth</string>
+    <string name="updateprofile">Update Profile</string>
+    <string name="member">Member</string>
+    <string name="changepwd">Change Password</string>
+    <string name="changeEmail">Change Email</string>
+    <string name="changePh">Change Phone Number</string>
+    <string name="contactus">Contact us</string>
+    <string name="sendappfeed">Send app Feedback</string>
+    <string name="shareynw">Share YouNeverWait</string>
+    <string name="privacypolicy">Privacy Policy</string>
+    <string name="termofuse">Terms of use</string>
+    <string name="logout">Logout</string>
+    <!--        db                   -->
+    <string name="db_name">YNW_db</string>
+    <string name="db_version">1</string>
+    <string name="db_table_userinfo">USERINFO_TB</string>
+    <string name="db_table_inbox">table_inbox</string>
+
+
+
+    <string name="mobile">Phone Number</string>
+    <string name="updatepf">Update Profile</string>
+    <string name="search_hint">Search...</string>
+    <string name="diff_date">Check-in for different date/time?</string>
+    <string name="welcome">Welcome to</string>
+    <string name="ynw">YouNeverWait</string>
+    <string name="consumer">Consumer App</string>
+    <string name="terms_cond_register1"> By clicking OK, you agree to the </string>
+    <string name="terms_cond_register2">YouNeverWait <font color='#00AEF2'><b>Terms and Conditions</b></font></string>
+    <string name="are_provider1"> Are you a <b>Provider?</b> </string>
+    <string name="are_provider2">Download <font color='#00AEF2'><b>YouNeverWait Provider App</b> </font></string>
+    <string name="ynw_account">You have YNW Account</string>
+    <string name="password_logintxt">Please enter Password to Login</string>
+    <string name="pls_enterotp">to proceed!</string>
+    <string name="hint_otp_pwd">Enter OTP Received</string>
+    <string name="changepwd_bold">Change <font color='#3E4A59'> Password</font></string>
+    <string name="new_ynw">New on YouNeverWait?</string>
+    <string name="creteaccount">Create Your Account</string>
+    <string name="emailtitle">We will send OTP via Email</string>
+    <string name="searchhint">Eg: Dentist, Restaurants, Car Wash...</string>
+    <string name="activecheckin">Active Check-in</string>
+    <string name="typecity">Type a City or neighborhood...</string>
+    <string name="selectservice">Select Service</string>
+
+
+    <string name="permission_alert_dialog_title">Requesting SMS permission</string>
+    <string name="permission_dialog_message">The app will now request your permission to send and read SMS related services.</string>
+
+    <string name="error_invalid_phone_number">Invalid phone number</string>
+    <string name="cancel">Cancel</string>
+    <string name="popularsearch">Popular Searches</string>
+
+
+</resources>

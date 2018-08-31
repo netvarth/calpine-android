@@ -1,0 +1,204 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="@color/home_background"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false">
+
+<!--    <android.support.v4.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nestedscrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">-->
+
+        <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/homemainlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@color/hometopbar"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding7"
+                    android:text="YNW \n LOGO"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/txtsize_title_term_small"
+                    android:gravity="center"
+                    android:textColor="@color/title_grey"
+                    android:background="@drawable/bg_circle"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Helloo Name !!"
+                    android:visibility="invisible" />
+                <TextView
+                    android:id="@+id/currentloc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="right"
+                    android:drawableRight="@drawable/icon_down_arrow_blue"
+                    android:drawableLeft="@drawable/icon_location_blue"
+                    android:paddingRight="@dimen/padding5"
+                    android:drawablePadding="2dp"
+                    android:textColor="@color/title_consu" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mRSearchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding7"
+                android:layout_marginRight="@dimen/padding7"
+                android:layout_marginTop="@dimen/default_padding"
+                android:background="@drawable/rounded_white_bg_rect"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spinnerdomain"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="0.35"
+                    android:background="@drawable/gridview_bg"
+                    ></Spinner>
+
+
+                <android.support.v7.widget.SearchView
+                    android:id="@+id/search"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.9"
+                    android:clickable="false"
+                    app:iconifiedByDefault="false"
+                    app:queryBackground="@android:color/transparent"
+                    app:queryHint="@string/searchhint"
+                    app:searchIcon="@drawable/icon_search_gray"
+                    app:theme="@style/AppSearchView" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_filter"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/LpopularSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"
+                android:orientation="vertical"
+                android:background="@color/yellow"
+                android:paddingBottom="@dimen/default_padding"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txt_popular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding7"
+                    android:text="Popular Searches"
+                    android:background="@color/txtcoloractive_in"
+                    android:textColor="@color/title_grey" />
+
+                <LinearLayout
+                    android:id="@+id/LinearPopularSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/yellow"
+                    android:layout_marginTop="@dimen/padding5"
+
+                    android:orientation="vertical"></LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/LinearMorePopularSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:layout_marginBottom="@dimen/default_padding"
+                    android:visibility="gone"
+                    android:background="@color/yellow"
+
+                    android:orientation="vertical"></LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtMore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="More"
+                    android:paddingTop="@dimen/padding5"
+                    android:textColor="@color/title_consu"
+                    android:drawableBottom="@drawable/icon_down_arrow_blue"
+                    android:drawablePadding="@dimen/padding2"
+
+                    android:textSize="@dimen/txtsize_title_term_small" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LActiveCheckin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding5"
+                android:layout_marginBottom="@dimen/default_padding"
+                android:orientation="vertical"
+                android:background="@color/yellow"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txt_activechkin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding5"
+                    android:background="@color/txtcoloractive_in"
+                    android:text="Active Check-in"
+                    android:textColor="@color/title_grey" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycleActive"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/yellow"
+                    android:layout_marginBottom="@dimen/padding7"
+                  >
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+        </LinearLayout>
+ <!--   </android.support.v4.widget.NestedScrollView>-->
+    </LinearLayout>
+
+</FrameLayout>

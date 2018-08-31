@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/padding7"
+    android:layout_marginRight="@dimen/padding7"
+    android:layout_marginTop="@dimen/default_padding"
+
+    card_view:cardCornerRadius="10dp">
+
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_background"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/padding7">
+
+        <RelativeLayout
+            android:id="@+id/mLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/mProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_padding"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/profile"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp" />
+
+                <RatingBar
+                    android:id="@+id/mRatingBar"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding5" />
+
+                <TextView
+                    android:id="@+id/txtOpen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding7"
+                    android:background="@color/bg_opennow"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="@dimen/padding5"
+                    android:paddingRight="@dimen/padding5"
+                    android:paddingTop="3dp"
+                    android:text="Open Now"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/txtsize_12"
+                    android:visibility="gone" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_toRightOf="@+id/mProfile"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/domain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding2"
+                    android:text="Name"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding2"
+                    android:drawableLeft="@drawable/icon_location_blue"
+                    android:gravity="center"
+                    android:text="Kakkanad"
+                    android:textColor="@color/title_consu"
+                    android:textSize="@dimen/txtsize_12" />
+
+
+                <LinearLayout
+                    android:id="@+id/specialization"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:orientation="horizontal"
+                    android:text=""
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/service"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding7"
+                    android:orientation="horizontal"
+                    android:textColor="@color/title_consu"
+                    android:textSize="@dimen/txtsize_12"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtWorkinghrs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Working Hours"
+                        android:textColor="@color/title_consu"
+                        android:textSize="@dimen/txtsize_12" />
+
+                    <TextView
+                        android:id="@+id/txtcommunicate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/padding5"
+                        android:text="Message"
+                        android:textColor="@color/title_consu"
+                        android:textSize="@dimen/txtsize_12" />
+                </LinearLayout>
+
+
+                <!-- <TextView
+                     android:id="@+id/mDate"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:gravity="right"
+                     android:padding="@dimen/default_padding"
+                     android:text="date"
+                     android:visibility="gone" />-->
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_border" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/padding7"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/txtWaitTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingRight="@dimen/default_padding"
+                android:text="Est WaitTime"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/btncheckin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/padding5"
+                android:layout_weight="0.5"
+                android:background="@drawable/button_gradient_checkin"
+                android:text="Check-In"
+                android:textAllCaps="true"
+                android:textColor="@color/app_background"
+                android:textSize="@dimen/txtsize_title" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_diffdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding2"
+            android:layout_marginTop="@dimen/padding2"
+            android:gravity="right"
+            android:paddingRight="@dimen/padding5"
+            android:text="@string/diff_date"
+            android:textColor="@color/title_consu"
+            android:textSize="@dimen/txtsize_title_term_small"
+            android:visibility="visible" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/mRecycleTypes"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

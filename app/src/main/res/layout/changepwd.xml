@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:orientation="vertical">
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/app_background"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/layout_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_margin="@dimen/padding20"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:text="Old Password"/>
+        <EditText
+            android:id="@+id/edt_oldpwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding5"
+            android:background="@drawable/input_border_gray_bg"
+            android:inputType="textPassword"
+            android:hint="Old Password"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:text="@string/hint_pwd"/>
+        <EditText
+            android:id="@+id/edt_newpwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding5"
+            android:background="@drawable/input_border_gray_bg"
+            android:inputType="textPassword"
+            android:hint="@string/hint_pwd"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:text="@string/hint_conf_pwd"/>
+        <EditText
+            android:id="@+id/confirmpwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding5"
+            android:background="@drawable/input_border_gray_bg"
+            android:inputType="textPassword"
+            android:hint="@string/hint_conf_pwd"/>
+
+        <Button
+            android:id="@+id/btndone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Done"
+            android:layout_marginTop="@dimen/default_padding"
+            android:layout_gravity="center"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+</LinearLayout>
+</FrameLayout>

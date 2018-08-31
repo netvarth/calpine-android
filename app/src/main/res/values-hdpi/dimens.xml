@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding30">25dp</dimen>
+    <dimen name="default_padding">5dp</dimen>
+    <dimen name="padding5">2dp</dimen>
+    <dimen name="padding20">13dp</dimen>
+    <dimen name="padding7">4dp</dimen>
+    <dimen name="layout_textsize_small">11sp</dimen>
+    <dimen name="txtsize_title">15dp</dimen>
+    <dimen name="txtsize_title_large">18dp</dimen>
+    <dimen name="txtsize_title_small">11dp</dimen>
+    <dimen name="txtsize_title_term_small">11sp</dimen>
+    <dimen name="txtsize_hint">12sp</dimen>
+    <dimen name="padding50">38dp</dimen>
+    <dimen name="padding25">20dp</dimen>
+    <dimen name="padding15">10dp</dimen>
+    <dimen name="padding60">48dp</dimen>
+    <dimen name="padding40">28dp</dimen>
+    <dimen name="padding45">35dp</dimen>
+    <dimen name="txtsize_subtitle">13dp</dimen>
+    <dimen name="txtsize_12">11sp</dimen>
+    <dimen name="txtsize_14">14sp</dimen>
+</resources>

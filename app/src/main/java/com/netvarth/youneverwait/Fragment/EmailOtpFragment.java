@@ -1,0 +1,215 @@
+package com.netvarth.youneverwait.Fragment;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.common.Config;
+import com.netvarth.youneverwait.connection.ApiClient;
+import com.netvarth.youneverwait.connection.ApiInterface;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+/**
+ * Created by sharmila on 11/7/18.
+ */
+
+public class EmailOtpFragment extends RootFragment {
+    Context mContext;
+    Toolbar toolbar;
+    TextView txtResend;
+    EditText edtOtp;
+    Button btn_verify;
+    String email;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View row = inflater.inflate(R.layout.fragment_verifyotp, container, false);
+
+        mContext = getActivity();
+
+        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        txtResend = (TextView) row.findViewById(R.id.resendOtp);
+
+        edtOtp = (EditText) row.findViewById(R.id.editotp);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            email = bundle.getString("email", "");
+        }
+        btn_verify = (Button) row.findViewById(R.id.btn_verify);
+        btn_verify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Config.isOnline(mContext)) {
+                    ApiOtpEmail(edtOtp.getText().toString(), email);
+                }
+            }
+        });
+
+        if (email.matches("[0-9]+")){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Phone Number");
+        }else{
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Email");
+        }
+
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+
+            }
+        });
+
+        txtResend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ApiChangeEmail(email);
+            }
+        });
+
+
+        return row;
+    }
+
+    private void ApiChangeEmail(final String mEmail) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Call<ResponseBody> call = apiService.ChangeEmail(mEmail);
+
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+
+                        //  if(response.body().equals("true")) {
+
+                        // }
+
+
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
+
+    private void ApiOtpEmail(String otp, String email) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("loginId", email);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.ChngeEmailOtp(otp, body);
+        Config.logV("Request--BODY--Emil-----------------------" + new Gson().toJson(jsonObj.toString()));
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        Config.logV("Response----------------");
+                        if (response.body().string().equals("true")) {
+
+                            getFragmentManager().popBackStack();
+
+
+                        }
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+}
