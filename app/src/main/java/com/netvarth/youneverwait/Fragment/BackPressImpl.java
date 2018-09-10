@@ -7,12 +7,15 @@ package com.netvarth.youneverwait.Fragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.netvarth.youneverwait.common.Config;
+
 public class BackPressImpl implements OnBackPressListener {
 
     private Fragment parentFragment;
 
     public BackPressImpl(Fragment parentFragment) {
         this.parentFragment = parentFragment;
+
     }
 
     @Override
@@ -21,6 +24,7 @@ public class BackPressImpl implements OnBackPressListener {
         if (parentFragment == null) return false;
 
         int childCount = parentFragment.getChildFragmentManager().getBackStackEntryCount();
+
 
         if (childCount == 0) {
             // it has no child Fragment
@@ -32,12 +36,15 @@ public class BackPressImpl implements OnBackPressListener {
             FragmentManager childFragmentManager = parentFragment.getChildFragmentManager();
             OnBackPressListener childFragment = (OnBackPressListener) childFragmentManager.getFragments().get(0);
 
+          //  Config.logV("Back Press-----------" + childFragment);
             // propagate onBackPressed method call to the child Fragment
             if (!childFragment.onBackPressed()) {
                 // child Fragment was unable to handle the task
                 // It could happen when the child Fragment is last last leaf of a chain
                 // removing the child Fragment from stack
+                Config.logV("Back Press----------pop-" + childFragment);
                 childFragmentManager.popBackStackImmediate();
+
 
             }
 

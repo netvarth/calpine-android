@@ -2,9 +2,8 @@ package com.netvarth.youneverwait.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +14,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,23 +27,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.netvarth.youneverwait.Fragment.SearchDetailFragment;
+import com.netvarth.youneverwait.Fragment.HomeTabFragment;
+import com.netvarth.youneverwait.Fragment.MyHomeFragment;
 import com.netvarth.youneverwait.Fragment.SearchDetailViewFragment;
+import com.netvarth.youneverwait.Fragment.SearchListFragment;
+import com.netvarth.youneverwait.Fragment.ServiceListFragment;
+import com.netvarth.youneverwait.Fragment.WorkingHourFragment;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.activities.CheckIn;
 import com.netvarth.youneverwait.activities.MessageActivity;
-import com.netvarth.youneverwait.activities.SearchServiceActivity;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.custom.CircleTransform;
 import com.netvarth.youneverwait.custom.CustomTypefaceSpan;
 import com.netvarth.youneverwait.model.SearchListModel;
-import com.netvarth.youneverwait.response.SearchAWsResponse;
-import com.netvarth.youneverwait.response.SearchService;
+import com.netvarth.youneverwait.model.WorkingModel;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -56,7 +53,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,13 +65,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private List<SearchListModel> searchResults;
     private Context context;
-
+    ArrayList<WorkingModel> workingModelArrayList =new ArrayList<>();
     private boolean isLoadingAdded = false;
-
-
-    public PaginationAdapter(Context context) {
+    Fragment mFragment;
+    String workingHrs = "";
+    public PaginationAdapter(Context context,Fragment mFragment) {
         this.context = context;
         searchResults = new ArrayList<>();
+        this.mFragment=mFragment;
+        Config.logV("Fragment Context 1"+mFragment);
 
     }
 
@@ -100,7 +98,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @NonNull
     private RecyclerView.ViewHolder getViewHolder(ViewGroup parent, LayoutInflater inflater) {
         RecyclerView.ViewHolder viewHolder;
-        View v1 = inflater.inflate(R.layout.searchdetail_row, parent, false);
+        View v1 = inflater.inflate(R.layout.searchlist_row, parent, false);
         viewHolder = new MyViewHolder(v1);
         return viewHolder;
     }
@@ -117,42 +115,85 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
 ////////////////////////////7 types////////////////////////////////////////////
-            /*    ArrayList<SearchListModel> listType=new ArrayList<>();
-                SearchListModel mType=new SearchListModel();
-                if(searchdetailList.getParking_type_location1()!=null)
-                mType.setParking_type_location1(searchdetailList.getParking_type_location1());
-                listType.add(mType);
+                ArrayList<SearchListModel> listType=new ArrayList<>();
 
-                if(searchdetailList.getAlways_open_location1()!=null)
-                mType.setAlways_open_location1(searchdetailList.getAlways_open_location1());
-                listType.add(mType);
+                if(searchdetailList.getParking_type_location1()!=null) {
+                    if(searchdetailList.getParking_type_location1().equalsIgnoreCase("1")) {
+                        SearchListModel mType=new SearchListModel();
+                       // mType.setTypeicon(R.drawable.icon_24hours);
+                        mType.setTypename("Parking");
+                        listType.add(mType);
+                    }
+                }
 
-                if(searchdetailList.getDentistemergencyservices_location1()!=null)
-                mType.setDentistemergencyservices_location1(searchdetailList.getDentistemergencyservices_location1());
-                listType.add(mType);
+                if(searchdetailList.getAlways_open_location1()!=null) {
+                    if (searchdetailList.getAlways_open_location1().equalsIgnoreCase("1")) {
+                        SearchListModel mType=new SearchListModel();
+                        //mType.setTypeicon(R.drawable.);
+                        mType.setTypename("24 Hours");
+                        listType.add(mType);
+                    }
+                }
 
-                if(searchdetailList.getDocambulance_location1()!=null)
-                mType.setDocambulance_location1(searchdetailList.getDocambulance_location1());
-                listType.add(mType);
 
-                if(searchdetailList.getFirstaid_location1()!=null)
-                mType.setFirstaid_location1(searchdetailList.getFirstaid_location1());
-                listType.add(mType);
+                if(searchdetailList.getDentistemergencyservices_location1()!=null){
+                    if (searchdetailList.getDentistemergencyservices_location1().equalsIgnoreCase("1")) {
+                        SearchListModel mType=new SearchListModel();
+                        //mType.setTypeicon(R.drawable.);
+                        mType.setTypename("Emergency");
+                        listType.add(mType);
+                    }
+                }
 
-                if(searchdetailList.getPhysiciansemergencyservices_location1()!=null)
-                mType.setPhysiciansemergencyservices_location1(searchdetailList.getPhysiciansemergencyservices_location1());
-                listType.add(mType);
 
-                if(searchdetailList.getTraumacentre_location1()!=null)
-                mType.setTraumacentre_location1(searchdetailList.getTraumacentre_location1());
-                listType.add(mType);
+                if(searchdetailList.getDocambulance_location1()!=null){
+                    if (searchdetailList.getDocambulance_location1().equalsIgnoreCase("1")) {
+                        SearchListModel mType=new SearchListModel();
+                        //mType.setTypeicon(R.drawable.);
+                        mType.setTypename("Ambulance");
+                        listType.add(mType);
+                    }
+                }
+
+
+                if(searchdetailList.getFirstaid_location1()!=null){
+                    if (searchdetailList.getFirstaid_location1().equalsIgnoreCase("1")) {
+                        SearchListModel mType=new SearchListModel();
+                        //mType.setTypeicon(R.drawable.);
+                        mType.setTypename("First Aid");
+                        listType.add(mType);
+                    }
+                }
+
+
+                if(searchdetailList.getPhysiciansemergencyservices_location1()!=null){
+                    if (searchdetailList.getPhysiciansemergencyservices_location1().equalsIgnoreCase("1")) {
+                        SearchListModel mType=new SearchListModel();
+                        //mType.setTypeicon(R.drawable.);
+                        mType.setTypename("Emergency");
+                        listType.add(mType);
+                    }
+                }
+
+
+                if(searchdetailList.getTraumacentre_location1()!=null){
+                    if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
+                        SearchListModel mType=new SearchListModel();
+                        //mType.setTypeicon(R.drawable.);
+                        mType.setTypename("Trauma");
+                        listType.add(mType);
+                    }
+                }
+
+
+
 
                 if(listType.size()>0) {
                     mParkTypeAdapter = new ParkingTypesAdapter(listType, context);
                     LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                     myViewHolder.mRecycleTypes.setLayoutManager(horizontalLayoutManager);
                     myViewHolder.mRecycleTypes.setAdapter(mParkTypeAdapter);
-                }*/
+                }
 
 
                 //////////////////////////////////////////////////////////////
@@ -173,9 +214,22 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }else {
                     myViewHolder.tv_name.setText(searchdetailList.getTitle());
                 }
-                myViewHolder.tv_domain.setText(searchdetailList.getSector());
 
-                myViewHolder.tv_location.setText(searchdetailList.getPlace1());
+
+                if(searchdetailList.getSector()!=null) {
+                    myViewHolder.tv_domain.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_domain.setText(searchdetailList.getSector());
+                }else{
+                    myViewHolder.tv_domain.setVisibility(View.GONE);
+                }
+
+
+                if(searchdetailList.getPlace1()!=null) {
+                    myViewHolder.tv_location.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_location.setText(searchdetailList.getPlace1());
+                }else{
+                    myViewHolder.tv_location.setVisibility(View.GONE);
+                }
 
 
                 if (searchdetailList.getFuture_checkins() != null) {
@@ -203,7 +257,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-                Config.logV("ID1111" + searchdetailList.getId() + "QID----" + searchdetailList.getQId());
+              //  Config.logV("ID1111" + searchdetailList.getId() + "QID----" + searchdetailList.getQId());
 
                 if (searchdetailList.getId().equalsIgnoreCase(searchdetailList.getQId())) {
 
@@ -236,11 +290,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if ((formattedDate.trim().equalsIgnoreCase(searchdetailList.getAvail_date().trim()) && (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")))) {
                             Config.logV("Title------333-"+searchdetailList.getTitle());
                             myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                            myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.button_gradient_checkin));
                          //   myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#3498db"));
 
                         } else if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1") && date1.compareTo(date2) < 0) {
                             myViewHolder.btncheckin.setVisibility(View.VISIBLE);
                            // myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+                            myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                            myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
                             myViewHolder.btncheckin.setEnabled(false);
                             Config.logV("Title------444-"+searchdetailList.getTitle());
                         }
@@ -381,11 +438,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if(searchdetailList.getSpecialization_displayname()!=null){
 
                    // myViewHolder.tv_specialization.setText(searchdetailList.getSpecialization_displayname());
-                    List<String> list_spec = new ArrayList<String>(Arrays.asList(searchdetailList.getSpecialization_displayname().split(",")));
+                    final List<String> list_spec = new ArrayList<String>(Arrays.asList(searchdetailList.getSpecialization_displayname().split(",")));
 
                     if(list_spec.size()>0) {
                         myViewHolder.L_specialization.removeAllViews();
                         myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+
                         int size = 0;
                         if (list_spec.size() == 1) {
                             size = 1;
@@ -396,27 +454,90 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             TextView dynaText = new TextView(context);
                             dynaText.setText(list_spec.get(i));
                             dynaText.setTextSize(13);
-                            dynaText.setPadding(0, 0, 10, 0);
+                            dynaText.setPadding(0, 0, 15, 0);
                             dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                             dynaText.setEllipsize(TextUtils.TruncateAt.END);
                             dynaText.setMaxLines(1);
-                            dynaText.setMaxEms(8);
+                            dynaText.setMaxEms(6);
                             myViewHolder.L_specialization.addView(dynaText);
                         }
+
+                        TextView dynaText = new TextView(context);
+                        dynaText.setGravity(Gravity.CENTER);
+                        dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_gray));
+                        dynaText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                myViewHolder.L_specialization.removeAllViews();
+                                myViewHolder.L_specialization.setOrientation(LinearLayout.VERTICAL);
+
+                                int k = 0;
+                                int add_row = 0;
+                                int rem = list_spec.size() % 2;
+                                if (rem == 0) {
+
+                                    add_row = 0;
+
+                                } else {
+
+                                    add_row = 1;
+                                }
+
+                                for (int i = 0; i < (list_spec.size() / 2) + add_row; i++) {
+                                    LinearLayout parent = new LinearLayout(context);
+
+                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                                    parent.setOrientation(LinearLayout.HORIZONTAL);
+                                    parent.setLayoutParams(params);
+
+
+                                    for (int j = 0; j < 2; j++) {
+
+                                        if (k >= list_spec.size()) {
+                                            break;
+                                        } else {
+                                            TextView dynaText = new TextView(context);
+                                            dynaText.setText(list_spec.get(k));
+                                            dynaText.setTextSize(13);
+                                            params.setMargins(0, 10, 15, 0);
+                                            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                                            dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                            dynaText.setMaxLines(1);
+                                            dynaText.setMaxEms(6);
+                                            dynaText.setWidth(dpToPx(100));
+
+                                           // params.setMargins(20, 10, 20, 0);
+                                            dynaText.setLayoutParams(params);
+                                            parent.addView(dynaText);
+
+                                            k++;
+                                        }
+
+                                    }
+                                    myViewHolder.L_specialization.addView(parent);
+                                }
+                            }
+                        });
+                        myViewHolder.L_specialization.addView(dynaText);
+
                     }else{
                         myViewHolder.L_specialization.setVisibility(View.GONE);
+
                     }
                 }else{
                     myViewHolder.L_specialization.setVisibility(View.GONE);
+
                 }
               //  Picasso.with(context).load(searchdetailList.getLogo()).fit().into(myViewHolder.profile);
-                Picasso.with(context).load(searchdetailList.getLogo()).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+                Picasso.with(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
                 if (searchdetailList.getServices() != null) {
 
 
                     if(searchdetailList.getServices().size()>0) {
                         myViewHolder.L_services.removeAllViews();
                         myViewHolder.L_services.setVisibility(View.VISIBLE);
+
                         int size=0;
                         if(searchdetailList.getServices().size()==1) {
                             size = 1;
@@ -427,120 +548,164 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             TextView dynaText = new TextView(context);
                             dynaText.setText(searchdetailList.getServices().get(i).toString());
                             dynaText.setTextSize(13);
-                            dynaText.setPadding(0, 0, 10, 0);
+                            dynaText.setPadding(0, 0, 15, 0);
                             dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
                             dynaText.setEllipsize(TextUtils.TruncateAt.END);
                             dynaText.setMaxLines(1);
-                            dynaText.setMaxEms(8);
+                            dynaText.setMaxEms(6);
                             myViewHolder.L_services.addView(dynaText);
 
                         }
+
+                        TextView dynaText = new TextView(context);
+                        dynaText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ServiceListFragment pfFragment = new ServiceListFragment();
+                                FragmentTransaction transaction = mFragment.getFragmentManager().beginTransaction();
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("servicelist", searchdetailList.getServices());
+                                bundle.putString("title",searchdetailList.getTitle());
+                                pfFragment.setArguments(bundle);
+                                // Store the Fragment in stack
+                                transaction.addToBackStack(null);
+                                transaction.replace(R.id.mainlayout, pfFragment).commit();
+                            }
+                        });
+                        dynaText.setGravity(Gravity.CENTER);
+                        dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_blue));
+                        myViewHolder.L_services.addView(dynaText);
                     }else{
                         myViewHolder.L_services.setVisibility(View.GONE);
+
                     }
 
                 } else {
                     myViewHolder.L_services.setVisibility(View.GONE);
+
                 }
 
 
                 if (searchdetailList.getBusiness_hours1() != null) {
-                    String workingHrs = "";
-                    try {
-                        //  Config.logV("json"+  new Gson().toJson(searchdetailList.getBusiness_hours1() ));
-                        String array_json = searchdetailList.getBusiness_hours1().toString();
-                        Config.logV("Array---------" + array_json);
-                        String data = "";
-
-                        try {
-
-
-                            //Get the instance of JSONArray that contains JSONObjects
-                            JSONArray jsonArray = new JSONArray(array_json);
-                            String jsonarry = jsonArray.getString(0);
-                            JSONArray jsonArray1 = new JSONArray(jsonarry);
-
-                            //Iterate the jsonArray and print the info of JSONObjects
-                            for (int i = 0; i < jsonArray1.length(); i++) {
-                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
-
-                                String id = jsonObject.optString("recurringType").toString();
-                                String repeatinterval = jsonObject.optString("repeatIntervals").toString();
-                                String timeslot = jsonObject.optString("timeSlots").toString();
-                                // String publish_date = jsonObject.optString("publish_date").toString();
-                                JSONArray jsonArray_time = new JSONArray(timeslot);
-                                JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
-                                String sTime = jsonObject_time.optString("sTime").toString();
-                                String eTime = jsonObject_time.optString("eTime").toString();
-
-
-                                JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
-                                String day = "";
-                                String date = "";
-
-
-                                int count = 0;
-                                for (int k = 0; k < jsonArray_repeat.length(); k++) {
-                                    String repeat = jsonArray_repeat.getString(k);
-                                    if (repeat.equalsIgnoreCase("1")) {
-                                        day = "Su";
-                                        count++;
-
-                                    }
-                                    if (repeat.equalsIgnoreCase("2")) {
-                                        day = "M";
-                                        count++;
-                                    }
-                                    if (repeat.equalsIgnoreCase("3")) {
-                                        day = "T";
-                                        count++;
-                                    }
-                                    if (repeat.equalsIgnoreCase("4")) {
-                                        day = "W";
-                                        count++;
-                                    }
-                                    if (repeat.equalsIgnoreCase("5")) {
-                                        day = "T";
-                                        count++;
-                                    }
-                                    if (repeat.equalsIgnoreCase("6")) {
-                                        day = "F";
-                                        count++;
-                                    }
-                                    if (repeat.equalsIgnoreCase("7")) {
-                                        day = "Sa";
-                                        count++;
-                                    }
-
-
-
-                                    date += day + ", ";
-                                }
-
-
-                                // data += " timeslot= "+ sTime+"-"+eTime +"\" \\n Repeat= "+date +"\"  \n\n ";
-                                data += date + " " + sTime + "-" + eTime + "\n ";
-                                ;
-
-                                workingHrs = data;
-
-
-                            }
-                            Config.logV("Data---------------" + data);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
                     myViewHolder.tv_Workinghrs.setVisibility(View.VISIBLE);
                    // myViewHolder.tv_Workinghrs.setText(workingHrs);
-
-
                 } else {
                     myViewHolder.tv_Workinghrs.setVisibility(View.GONE);
                 }
+
+
+
+                myViewHolder.tv_Workinghrs.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (searchdetailList.getBusiness_hours1() != null) {
+                            try {
+                                String array_json = searchdetailList.getBusiness_hours1().toString();
+
+
+                                try {
+
+
+                                    //Get the instance of JSONArray that contains JSONObjects
+                                    JSONArray jsonArray = new JSONArray(array_json);
+                                    String jsonarry = jsonArray.getString(0);
+                                    JSONArray jsonArray1 = new JSONArray(jsonarry);
+
+                                    //Iterate the jsonArray and print the info of JSONObjects
+
+                                    workingModelArrayList.clear();
+
+                                    for (int i = 0; i < jsonArray1.length(); i++) {
+                                        JSONObject jsonObject = jsonArray1.getJSONObject(i);
+
+                                        String id = jsonObject.optString("recurringType").toString();
+                                        String repeatinterval = jsonObject.optString("repeatIntervals").toString();
+                                        String timeslot = jsonObject.optString("timeSlots").toString();
+                                        // String publish_date = jsonObject.optString("publish_date").toString();
+                                        JSONArray jsonArray_time = new JSONArray(timeslot);
+                                        JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
+                                        String sTime = jsonObject_time.optString("sTime").toString();
+                                        String eTime = jsonObject_time.optString("eTime").toString();
+
+
+                                        JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
+
+                                        for (int k = 0; k < jsonArray_repeat.length(); k++) {
+                                            String repeat = jsonArray_repeat.getString(k);
+
+                                            WorkingModel work=new WorkingModel();
+                                            if (repeat.equalsIgnoreCase("2")) {
+
+                                                work.setDay("Monday");
+                                                work.setTime_value(sTime + "-" + eTime);
+
+                                            }
+                                            if (repeat.equalsIgnoreCase("3")) {
+
+                                                work.setDay("Tuesday");
+                                                work.setTime_value(sTime + "-" + eTime);
+
+                                            }
+                                            if (repeat.equalsIgnoreCase("4")) {
+                                                work.setDay("Wednesday");
+                                                work.setTime_value(sTime + "-" + eTime);
+                                            }
+                                            if (repeat.equalsIgnoreCase("5")) {
+
+                                                work.setDay("Thursday");
+                                                work.setTime_value(sTime + "-" + eTime);
+                                            }
+                                            if (repeat.equalsIgnoreCase("6")) {
+
+                                                work.setDay("Friday");
+                                                work.setTime_value(sTime + "-" + eTime);
+
+                                            }
+                                            if (repeat.equalsIgnoreCase("7")) {
+
+                                                work.setDay("Saturday");
+                                                work.setTime_value(sTime + "-" + eTime);
+
+                                            }
+                                            if (repeat.equalsIgnoreCase("1")) {
+
+                                                work.setDay("Sunday");
+                                                work.setTime_value(sTime + "-" + eTime);
+
+                                            }
+
+                                            workingModelArrayList.add(work);
+
+                                        }
+
+
+
+                                    }
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+
+                        WorkingHourFragment pfFragment = new WorkingHourFragment();
+                        Config.logV("Fragment context-----------"+mFragment);
+                        FragmentTransaction transaction = mFragment.getFragmentManager().beginTransaction();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("workinghrlist", workingModelArrayList);
+                        bundle.putString("title",searchdetailList.getTitle());
+                        pfFragment.setArguments(bundle);
+                        // Store the Fragment in stack
+                        transaction.addToBackStack(null);
+                        transaction.replace(R.id.mainlayout, pfFragment).commit();
+                    }
+                });
 
 
                 myViewHolder.tv_communicate.setOnClickListener(new View.OnClickListener() {
@@ -556,16 +721,36 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
 
 
-                //    myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
+                   if(searchdetailList.getRating()!=null) {
+
+                      /* String[] separated = searchdetailList.getRating().split(".");
+                       String rating=separated[0]; // this will contain "Fruit"
+                       String step=separated[1];*/
+
+
+                       myViewHolder.rating.setRating(Float.valueOf("3.7"));
+                      // myViewHolder.rating.setStepSize(Float.valueOf("0."+step));
+                   }
 
                 myViewHolder.mLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         Config.logV("UNIUE ID----------------" + searchdetailList.getUniqueid());
-                        Intent i = new Intent(context, SearchDetailViewFragment.class);
+                        Bundle bundle = new Bundle();
+
+                        SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
+
+                        bundle.putString("uniqueID",searchdetailList.getUniqueid());
+                        pfFragment.setArguments(bundle);
+
+                        FragmentTransaction transaction = mFragment.getFragmentManager().beginTransaction();
+                        // Store the Fragment in stack
+                        transaction.addToBackStack(null);
+                        transaction.replace(R.id.mainlayout, pfFragment).commit();
+                      /*  Intent i = new Intent(context, SearchDetailViewFragment.class);
                         i.putExtra("uniqueID", searchdetailList.getUniqueid());
-                        context.startActivity(i);
+                        context.startActivity(i);*/
                     }
                 });
 
@@ -684,6 +869,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Button btncheckin;
         RecyclerView mRecycleTypes;
 
+
         public MyViewHolder(View view) {
             super(view);
             tv_name = (TextView) view.findViewById(R.id.name);
@@ -702,6 +888,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             L_specialization=(LinearLayout) view.findViewById(R.id.specialization);
             tv_communicate=(TextView) view.findViewById(R.id.txtcommunicate);
             mRecycleTypes=(RecyclerView) view.findViewById(R.id.mRecycleTypes);
+
         }
     }
 

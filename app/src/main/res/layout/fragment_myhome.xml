@@ -42,6 +42,7 @@
                     android:textStyle="bold"
                     android:textSize="@dimen/txtsize_title_term_small"
                     android:gravity="center"
+                    android:fontFamily="@font/customfont"
                     android:textColor="@color/title_grey"
                     android:background="@drawable/bg_circle"
                     android:src="@mipmap/ic_launcher" />
@@ -117,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_padding"
                 android:orientation="vertical"
-                android:background="@color/yellow"
+                android:background="@drawable/gradient_home"
                 android:paddingBottom="@dimen/default_padding"
                 android:visibility="gone">
 
@@ -127,14 +128,12 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding7"
                     android:text="Popular Searches"
-                    android:background="@color/txtcoloractive_in"
                     android:textColor="@color/title_grey" />
 
                 <LinearLayout
                     android:id="@+id/LinearPopularSearch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/yellow"
                     android:layout_marginTop="@dimen/padding5"
 
                     android:orientation="vertical"></LinearLayout>
@@ -173,7 +172,7 @@
                 android:layout_marginTop="@dimen/padding5"
                 android:layout_marginBottom="@dimen/default_padding"
                 android:orientation="vertical"
-                android:background="@color/yellow"
+                android:background="@drawable/gradient_home"
                 android:visibility="gone">
 
                 <TextView
@@ -181,7 +180,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding5"
-                    android:background="@color/txtcoloractive_in"
                     android:text="Active Check-in"
                     android:textColor="@color/title_grey" />
 
@@ -191,7 +189,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:background="@color/yellow"
                     android:layout_marginBottom="@dimen/padding7"
                   >
 

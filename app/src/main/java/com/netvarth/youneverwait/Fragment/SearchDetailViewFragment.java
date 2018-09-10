@@ -4,11 +4,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +22,7 @@ import com.netvarth.youneverwait.adapter.SearchLocationAdapter;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
+import com.netvarth.youneverwait.custom.CircleTransform;
 import com.netvarth.youneverwait.response.QueueList;
 import com.netvarth.youneverwait.response.SearchCheckInMessage;
 import com.netvarth.youneverwait.response.SearchLocation;
@@ -45,7 +50,7 @@ import retrofit2.Response;
  */
 
 
-public class SearchDetailViewFragment extends AppCompatActivity {
+public class SearchDetailViewFragment extends RootFragment {
 
     Context mContext;
     Toolbar toolbar;
@@ -68,69 +73,119 @@ public class SearchDetailViewFragment extends AppCompatActivity {
 
     RecyclerView mRecyLocDetail;
     SearchLocationAdapter mSearchLocAdapter;
-    ImageView mImgeProfile, mImgthumbProfile;
+    ImageView mImgeProfile, mImgthumbProfile,mImgthumbProfile2,mImgthumbProfile1;
 
     int mProvoderId;
     ArrayList<String> ids = new ArrayList<>();
     String uniqueID;
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.searchdetails);
-        mContext = this;
-        mRecyLocDetail = (RecyclerView) findViewById(R.id.mSearchLoc);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(" Search ");
-        Bundle bundle = getIntent().getExtras();
-         uniqueID = bundle.getString("uniqueID");
+    TextView tv_ImageViewText;
+
+    @Override
+    public View onCreateView( LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
+        View row = inflater.inflate(R.layout.searchdetails, container, false);
+
+        mContext = getActivity();
+        mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
+
+        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()). setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()). getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()). getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(" Search ");
+
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            uniqueID = bundle.getString("uniqueID");
+
+        }
+
+
         Config.logV("UNIUE ID---------1111-------" + uniqueID);
-        tv_busName = (TextView) findViewById(R.id.txtbus_name);
-        tv_domain = (TextView) findViewById(R.id.txt_domain);
-        mImgeProfile = (ImageView) findViewById(R.id.i_profile);
-        mImgthumbProfile = (ImageView) findViewById(R.id.iThumb_profile);
-        tv_exp = (TextView) findViewById(R.id.txt_expe);
-        tv_desc = (TextView) findViewById(R.id.txt_bus_desc);
+        tv_busName = (TextView)row. findViewById(R.id.txtbus_name);
+        tv_domain = (TextView) row. findViewById(R.id.txt_domain);
+        mImgeProfile = (ImageView)row.  findViewById(R.id.i_profile);
+        mImgthumbProfile = (ImageView) row. findViewById(R.id.iThumb_profile);
+        mImgthumbProfile2 = (ImageView) row. findViewById(R.id.iThumb_profile2);
+        tv_ImageViewText = (TextView) row. findViewById(R.id.mImageViewText);
+        mImgthumbProfile1 = (ImageView) row. findViewById(R.id.iThumb_profile1);
+
+        tv_exp = (TextView) row. findViewById(R.id.txt_expe);
+        tv_desc = (TextView) row. findViewById(R.id.txt_bus_desc);
 
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchViewLocation(uniqueID);
-
         ApiSearchViewTerminology(uniqueID);
+
+
+        return  row;
     }
 
 
+
+
     public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery){
-        Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
+      //  Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
+
+        Config.logV("Gallery--------------333-----"+mGallery.size());
+        Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
 
         if (mGallery.size() > 1) {
             mImgthumbProfile.setVisibility(View.VISIBLE);
-            Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(mImgthumbProfile);
-            mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+           // Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(mImgthumbProfile);
 
-                    ArrayList<String> mGalleryList = new ArrayList<>();
-                    for (int i = 1; i < mGallery.size(); i++) {
+            Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
+
+
+            if(mGallery.size()==3){
+                mImgthumbProfile1.setVisibility(View.VISIBLE);
+                Config.logV("Gallery--------");
+                Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+            }else{
+                mImgthumbProfile1.setVisibility(View.GONE);
+            }
+
+            if(mGallery.size()>3) {
+
+                mImgthumbProfile1.setVisibility(View.VISIBLE);
+                Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+                mImgthumbProfile2.setVisibility(View.VISIBLE);
+                Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
+                tv_ImageViewText.setVisibility(View.VISIBLE);
+                tv_ImageViewText.setText(" +"+String.valueOf(mGallery.size()-3));
+                Config.logV("Galeery--------------11111-----------"+mGallery.size());
+                mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Config.logV("Gallery------------------------------"+mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        for (int i = 1; i < mGallery.size(); i++) {
                         /*SearchViewDetail data = new SearchViewDetail();
                         data.setUrl(mGallery.get(i).getUrl());*/
-                        mGalleryList.add(mGallery.get(i).getUrl());
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+
+
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+
+                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                            startActivity(intent);
+                        }
+
+
                     }
+                });
+            }else{
+                mImgthumbProfile2.setVisibility(View.GONE);
+                tv_ImageViewText.setVisibility(View.GONE);
+             //   mImgthumbProfile1.setVisibility(View.GONE);
+            }
 
 
-                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                    if (mValue) {
-
-                        Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                        startActivity(intent);
-                    }
-
-
-                }
-            });
 
         } else {
             mImgthumbProfile.setVisibility(View.GONE);
@@ -190,7 +245,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 try {
 
                     if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                        Config.closeDialog(getActivity(), mDialog);
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -216,7 +271,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                    Config.closeDialog(getActivity(), mDialog);
 
             }
         });
@@ -250,7 +305,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 try {
 
                     if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                        Config.closeDialog(getActivity(), mDialog);
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -274,7 +329,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                    Config.closeDialog(getActivity(), mDialog);
 
             }
         });
@@ -311,7 +366,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 try {
 
                     if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                        Config.closeDialog(getActivity(), mDialog);
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -367,7 +422,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                    Config.closeDialog(getActivity(), mDialog);
 
             }
         });
@@ -400,7 +455,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 try {
 
                     if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                        Config.closeDialog(getActivity(), mDialog);
 
                     Config.logV("URL----------Location-----" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -427,7 +482,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                    Config.closeDialog(getActivity(), mDialog);
 
             }
         });
@@ -456,7 +511,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 try {
 
                     if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                        Config.closeDialog(getActivity(), mDialog);
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -501,7 +556,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                    Config.closeDialog(getActivity(), mDialog);
 
             }
         });
@@ -537,7 +592,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 try {
 
                     if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                        Config.closeDialog(getActivity(), mDialog);
 
                     Config.logV("URL-------SEARCH--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -564,7 +619,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                    Config.closeDialog(getActivity(), mDialog);
 
             }
         });
@@ -601,7 +656,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 try {
 
                     if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                        Config.closeDialog(getActivity(), mDialog);
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -629,7 +684,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                    Config.closeDialog(getActivity(), mDialog);
 
             }
         });
@@ -664,7 +719,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 try {
 
                     if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                        Config.closeDialog(getActivity(), mDialog);
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -686,7 +741,7 @@ public class SearchDetailViewFragment extends AppCompatActivity {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                    Config.closeDialog(getActivity(), mDialog);
 
             }
         });

@@ -69,10 +69,6 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.netvarth.youneverwait.activities.SearchListActivity"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
             android:name="com.netvarth.youneverwait.activities.SearchLocationActivity"
             android:screenOrientation="portrait"></activity>
 

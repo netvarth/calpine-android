@@ -18,6 +18,8 @@
     <color name="button_background">#7a7a7a</color>
 
  <!--   Login screen-->
+
+    <color name="opaque_title_grey">#CC3E4A59</color>
     <color name="title_grey">#3E4A59</color>
     <color name="sec_title_grey">#78849E</color>
     <color name="title_consu">#00AEF2</color>
@@ -39,5 +41,7 @@
     <color name="txtcoloractive_in">#99FFFFFF</color>
     <color name="yellow">#FFF1A8</color>
 
+
+    <color name="button_grey">#663E4A59</color>
 
 </resources>

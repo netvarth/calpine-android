@@ -2,72 +2,192 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/spinnerbg"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_padding"
-        android:orientation="vertical">
+        android:layout_marginTop="@dimen/padding7"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/padding5"
+        android:paddingLeft="@dimen/padding7"
+        android:paddingRight="@dimen/padding7">
 
-        <TextView
-            android:id="@+id/txtLoc"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="location" />
+            android:layout_height="wrap_content">
 
-        <TextView
+            <LinearLayout
+                android:id="@+id/subLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtLoc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/customfont"
+                        android:padding="2dp"
+                        android:text="location"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_hint"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:drawableLeft="@drawable/icon_location_blue"
+                        android:padding="2dp"
+                        android:text="Get Direction"
+                        android:textColor="@color/title_consu"
+                        android:textSize="@dimen/txtsize_12" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtLocKM"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="1.5 Km"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_12" />
+
+                    <TextView
+                        android:id="@+id/txtopen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/customfont"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/padding7"
+                        android:text="Open Now"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/txtsize_12"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/img_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_angle_down" />
+        </RelativeLayout>
+        <!--<TextView
             android:id="@+id/txtworking"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding5"
-            android:text="mWorking" />
+            android:layout_marginTop="2dp"
+            android:text="mWorking" />-->
 
-        <TextView
-            android:id="@+id/txtservices"
+        <LinearLayout
+            android:id="@+id/mLayouthide"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Services" />
-        <LinearLayout
-            android:id="@+id/lServicelayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/lServicelayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding7"
+                android:orientation="horizontal">
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtworking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding7"
+                android:drawableLeft="@drawable/icon_time"
+                android:drawablePadding="2dp"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="Working Hours"
+                android:textColor="@color/title_consu"
+                android:textSize="@dimen/txtsize_12" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/padding7"
+                android:background="@color/view_border" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/padding7"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtwaittime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/default_padding"
+                    android:text="Est WaitTime"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/btn_checkin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/padding5"
+                    android:layout_marginLeft="@dimen/padding5"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/button_gradient_checkin"
+                    android:text="Check-In"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/customfont"
+                    android:textColor="@color/app_background"
+                    android:textSize="@dimen/txtsize_subtitle" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_diffdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding2"
+                android:layout_marginTop="@dimen/padding2"
+                android:gravity="right"
+                android:paddingRight="@dimen/padding5"
+                android:text="@string/diff_date"
+                android:textColor="@color/title_consu"
+                android:textSize="@dimen/txtsize_title_term_small"
+                android:visibility="visible" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/txtwaittime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding5"
-            android:visibility="gone"
-            android:text="" />
-
-
-        <TextView
-            android:id="@+id/txtopen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_padding"
-            android:background="@color/colorAccent"
-            android:padding="@dimen/default_padding"
-            android:text="Open Now"
-            android:textColor="@color/app_background"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/btn_checkin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="@dimen/padding5"
-            android:text="Check-in"
-            android:visibility="gone" />
     </LinearLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/input_border" />
+        android:layout_marginTop="@dimen/padding7"
+        android:background="@color/view_border" />
 </LinearLayout>

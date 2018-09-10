@@ -43,12 +43,14 @@ public class HomeTabFragment extends Fragment {
     ProfileFragment profileFragment;
 
     MenuItem prevMenuItem;
+    static Fragment hometabFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.bottomtab_fragment, container, false);
         viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
+
 
         //Initializing the bottomNavigationView
         bottomNavigationView = (BottomNavigationView) rootView.findViewById(R.id.bottom_navigation);
@@ -164,7 +166,7 @@ public class HomeTabFragment extends Fragment {
 
         OnBackPressListener currentFragment = (OnBackPressListener) adapter.getRegisteredFragment(viewPager.getCurrentItem());
 
-        Config.logV("On Back-------------");
+
 
         if (currentFragment != null) {
             // lets see if the currentFragment or any of its childFragment can handle onBackPressed

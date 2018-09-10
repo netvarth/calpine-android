@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.model.SearchListModel;
+
 import java.util.List;
 
 /**
@@ -24,6 +26,7 @@ public class ParkingTypesAdapter extends RecyclerView.Adapter<ParkingTypesAdapte
     public ParkingTypesAdapter(List<SearchListModel> horizontaltypeList, Context context) {
         this.horizontaltypeList = horizontaltypeList;
         this.context = context;
+        Config.logV("List-------------" + horizontaltypeList.size());
     }
 
     @Override
@@ -36,22 +39,23 @@ public class ParkingTypesAdapter extends RecyclerView.Adapter<ParkingTypesAdapte
 
     @Override
     public void onBindViewHolder(ParkingTypesAdapter.ParkingTypesAdapterViewHolder holder, final int position) {
-       // holder.ic_type.setBackgroundResource(R.drawable.icon_home);
 
-        if(horizontaltypeList.get(position).getParking_type_location1()!=null)
-        holder.tv_type.setText("Parking Type free");
-        if(horizontaltypeList.get(position).getAlways_open_location1()!=null)
-            holder.tv_type.setText("24 Hours Open");
-        if(horizontaltypeList.get(position).getDentistemergencyservices_location1()!=null)
-            holder.tv_type.setText("Emergency Services");
-        if(horizontaltypeList.get(position).getDocambulance_location1()!=null)
-            holder.tv_type.setText("Ambulance");
-        if(horizontaltypeList.get(position).getFirstaid_location1()!=null)
-            holder.tv_type.setText("First Aid");
-        if(horizontaltypeList.get(position).getPhysiciansemergencyservices_location1()!=null)
-            holder.tv_type.setText("Emergency Services");
-        if(horizontaltypeList.get(position).getTraumacentre_location1()!=null)
-            holder.tv_type.setText("Trauma Center");
+
+
+        holder.tv_type.setText(horizontaltypeList.get(position).getTypename());
+        if (horizontaltypeList.get(position).getTypename().equalsIgnoreCase("Parking"))
+            holder.ic_type.setImageResource(R.drawable.icon_parking);
+        if (horizontaltypeList.get(position).getTypename().equalsIgnoreCase("24 Hours"))
+            holder.ic_type.setImageResource(R.drawable.icon_24hours);
+        if (horizontaltypeList.get(position).getTypename().equalsIgnoreCase("Ambulance"))
+            holder.ic_type.setImageResource(R.drawable.icon_ambulance);
+        if (horizontaltypeList.get(position).getTypename().equalsIgnoreCase("First Aid"))
+            holder.ic_type.setImageResource(R.drawable.icon_firstaid);
+        if (horizontaltypeList.get(position).getTypename().equalsIgnoreCase("Trauma"))
+            holder.ic_type.setImageResource(R.drawable.icon_trauma);
+        if (horizontaltypeList.get(position).getTypename().equalsIgnoreCase("Emergency"))
+            holder.ic_type.setImageResource(R.drawable.icon_emergency);
+
 
     }
 

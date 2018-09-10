@@ -3,6 +3,8 @@ package com.netvarth.youneverwait.utils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.netvarth.youneverwait.common.Config;
+
 
 public abstract class PaginationScrollListener extends RecyclerView.OnScrollListener {
 
@@ -26,9 +28,15 @@ public abstract class PaginationScrollListener extends RecyclerView.OnScrollList
         int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
         if (!isLoading() && !isLastPage()) {
+
+            Config.logV("totalItemCount"+totalItemCount);
+            Config.logV("toatal firstVisibleItemPosition"+firstVisibleItemPosition+visibleItemCount);
+            Config.logV("firstVisibleItemPosition"+firstVisibleItemPosition );
             if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                     && firstVisibleItemPosition >= 0
                    /* && totalItemCount >= getTotalPageCount()*/) {
+
+                Config.logV("Load More items----------------------");
                 loadMoreItems();
             }
         }

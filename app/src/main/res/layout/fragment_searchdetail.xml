@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,10 +22,44 @@
 
             <include
                 android:id="@+id/toolbar"
-                layout="@layout/toolbar" />
+                layout="@layout/custom_toolbar" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/mRSearchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:layout_marginRight="@dimen/default_padding"
+            android:layout_marginTop="@dimen/default_padding"
+            android:background="@drawable/rounded_white_bg_rect"
+            android:orientation="horizontal">
 
+            <Spinner
+                android:id="@+id/spinnerdomain"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="0.35"
+                android:background="@drawable/gridview_bg"
+                ></Spinner>
+
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.9"
+                android:clickable="false"
+                app:iconifiedByDefault="false"
+                app:queryBackground="@android:color/transparent"
+                app:queryHint="@string/searchhint"
+                app:searchIcon="@drawable/icon_search_gray"
+                app:theme="@style/AppSearchView" />
+
+
+        </LinearLayout>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/SearchDetail"
             android:layout_width="match_parent"

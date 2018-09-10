@@ -4,15 +4,11 @@ package com.netvarth.youneverwait.adapter;
  * Created by sharmila on 18/7/18.
  */
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -28,44 +24,38 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.support.v7.widget.SearchView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.netvarth.youneverwait.Fragment.FamilyMemberFragment;
-import com.netvarth.youneverwait.Fragment.SearchDetailFragment;
-import com.netvarth.youneverwait.Fragment.UpdateProfileFragment;
+import com.netvarth.youneverwait.Fragment.SearchListFragment;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.common.Config;
-import com.netvarth.youneverwait.connection.ApiClient;
-import com.netvarth.youneverwait.connection.ApiInterface;
 import com.netvarth.youneverwait.custom.CustomTypefaceSpan;
 import com.netvarth.youneverwait.model.LanLong;
 import com.netvarth.youneverwait.model.ListCell;
-import com.netvarth.youneverwait.response.SearchAWsResponse;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SearchListAdpter extends BaseAdapter implements Filterable {
 
-    LayoutInflater inflater;
-    ValueFilter valueFilter;
+    private LayoutInflater inflater;
+    private ValueFilter valueFilter;
     private ArrayList<ListCell> items;
     private ArrayList<ListCell> filteredItems;
     Context mContext;
-    double lantitude, longitude;
+    private double lantitude, longitude;
     String mSector;
     Fragment mSearchFrag;
-    SearchView searchView;
-
-    public SearchListAdpter(Context context, ArrayList<ListCell> item, double lant, double longt, Fragment fragment, SearchView mSearchView) {
+    private SearchView searchView;
+    String mCheckClass;
+    boolean first=false;
+    Activity mActivity;
+    public SearchListAdpter( String mCheckClass, Context context, ArrayList<ListCell> item, double lant, double longt, Fragment fragment, SearchView mSearchView) {
         mContext = context;
+        this.mCheckClass=mCheckClass;
         items = item;
         filteredItems = item;
         mSearchFrag = fragment;
         searchView = mSearchView;
+
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Config.logV("Item---------------" + items.size());
 
@@ -108,84 +98,7 @@ public class SearchListAdpter extends BaseAdapter implements Filterable {
             name.setText(highlight(text, cell.getMdisplayname()));
         }
 
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Config.logV(" Click---------------");
 
-                //  String AWS_URL=SharedPreference.getInstance(mContext).getStringValue("AWS_URL","");
-
-                searchView.clearFocus();
-                searchView.setQuery("", false);
-
-                LanLong Lanlong = getLocationNearBy(lantitude, longitude);
-                double upperLeftLat = Lanlong.getUpperLeftLat();
-                double upperLeftLon = Lanlong.getUpperLeftLon();
-                double lowerRightLat = Lanlong.getLowerRightLat();
-                double lowerRightLon = Lanlong.getLowerRightLon();
-                String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
-                String sub = "";
-                String querycreate = "";
-                mSector = cell.getMsector();
-                Config.logV("Sector--------------" + mSector);
-
-                if (cell.getCategory().equalsIgnoreCase("Specializations")) {
-                    sub = "specialization:" + "'" + cell.getName() + "'";
-                    querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
-                }
-                if (cell.getCategory().equalsIgnoreCase("Sub Domain")) {
-
-                    sub = "sub_sector:" + "'" + cell.getName() + "'";
-                    querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
-                }
-
-                if (cell.getCategory().equalsIgnoreCase("Suggested Search")) {
-                    Config.logV("Query------------" + cell.getMsector());
-                    String requiredString = cell.getMsector().substring(cell.getMsector().indexOf("]") + 1, cell.getMsector().indexOf(")"));
-                    Config.logV("Second---------" + requiredString);
-                    querycreate = requiredString;
-                }
-
-                if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
-
-
-                    if (mSector.equalsIgnoreCase("All")) {
-                        querycreate = "title:" + "'" + cell.getName() + "'";
-                    } else {
-                        sub = "title:" + "'" + cell.getName() + "'";
-                        querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
-                    }
-                }
-
-
-                Config.logV("Query-----------" + querycreate);
-
-
-                String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
-
-
-                //  String newpass = "distance asc, title asc&expr.distance=haversin(" + lantitude + "," + longitude + ", location1.latitude, location1.longitude)";
-
-                Bundle bundle = new Bundle();
-                bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
-                bundle.putString("url", pass);
-
-
-                //VALID QUERY PASS
-               /* bundle.putString("query", "(and location1:"+ locationRange + querycreate + ")");
-                  bundle.putString("url",newpass);*/
-                SearchDetailFragment pfFragment = new SearchDetailFragment();
-                pfFragment.setArguments(bundle);
-
-                FragmentTransaction transaction = mSearchFrag.getFragmentManager().beginTransaction();
-                // Store the Fragment in stack
-                transaction.addToBackStack(null);
-                transaction.replace(R.id.mainlayout, pfFragment).commit();
-
-               /* String pass="distance asc, title asc&expr.distance=haversin(" + lantitude + "," + longitude + ", location1.latitude, location1.longitude)";
-                 ApiSEARCHAWS("(and location1:"+ locationRange + querycreate + ")",pass);*/
-            }
-        });
         return v;
     }
 

@@ -2,37 +2,23 @@ package com.netvarth.youneverwait.Fragment;
 
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -40,22 +26,17 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -82,6 +63,7 @@ import com.netvarth.youneverwait.model.ListCell;
 import com.netvarth.youneverwait.model.SearchModel;
 import com.netvarth.youneverwait.response.ActiveCheckIn;
 import com.netvarth.youneverwait.utils.SharedPreference;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -107,7 +89,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
     Fragment active;
     TextView txtUsername;
     Toolbar toolbar;
-    Fragment home;
+    static Fragment home;
     TextView mCurrentLoc;
     Spinner mSpinnerDomain;
     String AWS_URL = "";
@@ -128,8 +110,8 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
     ArrayList<SearchModel> mPopular_AllSearchList = new ArrayList<>();
 
 
-     SearchView mSearchView;
-     SearchView.SearchAutoComplete searchSrcTextView;
+    SearchView mSearchView;
+    SearchView.SearchAutoComplete searchSrcTextView;
     String mDomainSpinner;
     SearchListAdpter listadapter;
     ArrayList<ListCell> items;
@@ -147,7 +129,12 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
     LinearLayout Lhome_mainlayout;
     FrameLayout mainlayout;
 
-    public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList){
+    String mSearchtxt;
+    String mPopularSearchtxt;
+
+    String spinnerTxtPass;
+
+    public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
             is_MoreClick = false;
@@ -155,9 +142,9 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
             LinearPopularSearch.setVisibility(View.VISIBLE);
             LinearMorePopularSearch.setVisibility(View.GONE);
             LinearPopularSearch.removeAllViews();
-            if(mPopularSearchList.size()>6){
+            if (mPopularSearchList.size() > 6) {
                 tv_More.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 tv_More.setVisibility(View.GONE);
             }
 
@@ -203,7 +190,8 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                             @Override
                             public void onClick(View v) {
 
-                                FunPopularSearch(mPopularSearchList.get(finalK).getQuery(),"Suggested Search",mPopularSearchList.get(finalK).getName());
+                                mPopularSearchtxt=mPopularSearchList.get(finalK).getDisplayname();
+                                FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
                             }
                         });
                         parent1.addView(dynaText);
@@ -237,7 +225,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
         mContext = getActivity();
         active = getParentFragment();
-
+        //  SharedPreference.getInstance(mContext).setValue("fragmentonce",false);
 
         String mFirstNAme = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         String mLastNAme = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
@@ -258,8 +246,8 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_activechkin.setTypeface(tyface);
+        mCurrentLoc.setTypeface(tyface);
         tv_popular.setTypeface(tyface);
-
 
 
         //APiGetDomain();
@@ -275,7 +263,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
         });
         /////////////////////////////////////
 
-       // ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), android.R.layout.simple_spinner_dropdown_item, domainList);
+        // ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), android.R.layout.simple_spinner_dropdown_item, domainList);
 
         ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -289,19 +277,19 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                 searchSrcTextView.setText("");
                 //  Spinnertext = parent.getSelectedItem().toString();
                 mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getSector();
-                Config.logV("Selected-----------" + mDomainSpinner);
 
-
+                spinnerTxtPass=((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
+                Config.logV("Selected-----------" + spinnerTxtPass);
                 /////////test code///////////////////////////
 
 
                 mPopularSearchList.clear();
-                if(mDomainSpinner.equalsIgnoreCase("All")){
+                if (mDomainSpinner.equalsIgnoreCase("All")) {
                     mPopular_AllSearchList.addAll(mGLobalSearch);
-                    mPopularSearchList=mPopular_AllSearchList;
+                    mPopularSearchList = mPopular_AllSearchList;
                     funPopulateSearchList(mPopularSearchList);
 
-                }else{
+                } else {
                     mPopular_SubSearchList.clear();
                     for (int i = 0; i < mSectorSearch.size(); i++) {
 
@@ -322,7 +310,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
                     }
 
-                    mPopularSearchList=mPopular_SubSearchList;
+                    mPopularSearchList = mPopular_SubSearchList;
                     funPopulateSearchList(mPopularSearchList);
 
                 }
@@ -391,7 +379,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                                             public void onClick(View v) {
 
 
-                                                    FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
+                                                FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
 
 
                                             }
@@ -408,10 +396,6 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                         }
                     }
                 });
-
-
-
-
 
 
                 ///////////////////////////////////////////////////////////////
@@ -487,8 +471,8 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
                            /*     *******************************************************************/
 
-                    listadapter = new SearchListAdpter(getActivity(), items, latitude, longitude, getParentFragment(), mSearchView);
-
+                    listadapter = new SearchListAdpter("search", getActivity(), items, latitude, longitude, getParentFragment(), mSearchView);
+                    searchSrcTextView.setAdapter(listadapter);
 
                     mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
@@ -502,8 +486,17 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                         public boolean onQueryTextChange(String query) {
                             // filter recycler view when text is changed
 
+                           if(!query.equalsIgnoreCase("")) {
+
+                               mSearchtxt = query;
+
+                               Config.logV("SEARCH TXT--------------88252-" + mSearchtxt);
+                           }
 
 
+                            ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+                            searchIcon.setImageDrawable(null);
+                            searchIcon.setVisibility(View.GONE);
                             if (query.length() > 1) {
 
                                 //list.setAdapter(adapter);
@@ -515,7 +508,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
 
-                                searchSrcTextView.setAdapter(listadapter);
+                               /* searchSrcTextView.setAdapter(listadapter);*/
                                 listadapter.notifyDataSetChanged();
                                 listadapter.getFilter().filter(query);
                             }
@@ -611,8 +604,8 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                     }
 
 
-                    listadapter = new SearchListAdpter(getActivity(), items, latitude, longitude, home, mSearchView);
-
+                    listadapter = new SearchListAdpter("search", getActivity(), items, latitude, longitude, home, mSearchView);
+                    searchSrcTextView.setAdapter(listadapter);
 
                     mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
@@ -626,6 +619,16 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                         public boolean onQueryTextChange(String query) {
                             // filter recycler view when text is changed
 
+                            if(!query.equalsIgnoreCase("")) {
+
+                                mSearchtxt = query;
+
+                                Config.logV("SEARCH TXT--------------88252-" + mSearchtxt);
+                            }
+
+                            ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+                            searchIcon.setImageDrawable(null);
+                            searchIcon.setVisibility(View.GONE);
 
                             if (query.length() > 1) {
 
@@ -640,9 +643,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
 
 
-                                //listadapter = new SearchListAdpter(getActivity(), items, latitude, longitude, home, mSearchView);
-
-                                searchSrcTextView.setAdapter(listadapter);
+                                // searchSrcTextView.setAdapter(listadapter);
                                 listadapter.notifyDataSetChanged();
                                 listadapter.getFilter().filter(query);
                             }
@@ -685,7 +686,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
                     // screen width
                     int screenWidthPixel = mContext.getResources().getDisplayMetrics().widthPixels;
-                    searchSrcTextView.setDropDownWidth(screenWidthPixel-30);
+                    searchSrcTextView.setDropDownWidth(screenWidthPixel - 30);
                     searchSrcTextView.setDropDownBackgroundResource(R.drawable.roundedrect_blur_bg);
                     searchSrcTextView.setDropDownVerticalOffset(20);
 
@@ -695,8 +696,6 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
         }
 
 
-
-
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         searchSrcTextView.setTypeface(tyface1);
@@ -704,17 +703,99 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
         searchSrcTextView.setHintTextColor(mContext.getResources().getColor(R.color.title_grey_light));
 
 
-
-        String searchHint="Eg: Dentist, Restaurants, Car Wash...";
+        String searchHint = "Eg: Dentist, Restaurants, Car Wash...";
         Spannable spannable = new SpannableString(searchHint);
 
         Typeface tyface_edittext1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Light.otf");
 
 
-        spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext1), 0, searchHint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        searchSrcTextView.setHint( spannable );
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, searchHint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        searchSrcTextView.setHint(spannable);
 
+
+        searchSrcTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String mSector = "";
+                ListCell cell = listadapter.getItem(position);
+                mSearchView.setQuery("", false);
+
+                LanLong Lanlong = getLocationNearBy(latitude, longitude);
+                double upperLeftLat = Lanlong.getUpperLeftLat();
+                double upperLeftLon = Lanlong.getUpperLeftLon();
+                double lowerRightLat = Lanlong.getLowerRightLat();
+                double lowerRightLon = Lanlong.getLowerRightLon();
+                String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+                String sub = "";
+                String querycreate = "";
+                mSector = cell.getMsector();
+                Config.logV("Sector--------------" + mSector);
+
+                if (cell.getCategory().equalsIgnoreCase("Specializations")) {
+                    sub = "specialization:" + "'" + cell.getName() + "'";
+                    querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
+                }
+                if (cell.getCategory().equalsIgnoreCase("Sub Domain")) {
+
+                    sub = "sub_sector:" + "'" + cell.getName() + "'";
+                    querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
+                }
+
+                if (cell.getCategory().equalsIgnoreCase("Suggested Search")) {
+                    Config.logV("Query------------" + cell.getMsector());
+                    String requiredString = cell.getMsector().substring(cell.getMsector().indexOf("]") + 1, cell.getMsector().indexOf(")"));
+                    Config.logV("Second---------" + requiredString);
+                    querycreate = requiredString;
+                }
+
+                if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
+
+
+                    if (mSector.equalsIgnoreCase("All")) {
+                        querycreate = "title:" + "'" + cell.getName() + "'";
+                    } else {
+                        sub = "title:" + "'" + cell.getName() + "'";
+                        querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
+                    }
+                }
+
+
+                Config.logV("Query-----------" + querycreate);
+
+
+                String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+
+
+                //  String newpass = "distance asc, title asc&expr.distance=haversin(" + lantitude + "," + longitude + ", location1.latitude, location1.longitude)";
+
+                Bundle bundle = new Bundle();
+                bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
+                bundle.putString("url", pass);
+
+
+                //VALID QUERY PASS
+               /* bundle.putString("query", "(and location1:"+ locationRange + querycreate + ")");
+                  bundle.putString("url",newpass);*/
+                SearchListFragment pfFragment = new SearchListFragment();
+
+                bundle.putString("latitude", String.valueOf(latitude));
+                bundle.putString("longitude", String.valueOf(longitude));
+                bundle.putString("spinnervalue", spinnerTxtPass);
+                Config.logV("SEARCH TXT 99999"+mSearchtxt);
+                bundle.putString("searchtxt", mSearchtxt);
+                pfFragment.setArguments(bundle);
+
+
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                // Store the Fragment in stack
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, pfFragment).commit();
+
+
+            }
+        });
 
 
         return row;
@@ -824,7 +905,6 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                                     }
                                 }
                             });
-
 
 
                             APiGetDomain();
@@ -1092,7 +1172,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
     }
 
-    public void FunPopularSearch(String sector,String category,String name){
+    public void FunPopularSearch(String sector, String category, String name) {
         String mSector;
         LanLong Lanlong = getLocationNearBy(latitude, longitude);
         double upperLeftLat = Lanlong.getUpperLeftLat();
@@ -1119,16 +1199,16 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
             String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf(")"));
             Config.logV("Second---------" + requiredString);
-            querycreate =  requiredString;
+            querycreate = requiredString;
         }
 
         if (category.equalsIgnoreCase("Business Name as")) {
 
 
-            if(mSector.equalsIgnoreCase("All")){
-                querycreate ="title:" + "'" + name + "'";
-            }else {
-                sub = "title:" + "'" +name + "'";
+            if (mSector.equalsIgnoreCase("All")) {
+                querycreate = "title:" + "'" + name + "'";
+            } else {
+                sub = "title:" + "'" + name + "'";
                 querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
             }
         }
@@ -1144,15 +1224,21 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
         Bundle bundle = new Bundle();
         bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
-        bundle.putString("url",pass);
+        bundle.putString("url", pass);
 
 
         //VALID QUERY PASS
                /* bundle.putString("query", "(and location1:"+ locationRange + querycreate + ")");
                   bundle.putString("url",newpass);*/
         mSearchView.setQuery("", false);
-        SearchDetailFragment pfFragment = new SearchDetailFragment();
+        SearchListFragment pfFragment = new SearchListFragment();
+
+        bundle.putString("latitude", String.valueOf(latitude));
+        bundle.putString("longitude", String.valueOf(longitude));
+        bundle.putString("spinnervalue",  spinnerTxtPass);
+        bundle.putString("searchtxt", mPopularSearchtxt);
         pfFragment.setArguments(bundle);
+
 
         FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
         // Store the Fragment in stack
@@ -1196,7 +1282,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                 Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
                 List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 mCurrentLoc.setVisibility(View.VISIBLE);
-                mCurrentLoc.setText(  addresses.get(0).getLocality());
+                mCurrentLoc.setText(addresses.get(0).getLocality());
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
 
@@ -1337,4 +1423,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
     }
 
 
+    public static Fragment getHomeFragment() {
+        return home;
+    }
 }
