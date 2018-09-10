@@ -1,28 +1,29 @@
 package com.netvarth.youneverwait.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by sharmila on 25/7/18.
  */
 
-public class SearchListModel {
+public class SearchListModel implements Serializable{
 
-    String id;
-    String Logo;
-    String title;
-    String sector;
-    String place1;
-    String uniqueid;
-    String rating;
-    String QId;
-    String mLoc;
-    String avail_date;
-    String parking_type_location1;
-    String firstaid_location1;
-    String traumacentre_location1;
-    String docambulance_location1;
-    String always_open_location1;
+    private String id;
+    private String Logo;
+    private String title;
+    private String sector;
+    private String place1;
+    private String uniqueid;
+    private String rating;
+    private String QId;
+    private String mLoc;
+    private String avail_date;
+    private String parking_type_location1;
+    private String firstaid_location1;
+    private String traumacentre_location1;
+    private String docambulance_location1;
+    private String always_open_location1;
 
     public String getParking_type_location1() {
         return parking_type_location1;
@@ -131,7 +132,7 @@ public class SearchListModel {
 
     String show_waiting_time;
     int queueWaitingTime;
-    String serviceTime;
+    private String serviceTime;
 
     public ArrayList getServices() {
         return services;
@@ -159,8 +160,8 @@ public class SearchListModel {
         this.online_checkins = online_checkins;
     }
 
-    String future_checkins;
-    String online_checkins;
+    private String future_checkins;
+    private String online_checkins;
 
     public String getId() {
         return id;
@@ -250,7 +251,7 @@ public class SearchListModel {
         this.business_hours1 = business_hours1;
     }
 
-    ArrayList business_hours1;
+    private ArrayList business_hours1;
 
     public boolean isIsopen() {
         return isopen;
@@ -261,6 +262,26 @@ public class SearchListModel {
     }
 
     boolean isopen;
+
+    public String getTypename() {
+        return typename;
+    }
+
+    public void setTypename(String typename) {
+        this.typename = typename;
+    }
+
+    private String typename;
+
+    public String getTypeicon() {
+        return typeicon;
+    }
+
+    public void setTypeicon(String typeicon) {
+        this.typeicon = typeicon;
+    }
+
+    private String typeicon;
 }
 
 
