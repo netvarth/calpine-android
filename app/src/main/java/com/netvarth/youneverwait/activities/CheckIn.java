@@ -71,7 +71,7 @@ public class CheckIn extends AppCompatActivity {
     static QueueTimeSlotAdapter mQueueAdapter;
     PaymentAdapter mPayAdpater;
     // static RecyclerView mRecycleQueueList;
-   // RecyclerView mRecyclePayList;
+    // RecyclerView mRecyclePayList;
     static int mSpinnertext;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
@@ -82,7 +82,7 @@ public class CheckIn extends AppCompatActivity {
     static TextView tv_name;
     String mFirstName, mLastName;
     int consumerID;
-    TextView tv_waittime;
+    static TextView tv_waittime;
     static TextView tv_queue;
     String waititme;
     static TextView txt_date;
@@ -110,7 +110,7 @@ public class CheckIn extends AppCompatActivity {
 
         btn_checkin = (Button) findViewById(R.id.btn_checkin);
 
-      //  Lpayment = (LinearLayout) findViewById(R.id.Lpayment);
+        //  Lpayment = (LinearLayout) findViewById(R.id.Lpayment);
         queuelayout = (LinearLayout) findViewById(R.id.queuelayout);
         txt_chooseservice = (TextView) findViewById(R.id.txt_chooseservice);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -207,7 +207,7 @@ public class CheckIn extends AppCompatActivity {
         mContext = this;
         mActivity = this;
         //  mRecycleQueueList = (RecyclerView) findViewById(R.id.recycleQueueList);
-       // mRecyclePayList = (RecyclerView) findViewById(R.id.recyclepaymentList);
+        // mRecyclePayList = (RecyclerView) findViewById(R.id.recyclepaymentList);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             serviceId = extras.getInt("serviceId");
@@ -277,7 +277,7 @@ public class CheckIn extends AppCompatActivity {
                     sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getTotalAmount();
 
                 } else {
-                   // Lpayment.setVisibility(View.GONE);
+                    // Lpayment.setVisibility(View.GONE);
                 }
 
             }
@@ -291,18 +291,6 @@ public class CheckIn extends AppCompatActivity {
         });
 
 
-        String firstWord = "Est Wait Time ";
-        String secondWord = waititme;
-
-        Spannable spannable = new SpannableString(firstWord + secondWord);
-        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tv_waittime.setText(spannable);
-
-
         if (mFrom.equalsIgnoreCase("checkin")) {
             LcheckinDatepicker.setVisibility(View.GONE);
         } else {
@@ -314,7 +302,6 @@ public class CheckIn extends AppCompatActivity {
             System.out.println("UTC time: " + sdf.format(currentTime));
 
             txt_date.setText(sdf.format(currentTime));
-
 
 
             UpdateDAte();
@@ -396,8 +383,8 @@ public class CheckIn extends AppCompatActivity {
     }
 
 
-    public static void UpdateDAte(){
-        Date selecteddate=null;
+    public static void UpdateDAte() {
+        Date selecteddate = null;
         String dtStart = txt_date.getText().toString();
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
         try {
@@ -413,7 +400,7 @@ public class CheckIn extends AppCompatActivity {
             ic_cal_minus.setEnabled(true);
             ic_cal_minus.setImageResource(R.drawable.icon_minus_active);
 
-        }else{
+        } else {
             Config.logV("Date Disabled---------------");
             ic_cal_minus.setEnabled(false);
             ic_cal_minus.setImageResource(R.drawable.icon_minus_disabled);
@@ -587,6 +574,27 @@ public class CheckIn extends AppCompatActivity {
                         tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
                         tv_queuetime.setText(mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
+                        String firstWord = "Est Wait Time ";
+                        String secondWord = null;
+                        try {
+                            secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueWaitingTime()) + " Minutes";
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                        if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
+                            secondWord = mQueueTimeSlotList.get(0).getServiceTime();
+                        }
+
+                        Spannable spannable = new SpannableString(firstWord + secondWord);
+                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_waittime.setText(spannable);
+
 
                         if (mQueueTimeSlotList.size() > 1) {
 
@@ -620,6 +628,27 @@ public class CheckIn extends AppCompatActivity {
                                     tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
+                                    String firstWord = "Est Wait Time ";
+                                    String secondWord=null;
+                                    try {
+                                        secondWord = String.valueOf(mQueueTimeSlotList.get(i).getQueueWaitingTime()) + " Minutes";
+                                    }catch(Exception e){
+                                        e.printStackTrace();
+                                    }
+
+
+                                    if(mQueueTimeSlotList.get(i).getServiceTime()!=null){
+                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime() ;
+                                    }
+
+                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                            "fonts/Montserrat_Bold.otf");
+                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    tv_waittime.setText(spannable);
+
 
                                 } else {
                                     ic_left.setEnabled(false);
@@ -652,6 +681,29 @@ public class CheckIn extends AppCompatActivity {
                                     ic_right.setImageResource(R.drawable.icon_right_angle_active);
                                     tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
+
+
+                                    String firstWord = "Est Wait Time ";
+                                    String secondWord=null;
+                                    try {
+                                        secondWord = String.valueOf(mQueueTimeSlotList.get(i).getQueueWaitingTime()) + " Minutes";
+                                    }catch(Exception e){
+                                        e.printStackTrace();
+                                    }
+
+
+                                    if(mQueueTimeSlotList.get(i).getServiceTime()!=null){
+                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime() ;
+                                    }
+
+                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                            "fonts/Montserrat_Bold.otf");
+                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    tv_waittime.setText(spannable);
+
 
                                 } else {
                                     Config.logV("Right Click------------------" + i);

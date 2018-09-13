@@ -17,6 +17,7 @@ public class QueueTimeSlotModel {
     String sTime;
     String eTime;
 
+
     public int getId() {
         return id;
     }
@@ -65,13 +66,7 @@ public class QueueTimeSlotModel {
         this.eTime = eTime;
     }
 
-    public String getQueueWaitingTime() {
-        return queueWaitingTime;
-    }
 
-    public void setQueueWaitingTime(String queueWaitingTime) {
-        this.queueWaitingTime = queueWaitingTime;
-    }
 
     public String getServiceTime() {
         return serviceTime;
@@ -81,7 +76,15 @@ public class QueueTimeSlotModel {
         this.serviceTime = serviceTime;
     }
 
-    String queueWaitingTime;
+    public int getQueueWaitingTime() {
+        return queueWaitingTime;
+    }
+
+    public void setQueueWaitingTime(int queueWaitingTime) {
+        this.queueWaitingTime = queueWaitingTime;
+    }
+
+    int queueWaitingTime;
     String serviceTime;
 
 }
