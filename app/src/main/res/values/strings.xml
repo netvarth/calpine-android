@@ -73,7 +73,7 @@
     <string name="searchhint">Eg: Dentist, Restaurants, Car Wash...</string>
     <string name="activecheckin">Active Check-in</string>
     <string name="typecity">Type a City or neighborhood...</string>
-    <string name="selectservice">Select Service</string>
+    <string name="selectservice">Choose the service you want</string>
 
 
     <string name="permission_alert_dialog_title">Requesting SMS permission</string>
@@ -89,6 +89,8 @@
     <string name="wednesday">Wednesday</string>
     <string name="tuesday">Tuesday</string>
     <string name="monday">Monday</string>
+    <string name="changemem">Change Member</string>
+    <string name="addnote">Add Note</string>
 
 
 </resources>

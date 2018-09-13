@@ -169,7 +169,7 @@
                 android:id="@+id/LActiveCheckin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding5"
+                android:layout_marginTop="@dimen/default_padding"
                 android:layout_marginBottom="@dimen/default_padding"
                 android:orientation="vertical"
                 android:background="@drawable/gradient_home"
@@ -181,6 +181,15 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding5"
                     android:text="Active Check-in"
+                    android:textColor="@color/title_grey" />
+
+                <TextView
+                    android:id="@+id/txt_sorry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding5"
+                    android:text="Sorry.. No Active-Check-in"
+                    android:visibility="gone"
                     android:textColor="@color/title_grey" />
 
                 <android.support.v7.widget.RecyclerView

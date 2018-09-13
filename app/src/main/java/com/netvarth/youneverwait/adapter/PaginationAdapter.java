@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -27,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.netvarth.youneverwait.Fragment.AdapterCallback;
 import com.netvarth.youneverwait.Fragment.HomeTabFragment;
 import com.netvarth.youneverwait.Fragment.MyHomeFragment;
 import com.netvarth.youneverwait.Fragment.SearchDetailViewFragment;
@@ -69,11 +72,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean isLoadingAdded = false;
     Fragment mFragment;
     String workingHrs = "";
-    public PaginationAdapter(Context context,Fragment mFragment) {
+    SearchView mSearchView;
+    private AdapterCallback mAdapterCallback;
+    public PaginationAdapter(SearchView searchview, Context context, Fragment mFragment,AdapterCallback callback) {
         this.context = context;
         searchResults = new ArrayList<>();
         this.mFragment=mFragment;
+        mSearchView=searchview;
         Config.logV("Fragment Context 1"+mFragment);
+        this.mAdapterCallback=callback;
 
     }
 
@@ -115,11 +122,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
 ////////////////////////////7 types////////////////////////////////////////////
-                ArrayList<SearchListModel> listType=new ArrayList<>();
+                ArrayList<ParkingModel> listType=new ArrayList<>();
 
                 if(searchdetailList.getParking_type_location1()!=null) {
                     if(searchdetailList.getParking_type_location1().equalsIgnoreCase("1")) {
-                        SearchListModel mType=new SearchListModel();
+                        ParkingModel mType=new ParkingModel();
                        // mType.setTypeicon(R.drawable.icon_24hours);
                         mType.setTypename("Parking");
                         listType.add(mType);
@@ -128,7 +135,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if(searchdetailList.getAlways_open_location1()!=null) {
                     if (searchdetailList.getAlways_open_location1().equalsIgnoreCase("1")) {
-                        SearchListModel mType=new SearchListModel();
+                        ParkingModel mType=new ParkingModel();
                         //mType.setTypeicon(R.drawable.);
                         mType.setTypename("24 Hours");
                         listType.add(mType);
@@ -138,7 +145,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if(searchdetailList.getDentistemergencyservices_location1()!=null){
                     if (searchdetailList.getDentistemergencyservices_location1().equalsIgnoreCase("1")) {
-                        SearchListModel mType=new SearchListModel();
+                        ParkingModel mType=new ParkingModel();
                         //mType.setTypeicon(R.drawable.);
                         mType.setTypename("Emergency");
                         listType.add(mType);
@@ -148,7 +155,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if(searchdetailList.getDocambulance_location1()!=null){
                     if (searchdetailList.getDocambulance_location1().equalsIgnoreCase("1")) {
-                        SearchListModel mType=new SearchListModel();
+                        ParkingModel mType=new ParkingModel();
                         //mType.setTypeicon(R.drawable.);
                         mType.setTypename("Ambulance");
                         listType.add(mType);
@@ -158,7 +165,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if(searchdetailList.getFirstaid_location1()!=null){
                     if (searchdetailList.getFirstaid_location1().equalsIgnoreCase("1")) {
-                        SearchListModel mType=new SearchListModel();
+                        ParkingModel mType=new ParkingModel();
                         //mType.setTypeicon(R.drawable.);
                         mType.setTypename("First Aid");
                         listType.add(mType);
@@ -168,7 +175,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if(searchdetailList.getPhysiciansemergencyservices_location1()!=null){
                     if (searchdetailList.getPhysiciansemergencyservices_location1().equalsIgnoreCase("1")) {
-                        SearchListModel mType=new SearchListModel();
+                        ParkingModel mType=new ParkingModel();
                         //mType.setTypeicon(R.drawable.);
                         mType.setTypename("Emergency");
                         listType.add(mType);
@@ -178,7 +185,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if(searchdetailList.getTraumacentre_location1()!=null){
                     if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
-                        SearchListModel mType=new SearchListModel();
+                        ParkingModel mType=new ParkingModel();
                         //mType.setTypeicon(R.drawable.);
                         mType.setTypename("Trauma");
                         listType.add(mType);
@@ -203,6 +210,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.tv_name.setTypeface(tyface_confm);
                 myViewHolder.btncheckin.setTypeface(tyface_confm);
                 myViewHolder.tv_Open.setTypeface(tyface_confm);
+
 
                /* Typeface tyface_date = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Light.otf");
@@ -244,7 +252,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iCheckIn.putExtra("accountID",searchdetailList.getId());
                                 iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
                                 iCheckIn.putExtra("from", "future_date");
-                                Config.logV("Account ID-------------"+searchdetailList.getId());
+                                iCheckIn.putExtra("title", searchdetailList.getTitle());
+                                iCheckIn.putExtra("place", searchdetailList.getPlace1());
+                                Config.logV("getTitle-------------"+searchdetailList.getTitle());
                                 context.startActivity(iCheckIn);
                             }
                         });
@@ -399,10 +409,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 }
                             }
                         }else{
-                            myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                            myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
                         }
                     }else{
-                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                        myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
                     }
                    //Open Tag
 
@@ -429,6 +439,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         iCheckIn.putExtra("accountID",searchdetailList.getId());
                         iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
                         iCheckIn.putExtra("from", "checkin");
+                        iCheckIn.putExtra("title", searchdetailList.getTitle());
+                        iCheckIn.putExtra("place", searchdetailList.getPlace1());
                         Config.logV("Account ID-------------"+searchdetailList.getId());
                         context.startActivity(iCheckIn);
                     }
@@ -561,7 +573,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         dynaText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ServiceListFragment pfFragment = new ServiceListFragment();
+
+
+                                mAdapterCallback.onMethodServiceCallback(searchdetailList.getServices(),searchdetailList.getTitle());
+                                /*ServiceListFragment pfFragment = new ServiceListFragment();
                                 FragmentTransaction transaction = mFragment.getFragmentManager().beginTransaction();
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("servicelist", searchdetailList.getServices());
@@ -569,7 +584,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 pfFragment.setArguments(bundle);
                                 // Store the Fragment in stack
                                 transaction.addToBackStack(null);
-                                transaction.replace(R.id.mainlayout, pfFragment).commit();
+                                transaction.replace(R.id.mainlayout, pfFragment).commit();*/
                             }
                         });
                         dynaText.setGravity(Gravity.CENTER);
@@ -694,16 +709,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         }
 
-                        WorkingHourFragment pfFragment = new WorkingHourFragment();
-                        Config.logV("Fragment context-----------"+mFragment);
-                        FragmentTransaction transaction = mFragment.getFragmentManager().beginTransaction();
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("workinghrlist", workingModelArrayList);
-                        bundle.putString("title",searchdetailList.getTitle());
-                        pfFragment.setArguments(bundle);
-                        // Store the Fragment in stack
-                        transaction.addToBackStack(null);
-                        transaction.replace(R.id.mainlayout, pfFragment).commit();
+                        mAdapterCallback.onMethodWorkingCallback(workingModelArrayList,searchdetailList.getTitle());
+
+
                     }
                 });
 
@@ -728,7 +736,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                        String step=separated[1];*/
 
 
-                       myViewHolder.rating.setRating(Float.valueOf("3.7"));
+                       myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
                       // myViewHolder.rating.setStepSize(Float.valueOf("0."+step));
                    }
 
@@ -737,7 +745,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     public void onClick(View v) {
 
                         Config.logV("UNIUE ID----------------" + searchdetailList.getUniqueid());
-                        Bundle bundle = new Bundle();
+                        mSearchView.setQuery("", false);
+
+                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
+
+                        /*Bundle bundle = new Bundle();
 
                         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
 
@@ -747,10 +759,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         FragmentTransaction transaction = mFragment.getFragmentManager().beginTransaction();
                         // Store the Fragment in stack
                         transaction.addToBackStack(null);
-                        transaction.replace(R.id.mainlayout, pfFragment).commit();
-                      /*  Intent i = new Intent(context, SearchDetailViewFragment.class);
-                        i.putExtra("uniqueID", searchdetailList.getUniqueid());
-                        context.startActivity(i);*/
+                        transaction.replace(R.id.mainlayout, pfFragment).commit();*/
+
                     }
                 });
 

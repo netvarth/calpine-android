@@ -204,7 +204,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
         }
     }
-
+    TextView txt_sorry;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -212,6 +212,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
         View row = inflater.inflate(R.layout.fragment_myhome, container, false);
         mRecycleActive = (RecyclerView) row.findViewById(R.id.recycleActive);
         Lhome_mainlayout = (LinearLayout) row.findViewById(R.id.homemainlayout);
+        txt_sorry=(TextView)row.findViewById(R.id.txt_sorry);
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
         if (Config.isOnline(getActivity())) {
             ApiActiveCheckIn();
@@ -789,6 +790,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
 
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
@@ -1122,10 +1124,12 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                                 mRecycleActive.setAdapter(activeAdapter);
                                 activeAdapter.notifyDataSetChanged();
                             } else {
-                                LActiveCheckin.setVisibility(View.GONE);
+                                LActiveCheckin.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            LActiveCheckin.setVisibility(View.GONE);
+                            tv_activechkin.setText("Active Check-ins ");
+                            txt_sorry.setVisibility(View.VISIBLE);
+                            LActiveCheckin.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -1241,6 +1245,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
 
         FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();

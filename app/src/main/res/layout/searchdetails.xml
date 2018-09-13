@@ -29,21 +29,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusableInTouchMode="true"
+            android:overScrollMode="never"
             android:orientation="vertical">
-
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_padding"
-                android:layout_marginRight="@dimen/default_padding"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginRight="@dimen/padding5"
                 android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginBottom="@dimen/default_padding"
                 card_view:cardCornerRadius="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@color/app_background"
                     android:orientation="vertical">
 
@@ -73,6 +77,7 @@
                                 style="@style/Widget.AppCompat.RatingBar.Small"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:progressDrawable="@drawable/rating_display"
                                 android:layout_marginTop="@dimen/padding5" />
 
 
@@ -164,7 +169,6 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:layout_gravity="left"
-                                android:alpha="0.8"
                                 android:layout_marginLeft="@dimen/padding7"
                                 android:layout_toRightOf="@+id/iThumb_profile"
                                 android:src="@drawable/icon_noimage"
@@ -175,6 +179,7 @@
                                 android:layout_height="40dp"
                                 android:layout_gravity="left"
                                 android:alpha="0.8"
+                                android:foreground="@drawable/roundedrect_cicle"
                                 android:layout_marginLeft="@dimen/padding7"
                                 android:layout_toRightOf="@+id/iThumb_profile1"
                                 android:src="@drawable/icon_noimage"
@@ -212,10 +217,12 @@
                         android:id="@+id/mSearchLoc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
                         android:layout_marginTop="@dimen/padding5"
                         android:background="@color/spinnerbg"></android.support.v7.widget.RecyclerView>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
+            </FrameLayout>
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
 </LinearLayout>

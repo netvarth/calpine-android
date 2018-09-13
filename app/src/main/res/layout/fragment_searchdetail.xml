@@ -25,6 +25,7 @@
                 layout="@layout/custom_toolbar" />
         </LinearLayout>
 
+
         <LinearLayout
             android:id="@+id/mRSearchView"
             android:layout_width="match_parent"

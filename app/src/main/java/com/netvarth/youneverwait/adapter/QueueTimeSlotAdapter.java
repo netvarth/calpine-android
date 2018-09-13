@@ -43,7 +43,7 @@ public class QueueTimeSlotAdapter extends RecyclerView.Adapter<QueueTimeSlotAdap
 
     @Override
     public void onBindViewHolder(QueueTimeSlotViewHolder holder, final int position) {
-          holder.tv_queue.setText(horizontalQueueList.get(position).getName()+" "+"[ "+horizontalQueueList.get(position).getQueueSchedule().getTimeSlots().get(0).getsTime()+"- "+horizontalQueueList.get(position).getQueueSchedule().getTimeSlots().get(0).getsTime());
+          holder.tv_queue.setText(horizontalQueueList.get(position).getName()+" "+"[ "+horizontalQueueList.get(position).getQueueSchedule().getTimeSlots().get(0).getsTime()+"- "+horizontalQueueList.get(position).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
     }
 

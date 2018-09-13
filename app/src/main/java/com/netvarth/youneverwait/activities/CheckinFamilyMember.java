@@ -3,6 +3,7 @@ package com.netvarth.youneverwait.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -48,11 +49,10 @@ public class CheckinFamilyMember extends AppCompatActivity {
     RecyclerView mRecycleFamily;
     CheckIn_FamilyMemberListAdapter mFamilyAdpater;
     Toolbar toolbar;
-    Button btn_add, btn_savemember;
-    LinearLayout mLinearAddMember;
-    TextInputEditText tv_firstName, tv_Lastname;
+    TextView btn_add;
     String firstname,lastname;
     int consumerID;
+    Button btn_changemem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,10 +61,9 @@ public class CheckinFamilyMember extends AppCompatActivity {
         mContext = this;
         mActivity = this;
         mRecycleFamily = (RecyclerView) findViewById(R.id.recycle_familyMember);
-        tv_firstName = (TextInputEditText) findViewById(R.id.txt_firstname);
-        tv_Lastname = (TextInputEditText) findViewById(R.id.txt_lastname);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        btn_changemem = (Button) findViewById(R.id.btn_changemem);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             firstname = extras.getString("firstname");
@@ -72,101 +71,30 @@ public class CheckinFamilyMember extends AppCompatActivity {
             consumerID = extras.getInt("consumerID");
         }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        tv_title.setText("Family Member");
 
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Regular.otf");
-        tv_title.setTypeface(tyface);
-        btn_add = (Button) findViewById(R.id.btn_addmember);
-        btn_savemember = (Button) findViewById(R.id.btn_savemember);
-        mLinearAddMember = (LinearLayout) findViewById(R.id.LAddMember);
+        btn_add = (TextView) findViewById(R.id.btn_addmember);
+
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLinearAddMember.setVisibility(View.VISIBLE);
-
-
+                Intent i=new Intent(v.getContext(),AddMemberChekin.class);
+                startActivity(i);
             }
         });
-        btn_savemember.setOnClickListener(new View.OnClickListener() {
+
+        btn_changemem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiAddFamilyMember();
+                CheckIn.refreshName(s_changename);
+                finish();
+
             }
         });
+
         ApiListFamilyMember();
     }
 
-    private void ApiAddFamilyMember() {
 
-
-        ApiInterface apiService =
-                ApiClient.getClient(mActivity).create(ApiInterface.class);
-
-        final int consumerId = SharedPreference.getInstance(mActivity).getIntValue("consumerId", 0);
-
-        final Dialog mDialog = Config.getProgressDialog(mActivity, mActivity.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        JSONObject userProfile = new JSONObject();
-        JSONObject jsonObj = new JSONObject();
-        try {
-
-            jsonObj.put("firstName", tv_firstName.getText().toString());
-            jsonObj.put("lastName", tv_Lastname.getText().toString());
-
-
-            userProfile.putOpt("userProfile", jsonObj);
-            //  userProfile.put("parent",consumerId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), userProfile.toString());
-        Call<ResponseBody> call = apiService.AddFamilyMEmber(body);
-        Config.logV("Request--BODY-------------------------" + new Gson().toJson(userProfile.toString()));
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(mActivity, mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
-                    if (response.code() == 200) {
-                        mLinearAddMember.setVisibility(View.GONE);
-                        tv_firstName.setText("");
-                        tv_Lastname.setText("");
-
-                        ApiListFamilyMember();
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(mActivity, mDialog);
-
-            }
-        });
-
-
-    }
 
     private void ApiListFamilyMember() {
 
@@ -199,11 +127,12 @@ public class CheckinFamilyMember extends AppCompatActivity {
                         if (response.body().size() > 0) {
 
 
-                            FamilyArrayModel family = new FamilyArrayModel();
+                            /*FamilyArrayModel family = new FamilyArrayModel();
                             family.setFirstName(firstname);
                             family.setLastName(lastname);
                             family.setId(consumerID);
-                            LuserProfileList.add(family);
+                            LuserProfileList.add(family);*/
+                            LuserProfileList.clear();
                             LuserProfileList .addAll(response.body());
 
 
@@ -237,4 +166,15 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
     }
 
+    static String s_changename;
+    public static void changeMemberName(String name) {
+        s_changename= name;
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ApiListFamilyMember();
+    }
 }

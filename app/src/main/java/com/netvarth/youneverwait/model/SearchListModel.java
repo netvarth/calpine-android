@@ -263,25 +263,9 @@ public class SearchListModel implements Serializable{
 
     boolean isopen;
 
-    public String getTypename() {
-        return typename;
-    }
 
-    public void setTypename(String typename) {
-        this.typename = typename;
-    }
 
-    private String typename;
 
-    public String getTypeicon() {
-        return typeicon;
-    }
-
-    public void setTypeicon(String typeicon) {
-        this.typeicon = typeicon;
-    }
-
-    private String typeicon;
 }
 
 

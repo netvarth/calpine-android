@@ -28,6 +28,7 @@ public class CircleTransform implements Transformation {
 
         Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
 
+
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint();
         BitmapShader shader = new BitmapShader(squaredBitmap,
@@ -35,10 +36,12 @@ public class CircleTransform implements Transformation {
         paint.setShader(shader);
         paint.setAntiAlias(true);
 
+
         float r = size / 2f;
         canvas.drawCircle(r, r, r, paint);
 
         squaredBitmap.recycle();
+
         return bitmap;
     }
 

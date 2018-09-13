@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
 import com.netvarth.youneverwait.Fragment.HomeTabFragment;
 import com.netvarth.youneverwait.R;
 
@@ -63,6 +64,9 @@ public class Home extends AppCompatActivity {
             // carousel handled the back pressed task
             // do not call super
         }
+
     }
+
+
 
 }

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.activities.CheckIn;
+import com.netvarth.youneverwait.activities.CheckinFamilyMember;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.model.FamilyArrayModel;
 import com.netvarth.youneverwait.utils.SharedPreference;
@@ -78,7 +80,7 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
                 //store the clicked radiobutton
                 lastCheckedRB = myViewHolder.name;
                 Config.logV("Selected--------------------"+myViewHolder.name.getText().toString());
-                CheckIn.refreshName(myViewHolder.name.getText().toString());
+                CheckinFamilyMember.changeMemberName(myViewHolder.name.getText().toString());
             }
         });
 

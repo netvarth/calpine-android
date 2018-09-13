@@ -26,7 +26,10 @@ public class SearchServiceActivity extends AppCompatActivity {
     String name, duration, price, desc;
     Toolbar toolbar;
     ArrayList<SearchService> mGallery;
-    ImageView i_servicegallery,i_servicethumb;
+    ImageView i_servicegallery;
+    String title;
+    TextView tv_toolbartitle;
+    ImageView i_backpress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,55 +41,69 @@ public class SearchServiceActivity extends AppCompatActivity {
         tv_desc = (TextView) findViewById(R.id.txtdesc);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         i_servicegallery = (ImageView) findViewById(R.id.img_service);
-        i_servicethumb=(ImageView) findViewById(R.id.img_servicesmall);
+        i_backpress= (ImageView) findViewById(R.id.backpress);
+        i_backpress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+      //  i_servicethumb=(ImageView) findViewById(R.id.img_servicesmall);
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(" Search ");
+
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             name = extras.getString("name");
             duration = extras.getString("duration");
             price = extras.getString("price");
             desc = extras.getString("desc");
+            title=extras.getString("title");
             mGallery = (ArrayList<SearchService>) getIntent().getSerializableExtra("servicegallery");
         }
 
+        tv_toolbartitle=(TextView)findViewById(R.id.txt_toolbartitle);
+        tv_toolbartitle.setText(title);
+
         if (name != null) {
             tv_service.setVisibility(View.VISIBLE);
-            tv_service.setText("Service :" + " " + name);
+            tv_service.setText(name);
         } else {
             tv_service.setVisibility(View.GONE);
         }
 
         if (price != null) {
             tv_price.setVisibility(View.VISIBLE);
-            tv_price.setText("Price :" + " " + price);
+            tv_price.setText( price);
         } else {
             tv_price.setVisibility(View.GONE);
         }
         if (duration != null) {
             tv_duration.setVisibility(View.VISIBLE);
-            tv_duration.setText("Duration :" + " " + duration);
+            tv_duration.setText(duration +" Mins");
         } else {
             tv_duration.setVisibility(View.GONE);
 
         }
         if (desc != null) {
             tv_desc.setVisibility(View.VISIBLE);
-            tv_desc.setText("Description :" + " " + desc);
+            tv_desc.setText(desc);
         } else {
             tv_desc.setVisibility(View.GONE);
         }
 
         if(mGallery!=null){
+            if(mGallery.size()>0)
             Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(i_servicegallery);
+            /*if(mGallery.size()>1) {
+                if (mGallery.get(1).getUrl() != null) {
 
-            Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(i_servicethumb);
+                    Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(i_servicethumb);
+                }
+            }*/
 
 
-            i_servicethumb.setOnClickListener(new View.OnClickListener() {
+            i_servicegallery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ArrayList<String> mGalleryList = new ArrayList<>();
@@ -105,7 +122,7 @@ public class SearchServiceActivity extends AppCompatActivity {
             });
         }else{
             i_servicegallery.setVisibility(View.GONE);
-            i_servicethumb.setVisibility(View.GONE);
+           // i_servicethumb.setVisibility(View.GONE);
         }
     }
 }

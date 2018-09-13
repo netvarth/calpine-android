@@ -24,6 +24,16 @@ public class SearchViewDetail {
 
     String url;
 
+    public float getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(float avgRating) {
+        this.avgRating = avgRating;
+    }
+
+    float avgRating;
+
     public String getUrl() {
         return url;
     }

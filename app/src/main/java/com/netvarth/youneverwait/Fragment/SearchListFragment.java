@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -46,6 +47,7 @@ import com.netvarth.youneverwait.model.LanLong;
 import com.netvarth.youneverwait.model.ListCell;
 import com.netvarth.youneverwait.model.SearchListModel;
 import com.netvarth.youneverwait.model.SearchModel;
+import com.netvarth.youneverwait.model.WorkingModel;
 import com.netvarth.youneverwait.response.QueueList;
 import com.netvarth.youneverwait.response.SearchAWsResponse;
 import com.netvarth.youneverwait.utils.PaginationScrollListener;
@@ -70,7 +72,7 @@ import retrofit2.Response;
  * Created by sharmila on 20/7/18.
  */
 
-public class SearchListFragment extends RootFragment {
+public class SearchListFragment extends RootFragment implements AdapterCallback {
 
     Context mContext;
     String query, url;
@@ -305,6 +307,7 @@ public class SearchListFragment extends RootFragment {
     String latitude, longitude;
     String searchTxt, spinnerTxt;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -322,6 +325,7 @@ public class SearchListFragment extends RootFragment {
             spinnerTxt = bundle.getString("spinnervalue", "");
             searchTxt = bundle.getString("searchtxt", "");
         }
+
 
 
         SharedPreference.getInstance(mContext).setValue("firsttime", true);
@@ -356,12 +360,16 @@ public class SearchListFragment extends RootFragment {
         });
 
 
+
         searchDetail = new MyHomeFragment().getHomeFragment();
+
+
+
         Config.logV("Fragment Context--43343---" + searchDetail);
         progressBar = (ProgressBar) row.findViewById(R.id.main_progress);
         //  Config.logV("Pass Fragment" + searchDetail);
-
-        pageadapter = new PaginationAdapter(getActivity(), searchDetail);
+        mSearchView = (SearchView) row.findViewById(R.id.search);
+        pageadapter = new PaginationAdapter(mSearchView,getActivity(), searchDetail,this);
 
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecySearchDetail.setLayoutManager(linearLayoutManager);
@@ -536,7 +544,9 @@ public class SearchListFragment extends RootFragment {
                                 mSearchView.setQuery(searchTxt, false);
                             }*/
 
-
+                            ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+                            searchIcon.setImageDrawable(null);
+                            searchIcon.setVisibility(View.GONE);
                             if (query.length() > 1) {
 
                                 //list.setAdapter(adapter);
@@ -664,7 +674,9 @@ public class SearchListFragment extends RootFragment {
                                 Config.logV("Query-------------"+searchTxt);
                                 mSearchView.setQuery(searchTxt, false);
                             }*/
-
+                            ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+                            searchIcon.setImageDrawable(null);
+                            searchIcon.setVisibility(View.GONE);
                             if (query.length() > 1) {
 
                                 //list.setAdapter(adapter);
@@ -703,7 +715,7 @@ public class SearchListFragment extends RootFragment {
         ////////////////////////////SEARCH//////////////////////////////////////////////
 
 
-        mSearchView = (SearchView) row.findViewById(R.id.search);
+
         searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         SearchManager searchMng = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchMng.getSearchableInfo(getActivity().getComponentName()));
@@ -806,7 +818,8 @@ public class SearchListFragment extends RootFragment {
                 }
 
 
-                pageadapter = new PaginationAdapter(getActivity(), searchDetail);
+               // pageadapter = new PaginationAdapter(mSearchView,getActivity(), searchDetail,this);
+                pageadapter.clear();
 
                 linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                 mRecySearchDetail.setLayoutManager(linearLayoutManager);
@@ -1600,4 +1613,54 @@ public class SearchListFragment extends RootFragment {
         }
         return index;
     }
+
+    @Override
+    public void onMethodCallback(String value) {
+
+        Bundle bundle = new Bundle();
+
+        SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
+
+        bundle.putString("uniqueID",value);
+        pfFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_out_right, R.anim.slide_in_left);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, pfFragment).commit();
+
+    }
+
+    @Override
+    public void onMethodWorkingCallback(ArrayList<WorkingModel> workingModelArrayList,String value) {
+        WorkingHourFragment pfFragment = new WorkingHourFragment();
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("workinghrlist", workingModelArrayList);
+        bundle.putString("title",value);
+        pfFragment.setArguments(bundle);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_out_right, R.anim.slide_in_left);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, pfFragment).commit();
+    }
+
+    @Override
+    public void onMethodServiceCallback(ArrayList services, String value) {
+        ServiceListFragment pfFragment = new ServiceListFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("servicelist", services);
+        bundle.putString("title",value);
+        pfFragment.setArguments(bundle);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_out_right, R.anim.slide_in_left);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, pfFragment).commit();
+    }
+
+
+
 }

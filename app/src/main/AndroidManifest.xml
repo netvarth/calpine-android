@@ -60,9 +60,9 @@
             android:name="com.netvarth.youneverwait.activities.SwipeGalleryImage"
             android:screenOrientation="portrait"></activity>
 
-        <activity
+       <!-- <activity
             android:name="com.netvarth.youneverwait.Fragment.SearchDetailViewFragment"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"></activity>-->
 
         <activity
             android:name="com.netvarth.youneverwait.activities.SearchServiceActivity"
@@ -87,6 +87,12 @@
         <activity
             android:name="com.netvarth.youneverwait.activities.DetailInboxList"
             android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.netvarth.youneverwait.activities.AddMemberChekin"
+            android:screenOrientation="portrait"></activity>
+
+
         <receiver
             android:name="com.netvarth.youneverwait.service.SmsBroadcastReceiver"
             android:enabled="true"

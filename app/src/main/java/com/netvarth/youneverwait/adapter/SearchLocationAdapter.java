@@ -9,12 +9,14 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.netvarth.youneverwait.Fragment.AdapterCallback;
+import com.netvarth.youneverwait.Fragment.MyHomeFragment;
+import com.netvarth.youneverwait.Fragment.SearchLocationAdpterCallback;
+import com.netvarth.youneverwait.Fragment.ServiceListFragment;
 import com.netvarth.youneverwait.Fragment.WorkingHourFragment;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.activities.SearchServiceActivity;
@@ -60,6 +66,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         Button btn_checkin;
         LinearLayout mLSeriveLayout,mLayouthide;
         ImageView img_arrow;
+        RecyclerView recycle_parking;
 
         public MyViewHolder(View view) {
             super(view);
@@ -71,6 +78,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             mLSeriveLayout = (LinearLayout) view.findViewById(R.id.lServicelayout);
             img_arrow=(ImageView) view.findViewById(R.id.img_arrow);
             mLayouthide=(LinearLayout) view.findViewById(R.id.mLayouthide);
+            recycle_parking=(RecyclerView)view.findViewById(R.id.recycle_parking);
 
 
         }
@@ -79,13 +87,17 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     List<SearchService> mSearchServiceList;
     List<QueueList> mQueueList;
     SearchSetting mSearchSetting;
-
-    public SearchLocationAdapter(SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList) {
+    String mTitle;
+    private SearchLocationAdpterCallback adaptercallback;
+    public SearchLocationAdapter(SearchLocationAdpterCallback callback,String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchServiceList = SearchServiceList;
         this.mQueueList = SearchQueueList;
         this.mSearchSetting = searchSetting;
+        this.mTitle=title;
+        this.adaptercallback=callback;
+
 
 
     }
@@ -103,6 +115,85 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     @Override
     public void onBindViewHolder(final SearchLocationAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
+
+        ArrayList<ParkingModel> listType=new ArrayList<>();
+            if (searchLoclist.getParkingType() != null) {
+                if (searchLoclist.getParkingType().equalsIgnoreCase("free")) {
+                    ParkingModel mType = new ParkingModel();
+                    // mType.setTypeicon(R.drawable.icon_24hours);
+                    mType.setTypename("Parking");
+                    listType.add(mType);
+                }
+            }
+            if (searchLoclist.getLocationVirtualFields().getDocambulance() != null) {
+                if (searchLoclist.getLocationVirtualFields().getDocambulance().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    // mType.setTypeicon(R.drawable.icon_24hours);
+                    mType.setTypename("Ambulance");
+                    listType.add(mType);
+                }
+            }
+
+            if (searchLoclist.getLocationVirtualFields().getFirstaid() != null) {
+
+                if (searchLoclist.getLocationVirtualFields().getFirstaid().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    // mType.setTypeicon(R.drawable.icon_24hours);
+                    mType.setTypename("First Aid");
+                    listType.add(mType);
+                }
+            }
+
+            try {
+                if (searchLoclist.isOpen24hours()) {
+                    ParkingModel mType = new ParkingModel();
+                    // mType.setTypeicon(R.drawable.icon_24hours);
+                    mType.setTypename("24 Hours");
+                    listType.add(mType);
+
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            if (searchLoclist.getLocationVirtualFields().getTraumacentre() != null) {
+
+                if (searchLoclist.getLocationVirtualFields().getTraumacentre().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    // mType.setTypeicon(R.drawable.icon_24hours);
+                    mType.setTypename("Trauma");
+                    listType.add(mType);
+                }
+            }
+
+
+            if (searchLoclist.getLocationVirtualFields().getPhysiciansemergencyservices() != null) {
+                if (searchLoclist.getLocationVirtualFields().getPhysiciansemergencyservices().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    // mType.setTypeicon(R.drawable.icon_24hours);
+                    mType.setTypename("Emergency");
+                    listType.add(mType);
+                }
+            }
+
+            if (searchLoclist.getLocationVirtualFields().getDentistemergencyservices() != null) {
+                if (searchLoclist.getLocationVirtualFields().getDentistemergencyservices().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    // mType.setTypeicon(R.drawable.icon_24hours);
+                    mType.setTypename("Emergency");
+                    listType.add(mType);
+                }
+            }
+
+
+        if(listType.size()>0) {
+            ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext);
+            LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            myViewHolder.recycle_parking.setLayoutManager(horizontalLayoutManager);
+            myViewHolder.recycle_parking.setAdapter(mParkTypeAdapter);
+        }
+
+
         Config.logV("Place-------------" + searchLoclist.getPlace());
         myViewHolder.tv_place.setText(searchLoclist.getPlace());
         Config.logV("---Place 3333----11---" + searchLoclist.getbSchedule().getTimespec().size());
@@ -224,16 +315,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             }
 
 
-                            /*WorkingHourFragment pfFragment = new WorkingHourFragment();
-                            Config.logV("Fragment context-----------" + mFragment);
-                            FragmentTransaction transaction = mFragment.getFragmentManager().beginTransaction();
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("workinghrlist", workingModelArrayList);
-                            bundle.putString("title", searchdetailList.getTitle());
-                            pfFragment.setArguments(bundle);
-                            // Store the Fragment in stack
-                            transaction.addToBackStack(null);
-                            transaction.replace(R.id.mainlayout, pfFragment).commit();*/
+                           adaptercallback.onMethodWorkingCallback(workingModelArrayList,mTitle);
                         }
                     }
                 }
@@ -267,37 +349,71 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             if (searchLoclist.getId() == mSearchServiceList.get(i).getLocid()) {
 
 
+                int size=mSearchServiceList.get(i).getmAllService().size();
+                if(size==2){
+                    size=2;
+                }else if(size==1){
+                    size=1;
+                }else if(size>2){
+                    size=3;
+                }
 
-                for (int j = 0; j < mSearchServiceList.get(i).getmAllService().size(); j++) {
+                if(size>0) {
+
+                    for (int j = 0; j < size; j++) {
+                        TextView dynaText = new TextView(mContext);
+                        dynaText.setText(mSearchServiceList.get(i).getmAllService().get(j).getName());
+                        dynaText.setTextSize(13);
+                        dynaText.setPadding(10, 10, 10, 10);
+                        dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
+                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                        dynaText.setMaxLines(1);
+                        dynaText.setMaxEms(6);
+
+
+                        final String mServicename = mSearchServiceList.get(i).getmAllService().get(j).getName();
+                        final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(j).getTotalAmount();
+                        final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(j).getDescription();
+                        final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(j).getServiceDuration();
+                        final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(j).getServicegallery();
+
+                        dynaText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                iService.putExtra("name", mServicename);
+                                iService.putExtra("duration", mServiceduration);
+                                iService.putExtra("price", mServiceprice);
+                                iService.putExtra("desc", mServicedesc);
+                                iService.putExtra("servicegallery", mServiceGallery);
+                                iService.putExtra("title", mTitle);
+                                mContext.startActivity(iService);
+
+                            }
+                        });
+                        myViewHolder.mLSeriveLayout.addView(dynaText);
+                    }
+
                     TextView dynaText = new TextView(mContext);
-                    dynaText.setText(mSearchServiceList.get(i).getmAllService().get(j).getName());
-                    dynaText.setTextSize(13);
-                    dynaText.setPadding(10, 10, 10, 10);
-                    dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
-                    dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                    dynaText.setMaxLines(1);
-                    dynaText.setMaxEms(6);
-
-
-                    final String mServicename = mSearchServiceList.get(i).getmAllService().get(j).getName();
-                    final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(j).getTotalAmount();
-                    final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(j).getDescription();
-                    final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(j).getServiceDuration();
-                    final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(j).getServicegallery();
-
+                    final int finalI = i;
                     dynaText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                            iService.putExtra("name", mServicename);
-                            iService.putExtra("duration", mServiceduration);
-                            iService.putExtra("price", mServiceprice);
-                            iService.putExtra("desc", mServicedesc);
-                            iService.putExtra("servicegallery", mServiceGallery);
-                            mContext.startActivity(iService);
+                           /* ServiceListFragment pfFragment = new ServiceListFragment();
+                            FragmentTransaction transaction = MyHomeFragment.getHomeFragment().getFragmentManager().beginTransaction();
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("servicelist", mSearchServiceList.get(finalI).getmAllService());
+                            bundle.putString("title",mTitle);
+                            pfFragment.setArguments(bundle);
+                            // Store the Fragment in stack
+                            transaction.addToBackStack(null);
+                            transaction.replace(R.id.mainlayout, pfFragment).commit();*/
 
+                            adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(),mTitle);
                         }
                     });
+                    dynaText.setGravity(Gravity.CENTER);
+                    dynaText.setBackground(mContext.getResources().getDrawable(R.drawable.icon_arrowright_blue));
                     myViewHolder.mLSeriveLayout.addView(dynaText);
                 }
 

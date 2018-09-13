@@ -19,11 +19,11 @@ import java.util.List;
  */
 
 public class ParkingTypesAdapter extends RecyclerView.Adapter<ParkingTypesAdapter.ParkingTypesAdapterViewHolder> {
-    private List<SearchListModel> horizontaltypeList;
+    private List<ParkingModel> horizontaltypeList;
     Context context;
 
 
-    public ParkingTypesAdapter(List<SearchListModel> horizontaltypeList, Context context) {
+    public ParkingTypesAdapter(List<ParkingModel> horizontaltypeList, Context context) {
         this.horizontaltypeList = horizontaltypeList;
         this.context = context;
         Config.logV("List-------------" + horizontaltypeList.size());

@@ -12,20 +12,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.adapter.PaymentAdapter;
 import com.netvarth.youneverwait.adapter.QueueTimeSlotAdapter;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
+import com.netvarth.youneverwait.custom.CustomTypefaceSpan;
 import com.netvarth.youneverwait.response.PaymentModel;
 import com.netvarth.youneverwait.response.QueueTimeSlotModel;
 import com.netvarth.youneverwait.response.SearchService;
@@ -33,10 +39,13 @@ import com.netvarth.youneverwait.response.SearchSetting;
 import com.netvarth.youneverwait.response.SearchTerminology;
 import com.netvarth.youneverwait.utils.SharedPreference;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -61,13 +70,12 @@ public class CheckIn extends AppCompatActivity {
     String accountID;
     static QueueTimeSlotAdapter mQueueAdapter;
     PaymentAdapter mPayAdpater;
-    static RecyclerView mRecycleQueueList;
-    RecyclerView mRecyclePayList;
+    // static RecyclerView mRecycleQueueList;
+   // RecyclerView mRecyclePayList;
     static int mSpinnertext;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     static String modifyAccountID;
-    LinearLayout Lpayment;
     boolean isPrepayment;
     TextView tv_amount;
     String sAmountPay;
@@ -77,10 +85,21 @@ public class CheckIn extends AppCompatActivity {
     TextView tv_waittime;
     static TextView tv_queue;
     String waititme;
-    static TextView tv_checkin;
+    static TextView txt_date;
     ImageView img_calender_checkin;
     LinearLayout LcheckinDatepicker;
     String mFrom;
+    String title, place;
+    TextView tv_titlename, tv_place, tv_checkin_service;
+    static ImageView ic_left, ic_right;
+    static TextView tv_queuetime;
+    static TextView tv_queuename;
+    static LinearLayout queuelayout;
+    TextView txt_chooseservice;
+    static int i = 0;
+    static ImageView ic_cal_minus;
+    ImageView ic_cal_add;
+    Button btn_checkin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,30 +107,107 @@ public class CheckIn extends AppCompatActivity {
         setContentView(R.layout.checkin);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Lpayment = (LinearLayout) findViewById(R.id.Lpayment);
+
+        btn_checkin = (Button) findViewById(R.id.btn_checkin);
+
+      //  Lpayment = (LinearLayout) findViewById(R.id.Lpayment);
+        queuelayout = (LinearLayout) findViewById(R.id.queuelayout);
+        txt_chooseservice = (TextView) findViewById(R.id.txt_chooseservice);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         tv_amount = (TextView) findViewById(R.id.txtamount);
         tv_name = (TextView) findViewById(R.id.txtname);
         tv_waittime = (TextView) findViewById(R.id.txt_waittime);
-        tv_checkin = (TextView) findViewById(R.id.txt_checkin);
+        txt_date = (TextView) findViewById(R.id.txt_date);
         img_calender_checkin = (ImageView) findViewById(R.id.calender_checkin);
-        LcheckinDatepicker=(LinearLayout)findViewById(R.id.checkinDatepicker);
-        tv_queue=(TextView) findViewById(R.id.txt_queue);
+        LcheckinDatepicker = (LinearLayout) findViewById(R.id.checkinDatepicker);
+        tv_queue = (TextView) findViewById(R.id.txt_queue);
+        tv_place = (TextView) findViewById(R.id.txt_place);
+        tv_titlename = (TextView) findViewById(R.id.txt_title);
+        tv_checkin_service = (TextView) findViewById(R.id.txt_checkin_service);
+
+        tv_queuetime = (TextView) findViewById(R.id.txt_queuetime);
+        tv_queuename = (TextView) findViewById(R.id.txt_queuename);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                finish();
+            }
+        });
+
+        ic_left = (ImageView) findViewById(R.id.ic_left);
+        ic_right = (ImageView) findViewById(R.id.ic_right);
+
+
+        ic_cal_minus = (ImageView) findViewById(R.id.ic_cal_minus);
+        ic_cal_add = (ImageView) findViewById(R.id.ic_cal_add);
+
+        ic_cal_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String dtStart = txt_date.getText().toString();
+                Config.logV("Date----------------" + dtStart);
+                Date date = null;
+                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+                try {
+                    date = format.parse(dtStart);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Date added_date = addDays(date, 1);
+                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+
+                //to convert Date to String, use format method of SimpleDateFormat class.
+                String strDate = dateFormat.format(added_date);
+                txt_date.setText(strDate);
+                UpdateDAte();
+
+
+            }
+        });
+
+
+        ic_cal_minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String dtStart = txt_date.getText().toString();
+                Config.logV("Date----------------" + dtStart);
+                Date date = null;
+                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+                try {
+                    date = format.parse(dtStart);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Date added_date = subtractDays(date, 1);
+                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+
+                //to convert Date to String, use format method of SimpleDateFormat class.
+                String strDate = dateFormat.format(added_date);
+                txt_date.setText(strDate);
+                UpdateDAte();
+            }
+        });
+
 
         tv_title.setText("Check-in");
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Regular.otf");
+                "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
 
         int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         Config.logV("Consumer ID------------" + consumerId);
         mContext = this;
         mActivity = this;
-        mRecycleQueueList = (RecyclerView) findViewById(R.id.recycleQueueList);
-        mRecyclePayList = (RecyclerView) findViewById(R.id.recyclepaymentList);
+        //  mRecycleQueueList = (RecyclerView) findViewById(R.id.recycleQueueList);
+       // mRecyclePayList = (RecyclerView) findViewById(R.id.recyclepaymentList);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             serviceId = extras.getInt("serviceId");
@@ -119,9 +215,17 @@ public class CheckIn extends AppCompatActivity {
             accountID = extras.getString("accountID");
             modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
             waititme = extras.getString("waititme");
-            mFrom=extras.getString("from", "");
+            mFrom = extras.getString("from", "");
+
+            title = extras.getString("title", "");
+            place = extras.getString("place", "");
 
         }
+        tv_place.setText(place);
+
+        tv_titlename.setText(title);
+
+
         mSpinnerService = (Spinner) findViewById(R.id.spinnerservice);
         ApiSearchViewServiceID(serviceId);
         ApiSearchViewSetting(uniqueID);
@@ -147,12 +251,25 @@ public class CheckIn extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+
+                String firstWord = "Check-in for ";
+                String secondWord = ((SearchService) mSpinnerService.getSelectedItem()).getName();
+
+                Spannable spannable = new SpannableString(firstWord + secondWord);
+                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv_checkin_service.setText(spannable);
+
+
                 Date currentTime = new Date();
                 final SimpleDateFormat sdf = new SimpleDateFormat(
                         "yyyy-MM-dd", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 System.out.println("UTC time: " + sdf.format(currentTime));
-                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID,sdf.format(currentTime));
+                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
                 isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
                 Config.logV("Payment------------" + isPrepayment);
                 if (isPrepayment) {
@@ -160,7 +277,7 @@ public class CheckIn extends AppCompatActivity {
                     sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getTotalAmount();
 
                 } else {
-                    Lpayment.setVisibility(View.GONE);
+                   // Lpayment.setVisibility(View.GONE);
                 }
 
             }
@@ -172,20 +289,37 @@ public class CheckIn extends AppCompatActivity {
 
 
         });
-        tv_waittime.setText(waititme);
 
-        if(mFrom.equalsIgnoreCase("checkin")){
+
+        String firstWord = "Est Wait Time ";
+        String secondWord = waititme;
+
+        Spannable spannable = new SpannableString(firstWord + secondWord);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv_waittime.setText(spannable);
+
+
+        if (mFrom.equalsIgnoreCase("checkin")) {
             LcheckinDatepicker.setVisibility(View.GONE);
-        }else{
+        } else {
             LcheckinDatepicker.setVisibility(View.VISIBLE);
 
             Date currentTime = new Date();
-            final SimpleDateFormat sdf = new SimpleDateFormat(
-                    "yyyy-MM-dd", Locale.US);
+            final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy");
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             System.out.println("UTC time: " + sdf.format(currentTime));
 
-            tv_checkin.setText("Check-in Date "+sdf.format(currentTime));
+            txt_date.setText(sdf.format(currentTime));
+
+
+
+            UpdateDAte();
+
+
         }
 
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
@@ -194,11 +328,37 @@ public class CheckIn extends AppCompatActivity {
                 DialogFragment newFragment = new MyDatePickerDialog();
                 newFragment.show(getSupportFragmentManager(), "date picker");
 
+
             }
         });
 
     }
+
+    public Date addDays(Date date, int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days);
+
+        return cal.getTime();
+    }
+
+    /**
+     * subtract days to date in java
+     *
+     * @param date
+     * @param days
+     * @return
+     */
+    public Date subtractDays(Date date, int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, -days);
+
+        return cal.getTime();
+    }
+
     static String mDate;
+
     public static class MyDatePickerDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -207,24 +367,59 @@ public class CheckIn extends AppCompatActivity {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-
-            return new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            DatePickerDialog da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            return da;
         }
 
         private DatePickerDialog.OnDateSetListener dateSetListener =
                 new DatePickerDialog.OnDateSetListener() {
                     public void onDateSet(DatePicker view, int year, int month, int day) {
-                        /*Toast.makeText(getActivity(), "selected date is " + view.getYear() +
-                                " - " + (view.getMonth() + 1) +
-                                " - " + view.getDayOfMonth(), Toast.LENGTH_SHORT).show();*/
-                        mDate = view.getYear() +
-                                "-" + (view.getMonth() + 1) +
-                                "-" + view.getDayOfMonth();
-                        tv_checkin.setText("Check-in Date "+mDate);
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID,mDate);
+
+
+                        SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
+                        Date date = new Date(year, month, day - 1);
+                        String dayOfWeek = simpledateformat.format(date);
+                        Config.logV("Day-------------" + dayOfWeek);
+
+                        mDate = dayOfWeek + ", " + view.getDayOfMonth() +
+                                "/" + (view.getMonth() + 1) +
+                                "/" + view.getYear();
+                        txt_date.setText(mDate);
+
+
+                        UpdateDAte();
+
+                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, mDate);
                     }
                 };
     }
+
+
+    public static void UpdateDAte(){
+        Date selecteddate=null;
+        String dtStart = txt_date.getText().toString();
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+        try {
+            selecteddate = format.parse(dtStart);
+            //  System.out.println(selecteddate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        if (new Date().before(selecteddate)) {
+            Config.logV("Date Enabled---------------");
+            ic_cal_minus.setEnabled(true);
+            ic_cal_minus.setImageResource(R.drawable.icon_minus_active);
+
+        }else{
+            Config.logV("Date Disabled---------------");
+            ic_cal_minus.setEnabled(false);
+            ic_cal_minus.setImageResource(R.drawable.icon_minus_disabled);
+        }
+    }
+
     public static void refreshName(String name) {
         Config.logV("NAme----------" + name);
         if (name != null && !name.equalsIgnoreCase("")) {
@@ -317,14 +512,14 @@ public class CheckIn extends AppCompatActivity {
                     if (response.code() == 200) {
 
                         mPaymentData = response.body();
-                        if (mPaymentData.size() > 0) {
+                        /*if (mPaymentData.size() > 0) {
                             Lpayment.setVisibility(View.VISIBLE);
                             mPayAdpater = new PaymentAdapter(mPaymentData, mActivity);
                             LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
                             mRecyclePayList.setLayoutManager(horizontalLayoutManager);
                             mRecyclePayList.setAdapter(mPayAdpater);
                             tv_amount.setText("Amount to Pay ₹" + sAmountPay);
-                        }
+                        }*/
 
                     }
 
@@ -349,7 +544,7 @@ public class CheckIn extends AppCompatActivity {
     }
 
 
-    private static void ApiQueueTimeSlot(String serviceId, String subSeriveID, String accountID,String mDate) {
+    private static void ApiQueueTimeSlot(String serviceId, String subSeriveID, String accountID, String mDate) {
 
 
         ApiInterface apiService =
@@ -358,8 +553,6 @@ public class CheckIn extends AppCompatActivity {
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
 
 
         Call<ArrayList<QueueTimeSlotModel>> call = apiService.getQueueTimeSlot(serviceId, subSeriveID, mDate, accountID);
@@ -375,20 +568,111 @@ public class CheckIn extends AppCompatActivity {
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
+                    Config.logV("mQueueTimeSlotList--------11111-----------------" + response.code());
                     if (response.code() == 200) {
                         mQueueTimeSlotList = response.body();
-                        if(mQueueTimeSlotList.size()>0) {
+
+
+                        Config.logV("mQueueTimeSlotList-------------------------" + mQueueTimeSlotList.size());
+                        if (mQueueTimeSlotList.size() > 0) {
                             tv_queue.setVisibility(View.VISIBLE);
-                        }
-                        else{
+                            queuelayout.setVisibility(View.VISIBLE);
+                        } else {
                             tv_queue.setVisibility(View.GONE);
+                            queuelayout.setVisibility(View.GONE);
+
                         }
 
-                            mQueueAdapter = new QueueTimeSlotAdapter(mQueueTimeSlotList, mActivity);
+
+                        tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
+                        tv_queuetime.setText(mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
+
+
+                        if (mQueueTimeSlotList.size() > 1) {
+
+                            ic_right.setVisibility(View.VISIBLE);
+                            ic_left.setVisibility(View.VISIBLE);
+
+
+                        } else {
+                            ic_right.setVisibility(View.INVISIBLE);
+                            ic_left.setVisibility(View.INVISIBLE);
+                        }
+
+                        if (i > 0) {
+                            ic_left.setEnabled(true);
+                            ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                        } else {
+                            ic_left.setEnabled(false);
+                            ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                        }
+
+
+                        ic_left.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                i--;
+                                Config.logV("Left Click------------------**" + i);
+                                if (i >= 0) {
+                                    ic_left.setEnabled(true);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
+                                    tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
+
+
+                                } else {
+                                    ic_left.setEnabled(false);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                                }
+
+
+                                if (i < mQueueTimeSlotList.size()) {
+                                    ic_right.setEnabled(true);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_active);
+                                } else {
+                                    ic_right.setEnabled(false);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                                }
+
+                            }
+                        });
+
+                        ic_right.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                if (i < 0) {
+                                    i = 0;
+                                }
+                                i++;
+                                Config.logV("Right Click------------------" + i);
+                                if (i < mQueueTimeSlotList.size()) {
+                                    ic_right.setEnabled(true);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_active);
+                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
+                                    tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
+
+                                } else {
+                                    Config.logV("Right Click------------------" + i);
+                                    i--;
+                                    ic_right.setEnabled(false);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                                }
+
+                                if (i >= 0) {
+                                    ic_left.setEnabled(true);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                                } else {
+                                    ic_left.setEnabled(false);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                                }
+                            }
+                        });
+                            /*mQueueAdapter = new QueueTimeSlotAdapter(mQueueTimeSlotList, mActivity);
                             LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
                             mRecycleQueueList.setLayoutManager(horizontalLayoutManager);
-                            mRecycleQueueList.setAdapter(mQueueAdapter);
+                            mRecycleQueueList.setAdapter(mQueueAdapter);*/
 
 
                     }
@@ -453,11 +737,19 @@ public class CheckIn extends AppCompatActivity {
                         }
 
 
-                        Config.logV("mServicesList" + LServicesList.size());
-                        ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        if (LServicesList.size() > 0) {
+                            mSpinnerService.setVisibility(View.VISIBLE);
+                            txt_chooseservice.setVisibility(View.VISIBLE);
+                            Config.logV("mServicesList" + LServicesList.size());
+                            ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                        mSpinnerService.setAdapter(adapter);
+                            mSpinnerService.setAdapter(adapter);
+                        } else {
+
+                            mSpinnerService.setVisibility(View.GONE);
+                            txt_chooseservice.setVisibility(View.GONE);
+                        }
 
 
                         mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
@@ -470,7 +762,7 @@ public class CheckIn extends AppCompatActivity {
                                 "yyyy-MM-dd", Locale.US);
                         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                         System.out.println("UTC time: " + sdf.format(currentTime));
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID,sdf.format(currentTime));
+                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
 
                     }
 

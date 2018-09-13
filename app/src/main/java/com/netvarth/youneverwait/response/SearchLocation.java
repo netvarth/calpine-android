@@ -11,25 +11,43 @@ import java.util.ArrayList;
 public class SearchLocation {
 
     //Location
-    int id;
-    String place;
-    String parkingType;
-    boolean open24hours;
-    boolean baseLocation;
+    private int id;
+    private String place;
+    private String parkingType;
+    private boolean open24hours;
+    private boolean baseLocation;
     @SerializedName("locationVirtualFields")
     SearchLocation locationVirtualFields;
-    String traumacentre;
-    String physiciansemergencyservices;
+    private String traumacentre;
+    private String physiciansemergencyservices;
     @SerializedName("bSchedule")
     SearchLocation bSchedule;
     @SerializedName("timespec")
-    ArrayList<SearchLocation> timespec;
-    ArrayList<SearchLocation> timeSlots;
+    private ArrayList<SearchLocation> timespec;
+    private ArrayList<SearchLocation> timeSlots;
 
-    String eTime;
-    String sTime;
-    ArrayList repeatIntervals;
+    private String eTime;
+    private String sTime;
+    private ArrayList repeatIntervals;
 
+    public String getDocambulance() {
+        return docambulance;
+    }
+
+    public void setDocambulance(String docambulance) {
+        this.docambulance = docambulance;
+    }
+
+    public String getFirstaid() {
+        return firstaid;
+    }
+
+    public void setFirstaid(String firstaid) {
+        this.firstaid = firstaid;
+    }
+
+    String docambulance;
+    String firstaid;
 
     public ArrayList getRepeatIntervals() {
         return repeatIntervals;
@@ -154,6 +172,21 @@ public class SearchLocation {
         this.service = service;
     }
 
-    String service;
+    private String service;
 
+    public void setTypename(String typename) {
+        this.typename = typename;
+    }
+
+    private String typename;
+
+    public String getDentistemergencyservices() {
+        return dentistemergencyservices;
+    }
+
+    public void setDentistemergencyservices(String dentistemergencyservices) {
+        this.dentistemergencyservices = dentistemergencyservices;
+    }
+
+    String dentistemergencyservices;
 }

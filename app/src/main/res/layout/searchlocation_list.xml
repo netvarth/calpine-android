@@ -2,21 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/spinnerbg"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding7"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/padding5"
-        android:paddingLeft="@dimen/padding7"
-        android:paddingRight="@dimen/padding7">
+       >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding5"
+            android:paddingLeft="@dimen/padding7"
+            android:background="@color/spinnerbg"
+            android:paddingTop="@dimen/padding7"
+            android:paddingRight="@dimen/padding7">
 
             <LinearLayout
                 android:id="@+id/subLayout"
@@ -102,7 +103,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:background="@color/app_background"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingTop="@dimen/padding7"
+            android:paddingBottom="@dimen/padding7"
+            android:visibility="visible">
 
             <LinearLayout
                 android:id="@+id/lServicelayout"
@@ -183,11 +189,17 @@
                 android:textSize="@dimen/txtsize_title_term_small"
                 android:visibility="visible" />
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycle_parking"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/padding7"
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
         </LinearLayout>
     </LinearLayout>
-    <View
+    <!--<View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/padding7"
-        android:background="@color/view_border" />
+        android:background="@color/view_border" />-->
 </LinearLayout>
