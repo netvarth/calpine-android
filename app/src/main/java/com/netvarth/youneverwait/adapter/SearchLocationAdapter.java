@@ -1,14 +1,8 @@
 package com.netvarth.youneverwait.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -23,14 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.netvarth.youneverwait.Fragment.AdapterCallback;
-import com.netvarth.youneverwait.Fragment.MyHomeFragment;
-import com.netvarth.youneverwait.Fragment.SearchLocationAdpterCallback;
-import com.netvarth.youneverwait.Fragment.ServiceListFragment;
-import com.netvarth.youneverwait.Fragment.WorkingHourFragment;
+import com.netvarth.youneverwait.callback.SearchLocationAdpterCallback;
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.activities.CheckIn;
 import com.netvarth.youneverwait.activities.SearchServiceActivity;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.custom.CustomTypefaceSpan;
@@ -39,10 +31,6 @@ import com.netvarth.youneverwait.response.QueueList;
 import com.netvarth.youneverwait.response.SearchLocation;
 import com.netvarth.youneverwait.response.SearchService;
 import com.netvarth.youneverwait.response.SearchSetting;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,11 +50,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     Context mContext;
     ArrayList<WorkingModel> workingModelArrayList =new ArrayList<>();
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_place, tv_working, tv_open, tv_waittime;
+        public TextView tv_place, tv_working, tv_open, tv_waittime,txt_diffdate;
         Button btn_checkin;
         LinearLayout mLSeriveLayout,mLayouthide;
         ImageView img_arrow;
         RecyclerView recycle_parking;
+        RelativeLayout layout_exapnd;
 
         public MyViewHolder(View view) {
             super(view);
@@ -79,7 +68,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             img_arrow=(ImageView) view.findViewById(R.id.img_arrow);
             mLayouthide=(LinearLayout) view.findViewById(R.id.mLayouthide);
             recycle_parking=(RecyclerView)view.findViewById(R.id.recycle_parking);
-
+            txt_diffdate=(TextView) view.findViewById(R.id.txt_diffdate);
+            layout_exapnd=(RelativeLayout) view.findViewById(R.id.layout_exapnd);
 
         }
     }
@@ -89,7 +79,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     SearchSetting mSearchSetting;
     String mTitle;
     private SearchLocationAdpterCallback adaptercallback;
-    public SearchLocationAdapter(SearchLocationAdpterCallback callback,String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList) {
+    String mUniqueID,accountID;
+    public SearchLocationAdapter(String accountID,String uniqueid,SearchLocationAdpterCallback callback,String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchServiceList = SearchServiceList;
@@ -97,6 +88,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         this.mSearchSetting = searchSetting;
         this.mTitle=title;
         this.adaptercallback=callback;
+        mUniqueID=uniqueid;
+        this.accountID=accountID;
 
 
 
@@ -115,6 +108,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     @Override
     public void onBindViewHolder(final SearchLocationAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
+
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        myViewHolder.tv_place.setTypeface(tyface);
+        myViewHolder.tv_open.setTypeface(tyface);
+        myViewHolder.btn_checkin.setTypeface(tyface);
+
 
         ArrayList<ParkingModel> listType=new ArrayList<>();
             if (searchLoclist.getParkingType() != null) {
@@ -217,8 +217,44 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         }
 
 
+        if(mSearchSetting.isFutureDateWaitlist()){
+            myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+        }else{
+            myViewHolder.txt_diffdate.setVisibility(View.GONE);
+        }
 
-        myViewHolder.img_arrow.setOnClickListener(new View.OnClickListener() {
+
+        myViewHolder.txt_diffdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Config.logV("DETAIL !!!!!!!!!!!!!------"+);
+                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                iCheckIn.putExtra("serviceId", searchLoclist.getId());
+                iCheckIn.putExtra("uniqueID", mUniqueID);
+                iCheckIn.putExtra("accountID",accountID);
+                iCheckIn.putExtra("from", "searchdetail_future");
+                iCheckIn.putExtra("title", mTitle);
+                iCheckIn.putExtra("place", searchLoclist.getPlace());
+                mContext.startActivity(iCheckIn);
+            }
+        });
+
+        myViewHolder.btn_checkin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                iCheckIn.putExtra("serviceId", searchLoclist.getId());
+                iCheckIn.putExtra("uniqueID", mUniqueID);
+                iCheckIn.putExtra("accountID",accountID);
+                iCheckIn.putExtra("from", "searchdetail_checkin");
+                iCheckIn.putExtra("title", mTitle);
+                iCheckIn.putExtra("place", searchLoclist.getPlace());
+                mContext.startActivity(iCheckIn);
+            }
+        });
+
+        myViewHolder.layout_exapnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -400,7 +436,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         @Override
                         public void onClick(View v) {
                            /* ServiceListFragment pfFragment = new ServiceListFragment();
-                            FragmentTransaction transaction = MyHomeFragment.getHomeFragment().getFragmentManager().beginTransaction();
+                            FragmentTransaction transaction = DashboardFragment.getHomeFragment().getFragmentManager().beginTransaction();
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("servicelist", mSearchServiceList.get(finalI).getmAllService());
                             bundle.putString("title",mTitle);
@@ -467,25 +503,29 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     }
 
 
-                    if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
+                    if(mSearchSetting.isOnlineCheckIns()) {
+                        if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
 
-                        if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) {
+                            if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) {
 
-                            myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
-                            myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.button_gradient_checkin));
+                                myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
+                                myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.button_gradient_checkin));
 
-                        } else if (date1.compareTo(date2) < 0) {
-                            myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
-                           // myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                            myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                            myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
-                            myViewHolder.btn_checkin.setEnabled(false);
+                            } else if (date1.compareTo(date2) < 0) {
+                                myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
+                                // myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+                                myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
+                                myViewHolder.btn_checkin.setEnabled(false);
+
+                            }
+                        } else {
+
+                            myViewHolder.btn_checkin.setVisibility(View.GONE);
 
                         }
-                    } else {
-
+                    }else{
                         myViewHolder.btn_checkin.setVisibility(View.GONE);
-
                     }
 
 

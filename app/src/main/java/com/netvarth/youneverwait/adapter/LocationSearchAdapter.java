@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.callback.LocationSearchCallback;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.response.LocationResponse;
 
@@ -28,11 +30,13 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_loc;
+        LinearLayout l_searchlayout;
 
 
         public MyViewHolder(View view) {
             super(view);
             tv_loc = (TextView) view.findViewById(R.id.txtLoc);
+            l_searchlayout = (LinearLayout) view.findViewById(R.id.searchlayout);
 
         }
     }
@@ -42,11 +46,12 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
     ArrayList<LocationResponse> items;
     ArrayList<LocationResponse> filteredItems;
     String text = "";
-
-    public LocationSearchAdapter(Context context, ArrayList<LocationResponse> item) {
+    LocationSearchCallback callback;
+    public LocationSearchAdapter(Context context, ArrayList<LocationResponse> item,LocationSearchCallback callback) {
         mContext = context;
         items = item;
         filteredItems = item;
+        this.callback=callback;
 
 
     }
@@ -63,6 +68,13 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
     public void onBindViewHolder(LocationSearchAdapter.MyViewHolder myViewHolder, final int position) {
         final LocationResponse searchdetailList = items.get(position);
         myViewHolder.tv_loc.setText(searchdetailList.getName());
+        myViewHolder.l_searchlayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Config.logV("Latitude-----------"+searchdetailList.getLatitude());
+                callback.onMethodCallback(searchdetailList.getName(),searchdetailList.getLatitude(),searchdetailList.getLongitude());
+            }
+        });
 
 
 

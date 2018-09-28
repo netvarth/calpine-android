@@ -25,6 +25,16 @@ public class SearchListModel implements Serializable{
     private String docambulance_location1;
     private String always_open_location1;
 
+    public int getYnw_verified() {
+        return ynw_verified;
+    }
+
+    public void setYnw_verified(int ynw_verified) {
+        this.ynw_verified = ynw_verified;
+    }
+
+    int ynw_verified;
+
     public String getParking_type_location1() {
         return parking_type_location1;
     }

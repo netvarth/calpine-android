@@ -255,6 +255,7 @@ public class Password extends AppCompatActivity {
             return false;
         } else {
             txt_Confirm_InputPwd.setError(null);
+            txt_Confirm_InputPwd. setErrorEnabled(false);
         }
 
         return true;
@@ -273,6 +274,7 @@ public class Password extends AppCompatActivity {
             return false;
         } else {
             txt_InputPwd.setError(null);
+            txt_InputPwd. setErrorEnabled(false);
         }
 
         return true;

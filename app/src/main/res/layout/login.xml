@@ -87,6 +87,7 @@
         android:layout_marginTop="@dimen/padding20"
         android:background="@drawable/button_gradient"
         android:text="@string/btnlogin"
+        style="?android:attr/borderlessButtonStyle"
         android:textColor="@color/app_background"
         android:textAllCaps="true" />
     </LinearLayout>

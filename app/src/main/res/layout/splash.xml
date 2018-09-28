@@ -8,6 +8,6 @@
         android:gravity="center"
         android:textColor="@color/colorAccent"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:text="You Never Wait"/>
+        android:text="@string/app_name"/>
 
 </LinearLayout>

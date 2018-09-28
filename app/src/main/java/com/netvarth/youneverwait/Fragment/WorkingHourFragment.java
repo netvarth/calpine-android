@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -39,7 +40,7 @@ public class WorkingHourFragment extends RootFragment {
     String txtdataMon="",txtdataTue="",txtdataWed="",txtdataThu="",txtdataFri="",txtdataSat="",txtdataSun="";
     TextView tv_Monday,tv_Tuesday,tv_Wednesday,tv_Thursay,tv_Friday,tv_Saturday,tv_Sunday;
     TextView tv_subtitle;
-    String title;
+    String title,uniqueid;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class WorkingHourFragment extends RootFragment {
         if (bundle != null) {
             workingHrList = (ArrayList<WorkingModel>)getArguments().getSerializable("workinghrlist");
             title=bundle.getString("title", "");
+            uniqueid=bundle.getString("uniqueID", "");
         }
 
 
@@ -78,9 +80,39 @@ public class WorkingHourFragment extends RootFragment {
         tv_Saturday=(TextView)row.findViewById(R.id.txtSaturday);
         tv_Sunday=(TextView)row.findViewById(R.id.txtSunday);
 
+        Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_Monday.setTypeface(tyface);
+        tv_Tuesday.setTypeface(tyface);
+        tv_Wednesday.setTypeface(tyface);
+        tv_Thursay.setTypeface(tyface);
+        tv_Friday.setTypeface(tyface);
+        tv_Saturday.setTypeface(tyface);
+        tv_Sunday.setTypeface(tyface);
+
+
+
 
 
         tv_subtitle.setText(title);
+
+        tv_subtitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+
+                SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
+
+                bundle.putString("uniqueID",uniqueid);
+                pfFragment.setArguments(bundle);
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                //transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_out_right, R.anim.slide_in_left);
+                // Store the Fragment in stack
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, pfFragment).commit();
+            }
+        });
 
         tv_title.setText("Working Hours");
 
@@ -206,9 +238,9 @@ public class WorkingHourFragment extends RootFragment {
 
 
 
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface);
+        tv_title.setTypeface(tyface1);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

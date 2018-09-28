@@ -92,6 +92,10 @@
             android:name="com.netvarth.youneverwait.activities.AddMemberChekin"
             android:screenOrientation="portrait"></activity>
 
+        <activity
+            android:name="com.netvarth.youneverwait.activities.TermsOfUse"
+            android:screenOrientation="portrait"></activity>
+
 
         <receiver
             android:name="com.netvarth.youneverwait.service.SmsBroadcastReceiver"

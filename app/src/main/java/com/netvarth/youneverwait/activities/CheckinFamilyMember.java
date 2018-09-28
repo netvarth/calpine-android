@@ -53,7 +53,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
     String firstname,lastname;
     int consumerID;
     Button btn_changemem;
-
+TextView txt_toolbartitle;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +63,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
         mRecycleFamily = (RecyclerView) findViewById(R.id.recycle_familyMember);
 
         btn_changemem = (Button) findViewById(R.id.btn_changemem);
+        txt_toolbartitle=(TextView) findViewById(R.id.txt_toolbartitle);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -85,11 +86,15 @@ public class CheckinFamilyMember extends AppCompatActivity {
         btn_changemem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CheckIn.refreshName(s_changename);
+                CheckIn.refreshName(s_changename,memberid);
                 finish();
 
             }
         });
+        Typeface tyface = Typeface.createFromAsset(getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        btn_changemem.setTypeface(tyface);
+        txt_toolbartitle.setTypeface(tyface);
 
         ApiListFamilyMember();
     }
@@ -167,8 +172,10 @@ public class CheckinFamilyMember extends AppCompatActivity {
     }
 
     static String s_changename;
-    public static void changeMemberName(String name) {
+    static int memberid;
+    public static void changeMemberName(String name ,int familyMemID) {
         s_changename= name;
+       memberid=familyMemID;
 
     }
 

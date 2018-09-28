@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/padding7"
-    android:padding="@dimen/padding5"
+    android:padding="@dimen/padding7"
     android:orientation="vertical">
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_weight="0.6"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:textSize="@dimen/txtsize_hint"
+            android:textSize="@dimen/txtsize_12"
             android:textColor="@color/title_grey"
             android:text="Service" />
 
@@ -28,8 +28,9 @@
             android:layout_weight="0.4"
             android:layout_height="wrap_content"
             android:gravity="right"
-            android:textSize="@dimen/txtsize_hint"
+            android:textSize="@dimen/txtsize_10"
             android:textColor="@color/title_grey"
+            android:paddingRight="@dimen/default_padding"
             android:text="Domain" />
     </LinearLayout>
     <View

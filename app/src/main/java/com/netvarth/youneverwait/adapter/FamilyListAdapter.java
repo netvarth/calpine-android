@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.netvarth.youneverwait.Fragment.FamilyListFragment;
 import com.netvarth.youneverwait.Fragment.FamilyMemberFragment;
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.callback.FamilyAdapterCallback;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
@@ -57,7 +58,7 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
         public MyViewHolder(View view) {
             super(view);
             name = (TextView) view.findViewById(R.id.name);
-            gender = (TextView) view.findViewById(R.id.gender);
+           // gender = (TextView) view.findViewById(R.id.gender);
             edit = (ImageView) view.findViewById(R.id.edit);
             delete = (ImageView) view.findViewById(R.id.delete);
             lfamily = (LinearLayout) view.findViewById(R.id.lfamily);
@@ -67,12 +68,13 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
 
     Activity activity;
     Fragment mFragment;
-
-    public FamilyListAdapter(List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity, Fragment fragment) {
+    FamilyAdapterCallback callback;
+    public FamilyListAdapter(List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity, Fragment fragment, FamilyAdapterCallback callback) {
         this.mContext = mContext;
         this.familyList = mfamilyList;
         this.activity = mActivity;
         this.mFragment = fragment;
+        this.callback=callback;
 
     }
 
@@ -89,7 +91,8 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
         final FamilyArrayModel familylist = familyList.get(position);
         Config.logV("Family -----------------");
         myViewHolder.name.setText(familylist.getUserProfile().getFirstName());
-        myViewHolder.gender.setText(familylist.getUserProfile().getGender());
+       // myViewHolder.gender.setText(familylist.getUserProfile().getGender());
+
 
         myViewHolder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,14 +122,15 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
                         bundle.putString("mobile", familylist.getUserProfile().getPrimaryMobileNo());
                     }
                 }
-
+                callback.onMethodCallback(bundle);
+                /*
 
                 FamilyMemberFragment pfFragment = new FamilyMemberFragment();
                 pfFragment.setArguments(bundle);
                 FragmentTransaction transaction = mFragment.getChildFragmentManager().beginTransaction();
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
-                transaction.replace(R.id.mainlayout, pfFragment).commit();
+                transaction.replace(R.id.mainlayout, pfFragment).commit();*/
 
             }
         });

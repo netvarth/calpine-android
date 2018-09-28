@@ -29,7 +29,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="60dp"
                 android:background="@color/hometopbar"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding7"
-                    android:text="YNW \n LOGO"
+                    android:text="Jaldee \n LOGO"
                     android:textStyle="bold"
                     android:textSize="@dimen/txtsize_title_term_small"
                     android:gravity="center"
@@ -59,12 +59,12 @@
                     android:id="@+id/currentloc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="right"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="right|center"
                     android:drawableRight="@drawable/icon_down_arrow_blue"
                     android:drawableLeft="@drawable/icon_location_blue"
                     android:paddingRight="@dimen/padding5"
-                    android:drawablePadding="2dp"
+                    android:drawablePadding="5dp"
                     android:textColor="@color/title_consu" />
 
 
@@ -74,8 +74,8 @@
                 android:id="@+id/mRSearchView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding7"
-                android:layout_marginRight="@dimen/padding7"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginRight="@dimen/padding5"
                 android:layout_marginTop="@dimen/default_padding"
                 android:background="@drawable/rounded_white_bg_rect"
                 android:orientation="horizontal">
@@ -86,7 +86,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_margin="5dp"
-                    android:layout_weight="0.35"
+                    android:layout_weight="0.4"
                     android:background="@drawable/gridview_bg"
                     ></Spinner>
 
@@ -95,9 +95,10 @@
                     android:id="@+id/search"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.9"
+                    android:layout_weight="1"
                     android:clickable="false"
                     app:iconifiedByDefault="false"
+                    android:paddingLeft="-15dp"
                     app:queryBackground="@android:color/transparent"
                     app:queryHint="@string/searchhint"
                     app:searchIcon="@drawable/icon_search_gray"
@@ -126,7 +127,7 @@
                     android:id="@+id/txt_popular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding7"
+                    android:padding="@dimen/padding5"
                     android:text="Popular Searches"
                     android:textColor="@color/title_grey" />
 
@@ -145,7 +146,6 @@
                     android:layout_marginTop="@dimen/padding5"
                     android:layout_marginBottom="@dimen/default_padding"
                     android:visibility="gone"
-                    android:background="@color/yellow"
 
                     android:orientation="vertical"></LinearLayout>
 
@@ -164,6 +164,12 @@
 
 
             </LinearLayout>
+            <android.support.v4.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusableInTouchMode="true"
+                android:overScrollMode="never"
+                android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/LActiveCheckin"
@@ -188,7 +194,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding5"
-                    android:text="Sorry.. No Active-Check-in"
+                    android:text=" No Active-Check-in "
                     android:visibility="gone"
                     android:textColor="@color/title_grey" />
 
@@ -196,13 +202,15 @@
                     android:id="@+id/recycleActive"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="@dimen/padding5"
+                    android:layout_marginRight="@dimen/padding5"
                     android:layout_marginBottom="@dimen/padding7"
+                    android:nestedScrollingEnabled="false"
                   >
 
                 </android.support.v7.widget.RecyclerView>
             </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
         </LinearLayout>
  <!--   </android.support.v4.widget.NestedScrollView>-->
     </LinearLayout>

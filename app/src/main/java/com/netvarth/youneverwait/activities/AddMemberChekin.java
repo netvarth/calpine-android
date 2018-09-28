@@ -70,6 +70,12 @@ public class AddMemberChekin extends AppCompatActivity {
                 }
             }
         });
+
+
+        Typeface btntyface = Typeface.createFromAsset(getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        btn_savemember.setTypeface(btntyface);
+
     }
 
     private void ApiAddFamilyMember() {

@@ -35,6 +35,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.OPTIONS;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -194,4 +195,19 @@ public interface ApiInterface {
 
     @GET("consumer/providers")
     Call<ArrayList<FavouriteModel>> getFavourites();
+
+
+
+    @POST("consumer/waitlist/communicate/{waitlistid}")
+    Call<ResponseBody> WaitListMessage(@Path("waitlistid") String otp,@Query("account") String account,@Body RequestBody jsonObj);
+
+
+
+    @POST("consumer/payment")
+    Call<ResponseBody> generateHash(@Body RequestBody jsonObj);
+
+    @POST("consumer/waitlist")
+    Call<ResponseBody> Checkin(@Query("account") String account,@Body RequestBody jsonObj);
+
+
 }

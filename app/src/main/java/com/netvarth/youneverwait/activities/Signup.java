@@ -100,7 +100,7 @@ public class Signup extends AppCompatActivity {
                 "fonts/Montserrat_Medium.otf");
         btn_signup.setTypeface(tyface_btn);
 
-        String firstWord = "YouNeverWait ";
+        String firstWord = "Jaldee ";
         String secondWord = "Terms and Conditions";
         //  <font color='#00AEF2'><b>Terms and Conditions
 

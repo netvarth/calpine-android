@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorHint">@color/title_grey</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
 
     </style>
 
@@ -82,5 +83,28 @@
     </style>
 
 
+
+    <style name="GreyTextInputLayoutPassword" parent="@style/TextAppearance.AppCompat">
+        <item name="android:textColorHint">@color/sec_title_grey</item>
+        <item name="android:textColor">@color/sec_title_grey</item>
+        <item name="android:textSize">12sp</item>
+
+    </style>
+
+    <style name="GreyTextInputLayoutHintPwd" parent="@style/TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColorHint">@color/title_grey</item>
+    </style>
+
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_dialog</item>
+    </style>
 
 </resources>

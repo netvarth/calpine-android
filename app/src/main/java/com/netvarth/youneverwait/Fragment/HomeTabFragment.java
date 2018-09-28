@@ -3,22 +3,18 @@ package com.netvarth.youneverwait.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.adapter.ViewPagerAdapter;
-import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.utils.BottomNavigationViewHelper;
 
 /**
@@ -37,7 +33,7 @@ public class HomeTabFragment extends Fragment {
     //Fragments
 
     FavouriteFragment favFragment;
-    MyHomeFragment homeFragment;
+    DashboardFragment homeFragment;
     CheckinsFragment checkinFragment;
     InboxFragment inboxFragment;
     ProfileFragment profileFragment;
@@ -145,7 +141,7 @@ public class HomeTabFragment extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
-        homeFragment = new MyHomeFragment();
+        homeFragment = new DashboardFragment();
         checkinFragment = new CheckinsFragment();
         favFragment = new FavouriteFragment();
         inboxFragment = new InboxFragment();

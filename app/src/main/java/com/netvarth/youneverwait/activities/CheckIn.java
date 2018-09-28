@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -24,7 +27,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.adapter.PaymentAdapter;
 import com.netvarth.youneverwait.adapter.QueueTimeSlotAdapter;
@@ -39,6 +44,10 @@ import com.netvarth.youneverwait.response.SearchSetting;
 import com.netvarth.youneverwait.response.SearchTerminology;
 import com.netvarth.youneverwait.utils.SharedPreference;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,10 +55,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.util.UUID;
 
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -84,7 +98,6 @@ public class CheckIn extends AppCompatActivity {
     int consumerID;
     static TextView tv_waittime;
     static TextView tv_queue;
-    String waititme;
     static TextView txt_date;
     ImageView img_calender_checkin;
     LinearLayout LcheckinDatepicker;
@@ -100,11 +113,14 @@ public class CheckIn extends AppCompatActivity {
     static ImageView ic_cal_minus;
     ImageView ic_cal_add;
     Button btn_checkin;
+    static int queueId=0;
+
+    int selectedService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.checkin);
+        setContentView(R.layout.checkin_copy);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -129,6 +145,10 @@ public class CheckIn extends AppCompatActivity {
 
         tv_queuetime = (TextView) findViewById(R.id.txt_queuetime);
         tv_queuename = (TextView) findViewById(R.id.txt_queuename);
+
+
+
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,6 +222,12 @@ public class CheckIn extends AppCompatActivity {
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
 
+        tv_titlename.setTypeface(tyface);
+        btn_checkin.setTypeface(tyface);
+        tv_queuename.setTypeface(tyface);
+        txt_date.setTypeface(tyface);
+
+
         int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         Config.logV("Consumer ID------------" + consumerId);
         mContext = this;
@@ -213,9 +239,13 @@ public class CheckIn extends AppCompatActivity {
             serviceId = extras.getInt("serviceId");
             uniqueID = extras.getString("uniqueID");
             accountID = extras.getString("accountID");
-            modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
-            waititme = extras.getString("waititme");
             mFrom = extras.getString("from", "");
+            if(mFrom.equalsIgnoreCase("searchdetail_future")||mFrom.equalsIgnoreCase("searchdetail_checkin")){
+                modifyAccountID=accountID;
+            }else {
+                modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
+            }
+
 
             title = extras.getString("title", "");
             place = extras.getString("place", "");
@@ -225,6 +255,15 @@ public class CheckIn extends AppCompatActivity {
 
         tv_titlename.setText(title);
 
+
+        btn_checkin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // ApiGenerateHash();
+
+                ApiCheckin();
+            }
+        });
 
         mSpinnerService = (Spinner) findViewById(R.id.spinnerservice);
         ApiSearchViewServiceID(serviceId);
@@ -252,6 +291,7 @@ public class CheckIn extends AppCompatActivity {
                                        int position, long id) {
                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
 
+                selectedService=((SearchService) mSpinnerService.getSelectedItem()).getId();
                 String firstWord = "Check-in for ";
                 String secondWord = ((SearchService) mSpinnerService.getSelectedItem()).getName();
 
@@ -291,7 +331,7 @@ public class CheckIn extends AppCompatActivity {
         });
 
 
-        if (mFrom.equalsIgnoreCase("checkin")) {
+        if (mFrom.equalsIgnoreCase("checkin")||mFrom.equalsIgnoreCase("searchdetail_checkin")) {
             LcheckinDatepicker.setVisibility(View.GONE);
         } else {
             LcheckinDatepicker.setVisibility(View.VISIBLE);
@@ -320,6 +360,8 @@ public class CheckIn extends AppCompatActivity {
         });
 
     }
+
+
 
     public Date addDays(Date date, int days) {
         Calendar cal = Calendar.getInstance();
@@ -407,10 +449,12 @@ public class CheckIn extends AppCompatActivity {
         }
     }
 
-    public static void refreshName(String name) {
+   static  int familyMEmID;
+    public static void refreshName(String name ,int memID) {
         Config.logV("NAme----------" + name);
         if (name != null && !name.equalsIgnoreCase("")) {
             tv_name.setText(name);
+            familyMEmID=memID;
         }
     }
 
@@ -560,6 +604,10 @@ public class CheckIn extends AppCompatActivity {
                         mQueueTimeSlotList = response.body();
 
 
+                        if(mQueueTimeSlotList.get(i).getId()!=0) {
+                            queueId = mQueueTimeSlotList.get(i).getId();
+                        }
+
                         Config.logV("mQueueTimeSlotList-------------------------" + mQueueTimeSlotList.size());
                         if (mQueueTimeSlotList.size() > 0) {
                             tv_queue.setVisibility(View.VISIBLE);
@@ -637,6 +685,10 @@ public class CheckIn extends AppCompatActivity {
                                     }
 
 
+                                    if(mQueueTimeSlotList.get(i).getId()!=0) {
+                                        queueId = mQueueTimeSlotList.get(i).getId();
+                                    }
+
                                     if(mQueueTimeSlotList.get(i).getServiceTime()!=null){
                                         secondWord = mQueueTimeSlotList.get(i).getServiceTime() ;
                                     }
@@ -682,6 +734,10 @@ public class CheckIn extends AppCompatActivity {
                                     tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
+
+                                    if(mQueueTimeSlotList.get(i).getId()!=0) {
+                                        queueId = mQueueTimeSlotList.get(i).getId();
+                                    }
 
                                     String firstWord = "Est Wait Time ";
                                     String secondWord=null;
@@ -885,6 +941,181 @@ public class CheckIn extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SearchTerminology> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+
+
+    }
+
+    private void ApiGenerateHash(String ynwUUID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        String uniqueID = UUID.randomUUID().toString();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            String androidId = Settings.Secure.getString(getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            jsonObj.put("amount", "1");
+            jsonObj.put("paymentMode", "DC");
+            jsonObj.put("uuid", ynwUUID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.generateHash(body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+
+                        Config.logV("Response--cbody---------------------" + response.body().string());
+                    }else{
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+
+
+    }
+
+    private void ApiCheckin() {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        String uniqueID = UUID.randomUUID().toString();
+        Date c = Calendar.getInstance().getTime();
+        System.out.println("Current time => " + c);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = df.format(c);
+
+
+        JSONObject qjsonObj = new JSONObject();
+        JSONObject queueobj = new JSONObject();
+        JSONObject waitobj = new JSONObject();
+        JSONObject service=new JSONObject();
+       //
+        // JSONObject serviceObj=new JSONObject();
+        JSONArray waitlistArray=new JSONArray();
+        try {
+
+            qjsonObj.put("id", queueId);
+            queueobj.put("date", formattedDate);
+            queueobj.put("consumerNote","");
+            service.put("id",serviceId);
+
+            if(familyMEmID==0){
+                familyMEmID=consumerID;
+            }
+            waitobj.put("id",familyMEmID);
+            waitlistArray.put(waitobj);
+
+
+
+            queueobj.putOpt("service",selectedService);
+            queueobj.putOpt("queue",qjsonObj);
+            queueobj.putOpt("waitlistingFor",waitlistArray);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
+        Call<ResponseBody> call = apiService.Checkin(modifyAccountID,body);
+        Config.logV("JSON--------------" + new Gson().toJson(queueobj.toString()));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+                        Toast.makeText(mContext," Check-in saved successfully ",Toast.LENGTH_LONG).show();
+                        JSONObject reader = new JSONObject(response.body().string());
+                        Iterator iteratorObj = reader .keys();
+                        String value = null;
+                        while (iteratorObj.hasNext())
+                        {
+                            String getJsonObj = (String)iteratorObj.next();
+                            System.out.println("KEY: " + "------>" + getJsonObj);
+                             value = reader.getString(getJsonObj);
+
+
+                        }
+
+                        System.out.println("VALUE: " + "------>" + value);
+                       // finish();
+                     //   Config.logV("Response--cbody---------------------" + getJsonObj);
+                        ApiGenerateHash(value);
+                    }else{
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                        Toast.makeText(mContext,responseerror,Toast.LENGTH_LONG).show();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())

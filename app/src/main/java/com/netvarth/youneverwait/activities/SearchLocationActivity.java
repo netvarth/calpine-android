@@ -5,19 +5,26 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
+import com.netvarth.youneverwait.Fragment.DashboardFragment;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.adapter.LocationSearchAdapter;
+import com.netvarth.youneverwait.callback.AdapterCallback;
+import com.netvarth.youneverwait.callback.LocationSearchCallback;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
 import com.netvarth.youneverwait.response.LocationResponse;
+import com.netvarth.youneverwait.utils.SharedPreference;
+
 import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +34,7 @@ import retrofit2.Response;
  * Created by sharmila on 3/8/18.
  */
 
-public class SearchLocationActivity extends AppCompatActivity{
+public class SearchLocationActivity extends AppCompatActivity  implements LocationSearchCallback {
 
     Toolbar toolbar;
     RecyclerView mrRecylce_searchloc;
@@ -37,6 +44,8 @@ public class SearchLocationActivity extends AppCompatActivity{
     Context mContext;
     LocationSearchAdapter mSearchLocAdapter;
     ArrayList<LocationResponse> items=new ArrayList<>();
+    LocationSearchCallback mCallback;
+    TextView tv_currentloc;
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +56,32 @@ public class SearchLocationActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        tv_currentloc=(TextView)findViewById(R.id.tv_currentloc);
         tv_title.setText("Search Location");
+        Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+        tv_currentloc.setTypeface(tyface1);
         mActivity=this;
         mContext=this;
-
+        mCallback = (LocationSearchCallback) this;
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Regular.otf");
         tv_title.setTypeface(tyface);
+
+        tv_currentloc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreference.getInstance(v.getContext()).setValue("current_loc","yes");
+                DashboardFragment pfFragment = new DashboardFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                //transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+                // Store the Fragment in stack
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, pfFragment).commit();
+                finish();
+            }
+        });
 
         mrRecylce_searchloc = (RecyclerView) findViewById(R.id.recylce_searchloc);
         //SEARCH
@@ -64,7 +92,7 @@ public class SearchLocationActivity extends AppCompatActivity{
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivity);
         mrRecylce_searchloc.setLayoutManager(mLayoutManager);
-        mSearchLocAdapter = new LocationSearchAdapter(this, items);
+        mSearchLocAdapter = new LocationSearchAdapter(this, items,mCallback);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -110,7 +138,7 @@ public class SearchLocationActivity extends AppCompatActivity{
 
                     if (response.code() == 200) {
                         items=response.body();
-                        mSearchLocAdapter = new LocationSearchAdapter(mContext, items);
+                        mSearchLocAdapter = new LocationSearchAdapter(mContext, items,mCallback);
                         mrRecylce_searchloc.setAdapter(mSearchLocAdapter);
                         mSearchLocAdapter.notifyDataSetChanged();
 
@@ -134,5 +162,14 @@ public class SearchLocationActivity extends AppCompatActivity{
         });
 
 
+    }
+
+    @Override
+    public void onMethodCallback(String value, Double lat, Double longtitude) {
+        Config.logV("UpdateLocation 555----"+lat);
+       if(  DashboardFragment.UpdateLocation(lat,longtitude)){
+           SharedPreference.getInstance(this).setValue("current_loc","no");
+           finish();
+       }
     }
 }

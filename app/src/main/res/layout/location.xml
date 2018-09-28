@@ -1,47 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainlayout"
     android:layout_width="match_parent"
-    android:background="@drawable/bg_gradient_grey"
-    android:layout_height="match_parent">
-    <LinearLayout
-        android:id="@+id/layout_toolbar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/custom_toolbar" />
-    </LinearLayout>
+    android:layout_height="match_parent"
+    android:background="@drawable/app_bg_gradient_home"
+    android:clickable="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding7"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.SearchView
-            android:id="@+id/search_loc"
+        <LinearLayout
+            android:id="@+id/layout_toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/hometopbar"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/custom_toolbar" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_padding"
-            android:background="@drawable/rounded_white_bg"
-            android:clickable="false"
-            app:iconifiedByDefault="false"
-            app:queryBackground="@android:color/transparent"
-            app:queryHint="@string/typecity"
-            app:searchIcon="@null"
-            app:theme="@style/AppSearchView" />
+            android:layout_margin="@dimen/padding7"
+            android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recylce_searchloc"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/default_padding"
-            android:layout_height="wrap_content">
-        </android.support.v7.widget.RecyclerView>
 
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search_loc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"
+                android:background="@drawable/rounded_white_bg_rect"
+                android:clickable="false"
+                app:iconifiedByDefault="false"
+                app:queryBackground="@android:color/transparent"
+                app:queryHint="@string/typecity"
+                app:searchIcon="@null"
+                app:theme="@style/AppSearchView" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_padding"
+                android:layout_marginTop="@dimen/padding5"
+                android:text="@string/searchhint_loc"
+                android:textColor="@color/sec_title_grey"
+                android:textSize="@dimen/txtsize_12" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recylce_searchloc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"></android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/tv_currentloc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding5"
+                android:drawableLeft="@drawable/ic_current"
+                android:drawablePadding="@dimen/padding5"
+                android:layout_gravity="center"
+                android:gravity="left|center"
+                android:text="@string/currentloc"
+                android:textColor="@color/title_consu"
+                android:textSize="@dimen/txtsize_hint" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

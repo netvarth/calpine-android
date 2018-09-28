@@ -3,8 +3,10 @@ package com.netvarth.youneverwait.Fragment;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -21,15 +23,18 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.adapter.FamilyListAdapter;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
+import com.netvarth.youneverwait.model.FamilyArrayModel;
 import com.netvarth.youneverwait.utils.SharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.List;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -61,11 +66,25 @@ public class FamilyMemberFragment extends RootFragment {
 
         mContext = getActivity();
 
+        Config.logV("Add mEmber------------------------------");
         toolbar = (Toolbar) row.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(" Members ");
+        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        tv_title.setText("Add Members");
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Config.logV("Back Press-----------------");
+                getFragmentManager().popBackStack();
+            }
+        });
+
+        tv_title.setTypeface(tyface);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             ValueCheck = bundle.getString("familymember", "");
@@ -74,7 +93,6 @@ public class FamilyMemberFragment extends RootFragment {
 
 
                 mPassfname = bundle.getString("firstName", "");
-
                 mPassLastname = bundle.getString("lastname", "");
                 mPassDob = bundle.getString("dob", "");
                 mPassgender = bundle.getString("gender", "");
@@ -85,13 +103,7 @@ public class FamilyMemberFragment extends RootFragment {
             }
         }
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
 
-            }
-        });
         calenderclick = (ImageView) row.findViewById(R.id.calenderclick);
         dob = (EditText) row.findViewById(R.id.edtdob);
         edtfirstname = (EditText) row.findViewById(R.id.edtFirstName1);
@@ -215,9 +227,18 @@ public class FamilyMemberFragment extends RootFragment {
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
-                        getFragmentManager().popBackStackImmediate();
+                        // getFragmentManager().popBackStack();
 
+                        Bundle bundle = new Bundle();
+                        bundle.putString("refersh", "update");
 
+                        FamilyListFragment pfFragment = new FamilyListFragment();
+
+                        pfFragment.setArguments(bundle);
+                        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                        // Store the Fragment in stack
+                        // transaction.addToBackStack(null);
+                        transaction.replace(R.id.mainlayout, pfFragment).commit();
                     }
 
 
@@ -293,7 +314,17 @@ public class FamilyMemberFragment extends RootFragment {
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
 
-                        getFragmentManager().popBackStackImmediate();
+                      //  getFragmentManager().popBackStackImmediate();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("refersh", "update");
+
+                        FamilyListFragment pfFragment = new FamilyListFragment();
+
+                        pfFragment.setArguments(bundle);
+                        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                        // Store the Fragment in stack
+                       // transaction.addToBackStack(null);
+                        transaction.replace(R.id.mainlayout, pfFragment).commit();
                     }
 
 

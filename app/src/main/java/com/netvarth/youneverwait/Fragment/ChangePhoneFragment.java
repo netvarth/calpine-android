@@ -2,7 +2,10 @@ package com.netvarth.youneverwait.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.activities.Register;
@@ -33,8 +37,9 @@ import retrofit2.Response;
 public class ChangePhoneFragment extends RootFragment {
     Context mContext;
     Toolbar toolbar;
-    EditText edtPhone;
+    TextInputEditText edtPhone;
     Button mDone;
+    TextInputLayout text_input_phone;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,9 +53,23 @@ public class ChangePhoneFragment extends RootFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Phone Number");
+        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Phone Number");
+        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        tv_title.setText("Change Phone Number");
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        edtPhone=(EditText) row.findViewById(R.id.edtPhone) ;
+                Config.logV("Back Press-----------------");
+                getFragmentManager().popBackStack();
+            }
+        });
+
+        tv_title.setTypeface(tyface);
+        edtPhone=(TextInputEditText) row.findViewById(R.id.edtPhone) ;
+        text_input_phone=(TextInputLayout) row.findViewById(R.id.text_input_phone) ;
         edtPhone.addTextChangedListener(new MyTextWatcher(edtPhone));
         mDone=(Button)row.findViewById(R.id.btnsubmit) ;
         mDone.setOnClickListener(new View.OnClickListener() {
@@ -66,14 +85,10 @@ public class ChangePhoneFragment extends RootFragment {
         });
 
 
+        Typeface tyface_edittext = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        edtPhone.setTypeface(tyface_edittext);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
-
-            }
-        });
 
 
 
@@ -81,11 +96,11 @@ public class ChangePhoneFragment extends RootFragment {
     }
     private boolean validatePhone() {
         if (edtPhone.getText().toString().trim().isEmpty()||edtPhone.getText().toString().length()>10||edtPhone.getText().toString().length()<10) {
-            edtPhone.setError(getString(R.string.err_msg_phone));
+            text_input_phone.setError(getString(R.string.err_msg_phone));
             requestFocus(edtPhone);
             return false;
         } else {
-            edtPhone.setError(null);
+            text_input_phone.setError(null);
         }
 
         return true;

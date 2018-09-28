@@ -3,6 +3,7 @@
     <dimen name="padding30">30dp</dimen>
     <dimen name="default_padding">10dp</dimen>
     <dimen name="padding5">5dp</dimen>
+    <dimen name="padding3">3dp</dimen>
     <dimen name="layout_alert_dialog_width">190dp</dimen>
     <dimen name="layout_alert_dialog_height">190dp</dimen>
     <dimen name="txtsize_small">14sp</dimen>
@@ -19,4 +20,5 @@
     <dimen name="txtsize_subtitle">16dp</dimen>
     <dimen name="padding40">38dp</dimen>
     <dimen name="txtsize_14">15sp</dimen>
+    <dimen name="txtsize_10">11sp</dimen>
 </resources>

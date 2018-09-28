@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.callback.ActiveAdapterOnCallback;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.custom.CustomTypefaceSpan;
 import com.netvarth.youneverwait.response.ActiveCheckIn;
@@ -43,6 +44,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
     private List<ActiveCheckIn> activeChekinList;
     Context mContext;
+    ActiveAdapterOnCallback callback;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_businessname, tv_estTime,tv_service,tv_place;
@@ -64,11 +66,12 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
     Activity activity;
     Fragment mFragment;
 
-    public ActiveCheckInAdapter(List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity, Fragment fragment) {
+    public ActiveCheckInAdapter(List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity, Fragment fragment,ActiveAdapterOnCallback callback) {
         this.mContext = mContext;
         this.activeChekinList = mactiveChekinList;
         this.activity = mActivity;
         this.mFragment = fragment;
+        this.callback=callback;
 
     }
 
@@ -88,6 +91,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_businessname.setTypeface(tyface);
+
+        myViewHolder.tv_businessname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               callback.onMethodActiveCallback(activelist.getProvider().getUniqueId());
+            }
+        });
 
         if(activelist.getQueue()!=null){
             if(activelist.getQueue().getLocation().getPlace()!=null){
@@ -124,7 +134,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
-                String firstWord="Estimated Time ";
+                String firstWord="Est Time ";
                 String secondWord="Now";
                 Spannable spannable = new SpannableString(firstWord+secondWord);
                 spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -138,7 +148,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
-                String firstWord="Approx Wait Time ";
+                String firstWord="Est Wait Time ";
                 String secondWord=activelist.getAppxWaitingTime() +" Mins ";
                 Spannable spannable = new SpannableString(firstWord+secondWord);
                 spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

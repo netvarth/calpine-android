@@ -2,16 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/padding5"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/lfamily"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_padding"
+        android:layout_margin="@dimen/padding3"
         android:orientation="horizontal">
 
-        <LinearLayout
+       <!-- <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="0.8"
             android:layout_height="wrap_content"
@@ -30,27 +31,37 @@
                 android:layout_marginTop="@dimen/padding5"
                 android:text="Name"/>
 
-        </LinearLayout>
+        </LinearLayout>-->
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:textSize="@dimen/txtsize_hint"
+            android:textColor="@color/title_grey"
+            android:layout_height="wrap_content"
+            android:text="Name"/>
 
         <ImageView
             android:id="@+id/edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="@dimen/padding5"
-            android:src="@android:drawable/ic_menu_edit" />
+            android:layout_gravity="center"
+            android:src="@drawable/icon_edit" />
 
         <ImageView
             android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="@dimen/padding5"
-            android:src="@android:drawable/ic_menu_delete" />
+            android:layout_gravity="center"
+            android:src="@drawable/icon_delete" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/input_border" />
+        android:background="@color/view_border" />
 
 
 </LinearLayout>

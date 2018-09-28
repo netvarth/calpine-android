@@ -53,6 +53,7 @@ import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.activities.SearchLocationActivity;
 import com.netvarth.youneverwait.adapter.ActiveCheckInAdapter;
 import com.netvarth.youneverwait.adapter.SearchListAdpter;
+import com.netvarth.youneverwait.callback.ActiveAdapterOnCallback;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
@@ -76,11 +77,11 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyHomeFragment extends RootFragment implements GoogleApiClient.ConnectionCallbacks,
+public class DashboardFragment extends RootFragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener {
+        com.google.android.gms.location.LocationListener,ActiveAdapterOnCallback {
 
-    public MyHomeFragment() {
+    public DashboardFragment() {
         // Required empty public constructor
     }
 
@@ -90,7 +91,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
     TextView txtUsername;
     Toolbar toolbar;
     static Fragment home;
-    TextView mCurrentLoc;
+    static TextView mCurrentLoc;
     Spinner mSpinnerDomain;
     String AWS_URL = "";
     ArrayList<Domain_Spinner> domainList = new ArrayList<>();
@@ -120,8 +121,8 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
     private GoogleApiClient googleApiClient;
     private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
-    double latitude;
-    double longitude;
+    static double latitude;
+    static double longitude;
     TextView tv_activechkin, tv_popular;
     LinearLayout LpopularSearch, LActiveCheckin, LinearPopularSearch, LinearMorePopularSearch;
     TextView tv_More;
@@ -133,7 +134,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
     String mPopularSearchtxt;
 
     String spinnerTxtPass;
-
+ActiveAdapterOnCallback mInterface;
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
@@ -180,7 +181,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                         dynaText.setWidth(dpToPx(100));
                         dynaText.setGravity(Gravity.CENTER);
 
-                        params.setMargins(20, 10, 20, 0);
+                        params.setMargins(15, 10, 15, 0);
                         dynaText.setLayoutParams(params);
 
 
@@ -190,7 +191,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                             @Override
                             public void onClick(View v) {
 
-                                mPopularSearchtxt=mPopularSearchList.get(finalK).getDisplayname();
+                                mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
                                 FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
                             }
                         });
@@ -204,7 +205,9 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
 
         }
     }
+
     TextView txt_sorry;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -212,17 +215,25 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
         View row = inflater.inflate(R.layout.fragment_myhome, container, false);
         mRecycleActive = (RecyclerView) row.findViewById(R.id.recycleActive);
         Lhome_mainlayout = (LinearLayout) row.findViewById(R.id.homemainlayout);
-        txt_sorry=(TextView)row.findViewById(R.id.txt_sorry);
+        txt_sorry = (TextView) row.findViewById(R.id.txt_sorry);
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
         if (Config.isOnline(getActivity())) {
             ApiActiveCheckIn();
             ApiAWSearchDomain();
         }
 
+        mInterface=(ActiveAdapterOnCallback)this;
         home = getParentFragment();
         //Location
 
-        setUpGClient();
+        String s_currentLoc=SharedPreference.getInstance(getActivity()).getStringValue("current_loc","");
+        Config.logV("UpdateLocation noooooooooooooooooo"+s_currentLoc);
+        if(!s_currentLoc.equalsIgnoreCase("no")) {
+            setUpGClient();
+            Config.logV("UpdateLocation noooooooooooooooooo"+latitude);
+        }else{
+            UpdateLocation(latitude,longitude);
+        }
 
         mContext = getActivity();
         active = getParentFragment();
@@ -279,7 +290,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                 //  Spinnertext = parent.getSelectedItem().toString();
                 mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getSector();
 
-                spinnerTxtPass=((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
+                spinnerTxtPass = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
                 Config.logV("Selected-----------" + spinnerTxtPass);
                 /////////test code///////////////////////////
 
@@ -370,7 +381,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                                         dynaText.setGravity(Gravity.CENTER);
                                         dynaText.setWidth(dpToPx(100));
 
-                                        params.setMargins(20, 10, 20, 0);
+                                        params.setMargins(15, 10, 15, 0);
                                         dynaText.setLayoutParams(params);
 
                                         //   dynaText.setTag("" + i);
@@ -479,7 +490,10 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                         @Override
                         public boolean onQueryTextSubmit(String query) {
 
+                            Config.logV("Click-------------------------");
 
+
+                            QuerySubmitCLick(query);
                             return true;
                         }
 
@@ -487,12 +501,12 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                         public boolean onQueryTextChange(String query) {
                             // filter recycler view when text is changed
 
-                           if(!query.equalsIgnoreCase("")) {
+                            if (!query.equalsIgnoreCase("")) {
 
-                               mSearchtxt = query;
+                                mSearchtxt = query;
 
-                               Config.logV("SEARCH TXT--------------88252-" + mSearchtxt);
-                           }
+                                Config.logV("SEARCH TXT--------------88252-" + mSearchtxt);
+                            }
 
 
                             ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
@@ -612,7 +626,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                         @Override
                         public boolean onQueryTextSubmit(String query) {
 
-
+                            QuerySubmitCLick(query);
                             return true;
                         }
 
@@ -620,7 +634,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                         public boolean onQueryTextChange(String query) {
                             // filter recycler view when text is changed
 
-                            if(!query.equalsIgnoreCase("")) {
+                            if (!query.equalsIgnoreCase("")) {
 
                                 mSearchtxt = query;
 
@@ -766,25 +780,25 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                 Config.logV("Query-----------" + querycreate);
 
 
-                String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+                 String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
 
 
-                //  String newpass = "distance asc, title asc&expr.distance=haversin(" + lantitude + "," + longitude + ", location1.latitude, location1.longitude)";
+               // String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
                 Bundle bundle = new Bundle();
                 bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
                 bundle.putString("url", pass);
 
 
-                //VALID QUERY PASS
-               /* bundle.putString("query", "(and location1:"+ locationRange + querycreate + ")");
-                  bundle.putString("url",newpass);*/
+                /*//VALID QUERY PASS
+                bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+                bundle.putString("url", pass);*/
                 SearchListFragment pfFragment = new SearchListFragment();
 
                 bundle.putString("latitude", String.valueOf(latitude));
                 bundle.putString("longitude", String.valueOf(longitude));
                 bundle.putString("spinnervalue", spinnerTxtPass);
-                Config.logV("SEARCH TXT 99999"+mSearchtxt);
+                Config.logV("SEARCH TXT 99999" + mSearchtxt);
                 bundle.putString("searchtxt", mSearchtxt);
                 pfFragment.setArguments(bundle);
 
@@ -1120,7 +1134,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                                 LActiveCheckin.setVisibility(View.VISIBLE);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mRecycleActive.setLayoutManager(mLayoutManager);
-                                activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active);
+                                activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active,mInterface);
                                 mRecycleActive.setAdapter(activeAdapter);
                                 activeAdapter.notifyDataSetChanged();
                             } else {
@@ -1224,22 +1238,22 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
         String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
 
 
-        //  String newpass = "distance asc, title asc&expr.distance=haversin(" + lantitude + "," + longitude + ", location1.latitude, location1.longitude)";
+        //String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
         Bundle bundle = new Bundle();
         bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
         bundle.putString("url", pass);
 
 
-        //VALID QUERY PASS
-               /* bundle.putString("query", "(and location1:"+ locationRange + querycreate + ")");
-                  bundle.putString("url",newpass);*/
+       /* //VALID QUERY PASS
+        bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+        bundle.putString("url", pass);*/
         mSearchView.setQuery("", false);
         SearchListFragment pfFragment = new SearchListFragment();
 
         bundle.putString("latitude", String.valueOf(latitude));
         bundle.putString("longitude", String.valueOf(longitude));
-        bundle.putString("spinnervalue",  spinnerTxtPass);
+        bundle.putString("spinnervalue", spinnerTxtPass);
         bundle.putString("searchtxt", mPopularSearchtxt);
         pfFragment.setArguments(bundle);
 
@@ -1265,6 +1279,32 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
     }
 
 
+
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        checkPermissions();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        //Do whatever you need
+        //You can display a message here
+    }
+
+
+
+
+   /* @Override
+    public void onPause() {
+        super.onPause();
+       *//* String s_currentLoc=SharedPreference.getInstance(getActivity()).getStringValue("current_loc","");
+        if(!s_currentLoc.equalsIgnoreCase("no")) {
+            googleApiClient.stopAutoManage(getActivity());
+            googleApiClient.disconnect();
+        }*//*
+    }*/
+
     private synchronized void setUpGClient() {
         googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .enableAutoManage(getActivity(), 0, this)
@@ -1273,14 +1313,17 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                 .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();
+        Config.logV("Update Location SetUpFConnected---------------------------");
     }
 
     @Override
     public void onLocationChanged(Location location) {
         mylocation = location;
+        Config.logV("Update Location Changed Connected---------------------------"+location);
         if (mylocation != null) {
             latitude = mylocation.getLatitude();
             longitude = mylocation.getLongitude();
+            Config.logV("Update Location Changed Connected---------------------11111------"+location.getLatitude());
             Config.logV("Latitude-------------" + latitude);
 
             try {
@@ -1296,26 +1339,20 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
         }
     }
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        checkPermissions();
-    }
+
 
     @Override
-    public void onConnectionSuspended(int i) {
-        //Do whatever you need
+    public void onConnectionFailed(ConnectionResult connectionResult) {
         //You can display a message here
     }
 
-
-    private void getMyLocation() {
-
-        if (googleApiClient != null) {
+    private void getMyLocation(){
+        if(googleApiClient!=null) {
             if (googleApiClient.isConnected()) {
                 int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
-                    mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                    mylocation =                     LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                     LocationRequest locationRequest = new LocationRequest();
                     locationRequest.setInterval(3000);
                     locationRequest.setFastestInterval(3000);
@@ -1374,13 +1411,6 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        googleApiClient.stopAutoManage(getActivity());
-        googleApiClient.disconnect();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS_GPS:
@@ -1396,7 +1426,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
         }
     }
 
-    private void checkPermissions() {
+    private void checkPermissions(){
         int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
         List<String> listPermissionsNeeded = new ArrayList<>();
@@ -1406,7 +1436,7 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
                 ActivityCompat.requestPermissions(getActivity(),
                         listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
             }
-        } else {
+        }else{
             getMyLocation();
         }
 
@@ -1422,13 +1452,101 @@ public class MyHomeFragment extends RootFragment implements GoogleApiClient.Conn
     }
 
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public static Fragment getHomeFragment() {
+        return home;
+    }
 
+    public void QuerySubmitCLick(String query) {
+        mSearchView.setQuery("", false);
+
+        LanLong Lanlong = getLocationNearBy(latitude, longitude);
+        double upperLeftLat = Lanlong.getUpperLeftLat();
+        double upperLeftLon = Lanlong.getUpperLeftLon();
+        double lowerRightLat = Lanlong.getLowerRightLat();
+        double lowerRightLon = Lanlong.getLowerRightLon();
+        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+
+
+        String querycreate = "(phrase " + "'" + query + "')";
+        ;
+        //  Config.logV("Query-----------" + querycreate);
+
+
+        String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+
+
+        // String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+
+        Bundle bundle = new Bundle();
+
+
+        bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
+        bundle.putString("url", pass);
+
+        //VALID QUERY PASS
+        /*bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+        bundle.putString("url", pass);*/
+        SearchListFragment pfFragment = new SearchListFragment();
+
+        bundle.putString("latitude", String.valueOf(latitude));
+        bundle.putString("longitude", String.valueOf(longitude));
+        bundle.putString("spinnervalue", spinnerTxtPass);
+        Config.logV("SEARCH TXT 99999" + mSearchtxt);
+        bundle.putString("searchtxt", mSearchtxt);
+        pfFragment.setArguments(bundle);
+
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, pfFragment).commit();
+    }
+
+    public  static boolean UpdateLocation(Double mlatitude,Double mlongitude){
+        Config.logV("UpdateLocation 3333333333----"+latitude);
+        try {
+            latitude=mlatitude;
+            longitude=mlongitude;
+
+            Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            mCurrentLoc.setVisibility(View.VISIBLE);
+            mCurrentLoc.setText(addresses.get(0).getLocality());
+               Config.logV("UpdateLocation"+addresses.get(0).getLocality());
+            Config.logV("UpdateLocation 3333333333----"+latitude);
+        } catch (Exception e) {
+
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Config.logV("OnStop---------------------------------");
+          String s_currentLoc=SharedPreference.getInstance(getActivity()).getStringValue("current_loc","");
+        if(!s_currentLoc.equalsIgnoreCase("no")) {
+            googleApiClient.stopAutoManage(getActivity());
+            googleApiClient.disconnect();
+        }
     }
 
 
-    public static Fragment getHomeFragment() {
-        return home;
+    @Override
+    public void onMethodActiveCallback(String value) {
+        Bundle bundle = new Bundle();
+
+        SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
+
+        bundle.putString("uniqueID", value);
+        pfFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
 }

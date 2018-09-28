@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginTop="@dimen/padding5"
+        style="?android:attr/borderlessButtonStyle"
         android:text="Check-in"/>
     <TextView
         android:id="@+id/txt_date"

@@ -24,6 +24,12 @@ public class SearchViewDetail {
 
     String url;
 
+    public String getVerifyLevel() {
+        return verifyLevel;
+    }
+
+    String verifyLevel;
+
     public float getAvgRating() {
         return avgRating;
     }

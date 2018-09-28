@@ -80,7 +80,9 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
                 //store the clicked radiobutton
                 lastCheckedRB = myViewHolder.name;
                 Config.logV("Selected--------------------"+myViewHolder.name.getText().toString());
-                CheckinFamilyMember.changeMemberName(myViewHolder.name.getText().toString());
+
+                Config.logV("Selected--------------------"+myViewHolder.name.getText().toString());
+                CheckinFamilyMember.changeMemberName(myViewHolder.name.getText().toString(),Integer.parseInt(familylist.getUser()));
             }
         });
 

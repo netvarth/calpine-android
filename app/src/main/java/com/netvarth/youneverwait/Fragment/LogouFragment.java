@@ -2,6 +2,7 @@ package com.netvarth.youneverwait.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -50,7 +52,23 @@ public class LogouFragment  extends RootFragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Logout");
+       // ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Logout");
+
+        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        tv_title.setText("Logout");
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Config.logV("Back Press-----------------");
+                getFragmentManager().popBackStack();
+            }
+        });
+
+        tv_title.setTypeface(tyface);
+
 
         mBtnNo=(Button)row.findViewById(R.id.btnno) ;
         mBtnyes=(Button)row.findViewById(R.id.btnyes) ;
@@ -72,13 +90,7 @@ public class LogouFragment  extends RootFragment {
             }
         });
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
 
-            }
-        });
 
 
 

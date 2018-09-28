@@ -2,6 +2,8 @@ package com.netvarth.youneverwait.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,13 +13,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.activities.TermsOfUse;
 import com.netvarth.youneverwait.adapter.FamilyListAdapter;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
@@ -42,8 +47,7 @@ public class ProfileFragment extends RootFragment {
 
 
     Context mContext;
-    Toolbar toolbar;
-    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout;
+    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -59,18 +63,23 @@ public class ProfileFragment extends RootFragment {
         mContext = getActivity();
         Config.logV("Profile-----------");
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("My Account");
+
+        TextView tv_title = (TextView) row.findViewById(R.id.title);
+
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setText("My Profile");
+        tv_title.setTypeface(tyface);
+        tv_title.setGravity(Gravity.CENTER);
+
+
         mLprofile = (LinearLayout) row.findViewById(R.id.lprofile);
         mLchangepwd=(LinearLayout)row.findViewById(R.id.lchangepwd);
         mLchangeEmail=(LinearLayout)row.findViewById(R.id.lchangeemail);
         mLchangePhone=(LinearLayout)row.findViewById(R.id.lchangeph);
         mLmember=(LinearLayout)row.findViewById(R.id.lmember);
         mLogout=(LinearLayout)row.findViewById(R.id.llogout);
-
+        mLTerm=(LinearLayout)row.findViewById(R.id.lterm);
         mLchangeEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +119,7 @@ public class ProfileFragment extends RootFragment {
             public void onClick(View v) {
                 Config.logV("Update profile--------");
 
-                UpdateProfileFragment pfFragment = new UpdateProfileFragment();
+                EditProfileFragment pfFragment = new EditProfileFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
@@ -142,13 +151,15 @@ public class ProfileFragment extends RootFragment {
             }
         });
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mLTerm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // what do you want here
-                getActivity().finish();
+                Intent iTerm=new Intent(mContext, TermsOfUse.class);
+                startActivity(iTerm);
             }
         });
+
+
 
 
         return row;
@@ -200,7 +211,11 @@ public class ProfileFragment extends RootFragment {
 
                             boolean check=FamilyListFragment.getFamilyList(MuserProfileList,mContext);
                             if(check){
+
+                                Bundle bundle = new Bundle();
+                                bundle.putString("refersh", "noupdate");
                                 FamilyListFragment pfFragment = new FamilyListFragment();
+                                pfFragment.setArguments(bundle);
                                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                                 // Store the Fragment in stack
                                 transaction.addToBackStack(null);

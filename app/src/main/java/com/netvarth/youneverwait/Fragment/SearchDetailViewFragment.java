@@ -3,9 +3,8 @@ package com.netvarth.youneverwait.Fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,11 +20,11 @@ import android.widget.TextView;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.activities.SwipeGalleryImage;
 import com.netvarth.youneverwait.adapter.SearchLocationAdapter;
+import com.netvarth.youneverwait.callback.SearchLocationAdpterCallback;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
 import com.netvarth.youneverwait.custom.CircleTransform;
-import com.netvarth.youneverwait.model.SearchListModel;
 import com.netvarth.youneverwait.model.WorkingModel;
 import com.netvarth.youneverwait.response.QueueList;
 import com.netvarth.youneverwait.response.SearchCheckInMessage;
@@ -54,22 +53,22 @@ import retrofit2.Response;
  */
 
 
-public class SearchDetailViewFragment extends RootFragment implements  SearchLocationAdpterCallback {
+public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback {
 
     Context mContext;
     Toolbar toolbar;
-    SearchViewDetail mBusinessDataList ;
-    ArrayList<SearchViewDetail> mSearchGallery ;
-    ArrayList<SearchLocation> mSearchLocList ;
+    SearchViewDetail mBusinessDataList;
+    ArrayList<SearchViewDetail> mSearchGallery;
+    ArrayList<SearchLocation> mSearchLocList;
 
-    SearchSetting mSearchSettings ;
-    SearchTerminology mSearchTerminology ;
+    SearchSetting mSearchSettings;
+    SearchTerminology mSearchTerminology;
 
-    ArrayList<QueueList> mSearchQueueList ;
+    ArrayList<QueueList> mSearchQueueList;
 
-    ArrayList<SearchService> mServicesList ;
+    ArrayList<SearchService> mServicesList;
 
-    ArrayList<SearchCheckInMessage> mSearchmCheckMessageList ;
+    ArrayList<SearchCheckInMessage> mSearchmCheckMessageList;
 
 
     TextView tv_busName, tv_domain, tv_desc, tv_exp;
@@ -79,12 +78,13 @@ public class SearchDetailViewFragment extends RootFragment implements  SearchLoc
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
 
     int mProvoderId;
-    ArrayList<String> ids ;
+    ArrayList<String> ids;
     String uniqueID;
 
     TextView tv_ImageViewText;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View row = inflater.inflate(R.layout.searchdetails, container, false);
@@ -93,15 +93,15 @@ public class SearchDetailViewFragment extends RootFragment implements  SearchLoc
         mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
 
-         count=0;
-         mBusinessDataList = new SearchViewDetail();
-         mSearchGallery = new ArrayList<>();
-         mSearchLocList = new ArrayList<>();
-         mSearchSettings = new SearchSetting();
-         mSearchTerminology = new SearchTerminology();
-         mSearchQueueList = new ArrayList<>();
-         mServicesList = new ArrayList<>();
-         mSearchmCheckMessageList = new ArrayList<>();
+        count = 0;
+        mBusinessDataList = new SearchViewDetail();
+        mSearchGallery = new ArrayList<>();
+        mSearchLocList = new ArrayList<>();
+        mSearchSettings = new SearchSetting();
+        mSearchTerminology = new SearchTerminology();
+        mSearchQueueList = new ArrayList<>();
+        mServicesList = new ArrayList<>();
+        mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
 
 
@@ -141,9 +141,15 @@ public class SearchDetailViewFragment extends RootFragment implements  SearchLoc
         tv_exp = (TextView) row.findViewById(R.id.txt_expe);
         tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
 
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_busName.setTypeface(tyface);
+        tv_ImageViewText.setTypeface(tyface);
+
+
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
-        ApiSearchViewLocation(uniqueID);
+
         ApiSearchViewTerminology(uniqueID);
         mInterface = (SearchLocationAdpterCallback) this;
 
@@ -219,6 +225,19 @@ public class SearchDetailViewFragment extends RootFragment implements  SearchLoc
     public void UpdateMainUI(SearchViewDetail getBussinessData) {
 
 
+        if (getBussinessData.getVerifyLevel() != null) {
+            if (!getBussinessData.getVerifyLevel().equalsIgnoreCase("NONE")) {
+                tv_busName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_verified, 0);
+
+            } else {
+
+                tv_busName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
+
+        }else{
+            tv_busName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+
         tv_busName.setText(getBussinessData.getBusinessName());
         rating.setRating(getBussinessData.getAvgRating());
 
@@ -284,7 +303,7 @@ public class SearchDetailViewFragment extends RootFragment implements  SearchLoc
                         mBusinessDataList = response.body();
                         mProvoderId = response.body().getId();
                         UpdateMainUI(mBusinessDataList);
-
+                        ApiSearchViewLocation(uniqueID);
 
                     }
 
@@ -690,7 +709,7 @@ public class SearchDetailViewFragment extends RootFragment implements  SearchLoc
 
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mRecyLocDetail.setLayoutManager(mLayoutManager);
-                        mSearchLocAdapter = new SearchLocationAdapter(mInterface,mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList);
+                        mSearchLocAdapter = new SearchLocationAdapter(String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList);
                         mRecyLocDetail.setAdapter(mSearchLocAdapter);
                         mSearchLocAdapter.notifyDataSetChanged();
                     }
@@ -781,6 +800,7 @@ public class SearchDetailViewFragment extends RootFragment implements  SearchLoc
         Bundle bundle = new Bundle();
         bundle.putSerializable("workinghrlist", workingModel);
         bundle.putString("title", value);
+        bundle.putString("uniqueID", uniqueID);
         pfFragment.setArguments(bundle);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
@@ -793,7 +813,9 @@ public class SearchDetailViewFragment extends RootFragment implements  SearchLoc
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putSerializable("servicelist", searchService);
-        bundle.putString("title",value);
+        bundle.putString("title", value);
+        bundle.putString("from", "searchdetail");
+        bundle.putString("uniqueID", uniqueID);
         pfFragment.setArguments(bundle);
         // Store the Fragment in stack
         transaction.addToBackStack(null);

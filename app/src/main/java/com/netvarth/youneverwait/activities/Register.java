@@ -1,5 +1,6 @@
 package com.netvarth.youneverwait.activities;
 
+import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -87,8 +88,15 @@ public class Register extends AppCompatActivity {
         btn_reg_submit.setTypeface(tyface_btn);
 
 
+        tv_terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iterm=new Intent(v.getContext(),TermsOfUse.class);
+                mContext.startActivity(iterm);
+            }
+        });
 
-        String firstWord = "YouNeverWait ";
+        String firstWord = "Jaldee ";
         String secondWord = "Terms and Conditions";
        //  <font color='#00AEF2'><b>Terms and Conditions
 
@@ -122,7 +130,7 @@ public class Register extends AppCompatActivity {
 
 
         String text_1 = "Download ";
-        String text_2 = "YouNeverWait Provider App ";
+        String text_2 = "Jaldee Provider App ";
         //  <font color='#00AEF2'><b>Terms and Conditions
 
         Spannable spannable_txt1 = new SpannableString(text_1+text_2);
@@ -142,12 +150,14 @@ public class Register extends AppCompatActivity {
             Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
                     "fonts/Montserrat_Light.otf");
             s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            txt_InputMob. setErrorEnabled(true);
             txt_InputMob.setError(s);
             //txt_InputMob.setError(getString(R.string.err_msg_phone));
             requestFocus(mEdtMobno);
             return false;
         } else {
             txt_InputMob.setError(null);
+            txt_InputMob. setErrorEnabled(false);
         }
 
         return true;

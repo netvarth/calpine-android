@@ -3,33 +3,28 @@ package com.netvarth.youneverwait.Fragment;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,6 +33,7 @@ import com.google.gson.Gson;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.adapter.PaginationAdapter;
 import com.netvarth.youneverwait.adapter.SearchListAdpter;
+import com.netvarth.youneverwait.callback.AdapterCallback;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
@@ -53,7 +49,6 @@ import com.netvarth.youneverwait.response.SearchAWsResponse;
 import com.netvarth.youneverwait.utils.PaginationScrollListener;
 import com.netvarth.youneverwait.utils.SharedPreference;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -61,9 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,7 +69,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     Context mContext;
     String query, url;
-    Toolbar toolbar;
+
     RecyclerView mRecySearchDetail;
     // SearchDetailAdapter adapter;
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
@@ -90,7 +83,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     ProgressBar progressBar;
     LinearLayoutManager linearLayoutManager;
     PaginationAdapter pageadapter;
-    private static final int PAGE_START = 0;
+    private int PAGE_START = 0;
     private boolean isLoading = false;
     private boolean isLastPage = false;
     // limiting to 5 for this tutorial, since total pages in actual API is very large. Feel free to modify.
@@ -114,6 +107,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     String mDomainSpinner;
     SearchListAdpter listadapter;
     ArrayList<ListCell> items;
+    AdapterCallback mInterface;
 
 
     private void APiSearchList() {
@@ -307,7 +301,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     String latitude, longitude;
     String searchTxt, spinnerTxt;
 
+    String getQuery_previous = "";
 
+    public void refreshQuery() {
+        getQuery_previous = "true";
+    }
+
+    TextView txt_toolbarlocation;
+    ImageView ibackpress;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -315,11 +316,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         View row = inflater.inflate(R.layout.fragment_searchdetail, container, false);
 
         mContext = getActivity();
-
+        mInterface = (AdapterCallback) this;
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            query = bundle.getString("query", "");
-            url = bundle.getString("url", "");
+            if(!getQuery_previous.equalsIgnoreCase("true")) {
+                query = bundle.getString("query", "");
+                url = bundle.getString("url", "");
+            }
             latitude = bundle.getString("latitude", "");
             longitude = bundle.getString("longitude", "");
             spinnerTxt = bundle.getString("spinnervalue", "");
@@ -327,30 +330,41 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }
 
 
+        isLastPage = false;
+        isLoading = false;
+        PAGE_START = 0;
+        total_foundcount = 0;
+        TOTAL_PAGES = 0;
+        currentPage = PAGE_START;
+
 
         SharedPreference.getInstance(mContext).setValue("firsttime", true);
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
+
+        ibackpress=(ImageView)row.findViewById(R.id.backpress) ;
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        tv_title.setGravity(Gravity.RIGHT);
+        txt_toolbarlocation=(TextView) row.findViewById(R.id.txt_toolbarlocation);
+
+
+        Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        txt_toolbarlocation.setTypeface(tyface);
+
         try {
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(latitude), Double.parseDouble(longitude), 1);
-            tv_title.setVisibility(View.VISIBLE);
-            tv_title.setText(addresses.get(0).getLocality());
-            //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
+
+               Config.logV("Latitude-----11111--------"+addresses.get(0).getLocality());
+               if(!addresses.get(0).getLocality().equalsIgnoreCase("")){
+                   txt_toolbarlocation.setVisibility(View.VISIBLE);
+                   txt_toolbarlocation.setText(addresses.get(0).getLocality());
+               }
         } catch (Exception e) {
 
         }
 
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        ibackpress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // perform whatever you want on back arrow click
@@ -360,16 +374,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         });
 
 
-
-        searchDetail = new MyHomeFragment().getHomeFragment();
-
+        searchDetail = new DashboardFragment().getHomeFragment();
 
 
         Config.logV("Fragment Context--43343---" + searchDetail);
         progressBar = (ProgressBar) row.findViewById(R.id.main_progress);
         //  Config.logV("Pass Fragment" + searchDetail);
         mSearchView = (SearchView) row.findViewById(R.id.search);
-        pageadapter = new PaginationAdapter(mSearchView,getActivity(), searchDetail,this);
+        pageadapter = new PaginationAdapter(mSearchView, getActivity(), searchDetail, this);
 
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecySearchDetail.setLayoutManager(linearLayoutManager);
@@ -394,6 +406,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        Config.logV("Query--------------------" + query);
                         loadNextPage(query, url);
                     }
                 }, 1000);
@@ -442,14 +455,15 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 Config.logV("Selected---423333333333--------" + mDomainSpinner);
                 Config.logV("Selected---Spinner--------" + spinnerTxt);
 
+                mSearchView.setQuery("", false);
 
-                mSearchView.setQuery(searchTxt, false);
                 boolean FirstRun = SharedPreference.getInstance(mContext).getBoolanValue("firsttime", false);
                 if (FirstRun) {
 
                     int pos = getIndex(domainList, spinnerTxt);
                     mSpinnerDomain.setSelection(pos);
                     SharedPreference.getInstance(mContext).setValue("firsttime", false);
+                    mSearchView.setQuery(searchTxt, false);
                 }
 
 
@@ -523,7 +537,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                            /*     *******************************************************************/
 
-                    listadapter = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), MyHomeFragment.getHomeFragment(), mSearchView);
+                    listadapter = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), DashboardFragment.getHomeFragment(), mSearchView);
                     searchSrcTextView.setAdapter(listadapter);
 
                     mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -531,6 +545,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                         public boolean onQueryTextSubmit(String query) {
 
 
+                            QuerySubmitCLick(query);
                             return true;
                         }
 
@@ -654,14 +669,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     }
 
 
-                    listadapter = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), MyHomeFragment.getHomeFragment(), mSearchView);
+                    listadapter = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), DashboardFragment.getHomeFragment(), mSearchView);
                     searchSrcTextView.setAdapter(listadapter);
 
                     mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
                         public boolean onQueryTextSubmit(String query) {
 
-
+                            QuerySubmitCLick(query);
                             return true;
                         }
 
@@ -713,7 +728,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
         ////////////////////////////SEARCH//////////////////////////////////////////////
-
 
 
         searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(android.support.v7.appcompat.R.id.search_src_text);
@@ -775,8 +789,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 ListCell cell = listadapter.getItem(position);
 
 
-                Config.logV("Item CLICK **********************************");
-                mSearchView.setQuery("", false);
+                //  mSearchView.setQuery("", false);
                 String mSector;
                 LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
                 double upperLeftLat = Lanlong.getUpperLeftLat();
@@ -818,26 +831,44 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 }
 
 
-               // pageadapter = new PaginationAdapter(mSearchView,getActivity(), searchDetail,this);
+                isLastPage = false;
+                isLoading = false;
+                PAGE_START = 0;
+                total_foundcount = 0;
+                TOTAL_PAGES = 0;
+                currentPage = PAGE_START;
+
+
                 pageadapter.clear();
+
+
+                /*pageadapter = new PaginationAdapter(mSearchView,getActivity(), searchDetail,mInterface);
+                //pageadapter.clear();
 
                 linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                 mRecySearchDetail.setLayoutManager(linearLayoutManager);
 
                 mRecySearchDetail.setItemAnimator(new DefaultItemAnimator());
 
-                mRecySearchDetail.setAdapter(pageadapter);
+                mRecySearchDetail.setAdapter(pageadapter);*/
+
+
               /*  mRecySearchDetail.smoothScrollToPosition(0);*/
 
 
                 Config.logV("Query-----------" + querycreate);
 
-                final String query = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
+                final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
 
-                final String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
-                ApiSEARCHAWSLoadFirstData(query, pass);
+                final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
 
-                mRecySearchDetail.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+                query = query1;
+                url = pass1;
+
+                Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
+                ApiSEARCHAWSLoadFirstData(query, url);
+
+                /*mRecySearchDetail.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
                     @Override
                     protected void loadMoreItems() {
 
@@ -852,7 +883,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                loadNextPage(query, pass);
+                                Config.logV("Query--------------------"+query);
+                                loadNextPage(query, url);
                             }
                         }, 1000);
 
@@ -873,6 +905,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                         return isLoading;
                     }
                 });
+*/
             }
         });
 
@@ -1119,7 +1152,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL--------First-------" + response.raw().request().url().toString().trim());
 
                     Config.logV("Response--code-------------------------" + response.code());
 
@@ -1577,6 +1610,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 Config.logV("First ADD Footer");
                                 pageadapter.addLoadingFooter();
 
+
                             } else {
                                 isLastPage = true;
                             }
@@ -1621,11 +1655,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
 
-        bundle.putString("uniqueID",value);
+        refreshQuery();
+        bundle.putString("uniqueID", value);
         pfFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_out_right, R.anim.slide_in_left);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
@@ -1633,34 +1668,80 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
     @Override
-    public void onMethodWorkingCallback(ArrayList<WorkingModel> workingModelArrayList,String value) {
+    public void onMethodWorkingCallback(ArrayList<WorkingModel> workingModelArrayList, String value, String uniqueid) {
         WorkingHourFragment pfFragment = new WorkingHourFragment();
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putSerializable("workinghrlist", workingModelArrayList);
-        bundle.putString("title",value);
+        bundle.putString("title", value);
+        bundle.putString("uniqueID", uniqueid);
         pfFragment.setArguments(bundle);
-        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_out_right, R.anim.slide_in_left);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
 
     @Override
-    public void onMethodServiceCallback(ArrayList services, String value) {
+    public void onMethodServiceCallback(ArrayList services, String value, String uniqueid) {
         ServiceListFragment pfFragment = new ServiceListFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putSerializable("servicelist", services);
-        bundle.putString("title",value);
+        bundle.putString("title", value);
+        bundle.putString("from", "searchlist");
+        bundle.putString("uniqueID", uniqueid);
         pfFragment.setArguments(bundle);
-        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_out_right, R.anim.slide_in_left);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
 
+    @Override
+    public void onMethodOpenMap() {
+
+        Config.logV("latitude--------"+latitude);
+        String geoUri = "http://maps.google.com/maps?q=loc:" + latitude + "," + longitude + "";
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+        mContext.startActivity(intent);
+    }
 
 
+
+    public void QuerySubmitCLick(String query) {
+
+        //  mSearchView.setQuery("", false);
+        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        double upperLeftLat = Lanlong.getUpperLeftLat();
+        double upperLeftLon = Lanlong.getUpperLeftLon();
+        double lowerRightLat = Lanlong.getLowerRightLat();
+        double lowerRightLon = Lanlong.getLowerRightLon();
+        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+        String querycreate = "(phrase " + "'" + query + "')";
+
+
+        isLastPage = false;
+        isLoading = false;
+        PAGE_START = 0;
+        total_foundcount = 0;
+        TOTAL_PAGES = 0;
+        currentPage = PAGE_START;
+        pageadapter.clear();
+
+        Config.logV("Query-----------" + querycreate);
+
+        final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
+
+        final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+
+        query = query1;
+        url = pass1;
+
+        Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
+        ApiSEARCHAWSLoadFirstData(query, url);
+
+
+    }
 }

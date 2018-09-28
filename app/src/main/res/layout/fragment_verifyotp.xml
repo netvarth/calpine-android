@@ -1,73 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android.support.design="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background"
+    android:background="@drawable/app_bg_gradient_home"
+    android:orientation="vertical"
     tools:context=".Fragment.UpdateProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_background"
         android:orientation="vertical">
+
 
         <LinearLayout
             android:id="@+id/layout_toolbar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:background="@color/hometopbar"
             android:orientation="vertical">
 
             <include
                 android:id="@+id/toolbar"
-                layout="@layout/toolbar" />
+                layout="@layout/custom_toolbar" />
         </LinearLayout>
 
-        <LinearLayout
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/padding20"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_padding"
+            android:layout_marginLeft="@dimen/padding5"
+            android:layout_marginRight="@dimen/padding5"
+            android:layout_marginTop="@dimen/default_padding"
+            card_view:cardCornerRadius="10dp">
 
-            <TextView
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/hint_otp" />
-
-
-            <EditText
-                android:id="@+id/editotp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding5"
-                android:background="@drawable/input_border_gray_bg"
-                android:digits="0123456789"
-                android:hint="@string/hint_otp"
-                android:inputType="number" />
-
-
-            <Button
-                android:id="@+id/btn_verify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_padding"
-                android:text="@string/verify"
-                android:textAllCaps="false" />
-
-            <TextView
-                android:id="@+id/resendOtp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_padding"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/padding20"
                 android:gravity="center"
-                android:text="Resend OTP"
-                android:textColor="@color/title_grey" />
+                android:orientation="vertical">
 
 
-        </LinearLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_input_otp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding7"
+                    android:textColorHint="@color/title_grey"
+                    android.support.design:hintTextAppearance="@style/GreyTextInputLayoutPassword">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/editotp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding7"
+                        android:hint="@string/hint_otp"
+                        android:inputType="number"
+                        android:digits="0123456789"
+                        android:textAppearance="@style/GreyTextInputLayoutHintPwd"
+                        android:textColor="@color/title_grey"
+                        android:textColorHint="@color/sec_title_grey" />
+                </android.support.design.widget.TextInputLayout>
+                <Button
+                    android:id="@+id/btn_verify"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/padding7"
+                    android:layout_marginTop="@dimen/default_padding"
+                    android:background="@drawable/roundedrect_blue"
+                    android:text="@string/verify"
+                    android:textAllCaps="false"
+                    android:textColor="@color/app_background"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/resendOtp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding7"
+                    android:gravity="center"
+                    android:text="Resend OTP"
+                    android:textSize="@dimen/txtsize_hint"
+                    android:textColor="@color/title_consu" />
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
 
     </LinearLayout>

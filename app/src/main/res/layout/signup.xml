@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="2.5"
+        android:layout_weight="2"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/padding7"
         android:gravity="center"
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/title_grey"
-        android:layout_marginTop="@dimen/padding20"
+        android:layout_marginTop="@dimen/padding15"
         android:textSize="@dimen/txtsize_subtitle"
         android:gravity="center"
         android:text="@string/new_ynw"
@@ -49,7 +49,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding20"
+            android:layout_marginTop="@dimen/padding15"
             android:layout_gravity="center"
             android:src="@drawable/indicator_1"/>
     </LinearLayout>
@@ -64,10 +64,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/default_padding"
+        android:layout_marginTop="@dimen/padding7"
         android:layout_marginLeft="@dimen/padding40"
         android:layout_marginRight="@dimen/padding40"
-        android:layout_marginBottom="@dimen/padding15"
         android:orientation="vertical">
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_input_layout_first"
@@ -84,7 +83,6 @@
             android:textColor="@color/title_grey"
             android:textColorHint="@color/title_grey"
             android:textAppearance="@style/GreyTextInputLayoutHint"
-            android:layout_marginTop="3dp"
             android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:hint="@string/hint_firstname" />
         </android.support.design.widget.TextInputLayout>
@@ -93,7 +91,6 @@
             android:id="@+id/text_input_layout_last"
             android:layout_width="match_parent"
             android.support.design:hintTextAppearance="@style/GreyTextInputLayout"
-            android:layout_marginTop="@dimen/padding2"
             android:textColorHint="@color/title_grey"
             android:layout_height="wrap_content">
 
@@ -102,7 +99,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:layout_marginTop="3dp"
             android:textColor="@color/title_grey"
             android:textColorHint="@color/title_grey"
             android:textAppearance="@style/GreyTextInputLayoutHint"
@@ -115,10 +111,11 @@
             android:id="@+id/btn_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding7"
+            android:layout_marginTop="@dimen/padding5"
             android:onClick="BtnSignUp"
             android:textColor="@color/app_background"
             android:background="@drawable/button_gradient"
+            style="?android:attr/borderlessButtonStyle"
             android:text="@string/signup" />
 
         <TextView
@@ -126,9 +123,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/padding20"
             android:layout_marginRight="@dimen/padding20"
-            android:layout_marginTop="@dimen/padding7"
+            android:layout_marginTop="@dimen/padding5"
             android:gravity="center"
-            android:textSize="@dimen/txtsize_12"
+            android:textSize="@dimen/txtsize_title_term_small"
             android:text="@string/terms_cond_register1"
             android:textColor="@color/title_grey" />
 
@@ -138,7 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:gravity="center"
-            android:textSize="@dimen/txtsize_12"
+            android:textSize="@dimen/txtsize_title_term_small"
             android:text="@string/terms_cond_register2"
             android:textColor="@color/title_grey" />
     </LinearLayout>

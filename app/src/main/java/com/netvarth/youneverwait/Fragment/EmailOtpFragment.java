@@ -2,7 +2,9 @@ package com.netvarth.youneverwait.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +39,7 @@ public class EmailOtpFragment extends RootFragment {
     Context mContext;
     Toolbar toolbar;
     TextView txtResend;
-    EditText edtOtp;
+    TextInputEditText edtOtp;
     Button btn_verify;
     String email;
 
@@ -55,7 +57,7 @@ public class EmailOtpFragment extends RootFragment {
 
         txtResend = (TextView) row.findViewById(R.id.resendOtp);
 
-        edtOtp = (EditText) row.findViewById(R.id.editotp);
+        edtOtp = (TextInputEditText) row.findViewById(R.id.editotp);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             email = bundle.getString("email", "");
@@ -70,20 +72,23 @@ public class EmailOtpFragment extends RootFragment {
             }
         });
 
-        if (email.matches("[0-9]+")){
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Phone Number");
-        }else{
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Email");
-        }
-
-
+        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        tv_title.setText("Enter Otp");
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // what do you want here
 
+                Config.logV("Back Press-----------------");
+                getFragmentManager().popBackStack();
             }
         });
+
+        tv_title.setTypeface(tyface);
+
+
+
 
         txtResend.setOnClickListener(new View.OnClickListener() {
             @Override

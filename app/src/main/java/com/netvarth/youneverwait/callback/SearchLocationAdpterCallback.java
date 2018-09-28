@@ -1,4 +1,4 @@
-package com.netvarth.youneverwait.Fragment;
+package com.netvarth.youneverwait.callback;
 
 import com.netvarth.youneverwait.model.WorkingModel;
 import com.netvarth.youneverwait.response.SearchService;

@@ -63,8 +63,8 @@
             android:layout_height="wrap_content"
 
             android:layout_marginBottom="@dimen/default_padding"
-            android:layout_marginLeft="@dimen/padding5"
-            android:layout_marginRight="@dimen/padding5"
+            android:layout_marginLeft="@dimen/padding3"
+            android:layout_marginRight="@dimen/padding3"
             android:layout_marginTop="@dimen/default_padding"
             card_view:cardCornerRadius="10dp">
 
@@ -97,6 +97,7 @@
         android:textAllCaps="false"
         android:textColor="@color/app_background"
         android:textSize="@dimen/txtsize_hint"
+        style="?android:attr/borderlessButtonStyle"
         android:textStyle="bold" />
 
 </RelativeLayout>

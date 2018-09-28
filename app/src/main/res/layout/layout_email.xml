@@ -39,5 +39,6 @@
         android:gravity="center"
         android:background="@drawable/input_border_blue_bg"
         android:textColor="@color/title_consu"
+        style="?android:attr/borderlessButtonStyle"
         android:text="@string/send" />
 </LinearLayout>

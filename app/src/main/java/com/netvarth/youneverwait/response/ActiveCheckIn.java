@@ -58,7 +58,15 @@ public class ActiveCheckIn {
     private ActiveCheckIn provider;
 
 
+    public String getUniqueId() {
+        return uniqueId;
+    }
 
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    String uniqueId;
 
     public ActiveCheckIn getLocation() {
         return location;

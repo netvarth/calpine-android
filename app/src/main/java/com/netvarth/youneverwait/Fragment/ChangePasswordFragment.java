@@ -2,12 +2,17 @@ package com.netvarth.youneverwait.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,13 +52,15 @@ import retrofit2.Response;
 public class ChangePasswordFragment extends RootFragment {
 
     Context mContext;
-    Toolbar toolbar;
-   EditText edtOldpwd,edtNewpwd,edtconfirmpwd;
+   Toolbar toolbar;
+    TextInputEditText edtOldpwd,edtNewpwd,edtconfirmpwd;
    Button mDone;
   //  private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" ;
   private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$" ;
     private Pattern pattern;
     private Matcher matcher;
+
+    TextInputLayout txt_InputPwd,txt_Confirm_InputPwd,txt_Old_InputPwd;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,12 +73,48 @@ public class ChangePasswordFragment extends RootFragment {
         toolbar = (Toolbar) row.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Password");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(false);
+        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Password");
 
-        edtOldpwd=(EditText) row.findViewById(R.id.edt_oldpwd) ;
-        edtNewpwd=(EditText) row.findViewById(R.id.edt_newpwd) ;
-        edtconfirmpwd=(EditText) row.findViewById(R.id.confirmpwd) ;
+        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+
+        tv_title.setText("Change Password");
+     //   tv_title.setGravity(Gravity.CENTER);
+
+        Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface);
+
+
+
+        edtOldpwd=(TextInputEditText) row.findViewById(R.id.edt_oldpwd) ;
+        edtNewpwd=(TextInputEditText) row.findViewById(R.id.edt_newpwd) ;
+        edtconfirmpwd=(TextInputEditText) row.findViewById(R.id.confirmpwd) ;
+        edtOldpwd.setTransformationMethod(new PasswordTransformationMethod());
+        edtNewpwd.setTransformationMethod(new PasswordTransformationMethod());
+        edtconfirmpwd.setTransformationMethod(new PasswordTransformationMethod());
+
+
+        txt_InputPwd=(TextInputLayout) row.findViewById(R.id.text_input_layout_pwd) ;
+        txt_Confirm_InputPwd=(TextInputLayout) row.findViewById(R.id.text_input_layout_pwd_confirm) ;
+        txt_Old_InputPwd=(TextInputLayout) row.findViewById(R.id.text_input_old_pwd) ;
+
+
+
+        Typeface tyface_edittext = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/Montserrat_Regular.otf");
+        edtOldpwd.setTypeface(tyface_edittext);
+        edtNewpwd.setTypeface(tyface_edittext);
+        edtconfirmpwd.setTypeface(tyface_edittext);
+
+        txt_InputPwd.setTypeface(tyface_edittext);
+        txt_Confirm_InputPwd.setTypeface(tyface_edittext);
+        txt_Old_InputPwd.setTypeface(tyface_edittext);
+
+
+
+
+
         mDone=(Button)row.findViewById(R.id.btndone) ;
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +138,7 @@ public class ChangePasswordFragment extends RootFragment {
             public void onClick(View v) {
                 // what do you want here
 
+                getFragmentManager().popBackStack();
             }
         });
 
@@ -113,11 +157,12 @@ public class ChangePasswordFragment extends RootFragment {
     }
     private boolean validatePassword() {
         if (!validatePwd(edtNewpwd.getText().toString())) {
-            edtNewpwd.setError(getString(R.string.err_pwd_valid));
+            txt_InputPwd.setError(getString(R.string.err_pwd_valid));
             requestFocus(edtNewpwd);
             return false;
         } else {
-            edtNewpwd.setError(null);
+            txt_InputPwd.setError(null);
+            txt_InputPwd. setErrorEnabled(false);
         }
 
         return true;
@@ -125,23 +170,25 @@ public class ChangePasswordFragment extends RootFragment {
 
     private boolean validateConfirmPassword() {
         if (edtconfirmpwd.getText().toString().trim().isEmpty()) {
-            edtconfirmpwd.setError(getString(R.string.err_msg_password));
+            txt_Confirm_InputPwd.setError(getString(R.string.err_msg_password));
             requestFocus(edtconfirmpwd);
             return false;
         } else {
-            edtconfirmpwd.setError(null);
+            txt_Confirm_InputPwd.setError(null);
+            txt_Confirm_InputPwd. setErrorEnabled(false);
         }
 
         return true;
     }
 
     private boolean validateOldPassword() {
-        if (edtOldpwd.getText().toString().trim().isEmpty()) {
-            edtOldpwd.setError(getString(R.string.err_msg_password));
+        if (!validatePwd(edtOldpwd.getText().toString())) {
+            txt_Old_InputPwd.setError(getString(R.string.err_pwd_valid));
             requestFocus(edtOldpwd);
             return false;
         } else {
-            edtOldpwd.setError(null);
+            txt_Old_InputPwd.setError(null);
+            txt_Old_InputPwd.setErrorEnabled(false);
         }
 
         return true;

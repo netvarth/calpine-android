@@ -1,6 +1,7 @@
 package com.netvarth.youneverwait.activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -64,6 +65,14 @@ public class SearchServiceActivity extends AppCompatActivity {
 
         tv_toolbartitle=(TextView)findViewById(R.id.txt_toolbartitle);
         tv_toolbartitle.setText(title);
+
+        Typeface tyface = Typeface.createFromAsset(getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_toolbartitle.setTypeface(tyface);
+        tv_service.setTypeface(tyface);
+        tv_duration.setTypeface(tyface);
+        tv_price.setTypeface(tyface);
+
 
         if (name != null) {
             tv_service.setVisibility(View.VISIBLE);

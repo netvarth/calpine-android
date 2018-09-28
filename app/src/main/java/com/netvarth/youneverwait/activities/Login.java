@@ -99,6 +99,10 @@ public class Login extends AppCompatActivity {
                 "fonts/Montserrat_Medium.otf");
         btn_login.setTypeface(tyface_btn);
 
+        Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        edtpassword_login.setTypeface(tyface_edittext);
+
 
     }
 
@@ -223,6 +227,7 @@ public class Login extends AppCompatActivity {
 
                         }
 
+                       // Config.logV("Email------------------"+response.body().get);
                         SharedPreference.getInstance(mContext).setValue("consumerId",response.body().getId());
                         SharedPreference.getInstance(mContext).setValue("register","success");
                         SharedPreference.getInstance(mContext).setValue("firstname",response.body().getFirstName());

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YouNeverWait</string>
+    <string name="app_name">Jaldee</string>
     <string name="layout_button_ok">Ok</string>
     <string name="submit">Submit</string>
     <string name="hint_mobile">Enter Your Mobile Number</string>
@@ -39,12 +39,12 @@
     <string name="changePh">Change Phone Number</string>
     <string name="contactus">Contact us</string>
     <string name="sendappfeed">Send app Feedback</string>
-    <string name="shareynw">Share YouNeverWait</string>
+    <string name="shareynw">Share Jaldee</string>
     <string name="privacypolicy">Privacy Policy</string>
     <string name="termofuse">Terms of use</string>
     <string name="logout">Logout</string>
     <!--        db                   -->
-    <string name="db_name">YNW_db</string>
+    <string name="db_name">Jaldee_db</string>
     <string name="db_version">1</string>
     <string name="db_table_userinfo">USERINFO_TB</string>
     <string name="db_table_inbox">table_inbox</string>
@@ -56,18 +56,18 @@
     <string name="search_hint">Search...</string>
     <string name="diff_date">Check-in for different date/time?</string>
     <string name="welcome">Welcome to</string>
-    <string name="ynw">YouNeverWait</string>
+    <string name="ynw">Jaldee</string>
     <string name="consumer">Consumer App</string>
     <string name="terms_cond_register1"> By clicking OK, you agree to the </string>
-    <string name="terms_cond_register2">YouNeverWait <font color='#00AEF2'><b>Terms and Conditions</b></font></string>
+    <string name="terms_cond_register2">Jaldee <font color='#00AEF2'><b>Terms and Conditions</b></font></string>
     <string name="are_provider1"> Are you a <b>Provider?</b> </string>
-    <string name="are_provider2">Download <font color='#00AEF2'><b>YouNeverWait Provider App</b> </font></string>
-    <string name="ynw_account">You have YNW Account</string>
+    <string name="are_provider2">Download <font color='#00AEF2'><b>Jaldee Provider App</b> </font></string>
+    <string name="ynw_account">You have Jaldee Account</string>
     <string name="password_logintxt">Please enter Password to Login</string>
     <string name="pls_enterotp">to proceed!</string>
     <string name="hint_otp_pwd">Enter OTP Received</string>
     <string name="changepwd_bold">Change <font color='#3E4A59'> Password</font></string>
-    <string name="new_ynw">New on YouNeverWait?</string>
+    <string name="new_ynw">New on Jaldee?</string>
     <string name="creteaccount">Create Your Account</string>
     <string name="emailtitle">We will send OTP via Email</string>
     <string name="searchhint">Eg: Dentist, Restaurants, Car Wash...</string>
@@ -91,6 +91,9 @@
     <string name="monday">Monday</string>
     <string name="changemem">Change Member</string>
     <string name="addnote">Add Note</string>
+    <string name="currentloc">Use current location</string>
+    <string name="hint_message">Type your message here</string>
+    <string name="searchhint_loc">Eg: Majestic, Bangalore, Karnataka</string>
 
 
 </resources>

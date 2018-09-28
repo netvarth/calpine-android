@@ -135,7 +135,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("dob", profileModel.getDob());
 
 
-            db.update(mContext.getString(R.string.db_table_userinfo), values, "id="+profileModel.getId(), null);
+            db.update(mContext.getString(R.string.db_table_userinfo), values, "id=" + profileModel.getId(), null);
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
@@ -152,7 +152,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
         String table = mContext.getString(R.string.db_table_userinfo);
-        String[] columns = {"id", "firstname", "lastname", "email", "primaryMobNo", "emailVerified", "phoneVerified","gender","dob"};
+        String[] columns = {"id", "firstname", "lastname", "email", "primaryMobNo", "emailVerified", "phoneVerified", "gender", "dob"};
 
         String selection = " id =?";
         String[] selectionArgs = new String[]{String.valueOf(consumerID)};
@@ -194,14 +194,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "service TEXT,"
                 + "id INT,"
                 + "timestamp TEXT,"
-                + "message TEXT)";
+                + "message TEXT,"
+                + "uniqueID TEXT,"
+              /*  + "receiverID INT,"
+                + "receiverName TEXT,"*/
+                + "messageStatus TEXT,"
+                + "waitlistId TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_inbox) + tblFields;
         db.execSQL(tblCreateStr);
     }
-
-
 
 
     public void insertInbox(ArrayList<InboxModel> inboxModel) {
@@ -217,6 +220,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("id", inbox.getOwner().getId());
                 values.put("timestamp", inbox.getTimeStamp());
                 values.put("message", inbox.getMsg());
+                values.put("uniqueID", inbox.getUniqueID());
+                values.put("waitlistId", inbox.getWaitlistId());
+
+              /*  values.put("receiverID", inbox.getReceiver().getReceiverId());
+                values.put("receiverName", inbox.getReceiver().getReceiverName());*/
+
+                values.put("messageStatus", inbox.getMessageStatus());
 
                 db.insert(mContext.getString(R.string.db_table_inbox), null, values);
             }
@@ -232,7 +242,45 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
+    public void insertInboxModel(InboxModel inbox) {
+        // Config.logV("Insert Inbox");
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.beginTransaction();
 
+        try {
+
+            ContentValues values = new ContentValues();
+            values.put("provider", inbox.getUserName());
+            values.put("service", inbox.getService());
+            values.put("id", inbox.getId());
+            values.put("timestamp", inbox.getTimeStamp());
+            values.put("message", inbox.getMsg());
+            values.put("uniqueID", inbox.getUniqueID());
+            values.put("waitlistId", inbox.getWaitlistId());
+
+               /* values.put("receiverID", inbox.getReceiver().getReceiverId());
+                values.put("receiverName", inbox.getReceiver().getReceiverName());*/
+
+            values.put("messageStatus", inbox.getMessageStatus());
+
+            db.insert(mContext.getString(R.string.db_table_inbox), null, values);
+
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+
+
+    }
+
+    public void DeleteInbox() {
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.execSQL("delete from " + mContext.getString(R.string.db_table_inbox));
+        db.close();
+    }
 
     public void updateInboxInfo(ArrayList<InboxModel> inboxModel) {
         Config.logV("UpdateInboxDetails");
@@ -241,16 +289,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         try {
             for (InboxModel inbox : inboxModel) {
-            ContentValues values = new ContentValues();
-            values.put("provider", inbox.getOwner().getUserName());
-            values.put("service", inbox.getService());
-            values.put("id", inbox.getOwner().getId());
-            values.put("timestamp", inbox.getTimeStamp());
-            values.put("message", inbox.getMsg());
+                ContentValues values = new ContentValues();
+                values.put("provider", inbox.getOwner().getUserName());
+                values.put("service", inbox.getService());
+                values.put("id", inbox.getOwner().getId());
+                values.put("timestamp", inbox.getTimeStamp());
+                values.put("message", inbox.getMsg());
+                values.put("uniqueID", inbox.getUniqueID());
+                values.put("waitlistId", inbox.getWaitlistId());
+               /* values.put("receiverID", inbox.getReceiver().getReceiverId());
+                values.put("receiverName", inbox.getReceiver().getReceiverName());*/
+                values.put("messageStatus", inbox.getMessageStatus());
 
 
-
-            db.update(mContext.getString(R.string.db_table_inbox), values, "timestamp="+inbox.getTimeStamp(), null);
+                db.update(mContext.getString(R.string.db_table_inbox), values, "timestamp=" + inbox.getTimeStamp(), null);
 
             }
             db.setTransactionSuccessful();
@@ -264,39 +316,48 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public InboxModel getInboxDetail(String provider) {
+    public ArrayList<InboxModel> getInboxDetail(String uniqueID) {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
-
+        ArrayList<InboxModel> inboxData = new ArrayList<InboxModel>();
         String table = mContext.getString(R.string.db_table_inbox);
-        String[] columns = {"provider", "service", "id","timestamp", "message"};
+       /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
+        String[] columns = {"provider", "service", "id", "timestamp", "uniqueID", "message", "messageStatus", "waitlistId"};
+        String selection = " uniqueID =?";
+        String[] selectionArgs = new String[]{uniqueID};
 
-        String selection = " provider =?";
-        String[] selectionArgs = new String[]{provider};
+        //String timestamp="timestamp";
 
         db.beginTransaction();
 
         Cursor cursor = db.query(table, columns, selection, selectionArgs, null, null, null);
         cursor.moveToFirst();
+        if (cursor.moveToFirst()) {
+            do {
+                InboxModel inbox = new InboxModel();
+                inbox.setUserName(cursor.getString(0));
+                inbox.setService(cursor.getString(1));
+                inbox.setId(cursor.getInt(2));
+                inbox.setTimeStamp(cursor.getLong(3));
+                inbox.setUniqueID(cursor.getString(4));
+                // inbox.setReceiverId(cursor.getInt(5));
+                inbox.setMsg(cursor.getString(5));
+                //   inbox.setRecevierName(cursor.getString(7));
+                inbox.setMessageStatus(cursor.getString(6));
+                inbox.setWaitlistId(cursor.getString(7));
 
-        InboxModel inbox = new InboxModel();
-        inbox.setUserName(cursor.getString(0));
-        inbox.setService(cursor.getString(1));
-        inbox.setId(cursor.getInt(2));
-        inbox.setTimeStamp(cursor.getLong(3));
-        inbox.setMsg(cursor.getString(4));
 
-
-
+                inboxData.add(inbox);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
         db.setTransactionSuccessful();
         db.endTransaction();
         db.close();
 
-        return inbox;
+        return inboxData;
 
 
     }
-
-
 
 
     public ArrayList<InboxModel> getAllInboxDetail() {
@@ -305,11 +366,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
         String table = mContext.getString(R.string.db_table_inbox);
-        String[] columns = {"provider", "service", "id","timestamp", "message"};
+        // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
+        String[] columns = {"provider", "service", "id", "timestamp", "uniqueID", "message", "messageStatus", "waitlistId"};
+        String groupBy = "uniqueID";
         db.beginTransaction();
 
-        Cursor cursor = db.query(table, columns, null, null, null, null, null);
+        Cursor cursor = db.query(table, columns, null, null, groupBy, null, null);
         if (cursor.moveToFirst()) {
             do {
                 InboxModel inboxModel = new InboxModel();
@@ -317,7 +380,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 inboxModel.setService(cursor.getString(1));
                 inboxModel.setId(cursor.getInt(2));
                 inboxModel.setTimeStamp(cursor.getLong(3));
-                inboxModel.setMsg(cursor.getString(4));
+                inboxModel.setUniqueID(cursor.getString(4));
+
+                //  inboxModel.setReceiverId(cursor.getInt(5));
+                inboxModel.setMsg(cursor.getString(5));
+
+                // inboxModel.setRecevierName(cursor.getString(7));
+                inboxModel.setMessageStatus(cursor.getString(6));
+                inboxModel.setWaitlistId(cursor.getString(7));
 
 
                 inbox.add(inboxModel);
@@ -332,13 +402,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public  boolean CheckIsInboxTBDataorNot() {
+    public boolean CheckIsInboxTBDataorNot() {
 
         String TableName = mContext.getString(R.string.db_table_inbox);
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
         String Query = "Select * from " + TableName;
         Cursor cursor = db.rawQuery(Query, null);
-        if(cursor.getCount() <= 0){
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
+    public boolean CheckIsDataAlreadyInDBorNot(String fieldValue) {
+
+        String TableName = mContext.getString(R.string.db_table_inbox);
+        SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+        String Query = "Select * from " + TableName + " where timestamp = " + fieldValue;
+        Cursor cursor = db.rawQuery(Query, null);
+        if (cursor.getCount() <= 0) {
             cursor.close();
             return false;
         }

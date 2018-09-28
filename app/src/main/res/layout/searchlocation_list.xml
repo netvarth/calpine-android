@@ -11,12 +11,13 @@
        >
 
         <RelativeLayout
+            android:id="@+id/layout_exapnd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/padding5"
             android:paddingLeft="@dimen/padding7"
             android:background="@color/spinnerbg"
-            android:paddingTop="@dimen/padding7"
+            android:paddingTop="@dimen/padding5"
             android:paddingRight="@dimen/padding7">
 
             <LinearLayout
@@ -171,6 +172,7 @@
                     android:text="Check-In"
                     android:textAllCaps="true"
                     android:textStyle="bold"
+                    style="?android:attr/borderlessButtonStyle"
                     android:fontFamily="@font/customfont"
                     android:textColor="@color/app_background"
                     android:textSize="@dimen/txtsize_subtitle" />

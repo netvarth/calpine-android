@@ -7,12 +7,42 @@ import com.google.gson.annotations.SerializedName;
  * Created by sharmila on 14/8/18.
  */
 
-public class InboxModel  {
+public class InboxModel {
     public String getMsg() {
         return msg;
     }
 
+
+    public String getMessageStatus() {
+        return messageStatus;
+    }
+
+    public void setMessageStatus(String messageStatus) {
+        this.messageStatus = messageStatus;
+    }
+
+    String messageStatus;
     String msg;
+
+    public String getWaitlistId() {
+        return waitlistId;
+    }
+
+    public void setWaitlistId(String waitlistId) {
+        this.waitlistId = waitlistId;
+    }
+
+    String waitlistId;
+
+    public String getUniqueID() {
+        return uniqueID;
+    }
+
+    public void setUniqueID(String uniqueID) {
+        this.uniqueID = uniqueID;
+    }
+
+    String uniqueID;
 
     public long getTimeStamp() {
         return timeStamp;
@@ -27,19 +57,54 @@ public class InboxModel  {
     @SerializedName("owner")
     private InboxModel owner;
 
+    public InboxModel getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(InboxModel receiver) {
+        this.receiver = receiver;
+    }
+
+    @SerializedName("receiver")
+    private InboxModel receiver;
+
     public String getUserName() {
         return userName;
     }
-
     String userName;
+
+    String RuserName;
+
+
+    public String getReceiverName() {
+        return userName;
+    }
+
+    public void setRecevierName(String userName) {
+        this.userName = userName;
+    }
+
 
     public int getId() {
         return id;
     }
 
+    int Rid;
+
+    public void setReceiverId(int id) {
+        this.id = id;
+    }
+
+
+    public int getReceiverId() {
+        return id;
+    }
+
+
     public void setId(int id) {
         this.id = id;
     }
+
 
     int id;
 
@@ -78,4 +143,14 @@ public class InboxModel  {
     }
 
     String key;
+
+    public boolean isIs_see() {
+        return is_see;
+    }
+
+    public void setIs_see(boolean is_see) {
+        this.is_see = is_see;
+    }
+
+    boolean is_see;
 }

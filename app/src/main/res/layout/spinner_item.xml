@@ -9,5 +9,5 @@
     android:maxLines="1"
     android:maxEms="4"
     android:paddingLeft="2dp"
-    android:paddingRight="2dp"
+    android:paddingRight="@dimen/padding20"
     />

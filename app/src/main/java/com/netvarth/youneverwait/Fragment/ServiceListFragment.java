@@ -16,6 +16,7 @@ import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.adapter.CheckIn_FamilyMemberListAdapter;
 import com.netvarth.youneverwait.adapter.ServiceListAdapter;
 import com.netvarth.youneverwait.common.Config;
+import com.netvarth.youneverwait.response.SearchService;
 
 
 import java.util.ArrayList;
@@ -33,11 +34,13 @@ public class ServiceListFragment extends RootFragment {
 
     Context mContext;
     Toolbar toolbar;
-    String title;
+    String title,uniqueid;
     ArrayList serviceList;
+    ArrayList<SearchService> serviceList_Detail;
     TextView tv_subtitle;
     RecyclerView mrecycle_service;
     ServiceListAdapter mAdapter;
+    String from;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,13 +48,27 @@ public class ServiceListFragment extends RootFragment {
 
         mContext = getActivity();
         Bundle bundle = this.getArguments();
+        serviceList_Detail=new ArrayList<>();
         if (bundle != null) {
             title = bundle.getString("title", "");
-            serviceList = (ArrayList)getArguments().getSerializable("servicelist");
+            from = bundle.getString("from", "");
+            if (from.equalsIgnoreCase("searchdetail")) {
+                serviceList_Detail=(ArrayList)getArguments().getSerializable("servicelist");
+                Config.logV("Service List-----11111----------"+serviceList_Detail.size());
+            }else{
+                serviceList = (ArrayList)getArguments().getSerializable("servicelist");
+                for(int i=0;i<serviceList.size();i++){
+                    SearchService data=new SearchService();
+                    data.setName(serviceList.get(i).toString());
+                    serviceList_Detail.add(data);
+                }
+            }
+
+            uniqueid=bundle.getString("uniqueID", "");
         }
         mrecycle_service=(RecyclerView)row.findViewById(R.id.mrecycle_service) ;
 
-        Config.logV("Service List---------------"+serviceList.size());
+        Config.logV("Service List---------------"+serviceList_Detail.size());
 
         toolbar = (Toolbar) row.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -64,10 +81,26 @@ public class ServiceListFragment extends RootFragment {
         tv_title.setText("Services");
         tv_subtitle=(TextView)row.findViewById(R.id.txttitle) ;
         tv_subtitle.setText(title);
+        tv_subtitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
 
+                SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
+
+                bundle.putString("uniqueID",uniqueid);
+                pfFragment.setArguments(bundle);
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                //transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_out_right, R.anim.slide_in_left);
+                // Store the Fragment in stack
+                 transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, pfFragment).commit();
+            }
+        });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         mrecycle_service.setLayoutManager(mLayoutManager);
-        mAdapter = new ServiceListAdapter(serviceList, mContext);
+        mAdapter = new ServiceListAdapter(serviceList_Detail, mContext,from,title);
         mrecycle_service.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

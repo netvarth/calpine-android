@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -68,9 +69,11 @@ public class ResetOtp extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         tv_title.setText("Forgot Password");
+
+
         img_indicator = (ImageView) findViewById(R.id.img_indicator);
         img_indicator.setVisibility(View.GONE);
         txtproceed = (TextView) findViewById(R.id.txtproceed);
