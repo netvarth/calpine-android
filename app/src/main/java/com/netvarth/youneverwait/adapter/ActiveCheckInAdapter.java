@@ -3,6 +3,7 @@ package com.netvarth.youneverwait.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -107,7 +108,19 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 Typeface tyface4 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 myViewHolder.tv_waitsatus.setTypeface(tyface4);
-                myViewHolder.tv_waitsatus.setText(activelist.getWaitlistStatus());
+                if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")){
+
+                    myViewHolder.tv_waitsatus.setTextColor(mContext.getResources().getColor(R.color.red));
+                }
+                if(activelist.getWaitlistStatus().equalsIgnoreCase("started")){
+                    myViewHolder.tv_waitsatus.setTextColor(mContext.getResources().getColor(R.color.cyan));
+                }
+
+                if(activelist.getWaitlistStatus().equalsIgnoreCase("done")){
+
+                    myViewHolder.tv_waitsatus.setTextColor(mContext.getResources().getColor(R.color.green));
+                }
+                myViewHolder.tv_waitsatus.setText("\u2022 "+activelist.getWaitlistStatus());
             } else {
                 Config.logV("activelist.getWaitlistStatus()"+activelist.getWaitlistStatus());
                 myViewHolder.tv_waitsatus.setVisibility(View.GONE);

@@ -100,7 +100,7 @@ public class ServiceListFragment extends RootFragment {
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         mrecycle_service.setLayoutManager(mLayoutManager);
-        mAdapter = new ServiceListAdapter(serviceList_Detail, mContext,from,title);
+        mAdapter = new ServiceListAdapter(serviceList_Detail, mContext,from,title,uniqueid);
         mrecycle_service.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

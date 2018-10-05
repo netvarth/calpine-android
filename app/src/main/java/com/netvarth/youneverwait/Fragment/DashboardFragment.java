@@ -89,7 +89,7 @@ import retrofit2.Response;
  */
 public class DashboardFragment extends RootFragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        com.google.android.gms.location.LocationListener,ActiveAdapterOnCallback {
+        com.google.android.gms.location.LocationListener, ActiveAdapterOnCallback {
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -144,7 +144,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     String mPopularSearchtxt;
 
     String spinnerTxtPass;
-ActiveAdapterOnCallback mInterface;
+    ActiveAdapterOnCallback mInterface;
+
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
@@ -232,17 +233,17 @@ ActiveAdapterOnCallback mInterface;
             ApiAWSearchDomain();
         }
 
-        mInterface=(ActiveAdapterOnCallback)this;
+        mInterface = (ActiveAdapterOnCallback) this;
         home = getParentFragment();
         //Location
 
-        String s_currentLoc=SharedPreference.getInstance(getActivity()).getStringValue("current_loc","");
-        Config.logV("UpdateLocation noooooooooooooooooo"+s_currentLoc);
-        if(!s_currentLoc.equalsIgnoreCase("no")) {
+        String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
+        Config.logV("UpdateLocation noooooooooooooooooo" + s_currentLoc);
+        if (!s_currentLoc.equalsIgnoreCase("no")) {
             setUpGClient();
-            Config.logV("UpdateLocation noooooooooooooooooo"+latitude);
-        }else{
-            UpdateLocation(latitude,longitude);
+            Config.logV("UpdateLocation noooooooooooooooooo" + latitude);
+        } else {
+            UpdateLocation(latitude, longitude);
         }
 
         mContext = getActivity();
@@ -271,8 +272,8 @@ ActiveAdapterOnCallback mInterface;
         mCurrentLoc.setTypeface(tyface);
         tv_popular.setTypeface(tyface);
 
-        latitude=12.971599;
-        longitude=77.594563;
+        latitude = 12.971599;
+        longitude = 77.594563;
         try {
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
@@ -1154,7 +1155,7 @@ ActiveAdapterOnCallback mInterface;
                                 LActiveCheckin.setVisibility(View.VISIBLE);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mRecycleActive.setLayoutManager(mLayoutManager);
-                                activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active,mInterface);
+                                activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active, mInterface);
                                 mRecycleActive.setAdapter(activeAdapter);
                                 activeAdapter.notifyDataSetChanged();
                             } else {
@@ -1255,7 +1256,7 @@ ActiveAdapterOnCallback mInterface;
         Config.logV("Query-----------" + querycreate);
 
 
-       // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+        // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
 
 
         String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
@@ -1265,7 +1266,7 @@ ActiveAdapterOnCallback mInterface;
         bundle.putString("url", pass);*/
 
 
-       //VALID QUERY PASS
+        //VALID QUERY PASS
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
         mSearchView.setQuery("", false);
@@ -1294,16 +1295,14 @@ ActiveAdapterOnCallback mInterface;
     @Override
     public void onResume() {
         super.onResume();
-        String s_currentLoc=SharedPreference.getInstance(getActivity()).getStringValue("current_loc","");
-        if(!s_currentLoc.equalsIgnoreCase("no")) {
+        String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
+        if (!s_currentLoc.equalsIgnoreCase("no")) {
             Config.logV("Current Location---------------------------");
             googleApiClient.connect();
         }
 
 
     }
-
-
 
 
     @Override
@@ -1344,11 +1343,11 @@ ActiveAdapterOnCallback mInterface;
     @Override
     public void onLocationChanged(Location location) {
         mylocation = location;
-        Config.logV("Update Location Changed Connected---------------------------"+location);
+        Config.logV("Update Location Changed Connected---------------------------" + location);
         if (mylocation != null) {
             latitude = mylocation.getLatitude();
             longitude = mylocation.getLongitude();
-            Config.logV("Update Location Changed Connected---------------------11111------"+location.getLatitude());
+            Config.logV("Update Location Changed Connected---------------------11111------" + location.getLatitude());
             Config.logV("Latitude-------------" + latitude);
 
             try {
@@ -1365,19 +1364,18 @@ ActiveAdapterOnCallback mInterface;
     }
 
 
-
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         //You can display a message here
     }
 
-    private void getMyLocation(){
-        if(googleApiClient!=null) {
+    private void getMyLocation() {
+        if (googleApiClient != null) {
             if (googleApiClient.isConnected()) {
                 int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
-                    mylocation =                     LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                    mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                     LocationRequest locationRequest = new LocationRequest();
                     locationRequest.setInterval(3000);        // 10 seconds, in milliseconds
                     locationRequest.setFastestInterval(1 * 1000); // 1 second, in milliseconds
@@ -1452,7 +1450,7 @@ ActiveAdapterOnCallback mInterface;
         }
     }
 
-    private void checkPermissions(){
+    private void checkPermissions() {
         int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
         List<String> listPermissionsNeeded = new ArrayList<>();
@@ -1462,7 +1460,7 @@ ActiveAdapterOnCallback mInterface;
                 ActivityCompat.requestPermissions(getActivity(),
                         listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
             }
-        }else{
+        } else {
             getMyLocation();
         }
 
@@ -1498,10 +1496,10 @@ ActiveAdapterOnCallback mInterface;
         //  Config.logV("Query-----------" + querycreate);
 
 
-       // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+        // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
 
 
-         String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+        String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
         Bundle bundle = new Bundle();
 
@@ -1529,18 +1527,18 @@ ActiveAdapterOnCallback mInterface;
         transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
 
-    public  static boolean UpdateLocation(Double mlatitude,Double mlongitude){
-        Config.logV("UpdateLocation 3333333333----"+latitude);
+    public static boolean UpdateLocation(Double mlatitude, Double mlongitude) {
+        Config.logV("UpdateLocation 3333333333----" + latitude);
         try {
-            latitude=mlatitude;
-            longitude=mlongitude;
+            latitude = mlatitude;
+            longitude = mlongitude;
 
             Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             mCurrentLoc.setVisibility(View.VISIBLE);
             mCurrentLoc.setText(addresses.get(0).getLocality());
-               Config.logV("UpdateLocation"+addresses.get(0).getLocality());
-            Config.logV("UpdateLocation 3333333333----"+latitude);
+            Config.logV("UpdateLocation" + addresses.get(0).getLocality());
+            Config.logV("UpdateLocation 3333333333----" + latitude);
         } catch (Exception e) {
 
         }
@@ -1552,8 +1550,8 @@ ActiveAdapterOnCallback mInterface;
     public void onStop() {
         super.onStop();
         Config.logV("OnStop---------------------------------");
-          String s_currentLoc=SharedPreference.getInstance(getActivity()).getStringValue("current_loc","");
-        if(!s_currentLoc.equalsIgnoreCase("no")) {
+        String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
+        if (!s_currentLoc.equalsIgnoreCase("no")) {
             googleApiClient.stopAutoManage(getActivity());
             googleApiClient.disconnect();
         }
@@ -1577,38 +1575,37 @@ ActiveAdapterOnCallback mInterface;
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String value,String provider) {
-      Intent iBill=new Intent(mContext, BillActivity.class);
-      iBill.putExtra("ynwUUID",value);
-        iBill.putExtra("provider",provider);
-      startActivity(iBill);
+    public void onMethodActiveBillIconCallback(String value, String provider) {
+        Intent iBill = new Intent(mContext, BillActivity.class);
+        iBill.putExtra("ynwUUID", value);
+        iBill.putExtra("provider", provider);
+        startActivity(iBill);
 
     }
 
     @Override
-    public void onMethodMessageCallback(final String ynwuuid, final String accountID,String providerNAme) {
+    public void onMethodMessageCallback(final String ynwuuid, final String accountID, String providerNAme) {
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
         dialog.setContentView(R.layout.reply);
         dialog.show();
 
-        Button btn_send=(Button)dialog.findViewById(R.id.btn_send);
-        Button btn_cancel=(Button)dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message=(EditText) dialog.findViewById(R.id.edt_message);
-        TextView txtsendmsg=(TextView) dialog.findViewById(R.id.txtsendmsg);
-        String firstWord="Message to ";
-        String secondWord=providerNAme;
-        Spannable spannable = new SpannableString(firstWord+secondWord);
+        Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+        Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+        String firstWord = "Message to ";
+        String secondWord = providerNAme;
+        Spannable spannable = new SpannableString(firstWord + secondWord);
         Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface2), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        txtsendmsg.setText( spannable );
-
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        txtsendmsg.setText(spannable);
 
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiCommunicate(ynwuuid,String.valueOf(accountID),edt_message.getText().toString(),dialog);
+                ApiCommunicate(ynwuuid, String.valueOf(accountID), edt_message.getText().toString(), dialog);
 
             }
         });
@@ -1622,22 +1619,21 @@ ActiveAdapterOnCallback mInterface;
     }
 
     @Override
-    public void onMethodDelecteCheckinCallback(final String ynwuuid,final int accountID) {
+    public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID) {
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
         dialog.setContentView(R.layout.cancelcheckin);
         dialog.show();
 
-        Button btn_send=(Button)dialog.findViewById(R.id.btn_send);
-        Button btn_cancel=(Button)dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message=(EditText) dialog.findViewById(R.id.edt_message);
-        TextView txtsendmsg=(TextView) dialog.findViewById(R.id.txtsendmsg);
-
+        Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+        Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
 
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiDeleteCheckin(ynwuuid,String.valueOf(accountID),dialog);
+                ApiDeleteCheckin(ynwuuid, String.valueOf(accountID), dialog);
 
             }
         });
@@ -1667,12 +1663,11 @@ ActiveAdapterOnCallback mInterface;
             jsonObj.put("communicationMessage", message);
 
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.WaitListMessage(waitListId,String.valueOf(accountID),body);
+        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -1689,7 +1684,6 @@ ActiveAdapterOnCallback mInterface;
                     if (response.code() == 200) {
 
                         dialog.dismiss();
-
 
 
                     }
@@ -1726,8 +1720,7 @@ ActiveAdapterOnCallback mInterface;
         mDialog.show();
 
 
-
-        Call<ResponseBody> call = apiService.deleteActiveCheckIn(ynwuuid,String.valueOf(accountID));
+        Call<ResponseBody> call = apiService.deleteActiveCheckIn(ynwuuid, String.valueOf(accountID));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -1743,11 +1736,10 @@ ActiveAdapterOnCallback mInterface;
 
                     if (response.code() == 200) {
 
-                        if(response.body().string().equalsIgnoreCase("true")) {
+                        if (response.body().string().equalsIgnoreCase("true")) {
                             dialog.dismiss();
                             ApiActiveCheckIn();
                         }
-
 
 
                     }

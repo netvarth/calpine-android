@@ -48,12 +48,14 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     ArrayList<SearchService> mServiceList;
     String from;
     String title;
-    public ServiceListAdapter(ArrayList<SearchService> mServiceList, Context mContext,String from,String title) {
+    String uniqueID;
+    public ServiceListAdapter(ArrayList<SearchService> mServiceList, Context mContext,String from,String title,String uniqueID) {
         this.mContext = mContext;
         this.mServiceList = mServiceList;
         Config.logV("ServiceList--------------"+mServiceList.size());
         this.from=from;
         this.title=title;
+        this.uniqueID=uniqueID;
 
     }
 
@@ -68,6 +70,8 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     @Override
     public void onBindViewHolder(final ServiceListAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchService serviceList = mServiceList.get(position);
+
+
 
         myViewHolder.tv_service.setText(serviceList.getName());
         myViewHolder.serviceList.setOnClickListener(new View.OnClickListener() {
@@ -90,14 +94,15 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                     mContext.startActivity(iService);
                 }else{
 
-                  //  ApiService();
+                    Config.logV("Service ID pass------------"+serviceList.getName());
+                    ApiService(uniqueID,serviceList.getName(),title);
                 }
             }
         });
 
 
     }
-    private void ApiService(int uniqueID , final int serviceid) {
+    private void ApiService(String uniqueID , final String serviceName, final String title) {
 
 
         ApiInterface apiService =
@@ -114,7 +119,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
         System.out.println("UTC time: " + sdf.format(currentTime));
 
 
-        Call<ArrayList<SearchService>> call = apiService.getService(uniqueID, sdf.format(currentTime));
+        Call<ArrayList<SearchService>> call = apiService.getService(Integer.parseInt(uniqueID), sdf.format(currentTime));
 
         call.enqueue(new Callback<ArrayList<SearchService>>() {
             @Override
@@ -130,14 +135,27 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
 
                     if (response.code() == 200) {
 
-
+                        SearchService service1 = null;
                         ArrayList<SearchService> service=new ArrayList<>();
                         service=response.body();
                         for(int i=0;i<service.size();i++){
-                            if(service.get(i).getId()==serviceid){
-                               // SearchService service1=service.get
+                            Config.logV("Response--serviceid-------------------------" + serviceName);
+
+                            if(service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())){
+                                Intent iService = new Intent(mContext, SearchServiceActivity.class);
+                                iService.putExtra("name", service.get(i).getName());
+                                iService.putExtra("duration", service.get(i).getServiceDuration());
+                                iService.putExtra("price", service.get(i).getTotalAmount());
+                                iService.putExtra("desc", service.get(i).getDescription());
+                                iService.putExtra("servicegallery", service.get(i).getServicegallery());
+                                iService.putExtra("title", title);
+                                mContext.startActivity(iService);
+
                             }
                         }
+
+
+
 
 
                     }

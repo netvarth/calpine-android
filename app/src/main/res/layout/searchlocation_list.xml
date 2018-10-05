@@ -201,9 +201,8 @@
 
         </LinearLayout>
     </LinearLayout>
-    <!--<View
+    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/padding7"
-        android:background="@color/view_border" />-->
+        android:background="@color/app_background" />
 </LinearLayout>
