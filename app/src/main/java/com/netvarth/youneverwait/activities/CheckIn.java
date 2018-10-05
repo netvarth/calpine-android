@@ -58,6 +58,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -1127,7 +1128,7 @@ public class CheckIn extends AppCompatActivity {
 
                         CheckSumModel response_data = response.body();
                         Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
-                        Config.logV("Checksum id-----------" + response_data.getChecksum());
+                       // Config.logV("Checksum id-----------" + response_data.getChecksum());
                        // Config.logV("Product key-----------" + response_data.getProductinfo());
 
                         launchPaymentFlow(sAmountPay, response_data, serviceSelected);
@@ -1307,7 +1308,7 @@ public class CheckIn extends AppCompatActivity {
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
         payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
 
-        Config.logV("Service Selected" + service);
+      //  Config.logV("Response--PayU-------------------------" + checksumModel.getProductinfo().get(0).toString());
 
         String firstname = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         String lastname = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
@@ -1316,9 +1317,9 @@ public class CheckIn extends AppCompatActivity {
 
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
         builder.setAmount(convertStringToDouble(amount))
-                .setTxnId("86752422-217d-4719-a1ca-0825c26e7760"/*System.currentTimeMillis() + ""*/)
+                .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
-                .setProductName("{\"paymentParts\":[{\"name\":\"name\",\"description\":\"description\",\"value\":12.0,\"merchantId\":\"4825051\",\"commission\":0.0}]}")
+                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
                 .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
                 .setsUrl(checksumModel.getSuccessUrl())

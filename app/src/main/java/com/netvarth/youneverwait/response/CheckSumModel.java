@@ -1,5 +1,9 @@
 package com.netvarth.youneverwait.response;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+
 /**
  * Created by sharmila on 3/10/18.
  */
@@ -11,17 +15,31 @@ public class CheckSumModel {
     String merchantId;
     String email;
     String merchantKey;
-   /* String txnid;
+
+    public String getAmount() {
+        return amount;
+    }
+
+    String amount;
+
+   String txnid;
 
     public String getTxnid() {
         return txnid;
     }
 
-    public String getProductinfo() {
+    public ArrayList getPaymentParts() {
+        return paymentParts;
+    }
+
+    ArrayList paymentParts;
+
+    public CheckSumModel getProductinfo() {
         return productinfo;
     }
 
-    String productinfo;*/
+    @SerializedName("productinfo")
+   CheckSumModel productinfo;
 
     public String getChecksum() {
         return checksum;
