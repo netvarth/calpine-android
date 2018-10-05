@@ -34,12 +34,14 @@ import com.netvarth.youneverwait.utils.TypefaceFont;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.Headers;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okhttp3.internal.framed.Header;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -227,11 +229,20 @@ public class Login extends AppCompatActivity {
 
                         }
 
+
+                        Headers headerList = response.headers();
+                        String version=headerList.get("Version");
+                       Config.logV("Header----------"+version);
+
+                        SharedPreference.getInstance(mContext).setValue("Version",version);
+
                        // Config.logV("Email------------------"+response.body().get);
                         SharedPreference.getInstance(mContext).setValue("consumerId",response.body().getId());
                         SharedPreference.getInstance(mContext).setValue("register","success");
                         SharedPreference.getInstance(mContext).setValue("firstname",response.body().getFirstName());
                         SharedPreference.getInstance(mContext).setValue("lastname",response.body().getLastName());
+
+                        SharedPreference.getInstance(mContext).setValue("mobile",response.body().getPrimaryPhoneNumber());
                             Intent iReg = new Intent(mContext, Home.class);
                             startActivity(iReg);
                             finish();

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.activities.MessageActivity;
 import com.netvarth.youneverwait.activities.SwipeGalleryImage;
 import com.netvarth.youneverwait.adapter.SearchLocationAdapter;
 import com.netvarth.youneverwait.callback.SearchLocationAdpterCallback;
@@ -71,7 +73,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchCheckInMessage> mSearchmCheckMessageList;
 
 
-    TextView tv_busName, tv_domain, tv_desc, tv_exp;
+    TextView tv_busName, tv_domain, tv_desc, tv_exp,tv_msg;
 
     RecyclerView mRecyLocDetail;
     SearchLocationAdapter mSearchLocAdapter;
@@ -131,6 +133,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         Config.logV("UNIUE ID---------1111-------" + uniqueID);
         tv_busName = (TextView) row.findViewById(R.id.txtbus_name);
+        tv_msg=(TextView) row.findViewById(R.id.txtmsg);
         tv_domain = (TextView) row.findViewById(R.id.txt_domain);
         mImgeProfile = (ImageView) row.findViewById(R.id.i_profile);
         mImgthumbProfile = (ImageView) row.findViewById(R.id.iThumb_profile);
@@ -153,6 +156,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ApiSearchViewTerminology(uniqueID);
         mInterface = (SearchLocationAdpterCallback) this;
 
+        tv_msg.setEnabled(false);
+        tv_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Config.logV("Provider iD--------------"+ String.valueOf(mProvoderId));
+                Intent iCommunicate = new Intent(v.getContext(), MessageActivity.class);
+                iCommunicate.putExtra("accountID", String.valueOf(mProvoderId));
+                iCommunicate.putExtra("provider", tv_busName.getText().toString());
+                iCommunicate.putExtra("from", "detail");
+                mContext.startActivity(iCommunicate);
+            }
+        });
         return row;
     }
 
@@ -238,6 +253,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             tv_busName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
+        tv_msg.setEnabled(true);
         tv_busName.setText(getBussinessData.getBusinessName());
         rating.setRating(getBussinessData.getAvgRating());
 
@@ -301,6 +317,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
 
                         mBusinessDataList = response.body();
+                        Config.logV("Provider------------"+response.body().getId());
                         mProvoderId = response.body().getId();
                         UpdateMainUI(mBusinessDataList);
                         ApiSearchViewLocation(uniqueID);
@@ -821,6 +838,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
+
 
 
 }

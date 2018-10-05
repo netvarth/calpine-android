@@ -15,6 +15,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -26,12 +27,15 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,6 +54,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.activities.BillActivity;
 import com.netvarth.youneverwait.activities.SearchLocationActivity;
 import com.netvarth.youneverwait.adapter.ActiveCheckInAdapter;
 import com.netvarth.youneverwait.adapter.SearchListAdpter;
@@ -58,6 +63,7 @@ import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
 import com.netvarth.youneverwait.custom.CustomTypefaceSpan;
+import com.netvarth.youneverwait.model.BillModel;
 import com.netvarth.youneverwait.model.Domain_Spinner;
 import com.netvarth.youneverwait.model.LanLong;
 import com.netvarth.youneverwait.model.ListCell;
@@ -65,10 +71,14 @@ import com.netvarth.youneverwait.model.SearchModel;
 import com.netvarth.youneverwait.response.ActiveCheckIn;
 import com.netvarth.youneverwait.utils.SharedPreference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -261,7 +271,17 @@ ActiveAdapterOnCallback mInterface;
         mCurrentLoc.setTypeface(tyface);
         tv_popular.setTypeface(tyface);
 
+        latitude=12.971599;
+        longitude=77.594563;
+        try {
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            mCurrentLoc.setVisibility(View.VISIBLE);
+            mCurrentLoc.setText(addresses.get(0).getLocality());
+            //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
+        } catch (Exception e) {
 
+        }
         //APiGetDomain();
         APiSearchList();
 
@@ -780,19 +800,19 @@ ActiveAdapterOnCallback mInterface;
                 Config.logV("Query-----------" + querycreate);
 
 
-                 String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+                // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
 
 
-               // String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+                String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
                 Bundle bundle = new Bundle();
-                bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
-                bundle.putString("url", pass);
-
-
-                /*//VALID QUERY PASS
-                bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+                /*bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
                 bundle.putString("url", pass);*/
+
+
+                //VALID QUERY PASS
+                bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+                bundle.putString("url", pass);
                 SearchListFragment pfFragment = new SearchListFragment();
 
                 bundle.putString("latitude", String.valueOf(latitude));
@@ -1235,19 +1255,19 @@ ActiveAdapterOnCallback mInterface;
         Config.logV("Query-----------" + querycreate);
 
 
-        String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+       // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
 
 
-        //String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+        String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
         Bundle bundle = new Bundle();
-        bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
-        bundle.putString("url", pass);
-
-
-       /* //VALID QUERY PASS
-        bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+       /* bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
         bundle.putString("url", pass);*/
+
+
+       //VALID QUERY PASS
+        bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+        bundle.putString("url", pass);
         mSearchView.setQuery("", false);
         SearchListFragment pfFragment = new SearchListFragment();
 
@@ -1274,6 +1294,11 @@ ActiveAdapterOnCallback mInterface;
     @Override
     public void onResume() {
         super.onResume();
+        String s_currentLoc=SharedPreference.getInstance(getActivity()).getStringValue("current_loc","");
+        if(!s_currentLoc.equalsIgnoreCase("no")) {
+            Config.logV("Current Location---------------------------");
+            googleApiClient.connect();
+        }
 
 
     }
@@ -1354,8 +1379,9 @@ ActiveAdapterOnCallback mInterface;
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
                     mylocation =                     LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                     LocationRequest locationRequest = new LocationRequest();
-                    locationRequest.setInterval(3000);
-                    locationRequest.setFastestInterval(3000);
+                    locationRequest.setInterval(3000);        // 10 seconds, in milliseconds
+                    locationRequest.setFastestInterval(1 * 1000); // 1 second, in milliseconds
+
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                             .addLocationRequest(locationRequest);
@@ -1472,20 +1498,20 @@ ActiveAdapterOnCallback mInterface;
         //  Config.logV("Query-----------" + querycreate);
 
 
-        String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+       // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
 
 
-        // String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+         String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
         Bundle bundle = new Bundle();
 
 
-        bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
-        bundle.putString("url", pass);
+      /*  bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
+        bundle.putString("url", pass);*/
 
         //VALID QUERY PASS
-        /*bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
-        bundle.putString("url", pass);*/
+        bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+        bundle.putString("url", pass);
         SearchListFragment pfFragment = new SearchListFragment();
 
         bundle.putString("latitude", String.valueOf(latitude));
@@ -1543,10 +1569,208 @@ ActiveAdapterOnCallback mInterface;
         bundle.putString("uniqueID", value);
         pfFragment.setArguments(bundle);
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
+
+    @Override
+    public void onMethodActiveBillIconCallback(String value,String provider) {
+      Intent iBill=new Intent(mContext, BillActivity.class);
+      iBill.putExtra("ynwUUID",value);
+        iBill.putExtra("provider",provider);
+      startActivity(iBill);
+
+    }
+
+    @Override
+    public void onMethodMessageCallback(final String ynwuuid, final String accountID,String providerNAme) {
+        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+        dialog.setContentView(R.layout.reply);
+        dialog.show();
+
+        Button btn_send=(Button)dialog.findViewById(R.id.btn_send);
+        Button btn_cancel=(Button)dialog.findViewById(R.id.btn_cancel);
+        final EditText edt_message=(EditText) dialog.findViewById(R.id.edt_message);
+        TextView txtsendmsg=(TextView) dialog.findViewById(R.id.txtsendmsg);
+        String firstWord="Message to ";
+        String secondWord=providerNAme;
+        Spannable spannable = new SpannableString(firstWord+secondWord);
+        Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface2), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        txtsendmsg.setText( spannable );
+
+
+
+        btn_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ApiCommunicate(ynwuuid,String.valueOf(accountID),edt_message.getText().toString(),dialog);
+
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onMethodDelecteCheckinCallback(final String ynwuuid,final int accountID) {
+        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+        dialog.setContentView(R.layout.cancelcheckin);
+        dialog.show();
+
+        Button btn_send=(Button)dialog.findViewById(R.id.btn_send);
+        Button btn_cancel=(Button)dialog.findViewById(R.id.btn_cancel);
+        final EditText edt_message=(EditText) dialog.findViewById(R.id.edt_message);
+        TextView txtsendmsg=(TextView) dialog.findViewById(R.id.txtsendmsg);
+
+
+
+        btn_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ApiDeleteCheckin(ynwuuid,String.valueOf(accountID),dialog);
+
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+
+    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("communicationMessage", message);
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.WaitListMessage(waitListId,String.valueOf(accountID),body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        dialog.dismiss();
+
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
+
+    private void ApiDeleteCheckin(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+
+        Call<ResponseBody> call = apiService.deleteActiveCheckIn(ynwuuid,String.valueOf(accountID));
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        if(response.body().string().equalsIgnoreCase("true")) {
+                            dialog.dismiss();
+                            ApiActiveCheckIn();
+                        }
+
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
+
 }

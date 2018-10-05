@@ -50,8 +50,8 @@ public class TermsOfUse extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // what do you want here
-               // overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                finish();
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+               onBackPressed();
             }
         });
 

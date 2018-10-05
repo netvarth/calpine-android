@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.adapter.ViewPagerAdapter;
+import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.utils.BottomNavigationViewHelper;
 
 /**
@@ -166,7 +167,6 @@ public class HomeTabFragment extends Fragment {
 
         if (currentFragment != null) {
             // lets see if the currentFragment or any of its childFragment can handle onBackPressed
-
 
             return currentFragment.onBackPressed();
         }

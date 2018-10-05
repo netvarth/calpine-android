@@ -21,4 +21,5 @@
     <dimen name="padding40">38dp</dimen>
     <dimen name="txtsize_14">15sp</dimen>
     <dimen name="txtsize_10">11sp</dimen>
+    <dimen name="txtsize_12">12sp</dimen>
 </resources>

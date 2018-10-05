@@ -38,8 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/default_padding"
-                android:layout_marginLeft="@dimen/padding3"
-                android:layout_marginRight="@dimen/padding3"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginRight="@dimen/padding5"
                 android:layout_marginTop="@dimen/default_padding"
                 card_view:cardCornerRadius="10dp">
 
@@ -146,7 +146,7 @@
                         android:textSize="@dimen/txtsize_hint"
                         android:visibility="gone" />
 
-                    <!--<android.support.v7.widget.RecyclerView
+                 <!-- <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycleQueueList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

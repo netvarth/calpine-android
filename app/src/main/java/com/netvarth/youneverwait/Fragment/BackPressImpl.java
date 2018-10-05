@@ -29,6 +29,7 @@ public class BackPressImpl implements OnBackPressListener {
         if (childCount == 0) {
             // it has no child Fragment
             // can not handle the onBackPressed task by itself
+            Config.logV("Back Presskk----------pop 111111111111111111-");
             return false;
 
         } else {
@@ -42,7 +43,7 @@ public class BackPressImpl implements OnBackPressListener {
                 // child Fragment was unable to handle the task
                 // It could happen when the child Fragment is last last leaf of a chain
                 // removing the child Fragment from stack
-                Config.logV("Back Press----------pop-" + childFragment);
+                Config.logV("Back Presskk----------pop-" + childFragment);
                 childFragmentManager.popBackStackImmediate();
 
 

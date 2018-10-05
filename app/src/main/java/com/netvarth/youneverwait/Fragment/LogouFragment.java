@@ -2,6 +2,7 @@ package com.netvarth.youneverwait.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.activities.Register;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
@@ -125,6 +127,9 @@ public class LogouFragment  extends RootFragment {
                         Config.logV("Response----------------");
                         SharedPreference.getInstance(mContext).clear();
                         // if(response.body().equals("true")) {
+
+                      Intent iLogout=new Intent(mContext, Register.class);
+                      startActivity(iLogout);
                        getActivity().finish();
                         //  }
 

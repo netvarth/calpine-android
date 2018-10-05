@@ -349,6 +349,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
         txt_toolbarlocation.setTypeface(tyface);
+        txt_toolbarlocation.setClickable(false);
 
         try {
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
@@ -856,11 +857,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
               /*  mRecySearchDetail.smoothScrollToPosition(0);*/
 
 
+
                 Config.logV("Query-----------" + querycreate);
 
-                final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
+               // final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
 
-                final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+                final String query1 =  "(and location1:" + locationRange + querycreate + ")";
+              //  final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+                final String pass1 =    "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
                 query = query1;
                 url = pass1;
@@ -1732,9 +1736,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         Config.logV("Query-----------" + querycreate);
 
-        final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
+     /*   final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
 
-        final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+        final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";*/
+
+
+        final String query1 =  "(and location1:" + locationRange + querycreate + ")";
+
+        final String pass1 =    "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
         query = query1;
         url = pass1;

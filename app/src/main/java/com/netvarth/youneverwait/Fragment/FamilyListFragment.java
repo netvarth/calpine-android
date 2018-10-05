@@ -76,7 +76,8 @@ public class FamilyListFragment extends RootFragment implements FamilyAdapterCal
         mRecyclefamilyMember=(RecyclerView)row.findViewById(R.id.familyMember);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        ((AppCompatActivity) getActivity()).  getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         tv_title.setText("Members");
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -108,9 +109,9 @@ public class FamilyListFragment extends RootFragment implements FamilyAdapterCal
 
                 FamilyMemberFragment pfFragment = new FamilyMemberFragment();
                 pfFragment.setArguments(bundle);
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 // Store the Fragment in stack
-               // transaction.addToBackStack(null);
+                transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
             }
         });
@@ -136,7 +137,7 @@ public class FamilyListFragment extends RootFragment implements FamilyAdapterCal
     public void onResume() {
         super.onResume();
         Config.logV("OnRESUME----------- LIST");
-        //ApiAddFamilyMember();
+        ApiAddFamilyMember();
 
     }
 

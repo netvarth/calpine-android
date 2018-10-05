@@ -39,7 +39,7 @@ public class MessageActivity extends AppCompatActivity {
     TextView tv_sendmsg;
     Context mContext;
     Activity mActivity;
-    String accountID, provider,modifyAccountID;
+    String accountID, provider,modifyAccountID,from;
     Toolbar toolbar;
     SearchTerminology mSearchTerminology = new SearchTerminology();
     @Override
@@ -56,8 +56,14 @@ public class MessageActivity extends AppCompatActivity {
         if (extras != null) {
             provider = extras.getString("provider");
             accountID = extras.getString("accountID");
-            modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
+            from = extras.getString("from");
+            if(from.equalsIgnoreCase("detail")){
+                modifyAccountID = extras.getString("accountID");
+            }else {
+                modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
+            }
 
+            Config.logV("Account ID----------------"+modifyAccountID);
         }
 
 
@@ -69,9 +75,18 @@ public class MessageActivity extends AppCompatActivity {
 
         tv_title.setText("Send Message");
 
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Regular.otf");
-        tv_title.setTypeface(tyface);
+        Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
 
         tv_sendmsg.setText("Message to " + provider);
         btn_cancel.setOnClickListener(new View.OnClickListener() {

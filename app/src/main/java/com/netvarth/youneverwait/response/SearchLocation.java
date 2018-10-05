@@ -10,6 +10,11 @@ import java.util.ArrayList;
 
 public class SearchLocation {
 
+    public String getGoogleMapUrl() {
+        return googleMapUrl;
+    }
+
+    String googleMapUrl;
     //Location
     private int id;
     private String place;

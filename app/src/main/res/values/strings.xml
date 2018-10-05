@@ -94,6 +94,14 @@
     <string name="currentloc">Use current location</string>
     <string name="hint_message">Type your message here</string>
     <string name="searchhint_loc">Eg: Majestic, Bangalore, Karnataka</string>
+    <string name="customer">Customer</string>
+    <string name="datetime"><![CDATA[Date & Time]]></string>
+    <string name="bill">Bill Number</string>
+    <string name="GSTIN">GSTIN</string>
+    <string name="amount">Amount</string>
+    <string name="discount">Discount</string>
+    <string name="tax">Tax 10% of 13500</string>
+    <string name="amt_pay">Amount Paid</string>
 
 
 </resources>

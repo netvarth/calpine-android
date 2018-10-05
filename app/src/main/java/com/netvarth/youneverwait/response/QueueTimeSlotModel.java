@@ -87,4 +87,13 @@ public class QueueTimeSlotModel {
     int queueWaitingTime;
     String serviceTime;
 
+    public String getCalculationMode() {
+        return calculationMode;
+    }
+
+    public void setCalculationMode(String calculationMode) {
+        this.calculationMode = calculationMode;
+    }
+
+    String calculationMode;
 }

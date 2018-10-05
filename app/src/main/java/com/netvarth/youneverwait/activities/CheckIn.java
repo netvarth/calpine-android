@@ -4,17 +4,16 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -23,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -37,12 +37,18 @@ import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
 import com.netvarth.youneverwait.custom.CustomTypefaceSpan;
+import com.netvarth.youneverwait.response.CheckSumModel;
 import com.netvarth.youneverwait.response.PaymentModel;
 import com.netvarth.youneverwait.response.QueueTimeSlotModel;
 import com.netvarth.youneverwait.response.SearchService;
 import com.netvarth.youneverwait.response.SearchSetting;
 import com.netvarth.youneverwait.response.SearchTerminology;
 import com.netvarth.youneverwait.utils.SharedPreference;
+import com.payumoney.core.PayUmoneyConfig;
+import com.payumoney.core.PayUmoneySdkInitializer;
+import com.payumoney.core.entity.TransactionResponse;
+import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
+import com.payumoney.sdkui.ui.utils.ResultModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,11 +60,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
-import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -113,16 +116,23 @@ public class CheckIn extends AppCompatActivity {
     static ImageView ic_cal_minus;
     ImageView ic_cal_add;
     Button btn_checkin;
-    static int queueId=0;
+    static int queueId = 0;
 
     int selectedService;
 
+    static String selectedDateFormat;
+    String serviceSelected;
+
+    TextView tv_addnote;
+
+    String txt_message="";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.checkin_copy);
+        setContentView(R.layout.checkin);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mActivity = this;
 
         btn_checkin = (Button) findViewById(R.id.btn_checkin);
 
@@ -147,8 +157,6 @@ public class CheckIn extends AppCompatActivity {
         tv_queuename = (TextView) findViewById(R.id.txt_queuename);
 
 
-
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,6 +164,42 @@ public class CheckIn extends AppCompatActivity {
                 finish();
             }
         });
+
+
+        tv_addnote = (TextView) findViewById(R.id.txtaddnote);
+        tv_addnote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+                dialog.setContentView(R.layout.reply);
+                dialog.show();
+
+                Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+                Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+                txtsendmsg.setVisibility(View.GONE);
+                btn_send.setText("ADD");
+
+
+                btn_send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        txt_message=edt_message.getText().toString();
+                        dialog.dismiss();
+
+                    }
+                });
+
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
 
         ic_left = (ImageView) findViewById(R.id.ic_left);
         ic_right = (ImageView) findViewById(R.id.ic_right);
@@ -184,7 +228,11 @@ public class CheckIn extends AppCompatActivity {
                 //to convert Date to String, use format method of SimpleDateFormat class.
                 String strDate = dateFormat.format(added_date);
                 txt_date.setText(strDate);
-                UpdateDAte();
+
+
+                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+                selectedDateFormat = selecteddateParse.format(added_date);
+                UpdateDAte(selectedDateFormat);
 
 
             }
@@ -211,7 +259,14 @@ public class CheckIn extends AppCompatActivity {
                 //to convert Date to String, use format method of SimpleDateFormat class.
                 String strDate = dateFormat.format(added_date);
                 txt_date.setText(strDate);
-                UpdateDAte();
+
+
+                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+                selectedDateFormat = selecteddateParse.format(added_date);
+                UpdateDAte(selectedDateFormat);
+
+
+                //  UpdateDAte(strDate);
             }
         });
 
@@ -240,9 +295,9 @@ public class CheckIn extends AppCompatActivity {
             uniqueID = extras.getString("uniqueID");
             accountID = extras.getString("accountID");
             mFrom = extras.getString("from", "");
-            if(mFrom.equalsIgnoreCase("searchdetail_future")||mFrom.equalsIgnoreCase("searchdetail_checkin")){
-                modifyAccountID=accountID;
-            }else {
+            if (mFrom.equalsIgnoreCase("searchdetail_future") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+                modifyAccountID = accountID;
+            } else {
                 modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
             }
 
@@ -259,9 +314,9 @@ public class CheckIn extends AppCompatActivity {
         btn_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // ApiGenerateHash();
+                // ApiGenerateHash();
 
-                ApiCheckin();
+                ApiCheckin(txt_message);
             }
         });
 
@@ -275,6 +330,7 @@ public class CheckIn extends AppCompatActivity {
         tv_name.setText(mFirstName + " " + mLastName);
         tv_addmember = (TextView) findViewById(R.id.txtaddmember);
 
+
         tv_addmember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -286,12 +342,14 @@ public class CheckIn extends AppCompatActivity {
             }
         });
 
+
         mSpinnerService.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
 
-                selectedService=((SearchService) mSpinnerService.getSelectedItem()).getId();
+                serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
+                selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
                 String firstWord = "Check-in for ";
                 String secondWord = ((SearchService) mSpinnerService.getSelectedItem()).getName();
 
@@ -331,7 +389,7 @@ public class CheckIn extends AppCompatActivity {
         });
 
 
-        if (mFrom.equalsIgnoreCase("checkin")||mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
             LcheckinDatepicker.setVisibility(View.GONE);
         } else {
             LcheckinDatepicker.setVisibility(View.VISIBLE);
@@ -344,7 +402,11 @@ public class CheckIn extends AppCompatActivity {
             txt_date.setText(sdf.format(currentTime));
 
 
-            UpdateDAte();
+            DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+            selectedDateFormat = selecteddateParse.format(currentTime);
+
+
+            UpdateDAte(selectedDateFormat);
 
 
         }
@@ -360,7 +422,6 @@ public class CheckIn extends AppCompatActivity {
         });
 
     }
-
 
 
     public Date addDays(Date date, int days) {
@@ -417,15 +478,16 @@ public class CheckIn extends AppCompatActivity {
                         txt_date.setText(mDate);
 
 
-                        UpdateDAte();
+                        selectedDateFormat = view.getYear() + "-" + (view.getMonth() + 1) + "-" + view.getDayOfMonth();
+                        UpdateDAte(selectedDateFormat);
 
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, mDate);
+
                     }
                 };
     }
 
 
-    public static void UpdateDAte() {
+    public static void UpdateDAte(String selectedDate) {
         Date selecteddate = null;
         String dtStart = txt_date.getText().toString();
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
@@ -436,7 +498,8 @@ public class CheckIn extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
+        Config.logV("Selected Date----------------" + selectedDate);
+        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate);
         if (new Date().before(selecteddate)) {
             Config.logV("Date Enabled---------------");
             ic_cal_minus.setEnabled(true);
@@ -449,12 +512,13 @@ public class CheckIn extends AppCompatActivity {
         }
     }
 
-   static  int familyMEmID;
-    public static void refreshName(String name ,int memID) {
+    static int familyMEmID;
+
+    public static void refreshName(String name, int memID) {
         Config.logV("NAme----------" + name);
         if (name != null && !name.equalsIgnoreCase("")) {
             tv_name.setText(name);
-            familyMEmID=memID;
+            familyMEmID = memID;
         }
     }
 
@@ -602,48 +666,73 @@ public class CheckIn extends AppCompatActivity {
                     Config.logV("mQueueTimeSlotList--------11111-----------------" + response.code());
                     if (response.code() == 200) {
                         mQueueTimeSlotList = response.body();
-
-
-                        if(mQueueTimeSlotList.get(i).getId()!=0) {
-                            queueId = mQueueTimeSlotList.get(i).getId();
-                        }
-
-                        Config.logV("mQueueTimeSlotList-------------------------" + mQueueTimeSlotList.size());
+                        i = 0;
                         if (mQueueTimeSlotList.size() > 0) {
+
+                            tv_queuename.setVisibility(View.VISIBLE);
+                            tv_queuetime.setVisibility(View.VISIBLE);
+                            tv_waittime.setVisibility(View.VISIBLE);
+                            if (mQueueTimeSlotList.get(i).getId() != 0) {
+                                queueId = mQueueTimeSlotList.get(i).getId();
+                            }
+
+                            Config.logV("mQueueTimeSlotList-------------------------" + mQueueTimeSlotList.size());
                             tv_queue.setVisibility(View.VISIBLE);
                             queuelayout.setVisibility(View.VISIBLE);
+
+
+                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
+                            tv_queuetime.setText(mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
+
+                            String firstWord = "Est Wait Time ";
+                            String secondWord = null;
+                            try {
+                                String startTime = "00:00";
+                                String newtime = null;
+                                int minutes = mQueueTimeSlotList.get(0).getQueueWaitingTime();
+                                int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
+                                int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
+                                if (m > 0 && h > 0) {
+                                    newtime = h + "Hour :" + m + "Minutes";
+                                } else if (h > 0 && m == 0) {
+                                    newtime = h + "Hour";
+                                } else {
+                                    newtime = m + "Minutes";
+                                }
+                                secondWord = newtime;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                            if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
+                                secondWord = mQueueTimeSlotList.get(0).getServiceTime();
+                            }
+
+                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            tv_waittime.setText(spannable);
+
+                            if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                                tv_waittime.setVisibility(View.INVISIBLE);
+                            } else {
+                                tv_waittime.setVisibility(View.VISIBLE);
+                            }
+
+
                         } else {
+
+
                             tv_queue.setVisibility(View.GONE);
                             queuelayout.setVisibility(View.GONE);
-
+                            tv_queuename.setVisibility(View.GONE);
+                            tv_queuetime.setVisibility(View.GONE);
+                            tv_waittime.setVisibility(View.GONE);
                         }
-
-
-                        tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
-                        tv_queuetime.setText(mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
-
-                        String firstWord = "Est Wait Time ";
-                        String secondWord = null;
-                        try {
-                            secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueWaitingTime()) + " Minutes";
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-
-                        if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
-                            secondWord = mQueueTimeSlotList.get(0).getServiceTime();
-                        }
-
-                        Spannable spannable = new SpannableString(firstWord + secondWord);
-                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        tv_waittime.setText(spannable);
-
-
                         if (mQueueTimeSlotList.size() > 1) {
 
                             ic_right.setVisibility(View.VISIBLE);
@@ -671,26 +760,37 @@ public class CheckIn extends AppCompatActivity {
                                 i--;
                                 Config.logV("Left Click------------------**" + i);
                                 if (i >= 0) {
-                                    ic_left.setEnabled(true);
-                                    ic_left.setImageResource(R.drawable.icon_left_angle_active);
+
                                     tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
                                     String firstWord = "Est Wait Time ";
-                                    String secondWord=null;
+                                    String secondWord = null;
                                     try {
-                                        secondWord = String.valueOf(mQueueTimeSlotList.get(i).getQueueWaitingTime()) + " Minutes";
-                                    }catch(Exception e){
+                                        String startTime = "00:00";
+                                        String newtime;
+                                        int minutes = mQueueTimeSlotList.get(i).getQueueWaitingTime();
+                                        int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
+                                        int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
+                                        if (m > 0 && h > 0) {
+                                            newtime = h + "Hour :" + m + "Minutes";
+                                        } else if (h > 0 && m == 0) {
+                                            newtime = h + "Hour";
+                                        } else {
+                                            newtime = m + "Minutes";
+                                        }
+                                        secondWord = newtime;
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
 
-                                    if(mQueueTimeSlotList.get(i).getId()!=0) {
+                                    if (mQueueTimeSlotList.get(i).getId() != 0) {
                                         queueId = mQueueTimeSlotList.get(i).getId();
                                     }
 
-                                    if(mQueueTimeSlotList.get(i).getServiceTime()!=null){
-                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime() ;
+                                    if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
+                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime();
                                     }
 
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -701,10 +801,11 @@ public class CheckIn extends AppCompatActivity {
                                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     tv_waittime.setText(spannable);
 
-
-                                } else {
-                                    ic_left.setEnabled(false);
-                                    ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                                    if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                                        tv_waittime.setVisibility(View.INVISIBLE);
+                                    } else {
+                                        tv_waittime.setVisibility(View.VISIBLE);
+                                    }
                                 }
 
 
@@ -714,6 +815,15 @@ public class CheckIn extends AppCompatActivity {
                                 } else {
                                     ic_right.setEnabled(false);
                                     ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                                }
+
+                                if (i <= 0) {
+                                    ic_left.setEnabled(false);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                                } else {
+
+                                    ic_left.setEnabled(true);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_active);
                                 }
 
                             }
@@ -727,29 +837,40 @@ public class CheckIn extends AppCompatActivity {
                                     i = 0;
                                 }
                                 i++;
-                                Config.logV("Right Click------------------" + i);
+                                Config.logV("Right Click----1111--------------" + i);
                                 if (i < mQueueTimeSlotList.size()) {
-                                    ic_right.setEnabled(true);
-                                    ic_right.setImageResource(R.drawable.icon_right_angle_active);
+
                                     tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
 
-                                    if(mQueueTimeSlotList.get(i).getId()!=0) {
+                                    if (mQueueTimeSlotList.get(i).getId() != 0) {
                                         queueId = mQueueTimeSlotList.get(i).getId();
                                     }
 
                                     String firstWord = "Est Wait Time ";
-                                    String secondWord=null;
+                                    String secondWord = null;
                                     try {
-                                        secondWord = String.valueOf(mQueueTimeSlotList.get(i).getQueueWaitingTime()) + " Minutes";
-                                    }catch(Exception e){
+                                        String startTime = "00:00";
+                                        String newtime;
+                                        int minutes = mQueueTimeSlotList.get(i).getQueueWaitingTime();
+                                        int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
+                                        int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
+                                        if (m > 0 && h > 0) {
+                                            newtime = h + "Hour :" + m + "Minutes";
+                                        } else if (h > 0 && m == 0) {
+                                            newtime = h + "Hour";
+                                        } else {
+                                            newtime = m + "Minutes";
+                                        }
+                                        secondWord = newtime;
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
 
-                                    if(mQueueTimeSlotList.get(i).getServiceTime()!=null){
-                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime() ;
+                                    if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
+                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime();
                                     }
 
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -759,13 +880,12 @@ public class CheckIn extends AppCompatActivity {
                                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     tv_waittime.setText(spannable);
+                                    if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                                        tv_waittime.setVisibility(View.INVISIBLE);
+                                    } else {
+                                        tv_waittime.setVisibility(View.VISIBLE);
+                                    }
 
-
-                                } else {
-                                    Config.logV("Right Click------------------" + i);
-                                    i--;
-                                    ic_right.setEnabled(false);
-                                    ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
                                 }
 
                                 if (i >= 0) {
@@ -774,6 +894,16 @@ public class CheckIn extends AppCompatActivity {
                                 } else {
                                     ic_left.setEnabled(false);
                                     ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                                }
+
+                                Config.logV("Queuesize---------------" + mQueueTimeSlotList.size() + "position" + i);
+                                if (i == mQueueTimeSlotList.size() - 1) {
+
+                                    ic_right.setEnabled(false);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                                } else {
+                                    ic_right.setEnabled(true);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_active);
                                 }
                             }
                         });
@@ -952,7 +1082,7 @@ public class CheckIn extends AppCompatActivity {
 
     }
 
-    private void ApiGenerateHash(String ynwUUID) {
+    private void ApiGenerateHash(String ynwUUID, String amount) {
 
 
         ApiInterface apiService =
@@ -962,24 +1092,26 @@ public class CheckIn extends AppCompatActivity {
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
-        String uniqueID = UUID.randomUUID().toString();
+        //  String uniqueID = UUID.randomUUID().toString();
         JSONObject jsonObj = new JSONObject();
         try {
             String androidId = Settings.Secure.getString(getContentResolver(),
                     Settings.Secure.ANDROID_ID);
-            jsonObj.put("amount", "1");
+            jsonObj.put("amount", amount);
             jsonObj.put("paymentMode", "DC");
             jsonObj.put("uuid", ynwUUID);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.generateHash(body);
 
-        call.enqueue(new Callback<ResponseBody>() {
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<CheckSumModel> call = apiService.generateHash(body);
+
+        call.enqueue(new Callback<CheckSumModel>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {
 
                 try {
 
@@ -993,8 +1125,15 @@ public class CheckIn extends AppCompatActivity {
                     if (response.code() == 200) {
 
 
-                        Config.logV("Response--cbody---------------------" + response.body().string());
-                    }else{
+                        CheckSumModel response_data = response.body();
+                        Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
+                        Config.logV("Checksum id-----------" + response_data.getChecksum());
+                       // Config.logV("Product key-----------" + response_data.getProductinfo());
+
+                        launchPaymentFlow(sAmountPay, response_data, serviceSelected);
+
+
+                    } else {
                         String responseerror = response.errorBody().string();
                         Config.logV("Response--error-------------------------" + responseerror);
                     }
@@ -1007,7 +1146,7 @@ public class CheckIn extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<CheckSumModel> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -1018,8 +1157,8 @@ public class CheckIn extends AppCompatActivity {
 
 
     }
-
-    private void ApiCheckin() {
+    String value = null;
+    private void ApiCheckin( String txt_addnote) {
 
 
         ApiInterface apiService =
@@ -1040,34 +1179,33 @@ public class CheckIn extends AppCompatActivity {
         JSONObject qjsonObj = new JSONObject();
         JSONObject queueobj = new JSONObject();
         JSONObject waitobj = new JSONObject();
-        JSONObject service=new JSONObject();
-       //
+        JSONObject service = new JSONObject();
+        //
         // JSONObject serviceObj=new JSONObject();
-        JSONArray waitlistArray=new JSONArray();
+        JSONArray waitlistArray = new JSONArray();
         try {
 
             qjsonObj.put("id", queueId);
             queueobj.put("date", formattedDate);
-            queueobj.put("consumerNote","");
-            service.put("id",serviceId);
+            queueobj.put("consumerNote", txt_addnote);
+            service.put("id", serviceId);
 
-            if(familyMEmID==0){
-                familyMEmID=consumerID;
+            if (familyMEmID == 0) {
+                familyMEmID = consumerID;
             }
-            waitobj.put("id",familyMEmID);
+            waitobj.put("id", familyMEmID);
             waitlistArray.put(waitobj);
 
 
-
-            queueobj.putOpt("service",selectedService);
-            queueobj.putOpt("queue",qjsonObj);
-            queueobj.putOpt("waitlistingFor",waitlistArray);
+            queueobj.putOpt("service", selectedService);
+            queueobj.putOpt("queue", qjsonObj);
+            queueobj.putOpt("waitlistingFor", waitlistArray);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
-        Call<ResponseBody> call = apiService.Checkin(modifyAccountID,body);
+        Call<ResponseBody> call = apiService.Checkin(modifyAccountID, body);
         Config.logV("JSON--------------" + new Gson().toJson(queueobj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -1084,27 +1222,61 @@ public class CheckIn extends AppCompatActivity {
 
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext," Check-in saved successfully ",Toast.LENGTH_LONG).show();
+                        txt_message="";
+                        Toast.makeText(mContext, " Check-in saved successfully ", Toast.LENGTH_LONG).show();
                         JSONObject reader = new JSONObject(response.body().string());
-                        Iterator iteratorObj = reader .keys();
-                        String value = null;
-                        while (iteratorObj.hasNext())
-                        {
-                            String getJsonObj = (String)iteratorObj.next();
+                        Iterator iteratorObj = reader.keys();
+
+                        while (iteratorObj.hasNext()) {
+                            String getJsonObj = (String) iteratorObj.next();
                             System.out.println("KEY: " + "------>" + getJsonObj);
-                             value = reader.getString(getJsonObj);
+                            value = reader.getString(getJsonObj);
 
 
                         }
 
                         System.out.println("VALUE: " + "------>" + value);
-                       // finish();
-                     //   Config.logV("Response--cbody---------------------" + getJsonObj);
-                        ApiGenerateHash(value);
-                    }else{
+                        // finish();
+                        Config.logV("Response--isPrepayment------------------" + isPrepayment);
+                        if (isPrepayment) {
+                            final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+                            dialog.setContentView(R.layout.prepayment);
+                            dialog.show();
+
+                            Button btn_paytm=(Button)dialog.findViewById(R.id.btn_paytm);
+                            Button btn_payu=(Button)dialog.findViewById(R.id.btn_payu);
+                            final EditText edt_message=(EditText) dialog.findViewById(R.id.edt_message);
+                            TextView txtamt=(TextView) dialog.findViewById(R.id.txtamount);
+                            txtamt.setText(sAmountPay);
+                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                            txtamt.setTypeface(tyface1);
+                            btn_payu.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ApiGenerateHash(value, sAmountPay);
+                                    dialog.dismiss();
+
+                                }
+                            });
+
+                            btn_paytm.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            });
+
+
+
+                        }else{
+                            finish();
+                        }
+                    } else {
+                        txt_message="";
                         String responseerror = response.errorBody().string();
                         Config.logV("Response--error-------------------------" + responseerror);
-                        Toast.makeText(mContext,responseerror,Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
                     }
 
 
@@ -1126,4 +1298,111 @@ public class CheckIn extends AppCompatActivity {
 
 
     }
+
+    Dialog mDialog1 = null;
+
+    private void launchPaymentFlow(String amount, CheckSumModel checksumModel, String service) {
+        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
+
+        // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
+        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+
+        Config.logV("Service Selected" + service);
+
+        String firstname = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
+        String lastname = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
+
+        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+
+        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
+        builder.setAmount(convertStringToDouble(amount))
+                .setTxnId("86752422-217d-4719-a1ca-0825c26e7760"/*System.currentTimeMillis() + ""*/)
+                .setPhone(mobile)
+                .setProductName("{\"paymentParts\":[{\"name\":\"name\",\"description\":\"description\",\"value\":12.0,\"merchantId\":\"4825051\",\"commission\":0.0}]}")
+                .setFirstName(firstname)
+                .setEmail(checksumModel.getEmail())
+                .setsUrl(checksumModel.getSuccessUrl())
+                .setfUrl(checksumModel.getFailureUrl())
+                .setUdf1("")
+                .setUdf2("")
+                .setUdf3("")
+                .setUdf4("")
+                .setUdf5("")
+                .setUdf6("")
+                .setUdf7("")
+                .setUdf8("")
+                .setUdf9("")
+                .setUdf10("")
+                .setIsDebug(true)
+                .setKey(checksumModel.getMerchantKey())
+                .setMerchantId(checksumModel.getMerchantId());
+
+        try {
+            PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
+            if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
+                Toast.makeText(mContext, "Could not generate hash", Toast.LENGTH_SHORT).show();
+            } else {
+                mDialog1 = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+                mDialog1.show();
+                Config.logV("Checksum id---22222222222222--------" + checksumModel.getChecksum());
+                mPaymentParams.setMerchantHash(checksumModel.getChecksum());
+                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.PayUMoney, true);
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+            if (mDialog1.isShowing())
+                Config.closeDialog(getParent(), mDialog1);
+            // mTxvBuy.setEnabled(true);
+        }
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //   mTxvBuy.setEnabled(true);
+        if (mDialog1.isShowing())
+            Config.closeDialog(getParent(), mDialog1);
+        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
+
+
+            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
+            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
+
+            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
+
+                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
+                    showAlert("Payment Successful");
+                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
+                    showAlert("Payment Cancelled");
+                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
+                    showAlert("Payment Failed");
+                }
+
+            } else if (resultModel != null && resultModel.getError() != null) {
+                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
+            showAlert("Payment Cancelled");
+        }
+    }
+
+    private Double convertStringToDouble(String str) {
+        return Double.parseDouble(str);
+    }
+
+    private void showAlert(String msg) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage(msg);
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
+
 }

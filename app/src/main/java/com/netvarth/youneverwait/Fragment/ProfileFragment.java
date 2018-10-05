@@ -1,5 +1,6 @@
 package com.netvarth.youneverwait.Fragment;
 
+import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -85,6 +86,7 @@ public class ProfileFragment extends RootFragment {
             public void onClick(View v) {
                 ChangeEmailFragment changeFragment = new ChangeEmailFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, changeFragment).commit();
@@ -96,6 +98,7 @@ public class ProfileFragment extends RootFragment {
             public void onClick(View v) {
                 ChangePhoneFragment changeFragment = new ChangePhoneFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, changeFragment).commit();
@@ -107,6 +110,7 @@ public class ProfileFragment extends RootFragment {
             public void onClick(View v) {
                 ChangePasswordFragment changeFragment = new ChangePasswordFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, changeFragment).commit();
@@ -121,6 +125,7 @@ public class ProfileFragment extends RootFragment {
 
                 EditProfileFragment pfFragment = new EditProfileFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
@@ -143,6 +148,7 @@ public class ProfileFragment extends RootFragment {
             public void onClick(View v) {
                 LogouFragment pfFragment = new LogouFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
@@ -155,7 +161,8 @@ public class ProfileFragment extends RootFragment {
             @Override
             public void onClick(View v) {
                 Intent iTerm=new Intent(mContext, TermsOfUse.class);
-                startActivity(iTerm);
+                Bundle bndlanimation = ActivityOptions.makeCustomAnimation(mContext, R.anim.slide_in_right, R.anim.slide_out_left).toBundle();
+                startActivity(iTerm,bndlanimation);
             }
         });
 
@@ -217,7 +224,7 @@ public class ProfileFragment extends RootFragment {
                                 FamilyListFragment pfFragment = new FamilyListFragment();
                                 pfFragment.setArguments(bundle);
                                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                                // Store the Fragment in stack
+                                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right); // Store the Fragment in stack
                                 transaction.addToBackStack(null);
                                 transaction.replace(R.id.mainlayout, pfFragment).commit();
                             }
@@ -230,7 +237,7 @@ public class ProfileFragment extends RootFragment {
                             FamilyMemberFragment pfFragment = new FamilyMemberFragment();
                             pfFragment.setArguments(bundle);
                             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                            // Store the Fragment in stack
+                            transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);// Store the Fragment in stack
                             transaction.addToBackStack(null);
                             transaction.replace(R.id.mainlayout, pfFragment).commit();
                         }

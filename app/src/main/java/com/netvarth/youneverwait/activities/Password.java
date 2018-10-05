@@ -482,10 +482,19 @@ public class Password extends AppCompatActivity {
 
                         }
 
+
+                        Headers headerList = response.headers();
+                        String version=headerList.get("Version");
+                        Config.logV("Header----------"+version);
+
+                        SharedPreference.getInstance(mContext).setValue("Version",version);
+
+
                         SharedPreference.getInstance(mContext).setValue("firstname",response.body().getFirstName());
                         SharedPreference.getInstance(mContext).setValue("lastname",response.body().getLastName());
                         SharedPreference.getInstance(mContext).setValue("consumerId",response.body().getId());
                         SharedPreference.getInstance(mContext).setValue("register","success");
+                        SharedPreference.getInstance(mContext).setValue("mobile",response.body().getPrimaryPhoneNumber());
                         Intent iReg = new Intent(mContext, Home.class);
                         startActivity(iReg);
                         finish();

@@ -77,7 +77,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
         myViewHolder.tv_message.setText(inboxList.getMsg());
 
 
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(inboxList.getTimeStamp());
         myViewHolder.tv_date.setText(formatter.format(calendar.getTime()));

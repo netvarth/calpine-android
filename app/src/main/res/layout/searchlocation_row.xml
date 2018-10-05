@@ -7,6 +7,8 @@
     <TextView
         android:id="@+id/txtLoc"
         android:layout_width="match_parent"
+        android:textSize="@dimen/txtsize_hint"
+        android:textColor="@color/title_grey"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -53,7 +53,6 @@ public class SearchLocationActivity extends AppCompatActivity  implements Locati
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         tv_currentloc=(TextView)findViewById(R.id.tv_currentloc);
@@ -73,12 +72,19 @@ public class SearchLocationActivity extends AppCompatActivity  implements Locati
             @Override
             public void onClick(View v) {
                 SharedPreference.getInstance(v.getContext()).setValue("current_loc","yes");
-                DashboardFragment pfFragment = new DashboardFragment();
+               /* DashboardFragment pfFragment = new DashboardFragment();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 //transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
-                transaction.replace(R.id.mainlayout, pfFragment).commit();
+                transaction.replace(R.id.mainlayout, pfFragment).commit();*/
+                finish();
+            }
+        });
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 finish();
             }
         });

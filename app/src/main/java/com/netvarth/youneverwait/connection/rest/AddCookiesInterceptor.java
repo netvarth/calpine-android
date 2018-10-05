@@ -48,6 +48,12 @@ public class AddCookiesInterceptor implements Interceptor {
             builder.addHeader("Cookie", cookie);
         }
 
+        String version= SharedPreference.getInstance(context).getStringValue("Version","");
+        if(!version.equalsIgnoreCase("")) {
+            Config.logV("Add Header--Version---------------"+version);
+            builder.addHeader("Version", version);
+        }
+
         return chain.proceed(builder.build());
     }
 }

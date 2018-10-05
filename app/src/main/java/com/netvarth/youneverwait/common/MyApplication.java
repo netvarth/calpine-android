@@ -17,6 +17,8 @@ public class MyApplication extends Application{
 
         super.onCreate();
         FontOverride.setDefaultFont(this, "SERIF", "fonts/Montserrat_Regular.otf");
+        Config.logV("MyAPplication---------------------------");
+
     }
 
 

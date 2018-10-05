@@ -1,5 +1,6 @@
 package com.netvarth.youneverwait.response;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.netvarth.youneverwait.model.FamilyArrayModel;
 
@@ -8,6 +9,51 @@ import com.netvarth.youneverwait.model.FamilyArrayModel;
  */
 
 public class ActiveCheckIn {
+
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    boolean favourite;
+    public int getPersonsAhead() {
+        return personsAhead;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    int id;
+
+
+    int personsAhead=-1;
+    public String getYnwUuid() {
+        return ynwUuid;
+    }
+
+    public void setYnwUuid(String ynwUuid) {
+        this.ynwUuid = ynwUuid;
+    }
+
+    String ynwUuid;
+
+    public String getGoogleMapUrl() {
+        return googleMapUrl;
+    }
+
+    String googleMapUrl;
+
+    public String getBillStatus() {
+        return billStatus;
+    }
+
+    public void setBillStatus(String billStatus) {
+        this.billStatus = billStatus;
+    }
+
+    String billStatus;
+
 
     @SerializedName("consumer")
     private ActiveCheckIn consumer;
@@ -82,6 +128,15 @@ public class ActiveCheckIn {
 
     String place;
 
+    public String getServiceTime() {
+        return serviceTime;
+    }
+
+    public void setServiceTime(String serviceTime) {
+        this.serviceTime = serviceTime;
+    }
+
+    String serviceTime;
     public void setLocation(ActiveCheckIn location) {
         this.location = location;
     }
@@ -90,7 +145,7 @@ public class ActiveCheckIn {
     private ActiveCheckIn location;
 
 
-   public ActiveCheckIn getService() {
+    public ActiveCheckIn getService() {
         return service;
     }
 
@@ -103,6 +158,16 @@ public class ActiveCheckIn {
     }
 
     String name;
+
+    public int getToken() {
+        return token;
+    }
+
+    public void setToken(int token) {
+        this.token = token;
+    }
+
+    int token;
 
     public void setService(ActiveCheckIn service) {
         this.service = service;
@@ -138,8 +203,7 @@ public class ActiveCheckIn {
     int appxWaitingTime;
 
 
-
-   public ActiveCheckIn getQueue() {
+    public ActiveCheckIn getQueue() {
         return Queue;
     }
 

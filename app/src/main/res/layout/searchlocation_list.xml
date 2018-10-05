@@ -27,6 +27,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/locationlayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -43,9 +44,9 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:id="@+id/txtdirection"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
                         android:drawableLeft="@drawable/icon_location_blue"
                         android:padding="2dp"
                         android:text="Get Direction"
@@ -66,6 +67,7 @@
                         android:gravity="center"
                         android:padding="2dp"
                         android:text="1.5 Km"
+                        android:visibility="gone"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12" />
 

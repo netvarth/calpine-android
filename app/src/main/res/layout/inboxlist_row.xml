@@ -44,7 +44,7 @@
                     android:id="@+id/txt_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.6"
                     android:gravity="right"
                     android:text="Date"
                     android:textColor="@color/title_grey_light"

@@ -729,6 +729,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         Intent iCommunicate = new Intent(v.getContext(), MessageActivity.class);
                         iCommunicate.putExtra("accountID", searchdetailList.getId());
                         iCommunicate.putExtra("provider", searchdetailList.getTitle());
+                        iCommunicate.putExtra("from", "search");
                         context.startActivity(iCommunicate);
 
                     }

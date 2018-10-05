@@ -70,7 +70,8 @@ public class FamilyMemberFragment extends RootFragment {
         toolbar = (Toolbar) row.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+      //  ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity) getActivity()).  getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         tv_title.setText("Add Members");
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -227,9 +228,9 @@ public class FamilyMemberFragment extends RootFragment {
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
-                        // getFragmentManager().popBackStack();
+                         getFragmentManager().popBackStack();
 
-                        Bundle bundle = new Bundle();
+                      /*  Bundle bundle = new Bundle();
                         bundle.putString("refersh", "update");
 
                         FamilyListFragment pfFragment = new FamilyListFragment();
@@ -238,7 +239,7 @@ public class FamilyMemberFragment extends RootFragment {
                         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                         // Store the Fragment in stack
                         // transaction.addToBackStack(null);
-                        transaction.replace(R.id.mainlayout, pfFragment).commit();
+                        transaction.replace(R.id.mainlayout, pfFragment).commit();*/
                     }
 
 
@@ -314,17 +315,17 @@ public class FamilyMemberFragment extends RootFragment {
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
 
-                      //  getFragmentManager().popBackStackImmediate();
-                        Bundle bundle = new Bundle();
+                       getFragmentManager().popBackStackImmediate();
+                       /* Bundle bundle = new Bundle();
                         bundle.putString("refersh", "update");
 
                         FamilyListFragment pfFragment = new FamilyListFragment();
 
                         pfFragment.setArguments(bundle);
-                        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
                         // Store the Fragment in stack
-                       // transaction.addToBackStack(null);
-                        transaction.replace(R.id.mainlayout, pfFragment).commit();
+                        //transaction.addToBackStack(null);
+                        transaction.replace(R.id.mainlayout, pfFragment).commit();*/
                     }
 
 

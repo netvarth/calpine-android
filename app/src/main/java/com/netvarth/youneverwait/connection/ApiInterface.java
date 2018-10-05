@@ -1,12 +1,14 @@
 package com.netvarth.youneverwait.connection;
 
 
+import com.netvarth.youneverwait.model.BillModel;
 import com.netvarth.youneverwait.model.Domain_Spinner;
 import com.netvarth.youneverwait.model.FamilyArrayModel;
 import com.netvarth.youneverwait.model.FamilyModel;
 import com.netvarth.youneverwait.model.SearchModel;
 import com.netvarth.youneverwait.response.ActiveCheckIn;
 import com.netvarth.youneverwait.response.CheckInModel;
+import com.netvarth.youneverwait.response.CheckSumModel;
 import com.netvarth.youneverwait.response.FavouriteModel;
 import com.netvarth.youneverwait.response.InboxModel;
 import com.netvarth.youneverwait.response.LocationResponse;
@@ -22,6 +24,7 @@ import com.netvarth.youneverwait.response.SearchService;
 import com.netvarth.youneverwait.response.SearchSetting;
 import com.netvarth.youneverwait.response.SearchTerminology;
 import com.netvarth.youneverwait.response.SearchViewDetail;
+import com.netvarth.youneverwait.utils.SharedPreference;
 
 
 import java.util.ArrayList;
@@ -203,11 +206,22 @@ public interface ApiInterface {
 
 
 
+    @Headers("User-Agent: android")
     @POST("consumer/payment")
-    Call<ResponseBody> generateHash(@Body RequestBody jsonObj);
+    Call<CheckSumModel> generateHash(@Body RequestBody jsonObj);
 
     @POST("consumer/waitlist")
     Call<ResponseBody> Checkin(@Query("account") String account,@Body RequestBody jsonObj);
 
+
+    @GET("consumer/bill/{ynwuuid}")
+    Call<BillModel> getBill(@Path("ynwuuid") String uuid);
+
+    @DELETE("consumer/waitlist/{ynwuuid}")
+    Call<ResponseBody> deleteActiveCheckIn(@Path("ynwuuid") String uuid,@Query("account") String account);
+
+
+    @GET("{serviceid}/services.json")
+    Call<ArrayList<SearchService>> getService(@Path("serviceid") int serviceid, @Query("modifiedDate") String mDate);
 
 }

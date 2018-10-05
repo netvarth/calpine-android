@@ -3,6 +3,7 @@ package com.netvarth.youneverwait.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -56,6 +57,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         ImageView img_arrow;
         RecyclerView recycle_parking;
         RelativeLayout layout_exapnd;
+        TextView txtdirection;
+
 
         public MyViewHolder(View view) {
             super(view);
@@ -70,6 +73,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             recycle_parking=(RecyclerView)view.findViewById(R.id.recycle_parking);
             txt_diffdate=(TextView) view.findViewById(R.id.txt_diffdate);
             layout_exapnd=(RelativeLayout) view.findViewById(R.id.layout_exapnd);
+            txtdirection=(TextView)view.findViewById(R.id.txtdirection);
+
 
         }
     }
@@ -109,6 +114,16 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     public void onBindViewHolder(final SearchLocationAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
 
+
+        myViewHolder.txtdirection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Config.logV("googlemap url--------"+searchLoclist.getGoogleMapUrl());
+                String geoUri = searchLoclist.getGoogleMapUrl();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                mContext.startActivity(intent);
+            }
+        });
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_place.setTypeface(tyface);

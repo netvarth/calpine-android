@@ -1,6 +1,7 @@
 package com.netvarth.youneverwait.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.callback.LocationSearchCallback;
 import com.netvarth.youneverwait.common.Config;
+import com.netvarth.youneverwait.custom.CustomTypefaceSpan;
 import com.netvarth.youneverwait.response.LocationResponse;
 
 import java.text.Normalizer;
@@ -45,7 +47,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
     LocationSearchAdapter.ValueFilter valueFilter;
     ArrayList<LocationResponse> items;
     ArrayList<LocationResponse> filteredItems;
-    String text = "";
+
     LocationSearchCallback callback;
     public LocationSearchAdapter(Context context, ArrayList<LocationResponse> item,LocationSearchCallback callback) {
         mContext = context;
@@ -89,7 +91,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
         return valueFilter;
     }
 
-
+    String text = "";
     private class ValueFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -142,7 +144,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
         return items.size();
     }
 
-    public CharSequence highlight(String search, String originalText) {
+    public  CharSequence highlight(String search, String originalText) {
         // ignore case and accents
         // the same thing should have been done for the search text
         String normalizedText = Normalizer
@@ -163,10 +165,14 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
                 int spanEnd = Math.min(start + search.length(),
                         originalText.length());
 
-                highlighted.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
+                highlighted.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)),
                         spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 start = normalizedText.indexOf(search, spanEnd);
+                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                highlighted.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
             }
 
             return highlighted;
