@@ -185,14 +185,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
                         dynaText.setTextSize(12);
                         dynaText.setTextColor(getResources().getColor(R.color.title_grey));
-                        dynaText.setPadding(20, 10, 20, 10);
+                        dynaText.setPadding(15, 10, 15, 10);
                         dynaText.setEllipsize(TextUtils.TruncateAt.END);
                         dynaText.setMaxLines(1);
                         dynaText.setMaxEms(8);
-                        dynaText.setWidth(dpToPx(100));
+                        dynaText.setWidth(dpToPx(110));
                         dynaText.setGravity(Gravity.CENTER);
 
-                        params.setMargins(15, 10, 15, 0);
+                        params.setMargins(12, 10, 12, 0);
                         dynaText.setLayoutParams(params);
 
 
@@ -395,14 +395,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                         dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
                                         dynaText.setTextSize(12);
                                         dynaText.setTextColor(getResources().getColor(R.color.title_grey));
-                                        dynaText.setPadding(20, 10, 20, 10);
+                                        dynaText.setPadding(15, 10, 15, 10);
                                         dynaText.setEllipsize(TextUtils.TruncateAt.END);
                                         dynaText.setMaxLines(1);
                                         dynaText.setMaxEms(8);
                                         dynaText.setGravity(Gravity.CENTER);
-                                        dynaText.setWidth(dpToPx(100));
+                                        dynaText.setWidth(dpToPx(110));
 
-                                        params.setMargins(15, 10, 15, 0);
+                                        params.setMargins(12, 10, 12, 0);
                                         dynaText.setLayoutParams(params);
 
                                         //   dynaText.setTag("" + i);

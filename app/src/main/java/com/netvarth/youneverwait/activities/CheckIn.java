@@ -1083,7 +1083,7 @@ public class CheckIn extends AppCompatActivity {
 
     }
 
-    private void ApiGenerateHash(String ynwUUID, String amount) {
+    private void ApiGenerateHash(String ynwUUID, String amount,String accountID) {
 
 
         ApiInterface apiService =
@@ -1107,8 +1107,9 @@ public class CheckIn extends AppCompatActivity {
         }
 
 
+
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(body);
+        Call<CheckSumModel> call = apiService.generateHash(body,accountID);
 
         call.enqueue(new Callback<CheckSumModel>() {
             @Override
@@ -1248,14 +1249,14 @@ public class CheckIn extends AppCompatActivity {
                             Button btn_payu=(Button)dialog.findViewById(R.id.btn_payu);
                             final EditText edt_message=(EditText) dialog.findViewById(R.id.edt_message);
                             TextView txtamt=(TextView) dialog.findViewById(R.id.txtamount);
-                            txtamt.setText(sAmountPay);
+                            txtamt.setText("Rs."+sAmountPay);
                             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             txtamt.setTypeface(tyface1);
                             btn_payu.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ApiGenerateHash(value, sAmountPay);
+                                    ApiGenerateHash(value, sAmountPay,accountID);
                                     dialog.dismiss();
 
                                 }

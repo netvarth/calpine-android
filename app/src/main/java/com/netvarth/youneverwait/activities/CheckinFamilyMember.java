@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -54,6 +55,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
     int consumerID;
     Button btn_changemem;
 TextView txt_toolbartitle;
+ImageView imgBackpress;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,13 @@ TextView txt_toolbartitle;
 
         btn_changemem = (Button) findViewById(R.id.btn_changemem);
         txt_toolbartitle=(TextView) findViewById(R.id.txt_toolbartitle);
+        imgBackpress=(ImageView)findViewById(R.id.backpress);
+        imgBackpress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

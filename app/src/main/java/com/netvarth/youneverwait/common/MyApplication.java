@@ -2,6 +2,7 @@ package com.netvarth.youneverwait.common;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 
 import com.netvarth.youneverwait.custom.FontOverride;
 
@@ -16,7 +17,8 @@ public class MyApplication extends Application{
     public void onCreate() {
 
         super.onCreate();
-        FontOverride.setDefaultFont(this, "SERIF", "fonts/Montserrat_Regular.otf");
+        FontOverride.setDefaultFont(this, "SERIF", "fonts/Montserrat_Regular.ttf");
+
         Config.logV("MyAPplication---------------------------");
 
     }
