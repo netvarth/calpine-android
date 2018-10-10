@@ -145,7 +145,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     String spinnerTxtPass;
     ActiveAdapterOnCallback mInterface;
-
+    static String mlocName;
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
@@ -181,6 +181,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         break;
                     } else {
                         TextView dynaText = new TextView(mContext);
+                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Regular.otf");
+                        dynaText.setTypeface(tyface);
                         dynaText.setText(mPopularSearchList.get(k).getDisplayname());
                         dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
                         dynaText.setTextSize(12);
@@ -217,7 +220,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }
 
-    TextView txt_sorry;
+    TextView txt_sorry, tv_logotext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -226,6 +229,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         View row = inflater.inflate(R.layout.fragment_myhome, container, false);
         mRecycleActive = (RecyclerView) row.findViewById(R.id.recycleActive);
         Lhome_mainlayout = (LinearLayout) row.findViewById(R.id.homemainlayout);
+        tv_logotext = (TextView) row.findViewById(R.id.logotext);
         txt_sorry = (TextView) row.findViewById(R.id.txt_sorry);
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
         if (Config.isOnline(getActivity())) {
@@ -236,15 +240,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         mInterface = (ActiveAdapterOnCallback) this;
         home = getParentFragment();
         //Location
-
+       // SharedPreference.getInstance(mContext).setValue("map_intial","false");
         String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
         Config.logV("UpdateLocation noooooooooooooooooo" + s_currentLoc);
         if (!s_currentLoc.equalsIgnoreCase("no")) {
             setUpGClient();
             Config.logV("UpdateLocation noooooooooooooooooo" + latitude);
-        } else {
+        } /*else {
             UpdateLocation(latitude, longitude);
-        }
+        }*/
 
         mContext = getActivity();
         active = getParentFragment();
@@ -265,23 +269,29 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         LinearMorePopularSearch = (LinearLayout) row.findViewById(R.id.LinearMorePopularSearch);
         tv_More = (TextView) row.findViewById(R.id.txtMore);
 
-        mCurrentLoc.setVisibility(View.INVISIBLE);
+
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
+        tv_logotext.setTypeface(tyface);
         tv_activechkin.setTypeface(tyface);
         mCurrentLoc.setTypeface(tyface);
         tv_popular.setTypeface(tyface);
 
-        latitude = 12.971599;
-        longitude = 77.594563;
-        try {
-            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            mCurrentLoc.setVisibility(View.VISIBLE);
-            mCurrentLoc.setText(addresses.get(0).getLocality());
-            //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
-        } catch (Exception e) {
 
+        if (latitude != 0 && longitude != 0) {
+            UpdateLocation(latitude, longitude, mlocName);
+        } else {
+            latitude = 12.971599;
+            longitude = 77.594563;
+            try {
+                Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                mCurrentLoc.setVisibility(View.VISIBLE);
+                mCurrentLoc.setText(addresses.get(0).getLocality());
+                //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
+            } catch (Exception e) {
+
+            }
         }
         //APiGetDomain();
         APiSearchList();
@@ -291,6 +301,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             public void onClick(View v) {
 
                 Intent iLoc = new Intent(mContext, SearchLocationActivity.class);
+                iLoc.putExtra("from", "dashboard");
                 mContext.startActivity(iLoc);
             }
         });
@@ -391,6 +402,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
                                         TextView dynaText = new TextView(mContext);
+                                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                                "fonts/Montserrat_Regular.otf");
+                                        dynaText.setTypeface(tyface);
                                         dynaText.setText(mPopularSearchList.get(k).getDisplayname());
                                         dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
                                         dynaText.setTextSize(12);
@@ -815,6 +829,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
                 bundle.putString("url", pass);
                 SearchListFragment pfFragment = new SearchListFragment();
+
+                bundle.putString("locName", mCurrentLoc.getText().toString());
 
                 bundle.putString("latitude", String.valueOf(latitude));
                 bundle.putString("longitude", String.valueOf(longitude));
@@ -1272,6 +1288,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         mSearchView.setQuery("", false);
         SearchListFragment pfFragment = new SearchListFragment();
 
+        bundle.putString("locName", mCurrentLoc.getText().toString());
         bundle.putString("latitude", String.valueOf(latitude));
         bundle.putString("longitude", String.valueOf(longitude));
         bundle.putString("spinnervalue", spinnerTxtPass);
@@ -1296,9 +1313,17 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     public void onResume() {
         super.onResume();
         String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
+        Config.logV("Current Location---------------------------" + s_currentLoc);
         if (!s_currentLoc.equalsIgnoreCase("no")) {
-            Config.logV("Current Location---------------------------");
-            googleApiClient.connect();
+
+            if (googleApiClient != null) {
+                googleApiClient.connect();
+
+
+            }else{
+                setUpGClient();
+            }
+
         }
 
 
@@ -1319,14 +1344,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
 
-   /* @Override
+    /*@Override
     public void onPause() {
         super.onPause();
-       *//* String s_currentLoc=SharedPreference.getInstance(getActivity()).getStringValue("current_loc","");
+        String s_currentLoc=SharedPreference.getInstance(getActivity()).getStringValue("current_loc","");
         if(!s_currentLoc.equalsIgnoreCase("no")) {
             googleApiClient.stopAutoManage(getActivity());
             googleApiClient.disconnect();
-        }*//*
+        }
     }*/
 
     private synchronized void setUpGClient() {
@@ -1336,6 +1361,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+        //SharedPreference.getInstance(mContext).setValue("map_intial","true");
         googleApiClient.connect();
         Config.logV("Update Location SetUpFConnected---------------------------");
     }
@@ -1355,6 +1381,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 mCurrentLoc.setVisibility(View.VISIBLE);
                 mCurrentLoc.setText(addresses.get(0).getLocality());
+                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude),String.valueOf(longitude),addresses.get(0).getLocality());
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
 
@@ -1512,6 +1539,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         bundle.putString("url", pass);
         SearchListFragment pfFragment = new SearchListFragment();
 
+        bundle.putString("locName", mCurrentLoc.getText().toString());
         bundle.putString("latitude", String.valueOf(latitude));
         bundle.putString("longitude", String.valueOf(longitude));
         bundle.putString("spinnervalue", spinnerTxtPass);
@@ -1527,18 +1555,38 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
 
-    public static boolean UpdateLocation(Double mlatitude, Double mlongitude) {
-        Config.logV("UpdateLocation 3333333333----" + latitude);
+
+
+    public static boolean UpdateLocation(Double mlatitude, Double mlongitude, String locNme) {
+        Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude+""+locNme);
         try {
             latitude = mlatitude;
             longitude = mlongitude;
+            mlocName = locNme;
 
-            Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+            SharedPreference.getInstance(mContext).setValue("lat",latitude);
+            SharedPreference.getInstance(mContext).setValue("longitu",longitude);
+            SharedPreference.getInstance(mContext).setValue("locnme",mlocName);
+
+
+            SharedPreference.getInstance(mContext).setValue("locnme",mlocName);
+
             mCurrentLoc.setVisibility(View.VISIBLE);
-            mCurrentLoc.setText(addresses.get(0).getLocality());
-            Config.logV("UpdateLocation" + addresses.get(0).getLocality());
-            Config.logV("UpdateLocation 3333333333----" + latitude);
+            mCurrentLoc.setText(mlocName);
+            if(mlocName.equalsIgnoreCase("")){
+                try {
+                    Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                    mCurrentLoc.setVisibility(View.VISIBLE);
+                    mCurrentLoc.setText(addresses.get(0).getLocality());
+                    //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
+                } catch (Exception e) {
+
+                }
+            }
+
+          //  SharedPreference.getInstance(mContext).setValue("map_intial","false");
         } catch (Exception e) {
 
         }
@@ -1552,8 +1600,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         Config.logV("OnStop---------------------------------");
         String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
         if (!s_currentLoc.equalsIgnoreCase("no")) {
-            googleApiClient.stopAutoManage(getActivity());
-            googleApiClient.disconnect();
+            if (googleApiClient != null) {
+                googleApiClient.stopAutoManage(getActivity());
+                googleApiClient.disconnect();
+            }
         }
     }
 
