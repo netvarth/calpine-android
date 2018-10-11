@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -48,17 +50,18 @@ import retrofit2.Response;
 
 public class FamilyMemberFragment extends RootFragment {
     Context mContext;
-    Toolbar toolbar;
     ImageView calenderclick;
     static EditText dob;
-    EditText edtfirstname,edtmobileno;
-    EditText lastname;
+    TextInputEditText edtfirstname, edtmobileno;
+    TextInputEditText lastname;
     RadioGroup gender;
-    String radiogender="";
+    String radiogender = "";
     Button btn_Save;
-    RadioButton rFemale,rMale;
-    String ValueCheck="";
-    String mPassfname="",mPassLastname="",mPassgender="",mPassDob="",mPassPh="",mUser;
+    RadioButton rFemale, rMale;
+    String ValueCheck = "";
+    String mPassfname = "", mPassLastname = "", mPassgender = "", mPassDob = "", mPassPh = "", mUser;
+    TextInputLayout text_input_lastname, text_input_firstname;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -67,53 +70,62 @@ public class FamilyMemberFragment extends RootFragment {
         mContext = getActivity();
 
         Config.logV("Add mEmber------------------------------");
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      //  ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).  getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        tv_title.setText("Add Members");
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+        //  ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Config.logV("Back Press-----------------");
+                // what do you want here
                 getFragmentManager().popBackStack();
             }
         });
+
+
+        tv_title.setText("Add Members");
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+
 
         tv_title.setTypeface(tyface);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             ValueCheck = bundle.getString("familymember", "");
 
-            if(ValueCheck.equalsIgnoreCase("edit")) {
+            if (ValueCheck.equalsIgnoreCase("edit")) {
 
 
                 mPassfname = bundle.getString("firstName", "");
                 mPassLastname = bundle.getString("lastname", "");
                 mPassDob = bundle.getString("dob", "");
                 mPassgender = bundle.getString("gender", "");
-                mPassPh= bundle.getString("mobile", "");
-                mUser=bundle.getString("user", "");
+                mPassPh = bundle.getString("mobile", "");
+                mUser = bundle.getString("user", "");
 
-                Config.logV("Dob--1111----------"+mPassDob);
+                Config.logV("Dob--1111----------" + mPassDob);
             }
         }
 
 
         calenderclick = (ImageView) row.findViewById(R.id.calenderclick);
         dob = (EditText) row.findViewById(R.id.edtdob);
-        edtfirstname = (EditText) row.findViewById(R.id.edtFirstName1);
-        lastname = (EditText) row.findViewById(R.id.edtLastName);
+
+        text_input_lastname = (TextInputLayout) row.findViewById(R.id.text_input_lastname);
+
+        text_input_firstname = (TextInputLayout) row.findViewById(R.id.text_input_firstname);
+
+
+        edtfirstname = (TextInputEditText) row.findViewById(R.id.edtFirstName1);
+        lastname = (TextInputEditText) row.findViewById(R.id.edtLastName);
         btn_Save = (Button) row.findViewById(R.id.btn_save);
-        gender=(RadioGroup)row.findViewById(R.id.radiogender) ;
-        rFemale=(RadioButton)row.findViewById(R.id.radioF) ;
-        rMale=(RadioButton)row.findViewById(R.id.radioM) ;
-        edtmobileno=(EditText) row.findViewById(R.id.edtmobileno);
+        gender = (RadioGroup) row.findViewById(R.id.radiogender);
+        rFemale = (RadioButton) row.findViewById(R.id.radioF);
+        rMale = (RadioButton) row.findViewById(R.id.radioM);
+        edtmobileno = (TextInputEditText) row.findViewById(R.id.edtmobileno);
         gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -143,70 +155,98 @@ public class FamilyMemberFragment extends RootFragment {
         btn_Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("Check-------------"+ValueCheck);
-                if(ValueCheck.equalsIgnoreCase("profile")){
+                Config.logV("Check-------------" + ValueCheck);
+                if (ValueCheck.equalsIgnoreCase("profile")) {
                     Config.logV("SUcesss------------");
-                    ApiAddFamilyMember();
+                    if (validateCHeck()) {
+                        ApiAddFamilyMember();
+                    }
 
 
-                }else {
+                } else {
                     ApiUpdateFamilyMember(mUser);
                 }
             }
         });
-        if(ValueCheck.equalsIgnoreCase("edit")) {
+        if (ValueCheck.equalsIgnoreCase("edit")) {
             edtfirstname.setText(mPassfname);
             lastname.setText(mPassLastname);
 
-            if(!mPassgender.equalsIgnoreCase("")) {
-               if(mPassgender.equalsIgnoreCase("male")) {
+            if (!mPassgender.equalsIgnoreCase("")) {
+                if (mPassgender.equalsIgnoreCase("male")) {
                     rMale.setChecked(true);
-                }else{
+                } else {
                     rFemale.setChecked(true);
                 }
             }
 
-            if(!mPassDob.equalsIgnoreCase("")) {
+            if (!mPassDob.equalsIgnoreCase("")) {
                 dob.setText(mPassDob);
             }
-            if(!mPassPh.equalsIgnoreCase("")) {
+            if (!mPassPh.equalsIgnoreCase("")) {
                 edtmobileno.setText(mPassPh);
             }
         }
         return row;
     }
+
+    private boolean validateCHeck() {
+        if (edtfirstname.getText().toString().equalsIgnoreCase("") && lastname.getText().toString().equalsIgnoreCase("")) {
+            text_input_firstname.setError("Please enter valid first name");
+            text_input_lastname.setError("Please enter valid last name");
+            return false;
+        } else if (lastname.getText().toString().equalsIgnoreCase("")) {
+            text_input_lastname.setError("Please enter valid last name");
+            text_input_firstname.setErrorEnabled(false);
+            text_input_firstname.setError(null);
+            return false;
+        } else if (edtfirstname.getText().toString().equalsIgnoreCase("")) {
+            text_input_firstname.setError("Please enter valid first name");
+            text_input_lastname.setErrorEnabled(false);
+            text_input_lastname.setError(null);
+            return false;
+        } else {
+            text_input_firstname.setErrorEnabled(false);
+            text_input_firstname.setError(null);
+            text_input_lastname.setErrorEnabled(false);
+            text_input_lastname.setError(null);
+        }
+
+        return true;
+    }
+
     private void ApiUpdateFamilyMember(String mUser) {
 
 
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-      //  final int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
+        //  final int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        JSONObject userProfile=new JSONObject();
+        JSONObject userProfile = new JSONObject();
         JSONObject jsonObj = new JSONObject();
         try {
-            if(!edtmobileno.getText().toString().equalsIgnoreCase("")&&edtmobileno.getText().toString()!=null) {
+            if (!edtmobileno.getText().toString().equalsIgnoreCase("") && edtmobileno.getText().toString() != null) {
                 jsonObj.put("primaryMobileNo", edtmobileno.getText().toString());
             }
             jsonObj.put("firstName", edtfirstname.getText().toString());
             jsonObj.put("lastName", lastname.getText().toString());
 
-            if(!radiogender.equalsIgnoreCase("")&&radiogender!=null) {
+            if (!radiogender.equalsIgnoreCase("") && radiogender != null) {
                 jsonObj.put("gender", radiogender);
             }
-            if(!mDate.equalsIgnoreCase("")&&mDate!=null) {
+            if (!mDate.equalsIgnoreCase("") && mDate != null) {
                 jsonObj.put("dob", mDate);
             }
 
-            if(!edtmobileno.getText().toString().equalsIgnoreCase("")&&edtmobileno.getText().toString()!=null) {
+            if (!edtmobileno.getText().toString().equalsIgnoreCase("") && edtmobileno.getText().toString() != null) {
                 jsonObj.put("countryCode", "+91");
             }
 
-            userProfile.putOpt("userProfile",jsonObj);
-            userProfile.put("user",mUser);
+            userProfile.putOpt("userProfile", jsonObj);
+            userProfile.put("user", mUser);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -228,7 +268,10 @@ public class FamilyMemberFragment extends RootFragment {
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
-                         getFragmentManager().popBackStack();
+
+
+                            Toast.makeText(mContext, "Member updated successfully ", Toast.LENGTH_LONG).show();
+                            getFragmentManager().popBackStack();
 
                       /*  Bundle bundle = new Bundle();
                         bundle.putString("refersh", "update");
@@ -261,6 +304,7 @@ public class FamilyMemberFragment extends RootFragment {
 
 
     }
+
     private void ApiAddFamilyMember() {
 
 
@@ -271,28 +315,28 @@ public class FamilyMemberFragment extends RootFragment {
 
         final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        JSONObject userProfile=new JSONObject();
+        JSONObject userProfile = new JSONObject();
         JSONObject jsonObj = new JSONObject();
         try {
-            if(!edtmobileno.getText().toString().equalsIgnoreCase("")&&edtmobileno.getText().toString()!=null) {
+            if (!edtmobileno.getText().toString().equalsIgnoreCase("") && edtmobileno.getText().toString() != null) {
                 jsonObj.put("primaryMobileNo", edtmobileno.getText().toString());
             }
             jsonObj.put("firstName", edtfirstname.getText().toString());
             jsonObj.put("lastName", lastname.getText().toString());
 
-            if(!radiogender.equalsIgnoreCase("")&&radiogender!=null) {
+            if (!radiogender.equalsIgnoreCase("") && radiogender != null) {
                 jsonObj.put("gender", radiogender);
             }
-            if(!mDate.equalsIgnoreCase("")&&mDate!=null) {
+            if (!mDate.equalsIgnoreCase("") && mDate != null) {
                 jsonObj.put("dob", mDate);
             }
 
-            if(!edtmobileno.getText().toString().equalsIgnoreCase("")&&edtmobileno.getText().toString()!=null) {
+            if (!edtmobileno.getText().toString().equalsIgnoreCase("") && edtmobileno.getText().toString() != null) {
                 jsonObj.put("countryCode", "+91");
             }
 
-            userProfile.putOpt("userProfile",jsonObj);
-          //  userProfile.put("parent",consumerId);
+            userProfile.putOpt("userProfile", jsonObj);
+            //  userProfile.put("parent",consumerId);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -315,7 +359,11 @@ public class FamilyMemberFragment extends RootFragment {
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
 
-                       getFragmentManager().popBackStackImmediate();
+                       // if(response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext, "Member added successfully ", Toast.LENGTH_LONG).show();
+                            getFragmentManager().popBackStackImmediate();
+                       // }
+
                        /* Bundle bundle = new Bundle();
                         bundle.putString("refersh", "update");
 
@@ -347,7 +395,9 @@ public class FamilyMemberFragment extends RootFragment {
 
 
     }
-    static String mDate="";
+
+    static String mDate = "";
+
     public static class MyDatePickerDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {

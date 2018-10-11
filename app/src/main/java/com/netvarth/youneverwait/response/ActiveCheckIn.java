@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.netvarth.youneverwait.model.FamilyArrayModel;
 
+import java.util.ArrayList;
+
 /**
  * Created by sharmila on 13/7/18.
  */
@@ -102,6 +104,13 @@ public class ActiveCheckIn {
 
     @SerializedName("provider")
     private ActiveCheckIn provider;
+
+    public ArrayList<ActiveCheckIn> getWaitlistingFor() {
+        return waitlistingFor;
+    }
+
+    @SerializedName("waitlistingFor")
+    private ArrayList<ActiveCheckIn> waitlistingFor;
 
 
     public String getUniqueId() {

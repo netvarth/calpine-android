@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.netvarth.youneverwait.R;
@@ -36,7 +37,7 @@ import retrofit2.Response;
 
 public class ChangePhoneFragment extends RootFragment {
     Context mContext;
-    Toolbar toolbar;
+
     TextInputEditText edtPhone;
     Button mDone;
     TextInputLayout text_input_phone;
@@ -49,25 +50,25 @@ public class ChangePhoneFragment extends RootFragment {
 
         mContext = getActivity();
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Phone Number");
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        tv_title.setText("Change Phone Number");
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        tv_title.setTypeface(tyface1);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Config.logV("Back Press-----------------");
+                // what do you want here
                 getFragmentManager().popBackStack();
             }
         });
 
-        tv_title.setTypeface(tyface);
+
+
+        tv_title.setText("Change Phone Number");
+
         edtPhone=(TextInputEditText) row.findViewById(R.id.edtPhone) ;
         text_input_phone=(TextInputLayout) row.findViewById(R.id.text_input_phone) ;
         edtPhone.addTextChangedListener(new MyTextWatcher(edtPhone));

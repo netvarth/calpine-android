@@ -74,7 +74,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
             @Override
             public void onClick(View v) {
                 Config.logV("Latitude-----------"+searchdetailList.getLatitude());
-                callback.onMethodCallback(searchdetailList.getName(),searchdetailList.getLatitude(),searchdetailList.getLongitude());
+                callback.onMethodCallback(searchdetailList.getName(),searchdetailList.getLatitude(),searchdetailList.getLongitude(),searchdetailList.getName());
             }
         });
 

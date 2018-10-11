@@ -14,6 +14,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.netvarth.youneverwait.R;
@@ -26,7 +27,6 @@ import com.netvarth.youneverwait.common.Config;
 
 public class TermsOfUse extends AppCompatActivity {
     WebView webview;
-    Toolbar mToolbar;
     private Dialog progressBar;
     Context mContext;
 
@@ -35,25 +35,22 @@ public class TermsOfUse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.termsofuse);
         mContext = this;
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) mToolbar.findViewById(R.id.toolbar_title);
 
-        tv_title.setText("Terms & Conditions");
-        Typeface tyface = Typeface.createFromAsset(this.getAssets(),
+        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
+        Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
-
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        tv_title.setText("Terms & Conditions");
+        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // what do you want here
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-               onBackPressed();
+                onBackPressed();
             }
         });
+
 
 
         webview = (WebView) findViewById(R.id.mWebview_about);
@@ -88,21 +85,7 @@ public class TermsOfUse extends AppCompatActivity {
         //Webview loading end
 
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(R.layout.custom_title);
 
-
-        TextView title = (TextView) findViewById(android.R.id.text1);
-        title.setText("TermsOfUse");
-
-        title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
     }
 
     @Override

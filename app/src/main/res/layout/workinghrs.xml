@@ -15,6 +15,7 @@
             android:id="@+id/layout_toolbar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="@color/hometopbar"
             android:layout_alignParentTop="true"
             android:orientation="vertical">
 
@@ -54,6 +55,7 @@
                         android:layout_marginLeft="@dimen/padding3"
                         android:layout_marginRight="@dimen/padding3"
                         android:layout_marginTop="@dimen/default_padding"
+                        card_view:cardElevation="0dp"
                         card_view:cardCornerRadius="10dp">
 
                         <LinearLayout
@@ -67,6 +69,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/padding7"
                                 android:layout_marginRight="@dimen/padding7"
+                                android:layout_marginTop="@dimen/padding5"
                                 android:orientation="horizontal">
 
                                 <TextView
@@ -77,6 +80,7 @@
                                     android:fontFamily="@font/customfont"
                                     android:padding="@dimen/padding2"
                                     android:text="@string/monday"
+                                    android:gravity="left|center"
                                     android:textColor="@color/title_grey_light"
                                     android:textStyle="bold" />
 
@@ -91,6 +95,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_margin="@dimen/padding2"
                                         android:padding="@dimen/padding2"
+                                        android:gravity="left|center"
                                         android:textColor="@color/title_grey_light" />
                                 </LinearLayout>
                             </LinearLayout>
@@ -110,6 +115,7 @@
                                     android:fontFamily="@font/customfont"
                                     android:padding="@dimen/padding2"
                                     android:text="@string/tuesday"
+                                    android:gravity="left|center"
                                     android:textColor="@color/title_grey_light"
                                     android:textStyle="bold" />
 
@@ -124,6 +130,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_margin="@dimen/padding2"
                                         android:padding="@dimen/padding2"
+                                        android:gravity="left|center"
                                         android:textColor="@color/title_grey_light" />
                                 </LinearLayout>
                             </LinearLayout>
@@ -143,6 +150,7 @@
                                     android:fontFamily="@font/customfont"
                                     android:padding="@dimen/padding2"
                                     android:text="@string/wednesday"
+                                    android:gravity="left|center"
                                     android:textColor="@color/title_grey_light"
                                     android:textStyle="bold" />
 
@@ -157,7 +165,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_margin="@dimen/padding2"
                                         android:padding="@dimen/padding2"
-
+                                        android:gravity="left|center"
                                         android:textColor="@color/title_grey_light" />
                                 </LinearLayout>
                             </LinearLayout>
@@ -177,6 +185,7 @@
                                     android:fontFamily="@font/customfont"
                                     android:padding="@dimen/padding2"
                                     android:text="@string/thursday"
+                                    android:gravity="left|center"
                                     android:textColor="@color/title_grey_light"
                                     android:textStyle="bold" />
 
@@ -191,6 +200,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_margin="@dimen/padding2"
                                         android:padding="@dimen/padding2"
+                                        android:gravity="left|center"
                                         android:textColor="@color/title_grey_light" />
 
                                 </LinearLayout>
@@ -207,6 +217,7 @@
                                 <TextView
                                     android:id="@+id/txtFriday"
                                     android:layout_width="150dp"
+                                    android:gravity="left|center"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="@dimen/padding2"
                                     android:fontFamily="@font/customfont"
@@ -226,7 +237,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_margin="@dimen/padding2"
                                         android:padding="@dimen/padding2"
-
+                                        android:gravity="left|center"
                                         android:textColor="@color/title_grey_light" />
 
                                 </LinearLayout>
@@ -248,6 +259,7 @@
                                     android:fontFamily="@font/customfont"
                                     android:padding="@dimen/padding2"
                                     android:text="@string/saturday"
+                                    android:gravity="left|center"
                                     android:textColor="@color/title_grey_light"
                                     android:textStyle="bold" />
 
@@ -262,7 +274,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_margin="@dimen/padding2"
                                         android:padding="@dimen/padding2"
-
+                                        android:gravity="left|center"
                                         android:textColor="@color/title_grey_light" />
 
                                 </LinearLayout>
@@ -283,6 +295,7 @@
                                     android:layout_margin="@dimen/padding2"
                                     android:fontFamily="@font/customfont"
                                     android:padding="@dimen/padding2"
+                                    android:gravity="left|center"
                                     android:text="@string/sunday"
                                     android:textColor="@color/title_grey_light"
                                     android:textStyle="bold" />
@@ -298,6 +311,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_margin="@dimen/padding2"
                                         android:padding="@dimen/padding2"
+                                        android:gravity="left|center"
                                         android:textColor="@color/title_grey_light" />
 
                                 </LinearLayout>

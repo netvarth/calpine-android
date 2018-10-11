@@ -181,7 +181,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 String firstWord=activelist.getService().getName();
-                String secondWord=" for "+activelist.getConsumer().getUserProfile().getFirstName()+" "+activelist.getConsumer().getUserProfile().getLastName();
+                String secondWord=" for "+activelist.getWaitlistingFor().get(0).getFirstName()+" "+activelist.getWaitlistingFor().get(0).getLastName();
                 Spannable spannable = new SpannableString(firstWord+secondWord);
                 spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 myViewHolder.tv_service.setText( spannable );

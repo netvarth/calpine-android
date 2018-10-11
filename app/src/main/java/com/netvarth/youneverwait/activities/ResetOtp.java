@@ -50,7 +50,7 @@ import retrofit2.Response;
  */
 
 public class ResetOtp extends AppCompatActivity {
-    Toolbar toolbar;
+
     TextInputEditText editotp;
     Context mContext;
     Button otpverify;
@@ -65,33 +65,35 @@ public class ResetOtp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resetotp);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        tv_title.setText("Forgot Password");
 
-
-        img_indicator = (ImageView) findViewById(R.id.img_indicator);
-        img_indicator.setVisibility(View.GONE);
-        txtproceed = (TextView) findViewById(R.id.txtproceed);
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface);
-
-        Typeface tyface_p = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Light.otf");
-        txtproceed.setTypeface(tyface_p);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // what do you want here
                 finish();
             }
         });
+        TextView tv_title = (TextView)findViewById(R.id.title);
+        tv_title.setText("Forgot Password");
+
+        Typeface tyface = Typeface.createFromAsset(getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface);
+
+
+
+
+        img_indicator = (ImageView) findViewById(R.id.img_indicator);
+        img_indicator.setVisibility(View.GONE);
+        txtproceed = (TextView) findViewById(R.id.txtproceed);
+
+
+        Typeface tyface_p = Typeface.createFromAsset(getAssets(),
+                "fonts/Montserrat_Light.otf");
+        txtproceed.setTypeface(tyface_p);
+
+
         mContext = this;
 
         if (!hasReadSmsPermission()) {

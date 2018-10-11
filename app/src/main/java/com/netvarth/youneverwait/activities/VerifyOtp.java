@@ -56,7 +56,7 @@ import retrofit2.Response;
  */
 
 public class VerifyOtp extends AppCompatActivity {
-    Toolbar toolbar;
+
     TextInputEditText editotp;
     Context mContext;
     TextView txtResendOtp, txtResendEmail;
@@ -71,12 +71,7 @@ public class VerifyOtp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.verifyotp);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setVisibility(View.GONE);
+
         btn_verify=(Button)findViewById(R.id.btn_verify) ;
         txt_enterotp=(TextView) findViewById(R.id.txt_enterotp);
         txtproceed=(TextView) findViewById(R.id.txtproceed);

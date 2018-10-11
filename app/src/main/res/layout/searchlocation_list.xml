@@ -7,18 +7,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-       >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/layout_exapnd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/spinnerbg"
             android:paddingBottom="@dimen/padding5"
             android:paddingLeft="@dimen/padding7"
-            android:background="@color/spinnerbg"
-            android:paddingTop="@dimen/padding5"
-            android:paddingRight="@dimen/padding7">
+            android:paddingRight="@dimen/padding7"
+            android:paddingTop="@dimen/padding5">
 
             <LinearLayout
                 android:id="@+id/subLayout"
@@ -43,15 +42,26 @@
                         android:textSize="@dimen/txtsize_hint"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/txtdirection"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/icon_location_blue"
-                        android:padding="2dp"
-                        android:text="Get Direction"
-                        android:textColor="@color/title_consu"
-                        android:textSize="@dimen/txtsize_12" />
+                        android:layout_marginLeft="@dimen/padding3"
+                        android:gravity="right|center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/icon_location_blue" />
+
+                        <TextView
+                            android:id="@+id/txtdirection"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Get Direction"
+                            android:textColor="@color/title_consu"
+                            android:textSize="@dimen/txtsize_12" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -67,9 +77,9 @@
                         android:gravity="center"
                         android:padding="2dp"
                         android:text="1.5 Km"
-                        android:visibility="gone"
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12" />
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/txtopen"
@@ -105,12 +115,12 @@
             android:id="@+id/mLayouthide"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="@color/app_background"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/padding7"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
             android:paddingTop="@dimen/padding7"
-            android:paddingBottom="@dimen/padding7"
             android:visibility="visible">
 
             <LinearLayout
@@ -146,6 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_marginTop="@dimen/padding7"
                 android:orientation="horizontal">
 
@@ -155,7 +166,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:paddingRight="@dimen/default_padding"
                     android:text="Est WaitTime"
                     android:textColor="@color/title_grey"
@@ -164,6 +175,7 @@
 
                 <Button
                     android:id="@+id/btn_checkin"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -171,13 +183,12 @@
                     android:layout_marginLeft="@dimen/padding5"
                     android:layout_weight="0.5"
                     android:background="@drawable/button_gradient_checkin"
+                    android:fontFamily="@font/customfont"
                     android:text="Check-In"
                     android:textAllCaps="true"
-                    android:textStyle="bold"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:fontFamily="@font/customfont"
                     android:textColor="@color/app_background"
-                    android:textSize="@dimen/txtsize_subtitle" />
+                    android:textSize="@dimen/txtsize_subtitle"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
@@ -196,11 +207,12 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycle_parking"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/padding7"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding7"></android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

@@ -21,6 +21,16 @@ public class SearchAWsResponse {
     String physiciansemergencyservices_location1;
     String dentistemergencyservices_location1;
 
+    public String getLocation1() {
+        return location1;
+    }
+
+    public void setLocation1(String location1) {
+        this.location1 = location1;
+    }
+
+    String location1;
+
 
     public String getParking_type_location1() {
         return parking_type_location1;

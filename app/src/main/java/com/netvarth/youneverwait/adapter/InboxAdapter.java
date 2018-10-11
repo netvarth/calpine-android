@@ -145,6 +145,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
                {
                    Intent iInbox = new Intent(v.getContext(), DetailInboxList.class);
+                   iInbox.putExtra("provider",inboxList.getUserName());
                    mContext.startActivity(iInbox);
                }
 

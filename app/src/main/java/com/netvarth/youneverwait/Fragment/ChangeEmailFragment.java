@@ -2,6 +2,7 @@ package com.netvarth.youneverwait.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.netvarth.youneverwait.R;
@@ -47,11 +50,20 @@ public class ChangeEmailFragment extends RootFragment {
 
         mContext = getActivity();
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Email");
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                getFragmentManager().popBackStack();
+            }
+        });
+        tv_title.setText("Change Email");
 
         edtEmail=(EditText) row.findViewById(R.id.edtEmail) ;
 
@@ -71,13 +83,7 @@ public class ChangeEmailFragment extends RootFragment {
 
 
         edtEmail.addTextChangedListener(new MyTextWatcher(edtEmail));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
 
-            }
-        });
 
 
 

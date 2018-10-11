@@ -72,6 +72,7 @@
             android:id="@+id/text_input_layout_first"
             android:layout_width="match_parent"
             android:textColorHint="@color/title_grey"
+
             android.support.design:hintTextAppearance="@style/GreyTextInputLayout"
             android:layout_height="wrap_content">
 
@@ -79,7 +80,7 @@
             android:id="@+id/firstname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
+            android:inputType="textCapWords"
             android:textColor="@color/title_grey"
             android:textColorHint="@color/title_grey"
             android:textAppearance="@style/GreyTextInputLayoutHint"
@@ -98,7 +99,7 @@
             android:id="@+id/lastname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
+            android:inputType="textCapWords"
             android:textColor="@color/title_grey"
             android:textColorHint="@color/title_grey"
             android:textAppearance="@style/GreyTextInputLayoutHint"

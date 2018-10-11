@@ -58,7 +58,7 @@ import retrofit2.Response;
 public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback {
 
     Context mContext;
-    Toolbar toolbar;
+
     SearchViewDetail mBusinessDataList;
     ArrayList<SearchViewDetail> mSearchGallery;
     ArrayList<SearchLocation> mSearchLocList;
@@ -107,21 +107,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ids = new ArrayList<>();
 
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(" Search ");
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        tv_title.setVisibility(View.INVISIBLE);
 
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // perform whatever you want on back arrow click
-                Config.logV("BackPress-----------");
+                // what do you want here
                 getFragmentManager().popBackStack();
             }
         });
+
+
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {

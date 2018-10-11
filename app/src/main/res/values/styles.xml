@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:item="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -23,6 +23,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
     </style>
+
     <style name="CustomAlertDialogStyle">
         <item name="android:bottomBright">@android:color/transparent</item>
         <item name="android:bottomDark">@android:color/transparent</item>
@@ -37,6 +38,7 @@
     </style>
 
     <style name="MyCustomTestThemePopUp" parent="Theme.AppCompat.NoActionBar"></style>
+
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base">
 
     </style>
@@ -46,6 +48,8 @@
             @drawable/splash
         </item>-->
     </style>
+
+
     <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -55,17 +59,21 @@
         <item name="android:typeface">serif</item>
         <item name="android:itemBackground">@color/app_background</item>
         <item name="colorControlNormal">@color/title_grey</item>
-
+        <item name="android:textViewStyle">@style/Montserrat</item>
         <item name="colorControlActivated">@color/colorAccent</item>
 
     </style>
 
-    <style name="AppSearchView" parent="Widget.AppCompat.SearchView" >
+    <style name="AppSearchView" parent="Widget.AppCompat.SearchView">
         <item name="android:textSize">@dimen/txtsize_12</item>
     </style>
 
-    <style name="AppSpinner" parent="Widget.AppCompat.Spinner" >
+    <style name="AppSpinner" parent="Widget.AppCompat.Spinner">
         <item name="android:textSize">@dimen/txtsize_12</item>
+    </style>
+
+    <style name="Montserrat" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/montserrat_normal</item>
     </style>
 
 
@@ -82,7 +90,6 @@
     </style>
 
 
-
     <style name="GreyTextInputLayoutPassword" parent="@style/TextAppearance.AppCompat">
         <item name="android:textColorHint">@color/sec_title_grey</item>
         <item name="android:textColor">@color/sec_title_grey</item>
@@ -96,15 +103,14 @@
     </style>
 
 
-    <style name="AppBottomSheetDialogTheme"
-        parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
-    <style name="AppModalStyle"
-        parent="Widget.Design.BottomSheet.Modal">
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/rounded_dialog</item>
     </style>
+
     <style name="PayUMoney" parent="PayumoneyAppTheme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -115,5 +121,10 @@
     <style name="AlertDialogStylePayUMoney" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="android:textColorPrimary">@color/payumoney_text_color</item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 </resources>

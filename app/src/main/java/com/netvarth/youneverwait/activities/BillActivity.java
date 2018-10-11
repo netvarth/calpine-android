@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -43,7 +44,7 @@ public class BillActivity extends AppCompatActivity {
     RecyclerView recycle_item;
     BillServiceAdapter billServiceAdapter;
     ArrayList<BillModel> serviceArrayList = new ArrayList<>();
-    Toolbar toolbar;
+
     Button btn_cancel, btn_pay;
 TextView txtnetRate,txttotal;
     @Override
@@ -67,11 +68,8 @@ TextView txtnetRate,txttotal;
         btn_pay = (Button) findViewById(R.id.btn_pay);
 
         recycle_item = (RecyclerView) findViewById(R.id.recycle_item);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+
+        TextView tv_title = (TextView)findViewById(R.id.toolbartitle);
         tv_title.setText("Bill");
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -86,9 +84,11 @@ TextView txtnetRate,txttotal;
         txtnetRate.setTypeface(tyface);
 
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // what do you want here
                 finish();
             }
         });

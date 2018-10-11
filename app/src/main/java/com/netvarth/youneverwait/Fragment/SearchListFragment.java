@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.activities.SearchLocationActivity;
 import com.netvarth.youneverwait.adapter.PaginationAdapter;
 import com.netvarth.youneverwait.adapter.SearchListAdpter;
 import com.netvarth.youneverwait.callback.AdapterCallback;
@@ -108,6 +110,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     SearchListAdpter listadapter;
     ArrayList<ListCell> items;
     AdapterCallback mInterface;
+
+
 
 
     private void APiSearchList() {
@@ -298,7 +302,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }
     }
 
-    String latitude, longitude;
+    static String latitude;
+    static String longitude;
     String searchTxt, spinnerTxt;
 
     String getQuery_previous = "";
@@ -307,8 +312,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         getQuery_previous = "true";
     }
 
-    TextView txt_toolbarlocation;
+    static TextView txt_toolbarlocation;
     ImageView ibackpress;
+    String s_LocName;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -327,6 +333,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             longitude = bundle.getString("longitude", "");
             spinnerTxt = bundle.getString("spinnervalue", "");
             searchTxt = bundle.getString("searchtxt", "");
+            s_LocName=bundle.getString("locName", "");
         }
 
 
@@ -349,17 +356,26 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
         txt_toolbarlocation.setTypeface(tyface);
-        txt_toolbarlocation.setClickable(false);
+        txt_toolbarlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iLoc = new Intent(mContext, SearchLocationActivity.class);
+                iLoc.putExtra("from", "searchlist");
+                mContext.startActivity(iLoc);
+            }
+        });
+
 
         try {
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(latitude), Double.parseDouble(longitude), 1);
 
                Config.logV("Latitude-----11111--------"+addresses.get(0).getLocality());
-               if(!addresses.get(0).getLocality().equalsIgnoreCase("")){
+               if(!s_LocName.equalsIgnoreCase("")){
                    txt_toolbarlocation.setVisibility(View.VISIBLE);
-                   txt_toolbarlocation.setText(addresses.get(0).getLocality());
-               }
+                  // txt_toolbarlocation.setText(addresses.get(0).getLocality());
+                   txt_toolbarlocation.setText(s_LocName);
+              }
         } catch (Exception e) {
 
         }
@@ -1001,6 +1017,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setPlace1(response.body().getHits().getHit().get(i).getFields().getPlace1());
                                 search.setUnique_id(response.body().getHits().getHit().get(i).getFields().getUnique_id());
 
+                                search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
+
                                 if (response.body().getHits().getHit().get(i).getFields().getQualification() != null) {
                                     search.setQualification(response.body().getHits().getHit().get(i).getFields().getQualification());
 
@@ -1184,6 +1202,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setRating(response.body().getHits().getHit().get(i).getFields().getRating());
                                 search.setPlace1(response.body().getHits().getHit().get(i).getFields().getPlace1());
                                 search.setUnique_id(response.body().getHits().getHit().get(i).getFields().getUnique_id());
+                                search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
+
 
                                 if (response.body().getHits().getHit().get(i).getFields().getQualification() != null) {
                                     search.setQualification(response.body().getHits().getHit().get(i).getFields().getQualification());
@@ -1367,6 +1387,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setTitle(mSearchRespPass.get(i).getTitle());
                                 searchList.setRating(mSearchRespPass.get(i).getRating());
                                 searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
+
+                                searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
                                 String spec = "";
                                 if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
                                     for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
@@ -1497,6 +1519,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setTitle(mSearchRespPass.get(i).getTitle());
                                 searchList.setRating(mSearchRespPass.get(i).getRating());
                                 searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
+                                searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+
 
                                 String spec = "";
                                 if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
@@ -1704,10 +1728,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
     @Override
-    public void onMethodOpenMap() {
+    public void onMethodOpenMap(String location) {
 
-        Config.logV("latitude--------"+latitude);
-        String geoUri = "http://maps.google.com/maps?q=loc:" + latitude + "," + longitude + "";
+
+
+        String geoUri = "http://maps.google.com/maps?q=loc:"+location;
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
         mContext.startActivity(intent);
     }
@@ -1752,5 +1777,23 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         ApiSEARCHAWSLoadFirstData(query, url);
 
 
+    }
+
+    public static boolean UpdateLocationSearch(String mlatitude, String mlongitude, String locNme) {
+        Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude);
+        try {
+            latitude = mlatitude;
+            longitude = mlongitude;
+
+           // mlocName = locNme;
+            txt_toolbarlocation.setVisibility(View.VISIBLE);
+            txt_toolbarlocation.setText(locNme);
+
+
+        } catch (Exception e) {
+
+        }
+
+        return true;
     }
 }

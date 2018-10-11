@@ -1,6 +1,7 @@
 package com.netvarth.youneverwait.Fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.adapter.CheckIn_FamilyMemberListAdapter;
@@ -33,7 +35,6 @@ public class ServiceListFragment extends RootFragment {
 
 
     Context mContext;
-    Toolbar toolbar;
     String title,uniqueid;
     ArrayList serviceList;
     ArrayList<SearchService> serviceList_Detail;
@@ -70,14 +71,20 @@ public class ServiceListFragment extends RootFragment {
 
         Config.logV("Service List---------------"+serviceList_Detail.size());
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
 
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                getFragmentManager().popBackStack();
+            }
+        });
 
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         tv_title.setText("Services");
         tv_subtitle=(TextView)row.findViewById(R.id.txttitle) ;
         tv_subtitle.setText(title);
@@ -103,14 +110,7 @@ public class ServiceListFragment extends RootFragment {
         mAdapter = new ServiceListAdapter(serviceList_Detail, mContext,from,title,uniqueid);
         mrecycle_service.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
-                getFragmentManager().popBackStack();
 
-            }
-        });
         return row;
     }
 

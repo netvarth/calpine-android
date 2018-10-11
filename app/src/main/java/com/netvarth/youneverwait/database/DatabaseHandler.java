@@ -282,6 +282,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void DeleteProfile() {
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.execSQL("delete from " + mContext.getString(R.string.db_table_userinfo));
+        db.close();
+    }
+
     public void updateInboxInfo(ArrayList<InboxModel> inboxModel) {
         Config.logV("UpdateInboxDetails");
         SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();

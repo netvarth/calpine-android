@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -65,13 +66,15 @@ public class ProfileFragment extends RootFragment {
         Config.logV("Profile-----------");
 
 
-        TextView tv_title = (TextView) row.findViewById(R.id.title);
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setVisibility(View.GONE);
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setText("My Profile");
         tv_title.setTypeface(tyface);
-        tv_title.setGravity(Gravity.CENTER);
 
 
         mLprofile = (LinearLayout) row.findViewById(R.id.lprofile);

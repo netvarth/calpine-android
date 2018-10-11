@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -37,7 +38,7 @@ public class AddMemberChekin extends AppCompatActivity {
     Button btn_savemember;
     Context mActivity;
     EditText tv_firstName, tv_Lastname;
-    Toolbar toolbar;
+
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,16 +47,14 @@ public class AddMemberChekin extends AppCompatActivity {
         tv_firstName = (EditText) findViewById(R.id.txt_firstname);
         tv_Lastname = (EditText) findViewById(R.id.txt_lastname);
         btn_savemember = (Button) findViewById(R.id.btn_savemember);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+
+        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
         tv_title.setText("Add Member");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // what do you want here

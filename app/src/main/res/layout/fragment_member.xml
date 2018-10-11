@@ -53,6 +53,7 @@
                     android:layout_marginRight="@dimen/padding5"
                     android:layout_marginTop="@dimen/default_padding"
                     android:background="@color/app_background"
+                    card_view:cardElevation="0dp"
                     card_view:cardCornerRadius="10dp">
 
                     <LinearLayout

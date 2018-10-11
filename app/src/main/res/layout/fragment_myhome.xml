@@ -36,6 +36,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/logotext"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding7"
@@ -75,8 +76,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:gravity="right|center"
-                        android:text="Kakkanad"
+                        android:text="Locating..."
                         android:paddingRight="@dimen/padding3"
+                        android:textSize="@dimen/txtsize_12"
                         android:textColor="@color/title_consu" />
 
                     <ImageView
@@ -128,6 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
+                    android:visibility="gone"
                     android:src="@drawable/icon_filter" />
 
             </LinearLayout>
@@ -185,22 +188,22 @@
 
             </LinearLayout>
 
-            <android.support.v4.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
+           <!-- <android.support.v4.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusableInTouchMode="true"
                 android:orientation="vertical"
-                android:overScrollMode="never">
+                android:overScrollMode="never">-->
 
                 <LinearLayout
                     android:id="@+id/LActiveCheckin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_padding"
+
                     android:layout_marginTop="@dimen/default_padding"
                     android:background="@drawable/gradient_home"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/txt_activechkin"
@@ -223,12 +226,11 @@
                         android:id="@+id/recycleActive"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/padding7"
-                        android:nestedScrollingEnabled="false">
+                       >
 
                     </android.support.v7.widget.RecyclerView>
                 </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
+           <!-- </android.support.v4.widget.NestedScrollView>-->
         </LinearLayout>
         <!--   </android.support.v4.widget.NestedScrollView>-->
     </LinearLayout>

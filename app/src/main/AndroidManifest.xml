@@ -77,6 +77,11 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
+            android:name="com.netvarth.youneverwait.activities.CheckInCopy"
+            android:screenOrientation="portrait"></activity>
+
+
+        <activity
             android:name="com.netvarth.youneverwait.activities.CheckinFamilyMember"
             android:screenOrientation="portrait"></activity>
 

@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.netvarth.youneverwait.activities.CheckInCopy;
 import com.netvarth.youneverwait.callback.AdapterCallback;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.activities.CheckIn;
@@ -215,7 +216,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.tv_location.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mAdapterCallback.onMethodOpenMap();
+                        mAdapterCallback.onMethodOpenMap(searchdetailList.getLocation1());
                     }
                 });
 
@@ -258,6 +259,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
                                 iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
                                 iCheckIn.putExtra("accountID", searchdetailList.getId());
+
+                                iCheckIn.putExtra("googlemap", searchdetailList.getLocation1());
                                // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
                                 iCheckIn.putExtra("from", "future_date");
                                 iCheckIn.putExtra("title", searchdetailList.getTitle());
@@ -445,6 +448,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
                         iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
                         iCheckIn.putExtra("accountID", searchdetailList.getId());
+                        iCheckIn.putExtra("googlemap", searchdetailList.getLocation1());
                        // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
                         iCheckIn.putExtra("from", "checkin");
                         iCheckIn.putExtra("title", searchdetailList.getTitle());
@@ -472,6 +476,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                         for (int i = 0; i < size; i++) {
                             TextView dynaText = new TextView(context);
+                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                    "fonts/Montserrat_Regular.otf");
+                            dynaText.setTypeface(tyface);
                             dynaText.setText(list_spec.get(i));
                             dynaText.setTextSize(13);
                             dynaText.setPadding(0, 0, 12, 0);
@@ -518,6 +525,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             break;
                                         } else {
                                             TextView dynaText = new TextView(context);
+                                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                                    "fonts/Montserrat_Regular.otf");
+                                            dynaText.setTypeface(tyface);
                                             dynaText.setText(list_spec.get(k));
                                             dynaText.setTextSize(13);
                                             params.setMargins(0, 10, 12, 0);
@@ -566,6 +576,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                         for (int i = 0; i < size; i++) {
                             TextView dynaText = new TextView(context);
+                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                    "fonts/Montserrat_Regular.otf");
+                            dynaText.setTypeface(tyface);
                             dynaText.setText(searchdetailList.getServices().get(i).toString());
                             dynaText.setTextSize(13);
                             dynaText.setPadding(0, 0, 12, 0);
@@ -747,7 +760,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     // myViewHolder.rating.setStepSize(Float.valueOf("0."+step));
                 }
 
-                myViewHolder.mLayout.setOnClickListener(new View.OnClickListener() {
+                myViewHolder.tv_name.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 

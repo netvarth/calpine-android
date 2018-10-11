@@ -25,12 +25,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL = "http://54.215.5.201:8181/v1/rest/";
+    public static final String BASE_URL ="http://54.215.5.201:8181/v1/rest/";   /*"https://www.youneverwait.com/v1/rest/"; */
 
 
     private static Retrofit retrofit = null;
     private static Retrofit retrofitAWS = null;
     private static Retrofit retrofitCloud = null;
+
+    private static Retrofit retrofitTest = null;
     public static Context context;
 
     public static Retrofit getClient(Context mContext) {
@@ -46,6 +48,22 @@ public class ApiClient {
                     .build();
         }
         return retrofit;
+    }
+
+
+    public static Retrofit getTestClient(Context mContext) {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        context = mContext;
+        if (retrofitTest == null) {
+            retrofitTest = new Retrofit.Builder()
+                    .baseUrl("http://stage.bookmyconsult.com/test/")
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .client(OkttpClientTest(context))
+                    .build();
+        }
+        return retrofitTest;
     }
 
 
@@ -92,6 +110,27 @@ public class ApiClient {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         builder.addInterceptor(new AddCookiesInterceptor(context)); // VERY VERY IMPORTANT
+        //  builder.addInterceptor(new ReceivedCookiesInterceptor(context));
+        builder.addInterceptor(new ConnectivityInterceptor(context));
+        builder.readTimeout(90, TimeUnit.SECONDS);
+        builder.connectTimeout(90, TimeUnit.SECONDS);
+        okHttpClient = builder.build();
+       /* OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new ConnectivityInterceptor(context))
+                .readTimeout(90, TimeUnit.SECONDS)
+                .connectTimeout(90, TimeUnit.SECONDS)
+                .build();*/
+
+        return okHttpClient;
+    }
+
+
+    public static OkHttpClient OkttpClientTest(Context context) {
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+       // builder.addInterceptor(new AddCookiesInterceptor(context)); // VERY VERY IMPORTANT
         //  builder.addInterceptor(new ReceivedCookiesInterceptor(context));
         builder.addInterceptor(new ConnectivityInterceptor(context));
         builder.readTimeout(90, TimeUnit.SECONDS);

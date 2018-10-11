@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.netvarth.youneverwait.R;
+import com.netvarth.youneverwait.activities.Home;
 import com.netvarth.youneverwait.adapter.ViewPagerAdapter;
 import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.utils.BottomNavigationViewHelper;
@@ -162,6 +163,8 @@ public class HomeTabFragment extends Fragment {
         // currently visible tab Fragment
 
         OnBackPressListener currentFragment = (OnBackPressListener) adapter.getRegisteredFragment(viewPager.getCurrentItem());
+
+
 
 
 

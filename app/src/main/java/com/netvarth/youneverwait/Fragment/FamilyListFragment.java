@@ -52,7 +52,7 @@ import retrofit2.Response;
 
 public class FamilyListFragment extends RootFragment implements FamilyAdapterCallback {
      Context mContext;
-    Toolbar toolbar;
+
     static RecyclerView mRecyclefamilyMember;
     static FamilyListAdapter familyAdapter;
     static List<FamilyArrayModel> userProfileList=new ArrayList<>();
@@ -72,14 +72,23 @@ public class FamilyListFragment extends RootFragment implements FamilyAdapterCal
         Family=getParentFragment();
         mActivity=getActivity();
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        mRecyclefamilyMember=(RecyclerView)row.findViewById(R.id.familyMember);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ((AppCompatActivity) getActivity()).  getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        mRecyclefamilyMember=(RecyclerView)row.findViewById(R.id.familyMember);
+
+
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                getFragmentManager().popBackStack();
+            }
+        });
+
         tv_title.setText("Members");
+
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
@@ -93,12 +102,7 @@ public class FamilyListFragment extends RootFragment implements FamilyAdapterCal
         }
 
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getFragmentManager().popBackStack();
-            }
-        });
+
         txt_add=(TextView) row.findViewById(R.id.txt_add) ;
         txt_add.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,7 @@ import retrofit2.Response;
 public class LogouFragment  extends RootFragment {
 
     Context mContext;
-    Toolbar toolbar;
+
     Button mBtnyes,mBtnNo;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,24 +51,21 @@ public class LogouFragment  extends RootFragment {
 
         mContext = getActivity();
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-       // ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Logout");
 
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        tv_title.setText("Logout");
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Config.logV("Back Press-----------------");
+                // what do you want here
                 getFragmentManager().popBackStack();
             }
         });
+
+        tv_title.setText("Logout");
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
 
         tv_title.setTypeface(tyface);
 
@@ -125,6 +123,8 @@ public class LogouFragment  extends RootFragment {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         Config.logV("Response----------------");
+
+                        Toast.makeText(mContext,"Logout successfully ",Toast.LENGTH_LONG).show();
                         SharedPreference.getInstance(mContext).clear();
                         // if(response.body().equals("true")) {
 

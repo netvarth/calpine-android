@@ -14,5 +14,5 @@ public interface AdapterCallback {
 
     void onMethodServiceCallback(ArrayList services,String value,String uniqueID);
 
-    void onMethodOpenMap();
+    void onMethodOpenMap(String location);
 }

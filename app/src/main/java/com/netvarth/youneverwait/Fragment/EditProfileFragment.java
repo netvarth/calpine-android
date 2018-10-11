@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,16 +54,17 @@ import retrofit2.Response;
 
 public class EditProfileFragment extends RootFragment {
 
-    Toolbar toolbar;
+
     ImageView calenderclick;
     static TextInputEditText txtdob;
     TextInputEditText txtfirstname;
     TextInputEditText txtlastname;
     RadioGroup radio_gender;
-    String radiogender="";
+    String radiogender = "";
     Button btn_edtSubmit;
-    RadioButton rMale,rFemale;
-    TextView tv_phone,tv_email;
+    RadioButton rMale, rFemale;
+    TextView tv_phone;
+    TextInputEditText tv_email;
     DatabaseHandler db;
     Context mContext;
 
@@ -69,40 +72,45 @@ public class EditProfileFragment extends RootFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View row = inflater.inflate(R.layout.editprofile, container, false);
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Profile");
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                getFragmentManager().popBackStack();
+            }
+        });
+
+
+
         tv_title.setText("Update Profile");
 
 
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getFragmentManager().popBackStack();
-            }
-        });
 
         calenderclick = (ImageView) row.findViewById(R.id.calenderclick);
         txtdob = (TextInputEditText) row.findViewById(R.id.edtdob);
         txtfirstname = (TextInputEditText) row.findViewById(R.id.edtFirstName);
         txtlastname = (TextInputEditText) row.findViewById(R.id.edtLastName);
         btn_edtSubmit = (Button) row.findViewById(R.id.btn_edtSubmit);
-        radio_gender=(RadioGroup)row.findViewById(R.id.radiogender) ;
-        rFemale=(RadioButton)row.findViewById(R.id.radioF) ;
-        rMale=(RadioButton)row.findViewById(R.id.radioM) ;
-        tv_phone=(TextView)row.findViewById(R.id.txtphone) ;
-        tv_email=(TextView)row.findViewById(R.id.txtemail) ;
+        radio_gender = (RadioGroup) row.findViewById(R.id.radiogender);
+        rFemale = (RadioButton) row.findViewById(R.id.radioF);
+        rMale = (RadioButton) row.findViewById(R.id.radioM);
+        tv_phone = (TextView) row.findViewById(R.id.txtphone);
+        tv_email = (TextInputEditText) row.findViewById(R.id.txtemail);
 
-       mContext=getActivity();
+        txtfirstname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        txtlastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
+
+        mContext = getActivity();
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
-
 
 
         btn_edtSubmit.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +119,9 @@ public class EditProfileFragment extends RootFragment {
                 ApiEditProfileDetail();
             }
         });
+
+
+
         radio_gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -150,6 +161,7 @@ public class EditProfileFragment extends RootFragment {
 
         return row;
     }
+
     private void ApiGetProfileDetail() {
 
 
@@ -181,17 +193,19 @@ public class EditProfileFragment extends RootFragment {
                         Config.logV("Response--dob-------------------------" + response.body().getUserprofile().getDob());
                         Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
                         String db_user = SharedPreference.getInstance(mContext).getStringValue("userDb", "");
-                        if (!db_user.equalsIgnoreCase("success")) {
-                            db.insertUserInfo(response.body().getUserprofile());
-                        } else {
-                            db.updateUserInfo(response.body().getUserprofile());
-                        }
+                        //   if (!db_user.equalsIgnoreCase("success")) {
+
+                        db.DeleteProfile();
+                        db.insertUserInfo(response.body().getUserprofile());
+                        // } /*else {
+                        //  db.updateUserInfo(response.body().getUserprofile());
 
 
                         ProfileModel getProfile = db.getProfileDetail(consumerId);
                         showProfileDetail(getProfile);
                         SharedPreference.getInstance(mContext).setValue("userDb", "success");
                         Config.logV("ProfileModel size-----------" + getProfile);
+
 
                     }
 
@@ -225,18 +239,23 @@ public class EditProfileFragment extends RootFragment {
         txtlastname.setText(getProfile.getLastName());
         tv_phone.setText(getProfile.getPrimaryMobileNo());
         txtdob.setText(getProfile.getDob());
-        if(!getProfile.getGender().equalsIgnoreCase("")){
-            radiogender=getProfile.getGender();
-            if(radiogender.equalsIgnoreCase("Male")){
-                rMale.setChecked(true);
-            }else{
-                rFemale.setChecked(true);
+
+        if (getProfile.getGender() != null) {
+            if (!getProfile.getGender().equalsIgnoreCase("")) {
+                radiogender = getProfile.getGender();
+                if (radiogender.equalsIgnoreCase("Male")) {
+                    rMale.setChecked(true);
+                } else {
+                    rFemale.setChecked(true);
+                }
             }
+        } else {
+            radiogender = "";
         }
 
 
-
     }
+
     private void ApiEditProfileDetail() {
 
 
@@ -252,6 +271,8 @@ public class EditProfileFragment extends RootFragment {
             jsonObj.put("id", consumerId);
             jsonObj.put("firstName", txtfirstname.getText().toString());
             jsonObj.put("lastName", txtlastname.getText().toString());
+
+            jsonObj.put("email", tv_email.getText().toString());
            /* if(radiogender.equalsIgnoreCase("")){
                 radiogender=getGender;
             }*/
@@ -276,10 +297,10 @@ public class EditProfileFragment extends RootFragment {
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        if(response.body().string().equalsIgnoreCase("true")){
-                         //   Config.logV("PopBack---------------"+getFragmentManager().getBackStackEntryCount());
-
-                           getFragmentManager().popBackStackImmediate();
+                        if (response.body().string().equalsIgnoreCase("true")) {
+                            //   Config.logV("PopBack---------------"+getFragmentManager().getBackStackEntryCount());
+                            Toast.makeText(mContext, "Profile has been updated successfully ", Toast.LENGTH_LONG).show();
+                            getFragmentManager().popBackStackImmediate();
                            /* ProfileFragment pfFragment = new ProfileFragment();
                             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                             transaction.addToBackStack(null);
@@ -309,6 +330,7 @@ public class EditProfileFragment extends RootFragment {
     }
 
     static String mDate;
+
     public static class MyDatePickerDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -327,7 +349,7 @@ public class EditProfileFragment extends RootFragment {
                         /*Toast.makeText(getActivity(), "selected date is " + view.getYear() +
                                 " - " + (view.getMonth() + 1) +
                                 " - " + view.getDayOfMonth(), Toast.LENGTH_SHORT).show();*/
-                         mDate = view.getYear() +
+                        mDate = view.getYear() +
                                 "-" + (view.getMonth() + 1) +
                                 "-" + view.getDayOfMonth();
                         txtdob.setText(mDate);

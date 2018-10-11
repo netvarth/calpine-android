@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.BottomSheetDialog;
@@ -30,6 +29,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.adapter.PaymentAdapter;
@@ -38,6 +42,7 @@ import com.netvarth.youneverwait.common.Config;
 import com.netvarth.youneverwait.connection.ApiClient;
 import com.netvarth.youneverwait.connection.ApiInterface;
 import com.netvarth.youneverwait.custom.CustomTypefaceSpan;
+import com.netvarth.youneverwait.model.TestModel;
 import com.netvarth.youneverwait.response.CheckSumModel;
 import com.netvarth.youneverwait.response.PaymentModel;
 import com.netvarth.youneverwait.response.QueueTimeSlotModel;
@@ -59,11 +64,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -77,12 +82,13 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class CheckIn extends AppCompatActivity {
+public class CheckInCopy extends AppCompatActivity {
     static Context mContext;
     static Activity mActivity;
     Spinner mSpinnerService;
     static int serviceId;
     ArrayList<SearchService> LServicesList = new ArrayList<>();
+
     String uniqueID;
     TextView tv_addmember;
     String accountID;
@@ -127,12 +133,86 @@ public class CheckIn extends AppCompatActivity {
     TextView tv_addnote;
 
     String txt_message="";
-    String googlemap;
+    private void ApiGenerateHash(String ynwUUID, String amount,String accountID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            String androidId = Settings.Secure.getString(getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            jsonObj.put("amount", amount);
+            jsonObj.put("paymentMode", "DC");
+            jsonObj.put("uuid", ynwUUID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<CheckSumModel> call = apiService.generateHash(body,accountID);
+
+        call.enqueue(new Callback<CheckSumModel>() {
+            @Override
+            public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+
+                        CheckSumModel response_data = response.body();
+                        Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
+                        // Config.logV("Checksum id-----------" + response_data.getChecksum());
+                        // Config.logV("Product key-----------" + response_data.getProductinfo());
+
+                       // launchPaymentFlow1(sAmountPay, response_data, serviceSelected);
+
+
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<CheckSumModel> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+
+
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkin);
-
         mActivity = this;
 
         btn_checkin = (Button) findViewById(R.id.btn_checkin);
@@ -140,6 +220,7 @@ public class CheckIn extends AppCompatActivity {
         //  Lpayment = (LinearLayout) findViewById(R.id.Lpayment);
         queuelayout = (LinearLayout) findViewById(R.id.queuelayout);
         txt_chooseservice = (TextView) findViewById(R.id.txt_chooseservice);
+
 
         tv_amount = (TextView) findViewById(R.id.txtamount);
         tv_name = (TextView) findViewById(R.id.txtname);
@@ -155,7 +236,22 @@ public class CheckIn extends AppCompatActivity {
         tv_queuetime = (TextView) findViewById(R.id.txt_queuetime);
         tv_queuename = (TextView) findViewById(R.id.txt_queuename);
 
+        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                finish();
+            }
+        });
+        TextView tv_title = (TextView)findViewById(R.id.toolbartitle);
+        tv_title.setText("Check-in");
 
+        Typeface tyface = Typeface.createFromAsset(getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface);
+
+        tv_titlename.setTypeface(tyface);
 
 
 
@@ -263,22 +359,8 @@ public class CheckIn extends AppCompatActivity {
             }
         });
 
-        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
-        iBackPress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
-                finish();
-            }
-        });
-        TextView tv_title = (TextView)findViewById(R.id.toolbartitle);
-        tv_title.setText("Check-in");
 
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface);
 
-        tv_titlename.setTypeface(tyface);
         btn_checkin.setTypeface(tyface);
         tv_queuename.setTypeface(tyface);
         txt_date.setTypeface(tyface);
@@ -302,29 +384,11 @@ public class CheckIn extends AppCompatActivity {
                 modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
             }
 
-            googlemap = extras.getString("googlemap", "");
+
             title = extras.getString("title", "");
             place = extras.getString("place", "");
 
         }
-
-
-        tv_place.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mFrom.equalsIgnoreCase("searchdetail_future") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
-                    String geoUri = googlemap;
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                    mContext.startActivity(intent);
-                }
-                else{
-                    String geoUri = "http://maps.google.com/maps?q=loc:" + googlemap;
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                    mContext.startActivity(intent);
-                }
-            }
-        });
         tv_place.setText(place);
 
         tv_titlename.setText(title);
@@ -1102,57 +1166,97 @@ public class CheckIn extends AppCompatActivity {
 
 
     }
+    private void calculateHashInServer(final PayUmoneySdkInitializer.PaymentParam mPaymentParams) {
 
-    private void ApiGenerateHash(String ynwUUID, String amount,String accountID) {
+        String url = Constants.MONEY_HASH;
+        StringRequest request = new StringRequest(Request.Method.POST, url,
+
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                       // mTxvBuy.setEnabled(true);
+                        String merchantHash = "";
+
+                        System.out.println("Result----------"+response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            merchantHash = jsonObject.getString("result");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //ProgressUtils.cancelLoading();
+
+                        System.out.println("merchantHash"+merchantHash);
+                        // merchantHash="2cb657bc86811c455a5a83b4620f153c9f44259c0825444c2d2bc96c7cc765defb2706c2b6de9d0fd6106bccf0d5a4ec423f22c40bceca23c90d0fdb6d7e89bb";
+                        if (merchantHash.isEmpty() || merchantHash.equals("")) {
+
+                        } else {
+                            mPaymentParams.setMerchantHash(merchantHash);
+                            PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, CheckInCopy.this, R.style.PayUMoney, true);
+                        }
+                    }
+                },
+
+                new com.android.volley.Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                      //  mTxvBuy.setEnabled(true);
+                        if (error instanceof NoConnectionError) {
+                         //   Toast.makeText(MainActivity.this, "Connect to internet Volley", Toast.LENGTH_SHORT).show();
+                        } else {
+                           // Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                      //  ProgressUtils.cancelLoading();
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                return mPaymentParams.getParams();
+            }
+        };
+        Volley.newRequestQueue(this).add(request);
+    }
+    private void ApiGenerateHash1() {
 
 
         ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
+                ApiClient.getTestClient(mContext).create(ApiInterface.class);
 
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         //  String uniqueID = UUID.randomUUID().toString();
-        JSONObject jsonObj = new JSONObject();
-        try {
-            String androidId = Settings.Secure.getString(getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
-            jsonObj.put("amount", amount);
-            jsonObj.put("paymentMode", "DC");
-            jsonObj.put("uuid", ynwUUID);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+       // RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), params.toString());
+        Call<TestModel> call = apiService.generateHashTest();
 
-
-
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(body,accountID);
-
-        call.enqueue(new Callback<CheckSumModel>() {
+        call.enqueue(new Callback<TestModel>() {
             @Override
-            public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {
+            public void onResponse(Call<TestModel> call, Response<TestModel> response) {
 
                 try {
 
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL-------------RRRRRRRRRR--" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
-
+                    String merchantHash = "";
                     if (response.code() == 200) {
 
-
-                        CheckSumModel response_data = response.body();
-                        Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
+                       // String  response_data = response.body();
+                        TestModel responsedata=response.body();
                        // Config.logV("Checksum id-----------" + response_data.getChecksum());
                        // Config.logV("Product key-----------" + response_data.getProductinfo());
+                      // merchantHash=response.body().getResult();
 
-                        launchPaymentFlow(sAmountPay, response_data, serviceSelected);
+
+                        //System.out.println("merchantHash"+response.body().getKey());
+                       launchPaymentFlow1("1",responsedata,"");
+
 
 
                     } else {
@@ -1168,7 +1272,7 @@ public class CheckIn extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<CheckSumModel> call, Throwable t) {
+            public void onFailure(Call<TestModel> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -1276,7 +1380,8 @@ public class CheckIn extends AppCompatActivity {
                             btn_payu.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ApiGenerateHash(value, sAmountPay,accountID);
+                                    //launchPaymentFlow();
+                                    ApiGenerateHash1();
                                     dialog.dismiss();
 
                                 }
@@ -1323,66 +1428,13 @@ public class CheckIn extends AppCompatActivity {
 
     Dialog mDialog1 = null;
 
-    private void launchPaymentFlow(String amount, CheckSumModel checksumModel, String service) {
-        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
-        // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
-        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
-
-      //  Config.logV("Response--PayU-------------------------" + checksumModel.getProductinfo().get(0).toString());
-
-        String firstname = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
-        String lastname = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
-
-        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
-
-        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
-        builder.setAmount(convertStringToDouble(amount))
-                .setTxnId(checksumModel.getTxnid())
-                .setPhone(mobile)
-                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setFirstName(firstname)
-                .setEmail(checksumModel.getEmail())
-                .setsUrl(checksumModel.getSuccessUrl())
-                .setfUrl(checksumModel.getFailureUrl())
-                .setUdf1("")
-                .setUdf2("")
-                .setUdf3("")
-                .setUdf4("")
-                .setUdf5("")
-                .setUdf6("")
-                .setUdf7("")
-                .setUdf8("")
-                .setUdf9("")
-                .setUdf10("")
-                .setIsDebug(true)
-                .setKey(checksumModel.getMerchantKey())
-                .setMerchantId(checksumModel.getMerchantId());
-
-        try {
-            PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
-            if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
-                Toast.makeText(mContext, "Could not generate hash", Toast.LENGTH_SHORT).show();
-            } else {
-                mDialog1 = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-                mDialog1.show();
-                Config.logV("Checksum id---22222222222222--------" + checksumModel.getChecksum());
-                mPaymentParams.setMerchantHash(checksumModel.getChecksum());
-                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.PayUMoney, true);
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            if (mDialog1.isShowing())
-                Config.closeDialog(getParent(), mDialog1);
-            // mTxvBuy.setEnabled(true);
-        }
-    }
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
-        if (mDialog1.isShowing())
-            Config.closeDialog(getParent(), mDialog1);
+      /*  if (mDialog1.isShowing())
+            Config.closeDialog(getParent(), mDialog1);*/
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
 
@@ -1405,7 +1457,7 @@ public class CheckIn extends AppCompatActivity {
                 Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
-            showAlert("Payment Cancelled");
+            showAlert("Payment Cancelled111"+data);
         }
     }
 
@@ -1425,6 +1477,98 @@ public class CheckIn extends AppCompatActivity {
         });
         alertDialog.show();
     }
+    private void launchPaymentFlow() {
+        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
+        payUmoneyConfig.setPayUmoneyActivityTitle("Buy Shoe");
+        payUmoneyConfig.setDoneButtonText("Pay Rs.10");
 
+
+         /* String kEY="BC50nb";
+          String MerchantId= "4825051";*/
+        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
+        builder.setAmount(convertStringToDouble("10"))
+                .setTxnId(System.currentTimeMillis() + "")
+                .setPhone(Constants.MOBILE)
+                .setProductName("Shoe")
+                .setFirstName(Constants.FIRST_NAME)
+                .setEmail(Constants.EMAIL)
+                .setsUrl(Constants.SURL)
+                .setfUrl(Constants.FURL)
+                .setUdf1("")
+                .setUdf2("")
+                .setUdf3("")
+                .setUdf4("")
+                .setUdf5("")
+                .setUdf6("")
+                .setUdf7("")
+                .setUdf8("")
+                .setUdf9("")
+                .setUdf10("")
+                .setIsDebug(Constants.DEBUG)
+                .setKey(Constants.MERCHANT_KEY)
+                .setMerchantId(Constants.MERCHANT_ID);
+
+        try {
+            PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
+           // ApiGenerateHash1(mPaymentParams);
+            calculateHashInServer(mPaymentParams);
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+           // mTxvBuy.setEnabled(true);
+        }
+    }
+
+    private void launchPaymentFlow1(String amount, TestModel checksumModel, String service) {
+        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
+
+        // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
+        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+
+        //  Config.logV("Response--PayU-------------------------" + checksumModel.getProductinfo().get(0).toString());
+
+
+
+        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
+        builder.setAmount(convertStringToDouble("1"))
+                .setTxnId(checksumModel.getTxnid())
+                .setPhone("9895386009")
+                .setProductName("jaldee")
+                .setFirstName("lekha")
+                .setEmail("lekha.george@calpinetech.com")
+                .setsUrl("http://stage.bookmyconsult.com/test/payment-success")
+                .setfUrl("http://stage.bookmyconsult.com/test/payment-failure")
+                .setUdf1("")
+                .setUdf2("")
+                .setUdf3("")
+                .setUdf4("")
+                .setUdf5("")
+                .setUdf6("")
+                .setUdf7("")
+                .setUdf8("")
+                .setUdf9("")
+                .setUdf10("")
+                .setIsDebug(true)
+                .setKey("rjQUPktU")
+
+                .setMerchantId("4934580");
+
+        try {
+            PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
+            if (checksumModel.getResult().isEmpty() || checksumModel.getResult().equals("")) {
+                Toast.makeText(mContext, "Could not generate hash", Toast.LENGTH_SHORT).show();
+            } else {
+                mDialog1 = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+                mDialog1.show();
+                Config.logV("Checksum id---22222222222222--------" + checksumModel.getResult());
+                mPaymentParams.setMerchantHash(checksumModel.getResult());
+                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.PayUMoney, false);
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage()+"test", Toast.LENGTH_LONG).show();
+           /* if (mDialog1.isShowing())
+                Config.closeDialog(getParent(), mDialog1);*/
+            // mTxvBuy.setEnabled(true);
+        }
+    }
 
 }

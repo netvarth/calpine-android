@@ -11,8 +11,8 @@
         android:color="@color/title_consu" />
 
     <padding
-        android:left="@dimen/padding15"
+        android:left="@dimen/padding20"
         android:top="@dimen/default_padding"
-        android:right="@dimen/padding15"
+        android:right="@dimen/padding20"
         android:bottom="@dimen/default_padding" />
 </shape>

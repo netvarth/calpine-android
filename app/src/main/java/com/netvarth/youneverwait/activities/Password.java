@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.common.Config;
@@ -51,7 +52,7 @@ import retrofit2.Response;
 
 public class Password extends AppCompatActivity {
 
-    Toolbar toolbar;
+
     Context mContext;
     TextInputEditText mEdtpwd,mEdtconfirmPwd;
     String otp,from;
@@ -75,7 +76,7 @@ public class Password extends AppCompatActivity {
             from=extras.getString("from");
         }
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         txt_ynw=(TextView)findViewById(R.id.txt_ynw);
         tv_password_title=(TextView)findViewById(R.id.txt_password_title);
         btn_pwd_submit=(Button)findViewById(R.id.pwd_submit);
@@ -86,27 +87,28 @@ public class Password extends AppCompatActivity {
         btn_pwd_submit.setTypeface(tyface_btn);
 
 
-        setSupportActionBar(toolbar);
+
         if(from.equalsIgnoreCase("login")) {
             img_indicator.setVisibility(View.GONE);
 
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-            tv_title.setText("Forgot Password");
 
-            Typeface tyface = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            tv_title.setTypeface(tyface);
 
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+            iBackPress.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // what do you want here
                     finish();
                 }
             });
+            TextView tv_title = (TextView)findViewById(R.id.title);
+            tv_title.setText("Forgot Password");
+
+            Typeface tyface = Typeface.createFromAsset(getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            tv_title.setTypeface(tyface);
+
+
 
             String firstWord = "Change ";
             String secondWord = "Password";
@@ -127,7 +129,8 @@ public class Password extends AppCompatActivity {
             tv_password_title.setText( spannable );
 
         }else{
-            toolbar.setVisibility(View.GONE);
+            LinearLayout layout_toolbar=(LinearLayout)findViewById(R.id.layout_toolbar) ;
+            layout_toolbar.setVisibility(View.GONE);
             txt_ynw.setVisibility(View.VISIBLE);
 
             Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
@@ -287,6 +290,8 @@ public class Password extends AppCompatActivity {
             if(validatePassword()&&validateConfirmPassword()) {
                 if (mEdtpwd.getText().toString().equalsIgnoreCase(mEdtconfirmPwd.getText().toString())) {
                     ApiReSetPassword(otp, mEdtconfirmPwd.getText().toString());
+                }else{
+                    Toast.makeText(mContext,"Password mismatch",Toast.LENGTH_LONG).show();
                 }
             }
         }else {

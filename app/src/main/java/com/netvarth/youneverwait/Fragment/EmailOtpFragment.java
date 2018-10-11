@@ -14,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.netvarth.youneverwait.R;
@@ -37,7 +39,6 @@ import retrofit2.Response;
 
 public class EmailOtpFragment extends RootFragment {
     Context mContext;
-    Toolbar toolbar;
     TextView txtResend;
     TextInputEditText edtOtp;
     Button btn_verify;
@@ -50,10 +51,7 @@ public class EmailOtpFragment extends RootFragment {
 
         mContext = getActivity();
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         txtResend = (TextView) row.findViewById(R.id.resendOtp);
 
@@ -71,19 +69,22 @@ public class EmailOtpFragment extends RootFragment {
                 }
             }
         });
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
 
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        tv_title.setText("Enter Otp");
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Config.logV("Back Press-----------------");
+                // what do you want here
                 getFragmentManager().popBackStack();
             }
         });
+
+
+        tv_title.setText("Enter Otp");
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
 
         tv_title.setTypeface(tyface);
 
@@ -190,6 +191,7 @@ public class EmailOtpFragment extends RootFragment {
                         Config.logV("Response----------------");
                         if (response.body().string().equals("true")) {
 
+                            Toast.makeText(mContext,"Phone Number has been updated successfully ",Toast.LENGTH_LONG).show();
                             getFragmentManager().popBackStack();
 
 

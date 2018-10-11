@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +53,7 @@ import retrofit2.Response;
 public class ChangePasswordFragment extends RootFragment {
 
     Context mContext;
-   Toolbar toolbar;
+
     TextInputEditText edtOldpwd,edtNewpwd,edtconfirmpwd;
    Button mDone;
   //  private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" ;
@@ -70,20 +71,25 @@ public class ChangePasswordFragment extends RootFragment {
 
         mContext = getActivity();
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(false);
-        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Change Password");
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
 
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                getFragmentManager().popBackStack();
+            }
+        });
+
 
         tv_title.setText("Change Password");
-     //   tv_title.setGravity(Gravity.CENTER);
 
-        Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface);
+
+
 
 
 
@@ -133,14 +139,7 @@ public class ChangePasswordFragment extends RootFragment {
 
 
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
 
-                getFragmentManager().popBackStack();
-            }
-        });
 
         edtOldpwd.addTextChangedListener(new MyTextWatcher(edtOldpwd));
         edtNewpwd.addTextChangedListener(new MyTextWatcher(edtNewpwd));
@@ -264,7 +263,7 @@ public class ChangePasswordFragment extends RootFragment {
                     //Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body().string()));
                     if (response.code() == 200) {
                         Config.logV("Response----------------");
-
+                        Toast.makeText(mContext,"Password has been updated successfully ",Toast.LENGTH_LONG).show();
                        getFragmentManager().popBackStackImmediate();
 
 

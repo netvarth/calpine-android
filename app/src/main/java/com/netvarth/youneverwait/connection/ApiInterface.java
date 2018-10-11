@@ -1,11 +1,13 @@
 package com.netvarth.youneverwait.connection;
 
 
+import com.netvarth.youneverwait.activities.CheckinTest;
 import com.netvarth.youneverwait.model.BillModel;
 import com.netvarth.youneverwait.model.Domain_Spinner;
 import com.netvarth.youneverwait.model.FamilyArrayModel;
 import com.netvarth.youneverwait.model.FamilyModel;
 import com.netvarth.youneverwait.model.SearchModel;
+import com.netvarth.youneverwait.model.TestModel;
 import com.netvarth.youneverwait.response.ActiveCheckIn;
 import com.netvarth.youneverwait.response.CheckInModel;
 import com.netvarth.youneverwait.response.CheckSumModel;
@@ -25,6 +27,7 @@ import com.netvarth.youneverwait.response.SearchSetting;
 import com.netvarth.youneverwait.response.SearchTerminology;
 import com.netvarth.youneverwait.response.SearchViewDetail;
 import com.netvarth.youneverwait.utils.SharedPreference;
+import com.payumoney.core.PayUmoneySdkInitializer;
 
 
 import java.util.ArrayList;
@@ -224,4 +227,9 @@ public interface ApiInterface {
     @GET("{serviceid}/services.json")
     Call<ArrayList<SearchService>> getService(@Path("serviceid") int serviceid, @Query("modifiedDate") String mDate);
 
+
+    /*@POST("PayUMoneyHash.php")
+    Call<ResponseBody> generateHashTest(@Body RequestBody jsonObj);*/
+    @POST("hashgenerator")
+    Call<TestModel> generateHashTest();
 }

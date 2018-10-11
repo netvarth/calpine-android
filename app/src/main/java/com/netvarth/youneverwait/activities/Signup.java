@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
@@ -58,7 +59,12 @@ public class Signup extends AppCompatActivity {
         mContext = this;
         tv_terms = (TextView) findViewById(R.id.txt_terms);
         firstName = (TextInputEditText) findViewById(R.id.firstname);
+
+        firstName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
         Lastname = (TextInputEditText) findViewById(R.id.lastname);
+
+        Lastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         mInputFirst = (TextInputLayout) findViewById(R.id.text_input_layout_first);
         mInputLast = (TextInputLayout) findViewById(R.id.text_input_layout_last);
 
@@ -118,6 +124,14 @@ public class Signup extends AppCompatActivity {
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)),firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         tv_terms.setText( spannable );
+
+        tv_terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iterm=new Intent(v.getContext(),TermsOfUse.class);
+                mContext.startActivity(iterm);
+            }
+        });
 
     }
 

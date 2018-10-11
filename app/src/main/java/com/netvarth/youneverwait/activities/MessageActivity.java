@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.common.Config;
@@ -40,7 +41,6 @@ public class MessageActivity extends AppCompatActivity {
     Context mContext;
     Activity mActivity;
     String accountID, provider,modifyAccountID,from;
-    Toolbar toolbar;
     SearchTerminology mSearchTerminology = new SearchTerminology();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,24 +67,21 @@ public class MessageActivity extends AppCompatActivity {
         }
 
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-
-        tv_title.setText("Send Message");
-
-        Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
+        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
+        Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface1);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        tv_title.setTypeface(tyface);
+        tv_title.setText("Send Message");
+        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // what do you want here
                 finish();
             }
         });
+
+
 
 
 

@@ -32,6 +32,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -232,6 +233,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         tv_logotext = (TextView) row.findViewById(R.id.logotext);
         txt_sorry = (TextView) row.findViewById(R.id.txt_sorry);
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
+        mCurrentLoc = (TextView) row.findViewById(R.id.currentloc);
         if (Config.isOnline(getActivity())) {
             ApiActiveCheckIn();
             ApiAWSearchDomain();
@@ -240,15 +242,34 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         mInterface = (ActiveAdapterOnCallback) this;
         home = getParentFragment();
         //Location
-       // SharedPreference.getInstance(mContext).setValue("map_intial","false");
+
         String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
         Config.logV("UpdateLocation noooooooooooooooooo" + s_currentLoc);
         if (!s_currentLoc.equalsIgnoreCase("no")) {
             setUpGClient();
-            Config.logV("UpdateLocation noooooooooooooooooo" + latitude);
-        } /*else {
-            UpdateLocation(latitude, longitude);
-        }*/
+            //Config.logV("UpdateLocation noooooooooooooooooo" + latitude);
+        } else if (s_currentLoc.equalsIgnoreCase("no")) {
+
+            latitude=Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("lat",""));
+            longitude=Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("longitu",""));
+            mlocName=SharedPreference.getInstance(mContext).getStringValue("locnme","");
+            UpdateLocation(latitude, longitude, mlocName);
+
+
+        } else {
+            Config.logV("UpdateLocation banglore");
+            latitude = 12.971599;
+            longitude = 77.594563;
+            try {
+                Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                mCurrentLoc.setVisibility(View.VISIBLE);
+                mCurrentLoc.setText(addresses.get(0).getLocality());
+                //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
+            } catch (Exception e) {
+
+            }
+        }
 
         mContext = getActivity();
         active = getParentFragment();
@@ -258,7 +279,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         String mLastNAme = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
         txtUsername = (TextView) row.findViewById(R.id.username);
         //txtUsername.setText("Helloo " + mFirstNAme + " " + mLastNAme);
-        mCurrentLoc = (TextView) row.findViewById(R.id.currentloc);
+
 
         mSpinnerDomain = (Spinner) row.findViewById(R.id.spinnerdomain);
         tv_activechkin = (TextView) row.findViewById(R.id.txt_activechkin);
@@ -278,21 +299,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         tv_popular.setTypeface(tyface);
 
 
-        if (latitude != 0 && longitude != 0) {
-            UpdateLocation(latitude, longitude, mlocName);
-        } else {
-            latitude = 12.971599;
-            longitude = 77.594563;
-            try {
-                Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                mCurrentLoc.setVisibility(View.VISIBLE);
-                mCurrentLoc.setText(addresses.get(0).getLocality());
-                //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
-            } catch (Exception e) {
 
-            }
-        }
         //APiGetDomain();
         APiSearchList();
 
@@ -1152,7 +1159,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -1160,6 +1167,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         Config.logV("Response--Array size--Active-----------------------" + response.body().size());
 
                         if (response.body().size() > 0) {
+                            txt_sorry.setVisibility(View.GONE);
                             MActiveList.clear();
                             for (int i = 0; i < response.body().size(); i++) {
 
@@ -1413,6 +1421,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     builder.setAlwaysShow(true);
                     LocationServices.FusedLocationApi
                             .requestLocationUpdates(googleApiClient, locationRequest, this);
+                    DefaultLocation();
+
                     PendingResult<LocationSettingsResult> result =
                             LocationServices.SettingsApi
                                     .checkLocationSettings(googleApiClient, builder.build());
@@ -1471,6 +1481,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         break;
                     case Activity.RESULT_CANCELED:
                         getActivity().finish();
+                        DefaultLocation();
                         break;
                 }
                 break;
@@ -1493,6 +1504,21 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     }
 
+    public void DefaultLocation(){
+        if(mCurrentLoc.getText().toString().equalsIgnoreCase("Locating...")){
+            latitude = 12.971599;
+            longitude = 77.594563;
+            try {
+                Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                mCurrentLoc.setVisibility(View.VISIBLE);
+                mCurrentLoc.setText(addresses.get(0).getLocality());
+                //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
+            } catch (Exception e) {
+
+            }
+        }
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
@@ -1571,20 +1597,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
             SharedPreference.getInstance(mContext).setValue("locnme",mlocName);
-
+            Config.logV("UpdateLocation 4444----" + mlocName);
             mCurrentLoc.setVisibility(View.VISIBLE);
             mCurrentLoc.setText(mlocName);
-            if(mlocName.equalsIgnoreCase("")){
-                try {
-                    Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
-                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                    mCurrentLoc.setVisibility(View.VISIBLE);
-                    mCurrentLoc.setText(addresses.get(0).getLocality());
-                    //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
-                } catch (Exception e) {
 
-                }
-            }
 
           //  SharedPreference.getInstance(mContext).setValue("map_intial","false");
         } catch (Exception e) {
@@ -1635,7 +1651,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     @Override
     public void onMethodMessageCallback(final String ynwuuid, final String accountID, String providerNAme) {
-        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+        final BottomSheetDialog dialog = new BottomSheetDialog(mContext,R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();
 

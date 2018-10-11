@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
-    android:minHeight="?attr/actionBarSize"
+    android:background="@color/hometopbar"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -18,16 +18,16 @@
         android:src="@drawable/icon_back" />
 
     <TextView
-        android:id="@+id/toolbartitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center|left"
         android:textSize="@dimen/txtsize_subtitle"
         android:textColor="@color/title_grey"
+        android:layout_marginLeft="@dimen/default_padding"
         android:minHeight="?attr/actionBarSize"
         android:text="Title" />
 
-</RelativeLayout>
+</LinearLayout>
 
 
 

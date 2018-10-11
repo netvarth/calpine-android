@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.netvarth.youneverwait.Fragment.FamilyListFragment;
@@ -180,7 +181,7 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
 
                         if (response.body().string().equalsIgnoreCase("true")) {
                             familyList.remove(pos);
-
+                            Toast.makeText(mContext, "Member deleted successfully ", Toast.LENGTH_LONG).show();
                             notifyDataSetChanged();
                         }
                     }

@@ -10,11 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.netvarth.youneverwait.Fragment.DashboardFragment;
+import com.netvarth.youneverwait.Fragment.SearchListFragment;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.adapter.LocationSearchAdapter;
 import com.netvarth.youneverwait.callback.AdapterCallback;
@@ -36,7 +37,7 @@ import retrofit2.Response;
 
 public class SearchLocationActivity extends AppCompatActivity  implements LocationSearchCallback {
 
-    Toolbar toolbar;
+
     RecyclerView mrRecylce_searchloc;
     SearchView mSearchView;
     SearchView.SearchAutoComplete searchSrcTextView;
@@ -46,27 +47,44 @@ public class SearchLocationActivity extends AppCompatActivity  implements Locati
     ArrayList<LocationResponse> items=new ArrayList<>();
     LocationSearchCallback mCallback;
     TextView tv_currentloc;
+    String from;
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+
+
+        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                finish();
+            }
+        });
+        TextView tv_title = (TextView)findViewById(R.id.toolbartitle);
+
+
+
         tv_currentloc=(TextView)findViewById(R.id.tv_currentloc);
         tv_title.setText("Search Location");
         Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface1);
+
+
         tv_currentloc.setTypeface(tyface1);
         mActivity=this;
         mContext=this;
         mCallback = (LocationSearchCallback) this;
-        Typeface tyface = Typeface.createFromAsset(getAssets(),
-                "fonts/Montserrat_Regular.otf");
-        tv_title.setTypeface(tyface);
+
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            from = extras.getString("from");
+
+        }
+
 
         tv_currentloc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,12 +100,7 @@ public class SearchLocationActivity extends AppCompatActivity  implements Locati
             }
         });
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
 
         mrRecylce_searchloc = (RecyclerView) findViewById(R.id.recylce_searchloc);
         //SEARCH
@@ -171,11 +184,22 @@ public class SearchLocationActivity extends AppCompatActivity  implements Locati
     }
 
     @Override
-    public void onMethodCallback(String value, Double lat, Double longtitude) {
+    public void onMethodCallback(String value, Double lat, Double longtitude,String locName) {
         Config.logV("UpdateLocation 555----"+lat);
-       if(  DashboardFragment.UpdateLocation(lat,longtitude)){
-           SharedPreference.getInstance(this).setValue("current_loc","no");
-           finish();
-       }
+        if(from.equalsIgnoreCase("dashboard")) {
+            if (DashboardFragment.UpdateLocation(lat, longtitude, locName)) {
+                SharedPreference.getInstance(this).setValue("current_loc", "no");
+                finish();
+            }
+        }else{
+            if (DashboardFragment.UpdateLocation(lat, longtitude, locName)) {
+                SharedPreference.getInstance(this).setValue("current_loc", "no");
+
+            }
+
+           if(SearchListFragment.UpdateLocationSearch(String.valueOf(lat),String.valueOf(longtitude),locName)){
+                finish();
+           }
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.netvarth.youneverwait.Fragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -48,7 +50,7 @@ public class UpdateProfileFragment extends RootFragment {
 
 
     Context mContext;
-    Toolbar toolbar;
+
     DatabaseHandler db;
     FrameLayout mFrameLayout;
     TextView txtFirstName, txtLastName, txtEmail, txtPhoneNumber, txtGender, txtDob;
@@ -65,11 +67,22 @@ public class UpdateProfileFragment extends RootFragment {
 
         mContext = getActivity();
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Profile");
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                getFragmentManager().popBackStack();
+            }
+        });
+        tv_title.setText("Profile");
+
+
         mFrameLayout = (FrameLayout) row.findViewById(R.id.fragment_mainLayout);
         mFrameLayout.setVisibility(View.GONE);
         txtEmail = (TextView) row.findViewById(R.id.txtemail);
@@ -101,13 +114,7 @@ public class UpdateProfileFragment extends RootFragment {
             }
         });
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
 
-            }
-        });
         db = new DatabaseHandler(mContext);
         if (Config.isOnline(mContext)) {
 

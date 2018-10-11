@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.netvarth.youneverwait.activities.CheckInCopy;
 import com.netvarth.youneverwait.callback.SearchLocationAdpterCallback;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.activities.CheckIn;
@@ -251,6 +252,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("from", "searchdetail_future");
                 iCheckIn.putExtra("title", mTitle);
                 iCheckIn.putExtra("place", searchLoclist.getPlace());
+                iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -265,6 +267,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("from", "searchdetail_checkin");
                 iCheckIn.putExtra("title", mTitle);
                 iCheckIn.putExtra("place", searchLoclist.getPlace());
+                iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -413,6 +416,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                     for (int j = 0; j < size; j++) {
                         TextView dynaText = new TextView(mContext);
+                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Regular.otf");
+                        dynaText.setTypeface(tyface1);
                         dynaText.setText(mSearchServiceList.get(i).getmAllService().get(j).getName());
                         dynaText.setTextSize(13);
                         dynaText.setPadding(10, 10, 10, 10);
@@ -556,7 +562,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
-                                    String firstWord="Est Wait Time ";
+                                    String firstWord="Est Wait Time \n";
                                     String secondWord="Today ,"+mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord+secondWord);
                                     spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -588,7 +594,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
-                                    String firstWord="Next Wait Time ";
+                                    String firstWord="Next Wait Time \n";
                                     String secondWord=  monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord+secondWord);
                                     spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

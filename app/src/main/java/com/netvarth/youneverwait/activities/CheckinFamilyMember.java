@@ -49,7 +49,6 @@ public class CheckinFamilyMember extends AppCompatActivity {
     List<FamilyArrayModel> LuserProfileList = new ArrayList<>();
     RecyclerView mRecycleFamily;
     CheckIn_FamilyMemberListAdapter mFamilyAdpater;
-    Toolbar toolbar;
     TextView btn_add;
     String firstname,lastname;
     int consumerID;

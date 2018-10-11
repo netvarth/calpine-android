@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.netvarth.youneverwait.R;
@@ -62,7 +63,7 @@ public class InboxFragment extends RootFragment {
 
 
     ArrayList<InboxModel> mDBSORTInboxList = new ArrayList<>();
-    Toolbar toolbar;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,14 +74,20 @@ public class InboxFragment extends RootFragment {
         mrRecylce_inboxlist = (RecyclerView) row.findViewById(R.id.recylce_inbox);
         mContext = getActivity();
         ApiInboxList();
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
+
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+
+
+        iBackPress.setVisibility(View.GONE);
+
 
         tv_title.setText("Inbox");
-        tv_title.setGravity(Gravity.CENTER);
 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");

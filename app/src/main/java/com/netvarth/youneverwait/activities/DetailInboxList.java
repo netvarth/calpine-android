@@ -9,10 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.netvarth.youneverwait.R;
@@ -45,7 +47,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     Context mContext;
     DetailInboxAdapter mDetailAdapter;
     static ArrayList<InboxModel> mDetailInboxList=new ArrayList<>();
-    Toolbar toolbar;
     TextView txtprovider;
     String provider;
     DetailInboxAdapterCallback mInterface;
@@ -61,29 +62,32 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             provider = extras.getString("provider");
 
         }
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
 
-        tv_title.setText("Inbox");
-        //tv_title.setGravity(Gravity.CENTER);
-        txtprovider= (TextView) findViewById(R.id.txtprovider);
+        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                finish();
+            }
+        });
+        TextView tv_title = (TextView)findViewById(R.id.toolbartitle);
+        tv_title.setText(provider);
+
+
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
+
+
+
+
+        //tv_title.setGravity(Gravity.CENTER);
+        txtprovider= (TextView) findViewById(R.id.txtprovider);
+
+        tv_title.setTypeface(tyface);
         txtprovider.setTypeface(tyface);
         txtprovider.setText(provider);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // perform whatever you want on back arrow click
-                Config.logV("BackPress-----------");
-               finish();
-            }
-        });
-
 
 
         mInterface=(DetailInboxAdapterCallback) this;
@@ -113,7 +117,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
     @Override
     public void onMethodCallback(final String waitListId, final int accountID) {
-        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+        final BottomSheetDialog dialog = new BottomSheetDialog(mContext,R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();
 

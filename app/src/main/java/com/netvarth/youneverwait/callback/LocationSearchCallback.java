@@ -5,5 +5,5 @@ package com.netvarth.youneverwait.callback;
  */
 
 public interface LocationSearchCallback {
-    void onMethodCallback(String value,Double lat,Double longtitude) ;
+    void onMethodCallback(String value,Double lat,Double longtitude,String locName) ;
 }

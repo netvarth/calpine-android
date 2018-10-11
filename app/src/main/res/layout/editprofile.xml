@@ -140,6 +140,32 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding5"
+                    android:orientation="vertical">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/text_input_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/sec_title_grey"
+                        android.support.design:hintTextAppearance="@style/GreyTextInputLayoutPassword">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/txtemail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding5"
+                           android:inputType="textEmailAddress"
+                            android:hint="@string/email"
+                            android:textAppearance="@style/GreyTextInputLayoutHintPwd"
+                            android:textColor="@color/title_grey"
+                            android:textColorHint="@color/sec_title_grey" />
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <!--<LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/default_padding"
                     android:layout_marginLeft="@dimen/padding3"
                     android:orientation="vertical">
@@ -161,7 +187,7 @@
                         android:textSize="@dimen/txtsize_hint" />
 
 
-                </LinearLayout>
+                </LinearLayout>-->
 
                 <LinearLayout
                     android:layout_width="match_parent"

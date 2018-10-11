@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.netvarth.youneverwait.R;
 import com.netvarth.youneverwait.model.WorkingModel;
@@ -34,7 +35,7 @@ public class WorkingHourFragment extends RootFragment {
 
 
     Context mContext;
-    Toolbar toolbar;
+
     TextView txt_workinghr_mon,txt_workinghr_tue,txt_workinghr_wed,txt_workinghr_thu,txt_workinghr_fri,txt_workinghr_sat,txt_workinghr_sun;
     ArrayList<WorkingModel> workingHrList;
     String txtdataMon="",txtdataTue="",txtdataWed="",txtdataThu="",txtdataFri="",txtdataSat="",txtdataSun="";
@@ -56,13 +57,8 @@ public class WorkingHourFragment extends RootFragment {
         }
 
 
-        toolbar = (Toolbar) row.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ((AppCompatActivity) getActivity()). getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         tv_subtitle=(TextView)row.findViewById(R.id.txttitle) ;
-        TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
         txt_workinghr_mon=(TextView)row.findViewById(R.id.txt_workinghr_mon);
         txt_workinghr_tue=(TextView)row.findViewById(R.id.txt_workinghr_tue);
         txt_workinghr_wed=(TextView)row.findViewById(R.id.txt_workinghr_wed);
@@ -114,6 +110,19 @@ public class WorkingHourFragment extends RootFragment {
             }
         });
 
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+               getFragmentManager().popBackStack();
+            }
+        });
         tv_title.setText("Working Hours");
 
         for(int i=0;i<workingHrList.size();i++){
@@ -188,33 +197,33 @@ public class WorkingHourFragment extends RootFragment {
         if(!txtdataSun.equalsIgnoreCase("")) {
             txt_workinghr_sun.setText(txtdataSun);
         }else{
-            txt_workinghr_sun.setText("CLOSED");
+            txt_workinghr_sun.setText("CLOSED"+"\n");
         }
 
         if(!txtdataMon.equalsIgnoreCase("")) {
             txt_workinghr_mon.setText(txtdataMon);
         }else{
-            txt_workinghr_mon.setText("CLOSED");
+            txt_workinghr_mon.setText("CLOSED"+"\n");
         }
 
 
         if(!txtdataTue.equalsIgnoreCase("")) {
             txt_workinghr_tue.setText(txtdataTue);
         }else{
-            txt_workinghr_tue.setText("CLOSED");
+            txt_workinghr_tue.setText("CLOSED"+"\n");
         }
 
         if(!txtdataWed.equalsIgnoreCase("")) {
             txt_workinghr_wed.setText(txtdataWed);
         }else{
-            txt_workinghr_wed.setText("CLOSED");
+            txt_workinghr_wed.setText("CLOSED"+"\n");
         }
 
         if(!txtdataThu.equalsIgnoreCase("")) {
             txt_workinghr_thu.setText(txtdataThu);
         }else {
 
-            txt_workinghr_thu.setText("CLOSED");
+            txt_workinghr_thu.setText("CLOSED"+"\n");
         }
 
 
@@ -223,7 +232,7 @@ public class WorkingHourFragment extends RootFragment {
             txt_workinghr_fri.setText(txtdataFri);
         }else {
 
-            txt_workinghr_fri.setText("CLOSED");
+            txt_workinghr_fri.setText("CLOSED"+"\n");
         }
 
 
@@ -231,24 +240,14 @@ public class WorkingHourFragment extends RootFragment {
             txt_workinghr_sat.setText(txtdataSat);
         }else {
 
-            txt_workinghr_sat.setText("CLOSED");
+            txt_workinghr_sat.setText("CLOSED"+"\n");
         }
 
 
 
 
 
-        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setTypeface(tyface1);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
-               getFragmentManager().popBackStack();
-            }
-        });
 
 
 
