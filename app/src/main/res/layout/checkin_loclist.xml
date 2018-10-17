@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/padding5"
+    android:orientation="vertical">
+
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginTop="@dimen/padding5"
+            android:textColor="@color/title_grey"
+            android:textSize="@dimen/txtsize_hint" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding5"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.45"
+            android:gravity="left"
+            android:text="Service"
+            android:maxLines="1"
+            android:textColor="@color/sec_title_grey"
+            android:textSize="@dimen/txtsize_title_term_small" />
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:gravity="left"
+            android:text="For"
+            android:textColor="@color/sec_title_grey"
+            android:textSize="@dimen/txtsize_title_term_small" />
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="left"
+            android:text="Scheduled on"
+            android:textColor="@color/sec_title_grey"
+            android:textSize="@dimen/txtsize_title_term_small" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/padding5"
+        android:layout_marginRight="@dimen/padding5"
+        android:background="@color/view_border" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/checkloclist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding5"></android.support.v7.widget.RecyclerView>
+
+
+    <Button
+        android:id="@+id/btn_close"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginTop="@dimen/default_padding"
+        android:background="@drawable/roundedrect_grey"
+        android:text="Close"
+        android:textAllCaps="false"
+        android:textColor="@color/app_background"
+        android:textSize="@dimen/txtsize_hint" />
+
+</LinearLayout>

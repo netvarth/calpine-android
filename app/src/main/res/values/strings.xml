@@ -102,6 +102,7 @@
     <string name="discount">Discount</string>
     <string name="tax">Tax 10% of 13500</string>
     <string name="amt_pay">Amount Paid</string>
+    <string name="cancelcheckin" >Cancel Check-In</string>
 
 
 </resources>

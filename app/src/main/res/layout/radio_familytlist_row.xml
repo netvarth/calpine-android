@@ -15,6 +15,16 @@
         android:text="text"
         android:button="@drawable/custom_radiobutton"/>
 
+    <CheckBox
+        android:id="@+id/Checkmemeber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding5"
+        android:paddingLeft="@dimen/padding7"
+        android:text="text"
+        android:visibility="gone"
+        android:button="@drawable/custom_radiobutton"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

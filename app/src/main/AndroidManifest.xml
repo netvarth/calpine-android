@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.netvarth.youneverwait">
+    package="com.nv.youneverwait">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!--Permission for checking whether wifi is enabled -->
@@ -18,14 +18,14 @@
 
 
     <application
-        android:name=".common.MyApplication"
+        android:name="com.nv.youneverwait.common.MyApplication"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
 
         <activity
-            android:name=".activities.Splash"
+            android:name="com.nv.youneverwait.activities.Splash"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,81 +34,79 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.netvarth.youneverwait.activities.Register"
+            android:name="com.nv.youneverwait.activities.Register"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.netvarth.youneverwait.activities.Signup"
+            android:name="com.nv.youneverwait.activities.Signup"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.netvarth.youneverwait.activities.VerifyOtp"
+            android:name="com.nv.youneverwait.activities.VerifyOtp"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.netvarth.youneverwait.activities.Password"
+            android:name="com.nv.youneverwait.activities.Password"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.netvarth.youneverwait.activities.Home"
+            android:name="com.nv.youneverwait.activities.Home"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.netvarth.youneverwait.activities.Login"
+            android:name="com.nv.youneverwait.activities.Login"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.netvarth.youneverwait.activities.ResetOtp"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name="com.netvarth.youneverwait.activities.SwipeGalleryImage"
-            android:screenOrientation="portrait"></activity>
-
-       <!-- <activity
-            android:name="com.netvarth.youneverwait.Fragment.SearchDetailViewFragment"
-            android:screenOrientation="portrait"></activity>-->
-
-        <activity
-            android:name="com.netvarth.youneverwait.activities.SearchServiceActivity"
+            android:name="com.nv.youneverwait.activities.ResetOtp"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.netvarth.youneverwait.activities.SearchLocationActivity"
+            android:name="com.nv.youneverwait.activities.SwipeGalleryImage"
+            android:screenOrientation="portrait"></activity>
+
+
+
+        <activity
+            android:name="com.nv.youneverwait.activities.SearchServiceActivity"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.netvarth.youneverwait.activities.CheckIn"
+            android:name="com.nv.youneverwait.activities.SearchLocationActivity"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.netvarth.youneverwait.activities.CheckInCopy"
+            android:name="com.nv.youneverwait.activities.CheckIn"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.nv.youneverwait.activities.CheckInCopy"
             android:screenOrientation="portrait"></activity>
 
 
         <activity
-            android:name="com.netvarth.youneverwait.activities.CheckinFamilyMember"
+            android:name="com.nv.youneverwait.activities.CheckinFamilyMember"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.netvarth.youneverwait.activities.MessageActivity"
+            android:name="com.nv.youneverwait.activities.MessageActivity"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.netvarth.youneverwait.activities.DetailInboxList"
+            android:name="com.nv.youneverwait.activities.DetailInboxList"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.netvarth.youneverwait.activities.AddMemberChekin"
+            android:name="com.nv.youneverwait.activities.AddMemberChekin"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name="com.netvarth.youneverwait.activities.TermsOfUse"
+            android:name="com.nv.youneverwait.activities.TermsOfUse"
             android:screenOrientation="portrait"></activity>
 
 
         <activity
-            android:name="com.netvarth.youneverwait.activities.BillActivity"
+            android:name="com.nv.youneverwait.activities.BillActivity"
             android:screenOrientation="portrait"></activity>
 
 
         <receiver
-            android:name="com.netvarth.youneverwait.service.SmsBroadcastReceiver"
+            android:name="com.nv.youneverwait.service.SmsBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter android:priority="1000">
