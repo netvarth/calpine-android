@@ -34,6 +34,7 @@ public class BillActivity extends AppCompatActivity {
 
     Context mCOntext;
     Activity mActivity;
+
     String ynwUUID, mprovider;
     TextView tv_provider, tv_customer, tv_date, tv_gstn, tv_bill;
     BillModel mBillData;
