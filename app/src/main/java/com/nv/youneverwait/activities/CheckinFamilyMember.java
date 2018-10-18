@@ -181,11 +181,13 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
                             LuserProfileList.clear();
                             LCheckList.clear();
-                            FamilyArrayModel family = new FamilyArrayModel();
+                            /*FamilyArrayModel family = new FamilyArrayModel();
                             family.setFirstName(firstname);
                             family.setLastName(lastname);
                             family.setId(consumerID);
-                            LuserProfileList.add(family);
+                            LuserProfileList.add(family);*/
+
+
                             //  LuserProfileList.addAll(response.body());
                             for (int i = 0; i < response.body().size(); i++) {
                                 FamilyArrayModel family1 = new FamilyArrayModel();
@@ -221,44 +223,44 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
                                 Config.logV("Family @@@@"+LCheckList.size());
 
-                            mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(LCheckList, multiple, LCheckList, mContext, mActivity);
-                        } else {
-                            if (memID == 0) {
-                                memID = consumerID;
+                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(LCheckList, multiple, LCheckList, mContext, mActivity);
+                            } else {
+                                if (memID == 0) {
+                                    memID = consumerID;
+                                }
+                                Config.logV("memID @@@@@" + memID);
+                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(update,memID, multiple, LuserProfileList, mContext, mActivity);
                             }
-                            Config.logV("memID @@@@@" + memID);
-                            mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(update,memID, multiple, LuserProfileList, mContext, mActivity);
-                        }
 
-                        mRecycleFamily.setAdapter(mFamilyAdpater);
-                        mFamilyAdpater.notifyDataSetChanged();
+                            mRecycleFamily.setAdapter(mFamilyAdpater);
+                            mFamilyAdpater.notifyDataSetChanged();
+
+                        }
 
                     }
 
+
+                } catch(
+                        Exception e)
+
+                {
+                    e.printStackTrace();
                 }
 
-
-            } catch(
-            Exception e)
-
-            {
-                e.printStackTrace();
             }
 
-        }
+            @Override
+            public void onFailure (Call < ArrayList < FamilyArrayModel >> call, Throwable t){
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(mActivity, mDialog);
 
-        @Override
-        public void onFailure (Call < ArrayList < FamilyArrayModel >> call, Throwable t){
-            // Log error here since request failed
-            Config.logV("Fail---------------" + t.toString());
-            if (mDialog.isShowing())
-                Config.closeDialog(mActivity, mDialog);
-
-        }
-    });
+            }
+        });
 
 
-}
+    }
 
     static String s_changename;
     static int memberid;

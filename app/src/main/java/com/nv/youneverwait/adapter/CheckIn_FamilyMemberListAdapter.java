@@ -107,7 +107,7 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
             //if true, your checkbox will be selected, else unselected
             myViewHolder.Checkmemeber.setChecked(familylist.isCheck());
 
-
+            Config.logV("Checkin@@@"+familylist.getFirstName()+"status-----"+familylist.isCheck());
 
         } else {
             myViewHolder.Checkmemeber.setVisibility(View.GONE);
@@ -116,6 +116,9 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
            /* if (memId == familylist.getId()) {
                 familylist.setCheck(true);
             }*/
+
+
+            Config.logV("Checkin@@@"+familylist.getFirstName()+"status-----"+familylist.isCheck());
             myViewHolder.name.setChecked(familylist.isCheck());
         }
         myViewHolder.name.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

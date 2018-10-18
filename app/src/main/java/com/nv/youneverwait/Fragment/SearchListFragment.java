@@ -967,7 +967,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         query.put("start", String.valueOf(currentPage));
         query.put("q", mQueryPass);
-        query.put("fq","(and  (not test_account:1) )");
+        String mobile=SharedPreference.getInstance(mContext).getStringValue("mobile","");
+        if(mobile.startsWith("55")){
+            query.put("fq", "(and  test_account:1 )");
+        }else {
+            query.put("fq", "(and  (not test_account:1) )");
+        }
+
 
         Map<String, String> params = new HashMap<>();
 
@@ -1069,6 +1075,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getParking_location1() != null) {
 
+                                    Config.logV("Park-@@@@-------------------"+response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                     search.setParking_location1(response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                 }
 
@@ -1168,7 +1175,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         query.put("start", "0");
         query.put("q", mQueryPass);
-        query.put("fq","(and  (not test_account:1) )");
+
+        String mobile=SharedPreference.getInstance(mContext).getStringValue("mobile","");
+        if(mobile.startsWith("55")){
+            query.put("fq", "(and  test_account:1 )");
+        }else {
+            query.put("fq", "(and  (not test_account:1) )");
+        }
 
 
         Map<String, String> params = new HashMap<>();
@@ -1271,6 +1284,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getParking_location1() != null) {
 
+                                    Config.logV("Park-@@@@---111----------------"+response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                     search.setParking_location1(response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                 }
 
@@ -1484,6 +1498,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 if (mSearchRespPass.get(i).getParking_location1() != null) {
 
+                                    Config.logV("Park-@@@@-------------3333------"+mSearchRespPass.get(i).getParking_location1());
                                     searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
                                 }
 
@@ -1627,6 +1642,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 if (mSearchRespPass.get(i).getParking_location1() != null) {
 
+                                    Config.logV("Park-@@@@----------4444-----"+mSearchRespPass.get(i).getParking_location1());
                                     searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
                                 }
 

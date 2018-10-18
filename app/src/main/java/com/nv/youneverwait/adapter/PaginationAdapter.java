@@ -138,11 +138,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 ////////////////////////////7 types////////////////////////////////////////////
                 ArrayList<ParkingModel> listType = new ArrayList<>();
+                listType.clear();
 
                 if (searchdetailList.getParking_type_location1() != null) {
                     if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
                         ParkingModel mType = new ParkingModel();
                         // mType.setTypeicon(R.drawable.icon_24hours);
+                        Config.logV("Park-@@@@--------11111-----------"+searchdetailList.getTitle());
                         mType.setId("1");
                         mType.setTypename("Parking "+searchdetailList.getParking_type_location1());
                         listType.add(mType);
@@ -216,10 +218,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                 if (listType.size() > 0) {
+                    myViewHolder.mRecycleTypes.setVisibility(View.VISIBLE);
+                    Config.logV("Park-@@@@-------------6666------"+listType.size());
                     mParkTypeAdapter = new ParkingTypesAdapter(listType, context);
                     LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                     myViewHolder.mRecycleTypes.setLayoutManager(horizontalLayoutManager);
                     myViewHolder.mRecycleTypes.setAdapter(mParkTypeAdapter);
+                }else{
+                    myViewHolder.mRecycleTypes.setVisibility(View.GONE);
                 }
 
 

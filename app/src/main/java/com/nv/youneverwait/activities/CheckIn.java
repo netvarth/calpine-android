@@ -418,7 +418,19 @@ public class CheckIn extends AppCompatActivity {
                         "yyyy-MM-dd", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 System.out.println("UTC time: " + sdf.format(currentTime));
-                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+
+                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+
+                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                } else {
+                    if(selectedDateFormat!=null){
+                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID,selectedDateFormat);
+                    }else {
+                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                    }
+                }
+
+
                 isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
                 Config.logV("Payment------------" + isPrepayment);
                 if (isPrepayment) {
@@ -1208,7 +1220,19 @@ public class CheckIn extends AppCompatActivity {
                                         "yyyy-MM-dd", Locale.US);
                                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                                 System.out.println("UTC time: " + sdf.format(currentTime));
-                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                                //ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+
+
+                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+
+                                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                                } else {
+                                    if(selectedDateFormat!=null){
+                                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID,selectedDateFormat);
+                                    }else {
+                                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                                    }
+                                }
                                 isPrepayment = LServicesList.get(0).isPrePayment();
                                 Config.logV("Payment------------" + isPrepayment);
                                 if (isPrepayment) {
