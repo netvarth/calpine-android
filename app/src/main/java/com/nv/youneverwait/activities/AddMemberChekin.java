@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
@@ -64,6 +65,8 @@ public class AddMemberChekin extends AppCompatActivity {
             public void onClick(View v) {
                 if(!tv_firstName.getText().toString().isEmpty()&&!tv_Lastname.getText().toString().isEmpty()) {
                     ApiAddFamilyMember();
+                }else{
+                    Toast.makeText(mActivity,"Please enter name",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -118,6 +121,10 @@ public class AddMemberChekin extends AppCompatActivity {
                         finish();
 
 
+                    }else{
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error----11111---------------------" + responseerror);
+                        Toast.makeText(mActivity,responseerror,Toast.LENGTH_SHORT).show();
                     }
 
 

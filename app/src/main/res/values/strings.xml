@@ -54,7 +54,7 @@
     <string name="mobile">Phone Number</string>
     <string name="updatepf">Update Profile</string>
     <string name="search_hint">Search...</string>
-    <string name="diff_date">Check-in for different date/time?</string>
+    <string name="diff_date">Check-in for different Date?</string>
     <string name="welcome">Welcome to</string>
     <string name="ynw">Jaldee</string>
     <string name="consumer">Consumer App</string>
@@ -103,6 +103,9 @@
     <string name="tax">Tax 10% of 13500</string>
     <string name="amt_pay">Amount Paid</string>
     <string name="cancelcheckin" >Cancel Check-In</string>
+    <string name="pay">PAY</string>
+    <string name="aboutus">About Us</string>
+    <string name="address" >Netvarth Technologies Pvt Ltd \nMuseum cross lane \nChembukavu , \nThrissur-680020 \nKerala, India</string>
 
 
 </resources>

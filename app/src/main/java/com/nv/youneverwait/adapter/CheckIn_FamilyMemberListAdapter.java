@@ -7,6 +7,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -29,6 +30,7 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
     private List<FamilyArrayModel> familyList;
     Context mContext;
     private RadioButton lastCheckedRB = null;
+    private List<FamilyArrayModel> checkedfamilyList=new ArrayList<>();
 
     //private List<FamilyArrayModel> checkeditemList=new ArrayList<>();
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -47,26 +49,29 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
     Activity activity;
     boolean multiple;
     int memId,update;
+    Button changemem;
 
-    public CheckIn_FamilyMemberListAdapter(int update,int memId, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity) {
+    public CheckIn_FamilyMemberListAdapter(Button changemem,int update,int memId, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity) {
         this.mContext = mContext;
         this.familyList = mfamilyList;
         this.activity = mActivity;
         this.multiple = multiple;
         this.memId = memId;
         this.update=update;
+        this.changemem=changemem;
         Config.logV("multiplemem------222---------------" + multiple);
 
     }
 
     ArrayList<FamilyArrayModel> CheckList = new ArrayList<>();
 
-    public CheckIn_FamilyMemberListAdapter(ArrayList<FamilyArrayModel> mCheckList, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity) {
+    public CheckIn_FamilyMemberListAdapter(Button changemem,ArrayList<FamilyArrayModel> mCheckList, boolean multiple, List<FamilyArrayModel> mfamilyList, Context mContext, Activity mActivity) {
         this.mContext = mContext;
         this.familyList = mfamilyList;
         this.activity = mActivity;
         this.multiple = multiple;
         this.CheckList = mCheckList;
+        this.changemem=changemem;
 
 
     }
@@ -78,7 +83,9 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
 
         return new CheckIn_FamilyMemberListAdapter.MyViewHolder(itemView);
     }
-
+    public int getItemViewType(int position) {
+        return position;
+    }
     @Override
     public void onBindViewHolder(final CheckIn_FamilyMemberListAdapter.MyViewHolder myViewHolder, final int position) {
         final FamilyArrayModel familylist = familyList.get(position);
@@ -118,8 +125,10 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
             }*/
 
 
-            Config.logV("Checkin@@@"+familylist.getFirstName()+"status-----"+familylist.isCheck());
+          //  Config.logV("Checkin@@@"+familylist.getFirstName()+"status-----"+familylist.isCheck());
             myViewHolder.name.setChecked(familylist.isCheck());
+
+
         }
         myViewHolder.name.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -130,14 +139,14 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
                 }
                 //store the clicked radiobutton
                 lastCheckedRB = myViewHolder.name;
-                Config.logV("Selected------@@@@--------------" + myViewHolder.name.getText().toString());
+                Config.logV("lastCheckedRB------@@@@--------------" + lastCheckedRB);
 
-                Config.logV("Selected---------@@@@-----------" + myViewHolder.name.getText().toString());
-                if (isChecked) {
-                    familylist.setCheck(true);
-                } else {
-                    familylist.setCheck(false);
-                }
+
+
+                    familyList.get(position).setCheck(isChecked);
+
+
+              //  familyList.get(position).setCheck(isChecked);
                 //familyList.get(myViewHolder.getAdapterPosition()).setCheck(isChecked);
                 CheckinFamilyMember.changeMemberName(myViewHolder.name.getText().toString(), familylist.getId());
             }
@@ -151,6 +160,32 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
 
                 //familylist.setCheck(isChecked);
                 familyList.get(myViewHolder.getAdapterPosition()).setCheck(isChecked);
+
+                checkedfamilyList.clear();
+                for (int i = 0; i < familyList.size(); i++) {
+
+                    if (familyList.get(i).isCheck()) {
+                        FamilyArrayModel family = new FamilyArrayModel();
+                        family.setId(familyList.get(i).getId());
+                        family.setFirstName(familyList.get(i).getFirstName());
+                        family.setLastName(familyList.get(i).getLastName());
+                        family.setCheck(true);
+                        checkedfamilyList.add(family);
+                    }
+                }
+                CheckinFamilyMember.CheckedFamilyList(checkedfamilyList);
+
+                Config.logV("Check Family List-------------"+checkedfamilyList.size());
+                if(checkedfamilyList.size()>0){
+                    changemem.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                    changemem.setTextColor(mContext.getResources().getColor(R.color.app_background));
+                    changemem.setEnabled(true);
+                }else{
+                    changemem.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                    changemem.setTextColor(mContext.getResources().getColor(R.color.button_grey));
+                    changemem.setEnabled(false);
+                }
+
 
                 /*if (isChecked) {
                     myViewHolder.Checkmemeber.setChecked(true);
@@ -196,4 +231,6 @@ public class CheckIn_FamilyMemberListAdapter extends RecyclerView.Adapter<CheckI
     public int getItemCount() {
         return familyList.size();
     }
+
+
 }

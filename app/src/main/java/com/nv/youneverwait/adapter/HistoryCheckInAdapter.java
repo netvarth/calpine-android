@@ -8,20 +8,19 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.callback.ActiveAdapterOnCallback;
+import com.nv.youneverwait.callback.HistoryAdapterCallback;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.response.ActiveCheckIn;
@@ -39,11 +38,10 @@ import java.util.concurrent.TimeUnit;
  * Created by sharmila on 13/7/18.
  */
 
-public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdapter.MyViewHolder> {
+public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAdapter.MyViewHolder> {
 
     private List<ActiveCheckIn> activeChekinList;
     Context mContext;
-    ActiveAdapterOnCallback callback;
 
     public static String toTitleCase(String str) {
 
@@ -73,12 +71,11 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         return builder.toString();
     }
 
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_businessname, tv_estTime, tv_place;
-        TextView icon_bill, tv_prepaid;
-        LinearLayout layout_btnpay;
-        Button btn_pay;
+        public TextView tv_businessname, tv_estTime, tv_service, tv_place, tv_personahead, tv_token, icon_message, icon_cancel;
+        TextView icon_bill;
+        LinearLayout lactive;
+        ImageView img_fav;
 
 
         public MyViewHolder(View view) {
@@ -86,43 +83,57 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             tv_businessname = (TextView) view.findViewById(R.id.txt_businessname);
             tv_estTime = (TextView) view.findViewById(R.id.txt_esttime);
             icon_bill = (TextView) view.findViewById(R.id.icon_bill);
+            tv_service = (TextView) view.findViewById(R.id.txt_service);
             tv_place = (TextView) view.findViewById(R.id.txt_location);
-            layout_btnpay = (LinearLayout) view.findViewById(R.id.layout_btnpay);
-            btn_pay = (Button) view.findViewById(R.id.btn_pay);
-            tv_prepaid = (TextView) view.findViewById(R.id.txtprepaid);
-
-
+            tv_personahead = (TextView) view.findViewById(R.id.txt_personahead);
+            tv_token = (TextView) view.findViewById(R.id.txt_token);
+            //  tv_waitsatus=(TextView)view.findViewById(R.id.txt_waitsatus);
+            img_fav = (ImageView) view.findViewById(R.id.img_fav);
+            icon_message = (TextView) view.findViewById(R.id.icon_message);
+            icon_cancel = (TextView) view.findViewById(R.id.icon_cancel);
         }
     }
 
     Activity activity;
-    Fragment mFragment;
 
-    public ActiveCheckInAdapter(List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity, Fragment fragment, ActiveAdapterOnCallback callback) {
+    String category;
+    HistoryAdapterCallback callback;
+    public HistoryCheckInAdapter(List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity,HistoryAdapterCallback callback) {
         this.mContext = mContext;
         this.activeChekinList = mactiveChekinList;
         this.activity = mActivity;
-        this.mFragment = fragment;
-        this.callback = callback;
+        this.callback=callback;
 
     }
 
     @Override
-    public ActiveCheckInAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HistoryCheckInAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.active_checkin_newrow, parent, false);
+                .inflate(R.layout.child_checkinhistory_layout, parent, false);
 
-        return new ActiveCheckInAdapter.MyViewHolder(itemView);
+        return new HistoryCheckInAdapter.MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(ActiveCheckInAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(HistoryCheckInAdapter.MyViewHolder myViewHolder, final int position) {
         final ActiveCheckIn activelist = activeChekinList.get(position);
 
-        Config.logV("Provider NAme-------------------"+activelist.getProvider().getBusinessName());
+
         myViewHolder.tv_businessname.setText(toTitleCase(activelist.getProvider().getBusinessName()));
 
+        if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn") || activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
+            myViewHolder.icon_cancel.setVisibility(View.VISIBLE);
+        } else {
+            myViewHolder.icon_cancel.setVisibility(View.GONE);
+        }
 
+
+        myViewHolder.icon_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(),activelist.getProvider().getId());
+            }
+        });
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_businessname.setTypeface(tyface);
@@ -144,6 +155,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         }
 
 
+        if (activelist.getConsumer().isFavourite()) {
+
+            myViewHolder.img_fav.setVisibility(View.VISIBLE);
+            myViewHolder.img_fav.setImageResource(R.drawable.icon_favourited);
+        } else {
+            myViewHolder.img_fav.setVisibility(View.GONE);
+        }
         myViewHolder.tv_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,26 +171,34 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 mContext.startActivity(intent);
             }
         });
+        if (activelist.getService() != null) {
+            if (activelist.getService().getName() != null) {
+                myViewHolder.tv_service.setVisibility(View.VISIBLE);
 
+                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                String firstWord = activelist.getService().getName();
+                String secondWord = " for " + activelist.getWaitlistingFor().get(0).getFirstName() + " " + activelist.getWaitlistingFor().get(0).getLastName();
+                Spannable spannable = new SpannableString(firstWord + secondWord);
+                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                myViewHolder.tv_service.setText(spannable);
+            } else {
+                myViewHolder.tv_service.setVisibility(View.GONE);
+            }
+        }
 
         Config.logV("Bill------------" + activelist.getWaitlistStatus());
-        if ((activelist.getBillStatus() != null) || activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-            myViewHolder.btn_pay.setText("PAY");
-            if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-                myViewHolder.btn_pay.setText("PRE-PAY");
-            }
+        if (activelist.getBillStatus() != null) {
             myViewHolder.icon_bill.setVisibility(View.VISIBLE);
-            myViewHolder.btn_pay.setVisibility(View.VISIBLE);
         } else {
             myViewHolder.icon_bill.setVisibility(View.GONE);
-            myViewHolder.btn_pay.setVisibility(View.GONE);
         }
 
 
         myViewHolder.icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodActiveBillIconCallback(activelist.getYnwUuid(), activelist.getProvider().getBusinessName());
+                   callback.onMethodBillIconCallback(activelist.getYnwUuid(),activelist.getProvider().getBusinessName());
             }
         });
 
@@ -355,6 +381,42 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         } else {
             myViewHolder.tv_estTime.setVisibility(View.GONE);
         }
+
+
+        String firstWord = "Token No ";
+        String secondWord = String.valueOf(activelist.getToken());
+        Spannable spannable = new SpannableString(firstWord + secondWord);
+        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        myViewHolder.tv_token.setText(spannable);
+
+
+        if (activelist.getPersonsAhead() != -1) {
+            myViewHolder.tv_personahead.setVisibility(View.VISIBLE);
+            String firstWord1 = "Persons Ahead ";
+            String secondWord1 = String.valueOf(activelist.getPersonsAhead());
+            Spannable spannable1 = new SpannableString(firstWord1 + secondWord1);
+            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                    0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            myViewHolder.tv_personahead.setText(spannable1);
+        } else {
+            myViewHolder.tv_personahead.setVisibility(View.INVISIBLE);
+        }
+
+
+        myViewHolder.icon_message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onMethodMessageCallback(activelist.getYnwUuid(),String.valueOf(activelist.getProvider().getId()),activelist.getProvider().getBusinessName());
+
+            }
+        });
 
 
     }

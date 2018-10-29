@@ -36,7 +36,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
-                    android:text="Head"
+
+                    android:text="Head ss"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint"
                     android:textStyle="bold" />
@@ -56,9 +57,9 @@
                 android:id="@+id/txt_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding2"
+                android:layout_marginTop="@dimen/padding5"
                 android:ellipsize="end"
-                android:maxLines="3"
+                android:maxLines="1"
                 android:text="message"
                 android:textSize="@dimen/txtsize_12" />
 
@@ -82,6 +83,6 @@
         android:layout_marginTop="-7dp"
         android:background="@drawable/roundedrect_shade"
 
-       />
+        />
 
 </LinearLayout>

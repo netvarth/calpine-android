@@ -10,6 +10,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -24,13 +25,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.activities.SearchLocationActivity;
 import com.nv.youneverwait.adapter.PaginationAdapter;
 import com.nv.youneverwait.adapter.SearchListAdpter;
@@ -47,17 +52,24 @@ import com.nv.youneverwait.model.SearchModel;
 import com.nv.youneverwait.model.WorkingModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchAWsResponse;
+import com.nv.youneverwait.response.SearchTerminology;
 import com.nv.youneverwait.utils.PaginationScrollListener;
 import com.nv.youneverwait.utils.SharedPreference;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -109,8 +121,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     SearchListAdpter listadapter;
     ArrayList<ListCell> items;
     AdapterCallback mInterface;
-
-
 
 
     private void APiSearchList() {
@@ -314,6 +324,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     static TextView txt_toolbarlocation;
     ImageView ibackpress;
     String s_LocName;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -324,7 +335,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         mInterface = (AdapterCallback) this;
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            if(!getQuery_previous.equalsIgnoreCase("true")) {
+            if (!getQuery_previous.equalsIgnoreCase("true")) {
                 query = bundle.getString("query", "");
                 url = bundle.getString("url", "");
             }
@@ -332,7 +343,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             longitude = bundle.getString("longitude", "");
             spinnerTxt = bundle.getString("spinnervalue", "");
             searchTxt = bundle.getString("searchtxt", "");
-            s_LocName=bundle.getString("locName", "");
+            s_LocName = bundle.getString("locName", "");
         }
 
 
@@ -347,9 +358,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         SharedPreference.getInstance(mContext).setValue("firsttime", true);
 
 
-        ibackpress=(ImageView)row.findViewById(R.id.backpress) ;
+        ibackpress = (ImageView) row.findViewById(R.id.backpress);
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
-        txt_toolbarlocation=(TextView) row.findViewById(R.id.txt_toolbarlocation);
+        txt_toolbarlocation = (TextView) row.findViewById(R.id.txt_toolbarlocation);
 
 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
@@ -369,12 +380,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(latitude), Double.parseDouble(longitude), 1);
 
-               Config.logV("Latitude-----11111--------"+addresses.get(0).getLocality());
-               if(!s_LocName.equalsIgnoreCase("")){
-                   txt_toolbarlocation.setVisibility(View.VISIBLE);
-                  // txt_toolbarlocation.setText(addresses.get(0).getLocality());
-                   txt_toolbarlocation.setText(s_LocName);
-              }
+            Config.logV("Latitude-----11111--------" + addresses.get(0).getLocality());
+            if (!s_LocName.equalsIgnoreCase("")) {
+                txt_toolbarlocation.setVisibility(View.VISIBLE);
+                // txt_toolbarlocation.setText(addresses.get(0).getLocality());
+                txt_toolbarlocation.setText(s_LocName);
+            }
         } catch (Exception e) {
 
         }
@@ -397,7 +408,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         progressBar = (ProgressBar) row.findViewById(R.id.main_progress);
         //  Config.logV("Pass Fragment" + searchDetail);
         mSearchView = (SearchView) row.findViewById(R.id.search);
-        pageadapter = new PaginationAdapter(getActivity(),mSearchView, getActivity(), searchDetail, this);
+        pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this);
 
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecySearchDetail.setLayoutManager(linearLayoutManager);
@@ -479,9 +490,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     int pos = getIndex(domainList, spinnerTxt);
                     mSpinnerDomain.setSelection(pos);
                     SharedPreference.getInstance(mContext).setValue("firsttime", false);
-                    mSearchView.setQuery(searchTxt, false);
+
+                    //mSearchView.setQuery(searchTxt, false);
+
+                    Config.logV("Popular Text__________@@@__11111__"+searchTxt);
+
                 }
 
+                mSearchView.setQuery(searchTxt, false);
 
                 if (mDomainSpinner.equalsIgnoreCase("ALL")) {
 
@@ -574,6 +590,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             if(FirstRun){
                                 mSearchView.setQuery(searchTxt, false);
                             }*/
+
+                            if (!query.equalsIgnoreCase("")) {
+                                searchTxt = query;
+
+                            }
+
 
                             ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
                             searchIcon.setImageDrawable(null);
@@ -705,6 +727,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 Config.logV("Query-------------"+searchTxt);
                                 mSearchView.setQuery(searchTxt, false);
                             }*/
+
+                            if (!query.equalsIgnoreCase("")) {
+                                searchTxt = query;
+
+                            }
                             ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
                             searchIcon.setImageDrawable(null);
                             searchIcon.setVisibility(View.GONE);
@@ -872,14 +899,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
               /*  mRecySearchDetail.smoothScrollToPosition(0);*/
 
 
-
                 Config.logV("Query-----------" + querycreate);
 
-               // final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
+                // final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
 
-                final String query1 =  "(and location1:" + locationRange + querycreate + ")";
-              //  final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
-                final String pass1 =    "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+                final String query1 = "(and location1:" + locationRange + querycreate + ")";
+                //  final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+                final String pass1 = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
                 query = query1;
                 url = pass1;
@@ -967,10 +993,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         query.put("start", String.valueOf(currentPage));
         query.put("q", mQueryPass);
-        String mobile=SharedPreference.getInstance(mContext).getStringValue("mobile","");
-        if(mobile.startsWith("55")){
+        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        if (mobile.startsWith("55")) {
             query.put("fq", "(and  test_account:1 )");
-        }else {
+        } else {
             query.put("fq", "(and  (not test_account:1) )");
         }
 
@@ -1069,13 +1095,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 //7 types
 
                                 if (response.body().getHits().getHit().get(i).getFields().getParking_type_location1() != null) {
-                                    Config.logV("PArking----111---------"+response.body().getHits().getHit().get(i).getFields().getParking_type_location1());
+                                    Config.logV("PArking----111---------" + response.body().getHits().getHit().get(i).getFields().getParking_type_location1());
                                     search.setParking_type_location1(response.body().getHits().getHit().get(i).getFields().getParking_type_location1());
                                 }
 
                                 if (response.body().getHits().getHit().get(i).getFields().getParking_location1() != null) {
 
-                                    Config.logV("Park-@@@@-------------------"+response.body().getHits().getHit().get(i).getFields().getParking_location1());
+                                    Config.logV("Park-@@@@-------------------" + response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                     search.setParking_location1(response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                 }
 
@@ -1176,10 +1202,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         query.put("start", "0");
         query.put("q", mQueryPass);
 
-        String mobile=SharedPreference.getInstance(mContext).getStringValue("mobile","");
-        if(mobile.startsWith("55")){
+        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        if (mobile.startsWith("55")) {
             query.put("fq", "(and  test_account:1 )");
-        }else {
+        } else {
             query.put("fq", "(and  (not test_account:1) )");
         }
 
@@ -1278,16 +1304,15 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getParking_type_location1() != null) {
-                                    Config.logV("PArking----111---------"+response.body().getHits().getHit().get(i).getFields().getParking_type_location1());
+                                    Config.logV("PArking----111---------" + response.body().getHits().getHit().get(i).getFields().getParking_type_location1());
                                     search.setParking_type_location1(response.body().getHits().getHit().get(i).getFields().getParking_type_location1());
                                 }
 
                                 if (response.body().getHits().getHit().get(i).getFields().getParking_location1() != null) {
 
-                                    Config.logV("Park-@@@@---111----------------"+response.body().getHits().getHit().get(i).getFields().getParking_location1());
+                                    Config.logV("Park-@@@@---111----------------" + response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                     search.setParking_location1(response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                 }
-
 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getAlways_open_location1() != null) {
@@ -1491,17 +1516,16 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 //7types
 
                                 if (mSearchRespPass.get(i).getParking_type_location1() != null) {
-                                    Config.logV("PArking-------------"+mSearchRespPass.get(i).getParking_type_location1());
+                                    Config.logV("PArking-------------" + mSearchRespPass.get(i).getParking_type_location1());
                                     searchList.setParking_type_location1(mSearchRespPass.get(i).getParking_type_location1());
                                 }
 
 
                                 if (mSearchRespPass.get(i).getParking_location1() != null) {
 
-                                    Config.logV("Park-@@@@-------------3333------"+mSearchRespPass.get(i).getParking_location1());
+                                    Config.logV("Park-@@@@-------------3333------" + mSearchRespPass.get(i).getParking_location1());
                                     searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
                                 }
-
 
 
                                 if (mSearchRespPass.get(i).getAlways_open_location1() != null) {
@@ -1642,7 +1666,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 if (mSearchRespPass.get(i).getParking_location1() != null) {
 
-                                    Config.logV("Park-@@@@----------4444-----"+mSearchRespPass.get(i).getParking_location1());
+                                    Config.logV("Park-@@@@----------4444-----" + mSearchRespPass.get(i).getParking_location1());
                                     searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
                                 }
 
@@ -1781,7 +1805,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         bundle.putString("title", value);
         bundle.putString("uniqueID", uniqueid);
         pfFragment.setArguments(bundle);
-        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
@@ -1807,12 +1831,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     public void onMethodOpenMap(String location) {
 
 
-
-        String geoUri = "http://maps.google.com/maps?q=loc:"+location;
+        String geoUri = "http://maps.google.com/maps?q=loc:" + location;
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
         mContext.startActivity(intent);
     }
-
 
 
     public void QuerySubmitCLick(String query) {
@@ -1842,9 +1864,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";*/
 
 
-        final String query1 =  "(and location1:" + locationRange + querycreate + ")";
+        final String query1 = "(and location1:" + locationRange + querycreate + ")";
 
-        final String pass1 =    "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+        final String pass1 = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
         query = query1;
         url = pass1;
@@ -1861,7 +1883,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             latitude = mlatitude;
             longitude = mlongitude;
 
-           // mlocName = locNme;
+            // mlocName = locNme;
             txt_toolbarlocation.setVisibility(View.VISIBLE);
             txt_toolbarlocation.setText(locNme);
 
@@ -1872,4 +1894,164 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         return true;
     }
+
+    @Override
+    public void onMethodMessage(String provider, final String accountID, String from) {
+
+        final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
+        dialog.setContentView(R.layout.reply);
+        dialog.show();
+
+        Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+        Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+        txtsendmsg.setVisibility(View.VISIBLE);
+        txtsendmsg.setText("Message to " + provider);
+        btn_send.setText("SEND");
+
+
+        btn_send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
+                ApiCommunicate(modifyAccountID, edt_message.getText().toString(),dialog);
+               // ApiSearchViewTerminology(modifyAccountID);
+                //dialog.dismiss();
+
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+    }
+
+    SearchTerminology mSearchTerminology = new SearchTerminology();
+
+    private void ApiSearchViewTerminology(String accountID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+
+
+        Call<SearchTerminology> call = apiService.getSearchViewTerminology(Integer.parseInt(accountID), sdf.format(currentTime));
+
+        call.enqueue(new Callback<SearchTerminology>() {
+            @Override
+            public void onResponse(Call<SearchTerminology> call, Response<SearchTerminology> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        mSearchTerminology = response.body();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SearchTerminology> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
+    private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("communicationMessage", message);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.PostMessage(accountID, body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_LONG).show();
+                        mBottomDialog.dismiss();
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                mBottomDialog.dismiss();
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
+
 }

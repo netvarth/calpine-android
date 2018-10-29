@@ -184,12 +184,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         dynaText.setText(mPopularSearchList.get(k).getDisplayname());
                         dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
                         dynaText.setTextSize(12);
-                        dynaText.setTextColor(getResources().getColor(R.color.title_grey));
+                        dynaText.setTextColor(getResources().getColor(R.color.black));
                         dynaText.setPadding(15, 10, 15, 10);
-                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
                         dynaText.setMaxLines(1);
-                        dynaText.setMaxEms(8);
-                        dynaText.setWidth(dpToPx(110));
+                       // dynaText.setMaxEms(8);
+                        dynaText.setWidth(dpToPx(130));
                         dynaText.setGravity(Gravity.CENTER);
 
                         params.setMargins(12, 10, 12, 0);
@@ -202,7 +202,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             @Override
                             public void onClick(View v) {
 
+
                                 mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
+                                Config.logV("Popular Text__________@@@____"+mPopularSearchtxt);
                                 FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
                             }
                         });
@@ -411,13 +413,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                         dynaText.setText(mPopularSearchList.get(k).getDisplayname());
                                         dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
                                         dynaText.setTextSize(12);
-                                        dynaText.setTextColor(getResources().getColor(R.color.title_grey));
+                                        dynaText.setTextColor(getResources().getColor(R.color.black));
                                         dynaText.setPadding(15, 10, 15, 10);
-                                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                       // dynaText.setEllipsize(TextUtils.TruncateAt.END);
                                         dynaText.setMaxLines(1);
-                                        dynaText.setMaxEms(8);
+                                        //dynaText.setMaxEms(8);
                                         dynaText.setGravity(Gravity.CENTER);
-                                        dynaText.setWidth(dpToPx(110));
+                                        dynaText.setWidth(dpToPx(130));
 
                                         params.setMargins(12, 10, 12, 0);
                                         dynaText.setLayoutParams(params);
@@ -428,7 +430,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                             @Override
                                             public void onClick(View v) {
 
-
+                                                mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
+                                                Config.logV("Popular Text______________"+mPopularSearchtxt);
                                                 FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
 
 
@@ -773,6 +776,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 String mSector = "";
                 ListCell cell = listadapter.getItem(position);
+                Config.logV("Popular Text__________@@@Dele111");
                 mSearchView.setQuery("", false);
 
                 LanLong Lanlong = getLocationNearBy(latitude, longitude);
@@ -1289,6 +1293,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         //VALID QUERY PASS
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
+
+        Config.logV("Popular Text__________@@@Del111e");
         mSearchView.setQuery("", false);
         SearchListFragment pfFragment = new SearchListFragment();
 
@@ -1296,6 +1302,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         bundle.putString("latitude", String.valueOf(latitude));
         bundle.putString("longitude", String.valueOf(longitude));
         bundle.putString("spinnervalue", spinnerTxtPass);
+
+        Config.logV("Popular Text_______$$$$_______"+mPopularSearchtxt);
         bundle.putString("searchtxt", mPopularSearchtxt);
         pfFragment.setArguments(bundle);
 
@@ -1530,6 +1538,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     public void QuerySubmitCLick(String query) {
+
         mSearchView.setQuery("", false);
 
         LanLong Lanlong = getLocationNearBy(latitude, longitude);
@@ -1645,186 +1654,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     }
 
-    @Override
-    public void onMethodMessageCallback(final String ynwuuid, final String accountID, String providerNAme) {
-        final BottomSheetDialog dialog = new BottomSheetDialog(mContext,R.style.DialogStyle);
-        dialog.setContentView(R.layout.reply);
-        dialog.show();
 
-        Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
-        Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-        TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
-        String firstWord = "Message to ";
-        String secondWord = providerNAme;
-        Spannable spannable = new SpannableString(firstWord + secondWord);
-        Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        txtsendmsg.setText(spannable);
-
-
-        btn_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ApiCommunicate(ynwuuid, String.valueOf(accountID), edt_message.getText().toString(), dialog);
-
-            }
-        });
-
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-    }
-
-    @Override
-    public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID) {
-        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
-        dialog.setContentView(R.layout.cancelcheckin);
-        dialog.show();
-
-        Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
-        Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-        TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
-
-
-        btn_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ApiDeleteCheckin(ynwuuid, String.valueOf(accountID), dialog);
-
-            }
-        });
-
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-    }
-
-
-    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
-
-        JSONObject jsonObj = new JSONObject();
-        try {
-            jsonObj.put("communicationMessage", message);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), body);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-
-                        dialog.dismiss();
-
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-
-            }
-        });
-
-
-    }
-
-
-    private void ApiDeleteCheckin(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
-
-        Call<ResponseBody> call = apiService.deleteActiveCheckIn(ynwuuid, String.valueOf(accountID));
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-
-                        if (response.body().string().equalsIgnoreCase("true")) {
-                            dialog.dismiss();
-                            ApiActiveCheckIn();
-                        }
-
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-
-            }
-        });
-
-
-    }
 
 
 }

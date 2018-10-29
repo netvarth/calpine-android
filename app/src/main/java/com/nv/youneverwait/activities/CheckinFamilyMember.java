@@ -35,7 +35,7 @@ import retrofit2.Response;
 
 public class CheckinFamilyMember extends AppCompatActivity {
 
-    Context mContext;
+    static Context mContext;
     Activity mActivity;
 
     List<FamilyArrayModel> LuserProfileList = new ArrayList<>();
@@ -45,7 +45,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
     String firstname, lastname;
     int update;
     int consumerID, memID;
-    Button btn_changemem;
+    static Button btn_changemem;
     TextView txt_toolbartitle;
     ImageView imgBackpress;
     boolean multiple;
@@ -84,6 +84,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
             if (update == 1) {
                 checkList = (ArrayList<FamilyArrayModel>) getIntent().getSerializableExtra("checklist");
             } else {
+                checkedfamilyList.clear();
                 memID = extras.getInt("memberID");
                 Config.logV("memID" + memID);
             }
@@ -144,6 +145,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
         btn_changemem.setTypeface(tyface);
         txt_toolbartitle.setTypeface(tyface);
 
+
         ApiListFamilyMember();
 
     }
@@ -182,11 +184,11 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
                             LuserProfileList.clear();
                             LCheckList.clear();
-                            /*FamilyArrayModel family = new FamilyArrayModel();
+                            FamilyArrayModel family = new FamilyArrayModel();
                             family.setFirstName(firstname);
                             family.setLastName(lastname);
                             family.setId(consumerID);
-                            LuserProfileList.add(family);*/
+                            LuserProfileList.add(family);
 
 
                             //  LuserProfileList.addAll(response.body());
@@ -202,18 +204,18 @@ public class CheckinFamilyMember extends AppCompatActivity {
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                             mRecycleFamily.setLayoutManager(mLayoutManager);
 
-                            Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@" + checkList.size());
+                            Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@1111" + checkedfamilyList.size());
                             Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@ LuserProfileList" + LuserProfileList.size());
-                            if (update == 1) {
+                            if (update == 1 ||multiple) {
 
                                 for (int j = 0; j < LuserProfileList.size(); j++) {
                                     FamilyArrayModel family1 = new FamilyArrayModel();
                                     family1.setFirstName(LuserProfileList.get(j).getFirstName());
                                     family1.setLastName(LuserProfileList.get(j).getLastName());
                                     family1.setId(LuserProfileList.get(j).getId());
-                                    for (int i = 0; i < checkList.size(); i++) {
+                                    for (int i = 0; i < checkedfamilyList.size(); i++) {
 
-                                        if (checkList.get(i).getId() == LuserProfileList.get(j).getId()) {
+                                        if (checkedfamilyList.get(i).getId() == LuserProfileList.get(j).getId()) {
                                             family1.setCheck(true);
                                             Config.logV("Family %%%%%%%%%%%%%%%" + LuserProfileList.get(j).getFirstName());
                                         }
@@ -224,13 +226,26 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
                                 Config.logV("Family @@@@"+LCheckList.size());
 
-                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(LCheckList, multiple, LCheckList, mContext, mActivity);
+                                if(checkedfamilyList.size()>0){
+                                    btn_changemem.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                                    btn_changemem.setTextColor(mContext.getResources().getColor(R.color.app_background));
+                                    btn_changemem.setEnabled(true);
+                                }else{
+                                    btn_changemem.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                    btn_changemem.setTextColor(mContext.getResources().getColor(R.color.button_grey));
+                                    btn_changemem.setEnabled(false);
+                                }
+
+
+                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(btn_changemem,LCheckList, multiple, LCheckList, mContext, mActivity);
                             } else {
                                 if (memID == 0) {
                                     memID = consumerID;
                                 }
+
+
                                 Config.logV("memID @@@@@" + memID);
-                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(update,memID, multiple, LuserProfileList, mContext, mActivity);
+                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(btn_changemem,update,memID, multiple, LuserProfileList, mContext, mActivity);
                             }
 
                             mRecycleFamily.setAdapter(mFamilyAdpater);
@@ -269,17 +284,31 @@ public class CheckinFamilyMember extends AppCompatActivity {
     public static void changeMemberName(String name, int familyMemID) {
         s_changename = name;
         memberid = familyMemID;
+        if(!name.equalsIgnoreCase("")){
+            btn_changemem.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+            btn_changemem.setTextColor(mContext.getResources().getColor(R.color.app_background));
+            btn_changemem.setEnabled(true);
+        }else{
+            btn_changemem.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+            btn_changemem.setTextColor(mContext.getResources().getColor(R.color.button_grey));
+            btn_changemem.setEnabled(false);
+        }
 
     }
-
+    static List<FamilyArrayModel> checkedfamilyList=new ArrayList<>();
 
     @Override
     protected void onResume() {
         super.onResume();
+        Config.logV("Check Family List-------------------"+checkedfamilyList);
+
         ApiListFamilyMember();
     }
 
-    static FamilyArrayModel familyModelData;
+
+    public static void CheckedFamilyList(List<FamilyArrayModel> familyList){
+        checkedfamilyList=familyList;
+    }
 
 
 }

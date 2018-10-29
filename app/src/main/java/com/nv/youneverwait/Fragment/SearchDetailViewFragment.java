@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -44,6 +45,9 @@ import com.nv.youneverwait.response.SearchViewDetail;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,6 +56,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -171,17 +177,108 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             @Override
             public void onClick(View v) {
                 Config.logV("Provider iD--------------" + String.valueOf(mProvoderId));
-                Intent iCommunicate = new Intent(v.getContext(), MessageActivity.class);
-                iCommunicate.putExtra("accountID", String.valueOf(mProvoderId));
-                iCommunicate.putExtra("provider", tv_busName.getText().toString());
-                iCommunicate.putExtra("from", "detail");
-                mContext.startActivity(iCommunicate);
+
+                final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
+                dialog.setContentView(R.layout.reply);
+                dialog.show();
+
+                Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+                Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+                txtsendmsg.setVisibility(View.VISIBLE);
+                txtsendmsg.setText("Message to " + tv_busName.getText().toString());
+                btn_send.setText("SEND");
+
+
+                btn_send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                       String  modifyAccountID = String.valueOf(mProvoderId);
+                        ApiCommunicate(modifyAccountID, edt_message.getText().toString(),dialog);
+                        // ApiSearchViewTerminology(modifyAccountID);
+                        //dialog.dismiss();
+
+                    }
+                });
+
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
         return row;
     }
 
 
+
+
+
+    private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("communicationMessage", message);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.PostMessage(accountID, body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_LONG).show();
+                        mBottomDialog.dismiss();
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                mBottomDialog.dismiss();
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
     public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery) {
         //  Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
 

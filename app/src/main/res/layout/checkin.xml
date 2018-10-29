@@ -93,6 +93,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/default_padding"
                                 android:gravity="center"
+                                android:visibility="gone"
                                 android:text="@string/selectservice"
                                 android:textColor="@color/sec_title_grey"
                                 android:textSize="@dimen/txtsize_hint" />
@@ -105,6 +106,7 @@
                                 android:layout_marginLeft="@dimen/default_padding"
                                 android:layout_marginRight="@dimen/default_padding"
                                 android:layout_marginTop="@dimen/default_padding"
+                                android:visibility="gone"
                                 android:background="@drawable/gridview_bg"></Spinner>
 
                             <LinearLayout
@@ -140,7 +142,8 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:gravity="right"
-                                        android:text="CHANGE MEMBER"
+                                        android:text="Edit"
+                                        android:textAllCaps="false"
                                         android:textColor="@color/title_consu"
                                         android:textSize="@dimen/txtsize_12" />
 
@@ -180,6 +183,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Enter Party size"
                                     android:textColor="@color/title_grey"
+
                                     android:textSize="@dimen/txtsize_12" />
 
                                 <EditText
@@ -191,6 +195,7 @@
                                     android:gravity="center"
                                     android:minWidth="50dp"
                                     android:text="1"
+                                    android:inputType="number"
                                     android:textColor="@color/title_grey"
                                     android:textSize="@dimen/txtsize_12" />
 

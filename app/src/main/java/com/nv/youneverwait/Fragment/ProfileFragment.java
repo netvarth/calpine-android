@@ -1,9 +1,7 @@
 package com.nv.youneverwait.Fragment;
 
-import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
-import com.nv.youneverwait.activities.TermsOfUse;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
@@ -38,7 +35,7 @@ public class ProfileFragment extends RootFragment {
 
 
     Context mContext;
-    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm;
+    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm,mLcontactus;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -73,6 +70,21 @@ public class ProfileFragment extends RootFragment {
         mLmember=(LinearLayout)row.findViewById(R.id.lmember);
         mLogout=(LinearLayout)row.findViewById(R.id.llogout);
         mLTerm=(LinearLayout)row.findViewById(R.id.lterm);
+        mLcontactus=(LinearLayout)row.findViewById(R.id.lcontactus);
+
+        mLcontactus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContactusFragment contactFragment = new ContactusFragment();
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                // Store the Fragment in stack
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, contactFragment).commit();
+            }
+        });
+
+
         mLchangeEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,11 +164,16 @@ public class ProfileFragment extends RootFragment {
         mLTerm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iTerm=new Intent(mContext, TermsOfUse.class);
-                Bundle bndlanimation = ActivityOptions.makeCustomAnimation(mContext, R.anim.slide_in_right, R.anim.slide_out_left).toBundle();
-                startActivity(iTerm,bndlanimation);
+                AboutUsFragment contactFragment = new AboutUsFragment();
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                // Store the Fragment in stack
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, contactFragment).commit();
             }
         });
+
+
 
 
 

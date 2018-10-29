@@ -207,7 +207,7 @@ public class ActiveCheckIn {
         this.appxWaitingTime = appxWaitingTime;
     }
 
-    int appxWaitingTime;
+    int appxWaitingTime=-1;
 
 
     public ActiveCheckIn getQueue() {

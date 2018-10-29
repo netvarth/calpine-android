@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_bg_gradient_home"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/hometopbar"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/custom_toolbar" />
+    </LinearLayout>
+
+    <!-- <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_gravity="center"
+         android:background="@drawable/app_bg_gradient_home"
+         android:layout_marginTop="@dimen/default_padding"
+         android:orientation="vertical">-->
+   <!-- <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/Laboutus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/app_background"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/about"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".8"
+                android:padding="@dimen/default_padding"
+                android:text="@string/aboutus"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_hint" />
+
+            <ImageView
+                android:id="@+id/collapseabt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".2"
+                android:src="@drawable/icon_down_light" />
+
+        </LinearLayout>
+
+        <com.nv.youneverwait.widgets.TouchWebView
+            android:id="@+id/aboutWeb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_padding"
+            android:background="#6c757d"
+            android:visibility="gone"></com.nv.youneverwait.widgets.TouchWebView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_border" />
+
+        <LinearLayout
+            android:id="@+id/Lterms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/app_background"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/terms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".8"
+                android:background="@color/app_background"
+                android:padding="@dimen/default_padding"
+                android:text="@string/termofuse"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_hint" />
+
+            <ImageView
+                android:id="@+id/collapseterm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".2"
+                android:src="@drawable/icon_down_light" />
+
+        </LinearLayout>
+
+        <com.nv.youneverwait.widgets.TouchWebView
+            android:id="@+id/termsWeb"
+            android:layout_width="wrap_content"
+            android:layout_height="350dp"
+            android:padding="@dimen/default_padding"
+            android:visibility="gone"></com.nv.youneverwait.widgets.TouchWebView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_border" />
+
+        <LinearLayout
+            android:id="@+id/Lprivacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/app_background"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/privacy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:background="@color/app_background"
+                android:padding="@dimen/default_padding"
+                android:text="@string/privacypolicy"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_hint" />
+
+            <ImageView
+                android:id="@+id/collapseprivacy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight=".2"
+                android:src="@drawable/icon_down_light" />
+        </LinearLayout>
+
+        <com.nv.youneverwait.widgets.TouchWebView
+            android:id="@+id/privacyWeb"
+            android:layout_width="wrap_content"
+            android:layout_height="350dp"
+            android:padding="@dimen/default_padding"
+            android:visibility="gone"></com.nv.youneverwait.widgets.TouchWebView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_border" />
+        <!--</LinearLayout>-->
+        </LinearLayout>
+  <!--  </ScrollView>-->
+
+</LinearLayout>

@@ -222,7 +222,41 @@
                     </LinearLayout>
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/padding5"
+                    android:layout_marginLeft="@dimen/padding5"
+                    android:layout_marginRight="@dimen/padding5"
+                    android:background="@drawable/rounded_white_bg_rect"
+                    android:orientation="vertical">
 
+                    <LinearLayout
+                        android:id="@+id/lterm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/padding7"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:text="@string/aboutus"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.1"
+                            android:paddingRight="@dimen/padding5"
+                            android:src="@drawable/icon_angle_right" />
+                    </LinearLayout>
+
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -258,6 +292,8 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -331,77 +367,9 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding5"
-                    android:layout_marginLeft="@dimen/padding5"
-                    android:layout_marginRight="@dimen/padding5"
-                    android:background="@drawable/rounded_white_bg_rect"
-                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/lprivacy"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/padding7"
-                        android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="left"
-                            android:text="@string/privacypolicy"
-                            android:textColor="@color/title_grey"
-                            android:textSize="@dimen/txtsize_hint" />
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.1"
-                            android:paddingRight="@dimen/padding5"
-                            android:src="@drawable/icon_angle_right" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding5"
-                    android:layout_marginLeft="@dimen/padding5"
-                    android:layout_marginRight="@dimen/padding5"
-                    android:background="@drawable/rounded_white_bg_rect"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/lterm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/padding7"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:gravity="left"
-                            android:text="@string/termofuse"
-                            android:textColor="@color/title_grey"
-                            android:textSize="@dimen/txtsize_hint" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.1"
-                            android:paddingRight="@dimen/padding5"
-                            android:src="@drawable/icon_angle_right" />
-                    </LinearLayout>
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

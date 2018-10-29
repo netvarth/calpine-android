@@ -1,10 +1,11 @@
 package com.nv.youneverwait.Fragment;
 
-import android.app.DatePickerDialog;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.text.InputType;
@@ -12,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -27,23 +27,31 @@ import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.database.DatabaseHandler;
 import com.nv.youneverwait.response.ProfileModel;
 import com.nv.youneverwait.utils.SharedPreference;
+import com.tsongkha.spinnerdatepicker.DatePicker;
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+import com.tsongkha.spinnerdatepicker.DatePickerDialog;
 /**
  * Created by sharmila on 10/7/18.
  */
 
-public class EditProfileFragment extends RootFragment {
+public class EditProfileFragment extends RootFragment  implements DatePickerDialog.OnDateSetListener{
 
 
     ImageView calenderclick;
@@ -58,7 +66,7 @@ public class EditProfileFragment extends RootFragment {
     TextInputEditText tv_email;
     DatabaseHandler db;
     Context mContext;
-
+    SimpleDateFormat simpleDateFormat;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -76,10 +84,7 @@ public class EditProfileFragment extends RootFragment {
         });
 
 
-
         tv_title.setText("Update Profile");
-
-
 
 
         calenderclick = (ImageView) row.findViewById(R.id.calenderclick);
@@ -130,11 +135,38 @@ public class EditProfileFragment extends RootFragment {
                 }
             }
         });
+
+        simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         calenderclick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new MyDatePickerDialog();
-                newFragment.show(getChildFragmentManager(), "date picker");
+               /* DialogFragment newFragment = new MyDatePickerDialog();
+                newFragment.show(getChildFragmentManager(), "date picker");*/
+
+
+                if(!txtdob.getText().toString().equalsIgnoreCase("")){
+
+                    Date date = null;
+                    try {
+                        date = simpleDateFormat.parse(txtdob.getText().toString());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    System.out.println(calendar.get(Calendar.YEAR));
+                    System.out.println(calendar.get(Calendar.DAY_OF_MONTH));
+
+                    showDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), R.style.DatePickerSpinner);
+                }else{
+                    final Calendar c = Calendar.getInstance();
+                    int year = c.get(Calendar.YEAR);
+                    int month = c.get(Calendar.MONTH);
+                    int day = c.get(Calendar.DAY_OF_MONTH);
+                    showDate(year, month, day, R.style.DatePickerSpinner);
+                }
+
+
 
             }
         });
@@ -229,7 +261,24 @@ public class EditProfileFragment extends RootFragment {
         txtfirstname.setText(getProfile.getFirstName());
         txtlastname.setText(getProfile.getLastName());
         tv_phone.setText(getProfile.getPrimaryMobileNo());
-        txtdob.setText(getProfile.getDob());
+
+        String selectedDate=getProfile.getDob();
+        SimpleDateFormat dateFormat =new SimpleDateFormat("yyyy-MM-dd");
+
+        Date myDate = null;
+        try {
+            myDate = dateFormat.parse(selectedDate);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat timeFormat =  new SimpleDateFormat(
+                "dd-MM-yyyy");
+        String finalDate = timeFormat.format(myDate);
+
+
+        txtdob.setText(finalDate);
 
         if (getProfile.getGender() != null) {
             if (!getProfile.getGender().equalsIgnoreCase("")) {
@@ -268,7 +317,24 @@ public class EditProfileFragment extends RootFragment {
                 radiogender=getGender;
             }*/
             jsonObj.put("gender", radiogender);
-            jsonObj.put("dob", txtdob.getText().toString());
+
+            String selectedDate=txtdob.getText().toString();
+            SimpleDateFormat dateFormat = new SimpleDateFormat(
+                    "dd-MM-yyyy");
+
+            Date myDate = null;
+            try {
+                myDate = dateFormat.parse(selectedDate);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String finalDate = timeFormat.format(myDate);
+
+
+            jsonObj.put("dob", finalDate);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -320,7 +386,29 @@ public class EditProfileFragment extends RootFragment {
 
     }
 
-    static String mDate;
+
+
+
+    @VisibleForTesting
+    void showDate(int year, int monthOfYear, int dayOfMonth, int spinnerTheme) {
+        new SpinnerDatePickerDialogBuilder()
+                .context(getActivity())
+                .callback(this)
+                .spinnerTheme(spinnerTheme)
+                .defaultDate(year, monthOfYear, dayOfMonth)
+                .showDaySpinner(true)
+                .build()
+                .show();
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+        txtdob.setText(simpleDateFormat.format(calendar.getTime()));
+    }
+
+
+   /* static String mDate;
 
     public static class MyDatePickerDialog extends DialogFragment {
         @Override
@@ -337,14 +425,14 @@ public class EditProfileFragment extends RootFragment {
         private DatePickerDialog.OnDateSetListener dateSetListener =
                 new DatePickerDialog.OnDateSetListener() {
                     public void onDateSet(DatePicker view, int year, int month, int day) {
-                        /*Toast.makeText(getActivity(), "selected date is " + view.getYear() +
+                        *//*Toast.makeText(getActivity(), "selected date is " + view.getYear() +
                                 " - " + (view.getMonth() + 1) +
-                                " - " + view.getDayOfMonth(), Toast.LENGTH_SHORT).show();*/
+                                " - " + view.getDayOfMonth(), Toast.LENGTH_SHORT).show();*//*
                         mDate = view.getYear() +
                                 "-" + (view.getMonth() + 1) +
                                 "-" + view.getDayOfMonth();
                         txtdob.setText(mDate);
                     }
                 };
-    }
+    }*/
 }

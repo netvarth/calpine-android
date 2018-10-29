@@ -183,7 +183,10 @@ public interface ApiInterface {
 
 
     @GET("consumer/waitlist/history")
-    Call<ArrayList<CheckInModel>> getCheckInList(@QueryMap(encoded = true) Map<String, String>   query);
+    Call<ArrayList<ActiveCheckIn>> getCheckInList(/*@QueryMap(encoded = true) Map<String, String>   query*/);
+
+    @GET("consumer/waitlist/future")
+    Call<ArrayList<ActiveCheckIn>> getFutureCheckInList();
 
 
     @POST("consumer/communications")

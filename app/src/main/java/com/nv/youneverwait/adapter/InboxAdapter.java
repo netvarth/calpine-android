@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.DetailInboxList;
 import com.nv.youneverwait.database.DatabaseHandler;
 import com.nv.youneverwait.response.InboxModel;
+
+
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -63,7 +66,33 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
         return new InboxAdapter.MyViewHolder(itemView);
     }
+    public static String toTitleCase(String str) {
 
+        if (str == null) {
+            return null;
+        }
+
+        boolean space = true;
+        StringBuilder builder = new StringBuilder(str);
+        final int len = builder.length();
+
+        for (int i = 0; i < len; ++i) {
+            char c = builder.charAt(i);
+            if (space) {
+                if (!Character.isWhitespace(c)) {
+                    // Convert to title case and switch out of whitespace mode.
+                    builder.setCharAt(i, Character.toTitleCase(c));
+                    space = false;
+                }
+            } else if (Character.isWhitespace(c)) {
+                space = true;
+            } else {
+                builder.setCharAt(i, Character.toLowerCase(c));
+            }
+        }
+
+        return builder.toString();
+    }
     @Override
     public void onBindViewHolder(final InboxAdapter.MyViewHolder myViewHolder, final int position) {
         final InboxModel inboxList = mInboxList.get(position);
@@ -79,7 +108,17 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_provider.setTypeface(tyface);
-        myViewHolder.tv_provider.setText(inboxList.getUserName());
+
+       /* String[] strArray = inboxList.getUserName().split(" ");
+        StringBuilder builder = new StringBuilder();
+        for (String s : strArray) {
+            String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
+            builder.append(cap + " ");
+        }*/
+
+
+       // String cap_Provider = inboxList.getUserName().substring(0, 1).toUpperCase() + inboxList.getUserName().substring(1);
+        myViewHolder.tv_provider.setText(toTitleCase(inboxList.getUserName()));
         myViewHolder.linear_inbox_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

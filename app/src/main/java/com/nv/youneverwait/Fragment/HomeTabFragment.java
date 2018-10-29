@@ -153,8 +153,9 @@ public class HomeTabFragment extends Fragment {
         adapter.addFragment(inboxFragment);
         adapter.addFragment(profileFragment);
 
+/*        viewPager.setOffscreenPageLimit(1);*/
         viewPager.setAdapter(adapter);
-        /*viewPager.setOffscreenPageLimit(5);*/
+
     }
 
     public boolean onBackPressed() {

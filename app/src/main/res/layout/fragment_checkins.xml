@@ -1,16 +1,173 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_bg_gradient_home"
     android:orientation="vertical">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recylce_checkin"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/default_padding"
-        android:background="@drawable/input_border_bottom"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/layout_toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/hometopbar"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/custom_toolbar" />
+        </LinearLayout>
+
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/default_padding"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding7"
+                    android:layout_marginRight="@dimen/padding7"
+                    android:layout_marginTop="@dimen/default_padding"
+
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txttoday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/input_border_top"
+                        android:drawableRight="@drawable/icon_up_light"
+                        android:padding="@dimen/padding5"
+                        android:text="TODAY"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/txtsize_hint" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recylce_checkintoday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding5"
+                        android:layout_marginTop="3dp"
+                        android:background="@drawable/input_border_bottom"
+                        android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
+
+                    <TextView
+                        android:id="@+id/txtnocheckintoday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/input_border_bottom"
+                        android:padding="@dimen/padding5"
+                        android:text="No Today Check-ins"
+                        android:textColor="@color/title_grey"
+                        android:visibility="gone"
+                        android:textSize="@dimen/txtsize_hint" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding7"
+                    android:layout_marginRight="@dimen/padding7"
+                    android:layout_marginTop="@dimen/default_padding"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtfuture"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/input_border_top"
+                        android:drawableRight="@drawable/icon_up_light"
+                        android:padding="@dimen/padding5"
+                        android:text="FUTURE"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/txtsize_hint" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recylce_checkin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding5"
+                        android:layout_marginTop="3dp"
+                        android:background="@drawable/input_border_bottom"
+                        android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
+                    <TextView
+                        android:id="@+id/txtnocheckfuture"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/input_border_bottom"
+                        android:padding="@dimen/padding5"
+                        android:text="No Future Check-ins"
+                        android:textColor="@color/title_grey"
+                        android:visibility="gone"
+                        android:textSize="@dimen/txtsize_hint" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding7"
+                    android:layout_marginRight="@dimen/padding7"
+                    android:layout_marginTop="@dimen/default_padding"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/input_background_opaque_round"
+                        android:drawableRight="@drawable/icon_down_light"
+                        android:padding="@dimen/padding5"
+                        android:text="OLD"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/txtsize_hint" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recylce_oldcheckin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding5"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/app_background_opaque"
+                        android:nestedScrollingEnabled="false"
+                        android:visibility="gone"></android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+
+
+                <!--<ExpandableListView
+                    android:id="@+id/exp_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="@dimen/padding7"
+                    android:layout_marginRight="@dimen/padding7"
+                    android:layout_marginTop="@dimen/default_padding"
+                    android:divider="@null"
+                    android:dividerHeight="10dp"
+                    android:groupIndicator="@null" />-->
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
 </FrameLayout>

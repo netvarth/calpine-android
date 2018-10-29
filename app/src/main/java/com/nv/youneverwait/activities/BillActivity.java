@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nv.youneverwait.R;
@@ -45,12 +46,20 @@ public class BillActivity extends AppCompatActivity {
 
     Button btn_cancel, btn_pay;
 TextView txtnetRate,txttotal;
+LinearLayout discountlayout,paidlayout,coupanlayout,amountlayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bill);
         mCOntext = this;
         mActivity = this;
+
+        discountlayout = (LinearLayout) findViewById(R.id.discountlayout);
+        paidlayout = (LinearLayout) findViewById(R.id.paidlayout);
+        coupanlayout = (LinearLayout) findViewById(R.id.coupanlayout);
+        amountlayout = (LinearLayout) findViewById(R.id.amountlayout);
+
+
         tv_provider = (TextView) findViewById(R.id.provider);
         tv_customer = (TextView) findViewById(R.id.txtcustomer);
         tv_date = (TextView) findViewById(R.id.txtdate);
@@ -164,10 +173,41 @@ TextView txtnetRate,txttotal;
                         tv_bill.setText(String.valueOf(mBillData.getId()));
 
 
-                        tv_discount.setText("₹ " + mBillData.getDiscountValue());
-                        tv_coupan.setText("₹ " + mBillData.getCouponValue());
-                        tv_amount.setText("₹ " + String.valueOf(mBillData.getNetRate()));
-                        tv_paid.setText("₹ " + String.valueOf(mBillData.getTotalAmountPaid()));
+                        if(mBillData.getDiscountValue()!=0){
+                            discountlayout.setVisibility(View.VISIBLE);
+                            tv_discount.setText("₹ " +String.valueOf(mBillData.getDiscountValue()) );
+                        }else{
+
+                            discountlayout.setVisibility(View.GONE);
+                        }
+
+                        if(mBillData.getCouponValue()!=0){
+                            coupanlayout.setVisibility(View.VISIBLE);
+                            tv_coupan.setText("₹ " + String.valueOf(mBillData.getCouponValue()));
+                        }else{
+
+                            coupanlayout.setVisibility(View.GONE);
+                        }
+
+
+                        if(mBillData.getNetRate()!=0){
+
+                            amountlayout.setVisibility(View.VISIBLE);
+                            tv_amount.setText("₹ " + String.valueOf(mBillData.getNetRate()));
+                        }else{
+
+                            amountlayout.setVisibility(View.GONE);
+                        }
+
+                        if(mBillData.getTotalAmountPaid()!=0){
+                            paidlayout.setVisibility(View.VISIBLE);
+                            tv_paid.setText("₹ " + String.valueOf(mBillData.getTotalAmountPaid()));
+                        }else{
+
+                            paidlayout.setVisibility(View.GONE);
+                        }
+
+
 
                         double total=mBillData.getNetRate()-mBillData.getTotalAmountPaid();
                         tv_totalamt.setText("₹ " +String.valueOf(total));

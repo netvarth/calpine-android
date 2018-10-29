@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.response.FavouriteModel;
+import com.nv.youneverwait.response.QueueList;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.MyViewHolder> {
 
-    private List<FavouriteModel> mFavList;
+    private List<QueueList> mFavList;
     Context mContext;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -38,7 +39,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
     Activity activity;
 
-    public FavLocationAdapter(List<FavouriteModel> mFAVList, Context mContext) {
+    public FavLocationAdapter(List<QueueList> mFAVList, Context mContext) {
         this.mContext = mContext;
         this.mFavList = mFAVList;
 
@@ -55,12 +56,9 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
     @Override
     public void onBindViewHolder(final FavLocationAdapter.MyViewHolder myViewHolder, final int position) {
-        final FavouriteModel favList = mFavList.get(position);
+        final QueueList favList = mFavList.get(position);
 
-        myViewHolder.tv_loc.setText(favList.getLocations().get(position).getPlace());
-
-
-
+//        myViewHolder.tv_loc.setText(favList.getLocations().get(position).getPlace());
 
 
     }

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/padding5"
+    android:layout_marginLeft="@dimen/padding5"
+    android:layout_marginRight="@dimen/padding5"
+    android:layout_marginTop="@dimen/padding7"
+    card_view:cardCornerRadius="10dp"
+    card_view:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_background"
+        android:orientation="vertical"
+        android:padding="@dimen/padding7">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_businessname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding3"
+                    android:textColor="@color/title_consu"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/txt_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding3"
+                    android:drawableLeft="@drawable/icon_location_lightgray"
+                    android:drawablePadding="3dp"
+                    android:textColor="@color/sec_title_grey"
+                    android:textSize="@dimen/txtsize_title_term_small"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/icon_bill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/icon_receipt"
+                    android:gravity="center"
+                    android:text="Bill"
+                    android:textSize="@dimen/txtsize_12" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding3"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_esttime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding3"
+                    android:text="esttime"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+
+                <TextView
+                    android:id="@+id/txtprepaid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding3"
+                    android:text="Prepaid Amount"
+                    android:visibility="gone"
+                    android:textColor="@color/sec_title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_btnpay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:layout_gravity="bottom"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_pay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/rect_blue"
+                    android:text="@string/pay"
+                    android:textAllCaps="true"
+                    android:layout_gravity="right"
+                    android:textColor="@color/app_background"
+                    android:textSize="@dimen/txtsize_12"
+                    android:enabled="false"
+                    style="?android:attr/borderlessButtonStyle" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

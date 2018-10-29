@@ -46,7 +46,7 @@
            android:padding="@dimen/padding5"
             android:text="Add member"
             android:textColor="@color/title_grey"
-            android:textSize="@dimen/txtsize_12" />
+            android:textSize="@dimen/txtsize_subtitle" />
     </LinearLayout>
 
     <FrameLayout
@@ -91,12 +91,13 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:layout_margin="@dimen/default_padding"
-        android:background="@drawable/roundedrect_blue"
+        android:background="@drawable/btn_checkin_grey"
         android:fontFamily="@font/customfont"
         android:text="@string/changemem"
         android:textAllCaps="false"
-        android:textColor="@color/app_background"
+        android:textColor="@color/button_grey"
         android:textSize="@dimen/txtsize_hint"
+        android:enabled="false"
         style="?android:attr/borderlessButtonStyle"
         android:textStyle="bold" />
 

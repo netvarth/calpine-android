@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.utils.SharedPreference;
+import com.nv.youneverwait.utils.TypefaceFont;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,7 +58,7 @@ public class FamilyMemberFragment extends RootFragment {
     String ValueCheck = "";
     String mPassfname = "", mPassLastname = "", mPassgender = "", mPassDob = "", mPassPh = "", mUser;
     TextInputLayout text_input_lastname, text_input_firstname;
-
+    TextInputLayout txt_InputMob;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -78,7 +81,7 @@ public class FamilyMemberFragment extends RootFragment {
                 getFragmentManager().popBackStack();
             }
         });
-
+        txt_InputMob = (TextInputLayout) row.findViewById(R.id.text_input_mobno);
 
         tv_title.setText("Add Members");
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -153,12 +156,33 @@ public class FamilyMemberFragment extends RootFragment {
                 if (ValueCheck.equalsIgnoreCase("profile")) {
                     Config.logV("SUcesss------------");
                     if (validateCHeck()) {
-                        ApiAddFamilyMember();
+                        if(edtmobileno.length()>0){
+                            if(validatePhone()){
+                                ApiAddFamilyMember();
+                            }
+                        }else{
+                            ApiAddFamilyMember();
+                        }
+
                     }
 
 
                 } else {
-                    ApiUpdateFamilyMember(mUser);
+
+
+                    if (validateCHeck()) {
+                        if(edtmobileno.length()>0){
+                            if(validatePhone()){
+                                ApiUpdateFamilyMember(mUser);
+                            }
+                        }else{
+                            ApiUpdateFamilyMember(mUser);
+                        }
+
+                    }
+
+
+
                 }
             }
         });
@@ -183,7 +207,21 @@ public class FamilyMemberFragment extends RootFragment {
         }
         return row;
     }
+    private boolean validatePhone() {
+        if ( edtmobileno.getText().toString().length() > 10 || edtmobileno.getText().toString().length() < 10) {
 
+            SpannableString s = new SpannableString(getString(R.string.err_msg_phone));
+            txt_InputMob. setErrorEnabled(true);
+            txt_InputMob.setError(s);
+            //txt_InputMob.setError(getString(R.string.err_msg_phone));
+            return false;
+        } else {
+            txt_InputMob.setError(null);
+            txt_InputMob. setErrorEnabled(false);
+        }
+
+        return true;
+    }
     private boolean validateCHeck() {
         if (edtfirstname.getText().toString().equalsIgnoreCase("") && lastname.getText().toString().equalsIgnoreCase("")) {
             text_input_firstname.setError("Please enter valid first name");

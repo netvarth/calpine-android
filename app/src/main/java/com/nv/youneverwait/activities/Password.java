@@ -297,6 +297,8 @@ public class Password extends AppCompatActivity {
             if(validatePassword()&&validateConfirmPassword()) {
                 if (mEdtpwd.getText().toString().equalsIgnoreCase(mEdtconfirmPwd.getText().toString())) {
                     ApiSetPassword(otp, mEdtconfirmPwd.getText().toString());
+                }else{
+                    Toast.makeText(mContext,"Password mismatch",Toast.LENGTH_LONG).show();
                 }
             }
         }

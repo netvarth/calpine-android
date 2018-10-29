@@ -8,6 +8,8 @@
     android:layout_marginRight="@dimen/padding3"
     android:layout_marginTop="@dimen/padding5"
     android:layout_marginBottom="@dimen/padding5"
+    card_view:cardElevation="0dp"
+    card_view:cardUseCompatPadding="true"
     card_view:cardCornerRadius="10dp">
 
     <LinearLayout

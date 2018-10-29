@@ -616,7 +616,7 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     String firstWord="Est Wait Time \n";
-                                    String secondWord="Today ,"+mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                                    String secondWord="Today, "+mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord+secondWord);
                                     spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -662,10 +662,10 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
 
                             }
                         } else {
-                            myViewHolder.tv_waittime.setVisibility(View.GONE);
+                            myViewHolder.tv_waittime.setVisibility(View.INVISIBLE);
                         }
                     } else {
-                        myViewHolder.tv_waittime.setVisibility(View.GONE);
+                        myViewHolder.tv_waittime.setVisibility(View.INVISIBLE);
                     }
 
 

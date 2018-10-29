@@ -61,14 +61,14 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="right|center"
                     android:layout_marginRight="@dimen/padding5"
+                    android:gravity="right|center"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_location_blue"/>
+                        android:src="@drawable/icon_location_blue" />
 
                     <TextView
                         android:id="@+id/currentloc"
@@ -76,17 +76,17 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:gravity="right|center"
-                        android:text="Locating..."
                         android:paddingRight="@dimen/padding3"
-                        android:textSize="@dimen/txtsize_12"
-                        android:textColor="@color/title_consu" />
+                        android:text="Locating..."
+                        android:textColor="@color/title_consu"
+                        android:textSize="@dimen/txtsize_12" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="-3dp"
-                        android:src="@drawable/icon_down_arrow_blue"/>
+                        android:src="@drawable/icon_down_arrow_blue" />
                 </LinearLayout>
 
 
@@ -130,11 +130,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
-                    android:visibility="gone"
-                    android:src="@drawable/icon_filter" />
+                    android:src="@drawable/icon_filter"
+                    android:visibility="gone" />
 
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/LpopularSearch"
@@ -154,23 +153,40 @@
                     android:text="Popular Searches"
                     android:textColor="@color/title_grey" />
 
-                <LinearLayout
-                    android:id="@+id/LinearPopularSearch"
+                <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding5"
+                    android:fillViewport="true"
+                    android:scrollbars="none">
 
-                    android:orientation="vertical"></LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/LinearMorePopularSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_padding"
-                    android:layout_marginTop="@dimen/padding5"
-                    android:orientation="vertical"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    android:visibility="gone"></LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/LinearPopularSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding5"
+
+                            android:orientation="vertical"></LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/LinearMorePopularSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/default_padding"
+                            android:layout_marginTop="@dimen/padding5"
+                            android:orientation="vertical"
+
+                            android:visibility="gone"></LinearLayout>
+
+
+
+                    </LinearLayout>
+                </HorizontalScrollView>
 
                 <TextView
                     android:id="@+id/txtMore"
@@ -185,52 +201,48 @@
 
                     android:textSize="@dimen/txtsize_title_term_small" />
 
-
             </LinearLayout>
+            <!-- <android.support.v4.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:focusableInTouchMode="true"
+                 android:orientation="vertical"
+                 android:overScrollMode="never">-->
 
-           <!-- <android.support.v4.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
+            <LinearLayout
+                android:id="@+id/LActiveCheckin"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:focusableInTouchMode="true"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"
+                android:background="@drawable/gradient_home"
                 android:orientation="vertical"
-                android:overScrollMode="never">-->
+                android:visibility="gone">
 
-                <LinearLayout
-                    android:id="@+id/LActiveCheckin"
+                <TextView
+                    android:id="@+id/txt_activechkin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="@dimen/padding5"
+                    android:text="Active Check-in"
+                    android:textColor="@color/title_grey" />
 
-                    android:layout_marginTop="@dimen/default_padding"
-                    android:background="@drawable/gradient_home"
-                    android:orientation="vertical"
-                    android:visibility="visible">
+                <TextView
+                    android:id="@+id/txt_sorry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding5"
+                    android:text=" No Active-Check-in "
+                    android:textColor="@color/title_grey"
+                    android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/txt_activechkin"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/padding5"
-                        android:text="Active Check-in"
-                        android:textColor="@color/title_grey" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycleActive"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/txt_sorry"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/padding5"
-                        android:text=" No Active-Check-in "
-                        android:textColor="@color/title_grey"
-                        android:visibility="gone" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recycleActive"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                       >
-
-                    </android.support.v7.widget.RecyclerView>
-                </LinearLayout>
-           <!-- </android.support.v4.widget.NestedScrollView>-->
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+            <!-- </android.support.v4.widget.NestedScrollView>-->
         </LinearLayout>
         <!--   </android.support.v4.widget.NestedScrollView>-->
     </LinearLayout>

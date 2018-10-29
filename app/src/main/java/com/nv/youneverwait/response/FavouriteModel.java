@@ -17,6 +17,16 @@ public class FavouriteModel {
     String businessDesc;
     String status;
 
+    public boolean isExpandFlag() {
+        return expandFlag;
+    }
+
+    public void setExpandFlag(boolean expandFlag) {
+        this.expandFlag = expandFlag;
+    }
+
+    boolean expandFlag=false;
+
     public String getBusinessName() {
         return businessName;
     }

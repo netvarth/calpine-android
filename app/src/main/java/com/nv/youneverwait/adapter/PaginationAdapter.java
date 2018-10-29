@@ -774,11 +774,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
 
-                        Intent iCommunicate = new Intent(v.getContext(), MessageActivity.class);
+                        mAdapterCallback.onMethodMessage(searchdetailList.getTitle(),searchdetailList.getId(),"search");
+
+                      /*  Intent iCommunicate = new Intent(v.getContext(), MessageActivity.class);
                         iCommunicate.putExtra("accountID", searchdetailList.getId());
                         iCommunicate.putExtra("provider", searchdetailList.getTitle());
                         iCommunicate.putExtra("from", "search");
-                        context.startActivity(iCommunicate);
+                        context.startActivity(iCommunicate);*/
 
                     }
                 });
@@ -800,6 +802,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     public void onClick(View v) {
 
                         Config.logV("UNIUE ID----------------" + searchdetailList.getUniqueid());
+
+                        Config.logV("Popular Text__________@@@Dele");
                         mSearchView.setQuery("", false);
 
                         mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());

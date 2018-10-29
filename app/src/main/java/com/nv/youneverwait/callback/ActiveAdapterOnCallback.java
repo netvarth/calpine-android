@@ -8,7 +8,5 @@ public interface ActiveAdapterOnCallback {
 
     void onMethodActiveCallback(String value);
     void onMethodActiveBillIconCallback(String value,String provider);
-    void onMethodMessageCallback(String ynwuuid,String accountID,String provider);
 
-    void onMethodDelecteCheckinCallback(String ynwuuid,int accountID);
 }

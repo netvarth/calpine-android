@@ -296,6 +296,7 @@ public class CheckIn extends AppCompatActivity {
         tv_title.setTypeface(tyface);
 
         tv_titlename.setTypeface(tyface);
+        tv_name.setTypeface(tyface);
         btn_checkin.setTypeface(tyface);
         tv_queuename.setTypeface(tyface);
         txt_date.setTypeface(tyface);
@@ -462,12 +463,22 @@ public class CheckIn extends AppCompatActivity {
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             System.out.println("UTC time: " + sdf.format(currentTime));
 
-            txt_date.setText(sdf.format(currentTime));
+
+            Date added_date = addDays(currentTime, 1);
+            DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+
+            //to convert Date to String, use format method of SimpleDateFormat class.
+            String strDate = dateFormat.format(added_date);
+
+
+           /* txt_date.setText(sdf.format(currentTime));*/
+            txt_date.setText(strDate);
 
 
             DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-            selectedDateFormat = selecteddateParse.format(currentTime);
+           // selectedDateFormat = selecteddateParse.format(currentTime);
 
+            selectedDateFormat = selecteddateParse.format(added_date);
 
             UpdateDAte(selectedDateFormat);
 
@@ -516,12 +527,36 @@ public class CheckIn extends AppCompatActivity {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+
+            Config.logV("Date selected----------------------Selected"+selectedDateFormat);
+
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
-            da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            String tomorrowdate=year+"-"+month+"-"+day;
+            DatePickerDialog da;
+            if(selectedDateFormat.equalsIgnoreCase(tomorrowdate)){
+                 da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            }else{
+                Date date = null;
+                try {
+                    DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+                    date = selecteddateParse.parse(selectedDateFormat);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                da = new DatePickerDialog(getActivity(), dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            }
+
+
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+           // da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            da.getDatePicker().setMinDate(cal.getTimeInMillis());
+
             return da;
         }
 
@@ -563,7 +598,11 @@ public class CheckIn extends AppCompatActivity {
 
         Config.logV("Selected Date----------------" + selectedDate);
         ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate);
-        if (new Date().before(selecteddate)) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        Date tomorow=cal.getTime();
+        if (tomorow.before(selecteddate)) {
             Config.logV("Date Enabled---------------");
             ic_cal_minus.setEnabled(true);
             ic_cal_minus.setImageResource(R.drawable.icon_minus_active);
@@ -1223,16 +1262,7 @@ public class CheckIn extends AppCompatActivity {
                                 //ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
 
 
-                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
 
-                                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
-                                } else {
-                                    if(selectedDateFormat!=null){
-                                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID,selectedDateFormat);
-                                    }else {
-                                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
-                                    }
-                                }
                                 isPrepayment = LServicesList.get(0).isPrePayment();
                                 Config.logV("Payment------------" + isPrepayment);
                                 if (isPrepayment) {
