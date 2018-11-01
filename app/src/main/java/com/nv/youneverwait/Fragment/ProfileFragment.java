@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
@@ -31,7 +32,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/7/18.
  */
 
-public class ProfileFragment extends RootFragment {
+public class ProfileFragment extends RootFragment /*implements FragmentInterface*/ {
 
 
     Context mContext;
@@ -51,7 +52,7 @@ public class ProfileFragment extends RootFragment {
         mContext = getActivity();
         Config.logV("Profile-----------");
 
-
+        Home.doubleBackToExitPressedOnce=false;
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
 
         ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
@@ -279,4 +280,10 @@ public class ProfileFragment extends RootFragment {
         mContainer.removeAllViews();
         super.onDestroyView();
     }
+
+/*
+    @Override
+    public void fragmentBecameVisible() {
+
+    }*/
 }

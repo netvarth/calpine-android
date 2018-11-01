@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -50,32 +51,33 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
     private List<SearchLocation> mSearchLocationList;
     Context mContext;
-    ArrayList<WorkingModel> workingModelArrayList =new ArrayList<>();
+    ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_place, tv_working, tv_open, tv_waittime,txt_diffdate;
+        public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate;
         Button btn_checkin;
-        LinearLayout mLSeriveLayout,mLayouthide;
+        LinearLayout mLSeriveLayout, mLayouthide;
         ImageView img_arrow;
         RecyclerView recycle_parking;
         RelativeLayout layout_exapnd;
-        TextView txtdirection,tv_checkin;
+        TextView txtdirection, tv_checkin;
 
 
         public MyViewHolder(View view) {
             super(view);
-            tv_checkin=(TextView) view.findViewById(R.id.txtcheckin);
+            tv_checkin = (TextView) view.findViewById(R.id.txtcheckin);
             tv_place = (TextView) view.findViewById(R.id.txtLoc);
             tv_working = (TextView) view.findViewById(R.id.txtworking);
             btn_checkin = (Button) view.findViewById(R.id.btn_checkin);
             tv_open = (TextView) view.findViewById(R.id.txtopen);
             tv_waittime = (TextView) view.findViewById(R.id.txtwaittime);
             mLSeriveLayout = (LinearLayout) view.findViewById(R.id.lServicelayout);
-            img_arrow=(ImageView) view.findViewById(R.id.img_arrow);
-            mLayouthide=(LinearLayout) view.findViewById(R.id.mLayouthide);
-            recycle_parking=(RecyclerView)view.findViewById(R.id.recycle_parking);
-            txt_diffdate=(TextView) view.findViewById(R.id.txt_diffdate);
-            layout_exapnd=(RelativeLayout) view.findViewById(R.id.layout_exapnd);
-            txtdirection=(TextView)view.findViewById(R.id.txtdirection);
+            img_arrow = (ImageView) view.findViewById(R.id.img_arrow);
+            mLayouthide = (LinearLayout) view.findViewById(R.id.mLayouthide);
+            recycle_parking = (RecyclerView) view.findViewById(R.id.recycle_parking);
+            txt_diffdate = (TextView) view.findViewById(R.id.txt_diffdate);
+            layout_exapnd = (RelativeLayout) view.findViewById(R.id.layout_exapnd);
+            txtdirection = (TextView) view.findViewById(R.id.txtdirection);
 
 
         }
@@ -86,24 +88,24 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     SearchSetting mSearchSetting;
     String mTitle;
     private SearchLocationAdpterCallback adaptercallback;
-    String mUniqueID,accountID;
+    String mUniqueID, accountID;
     List<SearchCheckInMessage> mCheckInMessage;
     String sector, subsector;
 
-    public SearchLocationAdapter(String sector, String subsector,String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchServiceList = SearchServiceList;
         this.mQueueList = SearchQueueList;
         this.mSearchSetting = searchSetting;
-        this.mTitle=title;
-        this.adaptercallback=callback;
-        mUniqueID=uniqueid;
-        this.accountID=accountID;
-        this.mCheckInMessage=checkInMessage;
-        this.sector=sector;
-        this.subsector=subsector;
-Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
+        this.mTitle = title;
+        this.adaptercallback = callback;
+        mUniqueID = uniqueid;
+        this.accountID = accountID;
+        this.mCheckInMessage = checkInMessage;
+        this.sector = sector;
+        this.subsector = subsector;
+        Config.logV("Search Service-----1111-----------" + mSearchServiceList.size());
 
 
     }
@@ -117,34 +119,47 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
     }
 
     boolean mShowWaitTime = false;
-     boolean mFlagCLick=false,mFlagCLick1=false;
+    boolean mFlagCLick = false, mFlagCLick1 = false;
+
+
+    static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
+    private static Date dateCompareOne;
+
+    private static Date parseDate(String date) {
+
+        try {
+            return inputParser.parse(date);
+        } catch (java.text.ParseException e) {
+            return new Date(0);
+        }
+    }
+
+
     @Override
     public void onBindViewHolder(final SearchLocationAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
 
 
-
-
-        for(int i=0;i<mCheckInMessage.size();i++) {
-            if (searchLoclist.getId() == mCheckInMessage.get(i).getLocid()){
+        for (int i = 0; i < mCheckInMessage.size(); i++) {
+            if (searchLoclist.getId() == mCheckInMessage.get(i).getLocid()) {
 
                 myViewHolder.tv_checkin.setVisibility(View.VISIBLE);
-              //  myViewHolder.tv_checkin.setText("You have "+mCheckInMessage.get(i).getmAllSearch_checkIn().size()+" Check-In at this location");
-                Config.logV("Locationttt-----kkkk###########@@@@@@"+searchLoclist.getId());
-                Config.logV("Locationttt-----aaaa###########@@@@@@"+mCheckInMessage.get(i).getmAllSearch_checkIn().size());
+                //  myViewHolder.tv_checkin.setText("You have "+mCheckInMessage.get(i).getmAllSearch_checkIn().size()+" Check-In at this location");
+                Config.logV("Locationttt-----kkkk###########@@@@@@" + searchLoclist.getId());
+                Config.logV("Locationttt-----aaaa###########@@@@@@" + mCheckInMessage.get(i).getmAllSearch_checkIn().size());
 
 
-                String firstWord="You have ";
-                String secondWord=mCheckInMessage.get(i).getmAllSearch_checkIn().size()+" Check-In";
-                String thirdword=" at this location";
+                String firstWord = "You have ";
+                String secondWord = mCheckInMessage.get(i).getmAllSearch_checkIn().size() + " Check-In";
+                String thirdword = " at this location";
 
-                Spannable spannable = new SpannableString(firstWord+secondWord+thirdword);
+                Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
                 Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
-                spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 myViewHolder.tv_checkin.setText(spannable);
 
-            }else{
+            } else {
                 //myViewHolder.tv_checkin.setVisibility(View.GONE);
             }
         }
@@ -152,14 +167,14 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
         myViewHolder.tv_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adaptercallback.onMethodCheckinCallback(searchLoclist.getId(),"show",searchLoclist.getPlace());
+                adaptercallback.onMethodCheckinCallback(searchLoclist.getId(), "show", searchLoclist.getPlace());
             }
         });
 
         myViewHolder.txtdirection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("googlemap url--------"+searchLoclist.getGoogleMapUrl());
+                Config.logV("googlemap url--------" + searchLoclist.getGoogleMapUrl());
                 String geoUri = searchLoclist.getGoogleMapUrl();
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
                 mContext.startActivity(intent);
@@ -172,84 +187,84 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
         myViewHolder.btn_checkin.setTypeface(tyface);
 
 
-        ArrayList<ParkingModel> listType=new ArrayList<>();
-            if (searchLoclist.getParkingType() != null) {
-                if (searchLoclist.getParkingType().equalsIgnoreCase("free")||searchLoclist.getParkingType().equalsIgnoreCase("none")) {
-                    ParkingModel mType = new ParkingModel();
-                    mType.setId("1");
-                    // mType.setTypeicon(R.drawable.icon_24hours);
-                    mType.setTypename("Parking " +searchLoclist.getParkingType());
-                    listType.add(mType);
-                }
+        ArrayList<ParkingModel> listType = new ArrayList<>();
+        if (searchLoclist.getParkingType() != null) {
+            if (searchLoclist.getParkingType().equalsIgnoreCase("free") || searchLoclist.getParkingType().equalsIgnoreCase("none")) {
+                ParkingModel mType = new ParkingModel();
+                mType.setId("1");
+                // mType.setTypeicon(R.drawable.icon_24hours);
+                mType.setTypename("Parking " + searchLoclist.getParkingType());
+                listType.add(mType);
             }
-            if (searchLoclist.getLocationVirtualFields().getDocambulance() != null) {
-                if (searchLoclist.getLocationVirtualFields().getDocambulance().equalsIgnoreCase("true")) {
-                    ParkingModel mType = new ParkingModel();
-                    mType.setId("4");
-                    // mType.setTypeicon(R.drawable.icon_24hours);
-                    mType.setTypename("Ambulance");
-                    listType.add(mType);
-                }
+        }
+        if (searchLoclist.getLocationVirtualFields().getDocambulance() != null) {
+            if (searchLoclist.getLocationVirtualFields().getDocambulance().equalsIgnoreCase("true")) {
+                ParkingModel mType = new ParkingModel();
+                mType.setId("4");
+                // mType.setTypeicon(R.drawable.icon_24hours);
+                mType.setTypename("Ambulance");
+                listType.add(mType);
             }
+        }
 
-            if (searchLoclist.getLocationVirtualFields().getFirstaid() != null) {
+        if (searchLoclist.getLocationVirtualFields().getFirstaid() != null) {
 
-                if (searchLoclist.getLocationVirtualFields().getFirstaid().equalsIgnoreCase("true")) {
-                    ParkingModel mType = new ParkingModel();
-                    // mType.setTypeicon(R.drawable.icon_24hours);
-                    mType.setId("5");
-                    mType.setTypename("First Aid");
-                    listType.add(mType);
-                }
+            if (searchLoclist.getLocationVirtualFields().getFirstaid().equalsIgnoreCase("true")) {
+                ParkingModel mType = new ParkingModel();
+                // mType.setTypeicon(R.drawable.icon_24hours);
+                mType.setId("5");
+                mType.setTypename("First Aid");
+                listType.add(mType);
             }
+        }
 
-            try {
-                if (searchLoclist.isOpen24hours()) {
-                    ParkingModel mType = new ParkingModel();
-                    // mType.setTypeicon(R.drawable.icon_24hours);
-                    mType.setId("2");
-                    mType.setTypename("24 Hours");
-                    listType.add(mType);
+        try {
+            if (searchLoclist.isOpen24hours()) {
+                ParkingModel mType = new ParkingModel();
+                // mType.setTypeicon(R.drawable.icon_24hours);
+                mType.setId("2");
+                mType.setTypename("24 Hours");
+                listType.add(mType);
 
-                }
-            }catch(Exception e){
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            if (searchLoclist.getLocationVirtualFields().getTraumacentre() != null) {
+        if (searchLoclist.getLocationVirtualFields().getTraumacentre() != null) {
 
-                if (searchLoclist.getLocationVirtualFields().getTraumacentre().equalsIgnoreCase("true")) {
-                    ParkingModel mType = new ParkingModel();
-                    // mType.setTypeicon(R.drawable.icon_24hours);
-                    mType.setId("7");
-                    mType.setTypename("Trauma");
-                    listType.add(mType);
-                }
+            if (searchLoclist.getLocationVirtualFields().getTraumacentre().equalsIgnoreCase("true")) {
+                ParkingModel mType = new ParkingModel();
+                // mType.setTypeicon(R.drawable.icon_24hours);
+                mType.setId("7");
+                mType.setTypename("Trauma");
+                listType.add(mType);
             }
+        }
 
 
-            if (searchLoclist.getLocationVirtualFields().getPhysiciansemergencyservices() != null) {
-                if (searchLoclist.getLocationVirtualFields().getPhysiciansemergencyservices().equalsIgnoreCase("true")) {
-                    ParkingModel mType = new ParkingModel();
-                    // mType.setTypeicon(R.drawable.icon_24hours);
-                    mType.setId("3");
-                    mType.setTypename("Emergency");
-                    listType.add(mType);
-                }
+        if (searchLoclist.getLocationVirtualFields().getPhysiciansemergencyservices() != null) {
+            if (searchLoclist.getLocationVirtualFields().getPhysiciansemergencyservices().equalsIgnoreCase("true")) {
+                ParkingModel mType = new ParkingModel();
+                // mType.setTypeicon(R.drawable.icon_24hours);
+                mType.setId("3");
+                mType.setTypename("Emergency");
+                listType.add(mType);
             }
+        }
 
-            if (searchLoclist.getLocationVirtualFields().getDentistemergencyservices() != null) {
-                if (searchLoclist.getLocationVirtualFields().getDentistemergencyservices().equalsIgnoreCase("true")) {
-                    ParkingModel mType = new ParkingModel();
-                    // mType.setTypeicon(R.drawable.icon_24hours);
-                    mType.setId("6");
-                    mType.setTypename("Emergency");
-                    listType.add(mType);
-                }
+        if (searchLoclist.getLocationVirtualFields().getDentistemergencyservices() != null) {
+            if (searchLoclist.getLocationVirtualFields().getDentistemergencyservices().equalsIgnoreCase("true")) {
+                ParkingModel mType = new ParkingModel();
+                // mType.setTypeicon(R.drawable.icon_24hours);
+                mType.setId("6");
+                mType.setTypename("Emergency");
+                listType.add(mType);
             }
+        }
 
 
-        if(listType.size()>0) {
+        if (listType.size() > 0) {
             ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext);
             LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             myViewHolder.recycle_parking.setLayoutManager(horizontalLayoutManager);
@@ -269,20 +284,20 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
             }
         }
 
-        if(position==0){
+        if (position == 0) {
             myViewHolder.mLayouthide.setVisibility(View.VISIBLE);
             myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_up);
 
-        }else{
+        } else {
             myViewHolder.mLayouthide.setVisibility(View.GONE);
             myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_down);
 
         }
 
 
-        if(mSearchSetting.isFutureDateWaitlist()){
+        if (mSearchSetting.isFutureDateWaitlist()) {
             myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             myViewHolder.txt_diffdate.setVisibility(View.GONE);
         }
 
@@ -295,7 +310,7 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
                 iCheckIn.putExtra("serviceId", searchLoclist.getId());
                 iCheckIn.putExtra("uniqueID", mUniqueID);
-                iCheckIn.putExtra("accountID",accountID);
+                iCheckIn.putExtra("accountID", accountID);
                 iCheckIn.putExtra("from", "searchdetail_future");
                 iCheckIn.putExtra("title", mTitle);
                 iCheckIn.putExtra("place", searchLoclist.getPlace());
@@ -313,7 +328,7 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
                 iCheckIn.putExtra("serviceId", searchLoclist.getId());
                 iCheckIn.putExtra("uniqueID", mUniqueID);
-                iCheckIn.putExtra("accountID",accountID);
+                iCheckIn.putExtra("accountID", accountID);
                 iCheckIn.putExtra("from", "searchdetail_checkin");
                 iCheckIn.putExtra("title", mTitle);
                 iCheckIn.putExtra("place", searchLoclist.getPlace());
@@ -329,7 +344,7 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
             @Override
             public void onClick(View v) {
 
-                if(position==0){
+                if (position == 0) {
 
                     if (!mFlagCLick1) {
                         myViewHolder.mLayouthide.setVisibility(View.GONE);
@@ -342,7 +357,7 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
                     }
 
 
-                }else {
+                } else {
                     if (!mFlagCLick) {
                         myViewHolder.mLayouthide.setVisibility(View.VISIBLE);
                         myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_up);
@@ -357,76 +372,76 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
         });
 
 
-            myViewHolder.tv_working.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        myViewHolder.tv_working.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                    if (searchLoclist.getbSchedule() != null) {
-                        if (searchLoclist.getbSchedule().getTimespec().size() > 0) {
-                            String workingHrs = null;
-                            Config.logV("---Place 3333-------" + searchLoclist.getbSchedule().getTimespec().size());
-                            for (int k = 0; k < searchLoclist.getbSchedule().getTimespec().size(); k++) {
+                if (searchLoclist.getbSchedule() != null) {
+                    if (searchLoclist.getbSchedule().getTimespec().size() > 0) {
+                        String workingHrs = null;
+                        Config.logV("---Place 3333-------" + searchLoclist.getbSchedule().getTimespec().size());
+                        for (int k = 0; k < searchLoclist.getbSchedule().getTimespec().size(); k++) {
 
-                                String sTime, eTime;
-                                sTime = searchLoclist.getbSchedule().getTimespec().get(k).getTimeSlots().get(0).getsTime();
-                                eTime = searchLoclist.getbSchedule().getTimespec().get(k).getTimeSlots().get(0).geteTime();
-                                for (int j = 0; j < searchLoclist.getbSchedule().getTimespec().get(k).getRepeatIntervals().size(); j++) {
-                                    String repeat = searchLoclist.getbSchedule().getTimespec().get(k).getRepeatIntervals().get(j).toString();
+                            String sTime, eTime;
+                            sTime = searchLoclist.getbSchedule().getTimespec().get(k).getTimeSlots().get(0).getsTime();
+                            eTime = searchLoclist.getbSchedule().getTimespec().get(k).getTimeSlots().get(0).geteTime();
+                            for (int j = 0; j < searchLoclist.getbSchedule().getTimespec().get(k).getRepeatIntervals().size(); j++) {
+                                String repeat = searchLoclist.getbSchedule().getTimespec().get(k).getRepeatIntervals().get(j).toString();
 
-                                    WorkingModel work = new WorkingModel();
-                                    if (repeat.equalsIgnoreCase("2")) {
+                                WorkingModel work = new WorkingModel();
+                                if (repeat.equalsIgnoreCase("2")) {
 
-                                        work.setDay("Monday");
-                                        work.setTime_value(sTime + "-" + eTime);
+                                    work.setDay("Monday");
+                                    work.setTime_value(sTime + "-" + eTime);
 
-                                    }
-                                    if (repeat.equalsIgnoreCase("3")) {
+                                }
+                                if (repeat.equalsIgnoreCase("3")) {
 
-                                        work.setDay("Tuesday");
-                                        work.setTime_value(sTime + "-" + eTime);
+                                    work.setDay("Tuesday");
+                                    work.setTime_value(sTime + "-" + eTime);
 
-                                    }
-                                    if (repeat.equalsIgnoreCase("4")) {
-                                        work.setDay("Wednesday");
-                                        work.setTime_value(sTime + "-" + eTime);
-                                    }
-                                    if (repeat.equalsIgnoreCase("5")) {
+                                }
+                                if (repeat.equalsIgnoreCase("4")) {
+                                    work.setDay("Wednesday");
+                                    work.setTime_value(sTime + "-" + eTime);
+                                }
+                                if (repeat.equalsIgnoreCase("5")) {
 
-                                        work.setDay("Thursday");
-                                        work.setTime_value(sTime + "-" + eTime);
-                                    }
-                                    if (repeat.equalsIgnoreCase("6")) {
+                                    work.setDay("Thursday");
+                                    work.setTime_value(sTime + "-" + eTime);
+                                }
+                                if (repeat.equalsIgnoreCase("6")) {
 
-                                        work.setDay("Friday");
-                                        work.setTime_value(sTime + "-" + eTime);
+                                    work.setDay("Friday");
+                                    work.setTime_value(sTime + "-" + eTime);
 
-                                    }
-                                    if (repeat.equalsIgnoreCase("7")) {
+                                }
+                                if (repeat.equalsIgnoreCase("7")) {
 
-                                        work.setDay("Saturday");
-                                        work.setTime_value(sTime + "-" + eTime);
+                                    work.setDay("Saturday");
+                                    work.setTime_value(sTime + "-" + eTime);
 
-                                    }
-                                    if (repeat.equalsIgnoreCase("1")) {
+                                }
+                                if (repeat.equalsIgnoreCase("1")) {
 
-                                        work.setDay("Sunday");
-                                        work.setTime_value(sTime + "-" + eTime);
-
-                                    }
-
-                                    workingModelArrayList.add(work);
+                                    work.setDay("Sunday");
+                                    work.setTime_value(sTime + "-" + eTime);
 
                                 }
 
+                                workingModelArrayList.add(work);
 
                             }
 
 
-                           adaptercallback.onMethodWorkingCallback(workingModelArrayList,mTitle);
                         }
+
+
+                        adaptercallback.onMethodWorkingCallback(workingModelArrayList, mTitle);
                     }
                 }
-            });
+            }
+        });
 
 
 //Services------------
@@ -456,16 +471,16 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
             if (searchLoclist.getId() == mSearchServiceList.get(i).getLocid()) {
 
 
-                int size=mSearchServiceList.get(i).getmAllService().size();
-                if(size==2){
-                    size=2;
-                }else if(size==1){
-                    size=1;
-                }else if(size>2){
-                    size=3;
+                int size = mSearchServiceList.get(i).getmAllService().size();
+                if (size == 2) {
+                    size = 2;
+                } else if (size == 1) {
+                    size = 1;
+                } else if (size > 2) {
+                    size = 3;
                 }
 
-                if(size>0) {
+                if (size > 0) {
 
                     for (int j = 0; j < size; j++) {
                         TextView dynaText = new TextView(mContext);
@@ -519,7 +534,7 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
                             transaction.addToBackStack(null);
                             transaction.replace(R.id.mainlayout, pfFragment).commit();*/
 
-                            adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(),mTitle);
+                            adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle);
                         }
                     });
                     dynaText.setGravity(Gravity.CENTER);
@@ -577,7 +592,7 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
                     }
 
 
-                    if(mSearchSetting.isOnlineCheckIns()) {
+                    if (mSearchSetting.isOnlineCheckIns()) {
                         if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
 
                             if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) {
@@ -598,7 +613,7 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
                             myViewHolder.btn_checkin.setVisibility(View.GONE);
 
                         }
-                    }else{
+                    } else {
                         myViewHolder.btn_checkin.setVisibility(View.GONE);
                     }
 
@@ -615,24 +630,40 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
-                                    String firstWord="Est Wait Time \n";
-                                    String secondWord="Today, "+mQueueList.get(i).getNextAvailableQueue().getServiceTime();
-                                    Spannable spannable = new SpannableString(firstWord+secondWord);
-                                    spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                                    String firstWord = null;
+                                    Date dt = new Date();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                    String currentTime = sdf.format(dt);
+                                    Date datenow=parseDate(currentTime);
+
+                                    dateCompareOne = parseDate(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
+                                    if ( datenow.after( dateCompareOne ) ) {
+                                        firstWord = "Est Service Time \n";
+                                    }else {
+                                        firstWord = "Est Wait Time \n";
+
+                                    }
+
+
+                                    //String firstWord = "Est Wait Time \n";
+                                    String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                            firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                                     myViewHolder.tv_waittime.setText(spannable);
                                 } else {
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
-                                    String firstWord="Est Wait Time ";
-                                    String secondWord= mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime() + " Minutes";
-                                    Spannable spannable = new SpannableString(firstWord+secondWord);
-                                    spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    String firstWord = "Est Wait Time ";
+                                    String secondWord = mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime() + " Minutes";
+                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                            firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                                     myViewHolder.tv_waittime.setText(spannable);
                                 }
@@ -647,12 +678,12 @@ Config.logV("Search Service-----1111-----------"+mSearchServiceList.size());
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
-                                    String firstWord="Next Wait Time \n";
-                                    String secondWord=  monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
-                                    Spannable spannable = new SpannableString(firstWord+secondWord);
-                                    spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    String firstWord = "Next Wait Time \n";
+                                    String secondWord = monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                            firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                            firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                                     myViewHolder.tv_waittime.setText(spannable);
                                 } catch (ParseException e) {

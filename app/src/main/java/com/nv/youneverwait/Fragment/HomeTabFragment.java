@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.nv.youneverwait.R;
+
 import com.nv.youneverwait.adapter.ViewPagerAdapter;
 import com.nv.youneverwait.utils.BottomNavigationViewHelper;
+import com.nv.youneverwait.utils.CustomViewPager;
 
 /**
  * Created by sharmila on 9/7/18.
@@ -26,7 +27,7 @@ public class HomeTabFragment extends Fragment {
     BottomNavigationView bottomNavigationView;
 
     //This is our viewPager
-    private ViewPager viewPager;
+    private CustomViewPager viewPager;
     Toolbar toolbar;
     Context mContext;
 
@@ -45,7 +46,7 @@ public class HomeTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.bottomtab_fragment, container, false);
-        viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
+        viewPager = (CustomViewPager) rootView.findViewById(R.id.viewpager);
 
 
         //Initializing the bottomNavigationView
@@ -93,7 +94,7 @@ public class HomeTabFragment extends Fragment {
                     }
                 });
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        /*viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -109,8 +110,35 @@ public class HomeTabFragment extends Fragment {
                 Log.d("page", "onPageSelected: " + position);
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+               *//* FragmentInterface fragment = (FragmentInterface) adapter.instantiateItem(viewPager, position);
+                if (fragment != null) {
+                    fragment.fragmentBecameVisible();
+                }*//*
 
+            }
 
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });*/
+
+        viewPager.setOnPageChangeListener(new CustomViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                } else {
+                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                Log.d("page", "onPageSelected: " + position);
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
             }
 
             @Override
@@ -139,7 +167,7 @@ public class HomeTabFragment extends Fragment {
 
     ViewPagerAdapter adapter;
 
-    private void setupViewPager(ViewPager viewPager) {
+    private void setupViewPager(CustomViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         homeFragment = new DashboardFragment();
         checkinFragment = new CheckinsFragment();
@@ -153,7 +181,9 @@ public class HomeTabFragment extends Fragment {
         adapter.addFragment(inboxFragment);
         adapter.addFragment(profileFragment);
 
-/*        viewPager.setOffscreenPageLimit(1);*/
+       // int limit = (adapter.getCount() > 1 ? adapter.getCount() - 1 : 1);
+       // Config.logV("Limit------------@@@@@@@@@@@@@@@@@@@@---------"+limit);
+      viewPager.setOffscreenPageLimit(0);
         viewPager.setAdapter(adapter);
 
     }

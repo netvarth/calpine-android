@@ -196,6 +196,7 @@ public class Signup extends AppCompatActivity {
                             Intent iReg = new Intent(mContext, VerifyOtp.class);
                             startActivity(iReg);
                             finish();
+
                         }
 
                     }

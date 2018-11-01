@@ -116,7 +116,17 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     ParkingTypesAdapter mParkTypeAdapter;
+    static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
+    private static Date dateCompareOne;
 
+    private static Date parseDate(String date) {
+
+        try {
+            return inputParser.parse(date);
+        } catch (java.text.ParseException e) {
+            return new Date(0);
+        }
+    }
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
@@ -372,7 +382,21 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
-                                        String firstWord = "Est Wait Time ";
+                                      /*  String firstWord = "Est Wait Time ";*/
+                                        String firstWord = null;
+                                        Date dt = new Date();
+                                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                        String currentTime = sdf.format(dt);
+                                        Date datenow=parseDate(currentTime);
+
+                                        dateCompareOne = parseDate(searchdetailList.getServiceTime());
+                                        if ( datenow.after( dateCompareOne ) ) {
+                                            firstWord = "Est Service Time ";
+                                        }else {
+                                            firstWord = "Est Wait Time ";
+
+                                        }
+
                                         String secondWord = "\nToday, " + searchdetailList.getServiceTime();
                                         Spannable spannable = new SpannableString(firstWord + secondWord);
                                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -390,9 +414,24 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             String mtime = hours + " hour" + " " + minutes + " minute";
                                             //myViewHolder.tv_WaitTime.setText("Est Wait Time " + mtime );
 
+
                                             Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                     "fonts/Montserrat_Bold.otf");
-                                            String firstWord = "Est Wait Time ";
+                                          //  String firstWord = "Est Wait Time ";
+                                            String firstWord = null;
+                                            Date dt = new Date();
+                                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                            String currentTime = sdf.format(dt);
+                                            Date datenow=parseDate(currentTime);
+
+                                            dateCompareOne = parseDate(mtime);
+                                            if ( datenow.after( dateCompareOne ) ) {
+                                                firstWord = "Est Service Time ";
+                                            }else {
+                                                firstWord = "Est Wait Time ";
+
+                                            }
+
                                             String secondWord = "\n" + mtime;
                                             Spannable spannable = new SpannableString(firstWord + secondWord);
                                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -517,67 +556,70 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             myViewHolder.L_specialization.addView(dynaText);
                         }
 
-                        TextView dynaText = new TextView(context);
-                        dynaText.setGravity(Gravity.CENTER);
-                        dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_gray));
-                        dynaText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                myViewHolder.L_specialization.removeAllViews();
-                                myViewHolder.L_specialization.setOrientation(LinearLayout.VERTICAL);
+                        if(size>2) {
+                            TextView dynaText = new TextView(context);
+                            dynaText.setGravity(Gravity.CENTER);
+                            dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_gray));
+                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myViewHolder.L_specialization.removeAllViews();
+                                    myViewHolder.L_specialization.setOrientation(LinearLayout.VERTICAL);
 
-                                int k = 0;
-                                int add_row = 0;
-                                int rem = list_spec.size() % 2;
-                                if (rem == 0) {
+                                    int k = 0;
+                                    int add_row = 0;
+                                    int rem = list_spec.size() % 2;
+                                    if (rem == 0) {
 
-                                    add_row = 0;
+                                        add_row = 0;
 
-                                } else {
+                                    } else {
 
-                                    add_row = 1;
-                                }
-
-                                for (int i = 0; i < (list_spec.size() / 2) + add_row; i++) {
-                                    LinearLayout parent = new LinearLayout(context);
-
-                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                    //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                                    parent.setOrientation(LinearLayout.HORIZONTAL);
-                                    parent.setLayoutParams(params);
-
-
-                                    for (int j = 0; j < 2; j++) {
-
-                                        if (k >= list_spec.size()) {
-                                            break;
-                                        } else {
-                                            TextView dynaText = new TextView(context);
-                                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                                                    "fonts/Montserrat_Regular.otf");
-                                            dynaText.setTypeface(tyface);
-                                            dynaText.setText(list_spec.get(k));
-                                            dynaText.setTextSize(13);
-                                            params.setMargins(0, 10, 12, 0);
-                                            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                                            dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                            dynaText.setMaxLines(1);
-                                            dynaText.setMaxEms(5);
-                                            // dynaText.setWidth(dpToPx(50));
-
-                                            // params.setMargins(20, 10, 20, 0);
-                                            dynaText.setLayoutParams(params);
-                                            parent.addView(dynaText);
-
-                                            k++;
-                                        }
-
+                                        add_row = 1;
                                     }
-                                    myViewHolder.L_specialization.addView(parent);
+
+                                    for (int i = 0; i < (list_spec.size() / 2) + add_row; i++) {
+                                        LinearLayout parent = new LinearLayout(context);
+
+                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                        //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                                        parent.setOrientation(LinearLayout.HORIZONTAL);
+                                        parent.setLayoutParams(params);
+
+
+                                        for (int j = 0; j < 2; j++) {
+
+                                            if (k >= list_spec.size()) {
+                                                break;
+                                            } else {
+                                                TextView dynaText = new TextView(context);
+                                                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                                        "fonts/Montserrat_Regular.otf");
+                                                dynaText.setTypeface(tyface);
+                                                dynaText.setText(list_spec.get(k));
+                                                dynaText.setTextSize(13);
+                                                params.setMargins(0, 10, 12, 0);
+                                                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                                                dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                                dynaText.setMaxLines(1);
+                                                dynaText.setMaxEms(5);
+                                                // dynaText.setWidth(dpToPx(50));
+
+                                                // params.setMargins(20, 10, 20, 0);
+                                                dynaText.setLayoutParams(params);
+                                                parent.addView(dynaText);
+
+                                                k++;
+                                            }
+
+                                        }
+                                        myViewHolder.L_specialization.addView(parent);
+                                    }
                                 }
-                            }
-                        });
-                        myViewHolder.L_specialization.addView(dynaText);
+                            });
+                            myViewHolder.L_specialization.addView(dynaText);
+                        }
+
 
                     } else {
                         myViewHolder.L_specialization.setVisibility(View.GONE);

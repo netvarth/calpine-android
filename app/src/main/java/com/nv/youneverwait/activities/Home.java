@@ -53,7 +53,7 @@ public class Home extends AppCompatActivity {
                 .commit();
     }
 
-    boolean doubleBackToExitPressedOnce = false;
+    public static boolean  doubleBackToExitPressedOnce = false;
     @Override
     public void onBackPressed() {
 

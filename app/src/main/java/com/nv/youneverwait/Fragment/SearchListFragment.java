@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -325,6 +326,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     ImageView ibackpress;
     String s_LocName;
 
+    TextView tv_nosearchresult;
+    LinearLayout Lnosearchresult;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -362,7 +366,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
         txt_toolbarlocation = (TextView) row.findViewById(R.id.txt_toolbarlocation);
 
-
+        Lnosearchresult=(LinearLayout) row.findViewById(R.id.Lnosearchresult);
+        tv_nosearchresult = (TextView) row.findViewById(R.id.txtnosearchresult);
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
         txt_toolbarlocation.setTypeface(tyface);
@@ -493,7 +498,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     //mSearchView.setQuery(searchTxt, false);
 
-                    Config.logV("Popular Text__________@@@__11111__"+searchTxt);
+                    Config.logV("Popular Text__________@@@__11111__" + searchTxt);
 
                 }
 
@@ -1239,11 +1244,15 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                         Config.logV("Status" + response.body().getStatus().getRid());
 
-                        Config.logV("Found" + response.body().getHits().getFound());
+                        Config.logV("Found @@@@@@@@@@@@@@@@@@" + response.body().getHits().getFound());
                         total_foundcount = response.body().getHits().getFound();
                         TOTAL_PAGES = response.body().getHits().getFound() / 10;
                         if (response.body().getHits().getFound() > 0) {
 
+                            tv_nosearchresult.setVisibility(View.GONE);
+                            mRecySearchDetail.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.VISIBLE);
+                            Lnosearchresult.setVisibility(View.GONE);
 
                             mSearchResp.clear();
                             ArrayList<String> ids = new ArrayList<>();
@@ -1357,6 +1366,17 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                             //   waitlist/queues/waitingTime/2-1%2C2-2%2C141-388%2C141-2563
+
+                        } else {
+                            Config.logV(" No Found @@@@@@@@@@@@@@@@@@");
+                            Lnosearchresult.setVisibility(View.VISIBLE);
+                            tv_nosearchresult.setVisibility(View.VISIBLE);
+                            mRecySearchDetail.setVisibility(View.GONE);
+                            tv_nosearchresult.setText("No search result found for this location");
+                            progressBar.setVisibility(View.GONE);
+
+
+
 
                         }
 
@@ -1916,8 +1936,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             public void onClick(View v) {
 
                 String modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
-                ApiCommunicate(modifyAccountID, edt_message.getText().toString(),dialog);
-               // ApiSearchViewTerminology(modifyAccountID);
+                ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
+                // ApiSearchViewTerminology(modifyAccountID);
                 //dialog.dismiss();
 
             }
@@ -2027,7 +2047,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_LONG).show();
                         mBottomDialog.dismiss();
 
                     }

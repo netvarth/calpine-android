@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.nv.youneverwait.Fragment.DashboardFragment;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.adapter.MultipleFamilyMemberAdapter;
 import com.nv.youneverwait.adapter.PaymentAdapter;
@@ -47,6 +48,7 @@ import com.nv.youneverwait.response.QueueTimeSlotModel;
 import com.nv.youneverwait.response.SearchService;
 import com.nv.youneverwait.response.SearchSetting;
 import com.nv.youneverwait.response.SearchTerminology;
+import com.nv.youneverwait.response.SearchViewDetail;
 import com.nv.youneverwait.response.SectorCheckin;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
@@ -108,7 +110,7 @@ public class CheckIn extends AppCompatActivity {
     static TextView txt_date;
     ImageView img_calender_checkin;
     LinearLayout LcheckinDatepicker;
-    String mFrom;
+    static String mFrom;
     String title, place;
     TextView tv_titlename, tv_place, tv_checkin_service;
     static ImageView ic_left, ic_right;
@@ -190,6 +192,9 @@ public class CheckIn extends AppCompatActivity {
                 TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
                 txtsendmsg.setVisibility(View.GONE);
                 btn_send.setText("ADD");
+                if(!txtsendmsg.equals("")) {
+                    edt_message.setText(txt_message);
+                }
 
 
                 btn_send.setOnClickListener(new View.OnClickListener() {
@@ -310,27 +315,42 @@ public class CheckIn extends AppCompatActivity {
         // mRecyclePayList = (RecyclerView) findViewById(R.id.recyclepaymentList);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            serviceId = extras.getInt("serviceId");
-            uniqueID = extras.getString("uniqueID");
-            accountID = extras.getString("accountID");
             mFrom = extras.getString("from", "");
-            if (mFrom.equalsIgnoreCase("searchdetail_future") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+            Config.logV("From-------------"+mFrom);
+            if(mFrom.equalsIgnoreCase("favourites")||mFrom.equalsIgnoreCase("favourites_date")){
+                serviceId = extras.getInt("serviceId");
+                uniqueID = extras.getString("uniqueID");
+                accountID = extras.getString("accountID");
+
                 modifyAccountID = accountID;
-            } else {
-                modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
+                title = extras.getString("title", "");
+                place = extras.getString("place", "");
+                ApiSearchViewDetail(uniqueID);
+            }else {
+                serviceId = extras.getInt("serviceId");
+                uniqueID = extras.getString("uniqueID");
+                accountID = extras.getString("accountID");
+               /* mFrom = extras.getString("from", "");*/
+                if (mFrom.equalsIgnoreCase("searchdetail_future") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+                    modifyAccountID = accountID;
+                } else {
+                    modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
+                }
+
+                googlemap = extras.getString("googlemap", "");
+                title = extras.getString("title", "");
+                place = extras.getString("place", "");
+
+                sector = extras.getString("sector", "");
+                subsector = extras.getString("subsector", "");
             }
-
-            googlemap = extras.getString("googlemap", "");
-            title = extras.getString("title", "");
-            place = extras.getString("place", "");
-
-            sector = extras.getString("sector", "");
-            subsector = extras.getString("subsector", "");
 
         }
 
 
-        APISector(sector, subsector);
+        if(sector!=null&&subsector!=null) {
+            APISector(sector, subsector);
+        }
         tv_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -420,7 +440,7 @@ public class CheckIn extends AppCompatActivity {
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 System.out.println("UTC time: " + sdf.format(currentTime));
 
-                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
 
                     ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
                 } else {
@@ -453,7 +473,7 @@ public class CheckIn extends AppCompatActivity {
         });
 
 
-        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
             LcheckinDatepicker.setVisibility(View.GONE);
         } else {
             LcheckinDatepicker.setVisibility(View.VISIBLE);
@@ -814,8 +834,17 @@ public class CheckIn extends AppCompatActivity {
 
 
     }
+    static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
+    private static Date parseDate(String date) {
 
+        try {
+            return inputParser.parse(date);
+        } catch (java.text.ParseException e) {
+            return new Date(0);
+        }
+    }
 
+    private static Date dateCompareOne;
     private static void ApiQueueTimeSlot(String serviceId, String subSeriveID, String accountID, String mDate) {
 
 
@@ -862,8 +891,8 @@ public class CheckIn extends AppCompatActivity {
                             tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
                             tv_queuetime.setText(mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
+                            String firstWord=null;
 
-                            String firstWord = "Est Wait Time ";
                             String secondWord = null;
                             try {
                                 String startTime = "00:00";
@@ -878,7 +907,36 @@ public class CheckIn extends AppCompatActivity {
                                 } else {
                                     newtime = m + " Minutes";
                                 }
+
                                 secondWord = newtime;
+
+
+                                dateCompareOne = parseDate(secondWord);
+
+
+                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
+
+                                    Date dt = new Date();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                    String currentTime = sdf.format(dt);
+                                    Date datenow=parseDate(currentTime);
+
+
+                                    Config.logV("Date Now ################"+datenow);
+                                    Config.logV("not Date Now ################"+dateCompareOne);
+                                    if ( datenow.after( dateCompareOne ) ) {
+                                        firstWord = "Est Service Time ";
+                                    }else {
+                                        firstWord = "Est Wait Time ";
+
+                                          }
+
+                                }else{
+
+                                    firstWord = "Est Service Time ";
+                                }
+                                Config.logV("Second WORD---@@@@----222--------"+secondWord+"Datecompare"+dateCompareOne);
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -889,6 +947,33 @@ public class CheckIn extends AppCompatActivity {
 
                             if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
                                 secondWord = mQueueTimeSlotList.get(0).getServiceTime();
+
+
+
+                                dateCompareOne = parseDate(secondWord);
+
+
+                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
+
+                                    Date dt = new Date();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                    String currentTime = sdf.format(dt);
+                                    Date datenow=parseDate(currentTime);
+
+                                    Config.logV("Date Now ################"+datenow);
+                                    Config.logV("not Date Now ################"+dateCompareOne);
+                                    if ( datenow.after( dateCompareOne ) ) {
+                                        firstWord = "Est Service Time ";
+                                    }else {
+                                        firstWord = "Est Wait Time ";
+
+                                        Config.logV("Second WORD---@@@@------------"+secondWord+"Datecompare"+dateCompareOne);    }
+
+                                }else{
+
+                                    firstWord = "Est Service Time ";
+                                }
+                                Config.logV("Second WORD---------------"+secondWord);
                             }
 
                             Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -916,7 +1001,8 @@ public class CheckIn extends AppCompatActivity {
                             tv_waittime.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
 
-                            String firstWord = "Est Wait Time ";
+                            String firstWord=null;
+
                             String secondWord = null;
                             try {
                                 String startTime = "00:00";
@@ -932,6 +1018,33 @@ public class CheckIn extends AppCompatActivity {
                                     newtime = m + " Minutes";
                                 }
                                 secondWord = newtime;
+
+
+                                dateCompareOne = parseDate(secondWord);
+
+
+                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
+
+                                    Date dt = new Date();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                    String currentTime = sdf.format(dt);
+                                    Date datenow=parseDate(currentTime);
+
+                                    Config.logV("Date Now ############2222####"+datenow);
+                                    Config.logV("not Date Now ################"+dateCompareOne);
+                                    if ( datenow.after( dateCompareOne ) ) {
+                                        firstWord = "Est Service Time ";
+                                    }else {
+                                        firstWord = "Est Wait Time ";
+
+                                        Config.logV("Second WORD---@@@@------------"+secondWord+"Datecompare"+dateCompareOne);    }
+
+                                }else{
+
+                                    firstWord = "Est Service Time ";
+                                }
+
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -942,6 +1055,34 @@ public class CheckIn extends AppCompatActivity {
 
                             if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
                                 secondWord = mQueueTimeSlotList.get(0).getServiceTime();
+                                Config.logV("Second WORD---@@@@-------111--2222222---"+secondWord);
+
+
+                                dateCompareOne = parseDate(secondWord);
+
+
+                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
+
+                                    Date dt = new Date();
+                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                    String currentTime = sdf.format(dt);
+                                    Date datenow=parseDate(currentTime);
+
+                                    Config.logV("Date Now ###########33333#####"+datenow);
+                                    Config.logV("not Date Now ################"+dateCompareOne);
+                                    if ( datenow.after( dateCompareOne ) ) {
+                                        firstWord = "Est Service Time ";
+                                    }else {
+                                        firstWord = "Est Wait Time ";
+
+                                        Config.logV("Second WORD---@@@@------------"+secondWord+"Datecompare"+dateCompareOne);    }
+
+                                }else{
+
+                                    firstWord = "Est Service Time ";
+                                }
+
+
                             }
 
                             Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -1011,7 +1152,8 @@ public class CheckIn extends AppCompatActivity {
                                     tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
-                                    String firstWord = "Est Wait Time ";
+                                    String firstWord=null;
+
                                     String secondWord = null;
                                     try {
                                         String startTime = "00:00";
@@ -1027,6 +1169,32 @@ public class CheckIn extends AppCompatActivity {
                                             newtime = m + " Minutes";
                                         }
                                         secondWord = newtime;
+
+
+                                        dateCompareOne = parseDate(secondWord);
+
+
+                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
+
+                                            Date dt = new Date();
+                                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                            String currentTime = sdf.format(dt);
+                                            Date datenow=parseDate(currentTime);
+
+                                            Config.logV("Date Now ######444444##########"+datenow);
+
+                                            if ( datenow.after( dateCompareOne ) ) {
+                                                firstWord = "Est Service Time ";
+                                            }else {
+                                                firstWord = "Est Wait Time ";
+
+                                                Config.logV("Second WORD---@@@@------------"+secondWord+"Datecompare"+dateCompareOne);    }
+
+                                        }else{
+
+                                            firstWord = "Est Service Time ";
+                                        }
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -1038,6 +1206,31 @@ public class CheckIn extends AppCompatActivity {
 
                                     if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
                                         secondWord = mQueueTimeSlotList.get(i).getServiceTime();
+
+
+                                        dateCompareOne = parseDate(secondWord);
+
+
+                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
+
+                                            Date dt = new Date();
+                                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                            String currentTime = sdf.format(dt);
+                                            Date datenow=parseDate(currentTime);
+
+                                            Config.logV("Date Now #############55555###"+datenow);
+
+                                            if ( datenow.after( dateCompareOne ) ) {
+                                                firstWord = "Est Service Time ";
+                                            }else {
+                                                firstWord = "Est Wait Time ";
+
+                                                Config.logV("Second WORD---@@@@------------"+secondWord+"Datecompare"+dateCompareOne);    }
+
+                                        }else{
+
+                                            firstWord = "Est Service Time ";
+                                        }
                                     }
 
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -1095,7 +1288,8 @@ public class CheckIn extends AppCompatActivity {
                                         queueId = mQueueTimeSlotList.get(i).getId();
                                     }
 
-                                    String firstWord = "Est Wait Time ";
+                                    String firstWord=null;
+
                                     String secondWord = null;
                                     try {
                                         String startTime = "00:00";
@@ -1111,6 +1305,32 @@ public class CheckIn extends AppCompatActivity {
                                             newtime = m + " Minutes";
                                         }
                                         secondWord = newtime;
+
+
+                                        dateCompareOne = parseDate(secondWord);
+
+
+                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
+
+                                            Date dt = new Date();
+                                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                            String currentTime = sdf.format(dt);
+                                            Date datenow=parseDate(currentTime);
+
+                                            Config.logV("Date Now ########7777########"+datenow);
+
+                                            if ( datenow.after( dateCompareOne ) ) {
+                                                firstWord = "Est Service Time ";
+                                            }else {
+                                                firstWord = "Est Wait Time ";
+
+                                                Config.logV("Second WORD---@@@@------------"+secondWord+"Datecompare"+dateCompareOne);    }
+
+                                        }else{
+
+                                            firstWord = "Est Service Time ";
+                                        }
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -1118,6 +1338,29 @@ public class CheckIn extends AppCompatActivity {
 
                                     if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
                                         secondWord = mQueueTimeSlotList.get(i).getServiceTime();
+
+
+                                        dateCompareOne = parseDate(secondWord);
+                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
+
+                                            Date dt = new Date();
+                                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                                            String currentTime = sdf.format(dt);
+                                            Date datenow=parseDate(currentTime);
+
+                                            Config.logV("Date Now #####999999###########"+datenow);
+
+                                            if ( datenow.after( dateCompareOne ) ) {
+                                                firstWord = "Est Service Time ";
+                                            }else {
+                                                firstWord = "Est Wait Time ";
+
+                                                Config.logV("Second WORD---@@@@------------"+secondWord+"Datecompare"+dateCompareOne);    }
+
+                                        }else{
+
+                                            firstWord = "Est Service Time ";
+                                        }
                                     }
 
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -1457,7 +1700,7 @@ public class CheckIn extends AppCompatActivity {
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
         String formattedDate;
-        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin")||mFrom.equalsIgnoreCase("favourites")) {
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             formattedDate = df.format(c);
@@ -1523,6 +1766,7 @@ public class CheckIn extends AppCompatActivity {
 
                     MultiplefamilyList.clear();
                     if (response.code() == 200) {
+
 
                         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
                         txt_message = "";
@@ -1720,6 +1964,68 @@ public class CheckIn extends AppCompatActivity {
         recycle_family.setAdapter(mFamilyAdpater);
         mFamilyAdpater.notifyDataSetChanged();
         LSinglemember.setVisibility(View.GONE);
+    }
+
+    SearchViewDetail mBusinessDataList;
+    private void ApiSearchViewDetail(final String muniqueID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+
+
+        Call<SearchViewDetail> call = apiService.getSearchViewDetail(Integer.parseInt(muniqueID), sdf.format(currentTime));
+
+        call.enqueue(new Callback<SearchViewDetail>() {
+            @Override
+            public void onResponse(Call<SearchViewDetail> call, Response<SearchViewDetail> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----detail--------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                         mBusinessDataList=response.body();
+                         sector=mBusinessDataList.getServiceSector().getDomain();
+                         subsector=mBusinessDataList.getServiceSubSector().getSubDomain();
+                         APISector(sector,subsector);
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SearchViewDetail> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+
+
     }
 
 }

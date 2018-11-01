@@ -114,7 +114,16 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
         return new ActiveCheckInAdapter.MyViewHolder(itemView);
     }
+    static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
+    private static Date dateCompareOne;
+    private static Date parseDate(String date) {
 
+        try {
+            return inputParser.parse(date);
+        } catch (java.text.ParseException e) {
+            return new Date(0);
+        }
+    }
     @Override
     public void onBindViewHolder(ActiveCheckInAdapter.MyViewHolder myViewHolder, final int position) {
         final ActiveCheckIn activelist = activeChekinList.get(position);
@@ -188,7 +197,20 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
-                    String firstWord = "Est Wait Time ";
+                    String firstWord = null;
+                    Date dt = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+                    String currentTime = sdf.format(dt);
+                    Date datenow=parseDate(currentTime);
+
+                    dateCompareOne = parseDate(activelist.getServiceTime());
+                    if ( datenow.after( dateCompareOne ) ) {
+                        firstWord = "Est Service Time ";
+                    }else {
+                        firstWord = "Est Wait Time ";
+
+                    }
+
                     String secondWord = "Today," + activelist.getServiceTime();
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -215,7 +237,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
-                    String firstWord = "Est Wait Time ";
+                    String firstWord = "Est Service Time ";
                     String secondWord = outputDateStr + ", " + activelist.getServiceTime();
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -299,13 +321,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
                         long finalcheckin = appwaittime + millis;
-                        Config.logV("Check-in Time  " + millis);
+
 
                         String timeFORAMT = getDate(finalcheckin, "hh:mm a");
 
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
-                        String firstWord = "Check-in Time ";
+                        String firstWord = "Est Service Time ";
                         String secondWord = timeFORAMT;
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -336,7 +358,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             }
                             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                            String firstWord = "Check-in Time ";
+                            String firstWord = "Est Service Time ";
                             String secondWord = sTime;
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

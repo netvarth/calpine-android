@@ -2,26 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding7"
-    android:background="@drawable/input_border_bottom"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/padding7">
 
-    <TextView
-        android:id="@+id/txt_loc"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/icon_location_lightgray"
-        android:text="Fort Kochi"
-        android:layout_marginTop="@dimen/padding7"
-        android:drawablePadding="@dimen/padding5"
-        android:textColor="@color/sec_title_grey"
-        android:textSize="@dimen/txtsize_hint" />
+        android:layout_marginTop="@dimen/default_padding"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txt_loc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/icon_location_lightgray"
+            android:drawablePadding="@dimen/padding5"
+            android:text="Fort Kochi"
+            android:textColor="@color/sec_title_grey"
+            android:textSize="@dimen/txtsize_hint" />
+
+        <TextView
+            android:id="@+id/txtOpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@color/bg_opennow"
+            android:gravity="right"
+            android:paddingBottom="@dimen/padding3"
+            android:paddingLeft="@dimen/padding5"
+            android:paddingRight="@dimen/padding5"
+            android:paddingTop="@dimen/padding3"
+            android:text="Open Now"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/txt_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding3"
+        android:layout_marginTop="@dimen/padding5"
         android:text="Est WaitTime"
         android:textColor="@color/title_grey"
         android:textSize="@dimen/txtsize_hint" />
@@ -36,8 +59,8 @@
         android:background="@drawable/button_gradient_checkin"
         android:fontFamily="@font/customfont"
         android:gravity="center"
-        android:text="Check-in"
         android:padding="@dimen/padding5"
+        android:text="Check-in"
         android:textAllCaps="true"
         android:textColor="@color/app_background"
         android:textSize="@dimen/txtsize_subtitle"
@@ -48,10 +71,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:textSize="@dimen/txtsize_12"
-        android:layout_marginTop="@dimen/padding2"
+        android:padding="@dimen/padding2"
         android:text="@string/diff_date"
-        android:textColor="@color/title_consu" />
+        android:textColor="@color/title_consu"
+        android:textSize="@dimen/txtsize_title_term_small" />
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/padding5"
+        android:background="@color/view_border"
+        android:visibility="gone" />
 
 </LinearLayout>

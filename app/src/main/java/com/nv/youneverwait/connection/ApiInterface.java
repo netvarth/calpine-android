@@ -235,4 +235,13 @@ public interface ApiInterface {
 
     @GET(" ynwConf/settings/{sector}/{subsector}")
     Call<SectorCheckin> getSector(@Path("sector") String sector, @Path("subsector") String subsector);
+
+
+    @PUT("consumer/providers/revealPhoneNo/{providerID}/{revelphone}")
+    Call<ResponseBody> RevealPhoneNo(@Path("providerID") int providerID,@Path("revelphone") boolean revealphone);
+
+
+    @DELETE("consumer/providers/{providerID}")
+    Call<ResponseBody> DeleteFavourite(@Path("providerID") int id);
+
 }

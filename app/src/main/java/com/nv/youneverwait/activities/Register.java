@@ -215,13 +215,13 @@ public class Register extends AppCompatActivity {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Signup.class);
                             startActivity(iReg);
-                            finish();
+                          //  finish();
 
                         } else {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Login.class);
                             startActivity(iReg);
-                            finish();
+                           // finish();
 
                         }
 

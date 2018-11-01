@@ -501,6 +501,7 @@ public class Password extends AppCompatActivity {
                         SharedPreference.getInstance(mContext).setValue("register","success");
                         SharedPreference.getInstance(mContext).setValue("mobile",response.body().getPrimaryPhoneNumber());
                         Intent iReg = new Intent(mContext, Home.class);
+                        iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(iReg);
                         finish();
 

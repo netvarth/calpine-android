@@ -17,6 +17,16 @@ public class FavouriteModel {
     String businessDesc;
     String status;
 
+    public int getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
+    }
+
+    int uniqueId;
+
     public boolean isExpandFlag() {
         return expandFlag;
     }

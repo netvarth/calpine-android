@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.adapter.InboxAdapter;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
@@ -36,7 +37,8 @@ import retrofit2.Response;
  * Created by sharmila on 6/7/18.
  */
 
-public class InboxFragment extends RootFragment {
+public class InboxFragment extends RootFragment /*implements FragmentInterface*/{
+
 
 
     public InboxFragment() {
@@ -63,7 +65,35 @@ public class InboxFragment extends RootFragment {
         View row = inflater.inflate(R.layout.fragment_inbox, container, false);
         mrRecylce_inboxlist = (RecyclerView) row.findViewById(R.id.recylce_inbox);
         mContext = getActivity();
-        ApiInboxList();
+        Home.doubleBackToExitPressedOnce=false;
+        if (Config.isOnline(getActivity())) {
+            ApiInboxList();
+        }else{
+            mDBSORTInboxList.clear();
+            db=new DatabaseHandler(mContext);
+            mDBSORTInboxList = db.getAllInboxDetail();
+            if(mDBSORTInboxList.size()>0) {
+
+                Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
+                    @Override
+                    public int compare(InboxModel r1, InboxModel r2) {
+                        return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
+                    }
+                });
+
+                //  Config.logV("INBOX LIST----------------" + mDBInboxList.size());
+
+                Config.logV("INBOX LIST------NEW----------" + mDBSORTInboxList.size());
+
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                mrRecylce_inboxlist.setLayoutManager(mLayoutManager);
+                mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, mDBInboxList);
+                mrRecylce_inboxlist.setAdapter(mInboxAdapter);
+                mInboxAdapter.notifyDataSetChanged();
+            }
+        }
+
+
 
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
 
@@ -113,6 +143,7 @@ public class InboxFragment extends RootFragment {
                     if (response.code() == 200) {
                         mInboxList.clear();
                         mInboxList = response.body();
+
 
                         /*Collections.sort(mInboxList, new Comparator<InboxModel>() {
                             @Override
@@ -291,7 +322,40 @@ public class InboxFragment extends RootFragment {
     public void onResume() {
         super.onResume();
 
-        Config.logV("OnResume--------------------------");
-        ApiInboxList();
+        Config.logV("OnResume------Inbox--------------------");
+        if (Config.isOnline(getActivity())) {
+            ApiInboxList();
+        }else{
+            mDBSORTInboxList.clear();
+            db=new DatabaseHandler(mContext);
+            mDBSORTInboxList = db.getAllInboxDetail();
+            if(mDBSORTInboxList.size()>0) {
+
+                Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
+                    @Override
+                    public int compare(InboxModel r1, InboxModel r2) {
+                        return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
+                    }
+                });
+
+                //  Config.logV("INBOX LIST----------------" + mDBInboxList.size());
+
+                Config.logV("INBOX LIST------NEW----------" + mDBSORTInboxList.size());
+
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                mrRecylce_inboxlist.setLayoutManager(mLayoutManager);
+                mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, mDBInboxList);
+                mrRecylce_inboxlist.setAdapter(mInboxAdapter);
+                mInboxAdapter.notifyDataSetChanged();
+            }
+        }
     }
+
+
+    /*@Override
+    public void fragmentBecameVisible() {
+        Config.logV("OnResume------INBox Frgamrnt VIisble--------------------");
+
+
+    }*/
 }

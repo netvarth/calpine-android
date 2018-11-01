@@ -14,7 +14,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -25,15 +24,12 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,6 +49,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
+import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.activities.SearchLocationActivity;
 import com.nv.youneverwait.adapter.ActiveCheckInAdapter;
 import com.nv.youneverwait.adapter.SearchListAdpter;
@@ -68,14 +65,10 @@ import com.nv.youneverwait.model.SearchModel;
 import com.nv.youneverwait.response.ActiveCheckIn;
 import com.nv.youneverwait.utils.SharedPreference;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -219,7 +212,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }
 
-    TextView txt_sorry, tv_logotext;
+    TextView txt_sorry;
+    boolean activeCheckin=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -228,12 +222,20 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         View row = inflater.inflate(R.layout.fragment_myhome, container, false);
         mRecycleActive = (RecyclerView) row.findViewById(R.id.recycleActive);
         Lhome_mainlayout = (LinearLayout) row.findViewById(R.id.homemainlayout);
-        tv_logotext = (TextView) row.findViewById(R.id.logotext);
+
+        Home.doubleBackToExitPressedOnce=false;
+
         txt_sorry = (TextView) row.findViewById(R.id.txt_sorry);
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
         mCurrentLoc = (TextView) row.findViewById(R.id.currentloc);
         if (Config.isOnline(getActivity())) {
-            ApiActiveCheckIn();
+            Config.logV("Active Checkin------@@@@@@@@@@@-------------"+activeCheckin);
+            if(!activeCheckin){
+                activeCheckin=true;
+                ApiActiveCheckIn();
+
+            }
+
             ApiAWSearchDomain();
         }
 
@@ -291,7 +293,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        tv_logotext.setTypeface(tyface);
+
         tv_activechkin.setTypeface(tyface);
         mCurrentLoc.setTypeface(tyface);
         tv_popular.setTypeface(tyface);
@@ -1138,9 +1140,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     }
 
-    private void ApiActiveCheckIn() {
+    public void ApiActiveCheckIn() {
 
-
+        Config.logV("Active Checkin------%%%%%%%%%%%%%%%%%%%%------------"+activeCheckin);
         final ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
@@ -1163,6 +1165,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
+                        activeCheckin=false;
 
                         Config.logV("Response--Array size--Active-----------------------" + response.body().size());
 
@@ -1338,6 +1341,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         }
 
+        Config.logV("Active Checkin------@@@@@@@@@@@--------##########-----"+activeCheckin);
+        if(!activeCheckin) {
+            activeCheckin=true;
+            ApiActiveCheckIn();
+
+        }
+
+
+
 
     }
 
@@ -1416,8 +1428,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
                     mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                     LocationRequest locationRequest = new LocationRequest();
-                    locationRequest.setInterval(3000);        // 10 seconds, in milliseconds
-                    locationRequest.setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                    locationRequest.setInterval(0);        // 10 seconds, in milliseconds
+                    locationRequest.setFastestInterval(0); // 1 second, in milliseconds
 
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
@@ -1446,6 +1458,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                         mylocation = LocationServices.FusedLocationApi
                                                 .getLastLocation(googleApiClient);
                                     }
+
                                     break;
                                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                                     // Location settings are not satisfied.
@@ -1459,6 +1472,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                     } catch (IntentSender.SendIntentException e) {
                                         // Ignore the error.
                                     }
+
+
                                     break;
                                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                                     // Location settings are not satisfied.
@@ -1466,6 +1481,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                     // to fix the
                                     // settings so we won't show the dialog.
                                     // finish();
+
                                     break;
                             }
                         }
@@ -1653,7 +1669,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         startActivity(iBill);
 
     }
-
 
 
 

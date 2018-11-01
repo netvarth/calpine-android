@@ -1,12 +1,16 @@
 package com.nv.youneverwait.activities;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.utils.SharedPreference;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by sharmila on 3/7/18.
@@ -30,6 +34,11 @@ public class Splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
+        TextView txtlogo=(TextView)findViewById(R.id.txtlogo) ;
+        Typeface tyface = Typeface.createFromAsset(this.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        txtlogo.setTypeface(tyface);
+
 
     }
 
@@ -44,6 +53,7 @@ public class Splash extends AppCompatActivity {
             String check=SharedPreference.getInstance(this).getStringValue("register","");
             if(check.equalsIgnoreCase("success")) {
                 Intent iLogin = new Intent(this, Home.class);
+                iLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(iLogin);
                 finish();
             }else{

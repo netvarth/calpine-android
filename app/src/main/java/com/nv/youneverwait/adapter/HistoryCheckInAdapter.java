@@ -74,7 +74,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_businessname, tv_estTime, tv_service, tv_place, tv_personahead, tv_token, icon_message, icon_cancel;
         TextView icon_bill;
-        LinearLayout lactive;
+        LinearLayout layout_token;
         ImageView img_fav;
 
 
@@ -91,6 +91,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             img_fav = (ImageView) view.findViewById(R.id.img_fav);
             icon_message = (TextView) view.findViewById(R.id.icon_message);
             icon_cancel = (TextView) view.findViewById(R.id.icon_cancel);
+            layout_token = (LinearLayout) view.findViewById(R.id.layout_token);
         }
     }
 
@@ -98,11 +99,13 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
     String category;
     HistoryAdapterCallback callback;
-    public HistoryCheckInAdapter(List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity,HistoryAdapterCallback callback) {
+    String header;
+    public HistoryCheckInAdapter(List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity,HistoryAdapterCallback callback,String header) {
         this.mContext = mContext;
         this.activeChekinList = mactiveChekinList;
         this.activity = mActivity;
         this.callback=callback;
+        this.header=header;
 
     }
 
@@ -205,7 +208,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
         Config.logV("Date------------" + activelist.getDate());
 
-        if (!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+        if (!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")&&!header.equalsIgnoreCase("old")) {
             myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
             if (activelist.getServiceTime() != null) {
 
@@ -214,7 +217,15 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
-                    String firstWord = "Est Wait Time ";
+                    String firstWord = null;
+                    if(header.equalsIgnoreCase("future")){
+                         firstWord = "Est Service Time ";
+                    }
+
+                    if(header.equalsIgnoreCase("today")){
+                        firstWord = "Est Wait Time ";
+                    }
+                   
                     String secondWord = "Today," + activelist.getServiceTime();
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -241,7 +252,15 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
-                    String firstWord = "Est Wait Time ";
+                    String firstWord = null;
+                    if(header.equalsIgnoreCase("future")){
+                        firstWord = "Est Service Time ";
+                    }
+
+                    if(header.equalsIgnoreCase("today")){
+                        firstWord = "Est Wait Time ";
+                    }
+
                     String secondWord = outputDateStr + ", " + activelist.getServiceTime();
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -282,7 +301,15 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                             myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                            String firstWord = "Est Wait Time ";
+                            String firstWord = null;
+                            if(header.equalsIgnoreCase("future")){
+                                firstWord = "Est Service Time ";
+                            }
+
+                            if(header.equalsIgnoreCase("today")){
+                                firstWord = "Est Wait Time ";
+                            }
+
                             String secondWord = activelist.getAppxWaitingTime() + " Mins ";
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -325,13 +352,22 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
 
                         long finalcheckin = appwaittime + millis;
-                        Config.logV("Check-in Time  " + millis);
+
 
                         String timeFORAMT = getDate(finalcheckin, "hh:mm a");
 
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
-                        String firstWord = "Check-in Time ";
+                        String firstWord=null;
+
+                        if(header.equalsIgnoreCase("future")){
+                            firstWord = "Est Service Time ";
+                        }
+
+                        if(header.equalsIgnoreCase("today")){
+                            firstWord = "Est Wait Time ";
+                        }
+
                         String secondWord = timeFORAMT;
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -362,7 +398,15 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                             }
                             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                            String firstWord = "Check-in Time ";
+                            String firstWord=null;
+
+                            if(header.equalsIgnoreCase("future")){
+                                firstWord = "Est Service Time ";
+                            }
+
+                            if(header.equalsIgnoreCase("today")){
+                                firstWord = "Est Wait Time ";
+                            }
                             String secondWord = sTime;
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -383,15 +427,23 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         }
 
 
-        String firstWord = "Token No ";
-        String secondWord = String.valueOf(activelist.getToken());
-        Spannable spannable = new SpannableString(firstWord + secondWord);
-        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
-                0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        myViewHolder.tv_token.setText(spannable);
+        if(!header.equalsIgnoreCase("old")) {
+            myViewHolder.tv_token.setVisibility(View.VISIBLE);
+            myViewHolder.layout_token.setVisibility(View.VISIBLE);
+            String firstWord = "Token No ";
+            String secondWord = String.valueOf(activelist.getToken());
+            Spannable spannable = new SpannableString(firstWord + secondWord);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                    0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            myViewHolder.tv_token.setText(spannable);
+
+        }else{
+            myViewHolder.layout_token.setVisibility(View.GONE);
+            myViewHolder.tv_estTime.setVisibility(View.GONE);
+        }
 
 
         if (activelist.getPersonsAhead() != -1) {

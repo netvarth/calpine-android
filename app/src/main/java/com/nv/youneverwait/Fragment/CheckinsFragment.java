@@ -19,15 +19,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
+import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.adapter.HistoryCheckInAdapter;
-import com.nv.youneverwait.callback.ActiveAdapterOnCallback;
 import com.nv.youneverwait.callback.HistoryAdapterCallback;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
@@ -53,7 +52,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CheckinsFragment extends RootFragment implements HistoryAdapterCallback {
+public class CheckinsFragment extends RootFragment implements HistoryAdapterCallback /*,FragmentInterface*/{
 
 
     public CheckinsFragment() {
@@ -76,6 +75,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
     TextView tv_future, tv_old, tv_today, tv_notodaychekcin, tv_nofuturecheckin;
     boolean isExpandtoday = true, isExpandOld = false, isExpandFut = true;
+
     HistoryAdapterCallback mInterface;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,6 +91,8 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
         mrRecylce_checklistTOday = (RecyclerView) row.findViewById(R.id.recylce_checkintoday);
         tv_nofuturecheckin = (TextView) row.findViewById(R.id.txtnocheckfuture);
         tv_notodaychekcin = (TextView) row.findViewById(R.id.txtnocheckintoday);
+
+        Home.doubleBackToExitPressedOnce=false;
 
         //expList = (ExpandableListView) row.findViewById(R.id.exp_list);
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -174,7 +176,8 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
         });
 
 
-        ApiTodayChekInList();
+            ApiTodayChekInList();
+
         return row;
     }
 
@@ -295,20 +298,20 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         }
                         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(mContext);
                         mrRecylce_checklistTOday.setLayoutManager(mLayoutManager1);
-                        mCheckAdapter = new HistoryCheckInAdapter(mCheckTodayList, mContext, mActivity,mInterface );
+                        mCheckAdapter = new HistoryCheckInAdapter(mCheckTodayList, mContext, mActivity,mInterface ,"today");
                         mrRecylce_checklistTOday.setAdapter(mCheckAdapter);
                         mCheckAdapter.notifyDataSetChanged();
 
                         RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(mContext);
                         mrRecylce_checklistFuture.setLayoutManager(mLayoutManager2);
-                        mCheckAdapter = new HistoryCheckInAdapter(mCheckFutureList, mContext, mActivity,mInterface );
+                        mCheckAdapter = new HistoryCheckInAdapter(mCheckFutureList, mContext, mActivity,mInterface,"future" );
                         mrRecylce_checklistFuture.setAdapter(mCheckAdapter);
                         mCheckAdapter.notifyDataSetChanged();
 
 
                         RecyclerView.LayoutManager mLayoutManager3 = new LinearLayoutManager(mContext);
                         mrRecylce_checklistOLd.setLayoutManager(mLayoutManager3);
-                        mCheckAdapter = new HistoryCheckInAdapter(mCheckOldList, mContext, mActivity,mInterface );
+                        mCheckAdapter = new HistoryCheckInAdapter(mCheckOldList, mContext, mActivity,mInterface ,"old");
                         mrRecylce_checklistOLd.setAdapter(mCheckAdapter);
                         mCheckAdapter.notifyDataSetChanged();
 
@@ -626,4 +629,10 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
         super.onResume();
 
     }
+
+    /*@Override
+    public void fragmentBecameVisible() {
+
+
+    }*/
 }
