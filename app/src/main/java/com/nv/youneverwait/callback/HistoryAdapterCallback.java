@@ -11,4 +11,8 @@ public interface HistoryAdapterCallback {
 
     void onMethodDelecteCheckinCallback(String ynwuuid,int accountID);
     void onMethodActiveCallback(String value);
+    void onMethodAddFavourite(int value);
+    void onMethodDeleteFavourite(int value);
+    void onMethodRating(String accountID,String UUID);
+
 }

@@ -106,6 +106,10 @@
     <string name="pay">PAY</string>
     <string name="aboutus">About Us</string>
     <string name="address" >Netvarth Technologies Pvt Ltd \nMuseum cross lane \nChembukavu , \nThrissur-680020 \nKerala, India</string>
+    <string name="rate">RATE</string>
+    <string name="save">Save</string>
+    <string name="clickhere">Click here to view More Details</string>
+    <string name="eduqualif">Educational Qualification</string>
 
 
 </resources>

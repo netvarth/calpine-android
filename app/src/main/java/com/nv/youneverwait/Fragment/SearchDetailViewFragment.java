@@ -2,11 +2,13 @@ package com.nv.youneverwait.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +38,7 @@ import com.nv.youneverwait.custom.CircleTransform;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.custom.ResizableCustomView;
 import com.nv.youneverwait.model.WorkingModel;
+import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchCheckInMessage;
 import com.nv.youneverwait.response.SearchLocation;
@@ -103,6 +107,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     SearchLocationAdpterCallback mInterface;
     LocationCheckinCallback callback;
     String location;
+    ImageView ic_fav;
+    LinearLayout LexpandLayout ,LQualification,LExperience,LAwardsRecog;
+    TextView txtQualifHead,txtQualification,txtExperHead,txtExperience,txtAwardsRecogHead,txAwardsRecog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -155,6 +162,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mImgthumbProfile2 = (ImageView) row.findViewById(R.id.iThumb_profile2);
         tv_ImageViewText = (TextView) row.findViewById(R.id.mImageViewText);
         mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
+        ic_fav=(ImageView) row.findViewById(R.id.txtfav);
 
         tv_exp = (TextView) row.findViewById(R.id.txt_expe);
         tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
@@ -165,9 +173,28 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_ImageViewText.setTypeface(tyface);
 
 
+
+        LexpandLayout  = (LinearLayout) row.findViewById(R.id.LexpandLayout);
+        LQualification = (LinearLayout) row.findViewById(R.id.LQualification);
+        txtQualifHead = (TextView) row.findViewById(R.id.txtQualifHead);
+        txtQualification = (TextView) row.findViewById(R.id.txtQualification);
+
+
+        LExperience = (LinearLayout) row.findViewById(R.id.LExperience);
+        txtExperHead = (TextView) row.findViewById(R.id.txtExperHead);
+        txtExperience = (TextView) row.findViewById(R.id.txtExperience);
+
+        LAwardsRecog = (LinearLayout) row.findViewById(R.id.LAwardsRecog);
+        txtAwardsRecogHead = (TextView) row.findViewById(R.id.txtAwardsRecogHead);
+        txAwardsRecog = (TextView) row.findViewById(R.id.txAwardsRecog);
+
+
+
+
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
+
 
 
         mInterface = (SearchLocationAdpterCallback) this;
@@ -347,6 +374,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     public void UpdateMainUI(SearchViewDetail getBussinessData) {
 
 
+
+        /*if(getBussinessData.getDomainVirtualFields().getAwardsrecognitions()!=null){
+            LexpandLayout.setVisibility(View.VISIBLE);
+            LAwardsRecog.setVisibility(View.VISIBLE);
+            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            txtAwardsRecogHead.setTypeface(tyface);
+            txAwardsRecog.setText(getBussinessData.getDomainVirtualFields().getAwardsrecognitions().get(0).getAwardName()+", "+getBussinessData.getDomainVirtualFields().getAwardsrecognitions().get(0).getAwardIssuedBy()+", "getBussinessData.getDomainVirtualFields().getAwardsrecognitions().get(0).getAwardMonth()+", "+getBussinessData.getDomainVirtualFields().getAwardsrecognitions().get(0).getAwardYear());
+        }else{
+
+            LAwardsRecog.setVisibility(View.GONE);
+        }*/
         if (getBussinessData.getVerifyLevel() != null) {
             if (!getBussinessData.getVerifyLevel().equalsIgnoreCase("NONE")) {
                 tv_busName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_verified, 0);
@@ -365,6 +404,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         rating.setRating(getBussinessData.getAvgRating());
 
 
+
         tv_domain.setText(getBussinessData.getServiceSector().getDisplayName());
 
         if (getBussinessData.getDomainVirtualFields() != null) {
@@ -377,7 +417,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
 
         } else {
-            tv_exp.setVisibility(View.GONE);
+           tv_exp.setVisibility(View.GONE);
         }
 
         if (getBussinessData.getBusinessDesc() != null) {
@@ -444,6 +484,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Config.logV("Provider------------" + response.body().getId());
                         mProvoderId = response.body().getId();
                         UpdateMainUI(mBusinessDataList);
+                        ApiFavList();
                         ApiSearchViewLocation(uniqueID);
 
                     }
@@ -1049,7 +1090,209 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ApiSearchViewTerminology(uniqueID);
 
     }
+    private void ApiAddFavo(int providerID) {
 
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Call<ResponseBody> call = apiService.AddFavourite(providerID);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        if (response.body().string().equalsIgnoreCase("true")) {
+                            ApiFavList();
+                        }
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
+    boolean favFlag=false;
+    ArrayList<FavouriteModel> mFavList=new ArrayList<>();
+    private void ApiFavList() {
+
+        Config.logV("API Call");
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<ArrayList<FavouriteModel>> call = apiService.getFavourites();
+
+
+        call.enqueue(new Callback<ArrayList<FavouriteModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<FavouriteModel>> call, Response<ArrayList<FavouriteModel>> response) {
+
+                try {
+
+                    ic_fav.setImageResource(R.drawable.icon_favourite_line);
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+                        mFavList.clear();
+                        mFavList = response.body();
+                        favFlag=false;
+                        for (int i = 0; i < mFavList.size(); i++) {
+                            Config.logV("Fav List-----##&&&-----" + mFavList.get(i).getId());
+                            Config.logV("Fav Fav List--------%%%%--" + mBusinessDataList.getId());
+
+                            if (mFavList.get(i).getId() == mBusinessDataList.getId()) {
+
+                                favFlag=true;
+                                ic_fav.setVisibility(View.VISIBLE);
+                                ic_fav.setImageResource(R.drawable.icon_favourited);
+
+
+                            }
+                        }
+
+                        ic_fav.setOnClickListener(new View.OnClickListener() {
+                           @Override
+                           public void onClick(View v) {
+                               if(favFlag){
+                                   AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
+                                           //set message, title, and icon
+                                           .setTitle("Delete")
+                                           .setMessage("Do you want to remove "+mBusinessDataList.getBusinessName()+" from favourite list?")
+
+
+                                           .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                                               public void onClick(DialogInterface dialog, int whichButton) {
+                                                   //your deleting code
+                                                   dialog.dismiss();
+                                                 ApiRemoveFavo(mBusinessDataList.getId());
+                                               }
+
+                                           })
+
+
+
+                                           .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                               public void onClick(DialogInterface dialog, int which) {
+
+                                                   dialog.dismiss();
+
+                                               }
+                                           })
+                                           .create();
+                                   myQuittingDialogBox.show();
+                               }else{
+                                   ApiAddFavo(mBusinessDataList.getId());
+                               }
+                           }
+                       });
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<FavouriteModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+
+            }
+        });
+
+
+    }
+
+
+    private void ApiRemoveFavo(int providerID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Call<ResponseBody> call = apiService.DeleteFavourite(providerID);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        if (response.body().string().equalsIgnoreCase("true")) {
+                            ApiFavList();
+                        }
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
     @Override
     public void onResume() {
         super.onResume();

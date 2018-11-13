@@ -17,6 +17,8 @@ import com.nv.youneverwait.response.PaymentModel;
 import com.nv.youneverwait.response.ProfileModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.QueueTimeSlotModel;
+import com.nv.youneverwait.response.RatingResponse;
+import com.nv.youneverwait.response.RefinedFilters;
 import com.nv.youneverwait.response.SearchAWsResponse;
 import com.nv.youneverwait.response.SearchCheckInMessage;
 import com.nv.youneverwait.response.SearchLocation;
@@ -243,5 +245,21 @@ public interface ApiInterface {
 
     @DELETE("consumer/providers/{providerID}")
     Call<ResponseBody> DeleteFavourite(@Path("providerID") int id);
+
+    @POST("consumer/providers/{providerID}")
+    Call<ResponseBody> AddFavourite(@Path("providerID") int id);
+
+    @GET("consumer/waitlist/rating")
+    Call<ArrayList<RatingResponse>> getRating(@QueryMap(encoded = true) Map<String, String>   query);
+
+    @PUT("consumer/waitlist/rating")
+    Call<ResponseBody> PutRating(@Query("account") String account,@Body RequestBody jsonObj);
+
+    @POST("consumer/waitlist/rating")
+    Call<ResponseBody> PostRating(@Query("account") String account,@Body RequestBody jsonObj);
+
+    @GET("ynwConf/refinedFilters")
+    Call<RefinedFilters> getFilters();
+
 
 }

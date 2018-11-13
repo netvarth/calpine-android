@@ -33,6 +33,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding3"
           ></android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/txt_nofav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/padding5"
+            android:text=" You haven't added any favourite providers "
+            android:textColor="@color/title_grey"
+            android:visibility="gone" />
     </LinearLayout>
 
 </FrameLayout>

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,7 +52,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         View row = inflater.inflate(R.layout.fragment_profile, container, false);
         mContext = getActivity();
         Config.logV("Profile-----------");
-
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Home.doubleBackToExitPressedOnce=false;
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
 

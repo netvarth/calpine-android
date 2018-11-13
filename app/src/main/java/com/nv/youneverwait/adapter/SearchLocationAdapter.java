@@ -490,11 +490,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         dynaText.setText(mSearchServiceList.get(i).getmAllService().get(j).getName());
                         dynaText.setTextSize(13);
                         dynaText.setPadding(10, 10, 10, 10);
+                        dynaText.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
                         dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
                         dynaText.setEllipsize(TextUtils.TruncateAt.END);
                         dynaText.setMaxLines(1);
-                        dynaText.setMaxEms(6);
-
+                        dynaText.setMaxEms(8);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        params.setMargins(0, 0, 10, 0);
+                        dynaText.setLayoutParams(params);
 
                         final String mServicename = mSearchServiceList.get(i).getmAllService().get(j).getName();
                         final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(j).getTotalAmount();
@@ -561,6 +564,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             mShowWaitTime = false;
 
         }
+
 
         for (int i = 0; i < mQueueList.size(); i++) {
 
@@ -631,7 +635,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
 
-                                    String firstWord = null;
+                                    /*String firstWord = null;
                                     Date dt = new Date();
                                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
                                     String currentTime = sdf.format(dt);
@@ -643,10 +647,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     }else {
                                         firstWord = "Est Wait Time \n";
 
-                                    }
+                                    }*/
 
 
-                                    //String firstWord = "Est Wait Time \n";
+                                    String  firstWord = "Est Service Time \n";
                                     String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -701,6 +705,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
                 }
+            }else{
+
             }
 
         }

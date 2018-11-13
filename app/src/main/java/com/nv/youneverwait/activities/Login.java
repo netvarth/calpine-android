@@ -18,12 +18,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.response.LoginResponse;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.nv.youneverwait.utils.TypefaceFont;
 
@@ -225,6 +227,8 @@ public class Login extends AppCompatActivity {
                             SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
                             Config.logV("Set Cookie sharedpref------------" + Cookie_header);
 
+                            LogUtil.writeLogTest("****Login Cookie****"+Cookie_header);
+
                         }
 
 
@@ -240,6 +244,8 @@ public class Login extends AppCompatActivity {
                         SharedPreference.getInstance(mContext).setValue("firstname", response.body().getFirstName());
                         SharedPreference.getInstance(mContext).setValue("lastname", response.body().getLastName());
 
+                        SharedPreference.getInstance(mContext).setValue("s3Url", response.body().getS3Url());
+
                         SharedPreference.getInstance(mContext).setValue("mobile", response.body().getPrimaryPhoneNumber());
                         Intent iReg = new Intent(mContext, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -247,6 +253,8 @@ public class Login extends AppCompatActivity {
                         finish();
 
 
+                    }else{
+                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_LONG).show();
                     }
 
 
@@ -303,7 +311,7 @@ public class Login extends AppCompatActivity {
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-
+                        Toast.makeText(mContext,"Otp has been send to your registered number",Toast.LENGTH_LONG).show();
                         Intent iReg = new Intent(mContext, ResetOtp.class);
                         startActivity(iReg);
 

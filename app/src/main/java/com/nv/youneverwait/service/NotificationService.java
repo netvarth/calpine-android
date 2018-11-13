@@ -29,7 +29,7 @@ public class NotificationService extends FirebaseMessagingService {
         //Call method to generate notification
 
         Config.logV("Notification Body: " + remoteMessage.getNotification().getBody());
-       // generateNotification(remoteMessage.getNotification().getBody());
+        generateNotification(remoteMessage.getNotification().getBody());
     }
 
     private void generateNotification(String messageBody) {
@@ -40,8 +40,8 @@ public class NotificationService extends FirebaseMessagingService {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Firebase Cloud or Push Notification")
+                .setSmallIcon(R.mipmap.ynw_logo)
+                .setContentTitle("Notification")
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

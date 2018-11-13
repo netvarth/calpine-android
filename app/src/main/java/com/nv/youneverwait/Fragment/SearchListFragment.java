@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -287,6 +288,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 mSpinnerDomain.setAdapter(adapter);
 
+                                int pos = getIndex(domainList, spinnerTxt);
+                                Config.logV("Selected POSITION ####################" + pos);
+                                mSpinnerDomain.setSelection(pos);
+
+                                SharedPreference.getInstance(mContext).setValue("ALL_SELECTED", true);
+
+
 
                             }
                         }
@@ -329,12 +337,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     TextView tv_nosearchresult;
     LinearLayout Lnosearchresult;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View row = inflater.inflate(R.layout.fragment_searchdetail, container, false);
 
+        Config.logV("SELECTED SEARCH LIST---------------------------------");
         mContext = getActivity();
         mInterface = (AdapterCallback) this;
         Bundle bundle = this.getArguments();
@@ -358,15 +368,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         TOTAL_PAGES = 0;
         currentPage = PAGE_START;
 
-
-        SharedPreference.getInstance(mContext).setValue("firsttime", true);
-
-
         ibackpress = (ImageView) row.findViewById(R.id.backpress);
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
         txt_toolbarlocation = (TextView) row.findViewById(R.id.txt_toolbarlocation);
 
-        Lnosearchresult=(LinearLayout) row.findViewById(R.id.Lnosearchresult);
+        Lnosearchresult = (LinearLayout) row.findViewById(R.id.Lnosearchresult);
         tv_nosearchresult = (TextView) row.findViewById(R.id.txtnosearchresult);
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -421,6 +427,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         mRecySearchDetail.setItemAnimator(new DefaultItemAnimator());
 
         mRecySearchDetail.setAdapter(pageadapter);
+
+
 
 
         mRecySearchDetail.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
@@ -482,27 +490,43 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 searchSrcTextView.setText("");
-                //  Spinnertext = parent.getSelectedItem().toString();
                 mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getSector();
+
                 Config.logV("Selected---423333333333--------" + mDomainSpinner);
-                Config.logV("Selected---Spinner--------" + spinnerTxt);
 
-                mSearchView.setQuery("", false);
 
-                boolean FirstRun = SharedPreference.getInstance(mContext).getBoolanValue("firsttime", false);
+                boolean FirstRun = SharedPreference.getInstance(mContext).getBoolanValue("ALL_SELECTED", false);
+
                 if (FirstRun) {
 
                     int pos = getIndex(domainList, spinnerTxt);
                     mSpinnerDomain.setSelection(pos);
-                    SharedPreference.getInstance(mContext).setValue("firsttime", false);
+                    SharedPreference.getInstance(mContext).setValue("ALL_SELECTED", false);
 
-                    //mSearchView.setQuery(searchTxt, false);
+                    mSearchView.setQuery(searchTxt, false);
 
-                    Config.logV("Popular Text__________@@@__11111__" + searchTxt);
+                    Config.logV("Selected  FIRST RUN-----------------------" + searchTxt);
+                }  else {
+
+                    Config.logV("Selected NOT FIRST RUN-----------------------" + searchTxt);
+                    isLastPage = false;
+                    isLoading = false;
+                    PAGE_START = 0;
+                    total_foundcount = 0;
+                    TOTAL_PAGES = 0;
+                    currentPage = PAGE_START;
+                    searchSrcTextView.setText("");
+                    pageadapter.clear();
+                    Lnosearchresult.setVisibility(View.VISIBLE);
+                    tv_nosearchresult.setVisibility(View.VISIBLE);
+                    mRecySearchDetail.setVisibility(View.GONE);
+                    tv_nosearchresult.setText("No search result found for this location");
+                    progressBar.setVisibility(View.GONE);
 
                 }
 
-                mSearchView.setQuery(searchTxt, false);
+
+
 
                 if (mDomainSpinner.equalsIgnoreCase("ALL")) {
 
@@ -758,6 +782,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 listadapter.getFilter().filter(query);
                             }
 
+
+
                             return false;
                         }
                     });
@@ -918,44 +944,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
                 ApiSEARCHAWSLoadFirstData(query, url);
 
-                /*mRecySearchDetail.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
-                    @Override
-                    protected void loadMoreItems() {
 
-
-                        Config.logV("Load More-----------------------");
-                        isLoading = true;
-                        Config.logV("CURRENT PAGE***************" + currentPage);
-                        Config.logV("CURRENT PAGE**111*************" + TOTAL_PAGES);
-                        currentPage += 10;
-
-                        // mocking network delay for API call
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Config.logV("Query--------------------"+query);
-                                loadNextPage(query, url);
-                            }
-                        }, 1000);
-
-                    }
-
-                    @Override
-                    public int getTotalPageCount() {
-                        return TOTAL_PAGES;
-                    }
-
-                    @Override
-                    public boolean isLastPage() {
-                        return isLastPage;
-                    }
-
-                    @Override
-                    public boolean isLoading() {
-                        return isLoading;
-                    }
-                });
-*/
             }
         });
 
@@ -1010,7 +999,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         params.put("size", "10");
         params.put("q.parser", "structured");
-        params.put("q.sort", "ynw_verified_level asc, distance asc");
+        params.put("sort", "ynw_verified_level desc, distance asc");
 
         params.put("expr.distance", mPass);
 
@@ -1219,7 +1208,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         params.put("size", "10");
         params.put("q.parser", "structured");
-        params.put("q.sort", "ynw_verified_level asc, distance asc");
+        params.put("sort", "ynw_verified_level desc, distance asc");
         params.put("expr.distance", mPass);
 
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
@@ -1374,8 +1363,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             mRecySearchDetail.setVisibility(View.GONE);
                             tv_nosearchresult.setText("No search result found for this location");
                             progressBar.setVisibility(View.GONE);
-
-
 
 
                         }

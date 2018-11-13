@@ -1,4 +1,4 @@
-package com.nv.youneverwait.Fragment;
+package com.nv.youneverwait.utils;
 
 /**
  * Created by sharmila on 9/7/18.
@@ -7,6 +7,7 @@ package com.nv.youneverwait.Fragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.nv.youneverwait.Fragment.OnBackPressListener;
 import com.nv.youneverwait.common.Config;
 
 public class BackPressImpl implements OnBackPressListener {

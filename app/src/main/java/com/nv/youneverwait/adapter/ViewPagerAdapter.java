@@ -29,6 +29,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
 
+
+
     /**
      * Get the Fragment by position
      *

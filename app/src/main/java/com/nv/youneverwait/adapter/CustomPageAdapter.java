@@ -63,7 +63,7 @@ public class CustomPageAdapter extends PagerAdapter {
             @Override
             public void onError() {
 
-                Picasso.with(mContext).load(finalUrl).into(imageView);
+                Picasso.with(mContext).load(finalUrl).placeholder(R.drawable.icon_noimage).into(imageView);
             }
         });
 

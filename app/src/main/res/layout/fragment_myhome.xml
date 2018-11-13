@@ -121,12 +121,13 @@
                     app:theme="@style/AppSearchView" />
 
                 <ImageView
+                    android:id="@+id/ic_refinedFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
                     android:src="@drawable/icon_filter"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </LinearLayout>
 

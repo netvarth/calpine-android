@@ -15,6 +15,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
@@ -191,6 +192,8 @@ public class Signup extends AppCompatActivity {
                     Config.logV("Response---------------------------" + response.code());
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
+
+                            Toast.makeText(mContext,"Otp has been send to your registered number",Toast.LENGTH_LONG).show();
                             SharedPreference.getInstance(mContext).setValue("firstName", firstname);
                             SharedPreference.getInstance(mContext).setValue("LastName", lastname);
                             Intent iReg = new Intent(mContext, VerifyOtp.class);

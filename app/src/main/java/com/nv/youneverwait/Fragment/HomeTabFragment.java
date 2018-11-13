@@ -2,9 +2,11 @@ package com.nv.youneverwait.Fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +16,9 @@ import android.view.ViewGroup;
 
 import com.nv.youneverwait.R;
 
+import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.adapter.ViewPagerAdapter;
+import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.utils.BottomNavigationViewHelper;
 import com.nv.youneverwait.utils.CustomViewPager;
 
@@ -67,11 +71,14 @@ public class HomeTabFragment extends Fragment {
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
-                    public boolean onNavigationItemSelected( MenuItem item) {
+                    public boolean onNavigationItemSelected(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.action_home:
                                 viewPager.setCurrentItem(0);
                                 item.setIcon(getResources().getDrawable(R.drawable.selected_home));
+                                Config.logV("Page SLECTED&&&&&&&&&&&&&&&&&&&&&&");
+
+
                                 break;
                             case R.id.action_checkin:
                                 viewPager.setCurrentItem(1);
@@ -137,8 +144,11 @@ public class HomeTabFragment extends Fragment {
                     bottomNavigationView.getMenu().getItem(0).setChecked(false);
                 }
                 Log.d("page", "onPageSelected: " + position);
+
+
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+
             }
 
             @Override
@@ -165,6 +175,8 @@ public class HomeTabFragment extends Fragment {
         setupViewPager(viewPager);
     }
 
+
+
     ViewPagerAdapter adapter;
 
     private void setupViewPager(CustomViewPager viewPager) {
@@ -181,9 +193,10 @@ public class HomeTabFragment extends Fragment {
         adapter.addFragment(inboxFragment);
         adapter.addFragment(profileFragment);
 
-       // int limit = (adapter.getCount() > 1 ? adapter.getCount() - 1 : 1);
-       // Config.logV("Limit------------@@@@@@@@@@@@@@@@@@@@---------"+limit);
-      viewPager.setOffscreenPageLimit(0);
+        // int limit = (adapter.getCount() > 1 ? adapter.getCount() - 1 : 1);
+        // Config.logV("Limit------------@@@@@@@@@@@@@@@@@@@@---------"+limit);
+
+        viewPager.setOffscreenPageLimit(0);
         viewPager.setAdapter(adapter);
 
     }
@@ -192,9 +205,6 @@ public class HomeTabFragment extends Fragment {
         // currently visible tab Fragment
 
         OnBackPressListener currentFragment = (OnBackPressListener) adapter.getRegisteredFragment(viewPager.getCurrentItem());
-
-
-
 
 
         if (currentFragment != null) {

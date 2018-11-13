@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.database.DatabaseHandler;
 import com.nv.youneverwait.response.InboxModel;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 
 import java.util.ArrayList;
@@ -37,8 +40,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/7/18.
  */
 
-public class InboxFragment extends RootFragment /*implements FragmentInterface*/{
-
+public class InboxFragment extends RootFragment /*implements FragmentInterface*/ {
 
 
     public InboxFragment() {
@@ -56,6 +58,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
 
     ArrayList<InboxModel> mDBSORTInboxList = new ArrayList<>();
 
+    TextView tv_noinbox;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,15 +67,19 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
         Config.logV("Inbox Fragment---------------------");
         View row = inflater.inflate(R.layout.fragment_inbox, container, false);
         mrRecylce_inboxlist = (RecyclerView) row.findViewById(R.id.recylce_inbox);
+        tv_noinbox = (TextView) row.findViewById(R.id.txt_noinbox);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         mContext = getActivity();
-        Home.doubleBackToExitPressedOnce=false;
+        Home.doubleBackToExitPressedOnce = false;
         if (Config.isOnline(getActivity())) {
             ApiInboxList();
-        }else{
+        } else {
             mDBSORTInboxList.clear();
-            db=new DatabaseHandler(mContext);
+            db = new DatabaseHandler(mContext);
             mDBSORTInboxList = db.getAllInboxDetail();
-            if(mDBSORTInboxList.size()>0) {
+            if (mDBSORTInboxList.size() > 0) {
+                tv_noinbox.setVisibility(View.GONE);
+                mrRecylce_inboxlist.setVisibility(View.VISIBLE);
 
                 Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
                     @Override
@@ -90,14 +97,16 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                 mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, mDBInboxList);
                 mrRecylce_inboxlist.setAdapter(mInboxAdapter);
                 mInboxAdapter.notifyDataSetChanged();
+            } else {
+                tv_noinbox.setVisibility(View.VISIBLE);
+                mrRecylce_inboxlist.setVisibility(View.GONE);
             }
         }
 
 
-
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
 
-        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
 
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -155,11 +164,12 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                         mDBInboxList.clear();
                         mDBSORTInboxList.clear();
                         db = new DatabaseHandler(mContext);
-                        Config.logV("INBOX SIZE_------------------"+mInboxList.size());
+                        Config.logV("INBOX SIZE_------------------" + mInboxList.size());
                        /* if (Config.isOnline(mContext)) {*/
                         if (mInboxList.size() > 0) {
                             db.DeleteInbox();
-
+                            tv_noinbox.setVisibility(View.GONE);
+                            mrRecylce_inboxlist.setVisibility(View.VISIBLE);
                             for (int i = 0; i < mInboxList.size(); i++) {
 
                                 int activeConsumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
@@ -174,7 +184,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
 
                                     senderId = mInboxList.get(i).getReceiver().getReceiverId();
                                     senderName = String.valueOf(mInboxList.get(i).getReceiver().getReceiverName()).toLowerCase().trim();
-                                  //  Config.logV("SenderID--1111----------" + senderId);
+                                    //  Config.logV("SenderID--1111----------" + senderId);
                                     messageStatus = "out";
                                 }
 
@@ -188,114 +198,37 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                                 inbox.setWaitlistId(mInboxList.get(i).getWaitlistId());
                                 inbox.setMessageStatus(messageStatus);
                                 inbox.setUniqueID(senderKey);
-                               // mDBInboxList.add(inbox);
+                                // mDBInboxList.add(inbox);
 
                                 db.insertInboxModel(inbox);
                             }
+                            mDBSORTInboxList = db.getAllInboxDetail();
+                            Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
+                                @Override
+                                public int compare(InboxModel r1, InboxModel r2) {
+                                    return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
+                                }
+                            });
+
+                            Config.logV("INBOX LIST------NEW----------" + mDBSORTInboxList.size());
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                            mrRecylce_inboxlist.setLayoutManager(mLayoutManager);
+                            mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, mDBInboxList);
+                            mrRecylce_inboxlist.setAdapter(mInboxAdapter);
+                            mInboxAdapter.notifyDataSetChanged();
+                        } else {
+
+                            tv_noinbox.setVisibility(View.VISIBLE);
+                            mrRecylce_inboxlist.setVisibility(View.GONE);
 
                         }
-                        /*if(db.CheckIsDataAlreadyInDBorNot()){
-
-                            Config.logV("UPDATE INBOX LIST----------------"+mInboxList.size());
-                            db.updateInboxInfo(mInboxList);
-
-                        }else {
-
-                            Config.logV("INSERT INBOX LIST----------------"+mInboxList.size());
-                            db.insertInbox(mInboxList);
-                        }*/
-
-                        mDBSORTInboxList = db.getAllInboxDetail();
 
 
-                        /*for (int i = 0; i < mDBInboxList.size(); i++) {
-
-                            int activeConsumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
-
-                            String senderName = String.valueOf(mDBInboxList.get(i).getUserName()).toLowerCase();
-
-                            int senderId = mDBInboxList.get(i).getId();
-                            String messageStatus = "in";
-
-                            if (senderId == activeConsumerId) {
-
-                                senderId = mDBInboxList.get(i).getReceiverId();
-                                senderName = String.valueOf(mDBInboxList.get(i).getReceiverName()).toLowerCase();
-                              *//*  Config.logV("Receiver ID-----------"+senderId);
-                                Config.logV("Receiver NAme-----------"+senderName);*//*
-                                Config.logV("SenderID--1111----------" + senderId);
-                                messageStatus = "out";
-                            }
-
-                            Config.logV("SenderID------------" + senderId);
-                            String senderKey = senderId + "_" + senderName;
-
-                            if (messagesMap.containsKey(senderKey)) {
-
-                                InboxModel inbox = new InboxModel();
-                                inbox.setTimeStamp(mDBInboxList.get(i).getTimeStamp());
-                                inbox.setId(mDBInboxList.get(i).getId());
-                                inbox.setUserName(mDBInboxList.get(i).getUserName());
-                                inbox.setMsg(mDBInboxList.get(i).getMsg());
-                                inbox.setWaitlistId(mDBInboxList.get(i).getWaitlistId());
-                                inbox.setMessageStatus(messageStatus);
-                                messagesMap.get(senderKey).add(inbox);
-                            } else {
-                                ArrayList<InboxModel> emptyList = new ArrayList<InboxModel>();
-                                InboxModel inbox = new InboxModel();
-                                inbox.setTimeStamp(mDBInboxList.get(i).getTimeStamp());
-                                inbox.setId(mDBInboxList.get(i).getId());
-                                inbox.setUserName(mDBInboxList.get(i).getUserName());
-                                inbox.setMsg(mDBInboxList.get(i).getMsg());
-                                inbox.setWaitlistId(mDBInboxList.get(i).getWaitlistId());
-                                inbox.setMessageStatus(messageStatus);
-                                emptyList.add(inbox);
-                                messagesMap.put(senderKey, emptyList);
-                            }
-
-                        }*/
-
-                       /* mDBSORTInboxList.clear();
-
-
-                        Config.logV("messagesMap LIST----------------" + messagesMap.size());
-                        for (Map.Entry<String, List<InboxModel>> entry : messagesMap.entrySet()) {
-                            String key = entry.getKey();
-                            List<InboxModel> tab = entry.getValue();
-                            Config.logV("Key----------" + key);
-                            Config.logV("Value----------" + tab.size());
-
-                            InboxModel inbox = new InboxModel();
-                            inbox.setTimeStamp(tab.get(0).getTimeStamp());
-                            inbox.setUserName(tab.get(0).getUserName());
-                            inbox.setMsg(tab.get(0).getMsg());
-                            inbox.setId(tab.get(0).getId());
-                            inbox.setKey(key);
-                            inbox.setWaitlistId(tab.get(0).getWaitlistId());
-                            inbox.setMessageStatus(tab.get(0).getMessageStatus());
-                            mDBSORTInboxList.add(inbox);
-
-                        }*/
-
-
-                        Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
-                            @Override
-                            public int compare(InboxModel r1, InboxModel r2) {
-                                return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
-                            }
-                        });
-
-                      //  Config.logV("INBOX LIST----------------" + mDBInboxList.size());
-
-                        Config.logV("INBOX LIST------NEW----------" + mDBSORTInboxList.size());
-
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                        mrRecylce_inboxlist.setLayoutManager(mLayoutManager);
-                        mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, mDBInboxList);
-                        mrRecylce_inboxlist.setAdapter(mInboxAdapter);
-                        mInboxAdapter.notifyDataSetChanged();
-
-
+                    }else{
+                        if(response.code()==419){
+                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                            LogUtil.writeLogTest(" Session Expired "+cookie);
+                        }
                     }
 
 
@@ -325,12 +258,14 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
         Config.logV("OnResume------Inbox--------------------");
         if (Config.isOnline(getActivity())) {
             ApiInboxList();
-        }else{
+        } else {
             mDBSORTInboxList.clear();
-            db=new DatabaseHandler(mContext);
+            db = new DatabaseHandler(mContext);
             mDBSORTInboxList = db.getAllInboxDetail();
-            if(mDBSORTInboxList.size()>0) {
+            if (mDBSORTInboxList.size() > 0) {
 
+                tv_noinbox.setVisibility(View.GONE);
+                mrRecylce_inboxlist.setVisibility(View.VISIBLE);
                 Collections.sort(mDBSORTInboxList, new Comparator<InboxModel>() {
                     @Override
                     public int compare(InboxModel r1, InboxModel r2) {
@@ -347,6 +282,9 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                 mInboxAdapter = new InboxAdapter(mDBSORTInboxList, mContext, mActivity, mDBInboxList);
                 mrRecylce_inboxlist.setAdapter(mInboxAdapter);
                 mInboxAdapter.notifyDataSetChanged();
+            }else {
+                tv_noinbox.setVisibility(View.VISIBLE);
+                mrRecylce_inboxlist.setVisibility(View.GONE);
             }
         }
     }

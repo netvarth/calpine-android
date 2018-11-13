@@ -9,4 +9,5 @@ public interface ActiveAdapterOnCallback {
     void onMethodActiveCallback(String value);
     void onMethodActiveBillIconCallback(String value,String provider);
 
+
 }

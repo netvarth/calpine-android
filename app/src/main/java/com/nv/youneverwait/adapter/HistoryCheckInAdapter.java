@@ -2,10 +2,12 @@ package com.nv.youneverwait.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -24,10 +26,12 @@ import com.nv.youneverwait.callback.HistoryAdapterCallback;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.response.ActiveCheckIn;
+import com.nv.youneverwait.response.FavouriteModel;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -72,10 +76,10 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_businessname, tv_estTime, tv_service, tv_place, tv_personahead, tv_token, icon_message, icon_cancel;
-        TextView icon_bill;
+        public TextView tv_businessname, tv_estTime, tv_service, tv_place, tv_personahead, tv_token, icon_message, icon_cancel,tv_status;
+        TextView icon_bill,tv_date,icon_rate;
         LinearLayout layout_token;
-        ImageView img_fav;
+        TextView icon_fav;
 
 
         public MyViewHolder(View view) {
@@ -88,10 +92,13 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             tv_personahead = (TextView) view.findViewById(R.id.txt_personahead);
             tv_token = (TextView) view.findViewById(R.id.txt_token);
             //  tv_waitsatus=(TextView)view.findViewById(R.id.txt_waitsatus);
-            img_fav = (ImageView) view.findViewById(R.id.img_fav);
+            icon_fav = (TextView) view.findViewById(R.id.icon_fav);
             icon_message = (TextView) view.findViewById(R.id.icon_message);
             icon_cancel = (TextView) view.findViewById(R.id.icon_cancel);
+            icon_rate = (TextView) view.findViewById(R.id.icon_rate);
             layout_token = (LinearLayout) view.findViewById(R.id.layout_token);
+            tv_status=(TextView) view.findViewById(R.id.txt_status);
+            tv_date=(TextView) view.findViewById(R.id.txt_date);
         }
     }
 
@@ -100,12 +107,14 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
     String category;
     HistoryAdapterCallback callback;
     String header;
-    public HistoryCheckInAdapter(List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity,HistoryAdapterCallback callback,String header) {
+    ArrayList<FavouriteModel> FavList;
+    public HistoryCheckInAdapter(ArrayList<FavouriteModel> mFavList,List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, String header) {
         this.mContext = mContext;
         this.activeChekinList = mactiveChekinList;
         this.activity = mActivity;
         this.callback=callback;
         this.header=header;
+        this.FavList=mFavList;
 
     }
 
@@ -134,7 +143,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         myViewHolder.icon_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(),activelist.getProvider().getId());
+                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getProvider().getId());
             }
         });
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -158,13 +167,58 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         }
 
 
-        if (activelist.getConsumer().isFavourite()) {
+        for (int i = 0; i < FavList.size(); i++) {
+            Config.logV("Fav List-----##&&&-----"+FavList.get(i).getId());
+            Config.logV("Fav Fav List--------%%%%--"+activelist.getProvider().getId());
 
-            myViewHolder.img_fav.setVisibility(View.VISIBLE);
-            myViewHolder.img_fav.setImageResource(R.drawable.icon_favourited);
-        } else {
-            myViewHolder.img_fav.setVisibility(View.GONE);
+            if(FavList.get(i).getId()==activelist.getProvider().getId()){
+
+            myViewHolder.icon_fav.setVisibility(View.VISIBLE);
+            myViewHolder.icon_fav.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.icon_favourited,0,0);
+            activelist.setFavFlag(true);
         }
+    }
+
+        myViewHolder.icon_fav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (activelist.isFavFlag()) {
+
+
+                    AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
+                            //set message, title, and icon
+                            .setTitle("Delete")
+                            .setMessage("Do you want to remove "+toTitleCase(activelist.getProvider().getBusinessName())+" from favourite list?")
+
+
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    //your deleting code
+                                    dialog.dismiss();
+                                    callback.onMethodDeleteFavourite(activelist.getProvider().getId());
+                                }
+
+                            })
+
+
+
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    dialog.dismiss();
+
+                                }
+                            })
+                            .create();
+                    myQuittingDialogBox.show();
+
+
+                }else{
+                    callback.onMethodAddFavourite(activelist.getProvider().getId());
+                }
+            }
+        });
         myViewHolder.tv_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,7 +277,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                     }
 
                     if(header.equalsIgnoreCase("today")){
-                        firstWord = "Est Wait Time ";
+                        firstWord = "Est Service Time ";
                     }
                    
                     String secondWord = "Today," + activelist.getServiceTime();
@@ -379,12 +433,26 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
                         if (activelist.getAppxWaitingTime() != -1) {
                             String sTime = null;
+                            String firstWord=null;
                             try {
                                 String startTime = "00:00";
                                 String newtime;
                                 int minutes = activelist.getAppxWaitingTime();
                                 int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
                                 int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
+
+                                if(header.equalsIgnoreCase("future")){
+                                    firstWord = "Est Service Time ";
+                                }
+
+                                if(header.equalsIgnoreCase("today")){
+
+                                    if(h>0) {
+                                        firstWord = "Est Service Time ";
+                                    }else{
+                                        firstWord = "Est Wait Time ";
+                                    }
+                                }
                                 if (m > 0 && h > 0) {
                                     newtime = h + " Hour :" + m + " Minutes";
                                 } else if (h > 0 && m == 0) {
@@ -396,17 +464,9 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
                             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                            String firstWord=null;
-
-                            if(header.equalsIgnoreCase("future")){
-                                firstWord = "Est Service Time ";
-                            }
-
-                            if(header.equalsIgnoreCase("today")){
-                                firstWord = "Est Wait Time ";
-                            }
                             String secondWord = sTime;
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -469,6 +529,79 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
             }
         });
+
+
+
+       if(header.equalsIgnoreCase("old")) {
+
+           myViewHolder.tv_status.setVisibility(View.VISIBLE);
+           myViewHolder.tv_date.setVisibility(View.VISIBLE);
+
+           try {
+
+              String mDate= Config.ChangeDateFormat(activelist.getDate());
+              if(mDate!=null)
+               myViewHolder.tv_date.setText(mDate);
+           } catch (ParseException e) {
+               e.printStackTrace();
+           }
+           Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                   "fonts/Montserrat_Bold.otf");
+           myViewHolder.tv_status.setTypeface(tyface1);
+
+           myViewHolder.tv_status.setText(activelist.getWaitlistStatus());
+           if(activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
+               myViewHolder.tv_status.setText("Done");
+               myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
+           }
+
+           if(activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
+               myViewHolder.tv_status.setText("Arrived");
+               myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
+           }
+
+           if(activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
+               myViewHolder.tv_status.setText("Checked In");
+               myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.violet));
+           }
+
+           if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+               myViewHolder.tv_status.setText("Cancelled");
+               myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+           }
+           if(activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
+               myViewHolder.tv_status.setText("Started");
+               myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
+           }
+
+       }else{
+           myViewHolder.tv_status.setVisibility(View.GONE);
+           myViewHolder.tv_date.setVisibility(View.GONE);
+       }
+
+        if(header.equalsIgnoreCase("old")) {
+            if(activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
+                myViewHolder.icon_rate.setVisibility(View.VISIBLE);
+            }else{
+                myViewHolder.icon_rate.setVisibility(View.GONE);
+            }
+        }else {
+            myViewHolder.icon_rate.setVisibility(View.GONE);
+        }
+       myViewHolder.icon_rate.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+
+               callback.onMethodRating(String.valueOf(activelist.getProvider().getId()),activelist.getYnwUuid());
+           }
+       });
+
+        if(header.equalsIgnoreCase("old")) {
+            myViewHolder.icon_cancel.setVisibility(View.GONE);
+        }else{
+            myViewHolder.icon_cancel.setVisibility(View.VISIBLE);
+
+        }
 
 
     }

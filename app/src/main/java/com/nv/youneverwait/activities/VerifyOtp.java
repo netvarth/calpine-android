@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
@@ -252,7 +253,7 @@ public class VerifyOtp extends AppCompatActivity {
 
                           //  Toast.makeText(mContext, "OTP resend", Toast.LENGTH_LONG).show();
 
-
+                            Toast.makeText(mContext,"Otp has been resend to your registered number",Toast.LENGTH_LONG).show();
                         }
 
                     }

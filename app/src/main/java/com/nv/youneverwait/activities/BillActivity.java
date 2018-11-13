@@ -43,6 +43,8 @@ public class BillActivity extends AppCompatActivity {
     RecyclerView recycle_item;
     BillServiceAdapter billServiceAdapter;
     ArrayList<BillModel> serviceArrayList = new ArrayList<>();
+    ArrayList<BillModel> itemArrayList = new ArrayList<>();
+    ArrayList<BillModel> serviceItemArrayList = new ArrayList<>();
 
     Button btn_cancel, btn_pay;
 TextView txtnetRate,txttotal;
@@ -215,6 +217,9 @@ LinearLayout discountlayout,paidlayout,coupanlayout,amountlayout;
 
 
                         serviceArrayList = response.body().getService();
+                        itemArrayList=response.body().getItems();
+
+                        serviceArrayList.addAll(itemArrayList);
                         Config.logV("Sevice ArrayList-------------------" + serviceArrayList.size());
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mCOntext);
                         recycle_item.setLayoutManager(mLayoutManager);

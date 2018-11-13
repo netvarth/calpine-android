@@ -20,6 +20,28 @@ public class SearchViewDetail {
 
     String url;
 
+    String awardName;
+    String awardIssuedBy;
+    String awardMonth;
+
+    public String getAwardName() {
+        return awardName;
+    }
+
+    public String getAwardIssuedBy() {
+        return awardIssuedBy;
+    }
+
+    public String getAwardMonth() {
+        return awardMonth;
+    }
+
+    public String getAwardYear() {
+        return awardYear;
+    }
+
+    String awardYear;
+
     public String getVerifyLevel() {
         return verifyLevel;
     }

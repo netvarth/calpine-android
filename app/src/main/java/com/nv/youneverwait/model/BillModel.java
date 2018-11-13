@@ -32,7 +32,7 @@ public class BillModel {
         return discountValue;
     }
 
-    public int getCouponValue() {
+    public double getCouponValue() {
         return couponValue;
     }
 
@@ -41,10 +41,15 @@ public class BillModel {
     }
 
     double discountValue;
-    int couponValue;
+    double couponValue;
     double totalAmountPaid;
     int id;
 
+    public String getItemName() {
+        return itemName;
+    }
+
+    String  itemName;
     public String getGstNumber() {
         return gstNumber;
     }
@@ -78,6 +83,11 @@ public class BillModel {
     @SerializedName("service")
     private ArrayList<BillModel> service;
 
+    public ArrayList<BillModel> getItems() {
+        return items;
+    }
+
+    private ArrayList<BillModel>  items;
 
     @SerializedName("customer")
     private BillModel customer;

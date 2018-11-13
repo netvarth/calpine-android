@@ -21,6 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import com.nv.youneverwait.R;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 
@@ -147,5 +151,14 @@ public class Config {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
         return (netInfo != null && netInfo.isConnected());
+    }
+
+    public static String ChangeDateFormat(String datepass) throws ParseException {
+        SimpleDateFormat spf=new SimpleDateFormat("yyyy-mm-dd");
+        Date newDate=spf.parse(datepass);
+        spf= new SimpleDateFormat("dd-mm-yyyy");
+        String convertdate = spf.format(newDate);
+        return  convertdate;
+
     }
 }

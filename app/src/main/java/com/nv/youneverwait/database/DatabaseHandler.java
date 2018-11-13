@@ -146,7 +146,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     }
+    public boolean checkForTables(){
+        boolean hasTables = false;
+        SQLiteDatabase  db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " +mContext.getString(R.string.db_table_userinfo), null);
 
+        if(cursor != null && cursor.getCount() > 0){
+            hasTables=true;
+            cursor.close();
+        }
+
+        return hasTables;
+    }
     public ProfileModel getProfileDetail(int consumerID) {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
@@ -285,6 +296,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
         db.execSQL("delete from " + mContext.getString(R.string.db_table_userinfo));
         db.close();
+    }
+    public void deleteDatabase() {
+        boolean succes = mContext.deleteDatabase(mContext.getResources().getString(R.string.db_name));
+        Config.logV("data base deleted........" + succes);
     }
 
     public void updateInboxInfo(ArrayList<InboxModel> inboxModel) {

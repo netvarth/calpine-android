@@ -223,7 +223,7 @@ public class ResetOtp extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext,"Otp Resend ",Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext,"Otp has been resend to your registered number",Toast.LENGTH_LONG).show();
                     }
 
 

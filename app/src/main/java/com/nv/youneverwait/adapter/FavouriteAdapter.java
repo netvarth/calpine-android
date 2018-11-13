@@ -219,7 +219,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                 final CheckBox chkeprivacy = (CheckBox) dialog.findViewById(R.id.chkphone);
                 Config.logV("Revel Phone--------------"+favList.isRevealPhoneNumber());
                 chkeprivacy.setChecked(favList.isRevealPhoneNumber());
-                btn_send.setText("SEND");
+                btn_send.setText("SAVE");
                 Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 txtmangeprivacy.setTypeface(tyface);

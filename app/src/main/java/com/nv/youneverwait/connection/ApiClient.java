@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL ="http://54.215.5.201:8181/v1/rest/";//"http://35.154.241.175/v1/rest/";//";
+    public static final String BASE_URL ="http://35.154.241.175/v1/rest/";//"http://54.215.5.201:8181/v1/rest/";
     //""; /*"https://www.youneverwait.com/v1/rest/"; */
 
 
@@ -88,8 +88,8 @@ public class ApiClient {
         if (retrofitCloud == null) {
 
 
-            String url = "https://s3-us-west-1.amazonaws.com/ynwtest.youneverwait.com/";
-
+            //String url = "https://s3-us-west-1.amazonaws.com/ynwtest.youneverwait.com/";
+            String url=SharedPreference.getInstance(mContext).getStringValue("s3Url", "")+"/";
             retrofitCloud = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())

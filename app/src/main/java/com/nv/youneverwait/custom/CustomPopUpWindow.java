@@ -161,7 +161,7 @@ public class CustomPopUpWindow {
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
 
-                            Toast.makeText(mContext, "OTP resend", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "OTP resend to your email", Toast.LENGTH_LONG).show();
 
 
                         }

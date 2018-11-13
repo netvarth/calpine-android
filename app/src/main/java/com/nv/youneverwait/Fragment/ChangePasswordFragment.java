@@ -1,5 +1,6 @@
 package com.nv.youneverwait.Fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -119,6 +121,8 @@ public class ChangePasswordFragment extends RootFragment {
                     if(validatePassword()&&validateConfirmPassword()&&validateOldPassword()) {
                         if (edtNewpwd.getText().toString().equalsIgnoreCase(edtconfirmpwd.getText().toString())) {
                             ApiChangePwd(edtOldpwd.getText().toString(), edtNewpwd.getText().toString());
+                        }else{
+                            Toast.makeText(getActivity(),"Password and Confirm Password do not match",Toast.LENGTH_LONG).show();
                         }
                     }else{
                         Toast.makeText(getActivity(),"Password and Confirm Password do not match",Toast.LENGTH_LONG).show();
@@ -258,6 +262,8 @@ public class ChangePasswordFragment extends RootFragment {
 
 
 
+                    }else{
+                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -279,4 +285,7 @@ public class ChangePasswordFragment extends RootFragment {
 
 
     }
+
+
+
 }

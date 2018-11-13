@@ -14,6 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,8 @@ import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchSetting;
+import com.nv.youneverwait.utils.LogUtil;
+import com.nv.youneverwait.utils.SharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,13 +68,14 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
     FavAdapterOnCallback callback;
     ArrayList<QueueList> mSearchQueueList = new ArrayList<>();
 
+    TextView tv_nofav;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View row = inflater.inflate(R.layout.fragment_fav, container, false);
-        Home.doubleBackToExitPressedOnce=false;
+        Home.doubleBackToExitPressedOnce = false;
         mContext = getActivity();
         mActivity = getActivity();
         Config.logV("Favorite Fragment---------------------");
@@ -84,13 +89,11 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
         tv_title.setText("My Favorites");
         tv_title.setTypeface(tyface);
         callback = (FavAdapterOnCallback) this;
-
-
+        tv_nofav = (TextView) row.findViewById(R.id.txt_nofav);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         mrRecylce_fav = (RecyclerView) row.findViewById(R.id.recylce_fav);
 
-            ApiFavList();
-
-
+        ApiFavList();
 
 
         return row;
@@ -118,13 +121,25 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
                     if (response.code() == 200) {
                         mFavList = response.body();
+                        if(mFavList.size()>0) {
 
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                        mrRecylce_fav.setLayoutManager(mLayoutManager);
-                        mFavAdapter = new FavouriteAdapter(mFavList, mContext, mActivity, callback);
-                        mrRecylce_fav.setAdapter(mFavAdapter);
-                        mFavAdapter.notifyDataSetChanged();
+                            mrRecylce_fav.setVisibility(View.VISIBLE);
+                            tv_nofav.setVisibility(View.GONE);
+                            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                            mrRecylce_fav.setLayoutManager(mLayoutManager);
+                            mFavAdapter = new FavouriteAdapter(mFavList, mContext, mActivity, callback);
+                            mrRecylce_fav.setAdapter(mFavAdapter);
+                            mFavAdapter.notifyDataSetChanged();
+                        }else{
+                            mrRecylce_fav.setVisibility(View.GONE);
+                            tv_nofav.setVisibility(View.VISIBLE);
+                        }
 
+                    }else{
+                        if(response.code()==419){
+                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                            LogUtil.writeLogTest(response.errorBody().string()+" "+cookie);
+                        }
                     }
 
 
@@ -148,17 +163,18 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
     int uniQueID;
     String mTitle;
+
     @Override
-    public void onMethodViewCallback(int mProviderid, ArrayList<Integer> ids, RecyclerView rfavlocRecycleview,int uniqueID,String title) {
-        ApiSearchViewID(mProviderid, ids,rfavlocRecycleview);
-        uniQueID=uniqueID;
-        mTitle=title;
+    public void onMethodViewCallback(int mProviderid, ArrayList<Integer> ids, RecyclerView rfavlocRecycleview, int uniqueID, String title) {
+        ApiSearchViewID(mProviderid, ids, rfavlocRecycleview);
+        uniQueID = uniqueID;
+        mTitle = title;
 
     }
 
     @Override
     public void onMethodMessageCallback(String accountID, String message, BottomSheetDialog mBottomDialog) {
-        ApiCommunicate(accountID,message,mBottomDialog);
+        ApiCommunicate(accountID, message, mBottomDialog);
     }
 
     @Override
@@ -167,7 +183,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
 
-        bundle.putString("uniqueID",String.valueOf(uniqueiD));
+        bundle.putString("uniqueID", String.valueOf(uniqueiD));
         pfFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -179,7 +195,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
     @Override
     public void onMethodPrivacy(int ProviderID, boolean revelPhoneNumber, BottomSheetDialog mBottomDialog) {
-        ApiRevelPhoneNo(ProviderID,revelPhoneNumber,mBottomDialog);
+        ApiRevelPhoneNo(ProviderID, revelPhoneNumber, mBottomDialog);
 
     }
 
@@ -191,7 +207,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
     SearchSetting mSearchSettings = null;
 
-    private void ApiSearchViewSetting( final RecyclerView mrRecylce_favloc) {
+    private void ApiSearchViewSetting(final RecyclerView mrRecylce_favloc) {
 
 
         ApiInterface apiService =
@@ -231,15 +247,19 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
 
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavList, mSearchSettings,String.valueOf(uniQueID),mTitle);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavList, mSearchSettings, String.valueOf(uniQueID), mTitle);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
-                    }else{
+                    } else {
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavList, mSearchSettings,String.valueOf(uniQueID),mTitle);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavList, mSearchSettings, String.valueOf(uniQueID), mTitle);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
+                        if(response.code()==419){
+                            String cookie= SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                            LogUtil.writeLogTest(response.errorBody().string()+" "+cookie);
+                        }
                     }
 
 
@@ -318,6 +338,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
 
     }
+
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
 
 
@@ -354,7 +375,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                     mBottomDialog.dismiss();
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_LONG).show();
 
 
                     }
@@ -407,7 +428,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                     mBottomDialog.dismiss();
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext,"Manage Privacy changed successfully",Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Manage Privacy changed successfully", Toast.LENGTH_LONG).show();
 
 
                     }
@@ -432,6 +453,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
 
     }
+
     private void ApiRemoveFavo(int providerID) {
 
 
@@ -458,9 +480,9 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
                     if (response.code() == 200) {
 
-                       if(response.body().string().equalsIgnoreCase("true")){
-                           ApiFavList();
-                       }
+                        if (response.body().string().equalsIgnoreCase("true")) {
+                            ApiFavList();
+                        }
 
 
                     }

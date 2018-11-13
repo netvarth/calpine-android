@@ -178,8 +178,11 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
         } else {
 
             int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
-            ProfileModel getProfile = db.getProfileDetail(consumerId);
-            showProfileDetail(getProfile);
+            db = new DatabaseHandler(mContext);
+            if(db.checkForTables()) {
+                ProfileModel getProfile = db.getProfileDetail(consumerId);
+                showProfileDetail(getProfile);
+            }
         }
 
         return row;
@@ -263,22 +266,24 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
         tv_phone.setText(getProfile.getPrimaryMobileNo());
 
         String selectedDate=getProfile.getDob();
-        SimpleDateFormat dateFormat =new SimpleDateFormat("yyyy-MM-dd");
+        if(selectedDate!=null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        Date myDate = null;
-        try {
-            myDate = dateFormat.parse(selectedDate);
+            Date myDate = null;
+            try {
+                myDate = dateFormat.parse(selectedDate);
 
-        } catch (ParseException e) {
-            e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            SimpleDateFormat timeFormat = new SimpleDateFormat(
+                    "dd-MM-yyyy");
+            String finalDate = timeFormat.format(myDate);
+
+
+            txtdob.setText(finalDate);
         }
-
-        SimpleDateFormat timeFormat =  new SimpleDateFormat(
-                "dd-MM-yyyy");
-        String finalDate = timeFormat.format(myDate);
-
-
-        txtdob.setText(finalDate);
 
         if (getProfile.getGender() != null) {
             if (!getProfile.getGender().equalsIgnoreCase("")) {

@@ -58,7 +58,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
+           <!-- <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center"
@@ -69,9 +69,9 @@
                     android:id="@+id/img_fav"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/icon_favourited" />
+                    android:src="@drawable/icon_favourite" />
 
-            </LinearLayout>
+            </LinearLayout>-->
 
 
         </LinearLayout>
@@ -130,6 +130,21 @@
                 android:textSize="@dimen/txtsize_12" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/txt_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding5"
+            android:textColor="@color/title_grey"
+            android:visibility="gone"
+            android:textSize="@dimen/txtsize_12" />
+        <TextView
+            android:id="@+id/txt_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/padding5"
+            android:textSize="@dimen/txtsize_12" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -174,12 +189,24 @@
             android:gravity="left"
             android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/icon_fav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/icon_favourite_line"
+                android:drawablePadding="2dp"
+                android:layout_weight="0.3"
+                android:gravity="center"
+                android:text="Favourite"
+                android:textSize="@dimen/txtsize_12"/>
 
             <TextView
                 android:id="@+id/icon_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="2dp"
+                android:layout_weight="0.3"
+                android:layout_marginLeft="@dimen/default_padding"
                 android:drawableTop="@drawable/icon_message_gray"
                 android:gravity="center"
                 android:text="Message"
@@ -191,17 +218,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_padding"
                 android:drawablePadding="2dp"
+                android:layout_weight="0.3"
                 android:drawableTop="@drawable/icon_cancel_line"
                 android:gravity="center"
                 android:text="Cancel"
                 android:textSize="@dimen/txtsize_12" />
 
             <TextView
+                android:id="@+id/icon_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_padding"
+                android:drawablePadding="2dp"
+                android:layout_weight="0.3"
+                android:drawableTop="@drawable/icon_star_line"
+                android:gravity="center"
+                android:text="Rate"
+                android:textSize="@dimen/txtsize_12" />
+            <TextView
                 android:id="@+id/icon_bill"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_padding"
                 android:drawablePadding="2dp"
+                android:layout_weight="0.3"
                 android:drawableTop="@drawable/icon_receipt"
                 android:gravity="center"
                 android:text="Bill"

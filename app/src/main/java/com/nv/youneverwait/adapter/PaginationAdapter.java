@@ -382,8 +382,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
-                                      /*  String firstWord = "Est Wait Time ";*/
-                                        String firstWord = null;
+                                        String firstWord = "Est Service Time ";
+                                        /*String firstWord = null;
                                         Date dt = new Date();
                                         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
                                         String currentTime = sdf.format(dt);
@@ -395,7 +395,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         }else {
                                             firstWord = "Est Wait Time ";
 
-                                        }
+                                        }*/
 
                                         String secondWord = "\nToday, " + searchdetailList.getServiceTime();
                                         Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -417,8 +417,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                             Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                     "fonts/Montserrat_Bold.otf");
-                                          //  String firstWord = "Est Wait Time ";
-                                            String firstWord = null;
+                                            String firstWord = "Est Service Time ";
+                                            /*String firstWord = null;
                                             Date dt = new Date();
                                             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
                                             String currentTime = sdf.format(dt);
@@ -430,7 +430,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             }else {
                                                 firstWord = "Est Wait Time ";
 
-                                            }
+                                            }*/
 
                                             String secondWord = "\n" + mtime;
                                             Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -651,8 +651,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             dynaText.setTypeface(tyface);
                             dynaText.setText(searchdetailList.getServices().get(i).toString());
                             dynaText.setTextSize(13);
-                            dynaText.setPadding(0, 0, 12, 0);
+                          //  dynaText.setPadding(0, 0, 12, 0);
                             dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+                            dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
                             dynaText.setEllipsize(TextUtils.TruncateAt.END);
                             dynaText.setMaxLines(1);
                             dynaText.setMaxEms(5);
@@ -663,6 +664,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     ApiService(searchdetailList.getUniqueid(),searchdetailList.getServices().get(finalI).toString(),searchdetailList.getTitle());
                                 }
                             });
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            params.setMargins(0, 0, 7, 0);
+                            dynaText.setLayoutParams(params);
                             myViewHolder.L_services.addView(dynaText);
 
                         }
@@ -839,7 +843,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     // myViewHolder.rating.setStepSize(Float.valueOf("0."+step));
                 }
 
-                myViewHolder.tv_name.setOnClickListener(new View.OnClickListener() {
+                myViewHolder.layout_row.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -982,6 +986,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Button btncheckin;
         RecyclerView mRecycleTypes;
         ImageView tv_Workinghrs, tv_communicate;
+        LinearLayout layout_row;
 
         public MyViewHolder(View view) {
             super(view);
@@ -1001,6 +1006,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             L_specialization = (LinearLayout) view.findViewById(R.id.specialization);
             tv_communicate = (ImageView) view.findViewById(R.id.txtcommunicate);
             mRecycleTypes = (RecyclerView) view.findViewById(R.id.mRecycleTypes);
+            layout_row=(LinearLayout)view.findViewById(R.id.layout_row);
 
         }
     }

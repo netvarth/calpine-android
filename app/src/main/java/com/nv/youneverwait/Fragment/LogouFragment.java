@@ -18,6 +18,8 @@ import com.nv.youneverwait.activities.Register;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
+import com.nv.youneverwait.database.DatabaseHandler;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 
 import okhttp3.ResponseBody;
@@ -118,6 +120,8 @@ public class LogouFragment  extends RootFragment {
 
                         Toast.makeText(mContext,"Logout successfully ",Toast.LENGTH_LONG).show();
                         SharedPreference.getInstance(mContext).clear();
+                        DatabaseHandler db=new DatabaseHandler(mContext);
+                        db.deleteDatabase();
                         // if(response.body().equals("true")) {
 
                       Intent iLogout=new Intent(mContext, Register.class);
@@ -126,6 +130,11 @@ public class LogouFragment  extends RootFragment {
                         //  }
 
 
+                    }else{
+                        if(response.code()==419){
+                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                            LogUtil.writeLogTest(" Session Expired "+cookie);
+                        }
                     }
 
 

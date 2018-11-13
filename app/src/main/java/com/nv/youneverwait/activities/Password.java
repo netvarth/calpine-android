@@ -28,6 +28,7 @@ import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.response.LoginResponse;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.nv.youneverwait.utils.TypefaceFont;
 
@@ -289,7 +290,7 @@ public class Password extends AppCompatActivity {
                 if (mEdtpwd.getText().toString().equalsIgnoreCase(mEdtconfirmPwd.getText().toString())) {
                     ApiReSetPassword(otp, mEdtconfirmPwd.getText().toString());
                 }else{
-                    Toast.makeText(mContext,"Password mismatch",Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext," Password mismatch",Toast.LENGTH_LONG).show();
                 }
             }
         }else {
@@ -484,7 +485,7 @@ public class Password extends AppCompatActivity {
 
                             SharedPreference.getInstance(mContext).setValue("PREF_COOKIES",Cookie_header);
                             Config.logV("Set Cookie sharedpref------------"+Cookie_header);
-
+                            LogUtil.writeLogTest("*******Signup Cookie*****"+Cookie_header);
                         }
 
 
@@ -500,6 +501,8 @@ public class Password extends AppCompatActivity {
                         SharedPreference.getInstance(mContext).setValue("consumerId",response.body().getId());
                         SharedPreference.getInstance(mContext).setValue("register","success");
                         SharedPreference.getInstance(mContext).setValue("mobile",response.body().getPrimaryPhoneNumber());
+                        SharedPreference.getInstance(mContext).setValue("s3Url", response.body().getS3Url());
+
                         Intent iReg = new Intent(mContext, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(iReg);

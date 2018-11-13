@@ -20,6 +20,7 @@ import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.database.DatabaseHandler;
 import com.nv.youneverwait.response.ProfileModel;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 
 import retrofit2.Call;
@@ -161,6 +162,11 @@ public class UpdateProfileFragment extends RootFragment {
                         SharedPreference.getInstance(mContext).setValue("userDb", "success");
                         Config.logV("ProfileModel size-----------" + getProfile);
 
+                    }else{
+                        if(response.code()==419){
+                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                            LogUtil.writeLogTest(" Session Expired "+cookie);
+                        }
                     }
 
 

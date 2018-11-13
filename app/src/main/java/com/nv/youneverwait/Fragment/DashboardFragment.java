@@ -28,6 +28,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -35,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -50,6 +52,7 @@ import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
 import com.nv.youneverwait.activities.Home;
+import com.nv.youneverwait.activities.Register;
 import com.nv.youneverwait.activities.SearchLocationActivity;
 import com.nv.youneverwait.adapter.ActiveCheckInAdapter;
 import com.nv.youneverwait.adapter.SearchListAdpter;
@@ -58,11 +61,14 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
+import com.nv.youneverwait.database.DatabaseHandler;
 import com.nv.youneverwait.model.Domain_Spinner;
 import com.nv.youneverwait.model.LanLong;
 import com.nv.youneverwait.model.ListCell;
 import com.nv.youneverwait.model.SearchModel;
 import com.nv.youneverwait.response.ActiveCheckIn;
+import com.nv.youneverwait.response.RefinedFilters;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 
 import java.util.ArrayList;
@@ -214,7 +220,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     TextView txt_sorry;
     boolean activeCheckin=false;
-
+    ImageView ic_refinedFilter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -238,6 +244,18 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
             ApiAWSearchDomain();
         }
+
+        ic_refinedFilter=(ImageView) row.findViewById(R.id.ic_refinedFilter);
+
+        ic_refinedFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Config.isOnline(getActivity())) {
+                    ApiFilters();
+                }
+            }
+        });
+
 
         mInterface = (ActiveAdapterOnCallback) this;
         home = getParentFragment();
@@ -299,7 +317,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         tv_popular.setTypeface(tyface);
 
 
-
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //APiGetDomain();
         APiSearchList();
 
@@ -839,6 +857,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 bundle.putString("url", pass);
                 SearchListFragment pfFragment = new SearchListFragment();
 
+
                 bundle.putString("locName", mCurrentLoc.getText().toString());
 
                 bundle.putString("latitude", String.valueOf(latitude));
@@ -854,6 +873,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
+                searchSrcTextView.clearFocus();
+                mSearchView.clearFocus();
 
 
             }
@@ -1163,9 +1184,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
+                    activeCheckin=false;
                     if (response.code() == 200) {
-                        activeCheckin=false;
+
 
                         Config.logV("Response--Array size--Active-----------------------" + response.body().size());
 
@@ -1192,6 +1213,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             tv_activechkin.setText("Active Check-ins ");
                             txt_sorry.setVisibility(View.VISIBLE);
                             LActiveCheckin.setVisibility(View.VISIBLE);
+                        }
+                    }else{
+                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
+                        if(response.code()==419){
+                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                            LogUtil.writeLogTest(response.errorBody().string()+" "+cookie);
                         }
                     }
 
@@ -1316,6 +1343,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
+        searchSrcTextView.clearFocus();
+        mSearchView.clearFocus();
     }
 
     @Override
@@ -1405,6 +1434,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 mCurrentLoc.setVisibility(View.VISIBLE);
                 mCurrentLoc.setText(addresses.get(0).getLocality());
+
                 SearchListFragment.UpdateLocationSearch(String.valueOf(latitude),String.valueOf(longitude),addresses.get(0).getLocality());
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
@@ -1600,6 +1630,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
+        searchSrcTextView.clearFocus();
+        mSearchView.clearFocus();
     }
 
 
@@ -1620,7 +1652,23 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             SharedPreference.getInstance(mContext).setValue("locnme",mlocName);
             Config.logV("UpdateLocation 4444----" + mlocName);
             mCurrentLoc.setVisibility(View.VISIBLE);
-            mCurrentLoc.setText(mlocName);
+
+            if(mlocName.equalsIgnoreCase("")){
+                Config.logV("UpdateLocation banglore");
+                latitude = 12.971599;
+                longitude = 77.594563;
+                try {
+                    Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                    mCurrentLoc.setVisibility(View.VISIBLE);
+                    mCurrentLoc.setText(addresses.get(0).getLocality());
+                    //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
+                } catch (Exception e) {
+
+                }
+            }else{
+                mCurrentLoc.setText(mlocName);
+            }
 
 
           //  SharedPreference.getInstance(mContext).setValue("map_intial","false");
@@ -1670,6 +1718,66 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     }
 
+
+    ArrayList<RefinedFilters> commonFilterList=new ArrayList<>();
+    private void ApiFilters() {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<RefinedFilters> call = apiService.getFilters();
+
+
+        call.enqueue(new Callback<RefinedFilters>() {
+            @Override
+            public void onResponse(Call<RefinedFilters> call, Response<RefinedFilters> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Filters-------------------" + response.code());
+                    if (response.code() == 200) {
+                        Config.logV("Response----------------");
+
+                        commonFilterList.clear();
+                        commonFilterList=response.body().getCommonFilters();
+                        Config.logV("Common Filters----------------"+commonFilterList.size());
+
+
+                    }else{
+                        if(response.code()==419){
+                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                            LogUtil.writeLogTest(" Session Expired "+cookie);
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<RefinedFilters> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
 
 
 }

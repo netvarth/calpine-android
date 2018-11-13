@@ -237,5 +237,15 @@ public class ActiveCheckIn {
 
     String waitlistStatus;
 
+    public boolean isFavFlag() {
+        return favFlag;
+    }
+
+    public void setFavFlag(boolean favFlag) {
+        this.favFlag = favFlag;
+    }
+
+    boolean favFlag=false;
+
 
 }

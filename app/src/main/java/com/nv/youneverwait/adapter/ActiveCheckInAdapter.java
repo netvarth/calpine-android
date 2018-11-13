@@ -13,6 +13,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -131,7 +132,6 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         Config.logV("Provider NAme-------------------"+activelist.getProvider().getBusinessName());
         myViewHolder.tv_businessname.setText(toTitleCase(activelist.getProvider().getBusinessName()));
 
-
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_businessname.setTypeface(tyface);
@@ -197,7 +197,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
-                    String firstWord = null;
+                    /*String firstWord = null;
                     Date dt = new Date();
                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
                     String currentTime = sdf.format(dt);
@@ -211,6 +211,8 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                     }
 
+*/
+                    String firstWord = "Est Service Time ";
                     String secondWord = "Today," + activelist.getServiceTime();
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

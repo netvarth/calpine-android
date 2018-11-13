@@ -3,26 +3,32 @@ package com.nv.youneverwait.activities;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.nv.youneverwait.utils.TypefaceFont;
 
@@ -30,6 +36,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 /**
  * Created by sharmila on 2/7/18.
@@ -42,7 +51,53 @@ public class Register extends AppCompatActivity {
     TextInputLayout txt_InputMob;
     Button btn_reg_submit;
     TextView tv_terms,tv_provider,tv_download;
+    public static final int RequestPermissionCode = 7;
+    private void RequestMultiplePermission() {
 
+        // Creating String Array with Permissions.
+        ActivityCompat.requestPermissions(this, new String[]
+                {
+                        WRITE_EXTERNAL_STORAGE,
+                        READ_EXTERNAL_STORAGE
+
+                }, RequestPermissionCode);
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+
+            case RequestPermissionCode:
+
+                if (grantResults.length > 0) {
+
+                    boolean WritePermission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean ReadPermission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+
+
+                    if (WritePermission && ReadPermission) {
+                        Log.v("","Permission Granted-------------");
+                    }
+                    else {
+                        Toast.makeText(this,"Permission Denied",Toast.LENGTH_LONG).show();
+
+                    }
+                }
+
+                break;
+        }
+    }
+    // Checking permission is enabled or not using function starts from here.
+    public boolean CheckingPermissionIsEnabledOrNot() {
+
+        int FirstPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        int SecondPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
+
+
+        return FirstPermissionResult == PackageManager.PERMISSION_GRANTED &&
+                SecondPermissionResult == PackageManager.PERMISSION_GRANTED ;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +123,20 @@ public class Register extends AppCompatActivity {
 
 
         mContext = this;
+
+        if(CheckingPermissionIsEnabledOrNot())
+        {
+
+        }
+
+        // If, If permission is not enabled then else condition will execute.
+        else {
+
+            //Calling method to enable permission.
+            RequestMultiplePermission();
+
+        }
+        LogUtil.writeLogTest("**********************Jaldee***************************");
         mEdtMobno.addTextChangedListener(new MyTextWatcher(mEdtMobno));
 
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),

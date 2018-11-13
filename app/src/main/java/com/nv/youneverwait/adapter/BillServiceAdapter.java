@@ -43,8 +43,13 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
     @Override
     public void onBindViewHolder(final BillServiceAdapter.BillAdapterViewHolder holder, int position) {
 
-        Config.logV("ServiceNAme" + billServiceData.get(position).getServiceName());
-        holder.txtservicenme.setText(billServiceData.get(position).getServiceName());
+
+        if(billServiceData.get(position).getServiceName()!=null) {
+            Config.logV("ServiceNAme" + billServiceData.get(position).getServiceName());
+            holder.txtservicenme.setText(billServiceData.get(position).getServiceName());
+        }else{
+            holder.txtservicenme.setText(billServiceData.get(position).getItemName());
+        }
         holder.txt_amount.setText("₹ " + String.valueOf(billServiceData.get(position).getPrice()));
 
         if(billServiceData.get(position).getGSTpercentage()==0){
@@ -71,7 +76,7 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
             holder.txtcoupanval.setText("₹ " + String.valueOf(billServiceData.get(position).getCouponValue()));
         }
 
-        holder.qtyval.setText("₹ " + String.valueOf(billServiceData.get(position).getPrice()));
+        holder.qtyval.setText("₹ " + String.valueOf(billServiceData.get(position).getPrice()*billServiceData.get(position).getQuantity()));
         holder.txtsubtotalval.setText("₹ " + String.valueOf(billServiceData.get(position).getNetRate()));
         holder.qty.setText("Qty " + String.valueOf(billServiceData.get(position).getQuantity()));
 

@@ -5,36 +5,73 @@
     android:layout_height="match_parent"
     android:background="@color/app_background"
     android:focusable="true"
-    android:padding="@dimen/default_padding"
     android:orientation="vertical">
+
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding7"
+        android:layout_margin="@dimen/default_padding"
         android:background="@color/app_background"
         android:orientation="vertical">
-
         <TextView
-            android:id="@+id/txtmangeprivacy"
+
+            android:id="@+id/txtratevisit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_padding"
-            android:text=" Manage Privacy"
+            android:text=" Rate Your Visit"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_subtitle" />
 
-
-        <CheckBox
-            android:id="@+id/chkphone"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_padding"
-            android:text=" Reveal Phone number "
+            android:text=" Rate"
+            android:layout_marginTop="@dimen/padding15"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
 
+        <RatingBar
+            android:id="@+id/rRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            style="@style/ImageRatingBar"
+            android:stepSize="1.0"
+            />
+
+      <!--  <RatingBar
+            android:id="@+id/rRatingBar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding7"
+            android:progressDrawable="@drawable/rating_display" />-->
+
+        <TextView
+            android:id="@+id/txtsendmsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding2"
+            android:text=" Message"
+            android:textColor="@color/title_grey"
+            android:textSize="@dimen/txtsize_hint" />
+
+        <EditText
+            android:id="@+id/edt_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding5"
+            android:background="@drawable/input_border_message_bg"
+            android:gravity="top"
+            android:hint="@string/hint_message"
+            android:minHeight="150dp"
+            android:padding="@dimen/padding5"
+            android:textColor="@color/title_grey"
+            android:textColorHint="@color/title_grey_light"
+            android:textSize="@dimen/txtsize_12" />
 
     </LinearLayout>
 
@@ -53,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:background="@drawable/roundedrect_blue"
-            android:text="@string/save"
+            android:text="@string/rate"
             android:textAllCaps="true"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />
@@ -67,6 +104,7 @@
             android:layout_weight="0.5"
             android:background="@drawable/roundedrect_grey"
             android:text="@string/cancel"
+            android:textAllCaps="true"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />
     </LinearLayout>

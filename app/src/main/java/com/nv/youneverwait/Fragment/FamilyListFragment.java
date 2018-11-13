@@ -23,6 +23,7 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.model.FamilyArrayModel;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 
 import java.util.ArrayList;
@@ -185,6 +186,11 @@ public class FamilyListFragment extends RootFragment implements FamilyAdapterCal
 
                         }
 
+                    }else{
+                        if(response.code()==419){
+                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                            LogUtil.writeLogTest(" Session Expired "+cookie);
+                        }
                     }
 
 
