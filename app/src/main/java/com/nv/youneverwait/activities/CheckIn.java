@@ -16,8 +16,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.AdapterView;
@@ -186,7 +188,7 @@ public class CheckIn extends AppCompatActivity {
                 dialog.setContentView(R.layout.reply);
                 dialog.show();
 
-                Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+                final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
                 Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
                 final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                 TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
@@ -195,6 +197,7 @@ public class CheckIn extends AppCompatActivity {
                 if (!txtsendmsg.equals("")) {
                     edt_message.setText(txt_message);
                 }
+
 
 
                 btn_send.setOnClickListener(new View.OnClickListener() {
@@ -212,6 +215,28 @@ public class CheckIn extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
+
+                edt_message.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable arg0) {
+                        if(edt_message.getText().toString().length()>1){
+                            btn_send.setEnabled(true);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                        }else{
+                            btn_send.setEnabled(false);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                        }
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+
             }
         });
 

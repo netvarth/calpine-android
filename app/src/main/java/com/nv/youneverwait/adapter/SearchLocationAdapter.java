@@ -56,12 +56,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate;
         Button btn_checkin;
-        LinearLayout mLSeriveLayout, mLayouthide;
+        LinearLayout mLSeriveLayout, mLayouthide,LexpandCheckin;
         ImageView img_arrow;
         RecyclerView recycle_parking;
         RelativeLayout layout_exapnd;
         TextView txtdirection, tv_checkin;
-
+        Button btn_checkin_expand;
+        TextView txtwaittime_expand, txt_diffdate_expand;
 
         public MyViewHolder(View view) {
             super(view);
@@ -78,6 +79,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txt_diffdate = (TextView) view.findViewById(R.id.txt_diffdate);
             layout_exapnd = (RelativeLayout) view.findViewById(R.id.layout_exapnd);
             txtdirection = (TextView) view.findViewById(R.id.txtdirection);
+
+            txtwaittime_expand = (TextView) view.findViewById(R.id.txtwaittime_expand);
+            txt_diffdate_expand = (TextView) view.findViewById(R.id.txt_diffdate_expand);
+            btn_checkin_expand = (Button) view.findViewById(R.id.btn_checkin_expand);
+            LexpandCheckin=(LinearLayout) view.findViewById(R.id.LexpandCheckin);
 
 
         }
@@ -287,19 +293,45 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         if (position == 0) {
             myViewHolder.mLayouthide.setVisibility(View.VISIBLE);
             myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_up);
+            searchLoclist.setExpandFlag(true);
+            myViewHolder.LexpandCheckin.setVisibility(View.GONE);
 
         } else {
             myViewHolder.mLayouthide.setVisibility(View.GONE);
             myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_down);
+            myViewHolder.LexpandCheckin.setVisibility(View.VISIBLE);
 
         }
 
 
         if (mSearchSetting.isFutureDateWaitlist()) {
             myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+            myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
         } else {
             myViewHolder.txt_diffdate.setVisibility(View.GONE);
+            myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
         }
+
+
+        myViewHolder.txt_diffdate_expand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Config.logV("DETAIL !!!!!!!!!!!!!------"+);
+                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                iCheckIn.putExtra("serviceId", searchLoclist.getId());
+                iCheckIn.putExtra("uniqueID", mUniqueID);
+                iCheckIn.putExtra("accountID", accountID);
+                iCheckIn.putExtra("from", "searchdetail_future");
+                iCheckIn.putExtra("title", mTitle);
+                iCheckIn.putExtra("place", searchLoclist.getPlace());
+                iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
+
+                iCheckIn.putExtra("sector", sector);
+                iCheckIn.putExtra("subsector", subsector);
+                mContext.startActivity(iCheckIn);
+            }
+        });
 
 
         myViewHolder.txt_diffdate.setOnClickListener(new View.OnClickListener() {
@@ -340,7 +372,46 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         });
 
+        myViewHolder.btn_checkin_expand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                iCheckIn.putExtra("serviceId", searchLoclist.getId());
+                iCheckIn.putExtra("uniqueID", mUniqueID);
+                iCheckIn.putExtra("accountID", accountID);
+                iCheckIn.putExtra("from", "searchdetail_checkin");
+                iCheckIn.putExtra("title", mTitle);
+                iCheckIn.putExtra("place", searchLoclist.getPlace());
+                iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
+
+                iCheckIn.putExtra("sector", sector);
+                iCheckIn.putExtra("subsector", subsector);
+                mContext.startActivity(iCheckIn);
+            }
+        });
+
+
+
         myViewHolder.layout_exapnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!searchLoclist.isExpandFlag()) {
+                    myViewHolder.mLayouthide.setVisibility(View.VISIBLE);
+                    myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_up);
+                    searchLoclist.setExpandFlag(true);
+                    myViewHolder.LexpandCheckin.setVisibility(View.GONE);
+
+                }else{
+                    myViewHolder.mLayouthide.setVisibility(View.GONE);
+                    myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_down);
+                    searchLoclist.setExpandFlag(false);
+                    myViewHolder.LexpandCheckin.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
+
+        /*myViewHolder.layout_exapnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -369,7 +440,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     }
                 }
             }
-        });
+        });*/
 
 
         myViewHolder.tv_working.setOnClickListener(new View.OnClickListener() {
@@ -604,6 +675,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
                                 myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.button_gradient_checkin));
 
+                                myViewHolder.btn_checkin_expand.setVisibility(View.VISIBLE);
+
+
                             } else if (date1.compareTo(date2) < 0) {
                                 myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
                                 // myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
@@ -611,14 +685,23 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
                                 myViewHolder.btn_checkin.setEnabled(false);
 
+
+                                    myViewHolder.btn_checkin_expand.setVisibility(View.VISIBLE);
+                                    myViewHolder.btn_checkin_expand.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                    myViewHolder.btn_checkin_expand.setTextColor(mContext.getResources().getColor(R.color.button_grey));
+                                    myViewHolder.btn_checkin_expand.setEnabled(false);
+
+
                             }
                         } else {
 
                             myViewHolder.btn_checkin.setVisibility(View.GONE);
+                            myViewHolder.btn_checkin_expand.setVisibility(View.GONE);
 
                         }
                     } else {
                         myViewHolder.btn_checkin.setVisibility(View.GONE);
+                        myViewHolder.btn_checkin_expand.setVisibility(View.GONE);
                     }
 
 
@@ -627,6 +710,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                         if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
                             myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
 
 
                             if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) {
@@ -650,7 +734,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     }*/
 
 
-                                    String  firstWord = "Est Service Time \n";
+                                    String firstWord = "Est Service Time \n";
                                     String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -658,6 +742,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                                     myViewHolder.tv_waittime.setText(spannable);
+                                    myViewHolder.txtwaittime_expand.setText(spannable);
                                 } else {
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
@@ -670,6 +755,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                                     myViewHolder.tv_waittime.setText(spannable);
+                                    myViewHolder.txtwaittime_expand.setText(spannable);
                                 }
                             }
                             if (date1.compareTo(date2) < 0) {
@@ -690,6 +776,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                                     myViewHolder.tv_waittime.setText(spannable);
+                                    myViewHolder.txtwaittime_expand.setText(spannable);
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
@@ -698,14 +785,16 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             }
                         } else {
                             myViewHolder.tv_waittime.setVisibility(View.INVISIBLE);
+                            myViewHolder.txtwaittime_expand.setVisibility(View.INVISIBLE);
                         }
                     } else {
                         myViewHolder.tv_waittime.setVisibility(View.INVISIBLE);
+                        myViewHolder.txtwaittime_expand.setVisibility(View.INVISIBLE);
                     }
 
 
                 }
-            }else{
+            } else {
 
             }
 

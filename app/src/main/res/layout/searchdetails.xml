@@ -115,8 +115,8 @@
 
                                     <LinearLayout
                                         android:layout_width="0dp"
-                                        android:layout_weight="0.8"
                                         android:layout_height="wrap_content"
+                                        android:layout_weight="0.8"
                                         android:orientation="vertical">
 
                                         <TextView
@@ -128,7 +128,7 @@
                                             android:textColor="@color/title_grey"
                                             android:textSize="@dimen/txtsize_hint" />
 
-                                        <TextView
+                                        <!--<TextView
                                             android:id="@+id/txt_expe"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
                                             android:textColor="@color/opaque_title_grey"
                                             android:textSize="@dimen/txtsize_12"
                                             android:visibility="gone"
-                                            />
+                                            />-->
                                     </LinearLayout>
 
                                     <ImageView
@@ -145,8 +145,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_centerInParent="true"
-                                        android:gravity="center"
                                         android:layout_gravity="center"
+                                        android:gravity="center"
                                         android:paddingRight="@dimen/default_padding"
                                         android:src="@drawable/icon_favourite_line" />
                                 </LinearLayout>
@@ -238,83 +238,21 @@
                             </RelativeLayout>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/txtMoredetails"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableRight="@drawable/icon_down_arrow_blue"
-                            android:text="@string/clickhere"
-                            android:layout_marginTop="@dimen/padding7"
-                            android:textColor="@color/title_consu"
-                            android:layout_gravity="center"
-                            android:visibility="gone"
-                            android:drawablePadding="@dimen/padding3"
-                            android:textSize="@dimen/txtsize_10" />
+                        <!-- <TextView
+                             android:id="@+id/txtMoredetails"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:drawableRight="@drawable/icon_down_arrow_blue"
+                             android:text="@string/clickhere"
+                             android:layout_marginTop="@dimen/padding5"
+                             android:padding="@dimen/padding5"
+                             android:textColor="@color/title_consu"
+                             android:layout_gravity="center"
+                             android:drawablePadding="@dimen/padding3"
+                             android:visibility="gone"
+                             android:textSize="@dimen/txtsize_10" />
+ -->
 
-                        <LinearLayout
-                            android:id="@+id/LexpandLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:orientation="vertical">
-                            <LinearLayout
-                                android:id="@+id/LQualification"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-                                <TextView
-                                    android:id="@+id/txtQualifHead"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_12"
-                                    android:text="@string/eduqualif"/>
-                                <TextView
-                                    android:id="@+id/txtQualification"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_10"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:id="@+id/LExperience"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-                                <TextView
-                                    android:id="@+id/txtExperHead"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_12"
-                                    android:text="@string/eduqualif"/>
-                                <TextView
-                                    android:id="@+id/txtExperience"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_10"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:id="@+id/LAwardsRecog"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-                                <TextView
-                                    android:id="@+id/txtAwardsRecogHead"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_12"
-                                    android:text="@string/eduqualif"/>
-                                <TextView
-                                    android:id="@+id/txAwardsRecog"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_10"/>
-                            </LinearLayout>
-                        </LinearLayout>
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/mSearchLoc"

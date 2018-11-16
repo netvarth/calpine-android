@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nv.youneverwait.R;
@@ -33,6 +34,13 @@ public class ContactusFragment extends RootFragment {
             TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
             TextView txt_appname=(TextView) row.findViewById(R.id.txt_appname);
             TextView txtreach=(TextView) row.findViewById(R.id.txt_appname);
+            LinearLayout contactLayout=(LinearLayout) row.findViewById(R.id.contactLayout);
+            contactLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             tv_title.setTypeface(tyface1);

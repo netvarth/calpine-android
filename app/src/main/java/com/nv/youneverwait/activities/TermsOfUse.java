@@ -63,7 +63,7 @@ public class TermsOfUse extends AppCompatActivity {
         progressBar = Config.getProgressDialog(this, "");
         progressBar.show();
 
-        webview.loadUrl("https://www.youneverwait.com/#/terms");
+        webview.loadUrl("https://www.youneverwait.com/#/terms/mobile");
         webview.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
 

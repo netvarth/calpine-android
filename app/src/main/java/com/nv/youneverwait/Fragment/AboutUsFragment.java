@@ -124,7 +124,7 @@ public class AboutUsFragment extends RootFragment {
                     progressBar = Config.getProgressDialog(mContext, "");
                     progressBar.show();
 
-                    privacyWeb.loadUrl("https://www.youneverwait.com/#/privacy");
+                    privacyWeb.loadUrl("https://www.youneverwait.com/#/privacy/home");
                     privacyWeb.setWebViewClient(new WebViewClient() {
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
@@ -170,7 +170,7 @@ public class AboutUsFragment extends RootFragment {
                     progressBar = Config.getProgressDialog(mContext, "");
                     progressBar.show();
 
-                    termsWeb.loadUrl("https://www.youneverwait.com/#/terms");
+                    termsWeb.loadUrl("https://www.youneverwait.com/#/terms/mobile");
                     termsWeb.setWebViewClient(new WebViewClient() {
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 

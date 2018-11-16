@@ -12,8 +12,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -247,7 +249,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         } else {
                             tv_notodaychekcin.setVisibility(View.GONE);
                             mrRecylce_checklistTOday.setVisibility(View.VISIBLE);
-                            tv_today.setText("TODAY "+"( "+mCheckTodayFutureList.size()+" )");
+                            tv_today.setText("TODAY "+"( "+mCheckTodayList.size()+" )");
                         }
 
                         ApiFutureChekInList();
@@ -460,8 +462,8 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
         dialog.setContentView(R.layout.reply);
         dialog.show();
 
-        Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
-        Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+        final Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
         String firstWord = "Message to ";
@@ -485,6 +487,27 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+            }
+        });
+
+        edt_message.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+               if(edt_message.getText().toString().length()>1){
+                   btn_send.setEnabled(true);
+                   btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+               }else{
+                   btn_send.setEnabled(false);
+                   btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+               }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
     }
@@ -616,7 +639,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                             tv_title.setTypeface(tyface);
                             final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
 
-                            Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
+                            final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
                             btn_rate.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -636,7 +659,26 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                                 }
                             });
 
+                        edt_message.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void afterTextChanged(Editable arg0) {
+                                if(edt_message.getText().toString().length()>1){
+                                    btn_rate.setEnabled(true);
+                                    btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                                }else{
+                                    btn_rate.setEnabled(false);
+                                    btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                }
+                            }
 
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            }
+                        });
                             btn_close.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

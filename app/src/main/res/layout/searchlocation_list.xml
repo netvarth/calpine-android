@@ -107,6 +107,64 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/txtsize_title_term_small"
                      />
+
+            <LinearLayout
+                android:id="@+id/LexpandCheckin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/padding3"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="left"
+                    android:orientation="horizontal">
+
+
+
+                    <Button
+                        android:id="@+id/btn_checkin_expand"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:background="@color/title_consu"
+                        android:fontFamily="@font/customfont"
+                        android:text="Check-In"
+                        android:textAllCaps="true"
+                        android:textColor="@color/app_background"
+                        android:textSize="@dimen/txtsize_10"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtwaittime_expand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="left"
+                        android:layout_marginLeft="@dimen/default_padding"
+                        android:paddingRight="@dimen/default_padding"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_10"
+                         />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txt_diffdate_expand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/padding2"
+                    android:layout_marginTop="@dimen/padding2"
+                    android:gravity="left"
+                    android:paddingRight="@dimen/padding5"
+                    android:text="@string/diff_date"
+                    android:textColor="@color/title_consu"
+                    android:textSize="@dimen/txtsize_10"
+                    android:visibility="gone" />
+            </LinearLayout>
             </LinearLayout>
 
             <ImageView
@@ -115,6 +173,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/default_padding"
                 android:src="@drawable/icon_angle_down" />
         </RelativeLayout>
         <!--<TextView

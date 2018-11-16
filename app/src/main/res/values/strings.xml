@@ -110,6 +110,8 @@
     <string name="save">Save</string>
     <string name="clickhere">Click here to view More Details</string>
     <string name="eduqualif">Educational Qualification</string>
+    <string name="experience">Experience</string>
+    <string name="awards"><![CDATA[Awards & Recognitions]]></string>
 
 
 </resources>

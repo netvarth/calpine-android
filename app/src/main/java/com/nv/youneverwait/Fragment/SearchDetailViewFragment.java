@@ -11,8 +11,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +74,7 @@ import retrofit2.Response;
  */
 
 
-public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback,LocationCheckinCallback {
+public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback {
 
     Context mContext;
 
@@ -92,7 +94,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchCheckInMessage> mSearchmCheckListShow = new ArrayList<>();
 
 
-    TextView tv_busName, tv_domain, tv_desc, tv_exp, tv_msg;
+    TextView tv_busName, tv_domain, tv_desc, tv_msg;
 
     RecyclerView mRecyLocDetail;
     SearchLocationAdapter mSearchLocAdapter;
@@ -108,8 +110,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     LocationCheckinCallback callback;
     String location;
     ImageView ic_fav;
-    LinearLayout LexpandLayout ,LQualification,LExperience,LAwardsRecog;
-    TextView txtQualifHead,txtQualification,txtExperHead,txtExperience,txtAwardsRecogHead,txAwardsRecog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -162,9 +163,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mImgthumbProfile2 = (ImageView) row.findViewById(R.id.iThumb_profile2);
         tv_ImageViewText = (TextView) row.findViewById(R.id.mImageViewText);
         mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
-        ic_fav=(ImageView) row.findViewById(R.id.txtfav);
+        ic_fav = (ImageView) row.findViewById(R.id.txtfav);
 
-        tv_exp = (TextView) row.findViewById(R.id.txt_expe);
+        //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
         tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -174,27 +175,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
 
-        LexpandLayout  = (LinearLayout) row.findViewById(R.id.LexpandLayout);
-        LQualification = (LinearLayout) row.findViewById(R.id.LQualification);
-        txtQualifHead = (TextView) row.findViewById(R.id.txtQualifHead);
-        txtQualification = (TextView) row.findViewById(R.id.txtQualification);
-
-
-        LExperience = (LinearLayout) row.findViewById(R.id.LExperience);
-        txtExperHead = (TextView) row.findViewById(R.id.txtExperHead);
-        txtExperience = (TextView) row.findViewById(R.id.txtExperience);
-
-        LAwardsRecog = (LinearLayout) row.findViewById(R.id.LAwardsRecog);
-        txtAwardsRecogHead = (TextView) row.findViewById(R.id.txtAwardsRecogHead);
-        txAwardsRecog = (TextView) row.findViewById(R.id.txAwardsRecog);
-
-
 
 
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
-
 
 
         mInterface = (SearchLocationAdpterCallback) this;
@@ -209,7 +194,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 dialog.setContentView(R.layout.reply);
                 dialog.show();
 
-                Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+                final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
                 Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
                 final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                 TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
@@ -217,13 +202,32 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 txtsendmsg.setText("Message to " + tv_busName.getText().toString());
                 btn_send.setText("SEND");
 
+                edt_message.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable arg0) {
+                        if(edt_message.getText().toString().length()>1){
+                            btn_send.setEnabled(true);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                        }else{
+                            btn_send.setEnabled(false);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                        }
+                    }
 
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                       String  modifyAccountID = String.valueOf(mProvoderId);
-                        ApiCommunicate(modifyAccountID, edt_message.getText().toString(),dialog);
+                        String modifyAccountID = String.valueOf(mProvoderId);
+                        ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
                         // ApiSearchViewTerminology(modifyAccountID);
                         //dialog.dismiss();
 
@@ -240,9 +244,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         });
         return row;
     }
-
-
-
 
 
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
@@ -281,7 +282,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_LONG).show();
                         mBottomDialog.dismiss();
 
                     }
@@ -306,6 +307,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
     }
+
     public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery) {
         //  Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
 
@@ -371,21 +373,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
     }
 
+  //  boolean expand =false;
     public void UpdateMainUI(SearchViewDetail getBussinessData) {
 
 
-
-        /*if(getBussinessData.getDomainVirtualFields().getAwardsrecognitions()!=null){
-            LexpandLayout.setVisibility(View.VISIBLE);
-            LAwardsRecog.setVisibility(View.VISIBLE);
-            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            txtAwardsRecogHead.setTypeface(tyface);
-            txAwardsRecog.setText(getBussinessData.getDomainVirtualFields().getAwardsrecognitions().get(0).getAwardName()+", "+getBussinessData.getDomainVirtualFields().getAwardsrecognitions().get(0).getAwardIssuedBy()+", "getBussinessData.getDomainVirtualFields().getAwardsrecognitions().get(0).getAwardMonth()+", "+getBussinessData.getDomainVirtualFields().getAwardsrecognitions().get(0).getAwardYear());
-        }else{
-
-            LAwardsRecog.setVisibility(View.GONE);
-        }*/
         if (getBussinessData.getVerifyLevel() != null) {
             if (!getBussinessData.getVerifyLevel().equalsIgnoreCase("NONE")) {
                 tv_busName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_verified, 0);
@@ -399,26 +390,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             tv_busName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
+
         tv_msg.setEnabled(true);
         tv_busName.setText(getBussinessData.getBusinessName());
         rating.setRating(getBussinessData.getAvgRating());
 
 
-
         tv_domain.setText(getBussinessData.getServiceSector().getDisplayName());
 
-        if (getBussinessData.getDomainVirtualFields() != null) {
-            if (getBussinessData.getDomainVirtualFields().getExperience() != null) {
-
-                tv_exp.setVisibility(View.VISIBLE);
-                tv_exp.setText(getBussinessData.getDomainVirtualFields().getExperience());
-            } else {
-                tv_exp.setVisibility(View.GONE);
-            }
-
-        } else {
-           tv_exp.setVisibility(View.GONE);
-        }
 
         if (getBussinessData.getBusinessDesc() != null) {
             tv_desc.setVisibility(View.VISIBLE);
@@ -715,7 +694,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                 String firstWord = "Your Check-In at ";
                                 String secondWord = loc;
-                                location=loc;
+                                location = loc;
 
                                 Spannable spannable = new SpannableString(firstWord + secondWord);
                                 Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
@@ -742,7 +721,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mSearchmCheckListShow = response.body();
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 checkloclist.setLayoutManager(mLayoutManager);
-                                LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback,String.valueOf(mProvoderId), mSearchmCheckListShow, mContext, getActivity());
+                                LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback, String.valueOf(mProvoderId), mSearchmCheckListShow, mContext, getActivity());
                                 checkloclist.setAdapter(checkAdapter);
                                 checkAdapter.notifyDataSetChanged();
                             }
@@ -945,7 +924,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mRecyLocDetail.setLayoutManager(mLayoutManager);
-                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(),mBusinessDataList.getServiceSubSector().getSubDomain(),String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList);
+                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList);
                         mRecyLocDetail.setAdapter(mSearchLocAdapter);
                         mSearchLocAdapter.notifyDataSetChanged();
                     }
@@ -1067,14 +1046,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     @Override
     public void onMethodCallback() {
 
-        Toast.makeText(mContext,"No Checkin exists at "+location,Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "No Checkin exists at " + location, Toast.LENGTH_LONG).show();
         dialog.dismiss();
         refreshList();
     }
 
-    public void refreshList(){
+    public void refreshList() {
         count = 0;
-        SharedPreference.getInstance(mContext).setValue("refreshcheckin","false");
+        SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
         mSearchLocList = new ArrayList<>();
@@ -1090,6 +1069,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ApiSearchViewTerminology(uniqueID);
 
     }
+
     private void ApiAddFavo(int providerID) {
 
 
@@ -1143,8 +1123,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     }
 
-    boolean favFlag=false;
-    ArrayList<FavouriteModel> mFavList=new ArrayList<>();
+    boolean favFlag = false;
+    ArrayList<FavouriteModel> mFavList = new ArrayList<>();
+
     private void ApiFavList() {
 
         Config.logV("API Call");
@@ -1167,14 +1148,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
                         mFavList.clear();
                         mFavList = response.body();
-                        favFlag=false;
+                        favFlag = false;
                         for (int i = 0; i < mFavList.size(); i++) {
                             Config.logV("Fav List-----##&&&-----" + mFavList.get(i).getId());
                             Config.logV("Fav Fav List--------%%%%--" + mBusinessDataList.getId());
 
                             if (mFavList.get(i).getId() == mBusinessDataList.getId()) {
 
-                                favFlag=true;
+                                favFlag = true;
                                 ic_fav.setVisibility(View.VISIBLE);
                                 ic_fav.setImageResource(R.drawable.icon_favourited);
 
@@ -1183,41 +1164,40 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         }
 
                         ic_fav.setOnClickListener(new View.OnClickListener() {
-                           @Override
-                           public void onClick(View v) {
-                               if(favFlag){
-                                   AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
-                                           //set message, title, and icon
-                                           .setTitle("Delete")
-                                           .setMessage("Do you want to remove "+mBusinessDataList.getBusinessName()+" from favourite list?")
+                            @Override
+                            public void onClick(View v) {
+                                if (favFlag) {
+                                    AlertDialog myQuittingDialogBox = new AlertDialog.Builder(mContext)
+                                            //set message, title, and icon
+                                            .setTitle("Delete")
+                                            .setMessage("Do you want to remove " + mBusinessDataList.getBusinessName() + " from favourite list?")
 
 
-                                           .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-                                               public void onClick(DialogInterface dialog, int whichButton) {
-                                                   //your deleting code
-                                                   dialog.dismiss();
-                                                 ApiRemoveFavo(mBusinessDataList.getId());
-                                               }
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    //your deleting code
+                                                    dialog.dismiss();
+                                                    ApiRemoveFavo(mBusinessDataList.getId());
+                                                }
 
-                                           })
+                                            })
 
 
+                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                           .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                               public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
 
-                                                   dialog.dismiss();
-
-                                               }
-                                           })
-                                           .create();
-                                   myQuittingDialogBox.show();
-                               }else{
-                                   ApiAddFavo(mBusinessDataList.getId());
-                               }
-                           }
-                       });
+                                                }
+                                            })
+                                            .create();
+                                    myQuittingDialogBox.show();
+                                } else {
+                                    ApiAddFavo(mBusinessDataList.getId());
+                                }
+                            }
+                        });
 
                     }
 
@@ -1293,11 +1273,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        String refresh=SharedPreference.getInstance(mContext).getStringValue("refreshcheckin","");
-        if(refresh.equalsIgnoreCase("true")) {
+        String refresh = SharedPreference.getInstance(mContext).getStringValue("refreshcheckin", "");
+        if (refresh.equalsIgnoreCase("true")) {
             refreshList();
         }
     }

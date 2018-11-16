@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nv.youneverwait.connection.rest.AddCookiesInterceptor;
+import com.nv.youneverwait.connection.rest.ResponseInteceptor;
 import com.nv.youneverwait.utils.SharedPreference;
 
 import java.util.concurrent.TimeUnit;
@@ -107,6 +108,10 @@ public class ApiClient {
         builder.addInterceptor(new AddCookiesInterceptor(context)); // VERY VERY IMPORTANT
         //  builder.addInterceptor(new ReceivedCookiesInterceptor(context));
         builder.addInterceptor(new ConnectivityInterceptor(context));
+
+        builder.addInterceptor(new ResponseInteceptor(context));
+
+
         builder.readTimeout(90, TimeUnit.SECONDS);
         builder.connectTimeout(90, TimeUnit.SECONDS);
         okHttpClient = builder.build();

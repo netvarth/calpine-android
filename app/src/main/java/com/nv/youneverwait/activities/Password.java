@@ -3,6 +3,7 @@ package com.nv.youneverwait.activities;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -426,14 +427,17 @@ public class Password extends AppCompatActivity {
 
         ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
-        String androidId = Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+       /* String androidId = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);*/
+        SharedPreferences pref = mContext.getSharedPreferences(Config.SHARED_PREF, 0);
+        String regId = pref.getString("regId", null);
+        Config.logV("REGISTARION ID_________________"+regId);
 
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("loginId", loginId);
             jsonObj.put("password", password);
-            jsonObj.put("mUniqueId", androidId);
+            jsonObj.put("mUniqueId", regId);
 
         } catch (JSONException e) {
             e.printStackTrace();

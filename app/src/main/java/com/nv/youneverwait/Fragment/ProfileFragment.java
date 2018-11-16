@@ -2,6 +2,7 @@ package com.nv.youneverwait.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -37,7 +38,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
 
     Context mContext;
-    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm,mLcontactus;
+    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm,mLcontactus,mLshare;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -73,6 +74,24 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         mLogout=(LinearLayout)row.findViewById(R.id.llogout);
         mLTerm=(LinearLayout)row.findViewById(R.id.lterm);
         mLcontactus=(LinearLayout)row.findViewById(R.id.lcontactus);
+        mLshare=(LinearLayout)row.findViewById(R.id.lshare);
+
+        mLshare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent i = new Intent(Intent.ACTION_SEND);
+                    i.setType("text/plain");
+                    i.putExtra(Intent.EXTRA_SUBJECT, mContext.getResources().getString(R.string.app_name));
+                    String sAux = "\nLet me recommend you this application\n";
+                    sAux = sAux + "https://play.google.com/store/";
+                    i.putExtra(Intent.EXTRA_TEXT, sAux);
+                    startActivity(Intent.createChooser(i, "choose one"));
+                } catch(Exception e) {
+                    //e.toString();
+                }
+            }
+        });
 
         mLcontactus.setOnClickListener(new View.OnClickListener() {
             @Override

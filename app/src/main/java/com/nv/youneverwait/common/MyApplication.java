@@ -4,12 +4,15 @@ import android.app.Application;
 import android.content.Context;
 
 import com.nv.youneverwait.custom.FontOverride;
+import com.nv.youneverwait.database.DatabaseHandler;
+import com.nv.youneverwait.utils.NotificationUtils;
+import com.nv.youneverwait.utils.SharedPreference;
 
 /**
  * Created by sharmila on 2/7/18.
  */
 
-public class MyApplication extends Application{
+public class MyApplication extends Application implements AppLifeCycleHandler.AppLifeCycleCallback{
 
     private static MyApplication s_instance;
     @Override
@@ -18,7 +21,11 @@ public class MyApplication extends Application{
         super.onCreate();
         FontOverride.setDefaultFont(this, "SERIF", "fonts/Montserrat_Regular.otf");
 
-        Config.logV("MyAPplication---------------------------");
+        Config.logV("APP APplication---------------------------");
+
+        AppLifeCycleHandler appLifeCycleHandler = new AppLifeCycleHandler(this);
+        registerActivityLifecycleCallbacks(appLifeCycleHandler);
+        registerComponentCallbacks(appLifeCycleHandler);
 
     }
 
@@ -28,4 +35,23 @@ public class MyApplication extends Application{
         return s_instance;
     }
 
+    @Override
+    public void onAppBackground() {
+
+        Config.logV("App@@@@ BackGround");
+    }
+
+    @Override
+    public void onAppForeground() {
+
+        Config.logV("App@@@ ForeBackGround");
+
+        String loginId = SharedPreference.getInstance(this).getStringValue("mobno", "");
+        String password = SharedPreference.getInstance(this).getStringValue("password", "");
+        if(!loginId.equalsIgnoreCase("")&&!password.equalsIgnoreCase("")) {
+            Config.logV("App@@@ ForeBackGround Reset");
+            Config.ApiSessionResetLogin(loginId, password, this);
+        }
+
+    }
 }

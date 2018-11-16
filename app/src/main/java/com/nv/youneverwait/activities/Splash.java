@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.utils.SharedPreference;
 
 import org.w3c.dom.Text;
@@ -39,6 +40,8 @@ public class Splash extends AppCompatActivity {
                 "fonts/Montserrat_Bold.otf");
         txtlogo.setTypeface(tyface);
 
+        Config.logV("SPLASH @@@@@@@@@@@");
+
 
     }
 
@@ -47,6 +50,8 @@ public class Splash extends AppCompatActivity {
         mHandler.removeCallbacks(mLauncher);
         super.onStop();
     }
+
+
 
     private void launch() {
         if (!isFinishing()) {

@@ -1,6 +1,8 @@
 package com.nv.youneverwait.activities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.widget.Toast;
 import com.nv.youneverwait.Fragment.HomeTabFragment;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
+import com.nv.youneverwait.utils.NotificationUtils;
 
 
 /**
@@ -39,6 +42,10 @@ public class Home extends AppCompatActivity {
             // and getting the reference
             mHomeTab = (HomeTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
+
+        SharedPreferences pref = mContext.getSharedPreferences(Config.SHARED_PREF, 0);
+        String regId = pref.getString("regId", null);
+        Config.logV("REGISTARION ID___3333####___________@@@@@@@___"+regId);
 
 
     }

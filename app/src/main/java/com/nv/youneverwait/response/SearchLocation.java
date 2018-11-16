@@ -194,4 +194,14 @@ public class SearchLocation {
     }
 
     String dentistemergencyservices;
+
+    public boolean isExpandFlag() {
+        return expandFlag;
+    }
+
+    public void setExpandFlag(boolean expandFlag) {
+        this.expandFlag = expandFlag;
+    }
+
+    boolean expandFlag=false;
 }
