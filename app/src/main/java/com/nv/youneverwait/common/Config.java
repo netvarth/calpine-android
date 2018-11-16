@@ -8,6 +8,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,12 +22,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.activities.Home;
+import com.nv.youneverwait.connection.ApiClient;
+import com.nv.youneverwait.connection.ApiInterface;
+import com.nv.youneverwait.response.LoginResponse;
+import com.nv.youneverwait.utils.LogUtil;
+import com.nv.youneverwait.utils.SharedPreference;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
+
+import okhttp3.Headers;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 public class Config {
@@ -35,6 +53,20 @@ public class Config {
     public static String APP_TAG = "YNW"; //app name
     public static Vector<AlertDialog> dialogs = new Vector<AlertDialog>();
     public static int taskCount;
+    public static final String SHARED_PREF = "jaldee_firebase";
+    // global topic to receive app wide push notifications
+    public static final String TOPIC_GLOBAL = "global";
+
+    // broadcast receiver intent filters
+    public static final String REGISTRATION_COMPLETE = "registrationComplete";
+    public static final String PUSH_NOTIFICATION = "pushNotification";
+
+
+    public static final String NOTIFICATION_EVENT = "NOTIFICATION_EVENT";
+
+    // id to handle the notification in the notification tray
+    public static final int NOTIFICATION_ID = 100;
+    public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
 
     public static void logV(String message) {
         if (is_log_enabled) {
@@ -82,6 +114,105 @@ public class Config {
         lp.height = context.getResources().getDimensionPixelSize(R.dimen.layout_alert_dialog_height);
 
         return dialog;
+    }
+
+
+    public static void ApiSessionResetLogin(String loginId, String password, final Context context) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(context).create(ApiInterface.class);
+
+
+        SharedPreferences pref = context.getSharedPreferences(Config.SHARED_PREF, 0);
+        String regId = pref.getString("regId", null);
+        Config.logV("REGISTARION ID______RENEW________@@@@@@@___"+regId);
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("loginId", loginId);
+            jsonObj.put("password", password);
+            jsonObj.put("mUniqueId", regId);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Config.logV("JSON--------------" + jsonObj);
+
+        Call<LoginResponse> call = apiService.LoginResponse(body);
+
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, retrofit2.Response<LoginResponse> response) {
+
+                try {
+
+
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response-- LOGIN RESERT code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        Config.logV("Response--code-------------------------" + response.body().getFirstName());
+
+
+                        // get header value
+                        String cookie = response.headers().get("Set-Cookie");
+
+                        Config.logV("Response--Cookie-------------------------" + cookie);
+                        if (!cookie.isEmpty()) {
+
+                            SharedPreference.getInstance(context).getStringValue("PREF_COOKIES", "");
+                            String header = response.headers().get("Set-Cookie");
+                            String Cookie_header = header.substring(0, header.indexOf(";"));
+
+                            SharedPreference.getInstance(context).setValue("PREF_COOKIES", Cookie_header);
+                            Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+
+                            LogUtil.writeLogTest("****Login Cookie****"+Cookie_header);
+
+                        }
+
+
+                        Headers headerList = response.headers();
+                        String version = headerList.get("Version");
+                        Config.logV("Header----------" + version);
+
+                        SharedPreference.getInstance(context).setValue("Version", version);
+
+                        // Config.logV("Email------------------"+response.body().get);
+                        SharedPreference.getInstance(context).setValue("consumerId", response.body().getId());
+                        SharedPreference.getInstance(context).setValue("register", "success");
+                        SharedPreference.getInstance(context).setValue("firstname", response.body().getFirstName());
+                        SharedPreference.getInstance(context).setValue("lastname", response.body().getLastName());
+
+                        SharedPreference.getInstance(context).setValue("s3Url", response.body().getS3Url());
+
+                        SharedPreference.getInstance(context).setValue("mobile", response.body().getPrimaryPhoneNumber());
+                        Intent iReg = new Intent(context, Home.class);
+                        iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        context.startActivity(iReg);
+                        ((Activity)context).finish();
+
+
+                    }else{
+                       // Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+
+            }
+        });
+
     }
 
     public static void closeDialog(Activity mActivity,Dialog mDialog) {
@@ -161,4 +292,5 @@ public class Config {
         return  convertdate;
 
     }
+
 }
