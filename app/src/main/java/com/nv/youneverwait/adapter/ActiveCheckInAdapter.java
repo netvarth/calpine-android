@@ -177,6 +177,14 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             myViewHolder.btn_pay.setVisibility(View.GONE);
         }
 
+        myViewHolder.btn_pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Config.logV("Button Pay@@@@@@@@@@@@@@@@@");
+                callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
+            }
+        });
+
 
         myViewHolder.icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override

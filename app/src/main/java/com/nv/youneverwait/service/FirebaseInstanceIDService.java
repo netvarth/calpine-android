@@ -13,12 +13,12 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.utils.SharedPreference;
 
 
-public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
+public class FirebaseInstanceIDService extends FirebaseService {
     private static final String TAG = FirebaseInstanceIDService.class.getSimpleName();
 
     @Override
-    public void onTokenRefresh() {
-        super.onTokenRefresh();
+    public void onNewToken(String s) {
+        super.onNewToken(s);
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 
         // Saving reg id to shared preferences
@@ -29,17 +29,16 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
         // Notify UI that registration has completed, so the progress indicator can be hidden.
 
-        Config.logV("TOKEN REFRESH__________________"+refreshedToken);
+        Config.logV("TOKEN REFRESH__________@@@@@@________"+refreshedToken);
 
         String loginId = SharedPreference.getInstance(this).getStringValue("mobno", "");
         String password = SharedPreference.getInstance(this).getStringValue("password", "");
         if(!loginId.equalsIgnoreCase("")&&!password.equalsIgnoreCase("")) {
             Config.ApiSessionResetLogin(loginId,password,this);
         }
-       /* Intent registrationComplete = new Intent(Config.REGISTRATION_COMPLETE);
-        registrationComplete.putExtra("token", refreshedToken);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);*/
     }
+
+
 
     private void sendRegistrationToServer(final String token) {
         // sending gcm token to server

@@ -58,6 +58,8 @@ public class HomeTabFragment extends Fragment {
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
         bottomNavigationView.setItemIconTintList(null);
 
+
+
         return rootView;
     }
 
@@ -198,6 +200,7 @@ public class HomeTabFragment extends Fragment {
 
         viewPager.setOffscreenPageLimit(0);
         viewPager.setAdapter(adapter);
+
 
     }
 

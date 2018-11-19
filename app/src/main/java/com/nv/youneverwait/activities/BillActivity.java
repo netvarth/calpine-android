@@ -3,26 +3,45 @@ package com.nv.youneverwait.activities;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.adapter.BillServiceAdapter;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.model.BillModel;
+import com.nv.youneverwait.model.CheckSumModelTest;
+import com.nv.youneverwait.response.CheckSumModel;
+import com.nv.youneverwait.utils.SharedPreference;
+import com.payumoney.core.PayUmoneyConfig;
+import com.payumoney.core.PayUmoneySdkInitializer;
+import com.payumoney.core.entity.TransactionResponse;
+import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
+import com.payumoney.sdkui.ui.utils.ResultModel;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +53,7 @@ import retrofit2.Response;
 public class BillActivity extends AppCompatActivity {
 
     Context mCOntext;
-    Activity mActivity;
+    static Activity mActivity;
 
     String ynwUUID, mprovider;
     TextView tv_provider, tv_customer, tv_date, tv_gstn, tv_bill;
@@ -49,6 +68,7 @@ public class BillActivity extends AppCompatActivity {
     Button btn_cancel, btn_pay;
 TextView txtnetRate,txttotal;
 LinearLayout discountlayout,paidlayout,coupanlayout,amountlayout;
+String sAmountPay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,12 +145,148 @@ LinearLayout discountlayout,paidlayout,coupanlayout,amountlayout;
         btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final BottomSheetDialog dialog = new BottomSheetDialog(mCOntext);
+                dialog.setContentView(R.layout.prepayment);
+                dialog.show();
 
+                Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+                Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+                txtamt.setText("Rs." + sAmountPay);
+                Typeface tyface1 = Typeface.createFromAsset(mCOntext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                txtamt.setTypeface(tyface1);
+                btn_payu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new PaymentGateway(mCOntext,mActivity).ApiGenerateHashTest(ynwUUID, sAmountPay, "","bill");
+                        dialog.dismiss();
+                       // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
+                       /*
+                        dialog.dismiss();*/
+
+                    }
+                });
+
+                btn_paytm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        PaytmPayment payment=new PaytmPayment(mCOntext);
+                        payment.generateCheckSum();
+                        dialog.dismiss();
+                    }
+                });
             }
         });
 
 
     }
+
+
+
+   // Dialog mDialog1 = null;
+
+    public static  void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
+        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
+
+        // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
+        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+
+
+
+        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
+        builder.setAmount(convertStringToDouble(amount))
+                .setTxnId(checksumModel.getTxnId())
+                .setPhone(checksumModel.getMobile())
+                // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setProductName(checksumModel.getProductinfo())
+                .setFirstName(checksumModel.getFirstName())
+                .setEmail(checksumModel.getEmail())
+                .setsUrl(checksumModel.getFirstName())
+                .setfUrl(checksumModel.getFurl())
+                .setUdf1("")
+                .setUdf2("")
+                .setUdf3("")
+                .setUdf4("")
+                .setUdf5("")
+                .setUdf6("")
+                .setUdf7("")
+                .setUdf8("")
+                .setUdf9("")
+                .setUdf10("")
+                .setIsDebug(true)
+                .setKey(checksumModel.getKey())
+                .setMerchantId(checksumModel.getMerchantID());
+
+        try {
+            PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
+            if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
+              //  Toast.makeText(mCOntext, "Could not generate hash", Toast.LENGTH_SHORT).show();
+            } else {
+
+
+                mPaymentParams.setMerchantHash(checksumModel.getChecksum());
+                Config.logV("Checksum id---22222222222222--------" + mPaymentParams);
+
+                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.PayUMoney, true);
+            }
+        } catch (Exception e) {
+            Config.logV("e.getMessage()------" + e.getMessage());
+            Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+
+            // mTxvBuy.setEnabled(true);
+        }
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //   mTxvBuy.setEnabled(true);
+
+        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
+
+
+            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
+            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
+
+            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
+
+                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
+                    showAlert("Payment Successful");
+                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
+                    showAlert("Payment Cancelled");
+                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
+                    showAlert("Payment Failed");
+                }
+
+            } else if (resultModel != null && resultModel.getError() != null) {
+                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
+            } else {
+               // Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
+            showAlert("Payment Cancelled");
+        }
+    }
+
+    private static Double convertStringToDouble(String str) {
+        return Double.parseDouble(str);
+    }
+
+    private void showAlert(String msg) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage(msg);
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
 
     private void ApiBill(String ynwuuid) {
 
@@ -213,6 +369,7 @@ LinearLayout discountlayout,paidlayout,coupanlayout,amountlayout;
 
                         double total=mBillData.getNetRate()-mBillData.getTotalAmountPaid();
                         tv_totalamt.setText("₹ " +String.valueOf(total));
+                        sAmountPay=String.valueOf(total);
 
 
 

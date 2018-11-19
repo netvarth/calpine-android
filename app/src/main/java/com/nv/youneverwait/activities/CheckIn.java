@@ -43,6 +43,7 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
+import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.model.FamilyArrayModel;
 import com.nv.youneverwait.response.CheckSumModel;
 import com.nv.youneverwait.response.PaymentModel;
@@ -334,6 +335,8 @@ public class CheckIn extends AppCompatActivity {
 
         int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         Config.logV("Consumer ID------------" + consumerId);
+        familyMEmID=consumerId;
+
         mContext = this;
         mActivity = this;
         //  mRecycleQueueList = (RecyclerView) findViewById(R.id.recycleQueueList);
@@ -1683,8 +1686,7 @@ public class CheckIn extends AppCompatActivity {
         //  String uniqueID = UUID.randomUUID().toString();
         JSONObject jsonObj = new JSONObject();
         try {
-            String androidId = Settings.Secure.getString(getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
+
             jsonObj.put("amount", amount);
             jsonObj.put("paymentMode", "DC");
             jsonObj.put("uuid", ynwUUID);
@@ -1718,7 +1720,7 @@ public class CheckIn extends AppCompatActivity {
                         // Config.logV("Checksum id-----------" + response_data.getChecksum());
                         // Config.logV("Product key-----------" + response_data.getProductinfo());
 
-                        launchPaymentFlow(sAmountPay, response_data, serviceSelected);
+                        //launchPaymentFlow(sAmountPay, response_data);
 
 
                     } else {
@@ -1864,7 +1866,8 @@ public class CheckIn extends AppCompatActivity {
                             btn_payu.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ApiGenerateHash(value, sAmountPay, accountID);
+                                    //ApiGenerateHash(value, sAmountPay, accountID);
+                                    new PaymentGateway(mContext,mActivity).ApiGenerateHashTest(value, sAmountPay, accountID,"checkin");
                                     dialog.dismiss();
 
                                 }
@@ -1874,6 +1877,9 @@ public class CheckIn extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
 
+                                    PaytmPayment payment=new PaytmPayment(mContext);
+                                    payment.generateCheckSum();
+                                    dialog.dismiss();
                                 }
                             });
 
@@ -1908,9 +1914,9 @@ public class CheckIn extends AppCompatActivity {
 
     }
 
-    Dialog mDialog1 = null;
+   // Dialog mDialog1 = null;
 
-    private void launchPaymentFlow(String amount, CheckSumModel checksumModel, String service) {
+    public static void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
@@ -1923,15 +1929,19 @@ public class CheckIn extends AppCompatActivity {
 
         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
 
+
+
+
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
         builder.setAmount(convertStringToDouble(amount))
-                .setTxnId(checksumModel.getTxnid())
-                .setPhone(mobile)
-                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setFirstName(firstname)
+                .setTxnId(checksumModel.getTxnId())
+                .setPhone(checksumModel.getMobile())
+               // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setProductName(checksumModel.getProductinfo())
+                .setFirstName(checksumModel.getFirstName())
                 .setEmail(checksumModel.getEmail())
-                .setsUrl(checksumModel.getSuccessUrl())
-                .setfUrl(checksumModel.getFailureUrl())
+                .setsUrl(checksumModel.getFirstName())
+                .setfUrl(checksumModel.getFurl())
                 .setUdf1("")
                 .setUdf2("")
                 .setUdf3("")
@@ -1943,24 +1953,22 @@ public class CheckIn extends AppCompatActivity {
                 .setUdf9("")
                 .setUdf10("")
                 .setIsDebug(true)
-                .setKey(checksumModel.getMerchantKey())
-                .setMerchantId(checksumModel.getMerchantId());
+                .setKey(checksumModel.getKey())
+                .setMerchantId(checksumModel.getMerchantID());
 
         try {
             PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
             if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
                 Toast.makeText(mContext, "Could not generate hash", Toast.LENGTH_SHORT).show();
             } else {
-                mDialog1 = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-                mDialog1.show();
+
                 Config.logV("Checksum id---22222222222222--------" + checksumModel.getChecksum());
                 mPaymentParams.setMerchantHash(checksumModel.getChecksum());
                 PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.PayUMoney, true);
             }
         } catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            if (mDialog1.isShowing())
-                Config.closeDialog(getParent(), mDialog1);
+            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+
             // mTxvBuy.setEnabled(true);
         }
     }
@@ -1968,8 +1976,7 @@ public class CheckIn extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
-        if (mDialog1.isShowing())
-            Config.closeDialog(getParent(), mDialog1);
+
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
 
 
@@ -1989,14 +1996,14 @@ public class CheckIn extends AppCompatActivity {
             } else if (resultModel != null && resultModel.getError() != null) {
                 Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
             showAlert("Payment Cancelled");
         }
     }
 
-    private Double convertStringToDouble(String str) {
+    private static Double convertStringToDouble(String str) {
         return Double.parseDouble(str);
     }
 

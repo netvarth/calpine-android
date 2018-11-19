@@ -2,6 +2,7 @@ package com.nv.youneverwait.connection;
 
 
 import com.nv.youneverwait.model.BillModel;
+import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.model.Domain_Spinner;
 import com.nv.youneverwait.model.FamilyArrayModel;
 import com.nv.youneverwait.model.SearchModel;
@@ -14,6 +15,7 @@ import com.nv.youneverwait.response.InboxModel;
 import com.nv.youneverwait.response.LocationResponse;
 import com.nv.youneverwait.response.LoginResponse;
 import com.nv.youneverwait.response.PaymentModel;
+import com.nv.youneverwait.response.PaytmChecksum;
 import com.nv.youneverwait.response.ProfileModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.QueueTimeSlotModel;
@@ -38,6 +40,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
@@ -260,6 +264,15 @@ public interface ApiInterface {
 
     @GET("ynwConf/refinedFilters")
     Call<RefinedFilters> getFilters();
+
+    @FormUrlEncoded
+    @POST("checksum")
+    Call<ArrayList<PaytmChecksum>>getPaytmCheckSum(@Field("TXN_AMOUNT") String txnAmount);
+
+
+    @FormUrlEncoded
+    @POST("hashgenerator")
+    Call<CheckSumModelTest>getPayUCheckSum(@Field("TXN_AMOUNT") String txnAmount);
 
 
 }

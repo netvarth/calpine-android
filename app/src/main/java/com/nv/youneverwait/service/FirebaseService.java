@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -15,12 +16,15 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.common.Config;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.NotificationUtils;
+import com.nv.youneverwait.utils.SharedPreference;
 
 
 import org.json.JSONException;
@@ -46,7 +50,35 @@ public class FirebaseService extends FirebaseMessagingService {
     }*/
 
 
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+        String refreshedToken = s;
 
+        // Saving reg id to shared preferences
+        storeRegIdInPref(refreshedToken);
+
+        // sending reg id to your server
+
+
+        // Notify UI that registration has completed, so the progress indicator can be hidden.
+
+        Config.logV("TOKEN REFRESH #################__________________"+refreshedToken);
+        LogUtil.writeLogTest("Token@@"+refreshedToken);
+
+        String loginId = SharedPreference.getInstance(this).getStringValue("mobno", "");
+        String password = SharedPreference.getInstance(this).getStringValue("password", "");
+        if(!loginId.equalsIgnoreCase("")&&!password.equalsIgnoreCase("")) {
+            Config.ApiSessionResetLogin(loginId,password,this);
+        }
+    }
+
+    private void storeRegIdInPref(String token) {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("regId", token);
+        editor.commit();
+    }
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
@@ -65,14 +97,7 @@ public class FirebaseService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
-
-
-           /* try {
-                JSONObject json = new JSONObject(remoteMessage.getData().toString());
-                handleDataMessage(json);
-            } catch (Exception e) {
-                Log.e(TAG, "Exception: " + e.getMessage());
-            }*/
+        //    sendNotification(remoteMessage.getData().get("title").toString(),remoteMessage.getData().get("message").toString());
         }
     }
 
@@ -171,6 +196,7 @@ public class FirebaseService extends FirebaseMessagingService {
 
             Config.logV("Notification ONCLICK@@@@@@@@@@@@@@@@@@@@@@@");
         final Intent intent = new Intent(this, Home.class);
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("message", messageBody);
         final Random randomGenerator = new Random();
@@ -210,5 +236,7 @@ public class FirebaseService extends FirebaseMessagingService {
         final Intent notificationIntent = new Intent(Config.NOTIFICATION_EVENT);
         LocalBroadcastManager.getInstance(this).sendBroadcast(notificationIntent);
     }
+
+
 
 }

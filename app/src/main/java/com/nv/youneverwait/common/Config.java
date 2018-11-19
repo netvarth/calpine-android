@@ -126,6 +126,7 @@ public class Config {
         SharedPreferences pref = context.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
         Config.logV("REGISTARION ID______RENEW________@@@@@@@___"+regId);
+        LogUtil.writeLogTest("REG ID @@@@@@@@@@@"+regId);
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("loginId", loginId);
@@ -150,6 +151,8 @@ public class Config {
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response-- LOGIN RESERT code-------------------------" + response.code());
+
+                    LogUtil.writeLogTest("REG ID RESP CODE@@@@@@@@@@@"+response.code());
                     if (response.code() == 200) {
                         Config.logV("Response--code-------------------------" + response.body().getFirstName());
 

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -14,10 +15,12 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -31,6 +34,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +57,8 @@ import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
 import com.nv.youneverwait.activities.Home;
+import com.nv.youneverwait.activities.PaymentGateway;
+import com.nv.youneverwait.activities.PaytmPayment;
 import com.nv.youneverwait.activities.Register;
 import com.nv.youneverwait.activities.SearchLocationActivity;
 import com.nv.youneverwait.adapter.ActiveCheckInAdapter;
@@ -62,6 +69,7 @@ import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.database.DatabaseHandler;
+import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.model.Domain_Spinner;
 import com.nv.youneverwait.model.LanLong;
 import com.nv.youneverwait.model.ListCell;
@@ -70,6 +78,11 @@ import com.nv.youneverwait.response.ActiveCheckIn;
 import com.nv.youneverwait.response.RefinedFilters;
 import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
+import com.payumoney.core.PayUmoneyConfig;
+import com.payumoney.core.PayUmoneySdkInitializer;
+import com.payumoney.core.entity.TransactionResponse;
+import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
+import com.payumoney.sdkui.ui.utils.ResultModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +92,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -142,6 +158,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     String spinnerTxtPass;
     ActiveAdapterOnCallback mInterface;
     static String mlocName;
+
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
@@ -187,7 +204,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         dynaText.setPadding(15, 10, 15, 10);
                         //dynaText.setEllipsize(TextUtils.TruncateAt.END);
                         dynaText.setMaxLines(1);
-                       // dynaText.setMaxEms(8);
+                        // dynaText.setMaxEms(8);
                         dynaText.setWidth(dpToPx(130));
                         dynaText.setGravity(Gravity.CENTER);
 
@@ -203,7 +220,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
                                 mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
-                                Config.logV("Popular Text__________@@@____"+mPopularSearchtxt);
+                                Config.logV("Popular Text__________@@@____" + mPopularSearchtxt);
                                 FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
                             }
                         });
@@ -219,8 +236,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     TextView txt_sorry;
-    boolean activeCheckin=false;
+    boolean activeCheckin = false;
     ImageView ic_refinedFilter;
+    static Activity mActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -229,15 +248,16 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         mRecycleActive = (RecyclerView) row.findViewById(R.id.recycleActive);
         Lhome_mainlayout = (LinearLayout) row.findViewById(R.id.homemainlayout);
 
-        Home.doubleBackToExitPressedOnce=false;
+        Home.doubleBackToExitPressedOnce = false;
+        mActivity = getActivity();
 
         txt_sorry = (TextView) row.findViewById(R.id.txt_sorry);
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
         mCurrentLoc = (TextView) row.findViewById(R.id.currentloc);
         if (Config.isOnline(getActivity())) {
-            Config.logV("Active Checkin------@@@@@@@@@@@-------------"+activeCheckin);
-            if(!activeCheckin){
-                activeCheckin=true;
+            Config.logV("Active Checkin------@@@@@@@@@@@-------------" + activeCheckin);
+            if (!activeCheckin) {
+                activeCheckin = true;
                 ApiActiveCheckIn();
 
             }
@@ -245,7 +265,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             ApiAWSearchDomain();
         }
 
-        ic_refinedFilter=(ImageView) row.findViewById(R.id.ic_refinedFilter);
+        ic_refinedFilter = (ImageView) row.findViewById(R.id.ic_refinedFilter);
 
         ic_refinedFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,9 +288,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             //Config.logV("UpdateLocation noooooooooooooooooo" + latitude);
         } else if (s_currentLoc.equalsIgnoreCase("no")) {
 
-            latitude=Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("lat",""));
-            longitude=Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("longitu",""));
-            mlocName=SharedPreference.getInstance(mContext).getStringValue("locnme","");
+            latitude = Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("lat", ""));
+            longitude = Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("longitu", ""));
+            mlocName = SharedPreference.getInstance(mContext).getStringValue("locnme", "");
             UpdateLocation(latitude, longitude, mlocName);
 
 
@@ -435,7 +455,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                         dynaText.setTextSize(12);
                                         dynaText.setTextColor(getResources().getColor(R.color.black));
                                         dynaText.setPadding(15, 10, 15, 10);
-                                       // dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                        // dynaText.setEllipsize(TextUtils.TruncateAt.END);
                                         dynaText.setMaxLines(1);
                                         //dynaText.setMaxEms(8);
                                         dynaText.setGravity(Gravity.CENTER);
@@ -451,7 +471,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                             public void onClick(View v) {
 
                                                 mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
-                                                Config.logV("Popular Text______________"+mPopularSearchtxt);
+                                                Config.logV("Popular Text______________" + mPopularSearchtxt);
                                                 FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
 
 
@@ -1163,7 +1183,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     public void ApiActiveCheckIn() {
 
-        Config.logV("Active Checkin------%%%%%%%%%%%%%%%%%%%%------------"+activeCheckin);
+        Config.logV("Active Checkin------%%%%%%%%%%%%%%%%%%%%------------" + activeCheckin);
         final ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
@@ -1184,7 +1204,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-                    activeCheckin=false;
+                    activeCheckin = false;
                     if (response.code() == 200) {
 
 
@@ -1214,11 +1234,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             txt_sorry.setVisibility(View.VISIBLE);
                             LActiveCheckin.setVisibility(View.VISIBLE);
                         }
-                    }else{
-                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
-                        if(response.code()==419){
-                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
-                            LogUtil.writeLogTest(response.errorBody().string()+" "+cookie);
+                    } else {
+                        // Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
+                        if (response.code() == 419) {
+                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
+                            LogUtil.writeLogTest(response.errorBody().string() + " " + cookie);
                         }
                     }
 
@@ -1333,7 +1353,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         bundle.putString("longitude", String.valueOf(longitude));
         bundle.putString("spinnervalue", spinnerTxtPass);
 
-        Config.logV("Popular Text_______$$$$_______"+mPopularSearchtxt);
+        Config.logV("Popular Text_______$$$$_______" + mPopularSearchtxt);
         bundle.putString("searchtxt", mPopularSearchtxt);
         pfFragment.setArguments(bundle);
 
@@ -1364,20 +1384,18 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 googleApiClient.connect();
 
 
-            }else{
+            } else {
                 setUpGClient();
             }
 
         }
 
-        Config.logV("Active Checkin------@@@@@@@@@@@--------##########-----"+activeCheckin);
-        if(!activeCheckin) {
-            activeCheckin=true;
+        Config.logV("Active Checkin------@@@@@@@@@@@--------##########-----" + activeCheckin);
+        if (!activeCheckin) {
+            activeCheckin = true;
             ApiActiveCheckIn();
 
         }
-
-
 
 
     }
@@ -1435,7 +1453,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 mCurrentLoc.setVisibility(View.VISIBLE);
                 mCurrentLoc.setText(addresses.get(0).getLocality());
 
-                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude),String.valueOf(longitude),addresses.get(0).getLocality());
+                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude), String.valueOf(longitude), addresses.get(0).getLocality());
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
 
@@ -1526,14 +1544,17 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS_GPS:
                 switch (resultCode) {
-                    case Activity.RESULT_OK:
+                    case RESULT_OK:
                         getMyLocation();
                         break;
-                    case Activity.RESULT_CANCELED:
+                    case RESULT_CANCELED:
                         getActivity().finish();
                         DefaultLocation();
                         break;
+
+
                 }
+
                 break;
         }
     }
@@ -1554,8 +1575,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     }
 
-    public void DefaultLocation(){
-        if(mCurrentLoc.getText().toString().equalsIgnoreCase("Locating...")){
+    public void DefaultLocation() {
+        if (mCurrentLoc.getText().toString().equalsIgnoreCase("Locating...")) {
             latitude = 12.971599;
             longitude = 77.594563;
             try {
@@ -1569,6 +1590,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             }
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
@@ -1635,25 +1657,24 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
 
-
     public static boolean UpdateLocation(Double mlatitude, Double mlongitude, String locNme) {
-        Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude+""+locNme);
+        Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude + "" + locNme);
         try {
             latitude = mlatitude;
             longitude = mlongitude;
             mlocName = locNme;
 
 
-            SharedPreference.getInstance(mContext).setValue("lat",latitude);
-            SharedPreference.getInstance(mContext).setValue("longitu",longitude);
-            SharedPreference.getInstance(mContext).setValue("locnme",mlocName);
+            SharedPreference.getInstance(mContext).setValue("lat", latitude);
+            SharedPreference.getInstance(mContext).setValue("longitu", longitude);
+            SharedPreference.getInstance(mContext).setValue("locnme", mlocName);
 
 
-            SharedPreference.getInstance(mContext).setValue("locnme",mlocName);
+            SharedPreference.getInstance(mContext).setValue("locnme", mlocName);
             Config.logV("UpdateLocation 4444----" + mlocName);
             mCurrentLoc.setVisibility(View.VISIBLE);
 
-            if(mlocName.equalsIgnoreCase("")){
+            if (mlocName.equalsIgnoreCase("")) {
                 Config.logV("UpdateLocation banglore");
                 latitude = 12.971599;
                 longitude = 77.594563;
@@ -1666,12 +1687,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 } catch (Exception e) {
 
                 }
-            }else{
+            } else {
                 mCurrentLoc.setText(mlocName);
             }
 
 
-          //  SharedPreference.getInstance(mContext).setValue("map_intial","false");
+            //  SharedPreference.getInstance(mContext).setValue("map_intial","false");
         } catch (Exception e) {
 
         }
@@ -1718,8 +1739,121 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     }
 
+    @Override
+    public void onMethodActivePayIconCallback(final String value) {
 
-    ArrayList<RefinedFilters> commonFilterList=new ArrayList<>();
+        Config.logV("Button Pay@@@@@@@@@@@@@@@@");
+        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+        dialog.setContentView(R.layout.prepayment);
+        dialog.show();
+
+        Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+        Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+        txtamt.setText("Rs." + "10");
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        txtamt.setTypeface(tyface1);
+        btn_payu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, "10", "", "pay");
+                dialog.dismiss();
+                // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
+                       /*
+                        dialog.dismiss();*/
+
+            }
+        });
+
+        btn_paytm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PaytmPayment payment = new PaytmPayment(mContext);
+                payment.generateCheckSum();
+                dialog.dismiss();
+            }
+        });
+    }
+
+
+    public static  void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
+        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
+
+        // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
+        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+
+
+
+        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
+        builder.setAmount(convertStringToDouble(amount))
+                .setTxnId(checksumModel.getTxnId())
+                .setPhone(checksumModel.getMobile())
+                // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setProductName(checksumModel.getProductinfo())
+                .setFirstName(checksumModel.getFirstName())
+                .setEmail(checksumModel.getEmail())
+                .setsUrl(checksumModel.getFirstName())
+                .setfUrl(checksumModel.getFurl())
+                .setUdf1("")
+                .setUdf2("")
+                .setUdf3("")
+                .setUdf4("")
+                .setUdf5("")
+                .setUdf6("")
+                .setUdf7("")
+                .setUdf8("")
+                .setUdf9("")
+                .setUdf10("")
+                .setIsDebug(true)
+                .setKey(checksumModel.getKey())
+                .setMerchantId(checksumModel.getMerchantID());
+
+        try {
+            PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
+            if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
+                //  Toast.makeText(mCOntext, "Could not generate hash", Toast.LENGTH_SHORT).show();
+            } else {
+
+
+                mPaymentParams.setMerchantHash(checksumModel.getChecksum());
+                Config.logV("Checksum id---22222222222222--------" + mPaymentParams);
+
+                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.PayUMoney, true);
+            }
+        } catch (Exception e) {
+            Config.logV("e.getMessage()------" + e.getMessage());
+            Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+
+            // mTxvBuy.setEnabled(true);
+        }
+    }
+
+
+
+
+    private static Double convertStringToDouble(String str) {
+        return Double.parseDouble(str);
+    }
+
+    private void showAlert(String msg) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        alertDialog.setMessage(msg);
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
+
+
+    ArrayList<RefinedFilters> commonFilterList = new ArrayList<>();
+
     private void ApiFilters() {
 
 
@@ -1748,14 +1882,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         Config.logV("Response----------------");
 
                         commonFilterList.clear();
-                        commonFilterList=response.body().getCommonFilters();
-                        Config.logV("Common Filters----------------"+commonFilterList.size());
+                        commonFilterList = response.body().getCommonFilters();
+                        Config.logV("Common Filters----------------" + commonFilterList.size());
 
 
-                    }else{
-                        if(response.code()==419){
-                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
-                            LogUtil.writeLogTest(" Session Expired "+cookie);
+                    } else {
+                        if (response.code() == 419) {
+                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
+                            LogUtil.writeLogTest(" Session Expired " + cookie);
                         }
                     }
 

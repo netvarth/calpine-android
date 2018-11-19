@@ -31,17 +31,26 @@ public class Home extends AppCompatActivity {
 
         mContext = this;
 
+        Config.logV("Home Screen@@@@@@@@@@@@@@@@@@@");
+
+
         if (savedInstanceState == null) {
             // withholding the previously created fragment from being created again
             // On orientation change, it will prevent fragment recreation
             // its necessary to reserving the fragment stack inside each tab
             initScreen();
 
+            Config.logV("Init Screen@@@@@@@@@@@@@@@@@@@");
         } else {
             // restoring the previously created fragment
             // and getting the reference
+            Config.logV("RESTORE@@@@@@@@@@@@@@@@@");
             mHomeTab = (HomeTabFragment) getSupportFragmentManager().getFragments().get(0);
         }
+
+
+
+
 
         SharedPreferences pref = mContext.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);

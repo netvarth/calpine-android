@@ -38,7 +38,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
 
     Context mContext;
-    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm,mLcontactus,mLshare;
+    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm,mLcontactus,mLshare,mLappfeed;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -66,6 +66,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         tv_title.setTypeface(tyface);
 
 
+        mLappfeed=(LinearLayout) row.findViewById(R.id.lappfeed);
         mLprofile = (LinearLayout) row.findViewById(R.id.lprofile);
         mLchangepwd=(LinearLayout)row.findViewById(R.id.lchangepwd);
         mLchangeEmail=(LinearLayout)row.findViewById(R.id.lchangeemail);
@@ -75,6 +76,20 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         mLTerm=(LinearLayout)row.findViewById(R.id.lterm);
         mLcontactus=(LinearLayout)row.findViewById(R.id.lcontactus);
         mLshare=(LinearLayout)row.findViewById(R.id.lshare);
+
+
+        mLappfeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("plain/text");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "support@netvarth.com" });
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
+                intent.putExtra(Intent.EXTRA_TEXT, " ");
+                startActivity(Intent.createChooser(intent, ""));
+            }
+        });
+
 
         mLshare.setOnClickListener(new View.OnClickListener() {
             @Override

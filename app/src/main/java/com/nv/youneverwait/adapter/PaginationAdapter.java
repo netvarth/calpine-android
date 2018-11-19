@@ -344,20 +344,29 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         Config.logV("Title---111----" + searchdetailList.getAvail_date());
 
                         Config.logV("Title---111---222-" + formattedDate + "" + searchdetailList.getAvail_date() + "online" + searchdetailList.getOnline_checkins());
-                        if ((formattedDate.trim().equalsIgnoreCase(searchdetailList.getAvail_date().trim()) && (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")))) {
-                            Config.logV("Title------333-" + searchdetailList.getTitle());
-                            myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-                            myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.button_gradient_checkin));
-                            myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.app_background));
-                            //   myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#3498db"));
 
-                        } else if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1") && date1.compareTo(date2) < 0) {
-                            myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-                            // myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                            myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                            myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-                            myViewHolder.btncheckin.setEnabled(false);
-                            Config.logV("Title------444-" + searchdetailList.getTitle());
+                        if (searchdetailList.getOnline_checkins() != null) {
+                            if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {
+
+                                if ((formattedDate.trim().equalsIgnoreCase(searchdetailList.getAvail_date().trim()) && (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")))) {
+                                    Config.logV("Title------333-" + searchdetailList.getTitle());
+                                    myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                                    myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.button_gradient_checkin));
+                                    myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.app_background));
+                                    //   myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#3498db"));
+
+                                } else if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1") && date1.compareTo(date2) < 0) {
+                                    myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                                    // myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+                                    myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                    myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+                                    myViewHolder.btncheckin.setEnabled(false);
+                                    Config.logV("Title------444-" + searchdetailList.getTitle());
+                                }
+
+                            }else{
+                                myViewHolder.btncheckin.setVisibility(View.GONE);
+                            }
                         }
                     } else {
                         /*if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())&&searchdetailList.getServices()!=null) {

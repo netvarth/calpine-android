@@ -133,11 +133,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
         myViewHolder.tv_businessname.setText(toTitleCase(activelist.getProvider().getBusinessName()));
 
-        if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn") || activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
-            myViewHolder.icon_cancel.setVisibility(View.VISIBLE);
-        } else {
-            myViewHolder.icon_cancel.setVisibility(View.GONE);
-        }
+
 
 
         myViewHolder.icon_cancel.setOnClickListener(new View.OnClickListener() {
@@ -534,17 +530,24 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
        if(header.equalsIgnoreCase("old")) {
 
-           myViewHolder.tv_status.setVisibility(View.VISIBLE);
+
            myViewHolder.tv_date.setVisibility(View.VISIBLE);
 
            try {
 
-              String mDate= Config.ChangeDateFormat(activelist.getDate());
-              if(mDate!=null)
-               myViewHolder.tv_date.setText(mDate);
+               String mDate = Config.ChangeDateFormat(activelist.getDate());
+               if (mDate != null)
+                   myViewHolder.tv_date.setText(mDate);
            } catch (ParseException e) {
                e.printStackTrace();
            }
+       }else{
+
+           myViewHolder.tv_date.setVisibility(View.GONE);
+       }
+
+
+           myViewHolder.tv_status.setVisibility(View.VISIBLE);
            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                    "fonts/Montserrat_Bold.otf");
            myViewHolder.tv_status.setTypeface(tyface1);
@@ -574,10 +577,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
            }
 
-       }else{
-           myViewHolder.tv_status.setVisibility(View.GONE);
-           myViewHolder.tv_date.setVisibility(View.GONE);
-       }
+
 
         if(header.equalsIgnoreCase("old")) {
             if(activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
@@ -598,9 +598,13 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
         if(header.equalsIgnoreCase("old")) {
             myViewHolder.icon_cancel.setVisibility(View.GONE);
-        }else{
-            myViewHolder.icon_cancel.setVisibility(View.VISIBLE);
+        }else {
 
+            if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn") || activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
+                myViewHolder.icon_cancel.setVisibility(View.VISIBLE);
+            } else {
+                myViewHolder.icon_cancel.setVisibility(View.GONE);
+            }
         }
 
 
