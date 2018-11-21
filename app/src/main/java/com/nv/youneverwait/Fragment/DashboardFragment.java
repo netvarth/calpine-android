@@ -57,9 +57,8 @@ import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
 import com.nv.youneverwait.activities.Home;
-import com.nv.youneverwait.activities.PaymentGateway;
-import com.nv.youneverwait.activities.PaytmPayment;
-import com.nv.youneverwait.activities.Register;
+import com.nv.youneverwait.payment.PaymentGateway;
+import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.activities.SearchLocationActivity;
 import com.nv.youneverwait.adapter.ActiveCheckInAdapter;
 import com.nv.youneverwait.adapter.SearchListAdpter;
@@ -68,7 +67,6 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
-import com.nv.youneverwait.database.DatabaseHandler;
 import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.model.Domain_Spinner;
 import com.nv.youneverwait.model.LanLong;
@@ -80,9 +78,7 @@ import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
-import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
-import com.payumoney.sdkui.ui.utils.ResultModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -369,6 +365,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 spinnerTxtPass = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
                 Config.logV("Selected-----------" + spinnerTxtPass);
+
                 /////////test code///////////////////////////
 
 
@@ -648,6 +645,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                     /**********************************HEADER+SUBDOMAIN**************************************/
 
+                    items = new ArrayList<ListCell>();
                     //HEADER+SUBDOMAIN
                     mSubDomainSubSearch.clear();
                     Config.logV("mSubDomain.size()------------" + mSubDomain.size());
@@ -883,6 +881,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 bundle.putString("latitude", String.valueOf(latitude));
                 bundle.putString("longitude", String.valueOf(longitude));
                 bundle.putString("spinnervalue", spinnerTxtPass);
+
+                mSearchtxt = cell.getMdisplayname();
                 Config.logV("SEARCH TXT 99999" + mSearchtxt);
                 bundle.putString("searchtxt", mSearchtxt);
                 pfFragment.setArguments(bundle);
@@ -1616,9 +1616,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
 
+        String querycreate = "";
+        if (!mDomainSpinner.equalsIgnoreCase("All")) {
+            querycreate = "(phrase " + "'" + query + "') sector :'" +mDomainSpinner+ "'";
+        } else {
+            querycreate = "(phrase " + "'" + query + "')";
+        }
 
-        String querycreate = "(phrase " + "'" + query + "')";
-        ;
         //  Config.logV("Query-----------" + querycreate);
 
 
@@ -1731,10 +1735,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String value, String provider) {
+    public void onMethodActiveBillIconCallback(String value, String provider,String accountID) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
+        iBill.putExtra("accountID", accountID);
         startActivity(iBill);
 
     }
@@ -1742,114 +1747,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     @Override
     public void onMethodActivePayIconCallback(final String value) {
 
-        Config.logV("Button Pay@@@@@@@@@@@@@@@@");
-        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
-        dialog.setContentView(R.layout.prepayment);
-        dialog.show();
 
-        Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-        Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
-        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-        TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-        txtamt.setText("Rs." + "10");
-        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        txtamt.setTypeface(tyface1);
-        btn_payu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, "10", "", "pay");
-                dialog.dismiss();
-                // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
-                       /*
-                        dialog.dismiss();*/
-
-            }
-        });
-
-        btn_paytm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                PaytmPayment payment = new PaytmPayment(mContext);
-                payment.generateCheckSum();
-                dialog.dismiss();
-            }
-        });
-    }
-
-
-    public static  void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
-        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
-
-        // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
-        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
-
-
-
-        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
-        builder.setAmount(convertStringToDouble(amount))
-                .setTxnId(checksumModel.getTxnId())
-                .setPhone(checksumModel.getMobile())
-                // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo())
-                .setFirstName(checksumModel.getFirstName())
-                .setEmail(checksumModel.getEmail())
-                .setsUrl(checksumModel.getFirstName())
-                .setfUrl(checksumModel.getFurl())
-                .setUdf1("")
-                .setUdf2("")
-                .setUdf3("")
-                .setUdf4("")
-                .setUdf5("")
-                .setUdf6("")
-                .setUdf7("")
-                .setUdf8("")
-                .setUdf9("")
-                .setUdf10("")
-                .setIsDebug(true)
-                .setKey(checksumModel.getKey())
-                .setMerchantId(checksumModel.getMerchantID());
-
-        try {
-            PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
-            if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
-                //  Toast.makeText(mCOntext, "Could not generate hash", Toast.LENGTH_SHORT).show();
-            } else {
-
-
-                mPaymentParams.setMerchantHash(checksumModel.getChecksum());
-                Config.logV("Checksum id---22222222222222--------" + mPaymentParams);
-
-                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.PayUMoney, true);
-            }
-        } catch (Exception e) {
-            Config.logV("e.getMessage()------" + e.getMessage());
-            Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_LONG).show();
-
-            // mTxvBuy.setEnabled(true);
-        }
     }
 
 
 
-
-    private static Double convertStringToDouble(String str) {
-        return Double.parseDouble(str);
-    }
-
-    private void showAlert(String msg) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-        alertDialog.setMessage(msg);
-        alertDialog.setCancelable(false);
-        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        alertDialog.show();
-    }
 
 
     ArrayList<RefinedFilters> commonFilterList = new ArrayList<>();

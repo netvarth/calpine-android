@@ -593,11 +593,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.mLSeriveLayout.addView(dynaText);
                     }
 
-                    TextView dynaText = new TextView(mContext);
-                    final int finalI = i;
-                    dynaText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                    if(size>1) {
+
+                        TextView dynaText = new TextView(mContext);
+                        final int finalI = i;
+                        dynaText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
                            /* ServiceListFragment pfFragment = new ServiceListFragment();
                             FragmentTransaction transaction = DashboardFragment.getHomeFragment().getFragmentManager().beginTransaction();
                             Bundle bundle = new Bundle();
@@ -608,12 +610,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             transaction.addToBackStack(null);
                             transaction.replace(R.id.mainlayout, pfFragment).commit();*/
 
-                            adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle);
-                        }
-                    });
-                    dynaText.setGravity(Gravity.CENTER);
-                    dynaText.setBackground(mContext.getResources().getDrawable(R.drawable.icon_arrowright_blue));
-                    myViewHolder.mLSeriveLayout.addView(dynaText);
+                                adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle);
+                            }
+                        });
+                        dynaText.setGravity(Gravity.CENTER);
+                        dynaText.setBackground(mContext.getResources().getDrawable(R.drawable.icon_arrowright_blue));
+                        myViewHolder.mLSeriveLayout.addView(dynaText);
+                    }
                 }
 
 

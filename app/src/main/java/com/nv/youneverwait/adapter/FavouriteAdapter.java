@@ -198,7 +198,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
 
                 AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
                         //set message, title, and icon
-                        .setTitle("Delete")
+                        //.setTitle("Delete")
                         .setMessage("Do you want to remove "+favList.getBusinessName()+" from favourite list?")
 
 

@@ -251,7 +251,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         myViewHolder.icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                   callback.onMethodBillIconCallback(activelist.getYnwUuid(),activelist.getProvider().getBusinessName());
+                   callback.onMethodBillIconCallback(activelist.getYnwUuid(),activelist.getProvider().getBusinessName(),String.valueOf(activelist.getProvider().getId()));
             }
         });
 

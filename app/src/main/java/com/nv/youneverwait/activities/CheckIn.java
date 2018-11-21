@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.nv.youneverwait.Fragment.DashboardFragment;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.adapter.MultipleFamilyMemberAdapter;
 import com.nv.youneverwait.adapter.PaymentAdapter;
@@ -45,6 +43,8 @@ import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.model.FamilyArrayModel;
+import com.nv.youneverwait.payment.PaymentGateway;
+import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.response.CheckSumModel;
 import com.nv.youneverwait.response.PaymentModel;
 import com.nv.youneverwait.response.QueueTimeSlotModel;
@@ -70,10 +70,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -200,7 +204,6 @@ public class CheckIn extends AppCompatActivity {
                 }
 
 
-
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -220,10 +223,10 @@ public class CheckIn extends AppCompatActivity {
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
-                        if(edt_message.getText().toString().length()>1){
+                        if (edt_message.getText().toString().length() > 1) {
                             btn_send.setEnabled(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-                        }else{
+                        } else {
                             btn_send.setEnabled(false);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
@@ -335,7 +338,7 @@ public class CheckIn extends AppCompatActivity {
 
         int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         Config.logV("Consumer ID------------" + consumerId);
-        familyMEmID=consumerId;
+        familyMEmID = consumerId;
 
         mContext = this;
         mActivity = this;
@@ -803,6 +806,8 @@ public class CheckIn extends AppCompatActivity {
 
     }
 
+    boolean showPaytmWallet = false;
+    boolean showPayU = false;
 
     private void APIPayment(String accountID) {
 
@@ -832,6 +837,16 @@ public class CheckIn extends AppCompatActivity {
                     if (response.code() == 200) {
 
                         mPaymentData = response.body();
+
+                        for (int i = 0; i < mPaymentData.size(); i++) {
+                            if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
+                                showPaytmWallet = true;
+                            }
+
+                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
+                                showPayU = true;
+                            }
+                        }
                         /*if (mPaymentData.size() > 0) {
                             Lpayment.setVisibility(View.VISIBLE);
                             mPayAdpater = new PaymentAdapter(mPaymentData, mActivity);
@@ -841,6 +856,8 @@ public class CheckIn extends AppCompatActivity {
                             tv_amount.setText("Amount to Pay ₹" + sAmountPay);
                         }*/
 
+                    } else {
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }
 
 
@@ -942,7 +959,7 @@ public class CheckIn extends AppCompatActivity {
                                 secondWord = newtime;
 
 
-                               // dateCompareOne = parseDate(secondWord);
+                                // dateCompareOne = parseDate(secondWord);
 
 
                                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
@@ -988,7 +1005,7 @@ public class CheckIn extends AppCompatActivity {
                                 secondWord = mQueueTimeSlotList.get(0).getServiceTime();
 
 
-                              //  dateCompareOne = parseDate(secondWord);
+                                //  dateCompareOne = parseDate(secondWord);
 
 
                                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
@@ -1392,22 +1409,22 @@ public class CheckIn extends AppCompatActivity {
                                                 firstWord = "Est Wait Time ";
                                             }
 
-                                            } else{
+                                        } else {
 
-                                                firstWord = "Est Service Time ";
-                                            }
-
-                                        } catch(Exception e){
-                                            e.printStackTrace();
+                                            firstWord = "Est Service Time ";
                                         }
 
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
 
-                                        if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
-                                            secondWord = mQueueTimeSlotList.get(i).getServiceTime();
+
+                                    if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
+                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime();
 
 
-                                           // dateCompareOne = parseDate(secondWord);
-                                            if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+                                        // dateCompareOne = parseDate(secondWord);
+                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
                                                /* Date dt = new Date();
                                                 SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
@@ -1424,74 +1441,74 @@ public class CheckIn extends AppCompatActivity {
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }
 */
-                                                firstWord = "Est Service Time ";
-                                            } else {
-
-                                                firstWord = "Est Service Time ";
-                                            }
-                                        }
-
-                                        Spannable spannable = new SpannableString(firstWord + secondWord);
-                                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                                "fonts/Montserrat_Bold.otf");
-                                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        tv_waittime.setText(spannable);
-                                        if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                                            tv_waittime.setVisibility(View.INVISIBLE);
+                                            firstWord = "Est Service Time ";
                                         } else {
-                                            tv_waittime.setVisibility(View.VISIBLE);
+
+                                            firstWord = "Est Service Time ";
                                         }
-
                                     }
 
-                                    if (i >= 0) {
-                                        ic_left.setEnabled(true);
-                                        ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                            "fonts/Montserrat_Bold.otf");
+                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    tv_waittime.setText(spannable);
+                                    if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                                        tv_waittime.setVisibility(View.INVISIBLE);
                                     } else {
-                                        ic_left.setEnabled(false);
-                                        ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                                        tv_waittime.setVisibility(View.VISIBLE);
                                     }
 
-                                    Config.logV("Queuesize---------------" + mQueueTimeSlotList.size() + "position" + i);
-                                    if (i == mQueueTimeSlotList.size() - 1) {
-
-                                        ic_right.setEnabled(false);
-                                        ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
-                                    } else {
-                                        ic_right.setEnabled(true);
-                                        ic_right.setImageResource(R.drawable.icon_right_angle_active);
-                                    }
                                 }
-                            });
+
+                                if (i >= 0) {
+                                    ic_left.setEnabled(true);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                                } else {
+                                    ic_left.setEnabled(false);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                                }
+
+                                Config.logV("Queuesize---------------" + mQueueTimeSlotList.size() + "position" + i);
+                                if (i == mQueueTimeSlotList.size() - 1) {
+
+                                    ic_right.setEnabled(false);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                                } else {
+                                    ic_right.setEnabled(true);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_active);
+                                }
+                            }
+                        });
                             /*mQueueAdapter = new QueueTimeSlotAdapter(mQueueTimeSlotList, mActivity);
                             LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
                             mRecycleQueueList.setLayoutManager(horizontalLayoutManager);
                             mRecycleQueueList.setAdapter(mQueueAdapter);*/
 
 
-                        }
-
-
-                    } catch(Exception e){
-                        e.printStackTrace();
                     }
 
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-                @Override
-                public void onFailure (Call < ArrayList < QueueTimeSlotModel >> call, Throwable t){
-                    // Log error here since request failed
-                    Config.logV("Fail---------------" + t.toString());
-                    if (mDialog.isShowing())
-                        Config.closeDialog(mActivity, mDialog);
+            }
 
-                }
-            });
+            @Override
+            public void onFailure(Call<ArrayList<QueueTimeSlotModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(mActivity, mDialog);
+
+            }
+        });
 
 
-        }
+    }
 
 
     private void ApiSearchViewServiceID(final int id) {
@@ -1851,37 +1868,57 @@ public class CheckIn extends AppCompatActivity {
                         // finish();
                         Config.logV("Response--isPrepayment------------------" + isPrepayment);
                         if (isPrepayment) {
-                            final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
-                            dialog.setContentView(R.layout.prepayment);
-                            dialog.show();
+                            if (!showPaytmWallet && !showPayU) {
 
-                            Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-                            Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
-                            final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                            TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-                            txtamt.setText("Rs." + sAmountPay);
-                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                    "fonts/Montserrat_Bold.otf");
-                            txtamt.setTypeface(tyface1);
-                            btn_payu.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    //ApiGenerateHash(value, sAmountPay, accountID);
-                                    new PaymentGateway(mContext,mActivity).ApiGenerateHashTest(value, sAmountPay, accountID,"checkin");
-                                    dialog.dismiss();
+                                //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                            } else {
+                                try {
+                                    final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+                                    dialog.setContentView(R.layout.prepayment);
+                                    dialog.show();
 
+
+                                    Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+                                    Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                                    if (showPaytmWallet) {
+                                        btn_paytm.setVisibility(View.VISIBLE);
+                                    } else {
+                                        btn_paytm.setVisibility(View.GONE);
+                                    }
+                                    if (showPayU) {
+                                        btn_payu.setVisibility(View.VISIBLE);
+                                    } else {
+                                        btn_payu.setVisibility(View.GONE);
+                                    }
+                                    final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                                    TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+                                    txtamt.setText("Rs." + sAmountPay);
+                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                            "fonts/Montserrat_Bold.otf");
+                                    txtamt.setTypeface(tyface1);
+                                    btn_payu.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            //ApiGenerateHash(value, sAmountPay, accountID);
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
+                                            dialog.dismiss();
+
+                                        }
+                                    });
+
+                                    btn_paytm.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            PaytmPayment payment = new PaytmPayment(mContext);
+                                            payment.generateCheckSum(sAmountPay);
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            });
-
-                            btn_paytm.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    PaytmPayment payment=new PaytmPayment(mContext);
-                                    payment.generateCheckSum();
-                                    dialog.dismiss();
-                                }
-                            });
+                            }
 
 
                         } else {
@@ -1889,9 +1926,42 @@ public class CheckIn extends AppCompatActivity {
                         }
                     } else {
                         txt_message = "";
-                        String responseerror = response.errorBody().string();
-                        Config.logV("Response--error-------------------------" + responseerror);
-                        Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
+                        if (response.code() == 422) {
+
+                            String errorString = response.errorBody().string();
+
+
+                            Map<String, String> tokens = new HashMap<String, String>();
+                            tokens.put("customer", mSearchTerminology.getCustomer());
+                            tokens.put("provider", mSearchTerminology.getProvider());
+                            tokens.put("arrived", mSearchTerminology.getArrived());
+                            tokens.put("waitlist", mSearchTerminology.getWaitlist());
+
+                            tokens.put("start", mSearchTerminology.getStart());
+                            tokens.put("cancelled", mSearchTerminology.getCancelled());
+                            tokens.put("done", mSearchTerminology.getDone());
+
+
+                            StringBuffer sb = new StringBuffer();
+
+                            Pattern p3 = Pattern.compile("\\[(.*?)\\]");
+
+                            Matcher matcher = p3.matcher(errorString);
+                            while (matcher.find()) {
+                                System.out.println(matcher.group(1));
+                                matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
+                            }
+                            matcher.appendTail(sb);
+
+                            System.out.println("SubString@@@@@@@@@@@@@"+sb.toString());
+
+
+                            Toast.makeText(mContext, sb.toString(), Toast.LENGTH_LONG).show();
+                        } else {
+                            String responseerror = response.errorBody().string();
+                            Config.logV("Response--error-------------------------" + responseerror);
+                            Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
+                        }
                     }
 
 
@@ -1914,7 +1984,7 @@ public class CheckIn extends AppCompatActivity {
 
     }
 
-   // Dialog mDialog1 = null;
+    // Dialog mDialog1 = null;
 
     public static void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
@@ -1930,13 +2000,11 @@ public class CheckIn extends AppCompatActivity {
         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
 
 
-
-
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
         builder.setAmount(convertStringToDouble(amount))
                 .setTxnId(checksumModel.getTxnId())
                 .setPhone(checksumModel.getMobile())
-               // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
                 .setProductName(checksumModel.getProductinfo())
                 .setFirstName(checksumModel.getFirstName())
                 .setEmail(checksumModel.getEmail())
@@ -1996,7 +2064,7 @@ public class CheckIn extends AppCompatActivity {
             } else if (resultModel != null && resultModel.getError() != null) {
                 Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
             } else {
-              //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
             showAlert("Payment Cancelled");

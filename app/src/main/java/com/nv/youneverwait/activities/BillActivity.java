@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.adapter.BillServiceAdapter;
 import com.nv.youneverwait.common.Config;
@@ -28,20 +27,17 @@ import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.model.BillModel;
 import com.nv.youneverwait.model.CheckSumModelTest;
-import com.nv.youneverwait.response.CheckSumModel;
-import com.nv.youneverwait.utils.SharedPreference;
+import com.nv.youneverwait.payment.PaymentGateway;
+import com.nv.youneverwait.payment.PaytmPayment;
+import com.nv.youneverwait.response.PaymentModel;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,6 +65,7 @@ public class BillActivity extends AppCompatActivity {
 TextView txtnetRate,txttotal;
 LinearLayout discountlayout,paidlayout,coupanlayout,amountlayout;
 String sAmountPay;
+String accountID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +123,7 @@ String sAmountPay;
         if (extras != null) {
             ynwUUID = extras.getString("ynwUUID");
             mprovider = extras.getString("provider");
+            accountID=extras.getString("accountID");
         }
 
         ApiBill(ynwUUID);
@@ -141,43 +139,67 @@ String sAmountPay;
                 finish();
             }
         });
+        APIPayment(accountID);
 
         btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final BottomSheetDialog dialog = new BottomSheetDialog(mCOntext);
-                dialog.setContentView(R.layout.prepayment);
-                dialog.show();
 
-                Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-                Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
-                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-                txtamt.setText("Rs." + sAmountPay);
-                Typeface tyface1 = Typeface.createFromAsset(mCOntext.getAssets(),
-                        "fonts/Montserrat_Bold.otf");
-                txtamt.setTypeface(tyface1);
-                btn_payu.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new PaymentGateway(mCOntext,mActivity).ApiGenerateHashTest(ynwUUID, sAmountPay, "","bill");
-                        dialog.dismiss();
-                       // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
+                if(!showPaytmWallet&&!showPayU){
+
+
+                   // Toast.makeText(mCOntext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                }else {
+                    try {
+                        btn_pay.setVisibility(View.VISIBLE);
+                        final BottomSheetDialog dialog = new BottomSheetDialog(mCOntext);
+                        dialog.setContentView(R.layout.prepayment);
+                        dialog.show();
+
+                        Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+                        Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                        if (showPaytmWallet) {
+                            btn_paytm.setVisibility(View.VISIBLE);
+                        } else {
+                            btn_paytm.setVisibility(View.GONE);
+                        }
+                        if (showPayU) {
+                            btn_payu.setVisibility(View.VISIBLE);
+                        } else {
+                            btn_payu.setVisibility(View.GONE);
+                        }
+
+                        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                        TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+                        txtamt.setText("Rs." + sAmountPay);
+                        Typeface tyface1 = Typeface.createFromAsset(mCOntext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                        txtamt.setTypeface(tyface1);
+                        btn_payu.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHashTest(ynwUUID, sAmountPay, "", "bill");
+                                dialog.dismiss();
+                                // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
                        /*
                         dialog.dismiss();*/
 
-                    }
-                });
+                            }
+                        });
 
-                btn_paytm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                        btn_paytm.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                        PaytmPayment payment=new PaytmPayment(mCOntext);
-                        payment.generateCheckSum();
-                        dialog.dismiss();
+                                PaytmPayment payment = new PaytmPayment(mCOntext);
+                                payment.generateCheckSum(sAmountPay);
+                                dialog.dismiss();
+                            }
+                        });
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-                });
+                }
             }
         });
 
@@ -185,6 +207,84 @@ String sAmountPay;
     }
 
 
+    boolean showPaytmWallet=false;
+    boolean showPayU=false;
+    ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
+    private void APIPayment(String accountID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mCOntext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<ArrayList<PaymentModel>> call = apiService.getPayment(accountID);
+
+        call.enqueue(new Callback<ArrayList<PaymentModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        mPaymentData = response.body();
+
+                        for(int i=0;i<mPaymentData.size();i++){
+                            if(mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")){
+                                showPaytmWallet=true;
+                            }
+
+                            if(mPaymentData.get(i).getName().equalsIgnoreCase("CC")||mPaymentData.get(i).getName().equalsIgnoreCase("DC")||mPaymentData.get(i).getName().equalsIgnoreCase("NB")){
+                                showPayU=true;
+                            }
+                        }
+
+                        if(!showPaytmWallet&&!showPayU){
+                            btn_pay.setVisibility(View.INVISIBLE);
+                        }
+                        /*if (mPaymentData.size() > 0) {
+                            Lpayment.setVisibility(View.VISIBLE);
+                            mPayAdpater = new PaymentAdapter(mPaymentData, mActivity);
+                            LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+                            mRecyclePayList.setLayoutManager(horizontalLayoutManager);
+                            mRecyclePayList.setAdapter(mPayAdpater);
+                            tv_amount.setText("Amount to Pay ₹" + sAmountPay);
+                        }*/
+
+                    }else{
+                        btn_pay.setVisibility(View.INVISIBLE);
+                        Toast.makeText(mCOntext,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<PaymentModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+
+
+    }
 
    // Dialog mDialog1 = null;
 
@@ -370,6 +470,13 @@ String sAmountPay;
                         double total=mBillData.getNetRate()-mBillData.getTotalAmountPaid();
                         tv_totalamt.setText("₹ " +String.valueOf(total));
                         sAmountPay=String.valueOf(total);
+                        Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@"+sAmountPay);
+
+                        if(total!=0.0){
+                           btn_pay.setVisibility(View.VISIBLE);
+                        }else{
+                            btn_pay.setVisibility(View.INVISIBLE);
+                        }
 
 
 

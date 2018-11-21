@@ -7,7 +7,7 @@ package com.nv.youneverwait.callback;
 public interface ActiveAdapterOnCallback {
 
     void onMethodActiveCallback(String value);
-    void onMethodActiveBillIconCallback(String value,String provider);
+    void onMethodActiveBillIconCallback(String value,String provider,String accountID);
     void onMethodActivePayIconCallback(String value);
 
 

@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.nv.youneverwait.Fragment.HomeTabFragment;
+import com.nv.youneverwait.Fragment.SearchDetailViewFragment;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.utils.NotificationUtils;
@@ -62,6 +63,25 @@ public class Home extends AppCompatActivity {
     private void initScreen() {
         // Creating the ViewPager container fragment once
         mHomeTab = new HomeTabFragment();
+
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, mHomeTab)
+                .commit();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        Config.logV("Push Notification@@@@@@@@@@@@@@@@@@@@@");
+        mHomeTab = new HomeTabFragment();
+
+        Bundle bundle = new Bundle();
+
+
+        bundle.putString("tab","1" );
+        mHomeTab.setArguments(bundle);
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()

@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -64,7 +65,7 @@ public class FirebaseService extends FirebaseMessagingService {
         // Notify UI that registration has completed, so the progress indicator can be hidden.
 
         Config.logV("TOKEN REFRESH #################__________________"+refreshedToken);
-        LogUtil.writeLogTest("Token@@"+refreshedToken);
+        //LogUtil.writeLogTest("Token@@"+refreshedToken);
 
         String loginId = SharedPreference.getInstance(this).getStringValue("mobno", "");
         String password = SharedPreference.getInstance(this).getStringValue("password", "");
@@ -209,7 +210,8 @@ public class FirebaseService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             notificationBuilder.setSmallIcon(R.mipmap.ynw_logo);
         } else {
-            notificationBuilder.setSmallIcon(R.mipmap.ynw_logo);
+            notificationBuilder.setSmallIcon(R.drawable.ic_silhouette);
+            notificationBuilder.setColor(Color.parseColor("#F0B41C"));
         }
         notificationBuilder.setContentTitle(TextUtils.isEmpty(title) ? getString(R.string.app_name) : title)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))

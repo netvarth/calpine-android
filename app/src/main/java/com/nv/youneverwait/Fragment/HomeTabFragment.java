@@ -46,11 +46,13 @@ public class HomeTabFragment extends Fragment {
     MenuItem prevMenuItem;
     static Fragment hometabFragment;
 
+    String tab;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.bottomtab_fragment, container, false);
         viewPager = (CustomViewPager) rootView.findViewById(R.id.viewpager);
+        mContext=getActivity();
 
 
         //Initializing the bottomNavigationView
@@ -59,6 +61,11 @@ public class HomeTabFragment extends Fragment {
         bottomNavigationView.setItemIconTintList(null);
 
 
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            tab = bundle.getString("tab");
+            Config.logV("Tab@@@@@@#######@@@@@@@@@"+tab);
+        }
 
         return rootView;
     }
@@ -148,6 +155,7 @@ public class HomeTabFragment extends Fragment {
                 Log.d("page", "onPageSelected: " + position);
 
 
+
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 prevMenuItem = bottomNavigationView.getMenu().getItem(position);
 
@@ -200,6 +208,13 @@ public class HomeTabFragment extends Fragment {
 
         viewPager.setOffscreenPageLimit(0);
         viewPager.setAdapter(adapter);
+
+        if(tab!=null) {
+            Config.logV("Tab@@@@@@@@@@@@@@@@@@@@@@@@@@@"+tab);
+            if (tab.equalsIgnoreCase("1")) {
+                viewPager.setCurrentItem(1);
+            }
+        }
 
 
     }

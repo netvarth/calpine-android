@@ -181,7 +181,8 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             @Override
             public void onClick(View v) {
                 Config.logV("Button Pay@@@@@@@@@@@@@@@@@");
-                callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
+               // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
+                callback.onMethodActiveBillIconCallback(activelist.getYnwUuid(), activelist.getProvider().getBusinessName(),String.valueOf(activelist.getProvider().getId()));
             }
         });
 
@@ -189,7 +190,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         myViewHolder.icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodActiveBillIconCallback(activelist.getYnwUuid(), activelist.getProvider().getBusinessName());
+                callback.onMethodActiveBillIconCallback(activelist.getYnwUuid(), activelist.getProvider().getBusinessName(),String.valueOf(activelist.getProvider().getId()));
             }
         });
 

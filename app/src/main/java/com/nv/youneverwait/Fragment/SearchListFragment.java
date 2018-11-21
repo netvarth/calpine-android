@@ -448,7 +448,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Config.logV("Query--------------------" + query);
+                        Config.logV("loadNextPage--------------------" + query);
                         loadNextPage(query, url);
                     }
                 }, 1000);
@@ -913,6 +913,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 total_foundcount = 0;
                 TOTAL_PAGES = 0;
                 currentPage = PAGE_START;
+
+
+                searchTxt=cell.getMdisplayname();
+                mSearchView.setQuery(searchTxt, false);
 
 
                 pageadapter.clear();
@@ -1741,6 +1745,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             pageadapter.notifyDataSetChanged();
 
 
+                            Config.logV("Results@@@@@@@@@@@@@@@@@"+results.size());
                             Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
                             Config.logV("CURRENT PAGE**333*************" + currentPage);
                             if (TOTAL_PAGES > 0 && total_foundcount > 10) {
@@ -1846,7 +1851,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
-    public void QuerySubmitCLick(String query) {
+    public void QuerySubmitCLick(String querypass) {
 
         //  mSearchView.setQuery("", false);
         LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
@@ -1855,7 +1860,15 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         double lowerRightLat = Lanlong.getLowerRightLat();
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
-        String querycreate = "(phrase " + "'" + query + "')";
+      //  String querycreate = "(phrase " + "'" + query + "')";
+
+
+        String querycreate = "";
+        if (!mDomainSpinner.equalsIgnoreCase("All")) {
+            querycreate = "(phrase " + "'" + querypass + "') sector :'" +mDomainSpinner+ "'";
+        } else {
+            querycreate = "(phrase " + "'" + querypass + "')";
+        }
 
 
         isLastPage = false;
@@ -1865,6 +1878,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         TOTAL_PAGES = 0;
         currentPage = PAGE_START;
         pageadapter.clear();
+
+
+
 
         Config.logV("Query-----------" + querycreate);
 

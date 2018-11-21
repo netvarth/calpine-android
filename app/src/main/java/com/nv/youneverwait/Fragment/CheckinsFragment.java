@@ -352,11 +352,11 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
                     } else {
                        // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        if(response.code()==419){
+                       /* if(response.code()==419){
                             String cookie= SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
                             LogUtil.writeLogTest(" Session Expired "+cookie);
                         }
-
+*/
                     }
 
 
@@ -513,10 +513,11 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
     }
 
     @Override
-    public void onMethodBillIconCallback(String value, String provider) {
+    public void onMethodBillIconCallback(String value, String provider,String accountID ) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
+        iBill.putExtra("accountID", accountID);
         startActivity(iBill);
     }
 
@@ -953,6 +954,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext,"Added to Favourites",Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 

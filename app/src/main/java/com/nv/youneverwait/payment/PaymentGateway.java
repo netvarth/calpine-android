@@ -1,4 +1,4 @@
-package com.nv.youneverwait.activities;
+package com.nv.youneverwait.payment;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -9,7 +9,10 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.nv.youneverwait.Fragment.DashboardFragment;
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.activities.BillActivity;
+import com.nv.youneverwait.activities.CheckIn;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
@@ -30,6 +33,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by sharmila on 19/11/18.
  */
@@ -37,10 +43,11 @@ import retrofit2.Response;
 public class PaymentGateway {
 
     Context mCOntext;
-    Activity mActivity;
-    public PaymentGateway(Context mContext, Activity activity){
-        mCOntext=mContext;
-        mActivity=activity;
+    static Activity mActivity;
+
+    public PaymentGateway(Context mContext, Activity activity) {
+        mCOntext = mContext;
+        mActivity = activity;
     }
 
     public void ApiGenerateHashTest(String ynwUUID, final String amount, String accountID, final String from) {
@@ -66,7 +73,7 @@ public class PaymentGateway {
         }
 
 
-      //  RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        //  RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<CheckSumModelTest> call = apiService.getPayUCheckSum(amount);
 
         call.enqueue(new Callback<CheckSumModelTest>() {
@@ -85,14 +92,14 @@ public class PaymentGateway {
                     if (response.code() == 200) {
 
 
-                        if(from.equalsIgnoreCase("checkin")){
+                        if (from.equalsIgnoreCase("checkin")) {
 
                             CheckSumModelTest response_data = response.body();
                             Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
-                             CheckIn.launchPaymentFlow(amount, response_data);
+                            CheckIn.launchPaymentFlow(amount, response_data);
 
-                        }else {
+                        } else if (from.equalsIgnoreCase("bill")) {
                             CheckSumModelTest response_data = response.body();
                             Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 

@@ -57,7 +57,7 @@ public class Register extends AppCompatActivity {
     TextInputLayout txt_InputMob;
     Button btn_reg_submit;
     TextView tv_terms,tv_provider,tv_download;
-    public static final int RequestPermissionCode = 7;
+    /*public static final int RequestPermissionCode = 7;
     private void RequestMultiplePermission() {
 
         // Creating String Array with Permissions.
@@ -68,8 +68,8 @@ public class Register extends AppCompatActivity {
 
                 }, RequestPermissionCode);
 
-    }
-    @Override
+    }*/
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
 
@@ -103,7 +103,7 @@ public class Register extends AppCompatActivity {
         return FirstPermissionResult == PackageManager.PERMISSION_GRANTED &&
                 SecondPermissionResult == PackageManager.PERMISSION_GRANTED ;
 
-    }
+    }*/
    /* private BroadcastReceiver mRegistrationBroadcastReceiver;
     private void displayFirebaseRegId() {
         SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
@@ -167,7 +167,7 @@ public class Register extends AppCompatActivity {
         displayFirebaseRegId();*/
 
 
-        if(CheckingPermissionIsEnabledOrNot())
+       /* if(CheckingPermissionIsEnabledOrNot())
         {
 
         }
@@ -178,7 +178,7 @@ public class Register extends AppCompatActivity {
             //Calling method to enable permission.
             RequestMultiplePermission();
 
-        }
+        }*/
         LogUtil.writeLogTest("**********************Jaldee***************************");
         mEdtMobno.addTextChangedListener(new MyTextWatcher(mEdtMobno));
 

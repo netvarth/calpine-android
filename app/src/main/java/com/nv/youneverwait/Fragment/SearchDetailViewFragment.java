@@ -1097,6 +1097,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext,"Added to Favourites",Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 

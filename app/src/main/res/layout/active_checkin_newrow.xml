@@ -122,7 +122,6 @@
                     android:textSize="@dimen/txtsize_12"
                     android:paddingLeft="@dimen/padding2"
                     android:paddingRight="@dimen/padding2"
-                    android:enabled="false"
 
                     style="?android:attr/borderlessButtonStyle" />
             </LinearLayout>

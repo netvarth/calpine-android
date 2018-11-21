@@ -202,6 +202,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
                         Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_SHORT).show();
                        dialog.dismiss();
+                       finish();
 
 
 

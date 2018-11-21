@@ -1,4 +1,4 @@
-package com.nv.youneverwait.activities;
+package com.nv.youneverwait.payment;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -38,7 +38,7 @@ public class PaytmPayment {
     public PaytmPayment(Context mContext){
         context=mContext;
     }
-    public void generateCheckSum() {
+    public void generateCheckSum(String txtamt) {
 
 
         ApiInterface apiService =
@@ -46,7 +46,7 @@ public class PaytmPayment {
 
 
         // RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), params.toString());
-        Call<ArrayList<PaytmChecksum>>  call = apiService.getPaytmCheckSum("10");
+        Call<ArrayList<PaytmChecksum>>  call = apiService.getPaytmCheckSum(txtamt);
 
 
 
