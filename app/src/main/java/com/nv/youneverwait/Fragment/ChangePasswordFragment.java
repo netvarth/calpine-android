@@ -263,7 +263,9 @@ public class ChangePasswordFragment extends RootFragment {
 
 
                     }else{
-                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
+                        if (response.code() != 419) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
 

@@ -238,7 +238,7 @@
                             </RelativeLayout>
                         </LinearLayout>
 
-                        <!-- <TextView
+                       <TextView
                              android:id="@+id/txtMoredetails"
                              android:layout_width="wrap_content"
                              android:layout_height="wrap_content"
@@ -251,7 +251,13 @@
                              android:drawablePadding="@dimen/padding3"
                              android:visibility="gone"
                              android:textSize="@dimen/txtsize_10" />
- -->
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/mrecycle_virtualfield"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding5"
+                            android:visibility="gone"
+                            android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
 
 
                         <android.support.v7.widget.RecyclerView

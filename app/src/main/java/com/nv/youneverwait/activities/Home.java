@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.nv.youneverwait.Fragment.HomeTabFragment;
@@ -56,6 +57,35 @@ public class Home extends AppCompatActivity {
         SharedPreferences pref = mContext.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
         Config.logV("REGISTARION ID___3333####___________@@@@@@@___"+regId);
+
+
+        Bundle b = getIntent().getExtras();// add these lines of code to get data from notification
+        if(b!=null) {
+            String from = b.getString("message");
+            if (!from.equalsIgnoreCase("")) {
+                Config.logV("Push Notification@@@@@@@@@@@@@@@@@@@@@");
+                mHomeTab = new HomeTabFragment();
+
+                Bundle bundle = new Bundle();
+
+
+                bundle.putString("tab", "1");
+                mHomeTab.setArguments(bundle);
+
+                final FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, mHomeTab)
+                        .commit();
+            }
+        }
+
+        /*if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                Object value = getIntent().getExtras().get(key);
+             Config.logV( "Key: " + key + "\n Value: " + value);
+
+            }
+        }*/
 
 
     }

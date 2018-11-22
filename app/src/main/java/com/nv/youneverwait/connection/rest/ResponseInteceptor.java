@@ -55,7 +55,16 @@ public class ResponseInteceptor implements Interceptor {
 
         Response response =  chain.proceed(request);
 
+        Headers headerList = response.headers();
+        String versionheader = headerList.get("Version");
+        Config.logV("Header-----Response-----" + versionheader);
+       /* if(versionheader.equalsIgnoreCase("api-1.1.0,config-1.1.0")){
+            String version="v2";
+            Config.logV("Header-----Response--@@@@@---" + versionheader);
 
+           SharedPreference.getInstance(context).setValue("BASE_URL","http://35.154.241.175/"+version+"/rest/");
+        }
+*/
 
         if (response.code() == 419){
             // Magic is here ( Handle the error as your way )
@@ -85,6 +94,10 @@ public class ResponseInteceptor implements Interceptor {
         SharedPreferences pref = context.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
         Config.logV("REGISTARION ID______________@@@@@@@___"+regId);
+
+        Config.logV("login ID______________@@@@@@@___"+loginId);
+        Config.logV("password ID______________@@@@@@@___"+password);
+
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("loginId", loginId);
@@ -153,7 +166,8 @@ public class ResponseInteceptor implements Interceptor {
 
 
                     }else{
-                      //  Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                        if(response.code()!=419)
+                        Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();
                     }
 
 

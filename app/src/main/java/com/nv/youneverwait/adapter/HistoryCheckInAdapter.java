@@ -483,7 +483,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         }
 
 
-        if(!header.equalsIgnoreCase("old")) {
+        if(!header.equalsIgnoreCase("old")&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
             myViewHolder.tv_token.setVisibility(View.VISIBLE);
             myViewHolder.layout_token.setVisibility(View.VISIBLE);
             String firstWord = "Token No ";
@@ -502,7 +502,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         }
 
 
-        if (activelist.getPersonsAhead() != -1) {
+        if (activelist.getPersonsAhead() != -1&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
             myViewHolder.tv_personahead.setVisibility(View.VISIBLE);
             String firstWord1 = "Persons Ahead ";
             String secondWord1 = String.valueOf(activelist.getPersonsAhead());

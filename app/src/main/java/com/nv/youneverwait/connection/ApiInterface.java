@@ -28,6 +28,7 @@ import com.nv.youneverwait.response.SearchService;
 import com.nv.youneverwait.response.SearchSetting;
 import com.nv.youneverwait.response.SearchTerminology;
 import com.nv.youneverwait.response.SearchViewDetail;
+import com.nv.youneverwait.response.SearchVirtualFields;
 import com.nv.youneverwait.response.SectorCheckin;
 
 
@@ -273,6 +274,13 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("hashgenerator")
     Call<CheckSumModelTest>getPayUCheckSum(@Field("TXN_AMOUNT") String txnAmount);
+
+
+
+    @GET("{consumerID}/virtualFields.json")
+    Call<SearchVirtualFields> getVirtualFields(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+
+
 
 
 }

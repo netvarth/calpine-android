@@ -26,11 +26,16 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.activities.SwipeGalleryImage;
 import com.nv.youneverwait.adapter.LocationCheckinAdapter;
 import com.nv.youneverwait.adapter.SearchLocationAdapter;
+import com.nv.youneverwait.adapter.VirtualFieldAdapter;
 import com.nv.youneverwait.callback.LocationCheckinCallback;
 import com.nv.youneverwait.callback.SearchLocationAdpterCallback;
 import com.nv.youneverwait.common.Config;
@@ -48,9 +53,11 @@ import com.nv.youneverwait.response.SearchService;
 import com.nv.youneverwait.response.SearchSetting;
 import com.nv.youneverwait.response.SearchTerminology;
 import com.nv.youneverwait.response.SearchViewDetail;
+import com.nv.youneverwait.response.SearchVirtualFields;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,6 +74,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -96,7 +105,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     TextView tv_busName, tv_domain, tv_desc, tv_msg;
 
-    RecyclerView mRecyLocDetail;
+    RecyclerView mRecyLocDetail,mRecycle_virtualfield;
     SearchLocationAdapter mSearchLocAdapter;
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
 
@@ -104,7 +113,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<String> ids;
     String uniqueID;
 
-    TextView tv_ImageViewText;
+    TextView tv_ImageViewText,tv_Moredetails;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
     LocationCheckinCallback callback;
@@ -118,6 +127,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         mContext = getActivity();
         mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
+        mRecycle_virtualfield=(RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
 
         count = 0;
@@ -164,6 +174,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_ImageViewText = (TextView) row.findViewById(R.id.mImageViewText);
         mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
         ic_fav = (ImageView) row.findViewById(R.id.txtfav);
+        tv_Moredetails=(TextView) row.findViewById(R.id.txtMoredetails);
 
         //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
         tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
@@ -180,6 +191,24 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
+       /* ApiSearchVirtualFields(uniqueID);
+
+        tv_Moredetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mRecycle_virtualfield.setVisibility(View.VISIBLE);
+                Config.logV("Domain Size@@@@@@@@@@@@@"+domainVirtual.size());
+                Config.logV("Subdomain Size@@@@@@@@@@@@@"+sub_domainVirtual.size());
+
+
+               RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext);
+                mRecycle_virtualfield.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            }
+        });*/
 
 
         mInterface = (SearchLocationAdpterCallback) this;
@@ -948,6 +977,100 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
     }
+
+    VirtualFieldAdapter mAdapter;
+   SearchVirtualFields resultData;
+   ArrayList<SearchVirtualFields>  domainVirtual=new ArrayList<>();
+    ArrayList<SearchVirtualFields>  sub_domainVirtual=new ArrayList<>();
+
+    ArrayList<SearchVirtualFields>  mergeResult=new ArrayList<>();
+    private void ApiSearchVirtualFields(String muniqueID) {
+
+
+       ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+
+       /* Gson gson = new GsonBuilder()
+                .registerTypeAdapter(SearchVirtualFields.class, new SearchVirtualFields.DataStateDeserializer())
+                .create();*/
+
+       /* String url=SharedPreference.getInstance(mContext).getStringValue("s3Url", "")+"/";
+        Retrofit retrofit  = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiInterface apiService =retrofit.create(ApiInterface.class);*/
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+
+
+        Call<SearchVirtualFields> call = apiService.getVirtualFields(Integer.parseInt(muniqueID), sdf.format(currentTime));
+
+        call.enqueue(new Callback<SearchVirtualFields>() {
+            @Override
+            public void onResponse(Call<SearchVirtualFields> call, Response<SearchVirtualFields> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL----VIRTUAL-----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------VIRTUAL-------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+
+                        resultData= response.body();
+                        if(resultData!=null){
+                            tv_Moredetails.setVisibility(View.VISIBLE);
+                            domainVirtual.clear();
+                            domainVirtual=response.body().getDomain();
+                            sub_domainVirtual.clear();
+                            sub_domainVirtual=response.body().getSubdomain();
+
+
+                            domainVirtual.addAll(sub_domainVirtual);
+
+
+                        }else{
+                            tv_Moredetails.setVisibility(View.GONE);
+                        }
+
+
+
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SearchVirtualFields> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
 
 
     private void ApiSearchViewTerminology(String muniqueID) {

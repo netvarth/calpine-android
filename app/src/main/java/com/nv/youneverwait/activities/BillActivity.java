@@ -263,6 +263,7 @@ String accountID;
 
                     }else{
                         btn_pay.setVisibility(View.INVISIBLE);
+                        if(response.code()!=419)
                         Toast.makeText(mCOntext,response.errorBody().string(),Toast.LENGTH_LONG).show();
                     }
 

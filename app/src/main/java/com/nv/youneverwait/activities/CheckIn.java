@@ -1960,6 +1960,7 @@ public class CheckIn extends AppCompatActivity {
                         } else {
                             String responseerror = response.errorBody().string();
                             Config.logV("Response--error-------------------------" + responseerror);
+                            if(response.code()!=419)
                             Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
                         }
                     }

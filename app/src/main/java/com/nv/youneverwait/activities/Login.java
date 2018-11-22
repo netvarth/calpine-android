@@ -259,6 +259,7 @@ public class Login extends AppCompatActivity {
 
 
                     }else{
+                        if(response.code()!=419)
                         Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_LONG).show();
                     }
 

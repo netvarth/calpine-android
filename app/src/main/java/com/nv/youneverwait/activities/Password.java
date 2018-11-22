@@ -429,6 +429,9 @@ public class Password extends AppCompatActivity {
                 ApiClient.getClient(this).create(ApiInterface.class);
        /* String androidId = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);*/
+
+        SharedPreference.getInstance(mContext).setValue("password", password);
+
         SharedPreferences pref = mContext.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
         Config.logV("REGISTARION ID_________________"+regId);
