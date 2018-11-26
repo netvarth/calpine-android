@@ -11,6 +11,11 @@ import java.util.ArrayList;
 public class ActiveCheckIn {
 
 
+    public int getPartySize() {
+        return partySize;
+    }
+
+    int partySize;
     public boolean isFavourite() {
         return favourite;
     }

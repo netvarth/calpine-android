@@ -76,7 +76,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_businessname, tv_estTime, tv_service, tv_place, tv_personahead, tv_token, icon_message, icon_cancel,tv_status;
+        public TextView tv_partysize,tv_businessname, tv_estTime, tv_service, tv_place, tv_personahead, tv_token, icon_message, icon_cancel,tv_status;
         TextView icon_bill,tv_date,icon_rate;
         LinearLayout layout_token;
         TextView icon_fav;
@@ -99,6 +99,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             layout_token = (LinearLayout) view.findViewById(R.id.layout_token);
             tv_status=(TextView) view.findViewById(R.id.txt_status);
             tv_date=(TextView) view.findViewById(R.id.txt_date);
+            tv_partysize=(TextView) view.findViewById(R.id.txt_partysizevalue);
         }
     }
 
@@ -496,10 +497,35 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             myViewHolder.tv_token.setText(spannable);
 
+
+                if(String.valueOf(activelist.getPartySize())!=null) {
+                    if (activelist.getPartySize() > 1) {
+                        String partyWord = "Party Size ";
+                        String ValueWord = String.valueOf(activelist.getPartySize());
+                        Spannable spannable1 = new SpannableString(partyWord + ValueWord);
+                        spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                                0, partyWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        myViewHolder.tv_partysize.setVisibility(View.VISIBLE);
+                       // myViewHolder.tv_partysize.setText(String.valueOf(activelist.getPartySize()));
+
+                        spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), partyWord.length(), partyWord.length() + ValueWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        myViewHolder.tv_partysize.setText(spannable1);
+                    } else {
+                        myViewHolder.tv_partysize.setVisibility(View.GONE);
+                    }
+                }else{
+                    myViewHolder.tv_partysize.setVisibility(View.GONE);
+                }
+
+
+
         }else{
             myViewHolder.layout_token.setVisibility(View.GONE);
             myViewHolder.tv_estTime.setVisibility(View.GONE);
         }
+
+
+
 
 
         if (activelist.getPersonsAhead() != -1&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
