@@ -63,12 +63,89 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
 
         if(dataType.equalsIgnoreCase("Enum")||dataType.equalsIgnoreCase("EnumList")||dataType.equalsIgnoreCase("DataGrid")){
 
-            String mergeValue="";
-            ArrayList value= (ArrayList) t.get("value");
+
+            if(dataType.equalsIgnoreCase("DataGrid")) {
+                String mergeValue = null;
+
+                ArrayList value = (ArrayList) t.get("value");
 
 
-            String response1=new Gson().toJson(value);
-            Config.logV("mergeValue "+response1);
+                String response = new Gson().toJson(value);
+                Config.logV("mergeValue " + response);
+                try {
+                    // jsonString is a string variable that holds the JSON
+                    JSONArray itemArray = new JSONArray(response);
+                    for (int i = 0; i < itemArray.length(); i++) {
+
+                        Config.logV("mergeValue###" + mergeValue);
+                        if(i>0)
+                            mergeValue+="\n";
+
+                        String valueJson = itemArray.getString(i);
+                        Log.e("json", i + "=" + valueJson);
+                        JSONObject jsonObj = new JSONObject(valueJson);
+                        Iterator<?> iter = jsonObj.keys();
+                        while (iter.hasNext()) {
+                            String key = (String) iter.next();
+                            Config.logV("key###" + key);
+                            if(i==0) {
+                                if (mergeValue != null) {
+                                    mergeValue += ", " + jsonObj.getString(key);
+                                } else {
+                                    mergeValue = jsonObj.getString(key);
+                                }
+                            }else{
+                                mergeValue +=  jsonObj.getString(key)+",";
+                            }
+                            Config.logV("Value###" + mergeValue);
+                        }
+
+                        if (mergeValue.endsWith(",")) {
+                            mergeValue = mergeValue.substring(0, mergeValue.length() - 1);
+                        }
+
+                    }
+                    myViewHolder.tv_value.setText(mergeValue);
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }else{
+               Config.logV("Dataype---------"+dataType);
+                String mergeValue = null;
+
+                ArrayList value = (ArrayList) t.get("value");
+                String response = new Gson().toJson(value);
+                Config.logV("mergeValue " + response);
+                try {
+                    // jsonString is a string variable that holds the JSON
+                    JSONArray itemArray = new JSONArray(response);
+                    for (int i = 0; i < itemArray.length(); i++) {
+                        String valueJson = itemArray.getString(i);
+                        Log.e("json", i + "=" + valueJson);
+
+
+                        JSONObject jsonObj = new JSONObject(valueJson);
+
+
+                            if (mergeValue != null) {
+                                mergeValue+=","+ jsonObj.getString("displayName");
+                            } else {
+                                mergeValue = jsonObj.getString("displayName");
+                            }
+
+                        Config.logV("Value###" + mergeValue);
+                    }
+
+                   /* if (mergeValue.endsWith(",")) {
+                        mergeValue = mergeValue.substring(0, mergeValue.length() - 1);
+                    }*/
+                    myViewHolder.tv_value.setText(mergeValue);
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
 
         }else{
 

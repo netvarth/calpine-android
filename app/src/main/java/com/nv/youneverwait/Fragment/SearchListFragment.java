@@ -354,11 +354,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             if (!getQuery_previous.equalsIgnoreCase("true")) {
                 query = bundle.getString("query", "");
                 url = bundle.getString("url", "");
+                spinnerTxt = bundle.getString("spinnervalue", "");
+                searchTxt = bundle.getString("searchtxt", "");
             }
             latitude = bundle.getString("latitude", "");
             longitude = bundle.getString("longitude", "");
-            spinnerTxt = bundle.getString("spinnervalue", "");
-            searchTxt = bundle.getString("searchtxt", "");
+
             s_LocName = bundle.getString("locName", "");
         }
 
@@ -494,6 +495,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 searchSrcTextView.setText("");
                 mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getSector();
 
+
+                spinnerTxt = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
                 Config.logV("Selected---423333333333--------" + mDomainSpinner);
 
 
@@ -1813,6 +1816,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     public void onMethodWorkingCallback(ArrayList<WorkingModel> workingModelArrayList, String value, String uniqueid) {
         WorkingHourFragment pfFragment = new WorkingHourFragment();
 
+        refreshQuery();
+
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putSerializable("workinghrlist", workingModelArrayList);
@@ -1828,6 +1833,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     @Override
     public void onMethodServiceCallback(ArrayList services, String value, String uniqueid) {
         ServiceListFragment pfFragment = new ServiceListFragment();
+        refreshQuery();
+
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putSerializable("servicelist", services);

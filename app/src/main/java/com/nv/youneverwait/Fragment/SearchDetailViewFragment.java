@@ -105,7 +105,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     TextView tv_busName, tv_domain, tv_desc, tv_msg;
 
-    RecyclerView mRecyLocDetail,mRecycle_virtualfield;
+    RecyclerView mRecyLocDetail, mRecycle_virtualfield;
     SearchLocationAdapter mSearchLocAdapter;
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
 
@@ -113,21 +113,21 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<String> ids;
     String uniqueID;
 
-    TextView tv_ImageViewText,tv_Moredetails;
+    TextView tv_ImageViewText, tv_Moredetails;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
     LocationCheckinCallback callback;
     String location;
     ImageView ic_fav;
 
-
+boolean flag_more=false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View row = inflater.inflate(R.layout.searchdetails, container, false);
 
         mContext = getActivity();
         mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
-        mRecycle_virtualfield=(RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
+        mRecycle_virtualfield = (RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
 
         count = 0;
@@ -174,7 +174,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_ImageViewText = (TextView) row.findViewById(R.id.mImageViewText);
         mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
         ic_fav = (ImageView) row.findViewById(R.id.txtfav);
-        tv_Moredetails=(TextView) row.findViewById(R.id.txtMoredetails);
+        tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
 
         //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
         tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
@@ -185,30 +185,34 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_ImageViewText.setTypeface(tyface);
 
 
-
-
-
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
-       /* ApiSearchVirtualFields(uniqueID);
+        ApiSearchVirtualFields(uniqueID);
 
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                mRecycle_virtualfield.setVisibility(View.VISIBLE);
-                Config.logV("Domain Size@@@@@@@@@@@@@"+domainVirtual.size());
-                Config.logV("Subdomain Size@@@@@@@@@@@@@"+sub_domainVirtual.size());
+                if(!flag_more) {
+                    flag_more=true;
+                    mRecycle_virtualfield.setVisibility(View.VISIBLE);
+                    Config.logV("Domain Size@@@@@@@@@@@@@" + domainVirtual.size());
+                    Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
 
-
-               RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext);
-                mRecycle_virtualfield.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
+                    tv_Moredetails.setText("Click here to view Less Details");
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext);
+                    mRecycle_virtualfield.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                }else{
+                   flag_more=false;
+                    tv_Moredetails.setText("Click here to view More Details");
+                    mRecycle_virtualfield.setVisibility(View.GONE);
+                }
             }
-        });*/
+        });
 
 
         mInterface = (SearchLocationAdpterCallback) this;
@@ -234,10 +238,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
-                        if(edt_message.getText().toString().length()>1){
+                        if (edt_message.getText().toString().length() > 1) {
                             btn_send.setEnabled(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-                        }else{
+                        } else {
                             btn_send.setEnabled(false);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
@@ -402,7 +406,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
     }
 
-  //  boolean expand =false;
+    //  boolean expand =false;
     public void UpdateMainUI(SearchViewDetail getBussinessData) {
 
 
@@ -438,7 +442,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
 
                     if (lineCount > 3) {
-                        ResizableCustomView.doResizeTextView(mContext, tv_desc, 3, "more", true);
+                        ResizableCustomView.doResizeTextView(mContext, tv_desc, 3, "More", true);
                     } else {
 
                     }
@@ -979,15 +983,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
     VirtualFieldAdapter mAdapter;
-   SearchVirtualFields resultData;
-   ArrayList<SearchVirtualFields>  domainVirtual=new ArrayList<>();
-    ArrayList<SearchVirtualFields>  sub_domainVirtual=new ArrayList<>();
+    SearchVirtualFields resultData;
+    ArrayList<SearchVirtualFields> domainVirtual = new ArrayList<>();
+    ArrayList<SearchVirtualFields> sub_domainVirtual = new ArrayList<>();
 
-    ArrayList<SearchVirtualFields>  mergeResult=new ArrayList<>();
+    ArrayList<SearchVirtualFields> mergeResult = new ArrayList<>();
+
     private void ApiSearchVirtualFields(String muniqueID) {
 
 
-       ApiInterface apiService =
+        ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
 
        /* Gson gson = new GsonBuilder()
@@ -1029,24 +1034,21 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
 
 
-                        resultData= response.body();
-                        if(resultData!=null){
+                        resultData = response.body();
+                        if (resultData != null) {
                             tv_Moredetails.setVisibility(View.VISIBLE);
                             domainVirtual.clear();
-                            domainVirtual=response.body().getDomain();
+                            domainVirtual = response.body().getDomain();
                             sub_domainVirtual.clear();
-                            sub_domainVirtual=response.body().getSubdomain();
+                            sub_domainVirtual = response.body().getSubdomain();
 
 
                             domainVirtual.addAll(sub_domainVirtual);
 
 
-                        }else{
+                        } else {
                             tv_Moredetails.setVisibility(View.GONE);
                         }
-
-
-
 
 
                     }
@@ -1070,7 +1072,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
     }
-
 
 
     private void ApiSearchViewTerminology(String muniqueID) {
@@ -1220,7 +1221,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
-                            Toast.makeText(mContext,"Added to Favourites",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Added to Favourites", Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 

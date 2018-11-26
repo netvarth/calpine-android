@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -43,8 +44,9 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_provider, tv_removefav, tv_privacy, tv_message, tv_view;
-        LinearLayout Lfavlisiting;
+        LinearLayout Lfavlisiting,Layout_fav;
         RecyclerView mrRecylce_fav;
+        ImageView imgarrow;
 
         public MyViewHolder(View view) {
             super(view);
@@ -55,6 +57,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
             tv_message = (TextView) view.findViewById(R.id.txtmessage);
             tv_view = (TextView) view.findViewById(R.id.txtview);
             Lfavlisiting = (LinearLayout) view.findViewById(R.id.favlisiting);
+            imgarrow=(ImageView) view.findViewById(R.id.imgarrow);
+            Layout_fav=(LinearLayout) view.findViewById(R.id.layout_fav);
 
 
         }
@@ -90,10 +94,10 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         myViewHolder.tv_provider.setTypeface(tyface);
 
         myViewHolder.tv_provider.setText(favList.getBusinessName());
-        myViewHolder.tv_provider.setOnClickListener(new View.OnClickListener() {
+
+        myViewHolder.imgarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 if (!favList.isExpandFlag()) {
                     favList.setExpandFlag(true);
@@ -110,15 +114,21 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                         Config.logV("Ids---1111---------" + ids.get(i));
                     }
                     callback.onMethodViewCallback(favList.getId(), ids, myViewHolder.mrRecylce_fav, favList.getUniqueId(), favList.getBusinessName());
-                    myViewHolder.tv_provider.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                    myViewHolder.tv_provider.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top_white));
+                    myViewHolder.imgarrow.setImageResource( R.drawable.icon_up_light);
+                    myViewHolder.Layout_fav.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top_white));
                 } else {
                     favList.setExpandFlag(false);
                     myViewHolder.Lfavlisiting.setVisibility(View.GONE);
-                    myViewHolder.tv_provider.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                    myViewHolder.tv_provider.setBackground(mContext.getResources().getDrawable(R.drawable.input_background_white_round));
+                    myViewHolder.imgarrow.setImageResource( R.drawable.icon_down_light);
+                    myViewHolder.Layout_fav.setBackground(mContext.getResources().getDrawable(R.drawable.input_background_white_round));
 
                 }
+            }
+        });
+        myViewHolder.tv_provider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onMethodSearchDetailCallback(favList.getUniqueId());
             }
 
 

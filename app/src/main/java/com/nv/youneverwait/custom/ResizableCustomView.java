@@ -80,13 +80,13 @@ public class ResizableCustomView {
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
 
                         tv.invalidate();
-                        doResizeTextView(context,tv, -1, "less", false);
+                        doResizeTextView(context,tv, -1, "Less", false);
                     } else {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
 
                         tv.invalidate();
-                        doResizeTextView(context,tv, 3, "more", true);
+                        doResizeTextView(context,tv, 3, "More", true);
                     }
 
                 }

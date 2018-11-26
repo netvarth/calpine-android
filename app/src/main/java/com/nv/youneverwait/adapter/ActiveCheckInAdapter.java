@@ -76,8 +76,8 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_businessname, tv_estTime, tv_place;
-        TextView icon_bill, tv_prepaid;
+        public TextView tv_businessname, tv_estTime, tv_place, tv_status;
+        TextView icon_bill, tv_prepaid,tv_service;
         LinearLayout layout_btnpay;
         Button btn_pay;
 
@@ -91,8 +91,8 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             layout_btnpay = (LinearLayout) view.findViewById(R.id.layout_btnpay);
             btn_pay = (Button) view.findViewById(R.id.btn_pay);
             tv_prepaid = (TextView) view.findViewById(R.id.txtprepaid);
-
-
+            tv_status=(TextView) view.findViewById(R.id.txt_status);
+            tv_service = (TextView) view.findViewById(R.id.txt_service);
         }
     }
 
@@ -143,6 +143,36 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             }
         });
 
+        myViewHolder.tv_status.setVisibility(View.VISIBLE);
+        Typeface tyfacestatus = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        myViewHolder.tv_status.setTypeface(tyfacestatus);
+
+        myViewHolder.tv_status.setText(activelist.getWaitlistStatus());
+        if(activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
+            myViewHolder.tv_status.setText("Done");
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
+        }
+
+        if(activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
+            myViewHolder.tv_status.setText("Arrived");
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
+        }
+
+        if(activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
+            myViewHolder.tv_status.setText("Checked In");
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.violet));
+        }
+
+        if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+            myViewHolder.tv_status.setText("Cancelled");
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+        }
+        if(activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
+            myViewHolder.tv_status.setText("Started");
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
+        }
+
         if (activelist.getQueue() != null) {
             if (activelist.getQueue().getLocation().getPlace() != null) {
                 myViewHolder.tv_place.setVisibility(View.VISIBLE);
@@ -151,6 +181,24 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 myViewHolder.tv_place.setVisibility(View.GONE);
             }
         }
+
+
+        if (activelist.getService() != null) {
+            if (activelist.getService().getName() != null) {
+                myViewHolder.tv_service.setVisibility(View.VISIBLE);
+
+                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                String firstWord = activelist.getService().getName();
+                String secondWord = " for " + activelist.getWaitlistingFor().get(0).getFirstName() + " " + activelist.getWaitlistingFor().get(0).getLastName();
+                Spannable spannable = new SpannableString(firstWord + secondWord);
+                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                myViewHolder.tv_service.setText(spannable);
+            } else {
+                myViewHolder.tv_service.setVisibility(View.GONE);
+            }
+        }
+
 
 
         myViewHolder.tv_place.setOnClickListener(new View.OnClickListener() {
