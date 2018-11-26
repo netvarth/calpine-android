@@ -324,19 +324,23 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
             jsonObj.put("gender", radiogender);
 
             String selectedDate=txtdob.getText().toString();
-            SimpleDateFormat dateFormat = new SimpleDateFormat(
-                    "dd-MM-yyyy");
 
-            Date myDate = null;
-            try {
-                myDate = dateFormat.parse(selectedDate);
+            String finalDate="";
+            if(selectedDate!=null&&!selectedDate.equalsIgnoreCase("")) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat(
+                        "dd-MM-yyyy");
 
-            } catch (ParseException e) {
-                e.printStackTrace();
+                Date myDate = null;
+                try {
+                    myDate = dateFormat.parse(selectedDate);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
+                 finalDate = timeFormat.format(myDate);
             }
-
-            SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String finalDate = timeFormat.format(myDate);
 
 
             jsonObj.put("dob", finalDate);
