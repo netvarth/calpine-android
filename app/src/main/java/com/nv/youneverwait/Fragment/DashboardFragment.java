@@ -137,7 +137,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     private Location mylocation;
     private GoogleApiClient googleApiClient;
-    private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
+    public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
     static double latitude;
     static double longitude;
@@ -1382,7 +1382,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
             if (googleApiClient != null) {
                 googleApiClient.connect();
-
+                Config.logV("Google ONREUME");
 
             } else {
                 setUpGClient();
@@ -1404,6 +1404,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     @Override
     public void onConnected(Bundle bundle) {
         checkPermissions();
+        Config.logV("CONNECTED ");
     }
 
     @Override
@@ -1434,13 +1435,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 .build();
         //SharedPreference.getInstance(mContext).setValue("map_intial","true");
         googleApiClient.connect();
-        Config.logV("Update Location SetUpFConnected---------------------------");
+        Config.logV("Google Update Location SetUpFConnected---------------------------");
     }
 
     @Override
     public void onLocationChanged(Location location) {
         mylocation = location;
-        Config.logV("Update Location Changed Connected---------------------------" + location);
+        Config.logV("Google Update Location Changed Connected---------------------------" + location);
         if (mylocation != null) {
             latitude = mylocation.getLatitude();
             longitude = mylocation.getLongitude();
@@ -1470,10 +1471,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     private void getMyLocation() {
         if (googleApiClient != null) {
+
             if (googleApiClient.isConnected()) {
+
+                Config.logV("Google api connected granted");
                 int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+
+                    Config.logV("Google api connected granted@2@@@");
                     mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                     LocationRequest locationRequest = new LocationRequest();
                     locationRequest.setInterval(0);        // 10 seconds, in milliseconds
@@ -1485,7 +1491,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     builder.setAlwaysShow(true);
                     LocationServices.FusedLocationApi
                             .requestLocationUpdates(googleApiClient, locationRequest, this);
-                    DefaultLocation();
+                    //DefaultLocation();
 
                     PendingResult<LocationSettingsResult> result =
                             LocationServices.SettingsApi
@@ -1507,6 +1513,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                                 .getLastLocation(googleApiClient);
                                     }
 
+                                    Config.logV("Google apiClient LocationSettingsStatusCodes.SUCCESS");
                                     break;
                                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                                     // Location settings are not satisfied.
@@ -1515,10 +1522,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                         // Show the dialog by calling startResolutionForResult(),
                                         // and check the result in onActivityResult().
                                         // Ask to turn on GPS automatically
-                                        status.startResolutionForResult(getActivity(),
-                                                REQUEST_CHECK_SETTINGS_GPS);
+
+                                        Config.logV("Google Ask to turn on GPS automatically");
+                                        /*status.startResolutionForResult(getActivity(),
+                                                REQUEST_CHECK_SETTINGS_GPS);*/
+                                       startIntentSenderForResult(status.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS_GPS, null, 0, 0, 0, null);
                                     } catch (IntentSender.SendIntentException e) {
                                         // Ignore the error.
+                                        e.printStackTrace();
                                     }
 
 
@@ -1529,7 +1540,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                     // to fix the
                                     // settings so we won't show the dialog.
                                     // finish();
-
+                                    Config.logV("Google Location settings are not satisfied");
                                     break;
                             }
                         }
@@ -1539,16 +1550,24 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        Config.logV("GPS ON Google ##################");
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS_GPS:
+                Config.logV("GPS ON Google resultCode ##################"+resultCode);
                 switch (resultCode) {
+
                     case RESULT_OK:
+                        Config.logV("GPS ON Google");
                         getMyLocation();
                         break;
                     case RESULT_CANCELED:
-                        getActivity().finish();
+                        Config.logV("GPS ON Google Cancelled");
+                        //getActivity().finish();
                         DefaultLocation();
                         break;
 
@@ -1564,30 +1583,41 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
         List<String> listPermissionsNeeded = new ArrayList<>();
         if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+            Config.logV("Google Not Granted" + permissionLocation);
             listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
             if (!listPermissionsNeeded.isEmpty()) {
-                ActivityCompat.requestPermissions(getActivity(),
-                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
+               /*requestPermissions(getActivity(),
+                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);*/
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ID_MULTIPLE_PERMISSIONS);
+
+                Config.logV("GoogleNot Granted" + permissionLocation);
             }
+
         } else {
             getMyLocation();
         }
-
     }
 
+
     public void DefaultLocation() {
+        Config.logV("Google DEFAULT LOCATION" + mCurrentLoc.getText().toString());
         if (mCurrentLoc.getText().toString().equalsIgnoreCase("Locating...")) {
             latitude = 12.971599;
             longitude = 77.594563;
+            Config.logV("Not Google DEFAULT LOCATION @@@ YES");
             try {
                 Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
                 List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
                 mCurrentLoc.setVisibility(View.VISIBLE);
                 mCurrentLoc.setText(addresses.get(0).getLocality());
+                Config.logV("Google DEFAULT LOCATION @@@" + addresses.get(0).getLocality());
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
+        } else {
+            Config.logV("Not Google DEFAULT LOCATION @@@");
         }
     }
 
@@ -1596,8 +1626,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+            Config.logV("Google Granted@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%");
             getMyLocation();
+        } else {
+            DefaultLocation();
         }
+
     }
 
 
@@ -1618,7 +1652,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         String querycreate = "";
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
-            querycreate = "(phrase " + "'" + query + "') sector :'" +mDomainSpinner+ "'";
+            querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
         } else {
             querycreate = "(phrase " + "'" + query + "')";
         }
@@ -1735,7 +1769,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String value, String provider,String accountID) {
+    public void onMethodActiveBillIconCallback(String value, String provider, String accountID) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
@@ -1749,9 +1783,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
     }
-
-
-
 
 
     ArrayList<RefinedFilters> commonFilterList = new ArrayList<>();

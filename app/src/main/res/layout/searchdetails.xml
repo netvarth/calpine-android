@@ -264,7 +264,7 @@
                             android:id="@+id/mSearchLoc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/padding5"
+                            android:layout_marginTop="@dimen/padding7"
                             android:background="@color/spinnerbg"
                             android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
                     </LinearLayout>

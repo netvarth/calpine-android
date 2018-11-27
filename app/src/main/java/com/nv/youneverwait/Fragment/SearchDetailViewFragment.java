@@ -201,6 +201,7 @@ boolean flag_more=false;
                     Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
 
                     tv_Moredetails.setText("Click here to view Less Details");
+                    tv_Moredetails.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.icon_up_arrow_blue,0);
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                     mRecycle_virtualfield.setLayoutManager(mLayoutManager);
                     mAdapter = new VirtualFieldAdapter(domainVirtual, mContext);
@@ -209,6 +210,7 @@ boolean flag_more=false;
                 }else{
                    flag_more=false;
                     tv_Moredetails.setText("Click here to view More Details");
+                    tv_Moredetails.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.icon_down_arrow_blue,0);
                     mRecycle_virtualfield.setVisibility(View.GONE);
                 }
             }
@@ -240,9 +242,11 @@ boolean flag_more=false;
                     public void afterTextChanged(Editable arg0) {
                         if (edt_message.getText().toString().length() > 1) {
                             btn_send.setEnabled(true);
+                            btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
                         } else {
                             btn_send.setEnabled(false);
+                            btn_send.setClickable(false);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
                     }

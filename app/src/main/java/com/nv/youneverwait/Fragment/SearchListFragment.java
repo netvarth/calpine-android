@@ -297,7 +297,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 SharedPreference.getInstance(mContext).setValue("ALL_SELECTED", true);
 
 
-
                             }
                         }
 
@@ -364,6 +363,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }
 
 
+        Config.logV("LATITUDE--------------------------------" + latitude + ", " + longitude);
+
         isLastPage = false;
         isLoading = false;
         PAGE_START = 0;
@@ -391,16 +392,20 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
         try {
+
+            Config.logV("LATITUDE------------@@@@--------------------" + latitude + ", " + longitude);
+
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(latitude), Double.parseDouble(longitude), 1);
 
-            Config.logV("Latitude-----11111--------" + addresses.get(0).getLocality());
+           // Config.logV("Latitude-----11111--------" + addresses.get(0).getLocality());
             if (!s_LocName.equalsIgnoreCase("")) {
                 txt_toolbarlocation.setVisibility(View.VISIBLE);
                 // txt_toolbarlocation.setText(addresses.get(0).getLocality());
                 txt_toolbarlocation.setText(s_LocName);
             }
         } catch (Exception e) {
+            e.printStackTrace();
 
         }
 
@@ -430,8 +435,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         mRecySearchDetail.setItemAnimator(new DefaultItemAnimator());
 
         mRecySearchDetail.setAdapter(pageadapter);
-
-
 
 
         mRecySearchDetail.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
@@ -511,7 +514,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     mSearchView.setQuery(searchTxt, false);
 
                     Config.logV("Selected  FIRST RUN-----------------------" + searchTxt);
-                }  else {
+                } else {
 
                     Config.logV("Selected NOT FIRST RUN-----------------------" + searchTxt);
                     isLastPage = false;
@@ -529,8 +532,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     progressBar.setVisibility(View.GONE);
 
                 }
-
-
 
 
                 if (mDomainSpinner.equalsIgnoreCase("ALL")) {
@@ -788,7 +789,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             }
 
 
-
                             return false;
                         }
                     });
@@ -918,7 +918,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 currentPage = PAGE_START;
 
 
-                searchTxt=cell.getMdisplayname();
+                searchTxt = cell.getMdisplayname();
                 mSearchView.setQuery(searchTxt, false);
 
 
@@ -1748,7 +1748,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             pageadapter.notifyDataSetChanged();
 
 
-                            Config.logV("Results@@@@@@@@@@@@@@@@@"+results.size());
+                            Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
                             Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
                             Config.logV("CURRENT PAGE**333*************" + currentPage);
                             if (TOTAL_PAGES > 0 && total_foundcount > 10) {
@@ -1867,12 +1867,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         double lowerRightLat = Lanlong.getLowerRightLat();
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
-      //  String querycreate = "(phrase " + "'" + query + "')";
+        //  String querycreate = "(phrase " + "'" + query + "')";
 
 
         String querycreate = "";
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
-            querycreate = "(phrase " + "'" + querypass + "') sector :'" +mDomainSpinner+ "'";
+            querycreate = "(phrase " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
         } else {
             querycreate = "(phrase " + "'" + querypass + "')";
         }
@@ -1885,8 +1885,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         TOTAL_PAGES = 0;
         currentPage = PAGE_START;
         pageadapter.clear();
-
-
 
 
         Config.logV("Query-----------" + querycreate);
@@ -1946,11 +1944,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-                if(edt_message.getText().toString().length()>1){
+                if (edt_message.getText().toString().length() > 1) {
                     btn_send.setEnabled(true);
+                    btn_send.setClickable(true);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-                }else{
+                } else {
                     btn_send.setEnabled(false);
+                    btn_send.setClickable(false);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                 }
             }

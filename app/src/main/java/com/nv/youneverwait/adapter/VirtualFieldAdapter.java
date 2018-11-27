@@ -56,13 +56,19 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
         String name = t.get("displayName").toString();
 
         String dataType=t.get("dataType").toString();
-        myViewHolder.tv_head.setText(name);
+
+        if(name.equalsIgnoreCase("Gender")){
+            myViewHolder.tv_head.setVisibility(View.GONE);
+        }else {
+            myViewHolder.tv_head.setVisibility(View.VISIBLE);
+            myViewHolder.tv_head.setText(name);
+        }
         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_head.setTypeface(tyface);
 
         if(dataType.equalsIgnoreCase("Enum")||dataType.equalsIgnoreCase("EnumList")||dataType.equalsIgnoreCase("DataGrid")){
-
+            myViewHolder.tv_value.setVisibility(View.VISIBLE);
 
             if(dataType.equalsIgnoreCase("DataGrid")) {
                 String mergeValue = null;
@@ -111,6 +117,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
                     e.printStackTrace();
                 }
             }else{
+                myViewHolder.tv_value.setVisibility(View.VISIBLE);
                Config.logV("Dataype---------"+dataType);
                 String mergeValue = null;
 
@@ -152,12 +159,16 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
             String value=t.get("value").toString();
 
             if(dataType.equalsIgnoreCase("Boolean")){
+                myViewHolder.tv_value.setVisibility(View.VISIBLE);
                 if(value.equalsIgnoreCase("true")){
                     myViewHolder.tv_value.setText("Yes");
                 }else{
                     myViewHolder.tv_value.setText("No");
                 }
+            }else if(dataType.equalsIgnoreCase("Gender")){
+                myViewHolder.tv_value.setVisibility(View.GONE);
             }else{
+                myViewHolder.tv_value.setVisibility(View.VISIBLE);
                 myViewHolder.tv_value.setText(value);
             }
 

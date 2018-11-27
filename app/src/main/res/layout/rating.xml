@@ -91,6 +91,8 @@
             android:layout_weight="0.5"
             android:background="@drawable/btn_checkin_grey"
             android:text="@string/rate"
+            android:enabled="false"
+            android:clickable="false"
             android:textAllCaps="true"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />

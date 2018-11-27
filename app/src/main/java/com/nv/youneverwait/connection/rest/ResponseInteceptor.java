@@ -166,8 +166,9 @@ public class ResponseInteceptor implements Interceptor {
 
 
                     }else{
-                        if(response.code()!=419)
-                        Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                        /*if(response.code()!=419)
+                        Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();*/
+                        Config.logV("Response Error-----------"+response.errorBody().string());
                     }
 
 

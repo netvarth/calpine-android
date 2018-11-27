@@ -56,6 +56,8 @@
             android:layout_weight="0.5"
             android:background="@drawable/btn_checkin_grey"
             android:text="@string/send"
+            android:clickable="false"
+            android:enabled="false"
             android:textAllCaps="true"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />

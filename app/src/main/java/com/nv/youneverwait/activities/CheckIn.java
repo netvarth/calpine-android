@@ -225,9 +225,12 @@ public class CheckIn extends AppCompatActivity {
                     public void afterTextChanged(Editable arg0) {
                         if (edt_message.getText().toString().length() > 1) {
                             btn_send.setEnabled(true);
+                            btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
                         } else {
                             btn_send.setEnabled(false);
+                            btn_send.setClickable(false);
+
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
                     }
