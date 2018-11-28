@@ -301,7 +301,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 mCurrentLoc.setText(addresses.get(0).getLocality());
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
-
+e.printStackTrace();
             }
         }
 
@@ -1069,7 +1069,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                         Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-------------------------" + response.code());
-                        Config.logV("Response--BODY------Domain-------------------" + new Gson().toJson(response));
+                       // Config.logV("Response--BODY------Domain-------------------" + new Gson().toJson(response));
 
                         if (response.code() == 200) {
 

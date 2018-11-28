@@ -13,6 +13,15 @@ public class InboxModel {
     }
 
 
+    public int getLineCount() {
+        return lineCount;
+    }
+
+    public void setLineCount(int lineCount) {
+        this.lineCount = lineCount;
+    }
+
+    int lineCount=0;
     public String getMessageStatus() {
         return messageStatus;
     }

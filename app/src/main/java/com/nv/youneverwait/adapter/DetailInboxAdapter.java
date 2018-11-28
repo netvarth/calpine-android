@@ -75,6 +75,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         return new DetailInboxAdapter.MyViewHolder(itemView);
     }
 
+
     @Override
     public void onBindViewHolder(final DetailInboxAdapter.MyViewHolder myViewHolder, final int position) {
         final InboxModel inboxList = mInboxList.get(position);
@@ -103,16 +104,22 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         }
 
 
-        //Config.logV("SeeMore" + inboxList.isIs_see() + "message" + inboxList.getMsg());
+
 
         if (!inboxList.isIs_see()) {
             myViewHolder.tv_message.post(new Runnable() {
                 @Override
                 public void run() {
                     int lineCount = myViewHolder.tv_message.getLineCount();
-                    //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
 
-                    if (lineCount >= 3) {
+                    if(inboxList.getLineCount()==0){
+                        inboxList.setLineCount(lineCount);
+
+                    }
+                    //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
+                    Config.logV("SeeMore " + inboxList.isIs_see() + "message" + inboxList.getMsg());
+                    Config.logV("No of line---------------" + lineCount);
+                    if (inboxList.getLineCount() > 3) {
                         myViewHolder.tv_message.setMaxLines(3);
                         myViewHolder.tv_message.setEllipsize(TextUtils.TruncateAt.END);
                         myViewHolder.tv_seemore.setText("See More");
@@ -130,9 +137,16 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
                 @Override
                 public void run() {
                     int lineCount = myViewHolder.tv_message.getLineCount();
-                    //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
 
-                    if (lineCount >= 3) {
+                    if(inboxList.getLineCount()==0){
+                        inboxList.setLineCount(lineCount);
+
+                    }
+
+                    //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
+                    Config.logV("SeeMore @@@" + inboxList.isIs_see() + "message@@@" + inboxList.getMsg());
+                    Config.logV("No of line@@@@---------------" + lineCount);
+                    if (inboxList.getLineCount() > 3) {
                         myViewHolder.tv_message.setMaxLines(Integer.MAX_VALUE);
                         myViewHolder.tv_message.setEllipsize(null);
                         // is_seemore=true;
