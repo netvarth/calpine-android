@@ -166,6 +166,7 @@ public class AboutUsFragment extends RootFragment {
                             return true;
                         }
 
+
                         public void onPageFinished(WebView view, String url) {
 
                             if (progressBar.isShowing()) {
