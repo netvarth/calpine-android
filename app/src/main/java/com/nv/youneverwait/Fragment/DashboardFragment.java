@@ -305,6 +305,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             }
         }
 
+        if(mCurrentLoc.getText().equals("")){
+            DefaultLocation();
+        }
+
         mContext = getActivity();
         active = getParentFragment();
         //  SharedPreference.getInstance(mContext).setValue("fragmentonce",false);
@@ -1602,7 +1606,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     public void DefaultLocation() {
         Config.logV("Google DEFAULT LOCATION" + mCurrentLoc.getText().toString());
-        if (mCurrentLoc.getText().toString().equalsIgnoreCase("Locating...")) {
+        //if (mCurrentLoc.getText().toString().equalsIgnoreCase("Locating...")) {
             latitude = 12.971599;
             longitude = 77.594563;
             Config.logV("Not Google DEFAULT LOCATION @@@ YES");
@@ -1616,9 +1620,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
+        /*} else {
             Config.logV("Not Google DEFAULT LOCATION @@@");
-        }
+        }*/
     }
 
     @Override

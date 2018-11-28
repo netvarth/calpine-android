@@ -15,6 +15,7 @@ import com.nv.youneverwait.Fragment.SearchDetailViewFragment;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.utils.NotificationUtils;
+import com.nv.youneverwait.utils.SharedPreference;
 
 
 /**
@@ -63,19 +64,27 @@ public class Home extends AppCompatActivity {
         if(b!=null) {
             String from = b.getString("message");
             if (!from.equalsIgnoreCase("")) {
-                Config.logV("Push Notification@@@@@@@@@@@@@@@@@@@@@");
-                mHomeTab = new HomeTabFragment();
+                Config.logV("Push Notification Background@@@@@@@@@@@@@@@@@@@@@");
 
-                Bundle bundle = new Bundle();
+                String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+                if(!loginId.equalsIgnoreCase("")) {
+                    mHomeTab = new HomeTabFragment();
+
+                    Bundle bundle = new Bundle();
 
 
-                bundle.putString("tab", "1");
-                mHomeTab.setArguments(bundle);
+                    bundle.putString("tab", "1");
+                    mHomeTab.setArguments(bundle);
 
-                final FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, mHomeTab)
-                        .commit();
+                    final FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container, mHomeTab)
+                            .commit();
+                }else{
+                    Intent iLogin = new Intent(this, Register.class);
+                    startActivity(iLogin);
+                    finish();
+                }
             }
         }
 
@@ -104,19 +113,27 @@ public class Home extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        Config.logV("Push Notification@@@@@@@@@@@@@@@@@@@@@");
-        mHomeTab = new HomeTabFragment();
 
-        Bundle bundle = new Bundle();
+        String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        Config.logV("Push Notification Foreground @@@@@@@@@@@@@@@@@@@@@"+loginId);
+        if(!loginId.equalsIgnoreCase("")) {
+            mHomeTab = new HomeTabFragment();
+
+            Bundle bundle = new Bundle();
 
 
-        bundle.putString("tab","1" );
-        mHomeTab.setArguments(bundle);
+            bundle.putString("tab", "1");
+            mHomeTab.setArguments(bundle);
 
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, mHomeTab)
-                .commit();
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, mHomeTab)
+                    .commit();
+        }else{
+            Intent iLogin = new Intent(this, Register.class);
+            startActivity(iLogin);
+            finish();
+        }
     }
 
     public static boolean  doubleBackToExitPressedOnce = false;
