@@ -2,14 +2,20 @@ package com.nv.youneverwait.Fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -121,11 +127,39 @@ public class AboutUsFragment extends RootFragment {
 
 
                     //privacyWeb.loadData(webprivacy, "text/html", "UTF-8");
-                    progressBar = Config.getProgressDialog(mContext, "");
-                    progressBar.show();
 
-                    privacyWeb.loadUrl("https://www.youneverwait.com/#/privacy/mobile");
+
+                   // privacyWeb.loadUrl("https://www.youneverwait.com/#/privacy/mobile");
+
                     privacyWeb.setWebViewClient(new WebViewClient() {
+
+                        // This method will be triggered when the Page Started Loading
+
+                        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                            progressBar = ProgressDialog.show(mContext, null,
+                                    "Loading...");
+                            progressBar.setCancelable(true);
+                            super.onPageStarted(view, url, favicon);
+                        }
+
+                        // This method will be triggered when the Page loading is completed
+
+                        public void onPageFinished(WebView view, String url) {
+                            progressBar.dismiss();
+                            super.onPageFinished(view, url);
+                        }
+
+                        // This method will be triggered when error page appear
+
+                        @Override
+                        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError er) {
+                            handler.proceed();
+                            progressBar.dismiss();
+                            // Ignore SSL certificate errors
+                        }
+                    });
+                    privacyWeb.loadUrl("https://www.youneverwait.com/#/privacy/mobile");
+                    /*privacyWeb.setWebViewClient(new WebViewClient() {
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
                             view.loadUrl(url);
@@ -138,7 +172,7 @@ public class AboutUsFragment extends RootFragment {
                                 progressBar.dismiss();
                             }
                         }
-                    });
+                    });*/
                 } else {
                     privacyWeb.setVisibility(View.GONE);
                     expandpvyFlag = false;
@@ -170,6 +204,7 @@ public class AboutUsFragment extends RootFragment {
                     progressBar = Config.getProgressDialog(mContext, "");
                     progressBar.show();
 
+                    //termsWeb.loadUrl("https://www.youneverwait.com/#/terms/mobile");
                     termsWeb.loadUrl("https://www.youneverwait.com/#/terms/mobile");
                     termsWeb.setWebViewClient(new WebViewClient() {
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
