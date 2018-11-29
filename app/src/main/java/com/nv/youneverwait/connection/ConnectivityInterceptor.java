@@ -1,11 +1,14 @@
 package com.nv.youneverwait.connection;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -36,6 +39,7 @@ public class ConnectivityInterceptor implements Interceptor {
     public okhttp3.Response intercept(Chain chain) throws IOException {
 
         if (!isOnline()) {
+
              throw new NoConnectivityException();
            // Config.showAlertBuilder(mContext, "No Network", "Please check your connection");
 
@@ -47,7 +51,7 @@ public class ConnectivityInterceptor implements Interceptor {
                 e.printStackTrace();
               /*  Config.showAlertBuilder(mContext, mContext.getResources().getString(R.string.alertdialog_title_error),
                         mContext.getResources().getString(R.string.dialog_time_out_text));*/
-                Toast.makeText(mContext,  mContext.getResources().getString(R.string.dialog_time_out_text), Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext,    mContext.getResources().getString(R.string.dialog_time_out_text), Toast.LENGTH_LONG).show();
             } catch (SocketException e) {
                 e.printStackTrace();
                 /*Config.showAlertBuilder(mContext, mContext.getResources().getString(R.string.alertdialog_title_error),
@@ -74,8 +78,11 @@ public class ConnectivityInterceptor implements Interceptor {
 
         @Override
         public String getMessage() {
-            Toast.makeText(mContext, "No network available, please check your WiFi or Data connection", Toast.LENGTH_LONG).show();
+
+
+             Toast.makeText(mContext, "No network available, please check your WiFi or Data connection", Toast.LENGTH_LONG).show();
             //Config.showAlertBuilder(mContext, "No Network", "Please check your connection");
+
             return "No network available, please check your WiFi or Data connection";
         }
 

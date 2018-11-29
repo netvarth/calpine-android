@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
@@ -81,12 +83,15 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         mLappfeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("plain/text");
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "support@netvarth.com" });
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
-                intent.putExtra(Intent.EXTRA_TEXT, " ");
-                startActivity(Intent.createChooser(intent, ""));
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","support@netvarth.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                try {
+                    startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

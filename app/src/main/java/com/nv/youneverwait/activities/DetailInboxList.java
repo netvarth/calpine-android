@@ -72,7 +72,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             }
         });
         TextView tv_title = (TextView)findViewById(R.id.toolbartitle);
-        tv_title.setText(provider);
+        tv_title.setText(Config.toTitleCase(provider));
 
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
