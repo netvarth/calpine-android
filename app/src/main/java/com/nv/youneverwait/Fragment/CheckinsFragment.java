@@ -781,6 +781,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext,"Rated successfully",Toast.LENGTH_LONG).show();
 
                         }
 
@@ -843,11 +844,12 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
                     if (response.code() == 200) {
 
+                        Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_LONG).show();
                         dialog.dismiss();
 
 
                     } else {
-                        if (response.code() != 419) {
+                        if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -901,6 +903,8 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+
+                            Toast.makeText(mContext,"Checkin has been cancelled",Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                             ApiFavList();
 
@@ -1068,6 +1072,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext,"Removed from favourites",Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 

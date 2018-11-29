@@ -479,8 +479,10 @@ public class CheckIn extends AppCompatActivity {
                     ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
                 } else {
                     if (selectedDateFormat != null) {
+                        Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                         ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat);
                     } else {
+                        Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
                         ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
                     }
                 }
@@ -650,7 +652,7 @@ public class CheckIn extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Config.logV("Selected Date----------------" + selectedDate);
+        Config.logV("Selected Date---&&&&&&&&&&&#%%%%%%%-------------" + selectedDate);
         ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate);
 
         Calendar cal = Calendar.getInstance();
@@ -1174,7 +1176,7 @@ public class CheckIn extends AppCompatActivity {
 
                         } else {
 
-                            Config.logV("No Checkins-------------------");
+                            Config.logV("No Checkins-------------------"+mQueueTimeSlotList.size());
                             tv_queue.setVisibility(View.GONE);
                             queuelayout.setVisibility(View.GONE);
                             tv_queuename.setVisibility(View.GONE);
@@ -1611,7 +1613,22 @@ public class CheckIn extends AppCompatActivity {
                                 "yyyy-MM-dd", Locale.US);
                         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                         System.out.println("UTC time: " + sdf.format(currentTime));
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                        Config.logV("SELECTED &&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+                      //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+
+                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+
+                            ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                        } else {
+                            if (selectedDateFormat != null) {
+
+                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat);
+                            } else {
+
+                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                            }
+                        }
 
                     }
 
