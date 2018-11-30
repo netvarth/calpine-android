@@ -391,15 +391,34 @@ public class CheckIn extends AppCompatActivity {
 
                 if (mFrom.equalsIgnoreCase("searchdetail_future") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
                     String geoUri = googlemap;
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                    mContext.startActivity(intent);
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                        mContext.startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     String geoUri = "http://maps.google.com/maps?q=loc:" + googlemap;
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                    mContext.startActivity(intent);
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                        mContext.startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
+
+
+        if (googlemap != null) {
+            if (!googlemap.equalsIgnoreCase("") && googlemap != null) {
+
+                tv_place.setVisibility(View.VISIBLE);
+            }
+        } else {
+            tv_place.setVisibility(View.GONE);
+        }
+
         tv_place.setText(place);
 
         tv_titlename.setText(title);
@@ -1176,7 +1195,7 @@ public class CheckIn extends AppCompatActivity {
 
                         } else {
 
-                            Config.logV("No Checkins-------------------"+mQueueTimeSlotList.size());
+                            Config.logV("No Checkins-------------------" + mQueueTimeSlotList.size());
                             tv_queue.setVisibility(View.GONE);
                             queuelayout.setVisibility(View.GONE);
                             tv_queuename.setVisibility(View.GONE);
@@ -1615,7 +1634,7 @@ public class CheckIn extends AppCompatActivity {
                         System.out.println("UTC time: " + sdf.format(currentTime));
                         Config.logV("SELECTED &&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-                      //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                        //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
 
                         if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
@@ -1933,6 +1952,7 @@ public class CheckIn extends AppCompatActivity {
                                             PaytmPayment payment = new PaytmPayment(mContext);
                                             payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
+                                            //ApiGenerateHash(value, sAmountPay, accountID);
                                         }
                                     });
                                 } catch (Exception e) {
@@ -1973,15 +1993,15 @@ public class CheckIn extends AppCompatActivity {
                             }
                             matcher.appendTail(sb);
 
-                            System.out.println("SubString@@@@@@@@@@@@@"+sb.toString());
+                            System.out.println("SubString@@@@@@@@@@@@@" + sb.toString());
 
 
                             Toast.makeText(mContext, sb.toString(), Toast.LENGTH_LONG).show();
                         } else {
                             String responseerror = response.errorBody().string();
                             Config.logV("Response--error-------------------------" + responseerror);
-                            if(response.code()!=419)
-                            Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
+                            if (response.code() != 419)
+                                Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
                         }
                     }
 

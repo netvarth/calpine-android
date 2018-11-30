@@ -479,7 +479,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
-                                        String firstWord = "Next Wait Time ";
+                                        String firstWord = "Next Service Time ";
                                         String secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
                                         Spannable spannable = new SpannableString(firstWord + secondWord);
                                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -51,13 +51,15 @@ public class ConnectivityInterceptor implements Interceptor {
                 e.printStackTrace();
               /*  Config.showAlertBuilder(mContext, mContext.getResources().getString(R.string.alertdialog_title_error),
                         mContext.getResources().getString(R.string.dialog_time_out_text));*/
-                Toast.makeText(mContext,    mContext.getResources().getString(R.string.dialog_time_out_text), Toast.LENGTH_LONG).show();
+                throw new SockectTimeoutException();
+
             } catch (SocketException e) {
                 e.printStackTrace();
                 /*Config.showAlertBuilder(mContext, mContext.getResources().getString(R.string.alertdialog_title_error),
                         mContext.getResources().getString(R.string.dialog_server_down_text));*/
 
-                Toast.makeText(mContext,  mContext.getResources().getString(R.string.dialog_server_down_text), Toast.LENGTH_LONG).show();
+                throw new SockectException();
+             //   Toast.makeText(mContext,  mContext.getResources().getString(R.string.dialog_server_down_text), Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 e.printStackTrace();
 
@@ -84,6 +86,34 @@ public class ConnectivityInterceptor implements Interceptor {
             //Config.showAlertBuilder(mContext, "No Network", "Please check your connection");
 
             return "No network available, please check your WiFi or Data connection";
+        }
+
+    }
+
+    public class SockectException extends IOException {
+
+        @Override
+        public String getMessage() {
+
+            Toast.makeText(mContext,    mContext.getResources().getString(R.string.dialog_server_down_text), Toast.LENGTH_LONG).show();
+
+            //Config.showAlertBuilder(mContext, "No Network", "Please check your connection");
+
+            return  mContext.getResources().getString(R.string.dialog_server_down_text);
+        }
+
+    }
+
+    public class SockectTimeoutException extends IOException {
+
+        @Override
+        public String getMessage() {
+
+            Toast.makeText(mContext,    mContext.getResources().getString(R.string.dialog_time_out_text), Toast.LENGTH_LONG).show();
+
+            //Config.showAlertBuilder(mContext, "No Network", "Please check your connection");
+
+            return mContext.getResources().getString(R.string.dialog_time_out_text);
         }
 
     }

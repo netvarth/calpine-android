@@ -154,13 +154,29 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             }
         });
 
-        if (activelist.getQueue() != null) {
+       /* if (activelist.getQueue() != null) {
             if (activelist.getQueue().getLocation().getPlace() != null) {
                 myViewHolder.tv_place.setVisibility(View.VISIBLE);
                 myViewHolder.tv_place.setText(activelist.getQueue().getLocation().getPlace());
             } else {
                 myViewHolder.tv_place.setVisibility(View.GONE);
             }
+        }*/
+
+
+        try {
+            if (activelist.getQueue() != null) {
+                String geoUri = activelist.getQueue().getLocation().getGoogleMapUrl();
+                if (activelist.getQueue().getLocation().getPlace() != null&&geoUri != null && !geoUri.equalsIgnoreCase("")) {
+
+                    myViewHolder.tv_place.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_place.setText(activelist.getQueue().getLocation().getPlace());
+                } else {
+                    myViewHolder.tv_place.setVisibility(View.GONE);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
 

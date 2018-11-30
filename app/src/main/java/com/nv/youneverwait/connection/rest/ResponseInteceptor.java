@@ -1,11 +1,20 @@
 package com.nv.youneverwait.connection.rest;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
+import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.activities.Register;
 import com.nv.youneverwait.common.Config;
@@ -26,6 +35,7 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -41,6 +51,7 @@ public class ResponseInteceptor implements Interceptor {
         this.context = context;
     }
 
+    boolean callOnce=false;
     @Override
     public Response intercept(Interceptor.Chain chain) throws IOException {
 
@@ -56,8 +67,8 @@ public class ResponseInteceptor implements Interceptor {
         Response response =  chain.proceed(request);
 
         Headers headerList = response.headers();
-        String versionheader = headerList.get("Version");
-        Config.logV("Header-----Response-----" + versionheader);
+      //  String versionheader = headerList.get("Version");
+        Config.logV("Header-----Response-----" + headerList.toString());
        /* if(versionheader.equalsIgnoreCase("api-1.1.0,config-1.1.0")){
             String version="v2";
             Config.logV("Header-----Response--@@@@@---" + versionheader);
@@ -66,6 +77,7 @@ public class ResponseInteceptor implements Interceptor {
         }
 */
 
+        Config.logV("RESPONSE CODE@@@@@@@@@@@@@@@@@"+response.code());
         if (response.code() == 419){
             // Magic is here ( Handle the error as your way )
             Config.logV("RESPONSE @@@@@@@@@@@@@@@@@"+response.code());
@@ -83,8 +95,100 @@ public class ResponseInteceptor implements Interceptor {
 
             return response;
         }
+
+        if(response.code()==301){
+
+
+        }
         return response;
     }
+
+
+
+    public void showForceUpdateDialog(){
+        ((Activity)context).runOnUiThread(new Runnable() {
+            public void run() {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                alertDialog.setTitle("Please update your app");
+                alertDialog.setMessage("This app version is not supported any longer. Please update your app from the Play Store.");
+                alertDialog.setPositiveButton("UPDATE NOW", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        final String appPackageName = context.getPackageName();
+                        try {
+                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                        } catch (android.content.ActivityNotFoundException anfe) {
+                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                        }
+                    }
+                });
+                alertDialog.show();
+            }
+        });
+
+
+    }
+
+    private void ApiLogout() {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(context).create(ApiInterface.class);
+
+
+
+
+        Call<ResponseBody> call = apiService.logOut();
+
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
+                try {
+
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        Config.logV("Response----------------");
+
+                        SharedPreference.getInstance(context).clear();
+                        DatabaseHandler db=new DatabaseHandler(context);
+                        db.deleteDatabase();
+                        // if(response.body().equals("true")) {
+
+                        Intent iLogout=new Intent(context, Register.class);
+                        iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        context.startActivity(iLogout);
+                        ((Activity)context).finish();
+
+                        callOnce=true;
+                        showForceUpdateDialog();
+                        //  }
+
+
+                    }else{
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+
+
+    }
+
     public void ApiLogin(String loginId, String password) {
 
         ApiInterface apiService =

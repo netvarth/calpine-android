@@ -500,7 +500,7 @@ public class Password extends AppCompatActivity {
                         String version=headerList.get("Version");
                         Config.logV("Header----------"+version);
 
-                        SharedPreference.getInstance(mContext).setValue("Version",version);
+                      //  SharedPreference.getInstance(mContext).setValue("Version",version);
 
 
                         SharedPreference.getInstance(mContext).setValue("firstname",response.body().getFirstName());

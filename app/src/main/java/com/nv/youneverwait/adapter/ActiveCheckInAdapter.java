@@ -173,13 +173,19 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
         }
 
+        try {
         if (activelist.getQueue() != null) {
-            if (activelist.getQueue().getLocation().getPlace() != null) {
+            String geoUri = activelist.getQueue().getLocation().getGoogleMapUrl();
+            if (activelist.getQueue().getLocation().getPlace() != null&&geoUri != null && !geoUri.equalsIgnoreCase("")) {
+
                 myViewHolder.tv_place.setVisibility(View.VISIBLE);
                 myViewHolder.tv_place.setText(activelist.getQueue().getLocation().getPlace());
             } else {
                 myViewHolder.tv_place.setVisibility(View.GONE);
             }
+        }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
 
@@ -201,13 +207,18 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
 
+
         myViewHolder.tv_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Config.logV("googlemap url--------" + activelist.getQueue().getLocation().getGoogleMapUrl());
                 String geoUri = activelist.getQueue().getLocation().getGoogleMapUrl();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                mContext.startActivity(intent);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                    mContext.startActivity(intent);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 

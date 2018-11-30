@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
+import android.util.LayoutDirection;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate;
         Button btn_checkin;
-        LinearLayout mLSeriveLayout, mLayouthide,LexpandCheckin;
+        LinearLayout mLSeriveLayout, mLayouthide,LexpandCheckin,Ldirectionlayout;
         ImageView img_arrow;
         RecyclerView recycle_parking;
         RelativeLayout layout_exapnd;
@@ -84,7 +85,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txt_diffdate_expand = (TextView) view.findViewById(R.id.txt_diffdate_expand);
             btn_checkin_expand = (Button) view.findViewById(R.id.btn_checkin_expand);
             LexpandCheckin=(LinearLayout) view.findViewById(R.id.LexpandCheckin);
-
+            Ldirectionlayout=(LinearLayout) view.findViewById(R.id.Ldirectionlayout);
 
         }
     }
@@ -146,6 +147,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
 
 
+
         for (int i = 0; i < mCheckInMessage.size(); i++) {
             if (searchLoclist.getId() == mCheckInMessage.get(i).getLocid()) {
 
@@ -177,13 +179,24 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         });
 
+
+        if(searchLoclist.getGoogleMapUrl()!=null&&!searchLoclist.getGoogleMapUrl().equalsIgnoreCase("")){
+            myViewHolder.Ldirectionlayout.setVisibility(View.VISIBLE);
+        }else{
+            myViewHolder.Ldirectionlayout.setVisibility(View.GONE);
+        }
+
         myViewHolder.txtdirection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Config.logV("googlemap url--------" + searchLoclist.getGoogleMapUrl());
                 String geoUri = searchLoclist.getGoogleMapUrl();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                mContext.startActivity(intent);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                    mContext.startActivity(intent);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -771,7 +784,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
-                                    String firstWord = "Next Wait Time \n";
+                                    String firstWord = "Next Service Time \n";
                                     String secondWord = monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
