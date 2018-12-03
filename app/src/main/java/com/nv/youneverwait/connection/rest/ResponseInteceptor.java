@@ -98,6 +98,8 @@ public class ResponseInteceptor implements Interceptor {
 
         if(response.code()==301){
 
+            Config.logV(" ERROR  301 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            ApiLogout();
 
         }
         return response;
@@ -163,7 +165,7 @@ public class ResponseInteceptor implements Interceptor {
                         ((Activity)context).finish();
 
                         callOnce=true;
-                        showForceUpdateDialog();
+                       // showForceUpdateDialog();
                         //  }
 
 
