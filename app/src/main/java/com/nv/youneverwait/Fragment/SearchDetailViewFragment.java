@@ -1323,7 +1323,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     @Override
     public void onMethodCallback() {
 
-        Toast.makeText(mContext, "No Checkin exists at " + location, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "Check-In cancelled successfully" , Toast.LENGTH_LONG).show();
         dialog.dismiss();
         refreshList();
     }
