@@ -136,8 +136,8 @@ public class AboutUsFragment extends RootFragment {
                         // This method will be triggered when the Page Started Loading
 
                         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                            progressBar = ProgressDialog.show(mContext, null,
-                                    "Loading...");
+                            progressBar = Config.getProgressDialog(mContext, "");
+                            progressBar.show();
                             progressBar.setCancelable(true);
                             super.onPageStarted(view, url, favicon);
                         }
@@ -145,7 +145,9 @@ public class AboutUsFragment extends RootFragment {
                         // This method will be triggered when the Page loading is completed
 
                         public void onPageFinished(WebView view, String url) {
-                            progressBar.dismiss();
+                            if (progressBar.isShowing()) {
+                                progressBar.dismiss();
+                            }
                             super.onPageFinished(view, url);
                         }
 
@@ -154,11 +156,13 @@ public class AboutUsFragment extends RootFragment {
                         @Override
                         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError er) {
                             handler.proceed();
-                            progressBar.dismiss();
+                            if (progressBar.isShowing()) {
+                                progressBar.dismiss();
+                            }
                             // Ignore SSL certificate errors
                         }
                     });
-                    privacyWeb.loadUrl("https://www.youneverwait.com/#/privacy/mobile");
+                    privacyWeb.loadUrl("http://35.154.241.175/jaldee/#/privacy/mobile");
                     /*privacyWeb.setWebViewClient(new WebViewClient() {
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
@@ -206,7 +210,7 @@ public class AboutUsFragment extends RootFragment {
                     progressBar.show();
 
                     //termsWeb.loadUrl("https://www.youneverwait.com/#/terms/mobile");
-                    termsWeb.loadUrl("https://www.youneverwait.com/#/terms/mobile");
+                    termsWeb.loadUrl("http://35.154.241.175/jaldee/#/terms/mobile");
                     termsWeb.setWebViewClient(new WebViewClient() {
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 

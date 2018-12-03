@@ -83,6 +83,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                     final String mServiceprice = serviceList.getTotalAmount();
                     final String mServicedesc = serviceList.getDescription();
                     final String mServiceduration = serviceList.getServiceDuration();
+                    final boolean mTaxable = serviceList.isTaxable();
                     final ArrayList<SearchService> mServiceGallery = serviceList.getServicegallery();
 
                     Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
@@ -92,6 +93,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                     iService.putExtra("desc", mServicedesc);
                     iService.putExtra("servicegallery", mServiceGallery);
                     iService.putExtra("title", title);
+                    iService.putExtra("taxable", mTaxable);
                     mContext.startActivity(iService);
                 }else{
 

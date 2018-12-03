@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/serviceList"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:padding="@dimen/padding5"
+    android:padding="@dimen/padding3"
     android:layout_height="wrap_content">
     <TextView
         android:id="@+id/tv_heading"

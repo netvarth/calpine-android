@@ -161,4 +161,10 @@ public class SearchService implements Serializable {
         return this.name; // Value to be displayed in the Spinner
     }
 
+    public boolean isTaxable() {
+        return taxable;
+    }
+
+    boolean taxable;
+
 }

@@ -904,7 +904,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
                         if (response.body().string().equalsIgnoreCase("true")) {
 
-                            Toast.makeText(mContext,"Checkin has been cancelled",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext,"Check-In cancelled successfully",Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                             ApiFavList();
 

@@ -335,7 +335,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     ImageView ibackpress;
     String s_LocName;
 
-    TextView tv_nosearchresult;
+    TextView tv_nosearchresult,tv_searchresult;
     LinearLayout Lnosearchresult;
 
 
@@ -375,6 +375,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         ibackpress = (ImageView) row.findViewById(R.id.backpress);
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
         txt_toolbarlocation = (TextView) row.findViewById(R.id.txt_toolbarlocation);
+        tv_searchresult= (TextView) row.findViewById(R.id.searchresult);
 
         Lnosearchresult = (LinearLayout) row.findViewById(R.id.Lnosearchresult);
         tv_nosearchresult = (TextView) row.findViewById(R.id.txtnosearchresult);
@@ -1251,6 +1252,20 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             mRecySearchDetail.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.VISIBLE);
                             Lnosearchresult.setVisibility(View.GONE);
+                            tv_searchresult.setVisibility(View.VISIBLE);
+                            String firstWord = String.valueOf(total_foundcount);
+                            String secondWord="";
+                            if(total_foundcount>1) {
+                                 secondWord = " results found ";
+                            }else{
+                                secondWord = " result found ";
+                                }
+                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                            Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), 0, firstWord.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            tv_searchresult.setText(spannable);
+
 
                             mSearchResp.clear();
                             ArrayList<String> ids = new ArrayList<>();
@@ -1372,6 +1387,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             mRecySearchDetail.setVisibility(View.GONE);
                             tv_nosearchresult.setText("No search result found for this location");
                             progressBar.setVisibility(View.GONE);
+                            tv_searchresult.setVisibility(View.GONE);
 
 
                         }

@@ -1,5 +1,6 @@
 package com.nv.youneverwait.payment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -13,15 +14,20 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.model.TestModel;
+import com.nv.youneverwait.response.CheckSumModel;
 import com.nv.youneverwait.response.PaytmChecksum;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -103,6 +109,79 @@ public class PaytmPayment {
                 System.out.println("responseCode Fail" + t.toString());
             }
         });
+    }
+
+
+    public void ApiGenerateHashPaytm(String ynwUUID, String amount, String accountID, Context mContext, final Activity mActivity) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("amount", amount);
+            jsonObj.put("paymentMode", "PPI");
+            jsonObj.put("uuid", ynwUUID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<CheckSumModel> call = apiService.generateHash(body, accountID);
+
+        call.enqueue(new Callback<CheckSumModel>() {
+            @Override
+            public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(mActivity, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+
+                        CheckSumModel response_data = response.body();
+                        Config.logV("Response--Sucess----PAytm---------------------" + new Gson().toJson(response.body()));
+
+
+
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<CheckSumModel> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(mActivity, mDialog);
+
+            }
+        });
+
+
     }
 
     public void PaytmPay(Map<String, String> paramMap) {

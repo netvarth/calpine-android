@@ -33,6 +33,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.activities.SwipeGalleryImage;
+import com.nv.youneverwait.adapter.ContactDetailAdapter;
 import com.nv.youneverwait.adapter.LocationCheckinAdapter;
 import com.nv.youneverwait.adapter.SearchLocationAdapter;
 import com.nv.youneverwait.adapter.VirtualFieldAdapter;
@@ -44,6 +45,7 @@ import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CircleTransform;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.custom.ResizableCustomView;
+import com.nv.youneverwait.model.ContactModel;
 import com.nv.youneverwait.model.WorkingModel;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.QueueList;
@@ -105,7 +107,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     TextView tv_busName, tv_domain, tv_desc, tv_msg;
 
-    RecyclerView mRecyLocDetail, mRecycle_virtualfield;
+    RecyclerView mRecyLocDetail, mRecycle_virtualfield, mrecycle_contactdetail;
     SearchLocationAdapter mSearchLocAdapter;
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
 
@@ -113,14 +115,15 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<String> ids;
     String uniqueID;
 
-    TextView tv_ImageViewText, tv_Moredetails;
+    TextView tv_ImageViewText, tv_Moredetails, tv_contactdetails;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
     LocationCheckinCallback callback;
     String location;
     ImageView ic_fav;
 
-boolean flag_more=false;
+    boolean flag_more = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View row = inflater.inflate(R.layout.searchdetails, container, false);
@@ -128,8 +131,10 @@ boolean flag_more=false;
         mContext = getActivity();
         mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
         mRecycle_virtualfield = (RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
-        rating = (RatingBar) row.findViewById(R.id.mRatingBar);
+        mrecycle_contactdetail = (RecyclerView) row.findViewById(R.id.mrecycle_contactdetail);
 
+        rating = (RatingBar) row.findViewById(R.id.mRatingBar);
+        tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
@@ -194,23 +199,23 @@ boolean flag_more=false;
             @Override
             public void onClick(View v) {
 
-                if(!flag_more) {
-                    flag_more=true;
+                if (!flag_more) {
+                    flag_more = true;
                     mRecycle_virtualfield.setVisibility(View.VISIBLE);
                     Config.logV("Domain Size@@@@@@@@@@@@@" + domainVirtual.size());
                     Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
 
                     tv_Moredetails.setText("Click here to view Less Details");
-                    tv_Moredetails.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.icon_up_arrow_blue,0);
+                    tv_Moredetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_arrow_blue, 0);
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                     mRecycle_virtualfield.setLayoutManager(mLayoutManager);
                     mAdapter = new VirtualFieldAdapter(domainVirtual, mContext);
                     mRecycle_virtualfield.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
-                }else{
-                   flag_more=false;
+                } else {
+                    flag_more = false;
                     tv_Moredetails.setText("Click here to view More Details");
-                    tv_Moredetails.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.icon_down_arrow_blue,0);
+                    tv_Moredetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_arrow_blue, 0);
                     mRecycle_virtualfield.setVisibility(View.GONE);
                 }
             }
@@ -349,70 +354,214 @@ boolean flag_more=false;
         //  Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
 
         Config.logV("Gallery--------------333-----" + mGallery.size());
-        Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+        try {
+            if (mGallery.size() > 0) {
 
-        if (mGallery.size() > 1) {
-            mImgthumbProfile.setVisibility(View.VISIBLE);
-            // Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(mImgthumbProfile);
+                if (mGallery.get(0).getUrl() != null) {
+                    mImgeProfile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-            Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
-
-
-            if (mGallery.size() == 3) {
-                mImgthumbProfile1.setVisibility(View.VISIBLE);
-                Config.logV("Gallery--------");
-                Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-            } else {
-                mImgthumbProfile1.setVisibility(View.GONE);
-            }
-
-            if (mGallery.size() > 3) {
-
-                mImgthumbProfile1.setVisibility(View.VISIBLE);
-                Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-                mImgthumbProfile2.setVisibility(View.VISIBLE);
-                Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
-                tv_ImageViewText.setVisibility(View.VISIBLE);
-                tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
-                Config.logV("Galeery--------------11111-----------" + mGallery.size());
-                mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Config.logV("Gallery------------------------------" + mGallery.size());
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-                        for (int i = 1; i < mGallery.size(); i++) {
+                            Config.logV("Gallery------------------------------" + mGallery.size());
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            for (int i = 0; i < mGallery.size(); i++) {
                         /*SearchViewDetail data = new SearchViewDetail();
                         data.setUrl(mGallery.get(i).getUrl());*/
-                            mGalleryList.add(mGallery.get(i).getUrl());
+                                mGalleryList.add(mGallery.get(i).getUrl());
+                            }
+
+
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                            if (mValue) {
+
+                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                startActivity(intent);
+                            }
+
+
                         }
+                    });
+                }
+
+                if (mGallery.get(1).getUrl() != null) {
+                    mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Config.logV("Gallery------------------------------" + mGallery.size());
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            for (int i = 1; i < mGallery.size(); i++) {
+                        /*SearchViewDetail data = new SearchViewDetail();
+                        data.setUrl(mGallery.get(i).getUrl());*/
+                                mGalleryList.add(mGallery.get(i).getUrl());
+                            }
 
 
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                        if (mValue) {
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                            if (mValue) {
 
-                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                            startActivity(intent);
+                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                startActivity(intent);
+                            }
+
+
                         }
+                    });
+                }
+
+                if (mGallery.get(2).getUrl() != null) {
+                    mImgthumbProfile1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Config.logV("Gallery------------------------------" + mGallery.size());
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            for (int i = 1; i < mGallery.size(); i++) {
+                        /*SearchViewDetail data = new SearchViewDetail();
+                        data.setUrl(mGallery.get(i).getUrl());*/
+                                mGalleryList.add(mGallery.get(i).getUrl());
+                            }
 
 
-                    }
-                });
-            } else {
-                mImgthumbProfile2.setVisibility(View.GONE);
-                tv_ImageViewText.setVisibility(View.GONE);
-                // mImgthumbProfile1.setVisibility(View.GONE);
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                            if (mValue) {
+
+                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                startActivity(intent);
+                            }
+
+
+                        }
+                    });
+                }
             }
 
+            Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
 
-        } else {
-            mImgthumbProfile.setVisibility(View.GONE);
+            if (mGallery.size() > 1) {
+                mImgthumbProfile.setVisibility(View.VISIBLE);
+                // Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(mImgthumbProfile);
+
+                Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
+
+
+                if (mGallery.size() == 3) {
+                    mImgthumbProfile1.setVisibility(View.VISIBLE);
+                    Config.logV("Gallery--------");
+                    Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+                } else {
+                    mImgthumbProfile1.setVisibility(View.GONE);
+                }
+
+                if (mGallery.size() > 3) {
+
+                    mImgthumbProfile1.setVisibility(View.VISIBLE);
+                    Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+                    mImgthumbProfile2.setVisibility(View.VISIBLE);
+                    Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
+                    tv_ImageViewText.setVisibility(View.VISIBLE);
+                    tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
+                    Config.logV("Galeery--------------11111-----------" + mGallery.size());
+                    mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Config.logV("Gallery------------------------------" + mGallery.size());
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            for (int i = 1; i < mGallery.size(); i++) {
+                        /*SearchViewDetail data = new SearchViewDetail();
+                        data.setUrl(mGallery.get(i).getUrl());*/
+                                mGalleryList.add(mGallery.get(i).getUrl());
+                            }
+
+
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                            if (mValue) {
+
+                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                startActivity(intent);
+                            }
+
+
+                        }
+                    });
+                } else {
+                    mImgthumbProfile2.setVisibility(View.GONE);
+                    tv_ImageViewText.setVisibility(View.GONE);
+                    // mImgthumbProfile1.setVisibility(View.GONE);
+                }
+
+
+            } else {
+                mImgthumbProfile.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+  /*  ArrayList<SearchViewDetail> emails = new ArrayList<>();
+    ArrayList<SearchViewDetail> phoneNumber = new ArrayList<>();*/
+    ArrayList<ContactModel> contactDetail = new ArrayList<>();
+    boolean isContact=false;
 
     //  boolean expand =false;
     public void UpdateMainUI(SearchViewDetail getBussinessData) {
 
+
+
+
+        if(getBussinessData.getPhoneNumbers().size()>0) {
+            for(int i=0;i<getBussinessData.getPhoneNumbers().size();i++){
+                Config.logV("Phone @@@@@@@@@@@@"+getBussinessData.getPhoneNumbers().get(i).getInstance());
+                ContactModel contact=new ContactModel();
+                contact.setInstance(getBussinessData.getPhoneNumbers().get(i).getInstance());
+                contact.setResource(getBussinessData.getPhoneNumbers().get(i).getResource());
+                contact.setLabel(getBussinessData.getPhoneNumbers().get(i).getLabel());
+                contactDetail.add(contact);
+            }
+
+        }
+
+        if(getBussinessData.getEmails().size()>0) {
+            for(int i=0;i<getBussinessData.getEmails().size();i++){
+                ContactModel contact=new ContactModel();
+                contact.setInstance(getBussinessData.getEmails().get(i).getInstance());
+                contact.setResource(getBussinessData.getEmails().get(i).getResource());
+                contact.setLabel(getBussinessData.getEmails().get(i).getLabel());
+                contactDetail.add(contact);
+            }
+        }
+
+
+        if(getBussinessData.getPhoneNumbers().size()>0||getBussinessData.getEmails().size()>0&&contactDetail.size()>0) {
+
+            tv_contactdetails.setVisibility(View.VISIBLE);
+            tv_contactdetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!isContact){
+                        isContact=true;
+                        mrecycle_contactdetail.setVisibility(View.VISIBLE);
+                        tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue_hidden, 0);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                        mrecycle_contactdetail.setLayoutManager(mLayoutManager);
+                        ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity());
+                        mrecycle_contactdetail.setAdapter(checkAdapter);
+                        checkAdapter.notifyDataSetChanged();
+                    }else{
+                        isContact=false;
+                        tv_contactdetails.setText("Contact Details");
+                        tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue, 0);
+                        mrecycle_contactdetail.setVisibility(View.GONE);
+                    }
+                }
+            });
+
+        }else{
+            tv_contactdetails.setVisibility(View.GONE);
+            mrecycle_contactdetail.setVisibility(View.GONE);
+        }
 
         if (getBussinessData.getVerifyLevel() != null) {
             if (!getBussinessData.getVerifyLevel().equalsIgnoreCase("NONE")) {

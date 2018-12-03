@@ -107,12 +107,22 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/searchresult"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/title_grey"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:layout_marginRight="@dimen/default_padding"
+            android:textSize="@dimen/txtsize_12"
+            android:layout_marginTop="@dimen/padding7"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/SearchDetail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_padding"></android.support.v7.widget.RecyclerView>
+            android:layout_marginTop="@dimen/padding3"></android.support.v7.widget.RecyclerView>
 
 
         <ProgressBar

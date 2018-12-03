@@ -29,6 +29,7 @@ public class SearchServiceActivity extends AppCompatActivity {
     String title;
     TextView tv_toolbartitle;
     ImageView i_backpress;
+    boolean isTaxable;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class SearchServiceActivity extends AppCompatActivity {
             price = extras.getString("price");
             desc = extras.getString("desc");
             title=extras.getString("title");
+            isTaxable=extras.getBoolean("taxable");
             mGallery = (ArrayList<SearchService>) getIntent().getSerializableExtra("servicegallery");
         }
 
@@ -81,7 +83,12 @@ public class SearchServiceActivity extends AppCompatActivity {
 
         if (price != null) {
             tv_price.setVisibility(View.VISIBLE);
-            tv_price.setText( price);
+            if(isTaxable) {
+
+                tv_price.setText(price+ " (Tax Applicable)");
+            }else {
+                tv_price.setText(price);
+            }
         } else {
             tv_price.setVisibility(View.GONE);
         }
