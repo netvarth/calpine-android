@@ -39,6 +39,7 @@ import java.util.Map;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
@@ -221,7 +222,7 @@ public interface ApiInterface {
 
     @Headers("User-Agent: android")
     @POST("consumer/payment")
-    Call<CheckSumModel> generateHashPaytm(@Body RequestBody jsonObj);
+    Call<PaytmChecksum> generateHashPaytm(@Body RequestBody jsonObj);
 
     @POST("consumer/waitlist")
     Call<ResponseBody> Checkin(@Query("account") String account,@Body RequestBody jsonObj);

@@ -166,7 +166,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             uniqueID = bundle.getString("uniqueID");
 
         }
-
+         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mRecyLocDetail.setNestedScrollingEnabled(false);
 
         Config.logV("UNIUE ID---------1111-------" + uniqueID);
@@ -640,7 +640,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----detail--------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -702,7 +702,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----gallery--------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -763,7 +763,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL---3333------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--Location-----------------------" + response.code());
                     mSearchLocList.clear();
 
@@ -771,6 +771,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                         mSearchLocList = response.body();
+
                         for (int i = 0; i < response.body().size(); i++) {
                             ids.add(String.valueOf(response.body().get(i).getId()));
                         }
@@ -860,7 +861,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL----------Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
+                    Config.logV("URL-----4444-----Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--------Message-----------------" + response.code());
 
                     if (response.code() == 200) {
@@ -961,8 +962,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code----------Service---------------" + response.code());
+
 
                     if (response.code() == 200) {
 
@@ -973,11 +975,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mServicesList.add(mService);
 
 
+                        Config.logV("mServicesList @@@@" + response.body().size());
                         Config.logV("mServicesList" + mServicesList.size());
 
-                        Config.logV("Count " + count);
-                        count++;
 
+                        count++;
+                        Config.logV("Count " + count);
                         if (count == mSearchLocList.size()) {
 
 
@@ -1039,7 +1042,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL-------SEARCH--------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----SearchViewID--------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -1099,7 +1102,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -1181,7 +1184,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL----VIRTUAL-----------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL----VIRTUAL---8888--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------VIRTUAL-------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -1255,7 +1258,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL-------9999--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----Terminl--------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -1420,7 +1423,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 try {
 
                     ic_fav.setImageResource(R.drawable.icon_favourite_line);
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -1555,6 +1558,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     @Override
     public void onResume() {
         super.onResume();
+
         String refresh = SharedPreference.getInstance(mContext).getStringValue("refreshcheckin", "");
         if (refresh.equalsIgnoreCase("true")) {
             refreshList();

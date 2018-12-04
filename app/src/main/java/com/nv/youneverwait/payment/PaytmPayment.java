@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -136,12 +137,12 @@ public class PaytmPayment {
 
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHashPaytm(body);
+        Call<PaytmChecksum> call = apiService.generateHashPaytm(body);
 
         Config.logV("Request--body------ynwUUID-------------------" +ynwUUID);
-        call.enqueue(new Callback<CheckSumModel>() {
+        call.enqueue(new Callback<PaytmChecksum>() {
             @Override
-            public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {
+            public void onResponse(Call<PaytmChecksum> call, Response<PaytmChecksum> response) {
 
                 try {
 
@@ -155,10 +156,35 @@ public class PaytmPayment {
                     if (response.code() == 200) {
 
 
-                        CheckSumModel response_data = response.body();
+                        PaytmChecksum response_data = response.body();
+                       // Config.logV("Response--Sucess----PAytm---------------------" + response.body().string());
                         Config.logV("Response--Sucess----PAytm---------------------" + new Gson().toJson(response.body()));
 
+                        try {
 
+                            Map<String, String> map = new HashMap<>();
+
+
+                            map.put("MID", response_data.getMID());
+                            map.put("ORDER_ID", response_data.getORDER_ID());
+                            map.put("CUST_ID", response_data.getCUST_ID());
+                            map.put("INDUSTRY_TYPE_ID", response_data.getINDUSTRY_TYPE_ID());
+                            map.put("CHANNEL_ID", response_data.getCHANNEL_ID());
+                            map.put("TXN_AMOUNT", response_data.getTXN_AMOUNT());
+                            map.put("WEBSITE",response_data.getWEBSITE());
+
+                            Config.logV("Response--Sucess----PAytm-CALLBACK_URL--------------------" + response_data.getCALLBACK_URL());
+                            map.put("CALLBACK_URL",  response_data.getCALLBACK_URL());
+                            // map.put("EMAIL", jsonObj.getString("EMAIL"));
+                            // map.put("MOBILE_NO", jsonObj.getString("MOBILE_NO"));
+                            map.put("CHECKSUMHASH", response_data.getChecksum());
+                            PaytmPay(map);
+
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                     } else {
                         String responseerror = response.errorBody().string();
@@ -173,7 +199,7 @@ public class PaytmPayment {
             }
 
             @Override
-            public void onFailure(Call<CheckSumModel> call, Throwable t) {
+            public void onFailure(Call<PaytmChecksum> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())

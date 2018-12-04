@@ -23,10 +23,10 @@ public class PaytmChecksum {
     }
 
     public String getINDUSTRY_TYPE_ID() {
-        return INDUSTRY_TYPE_ID;
+        return INDUSTRY_TYPE;
     }
 
-    String INDUSTRY_TYPE_ID;
+    String INDUSTRY_TYPE;
     String CALLBACK_URL;
     String TXN_AMOUNT;
 
