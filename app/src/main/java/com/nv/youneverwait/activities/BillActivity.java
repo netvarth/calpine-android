@@ -192,7 +192,9 @@ String accountID;
                             public void onClick(View v) {
 
                                 PaytmPayment payment = new PaytmPayment(mCOntext);
-                                payment.generateCheckSum(sAmountPay);
+                               // payment.generateCheckSum(sAmountPay);
+                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
+                              //  payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
                                 dialog.dismiss();
                             }
                         });

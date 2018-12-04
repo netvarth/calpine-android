@@ -219,6 +219,10 @@ public interface ApiInterface {
     @POST("consumer/payment")
     Call<CheckSumModel> generateHash(@Body RequestBody jsonObj,@Query("accountId") String account);
 
+    @Headers("User-Agent: android")
+    @POST("consumer/payment")
+    Call<CheckSumModel> generateHashPaytm(@Body RequestBody jsonObj);
+
     @POST("consumer/waitlist")
     Call<ResponseBody> Checkin(@Query("account") String account,@Body RequestBody jsonObj);
 

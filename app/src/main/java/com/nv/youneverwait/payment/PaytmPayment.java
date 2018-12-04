@@ -136,8 +136,9 @@ public class PaytmPayment {
 
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(body, accountID);
+        Call<CheckSumModel> call = apiService.generateHashPaytm(body);
 
+        Config.logV("Request--body------ynwUUID-------------------" +ynwUUID);
         call.enqueue(new Callback<CheckSumModel>() {
             @Override
             public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {

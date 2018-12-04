@@ -193,7 +193,7 @@ public class Config {
                         Intent iReg = new Intent(context, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(iReg);
-                        ((Activity)context).finish();
+                       // ((Activity)context).finish();
 
 
                     }else{

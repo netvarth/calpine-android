@@ -1,13 +1,17 @@
 package com.nv.youneverwait.activities;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -56,7 +60,7 @@ public class Register extends AppCompatActivity {
     TextInputEditText mEdtMobno;
     TextInputLayout txt_InputMob;
     Button btn_reg_submit;
-    TextView tv_terms,tv_provider,tv_download;
+    TextView tv_terms, tv_provider, tv_download;
     /*public static final int RequestPermissionCode = 7;
     private void RequestMultiplePermission() {
 
@@ -113,6 +117,8 @@ public class Register extends AppCompatActivity {
 
 
     }*/
+    String sforceupdate = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +143,19 @@ public class Register extends AppCompatActivity {
 
 
         mContext = this;
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            sforceupdate = extras.getString("forceupdate", "");
+        }
+
+        if (sforceupdate != null) {
+            if (sforceupdate.equalsIgnoreCase("true")) {
+
+                showForceUpdateDialog();
+            }
+        }
+
 
         /*//GCM REGISTRATION
 
@@ -198,54 +217,51 @@ public class Register extends AppCompatActivity {
         tv_terms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iterm=new Intent(v.getContext(),TermsOfUse.class);
+                Intent iterm = new Intent(v.getContext(), TermsOfUse.class);
                 mContext.startActivity(iterm);
             }
         });
 
         String firstWord = "Jaldee ";
         String secondWord = "Terms and Conditions";
-       //  <font color='#00AEF2'><b>Terms and Conditions
+        //  <font color='#00AEF2'><b>Terms and Conditions
 
-        Spannable spannable = new SpannableString(firstWord+secondWord);
+        Spannable spannable = new SpannableString(firstWord + secondWord);
 
         Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Regular.otf");
         Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
 
-        spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_grey)),0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)),firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        tv_terms.setText( spannable );
-
+        tv_terms.setText(spannable);
 
 
         String text1 = "Are you a ";
         String text2 = "Provider? ";
         //  <font color='#00AEF2'><b>Terms and Conditions
 
-        Spannable spannable_txt = new SpannableString(text1+text2);
+        Spannable spannable_txt = new SpannableString(text1 + text2);
 
-        spannable_txt.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext1), 0, text1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable_txt.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), text1.length(), text1.length() + text2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tv_provider.setText( spannable_txt );
-
+        spannable_txt.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, text1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable_txt.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), text1.length(), text1.length() + text2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv_provider.setText(spannable_txt);
 
 
         String text_1 = "Download ";
         String text_2 = "Jaldee Provider App ";
         //  <font color='#00AEF2'><b>Terms and Conditions
 
-        Spannable spannable_txt1 = new SpannableString(text_1+text_2);
-        spannable_txt1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)),text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable_txt1.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext1), 0, text_1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable_txt1.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tv_download.setText( spannable_txt1 );
-
+        Spannable spannable_txt1 = new SpannableString(text_1 + text_2);
+        spannable_txt1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)), text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable_txt1.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, text_1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable_txt1.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv_download.setText(spannable_txt1);
 
 
     }
@@ -257,14 +273,14 @@ public class Register extends AppCompatActivity {
             Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
                     "fonts/Montserrat_Light.otf");
             s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            txt_InputMob. setErrorEnabled(true);
+            txt_InputMob.setErrorEnabled(true);
             txt_InputMob.setError(s);
             //txt_InputMob.setError(getString(R.string.err_msg_phone));
             requestFocus(mEdtMobno);
             return false;
         } else {
             txt_InputMob.setError(null);
-            txt_InputMob. setErrorEnabled(false);
+            txt_InputMob.setErrorEnabled(false);
         }
 
         return true;
@@ -327,13 +343,13 @@ public class Register extends AppCompatActivity {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Signup.class);
                             startActivity(iReg);
-                          //  finish();
+                            //  finish();
 
                         } else {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Login.class);
                             startActivity(iReg);
-                           // finish();
+                            // finish();
 
                         }
 
@@ -390,6 +406,24 @@ public class Register extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
     }*/
+
+    public void showForceUpdateDialog() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        alertDialog.setTitle("Please update your app");
+        alertDialog.setMessage("This app version is not supported any longer. Please update your app from the Play Store.");
+        alertDialog.setPositiveButton("UPDATE NOW", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                final String appPackageName = mContext.getPackageName();
+                try {
+                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+            }
+        });
+        alertDialog.show();
+    }
 
 
 }

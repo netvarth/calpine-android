@@ -51,7 +51,7 @@ public class ResponseInteceptor implements Interceptor {
         this.context = context;
     }
 
-    boolean callOnce=false;
+
     @Override
     public Response intercept(Interceptor.Chain chain) throws IOException {
 
@@ -99,7 +99,16 @@ public class ResponseInteceptor implements Interceptor {
         if(response.code()==301){
 
             Config.logV(" ERROR  301 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            ApiLogout();
+            SharedPreference.getInstance(context).clear();
+            DatabaseHandler db=new DatabaseHandler(context);
+            db.deleteDatabase();
+            // if(response.body().equals("true")) {
+
+            Intent iLogout=new Intent(context, Register.class);
+            iLogout.putExtra("forceupdate","true");
+            iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(iLogout);
+
 
         }
         return response;
@@ -107,89 +116,9 @@ public class ResponseInteceptor implements Interceptor {
 
 
 
-    public void showForceUpdateDialog(){
-        ((Activity)context).runOnUiThread(new Runnable() {
-            public void run() {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-                alertDialog.setTitle("Please update your app");
-                alertDialog.setMessage("This app version is not supported any longer. Please update your app from the Play Store.");
-                alertDialog.setPositiveButton("UPDATE NOW", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        final String appPackageName = context.getPackageName();
-                        try {
-                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                        } catch (android.content.ActivityNotFoundException anfe) {
-                            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                        }
-                    }
-                });
-                alertDialog.show();
-            }
-        });
-
-
-    }
-
-    private void ApiLogout() {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(context).create(ApiInterface.class);
 
 
 
-
-        Call<ResponseBody> call = apiService.logOut();
-
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-
-                try {
-
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        Config.logV("Response----------------");
-
-                        SharedPreference.getInstance(context).clear();
-                        DatabaseHandler db=new DatabaseHandler(context);
-                        db.deleteDatabase();
-                        // if(response.body().equals("true")) {
-
-                        Intent iLogout=new Intent(context, Register.class);
-                        iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        context.startActivity(iLogout);
-                        ((Activity)context).finish();
-
-                        callOnce=true;
-                       // showForceUpdateDialog();
-                        //  }
-
-
-                    }else{
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-
-            }
-        });
-
-
-    }
 
     public void ApiLogin(String loginId, String password) {
 
