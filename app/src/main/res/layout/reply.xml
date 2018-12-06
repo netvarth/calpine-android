@@ -48,6 +48,19 @@
         android:background="@color/app_background"
         android:orientation="horizontal">
 
+
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@drawable/roundedrect_grey"
+            android:text="@string/cancel"
+            android:textColor="@color/app_background"
+            android:textSize="@dimen/txtsize_hint" />
+
         <Button
             android:id="@+id/btn_send"
             style="?android:attr/borderlessButtonStyle"
@@ -58,19 +71,8 @@
             android:text="@string/send"
             android:clickable="false"
             android:enabled="false"
-            android:textAllCaps="true"
-            android:textColor="@color/app_background"
-            android:textSize="@dimen/txtsize_hint" />
-
-        <Button
-            android:id="@+id/btn_cancel"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_padding"
-            android:layout_weight="0.5"
-            android:background="@drawable/roundedrect_grey"
-            android:text="@string/cancel"
+            android:textAllCaps="true"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />
     </LinearLayout>

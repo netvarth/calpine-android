@@ -173,6 +173,12 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
         }
 
+        if(activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+            myViewHolder.tv_status.setText("Prepayment Pending");
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.gray));
+        }
+
+
         try {
         if (activelist.getQueue() != null) {
             String geoUri = activelist.getQueue().getLocation().getGoogleMapUrl();
@@ -196,9 +202,11 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 String firstWord = activelist.getService().getName();
-                String secondWord = " for " + activelist.getWaitlistingFor().get(0).getFirstName() + " " + activelist.getWaitlistingFor().get(0).getLastName();
-                Spannable spannable = new SpannableString(firstWord + secondWord);
+                String secondWord=" for ";
+                String thirdWord =   activelist.getWaitlistingFor().get(0).getFirstName() + " " + activelist.getWaitlistingFor().get(0).getLastName();
+                Spannable spannable = new SpannableString(firstWord + secondWord+thirdWord);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length()+secondWord.length(), firstWord.length()+secondWord.length()+thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 myViewHolder.tv_service.setText(spannable);
             } else {
                 myViewHolder.tv_service.setVisibility(View.GONE);

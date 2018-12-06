@@ -65,4 +65,18 @@ public class PaytmChecksum {
     String CUST_ID;
     String ORDER_ID;
 
+/*
+    public String getMOBILE_NO() {
+        return MOBILE_NO;
+    }
+
+    String MOBILE_NO;
+
+    public String getEMAIL() {
+        return EMAIL;
+    }
+
+    String EMAIL;
+*/
+
 }

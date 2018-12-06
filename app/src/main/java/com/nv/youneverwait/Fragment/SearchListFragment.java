@@ -1885,12 +1885,40 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
         //  String querycreate = "(phrase " + "'" + query + "')";
 
+        String querycreate = null;
 
-        String querycreate = "";
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
-            querycreate = "(phrase " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
-        } else {
-            querycreate = "(phrase " + "'" + querypass + "')";
+
+            for (int i=0;i<mSectorSubSearch.size();i++ ){
+                if(mSectorSubSearch.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())){
+
+                        Config.logV("Query------------" + mSectorSubSearch.get(i).getQuery());
+                        String requiredString = mSectorSubSearch.get(i).getQuery().substring(mSectorSubSearch.get(i).getQuery().indexOf("]") + 1, mSectorSubSearch.get(i).getQuery().indexOf(")"));
+                        Config.logV("Second----@@@@@@-----" + requiredString);
+                        querycreate = requiredString;
+
+                }
+            }
+            Config.logV("Query @@@@@@@@@@-----------" + querycreate);
+        }else{
+            for (int i=0;i<mGLobalSearch.size();i++ ){
+                if(mGLobalSearch.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())){
+                    Config.logV("Query-ALL-----------" + mGLobalSearch.get(i).getQuery());
+                    String requiredString = mGLobalSearch.get(i).getQuery().substring(mGLobalSearch.get(i).getQuery().indexOf("]") + 1, mGLobalSearch.get(i).getQuery().indexOf(")"));
+                    Config.logV("Second---All-@@@@@@-----" + requiredString);
+                    querycreate = requiredString;
+                }
+            }
+            Config.logV("Query  ALL @@@@@@@@@@-----------" + querycreate);
+        }
+
+
+        if (querycreate==null) {
+            if (!mDomainSpinner.equalsIgnoreCase("All")) {
+                querycreate = "(phrase " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
+            } else {
+                querycreate = "(phrase " + "'" + querypass + "')";
+            }
         }
 
 

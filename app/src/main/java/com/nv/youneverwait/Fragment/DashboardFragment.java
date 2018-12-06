@@ -142,7 +142,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     static double latitude;
     static double longitude;
     TextView tv_activechkin, tv_popular;
-    LinearLayout LpopularSearch, LActiveCheckin, LinearPopularSearch, LinearMorePopularSearch;
+    LinearLayout LpopularSearch, LActiveCheckin, LinearPopularSearch, LinearMorePopularSearch,LMore;
     TextView tv_More;
     boolean is_MoreClick = false;
     LinearLayout Lhome_mainlayout;
@@ -154,6 +154,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     String spinnerTxtPass;
     ActiveAdapterOnCallback mInterface;
     static String mlocName;
+    ImageView img_arrow;
 
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
@@ -165,8 +166,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             LinearPopularSearch.removeAllViews();
             if (mPopularSearchList.size() > 6) {
                 tv_More.setVisibility(View.VISIBLE);
+                LMore.setVisibility(View.VISIBLE);
             } else {
                 tv_More.setVisibility(View.GONE);
+                LMore.setVisibility(View.GONE);
             }
 
             int k = 0;
@@ -243,6 +246,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         View row = inflater.inflate(R.layout.fragment_myhome, container, false);
         mRecycleActive = (RecyclerView) row.findViewById(R.id.recycleActive);
         Lhome_mainlayout = (LinearLayout) row.findViewById(R.id.homemainlayout);
+        LMore=(LinearLayout) row.findViewById(R.id.LMore);
+        img_arrow=(ImageView) row.findViewById(R.id.img_arrow);
 
         Home.doubleBackToExitPressedOnce = false;
         mActivity = getActivity();
@@ -301,11 +306,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 mCurrentLoc.setText(addresses.get(0).getLocality());
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
-e.printStackTrace();
+                e.printStackTrace();
             }
         }
 
-        if(mCurrentLoc.getText().equals("")){
+        if (mCurrentLoc.getText().equals("")) {
             DefaultLocation();
         }
 
@@ -406,85 +411,99 @@ e.printStackTrace();
                 }
 
 
-                tv_More.setOnClickListener(new View.OnClickListener() {
+                LMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
 
                         if (mPopularSearchList.size() > 0) {
 
-                            is_MoreClick = true;
-                            tv_More.setVisibility(View.GONE);
-                            LpopularSearch.setVisibility(View.VISIBLE);
-                            LinearPopularSearch.setVisibility(View.GONE);
-                            LinearMorePopularSearch.setVisibility(View.VISIBLE);
-                            LinearMorePopularSearch.removeAllViews();
-
-                            int k = 0;
-                            int add_row = 0;
-                            int rem = mPopularSearchList.size() % 3;
-                            if (rem == 0) {
-
-                                add_row = 0;
-
+                            if (is_MoreClick) {
+                                is_MoreClick = false;
+                                LpopularSearch.setVisibility(View.VISIBLE);
+                                LinearPopularSearch.setVisibility(View.VISIBLE);
+                                LinearMorePopularSearch.setVisibility(View.GONE);
+                                tv_More.setVisibility(View.VISIBLE);
+                                LMore.setVisibility(View.VISIBLE);
+                               img_arrow.setImageResource(R.drawable.icon_down_arrow_blue);
+                                tv_More.setText("More");
                             } else {
+                                is_MoreClick = true;
+                                tv_More.setText("Less");
+                                img_arrow.setImageResource(R.drawable.icon_up_arrow_blue);
+                                tv_More.setVisibility(View.VISIBLE);
+                                LMore.setVisibility(View.VISIBLE);
+                                LpopularSearch.setVisibility(View.VISIBLE);
+                                LinearPopularSearch.setVisibility(View.GONE);
+                                LinearMorePopularSearch.setVisibility(View.VISIBLE);
+                                LinearMorePopularSearch.removeAllViews();
 
-                                add_row = 1;
-                            }
-                            for (int i = 0; i < (mPopularSearchList.size() / 3) + add_row; i++) {
-                                LinearLayout parent = new LinearLayout(mContext);
+                                int k = 0;
+                                int add_row = 0;
+                                int rem = mPopularSearchList.size() % 3;
+                                if (rem == 0) {
 
-                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                                parent.setOrientation(LinearLayout.HORIZONTAL);
-                                parent.setLayoutParams(params);
+                                    add_row = 0;
 
+                                } else {
 
-                                for (int j = 0; j < 3; j++) {
-
-                                    if (k >= mPopularSearchList.size()) {
-                                        break;
-                                    } else {
-
-
-                                        TextView dynaText = new TextView(mContext);
-                                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                                "fonts/Montserrat_Regular.otf");
-                                        dynaText.setTypeface(tyface);
-                                        dynaText.setText(mPopularSearchList.get(k).getDisplayname());
-                                        dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
-                                        dynaText.setTextSize(12);
-                                        dynaText.setTextColor(getResources().getColor(R.color.black));
-                                        dynaText.setPadding(15, 10, 15, 10);
-                                        // dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                        dynaText.setMaxLines(1);
-                                        //dynaText.setMaxEms(8);
-                                        dynaText.setGravity(Gravity.CENTER);
-                                        dynaText.setWidth(dpToPx(130));
-
-                                        params.setMargins(12, 10, 12, 0);
-                                        dynaText.setLayoutParams(params);
-
-                                        //   dynaText.setTag("" + i);
-                                        final int finalK = k;
-                                        dynaText.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-
-                                                mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
-                                                Config.logV("Popular Text______________" + mPopularSearchtxt);
-                                                FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
-
-
-                                            }
-                                        });
-                                        parent.addView(dynaText);
-
-                                        k++;
-                                    }
-
+                                    add_row = 1;
                                 }
-                                LinearMorePopularSearch.addView(parent);
+                                for (int i = 0; i < (mPopularSearchList.size() / 3) + add_row; i++) {
+                                    LinearLayout parent = new LinearLayout(mContext);
+
+                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                                    parent.setOrientation(LinearLayout.HORIZONTAL);
+                                    parent.setLayoutParams(params);
+
+
+                                    for (int j = 0; j < 3; j++) {
+
+                                        if (k >= mPopularSearchList.size()) {
+                                            break;
+                                        } else {
+
+
+                                            TextView dynaText = new TextView(mContext);
+                                            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                                    "fonts/Montserrat_Regular.otf");
+                                            dynaText.setTypeface(tyface);
+                                            dynaText.setText(mPopularSearchList.get(k).getDisplayname());
+                                            dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
+                                            dynaText.setTextSize(12);
+                                            dynaText.setTextColor(getResources().getColor(R.color.black));
+                                            dynaText.setPadding(15, 10, 15, 10);
+                                            // dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                            dynaText.setMaxLines(1);
+                                            //dynaText.setMaxEms(8);
+                                            dynaText.setGravity(Gravity.CENTER);
+                                            dynaText.setWidth(dpToPx(130));
+
+                                            params.setMargins(12, 10, 12, 0);
+                                            dynaText.setLayoutParams(params);
+
+                                            //   dynaText.setTag("" + i);
+                                            final int finalK = k;
+                                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+
+                                                    mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
+                                                    Config.logV("Popular Text______________" + mPopularSearchtxt);
+                                                    FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
+
+
+                                                }
+                                            });
+                                            parent.addView(dynaText);
+
+                                            k++;
+                                        }
+
+                                    }
+                                    LinearMorePopularSearch.addView(parent);
+                                }
                             }
 
                         }
@@ -984,7 +1003,7 @@ e.printStackTrace();
                             Config.logV("GLobal Search Size-------------" + mGLobalSearch.size());
 
 
-                            Lhome_mainlayout.setOnClickListener(new View.OnClickListener() {
+                           /* Lhome_mainlayout.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
 
@@ -1011,7 +1030,7 @@ e.printStackTrace();
                                         tv_More.setVisibility(View.VISIBLE);
                                     }
                                 }
-                            });
+                            });*/
 
 
                             APiGetDomain();
@@ -1069,7 +1088,7 @@ e.printStackTrace();
 
                         Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-------------------------" + response.code());
-                       // Config.logV("Response--BODY------Domain-------------------" + new Gson().toJson(response));
+                        // Config.logV("Response--BODY------Domain-------------------" + new Gson().toJson(response));
 
                         if (response.code() == 200) {
 
@@ -1530,7 +1549,7 @@ e.printStackTrace();
                                         Config.logV("Google Ask to turn on GPS automatically");
                                         /*status.startResolutionForResult(getActivity(),
                                                 REQUEST_CHECK_SETTINGS_GPS);*/
-                                       startIntentSenderForResult(status.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS_GPS, null, 0, 0, 0, null);
+                                        startIntentSenderForResult(status.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS_GPS, null, 0, 0, 0, null);
                                     } catch (IntentSender.SendIntentException e) {
                                         // Ignore the error.
                                         e.printStackTrace();
@@ -1562,7 +1581,7 @@ e.printStackTrace();
         Config.logV("GPS ON Google ##################");
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS_GPS:
-                Config.logV("GPS ON Google resultCode ##################"+resultCode);
+                Config.logV("GPS ON Google resultCode ##################" + resultCode);
                 switch (resultCode) {
 
                     case RESULT_OK:
@@ -1607,19 +1626,19 @@ e.printStackTrace();
     public void DefaultLocation() {
         Config.logV("Google DEFAULT LOCATION" + mCurrentLoc.getText().toString());
         //if (mCurrentLoc.getText().toString().equalsIgnoreCase("Locating...")) {
-            latitude = 12.971599;
-            longitude = 77.594563;
-            Config.logV("Not Google DEFAULT LOCATION @@@ YES");
-            try {
-                Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                mCurrentLoc.setVisibility(View.VISIBLE);
-                mCurrentLoc.setText(addresses.get(0).getLocality());
-                Config.logV("Google DEFAULT LOCATION @@@" + addresses.get(0).getLocality());
-                //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        latitude = 12.971599;
+        longitude = 77.594563;
+        Config.logV("Not Google DEFAULT LOCATION @@@ YES");
+        try {
+            Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            mCurrentLoc.setVisibility(View.VISIBLE);
+            mCurrentLoc.setText(addresses.get(0).getLocality());
+            Config.logV("Google DEFAULT LOCATION @@@" + addresses.get(0).getLocality());
+            //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         /*} else {
             Config.logV("Not Google DEFAULT LOCATION @@@");
         }*/

@@ -112,6 +112,7 @@
     <string name="eduqualif">Educational Qualification</string>
     <string name="experience">Experience</string>
     <string name="awards"><![CDATA[Awards & Recognitions]]></string>
+    <string name="call_permission_denied_message">Call permission denied</string>
 
 
 </resources>

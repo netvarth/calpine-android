@@ -1448,7 +1448,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             @Override
                             public void onClick(View v) {
                                 if (favFlag) {
-                                    AlertDialog myQuittingDialogBox = new AlertDialog.Builder(mContext)
+
+                                    ApiRemoveFavo(mBusinessDataList.getId());
+                                    /*AlertDialog myQuittingDialogBox = new AlertDialog.Builder(mContext)
                                             //set message, title, and icon
                                             .setTitle("Delete")
                                             .setMessage("Do you want to remove " + mBusinessDataList.getBusinessName() + " from favourite list?")
@@ -1473,7 +1475,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                                 }
                                             })
                                             .create();
-                                    myQuittingDialogBox.show();
+                                    myQuittingDialogBox.show();*/
                                 } else {
                                     ApiAddFavo(mBusinessDataList.getId());
                                 }

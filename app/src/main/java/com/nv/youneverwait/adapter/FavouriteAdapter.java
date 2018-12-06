@@ -208,7 +208,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
             @Override
             public void onClick(View v) {
 
-                AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
+                callback.onMethodDeleteFavourite(favList.getId());
+                /*AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
                         //set message, title, and icon
                         //.setTitle("Delete")
                         .setMessage("Do you want to remove "+favList.getBusinessName()+" from favourite list?")
@@ -234,7 +235,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                             }
                         })
                         .create();
-                 myQuittingDialogBox.show();
+                 myQuittingDialogBox.show();*/
             }
         });
 

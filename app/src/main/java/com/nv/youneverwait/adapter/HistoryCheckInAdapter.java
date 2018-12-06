@@ -197,8 +197,9 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             public void onClick(View v) {
                 if (activelist.isFavFlag()) {
 
+                    callback.onMethodDeleteFavourite(activelist.getProvider().getId());
 
-                    AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
+                   /* AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
                             //set message, title, and icon
                             .setTitle("Delete")
                             .setMessage("Do you want to remove "+toTitleCase(activelist.getProvider().getBusinessName())+" from favourite list?")
@@ -224,7 +225,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                                 }
                             })
                             .create();
-                    myQuittingDialogBox.show();
+                    myQuittingDialogBox.show();*/
 
 
                 }else{
@@ -503,7 +504,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         if(!header.equalsIgnoreCase("old")&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
             myViewHolder.tv_token.setVisibility(View.VISIBLE);
             myViewHolder.layout_token.setVisibility(View.VISIBLE);
-            String firstWord = "Token No ";
+            String firstWord = "Token # ";
             String secondWord = String.valueOf(activelist.getToken());
             Spannable spannable = new SpannableString(firstWord + secondWord);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
@@ -511,6 +512,9 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             myViewHolder.tv_token.setText(spannable);
 
 
@@ -525,6 +529,9 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                        // myViewHolder.tv_partysize.setText(String.valueOf(activelist.getPartySize()));
 
                         spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), partyWord.length(), partyWord.length() + ValueWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                                partyWord.length(), partyWord.length() + ValueWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         myViewHolder.tv_partysize.setText(spannable1);
                     } else {
                         myViewHolder.tv_partysize.setVisibility(View.GONE);
@@ -554,6 +561,9 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                    firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             myViewHolder.tv_personahead.setText(spannable1);
         } else {
             myViewHolder.tv_personahead.setVisibility(View.INVISIBLE);
@@ -619,7 +629,10 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
            }
 
-
+        if(activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+            myViewHolder.tv_status.setText("Prepayment Pending");
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.gray));
+        }
 
         if(header.equalsIgnoreCase("old")) {
             if(activelist.getWaitlistStatus().equalsIgnoreCase("done")) {

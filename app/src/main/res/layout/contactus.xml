@@ -112,6 +112,7 @@
 
                 <!--android:paddingLeft="@dimen/default_padding"-->
                 <TextView
+                    android:id="@+id/txtphone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Phone: 0487-2325650"

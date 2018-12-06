@@ -101,7 +101,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
                                     mergeValue = jsonObj.getString(key);
                                 }
                             }else{
-                                mergeValue +=  jsonObj.getString(key)+",";
+                                mergeValue +=  jsonObj.getString(key)+", ";
                             }
                             Config.logV("Value###" + mergeValue);
                         }
@@ -136,7 +136,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
 
 
                             if (mergeValue != null) {
-                                mergeValue+=","+ jsonObj.getString("displayName");
+                                mergeValue+=", "+ jsonObj.getString("displayName");
                             } else {
                                 mergeValue = jsonObj.getString("displayName");
                             }

@@ -41,8 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding7"
                     android:gravity="center"
-                    android:src="@mipmap/ynw_logo"
-                    />
+                    android:src="@mipmap/ynw_logo" />
 
                 <TextView
                     android:id="@+id/username"
@@ -75,7 +74,7 @@
 
                         android:textColor="@color/title_consu"
                         android:textSize="@dimen/txtsize_12" />
-               <!--     android:text="Locating..."-->
+                    <!--     android:text="Locating..."-->
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -174,29 +173,45 @@
                             android:id="@+id/LinearMorePopularSearch"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/default_padding"
                             android:layout_marginTop="@dimen/padding5"
                             android:orientation="vertical"
 
                             android:visibility="gone"></LinearLayout>
 
 
-
                     </LinearLayout>
                 </HorizontalScrollView>
 
-                <TextView
-                    android:id="@+id/txtMore"
+                <LinearLayout
+                    android:id="@+id/LMore"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableBottom="@drawable/icon_down_arrow_blue"
-                    android:drawablePadding="@dimen/padding2"
                     android:gravity="center"
                     android:paddingTop="@dimen/padding5"
-                    android:text="More"
-                    android:textColor="@color/title_consu"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
 
-                    android:textSize="@dimen/txtsize_title_term_small" />
+                    <TextView
+                        android:id="@+id/txtMore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="More"
+                        android:textColor="@color/title_consu"
+                        android:textSize="@dimen/txtsize_title_term_small" />
+
+                    <ImageView
+                        android:id="@+id/img_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:scaleType="center"
+                        android:padding="@dimen/padding3"
+                        android:layout_marginBottom="-2dp"
+                        android:src="@drawable/icon_down_arrow_blue" />
+
+                </LinearLayout>
 
             </LinearLayout>
             <!-- <android.support.v4.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"

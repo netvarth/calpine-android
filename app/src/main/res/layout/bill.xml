@@ -316,6 +316,19 @@
                         android:orientation="horizontal">
 
                         <Button
+                            android:id="@+id/btn_cancel"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+
+                            android:layout_weight="0.3"
+                            android:background="@drawable/roundedrect_grey"
+                            android:text="@string/cancel"
+                            android:textAllCaps="false"
+                            android:textColor="@color/app_background"
+                            android:textSize="@dimen/txtsize_hint" />
+
+                        <Button
                             android:id="@+id/btn_pay"
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="0dp"
@@ -324,19 +337,7 @@
                             android:background="@drawable/roundedrect_blue"
                             android:text="Make Payment"
                             android:textAllCaps="false"
-                            android:textColor="@color/app_background"
-                            android:textSize="@dimen/txtsize_hint" />
-
-                        <Button
-                            android:id="@+id/btn_cancel"
-                            style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/default_padding"
-                            android:layout_weight="0.3"
-                            android:background="@drawable/roundedrect_grey"
-                            android:text="@string/cancel"
-                            android:textAllCaps="false"
                             android:textColor="@color/app_background"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
