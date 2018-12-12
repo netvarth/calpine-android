@@ -47,6 +47,7 @@
                 android:layout_marginTop="@dimen/padding5"
                 android:gravity="center"
                 android:text="@string/consumer"
+                android:visibility="gone"
                 android:textAllCaps="true"
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_hint" />

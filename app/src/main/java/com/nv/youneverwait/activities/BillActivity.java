@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.adapter.BIllDiscountAdapter;
 import com.nv.youneverwait.adapter.BillServiceAdapter;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
@@ -54,18 +55,23 @@ public class BillActivity extends AppCompatActivity {
     String ynwUUID, mprovider;
     TextView tv_provider, tv_customer, tv_date, tv_gstn, tv_bill;
     BillModel mBillData;
-    TextView tv_coupan, tv_discount, tv_amount, tv_paid, tv_totalamt;
-    RecyclerView recycle_item;
+    TextView tv_paid, tv_totalamt;
+    RecyclerView recycle_item,recycle_discount_total;
     BillServiceAdapter billServiceAdapter;
     ArrayList<BillModel> serviceArrayList = new ArrayList<>();
     ArrayList<BillModel> itemArrayList = new ArrayList<>();
     ArrayList<BillModel> serviceItemArrayList = new ArrayList<>();
 
+
+    ArrayList<BillModel> discountArrayList = new ArrayList<>();
+    ArrayList<BillModel> coupanArrayList = new ArrayList<>();
+
     Button btn_cancel, btn_pay;
-TextView txtnetRate,txttotal;
-LinearLayout discountlayout,paidlayout,coupanlayout,amountlayout;
-String sAmountPay;
-String accountID;
+    TextView txtnetRate, txttotal, tv_amount;
+    LinearLayout  paidlayout, amountlayout;
+    String sAmountPay;
+    String accountID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,9 +79,9 @@ String accountID;
         mCOntext = this;
         mActivity = this;
 
-        discountlayout = (LinearLayout) findViewById(R.id.discountlayout);
+       // discountlayout = (LinearLayout) findViewById(R.id.discountlayout);
         paidlayout = (LinearLayout) findViewById(R.id.paidlayout);
-        coupanlayout = (LinearLayout) findViewById(R.id.coupanlayout);
+       // coupanlayout = (LinearLayout) findViewById(R.id.coupanlayout);
         amountlayout = (LinearLayout) findViewById(R.id.amountlayout);
 
 
@@ -85,8 +91,12 @@ String accountID;
         tv_bill = (TextView) findViewById(R.id.txtbill);
         tv_gstn = (TextView) findViewById(R.id.txtgstn);
 
-        tv_coupan = (TextView) findViewById(R.id.txtcoupan);
+      /*  tv_coupan = (TextView) findViewById(R.id.txtcoupan);
         tv_discount = (TextView) findViewById(R.id.txtdiscount);
+        tv_discounthead=(TextView) findViewById(R.id.txtdiscount_head);
+
+        tv_coupanhead=(TextView) findViewById(R.id.txtcoupan_head);
+*/
         tv_amount = (TextView) findViewById(R.id.txtamt);
         tv_paid = (TextView) findViewById(R.id.amtpaid);
         tv_totalamt = (TextView) findViewById(R.id.totalamt);
@@ -94,23 +104,24 @@ String accountID;
         btn_pay = (Button) findViewById(R.id.btn_pay);
 
         recycle_item = (RecyclerView) findViewById(R.id.recycle_item);
+        recycle_discount_total = (RecyclerView) findViewById(R.id.recycle_discount_total);
 
-        TextView tv_title = (TextView)findViewById(R.id.toolbartitle);
+        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
         tv_title.setText("Bill");
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
 
-        txtnetRate=(TextView) findViewById(R.id.txtnetRate);
-        txttotal=(TextView) findViewById(R.id.txttotal);
+        txtnetRate = (TextView) findViewById(R.id.txtnetRate);
+        txttotal = (TextView) findViewById(R.id.txttotal);
 
         tv_totalamt.setTypeface(tyface);
         txttotal.setTypeface(tyface);
         txtnetRate.setTypeface(tyface);
 
 
-        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        ImageView iBackPress = (ImageView) findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +134,7 @@ String accountID;
         if (extras != null) {
             ynwUUID = extras.getString("ynwUUID");
             mprovider = extras.getString("provider");
-            accountID=extras.getString("accountID");
+            accountID = extras.getString("accountID");
         }
 
         ApiBill(ynwUUID);
@@ -145,11 +156,11 @@ String accountID;
             @Override
             public void onClick(View v) {
 
-                if(!showPaytmWallet&&!showPayU){
+                if (!showPaytmWallet && !showPayU) {
 
 
-                   // Toast.makeText(mCOntext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
-                }else {
+                    // Toast.makeText(mCOntext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+                } else {
                     try {
                         btn_pay.setVisibility(View.VISIBLE);
                         final BottomSheetDialog dialog = new BottomSheetDialog(mCOntext);
@@ -192,13 +203,13 @@ String accountID;
                             public void onClick(View v) {
 
                                 PaytmPayment payment = new PaytmPayment(mCOntext);
-                               // payment.generateCheckSum(sAmountPay);
-                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
-                              //  payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
+                                // payment.generateCheckSum(sAmountPay);
+                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, mCOntext, mActivity);
+                                //  payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
                                 dialog.dismiss();
                             }
                         });
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -209,9 +220,10 @@ String accountID;
     }
 
 
-    boolean showPaytmWallet=false;
-    boolean showPayU=false;
+    boolean showPaytmWallet = false;
+    boolean showPayU = false;
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
+
     private void APIPayment(String accountID) {
 
 
@@ -241,17 +253,17 @@ String accountID;
 
                         mPaymentData = response.body();
 
-                        for(int i=0;i<mPaymentData.size();i++){
-                            if(mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")){
-                                showPaytmWallet=true;
+                        for (int i = 0; i < mPaymentData.size(); i++) {
+                            if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
+                                showPaytmWallet = true;
                             }
 
-                            if(mPaymentData.get(i).getName().equalsIgnoreCase("CC")||mPaymentData.get(i).getName().equalsIgnoreCase("DC")||mPaymentData.get(i).getName().equalsIgnoreCase("NB")){
-                                showPayU=true;
+                            if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
+                                showPayU = true;
                             }
                         }
 
-                        if(!showPaytmWallet&&!showPayU){
+                        if (!showPaytmWallet && !showPayU) {
                             btn_pay.setVisibility(View.INVISIBLE);
                         }
                         /*if (mPaymentData.size() > 0) {
@@ -263,10 +275,10 @@ String accountID;
                             tv_amount.setText("Amount to Pay ₹" + sAmountPay);
                         }*/
 
-                    }else{
+                    } else {
                         btn_pay.setVisibility(View.INVISIBLE);
-                        if(response.code()!=419)
-                        Toast.makeText(mCOntext,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                        if (response.code() != 419)
+                            Toast.makeText(mCOntext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }
 
 
@@ -289,14 +301,13 @@ String accountID;
 
     }
 
-   // Dialog mDialog1 = null;
+    // Dialog mDialog1 = null;
 
-    public static  void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
+    public static void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
         payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
-
 
 
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
@@ -326,7 +337,7 @@ String accountID;
         try {
             PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
             if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
-              //  Toast.makeText(mCOntext, "Could not generate hash", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(mCOntext, "Could not generate hash", Toast.LENGTH_SHORT).show();
             } else {
 
 
@@ -366,7 +377,7 @@ String accountID;
             } else if (resultModel != null && resultModel.getError() != null) {
                 Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
             } else {
-               // Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
             showAlert("Payment Cancelled");
@@ -390,7 +401,7 @@ String accountID;
         alertDialog.show();
     }
 
-
+    BIllDiscountAdapter billDiscountAdapter;
     private void ApiBill(String ynwuuid) {
 
 
@@ -434,57 +445,38 @@ String accountID;
                         tv_bill.setText(String.valueOf(mBillData.getId()));
 
 
-                        if(mBillData.getDiscountValue()!=0){
-                            discountlayout.setVisibility(View.VISIBLE);
-                            tv_discount.setText("₹ " +String.valueOf(mBillData.getDiscountValue()) );
-                        }else{
-
-                            discountlayout.setVisibility(View.GONE);
-                        }
-
-                        if(mBillData.getCouponValue()!=0){
-                            coupanlayout.setVisibility(View.VISIBLE);
-                            tv_coupan.setText("₹ " + String.valueOf(mBillData.getCouponValue()));
-                        }else{
-
-                            coupanlayout.setVisibility(View.GONE);
-                        }
-
-
-                        if(mBillData.getNetRate()!=0){
+                        if (mBillData.getNetRate() != 0) {
 
                             amountlayout.setVisibility(View.VISIBLE);
                             tv_amount.setText("₹ " + String.valueOf(mBillData.getNetRate()));
-                        }else{
+                        } else {
 
                             amountlayout.setVisibility(View.GONE);
                         }
 
-                        if(mBillData.getTotalAmountPaid()!=0){
+                        if (mBillData.getTotalAmountPaid() != 0) {
                             paidlayout.setVisibility(View.VISIBLE);
                             tv_paid.setText("₹ " + String.valueOf(mBillData.getTotalAmountPaid()));
-                        }else{
+                        } else {
 
                             paidlayout.setVisibility(View.GONE);
                         }
 
 
+                        double total = mBillData.getNetRate() - mBillData.getTotalAmountPaid();
+                        tv_totalamt.setText("₹ " + String.valueOf(total));
+                        sAmountPay = String.valueOf(total);
+                        Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@" + sAmountPay);
 
-                        double total=mBillData.getNetRate()-mBillData.getTotalAmountPaid();
-                        tv_totalamt.setText("₹ " +String.valueOf(total));
-                        sAmountPay=String.valueOf(total);
-                        Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@"+sAmountPay);
-
-                        if(total!=0.0){
-                           btn_pay.setVisibility(View.VISIBLE);
-                        }else{
+                        if (total != 0.0) {
+                            btn_pay.setVisibility(View.VISIBLE);
+                        } else {
                             btn_pay.setVisibility(View.INVISIBLE);
                         }
 
 
-
                         serviceArrayList = response.body().getService();
-                        itemArrayList=response.body().getItems();
+                        itemArrayList = response.body().getItems();
 
                         serviceArrayList.addAll(itemArrayList);
                         Config.logV("Sevice ArrayList-------------------" + serviceArrayList.size());
@@ -493,6 +485,22 @@ String accountID;
                         billServiceAdapter = new BillServiceAdapter(serviceArrayList, mCOntext);
                         recycle_item.setAdapter(billServiceAdapter);
                         billServiceAdapter.notifyDataSetChanged();
+
+                        /*discountArrayList.clear();
+                        coupanArrayList.clear();
+                        discountArrayList=response.body().getDiscount();
+                        coupanArrayList=response.body().getProviderCoupon();
+
+                        discountArrayList.addAll(coupanArrayList);
+                        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(mCOntext);
+                        recycle_discount_total.setLayoutManager(mLayoutManager1);
+                        if (discountArrayList.size()>0) {
+
+                            billDiscountAdapter = new BIllDiscountAdapter(discountArrayList, mCOntext);
+                        }
+
+                        recycle_discount_total.setAdapter(billDiscountAdapter);
+                        billDiscountAdapter.notifyDataSetChanged();*/
 
 
                     }

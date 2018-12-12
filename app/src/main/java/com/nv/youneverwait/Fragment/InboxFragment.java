@@ -189,6 +189,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                                 }
 
                                 String senderKey = senderId + "_" + senderName;
+                                Config.logV("SenderKEy----------"+senderKey);
                                 InboxModel inbox = new InboxModel();
                                 inbox.setTimeStamp(mInboxList.get(i).getTimeStamp());
                                 inbox.setUserName(senderName);
@@ -197,7 +198,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                                 inbox.setId(mInboxList.get(i).getOwner().getId());
                                 inbox.setWaitlistId(mInboxList.get(i).getWaitlistId());
                                 inbox.setMessageStatus(messageStatus);
-                                inbox.setUniqueID(senderKey);
+                                inbox.setUniqueID(mInboxList.get(i).getAccountId());
                                 // mDBInboxList.add(inbox);
 
                                 db.insertInboxModel(inbox);

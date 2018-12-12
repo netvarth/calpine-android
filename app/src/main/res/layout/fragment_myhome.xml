@@ -76,12 +76,12 @@
                         android:textSize="@dimen/txtsize_12" />
                     <!--     android:text="Locating..."-->
 
-                    <ImageView
+                   <!-- <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="-3dp"
-                        android:src="@drawable/icon_down_arrow_blue" />
+                        android:src="@drawable/icon_down_arrow_blue" />-->
                 </LinearLayout>
 
 

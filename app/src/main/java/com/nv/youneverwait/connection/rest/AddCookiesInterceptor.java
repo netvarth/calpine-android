@@ -52,7 +52,7 @@ public class AddCookiesInterceptor implements Interceptor {
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             int version = pInfo.versionCode;
-           String androidVersion="api-1.1.0,config-1.1.0,android-" +"1.1.0"/*String.valueOf(version)*/;
+           String androidVersion="api-1.0.0,config-1.0.0,android-" +"1.0.0"/*String.valueOf(version)*/;
             if(!androidVersion.equalsIgnoreCase("")) {
                 //Config.logV("Add Header--Version---------------"+androidVersion);
                 builder.addHeader("Android-Version", androidVersion);

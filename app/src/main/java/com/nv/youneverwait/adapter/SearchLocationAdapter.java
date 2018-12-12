@@ -51,7 +51,7 @@ import java.util.Locale;
 public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAdapter.MyViewHolder> {
 
     private List<SearchLocation> mSearchLocationList;
-    Context mContext;
+    static Context mContext;
     ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -578,7 +578,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
                         dynaText.setEllipsize(TextUtils.TruncateAt.END);
                         dynaText.setMaxLines(1);
-                        dynaText.setMaxEms(8);
+                        dynaText.setMaxEms(6);
+
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         params.setMargins(0, 0, 10, 0);
                         dynaText.setLayoutParams(params);
@@ -786,7 +787,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
-                                    String firstWord = "Next Service Time \n";
+                                    String firstWord = "Next Available Time \n";
                                     String secondWord = monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -8,6 +8,12 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class InboxModel {
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    String accountId;
     public String getMsg() {
         return msg;
     }

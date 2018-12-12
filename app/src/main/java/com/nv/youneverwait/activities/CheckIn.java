@@ -990,7 +990,7 @@ public class CheckIn extends AppCompatActivity {
 
 
                                     if (h > 0) {
-                                        firstWord = "Est Service Time ";
+                                         firstWord = "Checked in for ";
                                     } else {
                                         firstWord = "Est Wait Time ";
 
@@ -1013,7 +1013,7 @@ public class CheckIn extends AppCompatActivity {
 
                                 } else {
 
-                                    firstWord = "Est Service Time ";
+                                    firstWord = "Checked in for ";
                                 }
                                 Config.logV("Second WORD---@@@@----222--------" + secondWord + "Datecompare" + dateCompareOne);
 
@@ -1034,7 +1034,7 @@ public class CheckIn extends AppCompatActivity {
 
                                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                                    firstWord = "Est Service Time ";
+                                    firstWord = "Checked in for ";
                                     /*Date dt = new Date();
                                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
                                     String currentTime = sdf.format(dt);
@@ -1051,7 +1051,7 @@ public class CheckIn extends AppCompatActivity {
 */
                                 } else {
 
-                                    firstWord = "Est Service Time ";
+                                    firstWord = "Checked in for ";
                                 }
                                 Config.logV("Second WORD---------------" + secondWord);
                             }
@@ -1121,7 +1121,7 @@ public class CheckIn extends AppCompatActivity {
                                     }*/
 
                                     if (h > 0) {
-                                        firstWord = "Est Service Time ";
+                                        firstWord = "Checked in for ";
                                     } else {
                                         firstWord = "Est Wait Time ";
                                     }
@@ -1129,7 +1129,7 @@ public class CheckIn extends AppCompatActivity {
 
                                 } else {
 
-                                    firstWord = "Est Service Time ";
+                                    firstWord = "Checked in for ";
                                 }
 
 
@@ -1165,11 +1165,11 @@ public class CheckIn extends AppCompatActivity {
 
                                         Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                     }*/
-                                    firstWord = "Est Service Time ";
+                                    firstWord = "Checked in for ";
 
                                 } else {
 
-                                    firstWord = "Est Service Time ";
+                                    firstWord = "Checked in for ";
                                 }
 
 
@@ -1281,14 +1281,14 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-                                                firstWord = "Est Service Time ";
+                                                firstWord = "Checked in for ";
                                             } else {
                                                 firstWord = "Est Wait Time ";
                                             }
 
                                         } else {
 
-                                            firstWord = "Est Service Time ";
+                                            firstWord = "Checked in for ";
                                         }
 
                                     } catch (Exception e) {
@@ -1323,11 +1323,11 @@ public class CheckIn extends AppCompatActivity {
 
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }*/
-                                            firstWord = "Est Service Time ";
+                                            firstWord = "Checked in for ";
 
                                         } else {
 
-                                            firstWord = "Est Service Time ";
+                                            firstWord = "Checked in for ";
                                         }
                                     }
 
@@ -1428,14 +1428,14 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-                                                firstWord = "Est Service Time ";
+                                                firstWord = "Checked in for ";
                                             } else {
                                                 firstWord = "Est Wait Time ";
                                             }
 
                                         } else {
 
-                                            firstWord = "Est Service Time ";
+                                            firstWord = "Checked in for ";
                                         }
 
                                     } catch (Exception e) {
@@ -1465,10 +1465,10 @@ public class CheckIn extends AppCompatActivity {
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }
 */
-                                            firstWord = "Est Service Time ";
+                                            firstWord = "Checked in for ";
                                         } else {
 
-                                            firstWord = "Est Service Time ";
+                                            firstWord = "Checked in for ";
                                         }
                                     }
 

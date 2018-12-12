@@ -198,7 +198,14 @@
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
 
-                    <LinearLayout
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycle_discount_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding7"
+                        android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
+
+                   <!-- <LinearLayout
                         android:id="@+id/discountlayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -206,6 +213,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/txtdiscount_head"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
@@ -233,6 +241,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/txtcoupan_head"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
@@ -250,7 +259,7 @@
 
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <LinearLayout
                         android:id="@+id/paidlayout"
