@@ -577,8 +577,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                                 "fonts/Montserrat_Regular.otf");
                                         dynaText.setTypeface(tyface);
                                         dynaText.setText(list_spec.get(i));
-                                        dynaText.setTextSize(13);
-                                        dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                                        dynaText.setTextSize(12);
+                                        dynaText.setTextColor(context.getResources().getColor(R.color.black));
                                         dynaText.setEllipsize(TextUtils.TruncateAt.END);
                                         dynaText.setMaxLines(1);
                                         myViewHolder.L_specialization.addView(dynaText);
@@ -618,7 +618,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     "fonts/Montserrat_Regular.otf");
                             dynaText.setTypeface(tyface);
                             dynaText.setText(searchdetailList.getServices().get(i).toString());
-                            dynaText.setTextSize(13);
+                            dynaText.setTextSize(12);
                             //  dynaText.setPadding(0, 0, 12, 0);
                             dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
                             dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));

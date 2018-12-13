@@ -67,7 +67,7 @@ public class BillActivity extends AppCompatActivity {
     ArrayList<BillModel> coupanArrayList = new ArrayList<>();
 
     Button btn_cancel, btn_pay;
-    TextView txtnetRate, txttotal, tv_amount;
+    TextView txtnetRate, txttotal, tv_amount,tv_grosstotal,tv_gross;
     LinearLayout  paidlayout, amountlayout;
     String sAmountPay;
     String accountID;
@@ -83,13 +83,14 @@ public class BillActivity extends AppCompatActivity {
         paidlayout = (LinearLayout) findViewById(R.id.paidlayout);
        // coupanlayout = (LinearLayout) findViewById(R.id.coupanlayout);
         amountlayout = (LinearLayout) findViewById(R.id.amountlayout);
-
+        tv_grosstotal=(TextView) findViewById(R.id.grosstotal);
 
         tv_provider = (TextView) findViewById(R.id.provider);
         tv_customer = (TextView) findViewById(R.id.txtcustomer);
         tv_date = (TextView) findViewById(R.id.txtdate);
         tv_bill = (TextView) findViewById(R.id.txtbill);
         tv_gstn = (TextView) findViewById(R.id.txtgstn);
+        tv_gross=(TextView) findViewById(R.id.tv_gross);
 
       /*  tv_coupan = (TextView) findViewById(R.id.txtcoupan);
         tv_discount = (TextView) findViewById(R.id.txtdiscount);
@@ -437,6 +438,21 @@ public class BillActivity extends AppCompatActivity {
                             tv_date.setText(mBillData.getCreatedDate());
                         }
 
+                        Typeface tyface = Typeface.createFromAsset(getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                        tv_gross.setTypeface(tyface);
+                        tv_grosstotal.setTypeface(tyface);
+
+
+                        if (mBillData.getNetTotal()!=0.0) {
+                            tv_grosstotal.setVisibility(View.VISIBLE);
+                            tv_grosstotal.setText("₹ "+String.valueOf(mBillData.getNetTotal()));
+
+                        }else{
+                            tv_grosstotal.setVisibility(View.GONE);
+                        }
+
+
                         if (mBillData.getGstNumber() != null) {
                             tv_gstn.setText(mBillData.getGstNumber());
 
@@ -486,7 +502,7 @@ public class BillActivity extends AppCompatActivity {
                         recycle_item.setAdapter(billServiceAdapter);
                         billServiceAdapter.notifyDataSetChanged();
 
-                        /*discountArrayList.clear();
+                        discountArrayList.clear();
                         coupanArrayList.clear();
                         discountArrayList=response.body().getDiscount();
                         coupanArrayList=response.body().getProviderCoupon();
@@ -494,13 +510,17 @@ public class BillActivity extends AppCompatActivity {
                         discountArrayList.addAll(coupanArrayList);
                         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(mCOntext);
                         recycle_discount_total.setLayoutManager(mLayoutManager1);
+                        Config.logV("DISSCOUNT BILL SIZE @@@@@@@@@@@@@@@@@@@@"+discountArrayList.size());
                         if (discountArrayList.size()>0) {
 
+                            recycle_discount_total.setVisibility(View.VISIBLE);
                             billDiscountAdapter = new BIllDiscountAdapter(discountArrayList, mCOntext);
+                        }else{
+                            recycle_discount_total.setVisibility(View.GONE);
                         }
 
                         recycle_discount_total.setAdapter(billDiscountAdapter);
-                        billDiscountAdapter.notifyDataSetChanged();*/
+                        billDiscountAdapter.notifyDataSetChanged();
 
 
                     }

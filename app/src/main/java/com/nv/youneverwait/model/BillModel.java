@@ -10,6 +10,11 @@ import java.util.ArrayList;
 
 public class BillModel {
 
+    public double getNetTotal() {
+        return netTotal;
+    }
+
+    double netTotal;
     public ArrayList<BillModel> getProviderCoupon() {
         return providerCoupon;
     }
