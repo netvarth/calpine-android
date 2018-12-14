@@ -17,4 +17,6 @@ public interface AdapterCallback {
     void onMethodOpenMap(String location);
 
     void onMethodMessage(String provider,String accountID,String from);
+
+    void onMethodCoupn(String uniqueID);
 }

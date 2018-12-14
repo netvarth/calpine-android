@@ -54,6 +54,7 @@ import com.nv.youneverwait.model.ListCell;
 import com.nv.youneverwait.model.SearchListModel;
 import com.nv.youneverwait.model.SearchModel;
 import com.nv.youneverwait.model.WorkingModel;
+import com.nv.youneverwait.response.CoupnResponse;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchAWsResponse;
 import com.nv.youneverwait.response.SearchTerminology;
@@ -2030,6 +2031,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     }
 
+    @Override
+    public void onMethodCoupn(String uniqueID) {
+
+        ApiJaldeeCoupan(uniqueID);
+
+    }
+
     SearchTerminology mSearchTerminology = new SearchTerminology();
 
     private void ApiSearchViewTerminology(String accountID) {
@@ -2087,6 +2095,71 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
     }
+
+    ArrayList<CoupnResponse> coupanList=new ArrayList<>();
+    private void ApiJaldeeCoupan(String uniqueID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+
+
+
+
+        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+
+        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+
+                        coupanList.clear();
+                        coupanList = response.body();
+                        Config.logV("Coupan List------------------------" + coupanList.size());
+
+                        Config.logV("Coupan List------------------------" + coupanList.get(0).getJaldeeCouponCode());
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
 
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
 

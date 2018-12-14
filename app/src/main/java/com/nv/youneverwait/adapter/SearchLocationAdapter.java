@@ -752,8 +752,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     }*/
 
-
-                                    String firstWord = "Est Service Time \n";
+                                    String firstWord = "Checked in for ";
+                                    //String firstWord = "Est Service Time \n";
                                     String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -230,7 +230,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
 
-                        String firstWord="Est Service Time ";
+                        String firstWord="Checked in for ";
                         /*String firstWord = null;
                         Date dt = new Date();
                         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
@@ -278,7 +278,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         //String firstWord="Next Wait Time ";
-                        String firstWord="Est Service Time ";
+                        String firstWord="Next Available Time ";
                         String secondWord=  monthString + " " + day + ", " +queueList.getNextAvailableQueue().getServiceTime();
                         Spannable spannable = new SpannableString(firstWord+secondWord);
                         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

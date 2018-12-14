@@ -1,6 +1,7 @@
 package com.nv.youneverwait.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.nv.youneverwait.model.SocialMediaModel;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,12 @@ public class SearchViewDetail {
     String awardName;
     String awardIssuedBy;
     String awardMonth;
+
+    public ArrayList<SocialMediaModel> getSocialMedia() {
+        return socialMedia;
+    }
+
+    ArrayList<SocialMediaModel> socialMedia;
 
     public ArrayList<SearchViewDetail> getEmails() {
         return emails;

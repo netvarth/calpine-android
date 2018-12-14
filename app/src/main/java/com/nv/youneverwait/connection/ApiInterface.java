@@ -10,6 +10,7 @@ import com.nv.youneverwait.model.TestModel;
 import com.nv.youneverwait.response.ActiveCheckIn;
 import com.nv.youneverwait.response.CheckInModel;
 import com.nv.youneverwait.response.CheckSumModel;
+import com.nv.youneverwait.response.CoupnResponse;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.InboxModel;
 import com.nv.youneverwait.response.LocationResponse;
@@ -286,6 +287,6 @@ public interface ApiInterface {
     Call<SearchVirtualFields> getVirtualFields(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
 
-
-
+    @GET("{consumerID}/coupon.json")
+    Call<ArrayList<CoupnResponse>> getCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 }

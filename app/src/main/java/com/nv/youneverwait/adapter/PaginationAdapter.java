@@ -256,6 +256,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
 
 
+                myViewHolder.tv_domain.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
+                    }
+                });
+
                /* Typeface tyface_date = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Light.otf");
                 myViewHolder.tv_Futuredate.setTypeface(tyface_date);*/
@@ -392,7 +399,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
-                                        String firstWord = "Est Service Time ";
+                                       // String firstWord = "Est Service Time ";
+                                        String firstWord = "Checked in for ";
                                         /*String firstWord = null;
                                         Date dt = new Date();
                                         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
@@ -427,7 +435,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                             Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                     "fonts/Montserrat_Bold.otf");
-                                            String firstWord = "Est Service Time ";
+                                            //String firstWord = "Est Service Time ";
+                                            String firstWord="";
+                                            if (hours > 0) {
+                                                firstWord = "Checked in for ";
+                                            } else {
+                                                firstWord = "Est Wait Time ";
+
+                                            }
                                             /*String firstWord = null;
                                             Date dt = new Date();
                                             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");

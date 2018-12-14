@@ -46,6 +46,7 @@ import com.nv.youneverwait.custom.CircleTransform;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.custom.ResizableCustomView;
 import com.nv.youneverwait.model.ContactModel;
+import com.nv.youneverwait.model.SocialMediaModel;
 import com.nv.youneverwait.model.WorkingModel;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.QueueList;
@@ -505,11 +506,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<ContactModel> contactDetail = new ArrayList<>();
     boolean isContact=false;
 
+    ArrayList<SocialMediaModel> socialMedia = new ArrayList<>();
+
     //  boolean expand =false;
     public void UpdateMainUI(SearchViewDetail getBussinessData) {
 
 
 
+       /* if (getBussinessData.getSocialMedia().size()>0){
+            for(int i=0;i<getBussinessData.getSocialMedia().size();i++) {
+                Config.logV("SocialMEdia @@@@@@@@@@@@" + getBussinessData.getSocialMedia().get(i).getResource());
+            }
+        }*/
 
         if(getBussinessData.getPhoneNumbers().size()>0) {
             for(int i=0;i<getBussinessData.getPhoneNumbers().size();i++){

@@ -51,127 +51,149 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
     @Override
     public void onBindViewHolder(final VirtualFieldAdapterViewHolder myViewHolder, int position) {
         //SearchVirtualFields virtualList = virtualFieldList.get(position);
-        Object getrow = virtualFieldList.get(position);
-        LinkedTreeMap<Object,Object> t = (LinkedTreeMap) getrow;
-        String name = t.get("displayName").toString();
+        try {
+            Object getrow = virtualFieldList.get(position);
+            LinkedTreeMap<Object, Object> t = (LinkedTreeMap) getrow;
 
-        String dataType=t.get("dataType").toString();
+            String name = t.get("displayName").toString();
 
-        if(name.equalsIgnoreCase("Gender")){
-            myViewHolder.tv_head.setVisibility(View.GONE);
-        }else {
-            myViewHolder.tv_head.setVisibility(View.VISIBLE);
-            myViewHolder.tv_head.setText(name);
-        }
-        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        myViewHolder.tv_head.setTypeface(tyface);
+            String dataType=null;
+            if(t.containsKey("dataType")) {
+                 dataType = t.get("dataType").toString();
+            }
 
-        if(dataType.equalsIgnoreCase("Enum")||dataType.equalsIgnoreCase("EnumList")||dataType.equalsIgnoreCase("DataGrid")){
-            myViewHolder.tv_value.setVisibility(View.VISIBLE);
+            if (name.equalsIgnoreCase("Gender")) {
+                myViewHolder.tv_head.setVisibility(View.GONE);
+            } else {
+                myViewHolder.tv_head.setVisibility(View.VISIBLE);
+                myViewHolder.tv_head.setText(name);
+            }
+            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            myViewHolder.tv_head.setTypeface(tyface);
 
-            if(dataType.equalsIgnoreCase("DataGrid")) {
-                String mergeValue = null;
+            if(dataType!=null) {
+                if (dataType.equalsIgnoreCase("Enum") || dataType.equalsIgnoreCase("EnumList") || dataType.equalsIgnoreCase("DataGrid")) {
+                    myViewHolder.tv_value.setVisibility(View.VISIBLE);
 
-                ArrayList value = (ArrayList) t.get("value");
+                    if (dataType.equalsIgnoreCase("DataGrid")) {
+                        String mergeValue = null;
+
+                        ArrayList value = (ArrayList) t.get("value");
 
 
-                String response = new Gson().toJson(value);
-                Config.logV("mergeValue " + response);
-                try {
-                    // jsonString is a string variable that holds the JSON
-                    JSONArray itemArray = new JSONArray(response);
-                    for (int i = 0; i < itemArray.length(); i++) {
+                        String response = new Gson().toJson(value);
+                        Config.logV("mergeValue " + response);
+                        try {
+                            // jsonString is a string variable that holds the JSON
+                            JSONArray itemArray = new JSONArray(response);
+                            for (int i = 0; i < itemArray.length(); i++) {
 
-                        Config.logV("mergeValue###" + mergeValue);
-                        if(i>0)
-                            mergeValue+="\n";
+                                Config.logV("mergeValue###" + mergeValue);
+                                if (i > 0)
+                                    mergeValue += "\n";
 
-                        String valueJson = itemArray.getString(i);
-                        Log.e("json", i + "=" + valueJson);
-                        JSONObject jsonObj = new JSONObject(valueJson);
-                        Iterator<?> iter = jsonObj.keys();
-                        while (iter.hasNext()) {
-                            String key = (String) iter.next();
-                            Config.logV("key###" + key);
-                            if(i==0) {
-                                if (mergeValue != null) {
-                                    mergeValue += ", " + jsonObj.getString(key);
-                                } else {
-                                    mergeValue = jsonObj.getString(key);
+                                String valueJson = itemArray.getString(i);
+                                Log.e("json", i + "=" + valueJson);
+                                JSONObject jsonObj = new JSONObject(valueJson);
+                                Iterator<?> iter = jsonObj.keys();
+                                while (iter.hasNext()) {
+                                    String key = (String) iter.next();
+                                    Config.logV("key###" + key);
+                                    if (i == 0) {
+                                        if (mergeValue != null) {
+                                            mergeValue += ", " + jsonObj.getString(key);
+                                        } else {
+                                            mergeValue = jsonObj.getString(key);
+                                        }
+                                    } else {
+                                        mergeValue += jsonObj.getString(key) + ", ";
+                                    }
+                                    Config.logV("Value###" + mergeValue);
                                 }
-                            }else{
-                                mergeValue +=  jsonObj.getString(key)+", ";
+
+                                if (mergeValue.endsWith(",")) {
+                                    mergeValue = mergeValue.substring(0, mergeValue.length() - 1);
+                                }
+
                             }
-                            Config.logV("Value###" + mergeValue);
+                            myViewHolder.tv_value.setText(mergeValue);
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
                         }
+                    } else {
+                        myViewHolder.tv_value.setVisibility(View.VISIBLE);
+                        Config.logV("Dataype---------" + dataType);
+                        String mergeValue = null;
 
-                        if (mergeValue.endsWith(",")) {
-                            mergeValue = mergeValue.substring(0, mergeValue.length() - 1);
-                        }
-
-                    }
-                    myViewHolder.tv_value.setText(mergeValue);
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }else{
-                myViewHolder.tv_value.setVisibility(View.VISIBLE);
-               Config.logV("Dataype---------"+dataType);
-                String mergeValue = null;
-
-                ArrayList value = (ArrayList) t.get("value");
-                String response = new Gson().toJson(value);
-                Config.logV("mergeValue " + response);
-                try {
-                    // jsonString is a string variable that holds the JSON
-                    JSONArray itemArray = new JSONArray(response);
-                    for (int i = 0; i < itemArray.length(); i++) {
-                        String valueJson = itemArray.getString(i);
-                        Log.e("json", i + "=" + valueJson);
+                        ArrayList value = (ArrayList) t.get("value");
+                        String response = new Gson().toJson(value);
+                        Config.logV("mergeValue " + response);
+                        try {
+                            // jsonString is a string variable that holds the JSON
+                            JSONArray itemArray = new JSONArray(response);
+                            for (int i = 0; i < itemArray.length(); i++) {
+                                String valueJson = itemArray.getString(i);
+                                Log.e("json", i + "=" + valueJson);
 
 
-                        JSONObject jsonObj = new JSONObject(valueJson);
+                                JSONObject jsonObj = new JSONObject(valueJson);
 
 
-                            if (mergeValue != null) {
-                                mergeValue+=", "+ jsonObj.getString("displayName");
-                            } else {
-                                mergeValue = jsonObj.getString("displayName");
+                                if (mergeValue != null) {
+                                    mergeValue += ", " + jsonObj.getString("displayName");
+                                } else {
+                                    mergeValue = jsonObj.getString("displayName");
+                                }
+
+                                Config.logV("Value###" + mergeValue);
                             }
-
-                        Config.logV("Value###" + mergeValue);
-                    }
 
                    /* if (mergeValue.endsWith(",")) {
                         mergeValue = mergeValue.substring(0, mergeValue.length() - 1);
                     }*/
-                    myViewHolder.tv_value.setText(mergeValue);
-                } catch (JSONException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                            myViewHolder.tv_value.setText(mergeValue);
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+
+                } else {
+
+                    String value = t.get("value").toString();
+
+                    if (dataType.equalsIgnoreCase("Boolean")) {
+                        myViewHolder.tv_value.setVisibility(View.VISIBLE);
+                        if (value.equalsIgnoreCase("true")) {
+                            myViewHolder.tv_value.setText("Yes");
+                        } else {
+                            myViewHolder.tv_value.setText("No");
+                        }
+                    } else if (dataType.equalsIgnoreCase("Gender")) {
+                        myViewHolder.tv_value.setVisibility(View.GONE);
+                    } else {
+                        myViewHolder.tv_value.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_value.setText(value);
+                    }
+
                 }
-            }
 
-        }else{
-
-            String value=t.get("value").toString();
-
-            if(dataType.equalsIgnoreCase("Boolean")){
-                myViewHolder.tv_value.setVisibility(View.VISIBLE);
-                if(value.equalsIgnoreCase("true")){
-                    myViewHolder.tv_value.setText("Yes");
-                }else{
-                    myViewHolder.tv_value.setText("No");
-                }
-            }else if(dataType.equalsIgnoreCase("Gender")){
-                myViewHolder.tv_value.setVisibility(View.GONE);
             }else{
-                myViewHolder.tv_value.setVisibility(View.VISIBLE);
-                myViewHolder.tv_value.setText(value);
+                String value = t.get("value").toString();
+                if (name.equalsIgnoreCase("Gender")) {
+                    myViewHolder.tv_value.setVisibility(View.GONE);
+                } else {
+                    myViewHolder.tv_value.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_value.setText(value);
+                }
+
+
             }
 
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
 
