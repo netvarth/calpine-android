@@ -2172,6 +2172,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         mDialog.show();
 
 
+
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("communicationMessage", message);
