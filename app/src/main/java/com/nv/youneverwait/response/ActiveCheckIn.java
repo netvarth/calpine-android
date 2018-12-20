@@ -10,7 +10,11 @@ import java.util.ArrayList;
 
 public class ActiveCheckIn {
 
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
 
+    String paymentStatus;
     public int getPartySize() {
         return partySize;
     }

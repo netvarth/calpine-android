@@ -1,10 +1,12 @@
 package com.nv.youneverwait.Fragment;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.FragmentTransaction;
@@ -63,6 +65,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.ls.LSException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -116,7 +119,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<String> ids;
     String uniqueID;
 
-    TextView tv_ImageViewText, tv_Moredetails, tv_contactdetails;
+    TextView tv_ImageViewText, tv_Moredetails, tv_contactdetails,tv_specializtion;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
     LocationCheckinCallback callback;
@@ -124,6 +127,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ImageView ic_fav;
 
     boolean flag_more = false;
+    ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link;
+    LinearLayout LsocialMedia;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -136,6 +141,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
         tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
+        tv_specializtion = (TextView) row.findViewById(R.id.txt_specializtion);
+
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
@@ -167,7 +174,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             uniqueID = bundle.getString("uniqueID");
 
         }
-         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
+        SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mRecyLocDetail.setNestedScrollingEnabled(false);
 
         Config.logV("UNIUE ID---------1111-------" + uniqueID);
@@ -181,6 +188,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
         ic_fav = (ImageView) row.findViewById(R.id.txtfav);
         tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
+
+
+        LsocialMedia = (LinearLayout) row.findViewById(R.id.LsocialMedia);
+
+
+        ic_fac = (ImageView) row.findViewById(R.id.ic_fac);
+        ic_gplus = (ImageView) row.findViewById(R.id.ic_gplus);
+        ic_pin = (ImageView) row.findViewById(R.id.ic_pin);
+        ic_link = (ImageView) row.findViewById(R.id.ic_link);
+        ic_twitt = (ImageView) row.findViewById(R.id.ic_twitt);
+        ic_yout = (ImageView) row.findViewById(R.id.ic_yout);
+
 
         //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
         tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
@@ -501,28 +520,192 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
     }
 
-  /*  ArrayList<SearchViewDetail> emails = new ArrayList<>();
-    ArrayList<SearchViewDetail> phoneNumber = new ArrayList<>();*/
+    /*  ArrayList<SearchViewDetail> emails = new ArrayList<>();
+      ArrayList<SearchViewDetail> phoneNumber = new ArrayList<>();*/
     ArrayList<ContactModel> contactDetail = new ArrayList<>();
-    boolean isContact=false;
+    boolean isContact = false;
 
     ArrayList<SocialMediaModel> socialMedia = new ArrayList<>();
 
     //  boolean expand =false;
-    public void UpdateMainUI(SearchViewDetail getBussinessData) {
+    public void UpdateMainUI(final SearchViewDetail getBussinessData) {
+
+        String txt_specValue="";
+        if(getBussinessData.getSpecialization()!=null){
+            if(getBussinessData.getSpecialization().size()>0){
+
+                tv_specializtion.setVisibility(View.VISIBLE);
+
+
+                    for (int i = 0; i < getBussinessData.getSpecialization().size(); i++) {
+
+                        if(i==getBussinessData.getSpecialization().size()-1){
+
+                            txt_specValue += getBussinessData.getSpecialization().get(i) ;
+                        }else {
+
+                            txt_specValue += getBussinessData.getSpecialization().get(i) + ", ";
+                        }
 
 
 
-       /* if (getBussinessData.getSocialMedia().size()>0){
-            for(int i=0;i<getBussinessData.getSocialMedia().size();i++) {
-                Config.logV("SocialMEdia @@@@@@@@@@@@" + getBussinessData.getSocialMedia().get(i).getResource());
+                    tv_specializtion.setText(txt_specValue);
+                }
+
+            }else{
+                tv_specializtion.setVisibility(View.GONE);
             }
-        }*/
+        }else{
+          tv_specializtion.setVisibility(View.GONE);
+        }
 
-        if(getBussinessData.getPhoneNumbers().size()>0) {
-            for(int i=0;i<getBussinessData.getPhoneNumbers().size();i++){
-                Config.logV("Phone @@@@@@@@@@@@"+getBussinessData.getPhoneNumbers().get(i).getInstance());
-                ContactModel contact=new ContactModel();
+        if (getBussinessData.getSocialMedia() != null) {
+            if (getBussinessData.getSocialMedia().size() > 0) {
+                LsocialMedia.setVisibility(View.VISIBLE);
+                for (int i = 0; i < getBussinessData.getSocialMedia().size(); i++) {
+
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
+                        ic_fac.setVisibility(View.VISIBLE);
+                        final int finalI = i;
+                        ic_fac.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+
+
+
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("googleplus")) {
+                        ic_gplus.setVisibility(View.VISIBLE);
+                        final int finalI3 = i;
+                        ic_gplus.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI3).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("twitter")) {
+                        ic_twitt.setVisibility(View.VISIBLE);
+                        final int finalI1 = i;
+                        ic_twitt.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI1).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("linkedin")) {
+                        ic_link.setVisibility(View.VISIBLE);
+                        final int finalI5 = i;
+                        ic_link.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI5).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+
+
+
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("pinterest")) {
+                        ic_pin.setVisibility(View.VISIBLE);
+                        final int finalI4 = i;
+                        ic_pin.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI4).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+
+
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("youtube")) {
+                        ic_yout.setVisibility(View.VISIBLE);
+
+                        final int finalI2 = i;
+                        ic_yout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI2).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+
+                }
+
+
+
+
+
+            } else {
+                LsocialMedia.setVisibility(View.GONE);
+            }
+        } else {
+            LsocialMedia.setVisibility(View.GONE);
+        }
+
+        if (getBussinessData.getPhoneNumbers().size() > 0) {
+            for (int i = 0; i < getBussinessData.getPhoneNumbers().size(); i++) {
+                Config.logV("Phone @@@@@@@@@@@@" + getBussinessData.getPhoneNumbers().get(i).getInstance());
+                ContactModel contact = new ContactModel();
                 contact.setInstance(getBussinessData.getPhoneNumbers().get(i).getInstance());
                 contact.setResource(getBussinessData.getPhoneNumbers().get(i).getResource());
                 contact.setLabel(getBussinessData.getPhoneNumbers().get(i).getLabel());
@@ -531,9 +714,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         }
 
-        if(getBussinessData.getEmails().size()>0) {
-            for(int i=0;i<getBussinessData.getEmails().size();i++){
-                ContactModel contact=new ContactModel();
+        if (getBussinessData.getEmails().size() > 0) {
+            for (int i = 0; i < getBussinessData.getEmails().size(); i++) {
+                ContactModel contact = new ContactModel();
                 contact.setInstance(getBussinessData.getEmails().get(i).getInstance());
                 contact.setResource(getBussinessData.getEmails().get(i).getResource());
                 contact.setLabel(getBussinessData.getEmails().get(i).getLabel());
@@ -542,14 +725,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
 
 
-        if(getBussinessData.getPhoneNumbers().size()>0||getBussinessData.getEmails().size()>0&&contactDetail.size()>0) {
+        if (getBussinessData.getPhoneNumbers().size() > 0 || getBussinessData.getEmails().size() > 0 && contactDetail.size() > 0) {
 
             tv_contactdetails.setVisibility(View.VISIBLE);
             tv_contactdetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!isContact){
-                        isContact=true;
+                    if (!isContact) {
+                        isContact = true;
                         mrecycle_contactdetail.setVisibility(View.VISIBLE);
                         tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue_hidden, 0);
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
@@ -557,8 +740,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity());
                         mrecycle_contactdetail.setAdapter(checkAdapter);
                         checkAdapter.notifyDataSetChanged();
-                    }else{
-                        isContact=false;
+                    } else {
+                        isContact = false;
                         tv_contactdetails.setText("Contact Details");
                         tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue, 0);
                         mrecycle_contactdetail.setVisibility(View.GONE);
@@ -566,7 +749,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 }
             });
 
-        }else{
+        } else {
             tv_contactdetails.setVisibility(View.GONE);
             mrecycle_contactdetail.setVisibility(View.GONE);
         }
@@ -1334,7 +1517,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     @Override
     public void onMethodCallback() {
 
-        Toast.makeText(mContext, "Check-In cancelled successfully" , Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "Check-In cancelled successfully", Toast.LENGTH_LONG).show();
         dialog.dismiss();
         refreshList();
     }

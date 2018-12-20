@@ -172,6 +172,16 @@
                                 android:textSize="@dimen/txtsize_12"
                                 android:visibility="gone" />
 
+                            <TextView
+                                android:id="@+id/txt_specializtion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding7"
+                                android:text=""
+                                android:textColor="@color/title_grey"
+                                android:textSize="@dimen/txtsize_12"
+                                android:visibility="gone" />
+
                             <LinearLayout
                                 android:id="@+id/LsocialMedia"
                                 android:layout_width="match_parent"
@@ -184,16 +194,18 @@
                                     android:id="@+id/ic_fac"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/icon_eye_blue"
+                                    android:src="@drawable/icon_facebook"
                                     android:padding="@dimen/padding3"
+                                    android:visibility="gone"
                                     />
 
                                 <ImageView
                                     android:id="@+id/ic_yout"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/icon_eye_blue"
+                                    android:src="@drawable/icon_youtube"
                                     android:padding="@dimen/padding3"
+                                    android:visibility="gone"
                                     />
 
                                 <ImageView
@@ -201,7 +213,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:padding="@dimen/padding3"
-                                    android:src="@drawable/icon_eye_blue"
+                                    android:src="@drawable/icon_googleplus"
+                                    android:visibility="gone"
                                  />
 
                                 <ImageView
@@ -209,7 +222,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:padding="@dimen/padding3"
-                                    android:src="@drawable/icon_eye_blue"
+                                    android:src="@drawable/icon_twitter"
+                                    android:visibility="gone"
                                   />
 
                                 <ImageView
@@ -217,7 +231,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:padding="@dimen/padding3"
-                                    android:src="@drawable/icon_eye_blue"
+                                    android:src="@drawable/icon_linkedin"
+                                    android:visibility="gone"
                                     />
 
                                 <ImageView
@@ -225,7 +240,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:padding="@dimen/padding3"
-                                    android:src="@drawable/icon_eye_blue"
+                                    android:src="@drawable/icon_pinterest"
+                                    android:visibility="gone"
                                    />
 
                             </LinearLayout>

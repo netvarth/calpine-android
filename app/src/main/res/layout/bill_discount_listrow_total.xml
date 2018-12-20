@@ -1,41 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mLRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/padding7"
-    android:padding="@dimen/padding7"
     android:orientation="vertical">
-
     <LinearLayout
+        android:id="@+id/discountlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding3"
         android:orientation="horizontal">
-
         <TextView
-            android:id="@+id/txtservice"
             android:layout_width="0dp"
-            android:layout_weight="0.75"
             android:layout_height="wrap_content"
+            android:layout_weight="0.2"
             android:gravity="left"
-            android:textSize="@dimen/dimen_12dp"
             android:textColor="@color/title_grey"
-            android:text="Service" />
+            android:textSize="@dimen/txtsize_hint" />
 
         <TextView
-            android:id="@+id/txtdomain"
+            android:id="@+id/txtdiscount"
             android:layout_width="0dp"
-            android:layout_weight="0.3"
             android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Discount"
             android:gravity="right"
-            android:textSize="@dimen/txtsize_10"
-            android:textColor="@color/title_grey"
-            android:paddingRight="@dimen/padding7"
-            android:text="Domain" />
+            android:textColor="@color/sec_title_grey"
+            android:textSize="@dimen/txtsize_12" />
+
+        <TextView
+            android:id="@+id/txtdiscountval"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:gravity="right"
+            android:textColor="@color/sec_title_grey"
+            android:textSize="@dimen/txtsize_hint" />
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="@dimen/padding5"
-        android:background="#59000000"/>
 </LinearLayout>

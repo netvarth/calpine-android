@@ -96,7 +96,7 @@
     <string name="searchhint_loc">Eg: Majestic, Bangalore, Karnataka</string>
     <string name="customer">Customer</string>
     <string name="datetime"><![CDATA[Date & Time]]></string>
-    <string name="bill">Bill Number</string>
+    <string name="bill">Bill #</string>
     <string name="GSTIN">GSTIN</string>
     <string name="amount">Amount</string>
     <string name="discount">Discount</string>

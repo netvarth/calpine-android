@@ -47,19 +47,18 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
 
         if (billServiceData.get(position).getServiceName() != null) {
             Config.logV("ServiceNAme" + billServiceData.get(position).getServiceName());
-            holder.txtservicenme.setText(billServiceData.get(position).getServiceName());
+            holder.txtservicenme.setText(billServiceData.get(position).getServiceName()+" @ "+billServiceData.get(position).getPrice());
         } else {
             holder.txtservicenme.setText(billServiceData.get(position).getItemName());
         }
         //holder.txt_amount.setText("₹ " + String.valueOf(billServiceData.get(position).getPrice()));
 
-        if (billServiceData.get(position).getGSTpercentage() == 0) {
+       if (billServiceData.get(position).getGSTpercentage() == 0) {
 
-            holder.taxlayout.setVisibility(View.GONE);
+            holder.txttax.setVisibility(View.GONE);
         } else {
-            holder.taxlayout.setVisibility(View.VISIBLE);
-            holder.txtaxval.setText(String.valueOf(billServiceData.get(position).getGSTpercentage()) + "%");
-            holder.txttax.setText("Tax(CGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %" + ", SGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %)");
+            holder.txttax.setVisibility(View.VISIBLE);
+
         }
 
 
@@ -88,11 +87,13 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
         holder.recyclerView_discount.setLayoutManager(mLayoutManager);
         if (billServiceData.get(position).getDiscount()!= null) {
 
-            billDiscountAdapter = new BIllDiscountAdapter(billServiceData.get(position).getDiscount(), context);
+            billDiscountAdapter = new BIllDiscountAdapter("service",billServiceData.get(position).getDiscount(), context);
+            holder.recyclerView_discount.setAdapter(billDiscountAdapter);
+            billDiscountAdapter.notifyDataSetChanged();
+
         }
 
-        holder.recyclerView_discount.setAdapter(billDiscountAdapter);
-        billDiscountAdapter.notifyDataSetChanged();
+
 
 
     }
@@ -105,15 +106,14 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
 
     public class BillAdapterViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtservicenme, qtyval, txt_amount, txtdiscountval, txtsubtotalval, qty, txtcoupanval, txtaxval, txttax, txtdiscount, txtcoupan;
-        LinearLayout coupanlayout, taxlayout, discountlayout;
+        TextView txtservicenme, qtyval, txtdiscountval, txtsubtotalval, qty, txtcoupanval, txtdiscount, txttax;
         RecyclerView recyclerView_discount;
 
         public BillAdapterViewHolder(View view) {
             super(view);
-            txttax = view.findViewById(R.id.txttax);
+           // txttax = view.findViewById(R.id.txttax);
          //   txtcoupanval = view.findViewById(R.id.txtcoupanval);
-            txtaxval = view.findViewById(R.id.txtaxval);
+            //txtaxval = view.findViewById(R.id.txtaxval);
             txtservicenme = view.findViewById(R.id.txtservicenme);
             txtservicenme = view.findViewById(R.id.txtservicenme);
             //txt_amount = view.findViewById(R.id.txt_amount);
@@ -122,9 +122,9 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
             qtyval = view.findViewById(R.id.qtyval);
            // discountlayout = view.findViewById(R.id.discountlayout);
           //  coupanlayout = view.findViewById(R.id.coupanlayout);
-            taxlayout = view.findViewById(R.id.taxlayout);
+           // taxlayout = view.findViewById(R.id.taxlayout);
           //  txtdiscount = view.findViewById(R.id.txtdiscount);
-            //txtcoupan = view.findViewById(R.id.txtcoupan);
+            txttax = view.findViewById(R.id.txttax);
             qty = view.findViewById(R.id.qty);
             recyclerView_discount= view.findViewById(R.id.recycle_item_discount);
 

@@ -2034,7 +2034,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     @Override
     public void onMethodCoupn(String uniqueID) {
 
-        ApiJaldeeCoupan(uniqueID);
+      //  ApiJaldeeCoupan(uniqueID);
 
     }
 

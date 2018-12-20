@@ -10,6 +10,23 @@ import java.util.ArrayList;
 
 public class BillModel {
 
+    public double getTaxableTotal() {
+        return taxableTotal;
+    }
+
+    public double getTotalTaxAmount() {
+        return totalTaxAmount;
+    }
+
+    public double getTaxPercentage() {
+        return taxPercentage;
+    }
+
+    double taxableTotal;
+    double totalTaxAmount;
+    double taxPercentage;
+
+
     public double getNetTotal() {
         return netTotal;
     }

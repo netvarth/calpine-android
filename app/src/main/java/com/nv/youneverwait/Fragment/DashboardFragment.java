@@ -795,6 +795,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         final View dropDownAnchor = mSearchView.findViewById(searchSrcTextView.getDropDownAnchor());
 
+
+
         if (dropDownAnchor != null) {
             dropDownAnchor.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                 @Override
@@ -806,6 +808,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     searchSrcTextView.setDropDownWidth(screenWidthPixel - 30);
                     searchSrcTextView.setDropDownBackgroundResource(R.drawable.roundedrect_blur_bg);
                     searchSrcTextView.setDropDownVerticalOffset(20);
+
+
 
 
                 }
@@ -1792,11 +1796,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String value, String provider, String accountID) {
+    public void onMethodActiveBillIconCallback(String payStatus,String value, String provider, String accountID) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
         iBill.putExtra("accountID", accountID);
+        iBill.putExtra("payStatus", payStatus);
         startActivity(iBill);
 
     }

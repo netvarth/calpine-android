@@ -16,5 +16,13 @@ public class SocialMediaModel {
         return value;
     }
 
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     String value;
 }

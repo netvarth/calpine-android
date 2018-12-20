@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.DetailInboxList;
+import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.database.DatabaseHandler;
 import com.nv.youneverwait.response.InboxModel;
 
@@ -173,6 +174,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
 
                 DatabaseHandler db=new DatabaseHandler(mContext);
+                //Config.logV("inboxList.getUniqueID()"+inboxList.getUniqueID());
                 mDetailInboxList= db.getInboxDetail(inboxList.getUniqueID());
                if(DetailInboxList.setInboxList(mDetailInboxList))
 

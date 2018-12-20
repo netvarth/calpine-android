@@ -7,7 +7,7 @@ package com.nv.youneverwait.callback;
 public interface HistoryAdapterCallback {
 
     void onMethodMessageCallback(String ynwuuid,String accountID,String provider);
-    void onMethodBillIconCallback(String value,String provider,String accountID);
+    void onMethodBillIconCallback(String payStatus,String value,String provider,String accountID);
 
     void onMethodDelecteCheckinCallback(String ynwuuid,int accountID);
     void onMethodActiveCallback(String value);

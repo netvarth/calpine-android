@@ -56,7 +56,7 @@ public class BillActivity extends AppCompatActivity {
     TextView tv_provider, tv_customer, tv_date, tv_gstn, tv_bill;
     BillModel mBillData;
     TextView tv_paid, tv_totalamt;
-    RecyclerView recycle_item,recycle_discount_total;
+    RecyclerView recycle_item, recycle_discount_total;
     BillServiceAdapter billServiceAdapter;
     ArrayList<BillModel> serviceArrayList = new ArrayList<>();
     ArrayList<BillModel> itemArrayList = new ArrayList<>();
@@ -66,12 +66,12 @@ public class BillActivity extends AppCompatActivity {
     ArrayList<BillModel> discountArrayList = new ArrayList<>();
     ArrayList<BillModel> coupanArrayList = new ArrayList<>();
 
-    Button btn_cancel, btn_pay;
-    TextView txtnetRate, txttotal, tv_amount,tv_grosstotal,tv_gross;
-    LinearLayout  paidlayout, amountlayout;
+    Button  btn_pay;
+    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross,txtaxval,txttax;
+    LinearLayout paidlayout, amountlayout,taxlayout;
     String sAmountPay;
     String accountID;
-
+String payStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,18 +79,21 @@ public class BillActivity extends AppCompatActivity {
         mCOntext = this;
         mActivity = this;
 
-       // discountlayout = (LinearLayout) findViewById(R.id.discountlayout);
+        // discountlayout = (LinearLayout) findViewById(R.id.discountlayout);
         paidlayout = (LinearLayout) findViewById(R.id.paidlayout);
-       // coupanlayout = (LinearLayout) findViewById(R.id.coupanlayout);
+        // coupanlayout = (LinearLayout) findViewById(R.id.coupanlayout);
         amountlayout = (LinearLayout) findViewById(R.id.amountlayout);
-        tv_grosstotal=(TextView) findViewById(R.id.grosstotal);
+        tv_grosstotal = (TextView) findViewById(R.id.grosstotal);
 
         tv_provider = (TextView) findViewById(R.id.provider);
         tv_customer = (TextView) findViewById(R.id.txtcustomer);
         tv_date = (TextView) findViewById(R.id.txtdate);
         tv_bill = (TextView) findViewById(R.id.txtbill);
         tv_gstn = (TextView) findViewById(R.id.txtgstn);
-        tv_gross=(TextView) findViewById(R.id.tv_gross);
+        tv_gross = (TextView) findViewById(R.id.tv_gross);
+        txttax = (TextView) findViewById(R.id.tv_tax);
+        txtaxval = (TextView) findViewById(R.id.txtaxval);
+        taxlayout = (LinearLayout) findViewById(R.id.taxlayout);
 
       /*  tv_coupan = (TextView) findViewById(R.id.txtcoupan);
         tv_discount = (TextView) findViewById(R.id.txtdiscount);
@@ -101,14 +104,14 @@ public class BillActivity extends AppCompatActivity {
         tv_amount = (TextView) findViewById(R.id.txtamt);
         tv_paid = (TextView) findViewById(R.id.amtpaid);
         tv_totalamt = (TextView) findViewById(R.id.totalamt);
-        btn_cancel = (Button) findViewById(R.id.btn_cancel);
+       // btn_cancel = (Button) findViewById(R.id.btn_cancel);
         btn_pay = (Button) findViewById(R.id.btn_pay);
 
         recycle_item = (RecyclerView) findViewById(R.id.recycle_item);
         recycle_discount_total = (RecyclerView) findViewById(R.id.recycle_discount_total);
 
         TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
-        tv_title.setText("Bill");
+
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -136,21 +139,32 @@ public class BillActivity extends AppCompatActivity {
             ynwUUID = extras.getString("ynwUUID");
             mprovider = extras.getString("provider");
             accountID = extras.getString("accountID");
+            payStatus= extras.getString("payStatus");
         }
 
+        if(payStatus!=null) {
+
+            if (payStatus.equalsIgnoreCase("FullyPaid")) {
+                tv_title.setText("Receipt");
+                btn_pay.setVisibility(View.GONE);
+            } else {
+                tv_title.setText("Bill");
+                btn_pay.setVisibility(View.VISIBLE);
+            }
+        }
         ApiBill(ynwUUID);
 
         Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_provider.setTypeface(tyface1);
-        tv_provider.setText(mprovider);
+        tv_provider.setText(Config.toTitleCase(mprovider));
 
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
+       /* btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });
+        });*/
         APIPayment(accountID);
 
         btn_pay.setOnClickListener(new View.OnClickListener() {
@@ -403,6 +417,7 @@ public class BillActivity extends AppCompatActivity {
     }
 
     BIllDiscountAdapter billDiscountAdapter;
+
     private void ApiBill(String ynwuuid) {
 
 
@@ -434,7 +449,7 @@ public class BillActivity extends AppCompatActivity {
                         mBillData = response.body();
 
                         if (mBillData.getCustomer().getUserProfile() != null) {
-                            tv_customer.setText(mBillData.getCustomer().getUserProfile().getFirstName());
+                            tv_customer.setText(Config.toTitleCase(mBillData.getCustomer().getUserProfile().getFirstName()));
                             tv_date.setText(mBillData.getCreatedDate());
                         }
 
@@ -444,11 +459,11 @@ public class BillActivity extends AppCompatActivity {
                         tv_grosstotal.setTypeface(tyface);
 
 
-                        if (mBillData.getNetTotal()!=0.0) {
+                        if (mBillData.getNetTotal() != 0.0) {
                             tv_grosstotal.setVisibility(View.VISIBLE);
-                            tv_grosstotal.setText("₹ "+String.valueOf(mBillData.getNetTotal()));
+                            tv_grosstotal.setText("₹ " + String.valueOf(mBillData.getNetTotal()));
 
-                        }else{
+                        } else {
                             tv_grosstotal.setVisibility(View.GONE);
                         }
 
@@ -480,7 +495,16 @@ public class BillActivity extends AppCompatActivity {
 
 
                         double total = mBillData.getNetRate() - mBillData.getTotalAmountPaid();
-                        tv_totalamt.setText("₹ " + String.valueOf(total));
+                        if (total != 0) {
+                            txttotal.setVisibility(View.VISIBLE);
+                            tv_totalamt.setVisibility(View.VISIBLE);
+                            tv_totalamt.setText("₹ " + String.valueOf(total));
+                        }else{
+                            tv_totalamt.setVisibility(View.GONE);
+                            txttotal.setVisibility(View.GONE);
+                        }
+
+
                         sAmountPay = String.valueOf(total);
                         Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@" + sAmountPay);
 
@@ -488,6 +512,15 @@ public class BillActivity extends AppCompatActivity {
                             btn_pay.setVisibility(View.VISIBLE);
                         } else {
                             btn_pay.setVisibility(View.INVISIBLE);
+                        }
+
+                        if(mBillData.getTaxPercentage()!=0){
+                            taxlayout.setVisibility(View.VISIBLE);
+                            txttax.setText("Tax "+String.valueOf(mBillData.getTaxPercentage())+"% of "+"₹ "+String.valueOf(mBillData.getTaxableTotal())+"\n"+"(CGST: 0%" + ", SGST: 0%)");
+
+                            txtaxval.setText("(+)₹ "+String.valueOf(mBillData.getTotalTaxAmount()));
+                        }else{
+                            taxlayout.setVisibility(View.GONE);
                         }
 
 
@@ -504,23 +537,25 @@ public class BillActivity extends AppCompatActivity {
 
                         discountArrayList.clear();
                         coupanArrayList.clear();
-                        discountArrayList=response.body().getDiscount();
-                        coupanArrayList=response.body().getProviderCoupon();
+                        discountArrayList = response.body().getDiscount();
+                        coupanArrayList = response.body().getProviderCoupon();
 
-                        discountArrayList.addAll(coupanArrayList);
-                        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(mCOntext);
-                        recycle_discount_total.setLayoutManager(mLayoutManager1);
-                        Config.logV("DISSCOUNT BILL SIZE @@@@@@@@@@@@@@@@@@@@"+discountArrayList.size());
-                        if (discountArrayList.size()>0) {
+                        if (discountArrayList != null || coupanArrayList != null) {
+                            discountArrayList.addAll(coupanArrayList);
 
-                            recycle_discount_total.setVisibility(View.VISIBLE);
-                            billDiscountAdapter = new BIllDiscountAdapter(discountArrayList, mCOntext);
-                        }else{
+                            RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(mCOntext);
+                            recycle_discount_total.setLayoutManager(mLayoutManager1);
+
+                            if (discountArrayList.size() > 0) {
+
+                                recycle_discount_total.setVisibility(View.VISIBLE);
+                                billDiscountAdapter = new BIllDiscountAdapter("totalbill",discountArrayList, mCOntext);
+                            }
+                            recycle_discount_total.setAdapter(billDiscountAdapter);
+                            billDiscountAdapter.notifyDataSetChanged();
+                        } else {
                             recycle_discount_total.setVisibility(View.GONE);
                         }
-
-                        recycle_discount_total.setAdapter(billDiscountAdapter);
-                        billDiscountAdapter.notifyDataSetChanged();
 
 
                     }

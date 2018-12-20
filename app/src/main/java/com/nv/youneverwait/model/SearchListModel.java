@@ -9,6 +9,15 @@ import java.util.ArrayList;
 
 public class SearchListModel implements Serializable{
 
+    public boolean isIs_SpecOpen() {
+        return is_SpecOpen;
+    }
+
+    public void setIs_SpecOpen(boolean is_SpecOpen) {
+        this.is_SpecOpen = is_SpecOpen;
+    }
+
+    private boolean is_SpecOpen=false;
     private String id;
     private String Logo;
     private String title;

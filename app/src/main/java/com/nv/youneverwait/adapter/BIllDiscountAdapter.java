@@ -24,18 +24,24 @@ import java.util.List;
 public class BIllDiscountAdapter extends RecyclerView.Adapter<BIllDiscountAdapter.BillAdapterViewHolder> {
     private List<BillModel> billServiceData;
     Context context;
+    String from;
 
-
-    public BIllDiscountAdapter(ArrayList<BillModel> billServiceData, Context context) {
+    public BIllDiscountAdapter(String from,ArrayList<BillModel> billServiceData, Context context) {
         this.billServiceData = billServiceData;
         this.context = context;
+        this.from=from;
         Config.logV("BIll SERVICE---------------" + billServiceData.size());
     }
 
     @Override
     public BIllDiscountAdapter.BillAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflate the layout file
-        View queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.bill_discount_listrow, parent, false);
+        View queueView =null;
+        if(from.equalsIgnoreCase("totalbill")){
+            queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.bill_discount_listrow_total, parent, false);
+        }else {
+             queueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.bill_discount_listrow, parent, false);
+        }
         BIllDiscountAdapter.BillAdapterViewHolder gvh = new BIllDiscountAdapter.BillAdapterViewHolder(queueView);
         return gvh;
     }
@@ -46,19 +52,19 @@ public class BIllDiscountAdapter extends RecyclerView.Adapter<BIllDiscountAdapte
         holder.txtdiscountName.setText(String.valueOf(billServiceData.get(position).getName()));
         if(billServiceData.get(position).getDiscValue()!=0.0) {
             Config.logV("VALUE @@@@@@"+String.valueOf(billServiceData.get(position).getDiscValue()));
-            holder.txtdiscountVal.setText("₹ " + String.valueOf(billServiceData.get(position).getDiscValue()));
+            holder.txtdiscountVal.setText("(-)₹ " + String.valueOf(billServiceData.get(position).getDiscValue()));
         }
 
         if(billServiceData.get(position).getCouponValue()!=0.0) {
 
             Config.logV("VALUE @@@@@@"+String.valueOf(billServiceData.get(position).getCouponValue()));
-            holder.txtdiscountVal.setText("₹ " + String.valueOf(billServiceData.get(position).getCouponValue()));
+            holder.txtdiscountVal.setText("(-)₹ " + String.valueOf(billServiceData.get(position).getCouponValue()));
         }
 
         if(billServiceData.get(position).getDiscountValue()!=0.0) {
 
             Config.logV("VALUE @@@@@@"+String.valueOf(billServiceData.get(position).getDiscountValue()));
-            holder.txtdiscountVal.setText("₹ " + String.valueOf(billServiceData.get(position).getDiscountValue()));
+            holder.txtdiscountVal.setText("(-)₹ " + String.valueOf(billServiceData.get(position).getDiscountValue()));
         }
 
 

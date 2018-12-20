@@ -249,7 +249,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         } else {
                             tv_notodaychekcin.setVisibility(View.GONE);
                             mrRecylce_checklistTOday.setVisibility(View.VISIBLE);
-                            tv_today.setText("TODAY "+"( "+mCheckTodayList.size()+" )");
+                            tv_today.setText("Today "+"( "+mCheckTodayList.size()+" )");
                         }
 
                         ApiFutureChekInList();
@@ -417,7 +417,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         } else {
                             tv_nofuturecheckin.setVisibility(View.GONE);
                             mrRecylce_checklistFuture.setVisibility(View.VISIBLE);
-                            tv_future.setText("FUTURE"+" ( "+mCheckFutureList.size()+" )");
+                            tv_future.setText("Future"+" ( "+mCheckFutureList.size()+" )");
                         }
                        /* mCheckList.add(mCheckOldList);
                         mCheckList.add(mCheckFutureList);
@@ -519,11 +519,12 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
     }
 
     @Override
-    public void onMethodBillIconCallback(String value, String provider,String accountID ) {
+    public void onMethodBillIconCallback(String payStatus,String value, String provider,String accountID ) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
         iBill.putExtra("accountID", accountID);
+        iBill.putExtra("payStatus", payStatus);
         startActivity(iBill);
     }
 

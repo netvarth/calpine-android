@@ -137,7 +137,6 @@
                             android:orientation="vertical"
                             android:text=""
                             android:textColor="@color/title_grey"
-                            android:textSize="@dimen/txtsize_12"
                             android:visibility="gone"></LinearLayout>
                         <TextView
                             android:id="@+id/txtspec"

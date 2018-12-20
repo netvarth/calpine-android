@@ -198,6 +198,8 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                                 inbox.setId(mInboxList.get(i).getOwner().getId());
                                 inbox.setWaitlistId(mInboxList.get(i).getWaitlistId());
                                 inbox.setMessageStatus(messageStatus);
+
+                                //Config.logV("AccountID--------------"+mInboxList.get(i).getAccountId());
                                 inbox.setUniqueID(mInboxList.get(i).getAccountId());
                                 // mDBInboxList.add(inbox);
 

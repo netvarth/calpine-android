@@ -49,6 +49,12 @@ public class SearchViewDetail {
         return socialMedia;
     }
 
+    public ArrayList getSpecialization() {
+        return specialization;
+    }
+
+    ArrayList specialization;
+
     ArrayList<SocialMediaModel> socialMedia;
 
     public ArrayList<SearchViewDetail> getEmails() {
