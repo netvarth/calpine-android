@@ -31,13 +31,18 @@ import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.payment.PaymentGateway;
 import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.response.PaymentModel;
+import com.nv.youneverwait.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -448,10 +453,18 @@ String payStatus;
                         Config.logV("Response--Array size--Active-----------------------" + response.body().toString());
                         mBillData = response.body();
 
-                        if (mBillData.getCustomer().getUserProfile() != null) {
-                            tv_customer.setText(Config.toTitleCase(mBillData.getCustomer().getUserProfile().getFirstName()));
-                            tv_date.setText(mBillData.getCreatedDate());
-                        }
+                       // if (mBillData.getCustomer().getUserProfile() != null) {
+                            String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
+                            String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
+                            tv_customer.setText(Config.toTitleCase(firstName)+" "+Config.toTitleCase(lastNme));
+                           // tv_date.setText(mBillData.getCreatedDate());
+                        DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+                        DateFormat targetFormat = new SimpleDateFormat(("dd-MM-yyyy hh:mm a"));
+                        Date date = originalFormat.parse(mBillData.getCreatedDate());
+                        String formattedDate = targetFormat.format(date);
+                        tv_date.setText(formattedDate);
+
+                       // }
 
                         Typeface tyface = Typeface.createFromAsset(getAssets(),
                                 "fonts/Montserrat_Bold.otf");

@@ -13,7 +13,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.4"
+            android:layout_weight="0.7"
             android:orientation="horizontal">
 
             <TextView
@@ -171,23 +171,23 @@
 
 
     <LinearLayout
+        android:id="@+id/Lsubtotal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding3"
         android:orientation="horizontal">
 
         <TextView
-
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.4"
+            android:layout_weight="0.7"
             android:gravity="right"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint"
             android:visibility="invisible" />
 
         <TextView
-            android:id="@+id/subtotal"
+            android:id="@+id/txtsubtotal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"

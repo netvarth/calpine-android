@@ -230,7 +230,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
 
-                        String firstWord="Checked in for ";
+                        String firstWord="Next Available Time ";
                         /*String firstWord = null;
                         Date dt = new Date();
                         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");

@@ -178,12 +178,14 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
             @Override
             public void onClick(View v) {
                 if (isExpandOld) {
+                    Config.logV("Open@@@@@@@@@@@@@@@@@@@@");
                     isExpandOld = false;
                     mrRecylce_checklistOLd.setVisibility(View.GONE);
                     tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_background_opaque_round));
                     tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
                     tv_nocheckold.setVisibility(View.GONE);
                 } else {
+                    Config.logV("Closed@@@@@@@@@@@@@@@@@@@@");
                     isExpandOld = true;
                     mrRecylce_checklistOLd.setVisibility(View.VISIBLE);
                     tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_border_top));

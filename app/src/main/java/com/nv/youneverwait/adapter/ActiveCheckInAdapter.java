@@ -252,7 +252,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             myViewHolder.btn_pay.setVisibility(View.GONE);
         }
 
-        if ((activelist.getBillStatus() != null) || activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+        if ((activelist.getBillStatus() != null) ) {
 
             myViewHolder.icon_bill.setVisibility(View.VISIBLE);
 
