@@ -529,7 +529,8 @@ String payStatus;
 
                         if(mBillData.getTaxPercentage()!=0){
                             taxlayout.setVisibility(View.VISIBLE);
-                            txttax.setText("Tax "+String.valueOf(mBillData.getTaxPercentage())+"% of "+"₹ "+String.valueOf(mBillData.getTaxableTotal())+"\n"+"(CGST: 0%" + ", SGST: 0%)");
+                           // holder.txttax.setText("Tax(CGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %" + ", SGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %)");
+                            txttax.setText("Tax "+String.valueOf(mBillData.getTaxPercentage())+"% of "+"₹ "+String.valueOf(mBillData.getTaxableTotal())+"\n"+"(CGST: "+String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
 
                             txtaxval.setText("(+)₹ "+String.valueOf(mBillData.getTotalTaxAmount()));
                         }else{
