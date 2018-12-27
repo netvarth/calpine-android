@@ -251,7 +251,7 @@ public class PaytmPayment {
                 //  Toast.makeText(context, "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
 
                 Toast.makeText(context, "Payment Success", Toast.LENGTH_LONG).show();
-               // ( ( Activity)context).finish();
+                ( ( Activity)context).finish();
             }
 
             @Override

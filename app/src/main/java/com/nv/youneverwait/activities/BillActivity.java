@@ -388,6 +388,7 @@ String payStatus;
 
                 if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
                     showAlert("Payment Successful");
+                    finish();
                 } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
                     showAlert("Payment Cancelled");
                 } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
@@ -508,7 +509,8 @@ String payStatus;
 
 
                         double total = mBillData.getNetRate() - mBillData.getTotalAmountPaid();
-                        if (total != 0) {
+
+                        if (total != 0&&total>0) {
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setVisibility(View.VISIBLE);
                             tv_totalamt.setText("₹ " + String.valueOf(total));

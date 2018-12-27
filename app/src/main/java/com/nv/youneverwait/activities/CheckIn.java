@@ -511,7 +511,9 @@ public class CheckIn extends AppCompatActivity {
                 Config.logV("Payment------------" + isPrepayment);
                 if (isPrepayment) {
                     APIPayment(modifyAccountID);
-                    sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getTotalAmount();
+                    sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
+
+                    Config.logV("Payment----sAmountPay--------" + sAmountPay);
 
                 } else {
                     // Lpayment.setVisibility(View.GONE);
@@ -1570,6 +1572,7 @@ public class CheckIn extends AppCompatActivity {
                             mService.setId(response.body().get(i).getId());
                             mService.setPrePayment(response.body().get(i).isPrePayment());
                             mService.setTotalAmount(response.body().get(i).getTotalAmount());
+                            mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
                             LServicesList.add(mService);
                         }
 
@@ -1617,7 +1620,10 @@ public class CheckIn extends AppCompatActivity {
                                 Config.logV("Payment------------" + isPrepayment);
                                 if (isPrepayment) {
                                     APIPayment(modifyAccountID);
-                                    sAmountPay = LServicesList.get(0).getTotalAmount();
+
+                                    sAmountPay = LServicesList.get(0).getMinPrePaymentAmount();
+
+                                    Config.logV("Payment----sAmountPay--------" + sAmountPay);
 
                                 } else {
                                     // Lpayment.setVisibility(View.GONE);
@@ -1931,6 +1937,10 @@ public class CheckIn extends AppCompatActivity {
                                     }
                                     final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                                     TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+                                    TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
+
+                                    txtprepayment.setText("Prepayment Amount ");
+
                                     txtamt.setText("Rs." + sAmountPay);
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
@@ -2097,6 +2107,7 @@ public class CheckIn extends AppCompatActivity {
 
                 if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
                     showAlert("Payment Successful");
+                    finish();
                 } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
                     showAlert("Payment Cancelled");
                 } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
