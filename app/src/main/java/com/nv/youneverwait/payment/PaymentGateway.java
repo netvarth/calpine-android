@@ -67,6 +67,7 @@ public class PaymentGateway {
             jsonObj.put("amount", amount);
             jsonObj.put("paymentMode", "DC");
             jsonObj.put("uuid", ynwUUID);
+            jsonObj.put("accountId", accountID);
 
         } catch (JSONException e) {
             e.printStackTrace();

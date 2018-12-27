@@ -23,12 +23,14 @@ import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -112,7 +114,17 @@ public class PaytmPayment {
         });
     }
 
-
+    private static String bodyToString(final RequestBody request){
+        try {
+            final RequestBody copy = request;
+            final Buffer buffer = new Buffer();
+            copy.writeTo(buffer);
+            return buffer.readUtf8();
+        }
+        catch (final IOException e) {
+            return "did not work";
+        }
+    }
     public void ApiGenerateHashPaytm(String ynwUUID, String amount, String accountID, final Context mContext, final Activity mActivity) {
 
 
@@ -130,6 +142,7 @@ public class PaytmPayment {
             jsonObj.put("amount", amount);
             jsonObj.put("paymentMode", "PPI");
             jsonObj.put("uuid", ynwUUID);
+            jsonObj.put("accountId", accountID);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -140,7 +153,7 @@ public class PaytmPayment {
         Call<PaytmChecksum> call = apiService.generateHashPaytm(body);
 
         Config.logV("Request--body------Payment---Amount----------------" + amount);
-       // Config.logV("Request--body------Payment-------------------" + new String(body.toString()));
+        Config.logV("Request--body------Payment-------------------" +bodyToString(body));
         call.enqueue(new Callback<PaytmChecksum>() {
             @Override
             public void onResponse(Call<PaytmChecksum> call, Response<PaytmChecksum> response) {

@@ -209,7 +209,7 @@ String payStatus;
                         btn_payu.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHashTest(ynwUUID, sAmountPay, "", "bill");
+                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHashTest(ynwUUID, sAmountPay, accountID, "bill");
                                 dialog.dismiss();
                                 // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
                        /*
