@@ -1960,7 +1960,7 @@ public class CheckIn extends AppCompatActivity {
                                         public void onClick(View v) {
 
                                             PaytmPayment payment = new PaytmPayment(mContext);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, accountID,mContext,mActivity);
+                                            payment.ApiGenerateHashPaytm(value, sAmountPay, accountID,mContext,mActivity,"");
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);

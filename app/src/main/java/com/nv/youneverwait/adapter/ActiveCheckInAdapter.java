@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +27,8 @@ import com.nv.youneverwait.R;
 import com.nv.youneverwait.callback.ActiveAdapterOnCallback;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
+import com.nv.youneverwait.payment.PaymentGateway;
+import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.response.ActiveCheckIn;
 
 import java.text.DateFormat;
@@ -132,8 +136,8 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
     public void onBindViewHolder(ActiveCheckInAdapter.MyViewHolder myViewHolder, final int position) {
         final ActiveCheckIn activelist = activeChekinList.get(position);
 
-        Config.logV("Provider NAme-------------------" + activelist.getProvider().getBusinessName());
-        myViewHolder.tv_businessname.setText(toTitleCase(activelist.getProvider().getBusinessName()));
+        Config.logV("Provider NAme-------------------" + activelist.getBusinessName());
+        myViewHolder.tv_businessname.setText(toTitleCase(activelist.getBusinessName()));
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -142,7 +146,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         myViewHolder.tv_businessname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodActiveCallback(activelist.getProvider().getUniqueId());
+                callback.onMethodActiveCallback(activelist.getUniqueId());
             }
         });
 
@@ -190,12 +194,12 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
         try {
-            if (activelist.getQueue() != null) {
-                String geoUri = activelist.getQueue().getLocation().getGoogleMapUrl();
-                if (activelist.getQueue().getLocation().getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
+            if (activelist.getGoogleMapUrl() != null) {
+                String geoUri = activelist.getGoogleMapUrl();
+                if (geoUri!=null) {
 
                     myViewHolder.tv_place.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_place.setText(activelist.getQueue().getLocation().getPlace());
+                    myViewHolder.tv_place.setText(activelist.getPlace());
                 } else {
                     myViewHolder.tv_place.setVisibility(View.GONE);
                 }
@@ -205,15 +209,15 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         }
 
 
-        if (activelist.getService() != null) {
-            if (activelist.getService().getName() != null) {
+       /* if (activelist.getService() != null) {*/
+            if (activelist.getName() != null) {
                 myViewHolder.tv_service.setVisibility(View.VISIBLE);
 
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
-                String firstWord = activelist.getService().getName();
+                String firstWord = activelist.getName();
                 String secondWord = " for ";
-                String thirdWord = activelist.getWaitlistingFor().get(0).getFirstName() + " " + activelist.getWaitlistingFor().get(0).getLastName();
+                String thirdWord = Config.toTitleCase(activelist.getFirstName() )+ " " + Config.toTitleCase(activelist.getLastName());
                 Spannable spannable = new SpannableString(firstWord + secondWord + thirdWord);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() + secondWord.length(), firstWord.length() + secondWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -221,14 +225,14 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             } else {
                 myViewHolder.tv_service.setVisibility(View.GONE);
             }
-        }
+      //  }
 
 
         myViewHolder.tv_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("googlemap url--------" + activelist.getQueue().getLocation().getGoogleMapUrl());
-                String geoUri = activelist.getQueue().getLocation().getGoogleMapUrl();
+                Config.logV("googlemap url--------" + activelist.getGoogleMapUrl());
+                String geoUri = activelist.getGoogleMapUrl();
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
                     mContext.startActivity(intent);
@@ -264,9 +268,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         myViewHolder.btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("Button Pay@@@@@@@@@@@@@@@@@");
+                Config.logV("Button Pay@@@@@@@@@@@@@@@@@"+activelist.getWaitlistStatus());
                 // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
-                callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(),activelist.getYnwUuid(), activelist.getProvider().getBusinessName(), String.valueOf(activelist.getProvider().getId()));
+                if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                    callback.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()),activelist.getAmountDue());
+                }else {
+                    callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()));
+                }
             }
         });
 
@@ -279,7 +287,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         myViewHolder.icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(),activelist.getYnwUuid(), activelist.getProvider().getBusinessName(), String.valueOf(activelist.getProvider().getId()));
+                callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(),activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()));
             }
         });
 
@@ -470,9 +478,9 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 }
             } else {
 
-                Config.logV("response.body().get(i).getQueue().getQueueStartTime()" + activelist.getQueue().getQueueStartTime());
+                Config.logV("response.body().get(i).getQueue().getQueueStartTime()" + activelist.getQueueStartTime());
                 //Calulate appxtime+questime
-                Config.logV("Quueue Time----------------" + activelist.getQueue().getQueueStartTime());
+                Config.logV("Quueue Time----------------" + activelist.getQueueStartTime());
                 Config.logV("App Time----------------" + activelist.getAppxWaitingTime());
                 long appwaittime;
                 if (activelist.getAppxWaitingTime() != -1) {
@@ -481,14 +489,14 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                     appwaittime = 0;
                 }
 
-                if (activelist.getQueue().getQueueStartTime() != null) {
+                if (activelist.getQueueStartTime() != null) {
 
                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
                     Date Timeconvert = null;
                     long millis = 0;
                     try {
                         // sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        Timeconvert = sdf.parse(activelist.getQueue().getQueueStartTime());
+                        Timeconvert = sdf.parse(activelist.getQueueStartTime());
                         millis = Timeconvert.getTime();
                         Config.logV("millsss----" + millis);
                     } catch (ParseException e) {

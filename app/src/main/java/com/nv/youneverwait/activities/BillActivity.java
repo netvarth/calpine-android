@@ -224,7 +224,7 @@ String payStatus;
 
                                 PaytmPayment payment = new PaytmPayment(mCOntext);
                                 // payment.generateCheckSum(sAmountPay);
-                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, mCOntext, mActivity);
+                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, mCOntext, mActivity,"");
                                 //  payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
                                 dialog.dismiss();
                             }

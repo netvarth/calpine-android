@@ -96,7 +96,9 @@ public class PaytmPayment {
                         // map.put("EMAIL", jsonObj.getString("EMAIL"));
                         // map.put("MOBILE_NO", jsonObj.getString("MOBILE_NO"));
                         map.put("CHECKSUMHASH", response.body().get(0).getChecksum());
-                        PaytmPay(map);
+
+
+                        //PaytmPay(map);
 
 
                     } catch (Exception e) {
@@ -125,7 +127,7 @@ public class PaytmPayment {
             return "did not work";
         }
     }
-    public void ApiGenerateHashPaytm(String ynwUUID, String amount, String accountID, final Context mContext, final Activity mActivity) {
+    public void ApiGenerateHashPaytm(String ynwUUID, String amount, String accountID, final Context mContext, final Activity mActivity, final String from) {
 
 
         ApiInterface apiService =
@@ -197,7 +199,7 @@ public class PaytmPayment {
                             // map.put("EMAIL", jsonObj.getString("EMAIL"));
                             // map.put("MOBILE_NO", jsonObj.getString("MOBILE_NO"));
                             map.put("CHECKSUMHASH", response_data.getChecksum());
-                            PaytmPay(map);
+                            PaytmPay(map,from);
 
 
                         } catch (Exception e) {
@@ -232,7 +234,7 @@ public class PaytmPayment {
 
     }
 
-    public void PaytmPay(Map<String, String> paramMap) {
+    public void PaytmPay(Map<String, String> paramMap, final String from) {
         PaytmPGService Service = null;
         Service = PaytmPGService.getStagingService();
         PaytmOrder Order = new PaytmOrder((HashMap<String, String>) paramMap);
@@ -251,7 +253,10 @@ public class PaytmPayment {
                 //  Toast.makeText(context, "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
 
                 Toast.makeText(context, "Payment Success", Toast.LENGTH_LONG).show();
-                ( ( Activity)context).finish();
+                ((Activity) context).finish();
+                /*if(!from.equalsIgnoreCase("home")) {
+                    ((Activity) context).finish();
+                }*/
             }
 
             @Override

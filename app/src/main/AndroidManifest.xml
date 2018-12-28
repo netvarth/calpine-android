@@ -85,6 +85,11 @@
             android:name="com.nv.youneverwait.activities.CheckInCopy"
             android:screenOrientation="portrait"></activity>
 
+        <activity
+            android:name="com.nv.youneverwait.activities.PaymentActivity"
+            android:screenOrientation="portrait"></activity>
+
+
 
         <activity
             android:name="com.nv.youneverwait.activities.CheckinFamilyMember"

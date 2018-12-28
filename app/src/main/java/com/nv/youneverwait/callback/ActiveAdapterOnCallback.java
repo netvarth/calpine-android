@@ -8,7 +8,7 @@ public interface ActiveAdapterOnCallback {
 
     void onMethodActiveCallback(String value);
     void onMethodActiveBillIconCallback(String payStatus,String value,String provider,String accountID);
-    void onMethodActivePayIconCallback(String value);
+    void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID,double amountDue) ;
 
 
 }

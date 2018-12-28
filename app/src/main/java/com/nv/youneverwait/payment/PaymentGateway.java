@@ -13,6 +13,7 @@ import com.nv.youneverwait.Fragment.DashboardFragment;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
 import com.nv.youneverwait.activities.CheckIn;
+import com.nv.youneverwait.activities.PaymentActivity;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
@@ -105,6 +106,10 @@ public class PaymentGateway {
                             Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
                             BillActivity.launchPaymentFlow(amount, response_data);
+                        }else{
+                            CheckSumModelTest response_data = response.body();
+
+                            PaymentActivity.launchPaymentFlow(amount, response_data);
                         }
 
 

@@ -12,10 +12,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
+import com.nv.youneverwait.response.ActiveCheckIn;
 import com.nv.youneverwait.response.InboxModel;
 import com.nv.youneverwait.response.ProfileModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -52,6 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //createTableDoctorDetails(db);
         createTableUserInfo(db);
         createTableInbox(db);
+        createTableCheckin(db);
 
     }
 
@@ -60,6 +63,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_userinfo));
         db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_inbox));
+
+        db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_checkin));
 
         // Create tables again
         onCreate(db);
@@ -85,6 +90,135 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
+    /*Table userInfo*/
+    private void createTableCheckin(SQLiteDatabase db) {
+        String tblFields, tblCreateStr;
+
+        tblFields = "( id INTEGER ,"
+                + "businessName TEXT,"
+                + "uniqueId TEXT,"
+                + "date TEXT,"
+                + "waitlistStatus TEXT,"
+                + "servicename TEXT,"
+                + "partySize INTEGER,"
+                + "appxWaitingTime INTEGER,"
+                + "place TEXT,"
+                + "googleMapUrl TEXT,"
+                + "queueStartTime TEXT,"
+                + "firstName TEXT,"
+                + "lastName TEXT,"
+                + "ynwUuid TEXT,"
+                + "paymentStatus TEXT,"
+                + "billViewStatus TEXT,"
+                + "billStatus TEXT,"
+                + "amountPaid DOUBLE,"
+                + "amountDue DOUBLE,"
+                + "serviceTime TEXT)";
+
+        //create table
+        tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_checkin) + tblFields;
+        db.execSQL(tblCreateStr);
+    }
+
+
+    public void insertCheckinInfo(List<ActiveCheckIn> activeCheckInModel) {
+        Config.logV("InsertCheckinDetails"+activeCheckInModel.size());
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (ActiveCheckIn activeCheckIn : activeCheckInModel) {
+                Config.logV("InsertCheckinDetails"+activeCheckIn.getProvider().getId());
+                ContentValues values = new ContentValues();
+                values.put("id", activeCheckIn.getProvider().getId());
+                values.put("businessName", activeCheckIn.getProvider().getBusinessName());
+                values.put("uniqueId", activeCheckIn.getProvider().getUniqueId());
+                values.put("date", activeCheckIn.getDate());
+                values.put("waitlistStatus", activeCheckIn.getWaitlistStatus());
+                values.put("servicename", activeCheckIn.getService().getName());
+                values.put("partySize", activeCheckIn.getPartySize());
+                values.put("appxWaitingTime", activeCheckIn.getAppxWaitingTime());
+                values.put("place", activeCheckIn.getQueue().getLocation().getPlace());
+                values.put("googleMapUrl", activeCheckIn.getQueue().getLocation().getGoogleMapUrl());
+                values.put("queueStartTime", activeCheckIn.getQueue().getQueueStartTime());
+                values.put("firstName", activeCheckIn.getWaitlistingFor().get(0).getFirstName());
+                values.put("lastName", activeCheckIn.getWaitlistingFor().get(0).getLastName());
+
+                values.put("ynwUuid", activeCheckIn.getYnwUuid());
+                values.put("paymentStatus", activeCheckIn.getPaymentStatus());
+                values.put("billViewStatus", activeCheckIn.getBillViewStatus());
+                values.put("billStatus", activeCheckIn.getBillStatus());
+                values.put("amountPaid", activeCheckIn.getAmountPaid());
+                values.put("amountDue", activeCheckIn.getAmountDue());
+                values.put("serviceTime", activeCheckIn.getServiceTime());
+
+                db.insert(mContext.getString(R.string.db_table_checkin), null, values);
+            }
+
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+
+
+    }
+
+    public List<ActiveCheckIn> getAllCheckinList() {
+        List<ActiveCheckIn> checkin = new ArrayList<ActiveCheckIn>();
+
+        SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+
+        String table = mContext.getString(R.string.db_table_checkin);
+        // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
+
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","serviceTime"};
+
+        db.beginTransaction();
+
+        Cursor cursor = db.query(table, columns, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                ActiveCheckIn activeModel = new ActiveCheckIn();
+                activeModel.setId(cursor.getInt(0));
+                activeModel.setBusinessName(cursor.getString(1));
+                activeModel.setUniqueId(cursor.getString(2));
+                activeModel.setDate(cursor.getString(3));
+                activeModel.setWaitlistStatus(cursor.getString(4));
+                activeModel.setName(cursor.getString(5));
+                activeModel.setPartySize(cursor.getInt(6));
+                activeModel.setAppxWaitingTime(cursor.getInt(7));
+
+                activeModel.setPlace(cursor.getString(8));
+                activeModel.setGoogleMapUrl(cursor.getString(9));
+                activeModel.setQueueStartTime(cursor.getString(10));
+
+                activeModel.setFirstName(cursor.getString(11));
+                activeModel.setLastName(cursor.getString(12));
+                activeModel.setYnwUuid(cursor.getString(13));
+                activeModel.setPaymentStatus(cursor.getString(14));
+
+                activeModel.setBillViewStatus(cursor.getString(15));
+                activeModel.setBillStatus(cursor.getString(16));
+                activeModel.setAmountPaid(cursor.getDouble(17));
+                activeModel.setAmountDue(cursor.getDouble(18));
+
+                activeModel.setServiceTime(cursor.getString(19));
+
+
+
+                checkin.add(activeModel);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+
+        return checkin;
+    }
+
     public void insertUserInfo(ProfileModel profileModel) {
         Config.logV("InsertProfileDetails");
         SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
@@ -104,6 +238,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
             db.insert(mContext.getString(R.string.db_table_userinfo), null, values);
+
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
@@ -146,18 +281,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     }
-    public boolean checkForTables(){
-        boolean hasTables = false;
-        SQLiteDatabase  db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " +mContext.getString(R.string.db_table_userinfo), null);
 
-        if(cursor != null && cursor.getCount() > 0){
-            hasTables=true;
+    public boolean checkForTables() {
+        boolean hasTables = false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + mContext.getString(R.string.db_table_userinfo), null);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            hasTables = true;
             cursor.close();
         }
 
         return hasTables;
     }
+
     public ProfileModel getProfileDetail(int consumerID) {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 
@@ -286,6 +423,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public void DeleteCheckin() {
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.execSQL("delete from " + mContext.getString(R.string.db_table_checkin));
+        db.close();
+    }
+
+
     public void DeleteInbox() {
         SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
         db.execSQL("delete from " + mContext.getString(R.string.db_table_inbox));
@@ -297,6 +441,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + mContext.getString(R.string.db_table_userinfo));
         db.close();
     }
+
     public void deleteDatabase() {
         boolean succes = mContext.deleteDatabase(mContext.getResources().getString(R.string.db_name));
         Config.logV("data base deleted........" + succes);
