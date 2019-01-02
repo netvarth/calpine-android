@@ -86,6 +86,9 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                     final boolean mTaxable = serviceList.isTaxable();
                     final ArrayList<SearchService> mServiceGallery = serviceList.getServicegallery();
 
+                    final boolean isPrepayment = serviceList.isPrePayment();
+                    final String minPrepayment = serviceList.getMinPrePaymentAmount();
+
                     Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
                     iService.putExtra("name", mServicename);
                     iService.putExtra("duration", mServiceduration);
@@ -94,6 +97,8 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                     iService.putExtra("servicegallery", mServiceGallery);
                     iService.putExtra("title", title);
                     iService.putExtra("taxable", mTaxable);
+                    iService.putExtra("isPrePayment", isPrepayment);
+                    iService.putExtra("MinPrePaymentAmount",minPrepayment);
                     mContext.startActivity(iService);
                 }else{
 
@@ -151,6 +156,9 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                                 iService.putExtra("price", service.get(i).getTotalAmount());
                                 iService.putExtra("desc", service.get(i).getDescription());
                                 iService.putExtra("servicegallery", service.get(i).getServicegallery());
+
+                                iService.putExtra("isPrePayment", service.get(i).isPrePayment());
+                                iService.putExtra("MinPrePaymentAmount", service.get(i).getMinPrePaymentAmount());
                                 iService.putExtra("title", title);
                                 mContext.startActivity(iService);
 

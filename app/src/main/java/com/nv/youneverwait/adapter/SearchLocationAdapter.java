@@ -591,6 +591,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(j).isTaxable();
                         final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(j).getServicegallery();
 
+                        final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(j).isPrePayment();
+                        final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(j).getMinPrePaymentAmount();
                         dynaText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -602,6 +604,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 iService.putExtra("servicegallery", mServiceGallery);
                                 iService.putExtra("taxable", mTaxable);
                                 iService.putExtra("title", mTitle);
+                                iService.putExtra("isPrePayment", isPrepayment);
+                                iService.putExtra("MinPrePaymentAmount", minPrepayment);
                                 mContext.startActivity(iService);
 
                             }

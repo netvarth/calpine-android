@@ -7,9 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.response.SearchService;
 import com.squareup.picasso.Picasso;
 
@@ -22,15 +24,17 @@ import java.util.ArrayList;
 public class SearchServiceActivity extends AppCompatActivity {
     TextView tv_price, tv_duration, tv_service, tv_desc;
 
-    String name, duration, price, desc;
+    String name, duration, price, desc="";
     Toolbar toolbar;
     ArrayList<SearchService> mGallery;
     ImageView i_servicegallery;
     String title;
-    TextView tv_toolbartitle;
+    TextView tv_toolbartitle,tv_descVal;
     ImageView i_backpress;
-    boolean isTaxable;
-
+    boolean isTaxable,isPrepayment;
+    LinearLayout Lprepayment;
+    TextView txtpreVal;
+String MinPrePaymentAmount;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +43,14 @@ public class SearchServiceActivity extends AppCompatActivity {
         tv_price = (TextView) findViewById(R.id.txtprice);
         tv_service = (TextView) findViewById(R.id.txtservice);
         tv_desc = (TextView) findViewById(R.id.txtdesc);
+        tv_descVal=(TextView) findViewById(R.id.txtdescVal);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         i_servicegallery = (ImageView) findViewById(R.id.img_service);
         i_backpress= (ImageView) findViewById(R.id.backpress);
+        Lprepayment=(LinearLayout) findViewById(R.id.Lprepayment);
+        txtpreVal=(TextView) findViewById(R.id.txtpreVal);
+
+
         i_backpress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +69,9 @@ public class SearchServiceActivity extends AppCompatActivity {
             desc = extras.getString("desc");
             title=extras.getString("title");
             isTaxable=extras.getBoolean("taxable");
+            isPrepayment=extras.getBoolean("isPrePayment");
+
+            MinPrePaymentAmount=extras.getString("MinPrePaymentAmount");
             mGallery = (ArrayList<SearchService>) getIntent().getSerializableExtra("servicegallery");
         }
 
@@ -85,9 +97,9 @@ public class SearchServiceActivity extends AppCompatActivity {
             tv_price.setVisibility(View.VISIBLE);
             if(isTaxable) {
 
-                tv_price.setText(price+ " (Tax Applicable)");
+                tv_price.setText("₹"+price+ " (Tax Applicable)");
             }else {
-                tv_price.setText(price);
+                tv_price.setText("₹"+price);
             }
         } else {
             tv_price.setVisibility(View.GONE);
@@ -99,16 +111,37 @@ public class SearchServiceActivity extends AppCompatActivity {
             tv_duration.setVisibility(View.GONE);
 
         }
-        if (desc != null) {
+        if(isPrepayment){
+            Lprepayment.setVisibility(View.VISIBLE);
+            txtpreVal.setText("₹"+MinPrePaymentAmount);
+        }else{
+            Lprepayment.setVisibility(View.GONE);
+        }
+        if (desc != null&&desc.length()>0&&!desc.equalsIgnoreCase("")) {
             tv_desc.setVisibility(View.VISIBLE);
-            tv_desc.setText(desc);
+            tv_descVal.setVisibility(View.VISIBLE);
+            Typeface tyfacedesc = Typeface.createFromAsset(getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            tv_desc.setTypeface(tyfacedesc);
+            tv_descVal.setText(desc);
         } else {
             tv_desc.setVisibility(View.GONE);
+            tv_descVal.setVisibility(View.GONE);
         }
 
         if(mGallery!=null){
-            if(mGallery.size()>0)
-            Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(i_servicegallery);
+
+            if(mGallery.size()>0) {
+
+                Config.logV("SERVICE GALLERY"+mGallery.get(0).getUrl());
+                i_servicegallery.setVisibility(View.VISIBLE);
+                try {
+                    Picasso.with(this).setLoggingEnabled(true);
+                    Picasso.with(this). load(mGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             /*if(mGallery.size()>1) {
                 if (mGallery.get(1).getUrl() != null) {
 

@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.response.ActiveCheckIn;
+import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.InboxModel;
 import com.nv.youneverwait.response.ProfileModel;
 
@@ -56,6 +57,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         createTableInbox(db);
         createTableCheckin(db);
 
+        createTableFavour(db);
+
     }
 
     @Override
@@ -66,6 +69,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_checkin));
 
+        db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_fav));
         // Create tables again
         onCreate(db);
     }
@@ -87,6 +91,92 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_userinfo) + tblFields;
         db.execSQL(tblCreateStr);
+    }
+
+    private void createTableFavour(SQLiteDatabase db) {
+        String tblFields, tblCreateStr;
+
+        tblFields = "( id INTEGER PRIMARY KEY,"
+                + "businessname TEXT,"
+                + "locid TEXT,"
+                + "uniqueid INTEGER,"
+                + "isRevelPhoneno boolean)";
+
+
+        //create table
+        tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_fav) + tblFields;
+        db.execSQL(tblCreateStr);
+    }
+
+    public void insertFavInfo(FavouriteModel favorite) {
+
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.beginTransaction();
+        try {
+           // for (FavouriteModel favorite : favouriteModel) {
+
+                ContentValues values = new ContentValues();
+                values.put("id", favorite.getId());
+                values.put("businessname", favorite.getBusinessName());
+                values.put("uniqueId", favorite.getUniqueId());
+                values.put("locid", favorite.getLocationId());
+                values.put("isRevelPhoneno", favorite.isRevealPhoneNumber());
+
+
+                db.insert(mContext.getString(R.string.db_table_fav), null, values);
+           // }
+
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+
+
+    }
+
+
+    public ArrayList<FavouriteModel> getFavourites() {
+        SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+        ArrayList<FavouriteModel> favData = new ArrayList<FavouriteModel>();
+        String table = mContext.getString(R.string.db_table_fav);
+       /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
+        String[] columns = {"id","businessname","locid","uniqueid","isRevelPhoneno"};
+
+
+
+        //String timestamp="timestamp";
+
+        db.beginTransaction();
+
+        Cursor cursor = db.query(table, columns, null, null, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.moveToFirst()) {
+            do {
+                FavouriteModel fav = new FavouriteModel();
+
+                fav.setId(cursor.getInt(0));
+                fav.setBusinessName(cursor.getString(1));
+                fav.setLocationId(cursor.getString(2));
+                fav.setUniqueId(cursor.getInt(3));
+                fav.setRevealPhoneNumber(cursor.getWantsAllOnMoveCalls());
+
+
+
+
+                favData.add(fav);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+
+        return favData;
+
+
     }
 
 
@@ -426,6 +516,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void DeleteCheckin() {
         SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
         db.execSQL("delete from " + mContext.getString(R.string.db_table_checkin));
+        db.close();
+    }
+
+    public void DeleteFav() {
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.execSQL("delete from " + mContext.getString(R.string.db_table_fav));
         db.close();
     }
 

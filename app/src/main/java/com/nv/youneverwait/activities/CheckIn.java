@@ -119,7 +119,7 @@ public class CheckIn extends AppCompatActivity {
     LinearLayout LcheckinDatepicker;
     static String mFrom;
     String title, place;
-    TextView tv_titlename, tv_place, tv_checkin_service;
+    TextView tv_titlename, tv_place, tv_checkin_service,txtprepay;
     static ImageView ic_left, ic_right;
     static TextView tv_queuetime;
     static TextView tv_queuename;
@@ -136,13 +136,13 @@ public class CheckIn extends AppCompatActivity {
     static String selectedDateFormat;
     String serviceSelected;
 
-    TextView tv_addnote;
+    TextView tv_addnote,txtprepayamount;
     static TextView txtnocheckin;
 
     String txt_message = "";
     String googlemap;
     String sector, subsector;
-    LinearLayout layout_party;
+    LinearLayout layout_party,LservicePrepay;
     EditText editpartysize;
     int maxPartysize;
     static RecyclerView recycle_family;
@@ -158,6 +158,10 @@ public class CheckIn extends AppCompatActivity {
         btn_checkin = (Button) findViewById(R.id.btn_checkin);
         editpartysize = (EditText) findViewById(R.id.editpartysize);
         LSinglemember = (LinearLayout) findViewById(R.id.familymember);
+        LservicePrepay=(LinearLayout) findViewById(R.id.LservicePrepay);
+        txtprepayamount=(TextView) findViewById(R.id.txtprepayamount);
+        txtprepay=(TextView) findViewById(R.id.txtprepay);
+
         LSinglemember.setVisibility(View.VISIBLE);
         recycle_family.setVisibility(View.GONE);
 
@@ -510,10 +514,11 @@ public class CheckIn extends AppCompatActivity {
                 isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
                 Config.logV("Payment------------" + isPrepayment);
                 if (isPrepayment) {
-                    APIPayment(modifyAccountID);
+
                     sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
 
                     Config.logV("Payment----sAmountPay--------" + sAmountPay);
+                    APIPayment(modifyAccountID);
 
                 } else {
                     // Lpayment.setVisibility(View.GONE);
@@ -857,7 +862,7 @@ public class CheckIn extends AppCompatActivity {
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL----%%%%%-----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -872,6 +877,21 @@ public class CheckIn extends AppCompatActivity {
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
                                 showPayU = true;
                             }
+                        }
+
+                        if((showPayU)||showPaytmWallet){
+                            Config.logV("URL----%%%%%---@@--");
+                            LservicePrepay.setVisibility(View.VISIBLE);
+                            Typeface tyface = Typeface.createFromAsset(getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                            txtprepay.setTypeface(tyface);
+                            txtprepayamount.setTypeface(tyface);
+                            String firstWord="Prepayment Amount: ";
+                            String secondWord="₹"+sAmountPay;
+                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txtprepayamount.setText(spannable);
                         }
                         /*if (mPaymentData.size() > 0) {
                             Lpayment.setVisibility(View.VISIBLE);
@@ -1619,9 +1639,10 @@ public class CheckIn extends AppCompatActivity {
                                 isPrepayment = LServicesList.get(0).isPrePayment();
                                 Config.logV("Payment------------" + isPrepayment);
                                 if (isPrepayment) {
-                                    APIPayment(modifyAccountID);
+
 
                                     sAmountPay = LServicesList.get(0).getMinPrePaymentAmount();
+                                    APIPayment(modifyAccountID);
 
                                     Config.logV("Payment----sAmountPay--------" + sAmountPay);
 
@@ -1896,7 +1917,7 @@ public class CheckIn extends AppCompatActivity {
 
                         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
                         txt_message = "";
-                        Toast.makeText(mContext, " Check-in saved successfully ", Toast.LENGTH_LONG).show();
+
                         JSONObject reader = new JSONObject(response.body().string());
                         Iterator iteratorObj = reader.keys();
 
@@ -1973,6 +1994,7 @@ public class CheckIn extends AppCompatActivity {
 
 
                         } else {
+                            Toast.makeText(mContext, " Check-in saved successfully ", Toast.LENGTH_LONG).show();
                             finish();
                         }
                     } else {

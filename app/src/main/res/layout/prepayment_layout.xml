@@ -35,7 +35,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.7"
-                android:text="Amount to Pay "
+                android:text="Prepayment Amount "
                 android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_subtitle" />
 

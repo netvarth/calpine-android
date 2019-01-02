@@ -1127,6 +1127,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iService.putExtra("servicegallery", service.get(i).getServicegallery());
                                 iService.putExtra("taxable", service.get(i).isTaxable());
                                 iService.putExtra("title", title);
+                                iService.putExtra("isPrePayment", service.get(i).isPrePayment());
+                                iService.putExtra("MinPrePaymentAmount", service.get(i).getMinPrePaymentAmount());
                                 context.startActivity(iService);
 
                             }

@@ -516,6 +516,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     mSearchView.setQuery(searchTxt, false);
 
                     Config.logV("Selected  FIRST RUN-----------------------" + searchTxt);
+                    if(!searchTxt.equalsIgnoreCase("")){
+                        ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+                        searchIcon.setImageDrawable(null);
+                        searchIcon.setVisibility(View.GONE);
+                    }
                 } else {
 
                     Config.logV("Selected NOT FIRST RUN-----------------------" + searchTxt);

@@ -162,9 +162,9 @@ public class ChangePhoneFragment extends RootFragment {
                             Bundle bundle = new Bundle();
                             bundle.putString("email", mPhone);
                             emailFragment.setArguments(bundle);
-                            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
                             transaction.addToBackStack(null);
-                            transaction.replace(R.id.fragment_mainLayout, emailFragment).commit();
+                            transaction.replace(R.id.mainlayout, emailFragment).commit();
 
 
                             //}

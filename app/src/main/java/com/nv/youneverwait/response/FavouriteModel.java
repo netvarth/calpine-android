@@ -111,12 +111,22 @@ public class FavouriteModel {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     int id;
 
 
+    public String getLocationId() {
+        return locationId;
+    }
 
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
+    }
 
-   // int locId;
+    String locationId;
 
     public int getLocId() {
         return id;

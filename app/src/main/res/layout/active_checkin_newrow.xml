@@ -135,6 +135,7 @@
                     android:layout_gravity="right"
                     android:textColor="@color/app_background"
                     android:textSize="@dimen/txtsize_10"
+                    android:visibility="gone"
                     android:paddingLeft="@dimen/padding2"
                     android:paddingRight="@dimen/padding2"
 

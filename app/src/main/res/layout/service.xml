@@ -45,9 +45,10 @@
 
         <ImageView
             android:id="@+id/img_service"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:src="@drawable/icon_noimage"
             android:scaleType="fitXY" />
 
         <!-- <ImageView
@@ -122,12 +123,44 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/Lprepayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:visibility="gone"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prepayment Amount"
+                android:textColor="@color/opaque_title_grey" />
+
+            <TextView
+                android:id="@+id/txtpreVal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding5"
+                android:fontFamily="@font/customfont"
+                android:text="200"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_hint"
+                android:textStyle="bold" />
+        </LinearLayout>
         <TextView
             android:id="@+id/txtdesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding20"
+            android:layout_marginTop="@dimen/default_padding"
+            android:text="Description"
+            android:textColor="@color/title_grey"
+            android:textSize="@dimen/txtsize_subtitle"/>
+        <TextView
+            android:id="@+id/txtdescVal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding7"
             android:text="Description"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_12" />

@@ -76,8 +76,8 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_partysize,tv_businessname, tv_estTime, tv_service, tv_place, tv_personahead, tv_token, icon_message, icon_cancel,tv_status;
-        TextView icon_bill,tv_date,icon_rate;
+        public TextView tv_partysize, tv_businessname, tv_estTime, tv_service, tv_place, tv_personahead, tv_token, icon_message, icon_cancel, tv_status;
+        TextView icon_bill, tv_date, icon_rate;
         LinearLayout layout_token;
         TextView icon_fav;
 
@@ -97,9 +97,9 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             icon_cancel = (TextView) view.findViewById(R.id.icon_cancel);
             icon_rate = (TextView) view.findViewById(R.id.icon_rate);
             layout_token = (LinearLayout) view.findViewById(R.id.layout_token);
-            tv_status=(TextView) view.findViewById(R.id.txt_status);
-            tv_date=(TextView) view.findViewById(R.id.txt_date);
-            tv_partysize=(TextView) view.findViewById(R.id.txt_partysizevalue);
+            tv_status = (TextView) view.findViewById(R.id.txt_status);
+            tv_date = (TextView) view.findViewById(R.id.txt_date);
+            tv_partysize = (TextView) view.findViewById(R.id.txt_partysizevalue);
         }
     }
 
@@ -109,13 +109,14 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
     HistoryAdapterCallback callback;
     String header;
     ArrayList<FavouriteModel> FavList;
-    public HistoryCheckInAdapter(ArrayList<FavouriteModel> mFavList,List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, String header) {
+
+    public HistoryCheckInAdapter(ArrayList<FavouriteModel> mFavList, List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, String header) {
         this.mContext = mContext;
         this.activeChekinList = mactiveChekinList;
         this.activity = mActivity;
-        this.callback=callback;
-        this.header=header;
-        this.FavList=mFavList;
+        this.callback = callback;
+        this.header = header;
+        this.FavList = mFavList;
 
     }
 
@@ -133,8 +134,6 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
 
         myViewHolder.tv_businessname.setText(toTitleCase(activelist.getProvider().getBusinessName()));
-
-
 
 
         myViewHolder.icon_cancel.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +166,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         try {
             if (activelist.getQueue() != null) {
                 String geoUri = activelist.getQueue().getLocation().getGoogleMapUrl();
-                if (activelist.getQueue().getLocation().getPlace() != null&&geoUri != null && !geoUri.equalsIgnoreCase("")) {
+                if (activelist.getQueue().getLocation().getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
 
                     myViewHolder.tv_place.setVisibility(View.VISIBLE);
                     myViewHolder.tv_place.setText(activelist.getQueue().getLocation().getPlace());
@@ -175,19 +174,19 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                     myViewHolder.tv_place.setVisibility(View.GONE);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
         for (int i = 0; i < FavList.size(); i++) {
-            Config.logV("Fav List-----##&&&-----"+FavList.get(i).getId());
-            Config.logV("Fav Fav List--------%%%%--"+activelist.getProvider().getId());
+            Config.logV("Fav List-----##&&&-----" + FavList.get(i).getId());
+            Config.logV("Fav Fav List--------%%%%--" + activelist.getProvider().getId());
 
-            if(FavList.get(i).getId()==activelist.getProvider().getId()){
+            if (FavList.get(i).getId() == activelist.getProvider().getId()) {
 
                 myViewHolder.icon_fav.setVisibility(View.VISIBLE);
-                myViewHolder.icon_fav.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.icon_favourited,0,0);
+                myViewHolder.icon_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
                 activelist.setFavFlag(true);
             }
         }
@@ -228,7 +227,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                     myQuittingDialogBox.show();*/
 
 
-                }else{
+                } else {
                     callback.onMethodAddFavourite(activelist.getProvider().getId());
                 }
             }
@@ -260,24 +259,32 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             }
         }
 
-        if(activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid")){
+        if (activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid")) {
             myViewHolder.icon_bill.setText("Receipt");
-        }else{
+        } else {
             myViewHolder.icon_bill.setText("Bill");
         }
 
         Config.logV("Bill------------" + activelist.getWaitlistStatus());
-        if (activelist.getBillStatus() != null) {
-            myViewHolder.icon_bill.setVisibility(View.VISIBLE);
-        } else {
+        if (activelist.getBillViewStatus() != null) {
+            if (activelist.getBillViewStatus().equalsIgnoreCase("Show")) {
+                myViewHolder.icon_bill.setVisibility(View.VISIBLE);
+            } else {
+                myViewHolder.icon_bill.setVisibility(View.GONE);
+            }
+        } else
+
+        {
             myViewHolder.icon_bill.setVisibility(View.GONE);
         }
 
 
-        myViewHolder.icon_bill.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.icon_bill.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
-                callback.onMethodBillIconCallback(activelist.getPaymentStatus(),activelist.getYnwUuid(),activelist.getProvider().getBusinessName(),String.valueOf(activelist.getProvider().getId()));
+                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getProvider().getBusinessName(), String.valueOf(activelist.getProvider().getId()));
             }
         });
 
@@ -285,10 +292,10 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         Config.logV("Date------------" + activelist.getDate());
 
 
-
-
         myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-        if (activelist.getServiceTime() != null) {
+        if (activelist.getServiceTime() != null)
+
+        {
 
             String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             if (date.equalsIgnoreCase(activelist.getDate())) {
@@ -303,7 +310,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                 if(header.equalsIgnoreCase("today")){
                     firstWord = "Est Service Time ";
                 }*/
-                 firstWord ="Checked in for ";
+                firstWord = "Checked in for ";
 
                 String secondWord = "Today," + activelist.getServiceTime();
                 Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -311,16 +318,16 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                     myViewHolder.tv_status.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_status.setText(secondWord +" - Cancelled ");
+                    myViewHolder.tv_status.setText(secondWord + " - Cancelled ");
                     myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                 }
 
-                if (!activelist.getWaitlistStatus().equalsIgnoreCase("done")&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")&&!header.equalsIgnoreCase("old")) {
+                if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                     myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                     myViewHolder.tv_estTime.setText(spannable);
-                }else {
+                } else {
                     myViewHolder.tv_estTime.setVisibility(View.GONE);
                 }
 
@@ -350,12 +357,12 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                 if(header.equalsIgnoreCase("today")){
                     firstWord = "Est Wait Time ";
                 }*/
-                 firstWord ="Checked in for ";
+                firstWord = "Checked in for ";
 
-             //   String secondWord = outputDateStr + ", " + activelist.getServiceTime();
+                //   String secondWord = outputDateStr + ", " + activelist.getServiceTime();
 
                 String dtStart = outputDateStr;
-                Date dateParse=null;
+                Date dateParse = null;
                 SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
                 try {
                     dateParse = format1.parse(dtStart);
@@ -367,11 +374,11 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                 SimpleDateFormat format = new SimpleDateFormat("d");
                 String date1 = format.format(dateParse);
 
-                if(date1.endsWith("1") && !date1.endsWith("11"))
+                if (date1.endsWith("1") && !date1.endsWith("11"))
                     format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                else if(date1.endsWith("2") && !date1.endsWith("12"))
+                else if (date1.endsWith("2") && !date1.endsWith("12"))
                     format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                else if(date1.endsWith("3") && !date1.endsWith("13"))
+                else if (date1.endsWith("3") && !date1.endsWith("13"))
                     format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
                 else
                     format = new SimpleDateFormat("EE, MMM d'th' yyyy");
@@ -385,15 +392,15 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                     myViewHolder.tv_status.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_status.setText(secondWord +" - Cancelled ");
+                    myViewHolder.tv_status.setText(secondWord + " - Cancelled ");
                     myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                 }
-                if (!activelist.getWaitlistStatus().equalsIgnoreCase("done")&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")&&!header.equalsIgnoreCase("old")) {
+                if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                     myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                     myViewHolder.tv_estTime.setText(spannable);
-                }else {
+                } else {
                     myViewHolder.tv_estTime.setVisibility(View.GONE);
                 }
 
@@ -403,7 +410,9 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             }
 
 
-        } else {
+        } else
+
+        {
             String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             if (date.equalsIgnoreCase(activelist.getDate())) {
                 Config.logV("getAppxWaitingTime------------" + activelist.getAppxWaitingTime());
@@ -420,15 +429,15 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-                    if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                    if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                         myViewHolder.tv_status.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_status.setText("Cancelled "+secondWord);
+                        myViewHolder.tv_status.setText("Cancelled " + secondWord);
                         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
-                    if (!activelist.getWaitlistStatus().equalsIgnoreCase("done")&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")&&!header.equalsIgnoreCase("old")) {
+                    if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                         myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                         myViewHolder.tv_estTime.setText(spannable);
-                    }else {
+                    } else {
                         myViewHolder.tv_estTime.setVisibility(View.GONE);
                     }
 
@@ -436,20 +445,25 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                 } else {
                     if (activelist.getAppxWaitingTime() == -1) {
                         myViewHolder.tv_estTime.setVisibility(View.GONE);
+                        if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                            myViewHolder.tv_status.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_status.setText(" Cancelled ");
+                            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+                        }
                     } else {
                         myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         String firstWord = "";
-                        /*if(header.equalsIgnoreCase("future")){
-                            firstWord = "Est Service Time ";
+                        if(header.equalsIgnoreCase("future")){
+                            firstWord = "Checked in for ";
                         }
 
                         if(header.equalsIgnoreCase("today")){
                             firstWord = "Est Wait Time ";
-                        }*/
+                        }
 
-                        firstWord = "Est Wait Time ";
+
 
 
                         String secondWord = activelist.getAppxWaitingTime() + " Mins ";
@@ -459,17 +473,17 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-                        if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                        if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             myViewHolder.tv_status.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_status.setText(secondWord +" - Cancelled ");
+                            myViewHolder.tv_status.setText(secondWord + " - Cancelled ");
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
 
 
-                        if (!activelist.getWaitlistStatus().equalsIgnoreCase("done")&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")&&!header.equalsIgnoreCase("old")) {
+                        if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                             myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                             myViewHolder.tv_estTime.setText(spannable);
-                        }else {
+                        } else {
                             myViewHolder.tv_estTime.setVisibility(View.GONE);
                         }
                     }
@@ -513,43 +527,81 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
-                    String firstWord="";
+                    String firstWord = "";
 
                     /*if(header.equalsIgnoreCase("future")){
-                        firstWord = "Est Service Time ";
+                        firstWord = "Checked in for ";
                     }
 
                     if(header.equalsIgnoreCase("today")){
                         firstWord = "Est Wait Time ";
-                    }*/
+                    }
+*/
+                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    String inputDateStr = activelist.getDate();
+                    Date datechange = null;
+                    try {
+                        datechange = inputFormat.parse(inputDateStr);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    String outputDateStr = outputFormat.format(datechange);
 
-                    firstWord = "Est Wait Time ";
 
 
-                    String secondWord = timeFORAMT;
+                     firstWord = "Checked in for ";
+                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                    String dtStart = outputDateStr;
+                    Date dateParse = null;
+                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                    try {
+                        dateParse = format1.parse(dtStart);
+                        System.out.println(dateParse);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    SimpleDateFormat format = new SimpleDateFormat("d");
+                    String date1 = format.format(dateParse);
+
+                    if (date1.endsWith("1") && !date1.endsWith("11"))
+                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                    else if (date1.endsWith("2") && !date1.endsWith("12"))
+                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                    else if (date1.endsWith("3") && !date1.endsWith("13"))
+                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                    else
+                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                    String yourDate = format.format(dateParse);
+
+
+                    String secondWord = yourDate+", "+timeFORAMT;
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                    if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                         myViewHolder.tv_status.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_status.setText(secondWord +" - Cancelled ");
+                        myViewHolder.tv_status.setText(secondWord + " - Cancelled ");
                         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
 
 
-                    if (!activelist.getWaitlistStatus().equalsIgnoreCase("done")&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")&&!header.equalsIgnoreCase("old")) {
+                    if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                         myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                         myViewHolder.tv_estTime.setText(spannable);
-                    }else {
+                    } else {
                         myViewHolder.tv_estTime.setVisibility(View.GONE);
                     }
                 } else {
 
                     if (activelist.getAppxWaitingTime() != -1) {
                         String sTime = null;
-                        String firstWord="";
+                        String firstWord = "";
                         try {
                             String startTime = "00:00";
                             String newtime;
@@ -557,20 +609,18 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                             int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
                             int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
 
-                            /*if(header.equalsIgnoreCase("future")){
-                                firstWord = "Est Service Time ";
+                            if(header.equalsIgnoreCase("future")){
+                                firstWord = "Checked in for ";
                             }
 
                             if(header.equalsIgnoreCase("today")){
 
-                                if(h>0) {
-                                    firstWord = "Est Service Time ";
-                                }else{
-                                    firstWord = "Est Wait Time ";
-                                }
-                            }*/
+                                firstWord = "Est Wait Time ";
+                            }
 
-                             firstWord = "Est Wait Time ";
+
+
+                          //  firstWord = "Est Wait Time ";
 
                             if (m > 0 && h > 0) {
                                 newtime = h + " Hour :" + m + " Minutes";
@@ -586,23 +636,64 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
-                        String secondWord = sTime;
+
+                        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                        String inputDateStr = activelist.getDate();
+                        Date datechange = null;
+                        try {
+                            datechange = inputFormat.parse(inputDateStr);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        String outputDateStr = outputFormat.format(datechange);
+
+
+
+                        //firstWord = "Checked in for ";
+                        // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                        String dtStart = outputDateStr;
+                        Date dateParse = null;
+                        SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                        try {
+                            dateParse = format1.parse(dtStart);
+                            System.out.println(dateParse);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        SimpleDateFormat format = new SimpleDateFormat("d");
+                        String date1 = format.format(dateParse);
+
+                        if (date1.endsWith("1") && !date1.endsWith("11"))
+                            format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                        else if (date1.endsWith("2") && !date1.endsWith("12"))
+                            format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                        else if (date1.endsWith("3") && !date1.endsWith("13"))
+                            format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                        else
+                            format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                        String yourDate = format.format(dateParse);
+
+                        String secondWord = yourDate+", "+sTime;
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-                        if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                        if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             myViewHolder.tv_status.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_status.setText(secondWord +" - Cancelled ");
+                            myViewHolder.tv_status.setText(secondWord + " - Cancelled ");
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
 
-                        if (  !activelist.getWaitlistStatus().equalsIgnoreCase("done") &&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")&&!header.equalsIgnoreCase("old")) {
+                        if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                             myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                             myViewHolder.tv_estTime.setText(spannable);
-                        }else {
+                        } else {
                             myViewHolder.tv_estTime.setVisibility(View.GONE);
                         }
                     } else {
@@ -618,7 +709,15 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         }*/
 
 
-        if(!header.equalsIgnoreCase("old")&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") &&!(activelist.getWaitlistStatus().equalsIgnoreCase("done"))) {
+        if (!header.equalsIgnoreCase("old") && !activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("started")&& !activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("cancelled") && !(activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("done")))
+
+        {
             myViewHolder.tv_token.setVisibility(View.VISIBLE);
             myViewHolder.layout_token.setVisibility(View.VISIBLE);
             String firstWord = "Token # ";
@@ -635,7 +734,7 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             myViewHolder.tv_token.setText(spannable);
 
 
-            if(String.valueOf(activelist.getPartySize())!=null) {
+            if (String.valueOf(activelist.getPartySize()) != null) {
                 if (activelist.getPartySize() > 1) {
                     String partyWord = "Party Size ";
                     String ValueWord = String.valueOf(activelist.getPartySize());
@@ -653,22 +752,24 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                 } else {
                     myViewHolder.tv_partysize.setVisibility(View.GONE);
                 }
-            }else{
+            } else {
                 myViewHolder.tv_partysize.setVisibility(View.GONE);
             }
 
 
+        } else
 
-        }else{
+        {
             myViewHolder.layout_token.setVisibility(View.GONE);
             myViewHolder.tv_estTime.setVisibility(View.GONE);
         }
 
 
+        if (activelist.getPersonsAhead() != -1 && !activelist.getWaitlistStatus().
 
+                equalsIgnoreCase("cancelled"))
 
-
-        if (activelist.getPersonsAhead() != -1&&!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+        {
             myViewHolder.tv_personahead.setVisibility(View.VISIBLE);
             String firstWord1 = "Persons Ahead ";
             String secondWord1 = String.valueOf(activelist.getPersonsAhead());
@@ -682,22 +783,27 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                     firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             myViewHolder.tv_personahead.setText(spannable1);
-        } else {
+        } else
+
+        {
             myViewHolder.tv_personahead.setVisibility(View.INVISIBLE);
         }
 
 
-        myViewHolder.icon_message.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.icon_message.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
-                callback.onMethodMessageCallback(activelist.getYnwUuid(),String.valueOf(activelist.getProvider().getId()),activelist.getProvider().getBusinessName());
+                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getProvider().getId()), activelist.getProvider().getBusinessName());
 
             }
         });
 
 
+        if (header.equalsIgnoreCase("old"))
 
-        if(header.equalsIgnoreCase("old")) {
+        {
 
 
             myViewHolder.tv_date.setVisibility(View.VISIBLE);
@@ -710,7 +816,9 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else
+
+        {
 
             myViewHolder.tv_date.setVisibility(View.GONE);
         }
@@ -722,60 +830,92 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         myViewHolder.tv_status.setTypeface(tyface1);
 
         // myViewHolder.tv_status.setText(activelist.getWaitlistStatus());
-        if(activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
-            myViewHolder.tv_status.setText("Done");
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("done"))
+
+        {
+            myViewHolder.tv_status.setText("Complete");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
         }
 
-        if(activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("arrived"))
+
+        {
             myViewHolder.tv_status.setText("Arrived");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
         }
 
-        if(activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("checkedIn"))
+
+        {
             myViewHolder.tv_status.setVisibility(View.GONE);
-          //  myViewHolder.tv_status.setText("Checked In");
-          //  myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.violet));
+            //  myViewHolder.tv_status.setText("Checked In");
+            //  myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.violet));
         }
 
           /* if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                myViewHolder.tv_status.setText("Cancelled");
                myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
            }*/
-        if(activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("started"))
+
+        {
             myViewHolder.tv_status.setText("Started");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
         }
 
-        if(activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("prepaymentPending"))
+
+        {
             myViewHolder.tv_status.setText("Prepayment Pending");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.gray));
         }
 
         /*if(header.equalsIgnoreCase("old")) {*/
-            if(activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
-                myViewHolder.icon_rate.setVisibility(View.VISIBLE);
-            }else{
-                myViewHolder.icon_rate.setVisibility(View.GONE);
-            }
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("done"))
+
+        {
+            myViewHolder.icon_rate.setVisibility(View.VISIBLE);
+        } else
+
+        {
+            myViewHolder.icon_rate.setVisibility(View.GONE);
+        }
         /*}else {
             myViewHolder.icon_rate.setVisibility(View.GONE);
         }*/
-        myViewHolder.icon_rate.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.icon_rate.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
 
-                callback.onMethodRating(String.valueOf(activelist.getProvider().getId()),activelist.getYnwUuid());
+                callback.onMethodRating(String.valueOf(activelist.getProvider().getId()), activelist.getYnwUuid());
             }
         });
 
-        if(header.equalsIgnoreCase("old")) {
+        if (header.equalsIgnoreCase("old"))
+
+        {
             myViewHolder.icon_cancel.setVisibility(View.GONE);
-        }else {
+        } else
+
+        {
 
             if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn") || activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
                 myViewHolder.icon_cancel.setVisibility(View.VISIBLE);
