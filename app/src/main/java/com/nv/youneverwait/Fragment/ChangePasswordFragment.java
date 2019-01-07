@@ -88,7 +88,7 @@ public class ChangePasswordFragment extends RootFragment {
         edtOldpwd=(TextInputEditText) row.findViewById(R.id.edt_oldpwd) ;
         edtNewpwd=(TextInputEditText) row.findViewById(R.id.edt_newpwd) ;
         edtconfirmpwd=(TextInputEditText) row.findViewById(R.id.confirmpwd) ;
-        edtOldpwd.setTransformationMethod(new PasswordTransformationMethod());
+       // edtOldpwd.setTransformationMethod(new PasswordTransformationMethod());
         edtNewpwd.setTransformationMethod(new PasswordTransformationMethod());
         edtconfirmpwd.setTransformationMethod(new PasswordTransformationMethod());
 
@@ -118,7 +118,7 @@ public class ChangePasswordFragment extends RootFragment {
             @Override
             public void onClick(View v) {
                 if(Config.isOnline(mContext)){
-                    if(validatePassword()&&validateConfirmPassword()&&validateOldPassword()) {
+                    if(validatePassword()&&validateConfirmPassword()/*&&validateOldPassword()*/) {
                         if (edtNewpwd.getText().toString().equalsIgnoreCase(edtconfirmpwd.getText().toString())) {
                             ApiChangePwd(edtOldpwd.getText().toString(), edtNewpwd.getText().toString());
                         }else{
@@ -174,7 +174,7 @@ public class ChangePasswordFragment extends RootFragment {
         return true;
     }
 
-    private boolean validateOldPassword() {
+    /*private boolean validateOldPassword() {
         if (!validatePwd(edtOldpwd.getText().toString())) {
             txt_Old_InputPwd.setError(getString(R.string.err_pwd_valid));
             requestFocus(edtOldpwd);
@@ -185,7 +185,7 @@ public class ChangePasswordFragment extends RootFragment {
         }
 
         return true;
-    }
+    }*/
     private class MyTextWatcher implements TextWatcher {
 
         private View view;
@@ -202,9 +202,9 @@ public class ChangePasswordFragment extends RootFragment {
 
         public void afterTextChanged(Editable editable) {
             switch (view.getId()) {
-                case R.id.edt_oldpwd:
-                    validateOldPassword();
-                    break;
+               /* case R.id.edt_oldpwd:
+                    //validateOldPassword();
+                    break;*/
                 case R.id.edt_newpwd:
                     validatePassword();
                     break;

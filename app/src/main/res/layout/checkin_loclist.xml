@@ -13,6 +13,8 @@
             android:layout_height="wrap_content"
             android:gravity="left"
             android:layout_marginTop="@dimen/padding5"
+            android:layout_marginLeft="@dimen/padding5"
+            android:layout_marginRight="@dimen/padding5"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
 
@@ -30,7 +32,7 @@
             android:text="Service"
             android:maxLines="1"
             android:textColor="@color/sec_title_grey"
-            android:textSize="@dimen/txtsize_title_term_small" />
+            android:textSize="@dimen/txtsize_12" />
 
         <TextView
 
@@ -40,7 +42,7 @@
             android:gravity="left"
             android:text="For"
             android:textColor="@color/sec_title_grey"
-            android:textSize="@dimen/txtsize_title_term_small" />
+            android:textSize="@dimen/txtsize_12" />
 
         <TextView
 
@@ -50,8 +52,14 @@
             android:gravity="left"
             android:text="Scheduled on"
             android:textColor="@color/sec_title_grey"
-            android:textSize="@dimen/txtsize_title_term_small" />
-
+            android:textSize="@dimen/txtsize_12" />
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            android:src="@drawable/icon_delete_small" />
 
     </LinearLayout>
 
@@ -66,7 +74,7 @@
         android:id="@+id/checkloclist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding5"></android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="@dimen/padding3"></android.support.v7.widget.RecyclerView>
 
 
     <Button
@@ -76,6 +84,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginTop="@dimen/default_padding"
+        android:layout_marginLeft="@dimen/padding5"
+        android:layout_marginRight="@dimen/padding5"
+        android:layout_marginBottom="@dimen/padding7"
         android:background="@drawable/roundedrect_grey"
         android:text="Close"
         android:textAllCaps="false"

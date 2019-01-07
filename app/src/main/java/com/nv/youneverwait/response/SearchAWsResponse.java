@@ -51,6 +51,16 @@ public class SearchAWsResponse {
         return ynw_verified;
     }
 
+    public String getYnw_verified_level() {
+        return ynw_verified_level;
+    }
+
+    public void setYnw_verified_level(String ynw_verified_level) {
+        this.ynw_verified_level = ynw_verified_level;
+    }
+
+    String ynw_verified_level;
+
     public void setYnw_verified(String ynw_verified) {
         this.ynw_verified = ynw_verified;
     }

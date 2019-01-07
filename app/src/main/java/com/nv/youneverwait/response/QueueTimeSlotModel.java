@@ -17,6 +17,18 @@ public class QueueTimeSlotModel {
     String sTime;
     String eTime;
 
+    public String getStartDate() {
+        return startDate;
+    }
+
+    String startDate;
+
+    public QueueTimeSlotModel getEffectiveSchedule() {
+
+        return effectiveSchedule;
+    }
+
+    QueueTimeSlotModel effectiveSchedule;
 
     public int getId() {
         return id;

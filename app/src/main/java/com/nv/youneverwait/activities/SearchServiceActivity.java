@@ -122,7 +122,7 @@ String MinPrePaymentAmount;
             tv_descVal.setVisibility(View.VISIBLE);
             Typeface tyfacedesc = Typeface.createFromAsset(getAssets(),
                     "fonts/Montserrat_Bold.otf");
-            tv_desc.setTypeface(tyfacedesc);
+            tv_descVal.setTypeface(tyfacedesc);
             tv_descVal.setText(desc);
         } else {
             tv_desc.setVisibility(View.GONE);

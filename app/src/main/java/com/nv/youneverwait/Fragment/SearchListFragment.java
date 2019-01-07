@@ -1069,6 +1069,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 }
 
 
+                                if (response.body().getHits().getHit().get(i).getFields().getYnw_verified_level() != null) {
+                                    search.setYnw_verified_level(response.body().getHits().getHit().get(i).getFields().getYnw_verified_level());
+
+                                }
+
+
                                 if (response.body().getHits().getHit().get(i).getFields().getQualification() != null) {
                                     search.setQualification(response.body().getHits().getHit().get(i).getFields().getQualification());
 
@@ -1290,6 +1296,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
                                     search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
+
+                                }
+                                if (response.body().getHits().getHit().get(i).getFields().getYnw_verified_level() != null) {
+                                    search.setYnw_verified_level(response.body().getHits().getHit().get(i).getFields().getYnw_verified_level());
 
                                 }
 
@@ -1529,6 +1539,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 }
 
+                                if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
+                                    searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
+
+                                }
+
 
                                 if (mSearchRespPass.get(i).getServices() != null) {
                                     searchList.setServices(mSearchRespPass.get(i).getServices());
@@ -1677,6 +1692,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
 
                                 }
+
+                                if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
+                                    searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
+
+                                }
+
+
                                 if (mSearchRespPass.get(i).getServices() != null) {
                                     searchList.setServices(mSearchRespPass.get(i).getServices());
                                 }

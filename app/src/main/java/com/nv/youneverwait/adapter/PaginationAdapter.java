@@ -147,6 +147,35 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
+                Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
+                if(searchdetailList.getYnw_verified_level()!=null) {
+                    if (searchdetailList.getYnw_verified() == 1) {
+                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("1")) {
+
+                            myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_ynw_verified.setText("Basic");
+                        }
+
+
+                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("2")) {
+                            myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_ynw_verified.setText("Basic Plus");
+                        }
+
+
+                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("3")) {
+
+                            myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_ynw_verified.setText("Premium");
+                        }
+                    }else{
+                        myViewHolder.tv_ynw_verified.setVisibility(View.GONE);
+                    }
+                }else{
+                    myViewHolder.tv_ynw_verified.setVisibility(View.GONE);
+                }
+
+
 ////////////////////////////7 types////////////////////////////////////////////
                 ArrayList<ParkingModel> listType = new ArrayList<>();
                 listType.clear();
@@ -1034,7 +1063,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_Open, tv_WaitTime, tv_spec;
+        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_Open, tv_WaitTime, tv_spec,tv_ynw_verified;
         LinearLayout L_specialization, L_services;
 
         ImageView profile;
@@ -1047,6 +1076,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public MyViewHolder(View view) {
             super(view);
+            tv_ynw_verified= (TextView) view.findViewById(R.id.ynw_verified);
             tv_name = (TextView) view.findViewById(R.id.name);
             tv_location = (TextView) view.findViewById(R.id.location);
             tv_domain = (TextView) view.findViewById(R.id.domain);

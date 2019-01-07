@@ -1002,6 +1002,8 @@ public class CheckIn extends AppCompatActivity {
                                     newtime = m + " Minutes";
                                 }
 
+
+
                                 secondWord = newtime;
 
 
@@ -1012,7 +1014,7 @@ public class CheckIn extends AppCompatActivity {
 
 
                                     if (h > 0) {
-                                         firstWord = "Next Available Time ";
+                                         firstWord = "Checked in for Today, ";
                                     } else {
                                         firstWord = "Est Wait Time ";
 
@@ -1036,6 +1038,45 @@ public class CheckIn extends AppCompatActivity {
                                 } else {
 
                                     firstWord = "Next Available Time ";
+                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                    Date datechange = null;
+                                    try {
+                                        datechange = inputFormat.parse(inputDateStr);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String outputDateStr = outputFormat.format(datechange);
+
+
+                                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                    String dtStart = outputDateStr;
+                                    Date dateParse = null;
+                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                    try {
+                                        dateParse = format1.parse(dtStart);
+                                        System.out.println(dateParse);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    SimpleDateFormat format = new SimpleDateFormat("d");
+                                    String date1 = format.format(dateParse);
+
+                                    if (date1.endsWith("1") && !date1.endsWith("11"))
+                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                    else
+                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                    String yourDate = format.format(dateParse);
+
+                                    secondWord=yourDate+", "+newtime;
                                 }
                                 Config.logV("Second WORD---@@@@----222--------" + secondWord + "Datecompare" + dateCompareOne);
 
@@ -1048,7 +1089,7 @@ public class CheckIn extends AppCompatActivity {
                             }
 
                             if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
-                                secondWord = mQueueTimeSlotList.get(0).getServiceTime();
+
 
 
                                 //  dateCompareOne = parseDate(secondWord);
@@ -1056,7 +1097,7 @@ public class CheckIn extends AppCompatActivity {
 
                                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                                    firstWord = "Next Available Time ";
+                                    firstWord = "Checked in for Today, ";
                                     /*Date dt = new Date();
                                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
                                     String currentTime = sdf.format(dt);
@@ -1071,10 +1112,53 @@ public class CheckIn extends AppCompatActivity {
 
                                         Config.logV("Second WORD---@@@@------------"+secondWord+"Datecompare"+dateCompareOne);    }
 */
+                                    secondWord = mQueueTimeSlotList.get(0).getServiceTime();
                                 } else {
 
                                     firstWord = "Next Available Time ";
+                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                    Date datechange = null;
+                                    try {
+                                        datechange = inputFormat.parse(inputDateStr);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String outputDateStr = outputFormat.format(datechange);
+
+
+                                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                    String dtStart = outputDateStr;
+                                    Date dateParse = null;
+                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                    try {
+                                        dateParse = format1.parse(dtStart);
+                                        System.out.println(dateParse);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    SimpleDateFormat format = new SimpleDateFormat("d");
+                                    String date1 = format.format(dateParse);
+
+                                    if (date1.endsWith("1") && !date1.endsWith("11"))
+                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                    else
+                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                    String yourDate = format.format(dateParse);
+
+
+                                    secondWord = yourDate+", "+mQueueTimeSlotList.get(0).getServiceTime();
                                 }
+
+
                                 Config.logV("Second WORD---------------" + secondWord);
                             }
 
@@ -1143,15 +1227,54 @@ public class CheckIn extends AppCompatActivity {
                                     }*/
 
                                     if (h > 0) {
-                                        firstWord = "Next Available Time ";
+                                        firstWord = "Checked in for Today, ";
                                     } else {
                                         firstWord = "Est Wait Time ";
-                                    }
 
+                                    }
 
                                 } else {
 
                                     firstWord = "Next Available Time ";
+                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                    Date datechange = null;
+                                    try {
+                                        datechange = inputFormat.parse(inputDateStr);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String outputDateStr = outputFormat.format(datechange);
+
+
+                                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                    String dtStart = outputDateStr;
+                                    Date dateParse = null;
+                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                    try {
+                                        dateParse = format1.parse(dtStart);
+                                        System.out.println(dateParse);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    SimpleDateFormat format = new SimpleDateFormat("d");
+                                    String date1 = format.format(dateParse);
+
+                                    if (date1.endsWith("1") && !date1.endsWith("11"))
+                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                    else
+                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                    String yourDate = format.format(dateParse);
+
+                                    secondWord=yourDate+", "+newtime;
                                 }
 
 
@@ -1164,7 +1287,7 @@ public class CheckIn extends AppCompatActivity {
                             }
 
                             if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
-                                secondWord = mQueueTimeSlotList.get(0).getServiceTime();
+
                                 Config.logV("Second WORD---@@@@-------111--2222222---" + secondWord);
 
 
@@ -1187,11 +1310,52 @@ public class CheckIn extends AppCompatActivity {
 
                                         Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                     }*/
-                                    firstWord = "Next Available Time ";
+                                    firstWord = "Checked in for Today, ";
+                                    secondWord = mQueueTimeSlotList.get(0).getServiceTime();
 
                                 } else {
 
                                     firstWord = "Next Available Time ";
+                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                    Date datechange = null;
+                                    try {
+                                        datechange = inputFormat.parse(inputDateStr);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String outputDateStr = outputFormat.format(datechange);
+
+
+                                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                    String dtStart = outputDateStr;
+                                    Date dateParse = null;
+                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                    try {
+                                        dateParse = format1.parse(dtStart);
+                                        System.out.println(dateParse);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    SimpleDateFormat format = new SimpleDateFormat("d");
+                                    String date1 = format.format(dateParse);
+
+                                    if (date1.endsWith("1") && !date1.endsWith("11"))
+                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                    else
+                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                    String yourDate = format.format(dateParse);
+
+
+                                    secondWord = yourDate+", "+mQueueTimeSlotList.get(0).getServiceTime();
                                 }
 
 
@@ -1303,14 +1467,54 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-                                                firstWord = "Next Available Time ";
+                                                firstWord = "Checked in for Today, ";
                                             } else {
                                                 firstWord = "Est Wait Time ";
+
                                             }
 
                                         } else {
 
                                             firstWord = "Next Available Time ";
+                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                            Date datechange = null;
+                                            try {
+                                                datechange = inputFormat.parse(inputDateStr);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String outputDateStr = outputFormat.format(datechange);
+
+
+                                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                            String dtStart = outputDateStr;
+                                            Date dateParse = null;
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                            try {
+                                                dateParse = format1.parse(dtStart);
+                                                System.out.println(dateParse);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            SimpleDateFormat format = new SimpleDateFormat("d");
+                                            String date1 = format.format(dateParse);
+
+                                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                            else
+                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                            String yourDate = format.format(dateParse);
+
+                                            secondWord=yourDate+", "+newtime;
                                         }
 
                                     } catch (Exception e) {
@@ -1323,7 +1527,7 @@ public class CheckIn extends AppCompatActivity {
                                     }
 
                                     if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
-                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime();
+                                       // secondWord = mQueueTimeSlotList.get(i).getServiceTime();
 
 
                                         //  dateCompareOne = parseDate(secondWord);
@@ -1345,11 +1549,52 @@ public class CheckIn extends AppCompatActivity {
 
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }*/
-                                            firstWord = "Next Available Time ";
+                                            firstWord = "Checked in for Today, ";
+                                            secondWord = mQueueTimeSlotList.get(i).getServiceTime();
 
                                         } else {
 
                                             firstWord = "Next Available Time ";
+                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                            Date datechange = null;
+                                            try {
+                                                datechange = inputFormat.parse(inputDateStr);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String outputDateStr = outputFormat.format(datechange);
+
+
+                                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                            String dtStart = outputDateStr;
+                                            Date dateParse = null;
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                            try {
+                                                dateParse = format1.parse(dtStart);
+                                                System.out.println(dateParse);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            SimpleDateFormat format = new SimpleDateFormat("d");
+                                            String date1 = format.format(dateParse);
+
+                                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                            else
+                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                            String yourDate = format.format(dateParse);
+
+
+                                            secondWord = yourDate+", "+mQueueTimeSlotList.get(i).getServiceTime();
                                         }
                                     }
 
@@ -1450,14 +1695,55 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-                                                firstWord = "Next Available Time ";
+                                                firstWord = "Checked in for Today, ";
                                             } else {
                                                 firstWord = "Est Wait Time ";
-                                            }
 
+                                            }
+                                            secondWord = newtime;
+                                            Config.logV("First Word@@@@@@@@@@@@@"+firstWord+"Second"+secondWord);
                                         } else {
 
                                             firstWord = "Next Available Time ";
+                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                            Date datechange = null;
+                                            try {
+                                                datechange = inputFormat.parse(inputDateStr);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String outputDateStr = outputFormat.format(datechange);
+
+
+                                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                            String dtStart = outputDateStr;
+                                            Date dateParse = null;
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                            try {
+                                                dateParse = format1.parse(dtStart);
+                                                System.out.println(dateParse);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            SimpleDateFormat format = new SimpleDateFormat("d");
+                                            String date1 = format.format(dateParse);
+
+                                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                            else
+                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                            String yourDate = format.format(dateParse);
+
+                                            secondWord=yourDate+", "+newtime;
                                         }
 
                                     } catch (Exception e) {
@@ -1466,7 +1752,7 @@ public class CheckIn extends AppCompatActivity {
 
 
                                     if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
-                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime();
+                                      //  secondWord = mQueueTimeSlotList.get(i).getServiceTime();
 
 
                                         // dateCompareOne = parseDate(secondWord);
@@ -1487,12 +1773,57 @@ public class CheckIn extends AppCompatActivity {
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }
 */
-                                            firstWord = "Next Available Time ";
+                                            firstWord = "Checked in for Today, ";
+                                            secondWord = mQueueTimeSlotList.get(i).getServiceTime();
+                                            Config.logV("First Word@@@@@@@@@@@@@"+firstWord+"Second777"+secondWord);
+
                                         } else {
 
                                             firstWord = "Next Available Time ";
+                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                            Date datechange = null;
+                                            try {
+                                                datechange = inputFormat.parse(inputDateStr);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String outputDateStr = outputFormat.format(datechange);
+
+
+                                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                            String dtStart = outputDateStr;
+                                            Date dateParse = null;
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                            try {
+                                                dateParse = format1.parse(dtStart);
+                                                System.out.println(dateParse);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            SimpleDateFormat format = new SimpleDateFormat("d");
+                                            String date1 = format.format(dateParse);
+
+                                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                            else
+                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                            String yourDate = format.format(dateParse);
+
+
+                                            secondWord = yourDate+", "+mQueueTimeSlotList.get(i).getServiceTime();
+
                                         }
                                     }
+
 
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),

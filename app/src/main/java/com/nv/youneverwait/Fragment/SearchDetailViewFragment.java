@@ -154,6 +154,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
         callback = (LocationCheckinCallback) this;
+        isContact=false;
+        Config.logV("Refresh @@@@@@@@@@@@@@@@@@");
 
 
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -701,7 +703,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         } else {
             LsocialMedia.setVisibility(View.GONE);
         }
-
+        contactDetail.clear();
         if (getBussinessData.getPhoneNumbers().size() > 0) {
             for (int i = 0; i < getBussinessData.getPhoneNumbers().size(); i++) {
                 Config.logV("Phone @@@@@@@@@@@@" + getBussinessData.getPhoneNumbers().get(i).getInstance());
@@ -732,6 +734,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 @Override
                 public void onClick(View v) {
                     if (!isContact) {
+                        Config.logV("Open");
                         isContact = true;
                         mrecycle_contactdetail.setVisibility(View.VISIBLE);
                         tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue_hidden, 0);
@@ -741,6 +744,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mrecycle_contactdetail.setAdapter(checkAdapter);
                         checkAdapter.notifyDataSetChanged();
                     } else {
+                        Config.logV("CLosed");
                         isContact = false;
                         tv_contactdetails.setText("Contact Details");
                         tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue, 0);
@@ -1523,7 +1527,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
     public void refreshList() {
+        Config.logV("Refresh $$$$$@@@@@@@@@@@@@@@@@@");
         count = 0;
+        isContact=false;
+
         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
@@ -1535,6 +1542,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mServicesList.clear();
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
+        contactDetail = new ArrayList<>();
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
@@ -1722,6 +1730,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext,"Removed from favourites",Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 

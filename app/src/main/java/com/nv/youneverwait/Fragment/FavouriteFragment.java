@@ -553,6 +553,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext,"Removed from favourites",Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 

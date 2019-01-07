@@ -82,6 +82,16 @@ public class SearchListModel implements Serializable{
 
     int ynw_verified;
 
+    public void setYnw_verified_level(String ynw_verified_level) {
+        this.ynw_verified_level = ynw_verified_level;
+    }
+
+    String ynw_verified_level;
+
+    public String getYnw_verified_level() {
+        return ynw_verified_level;
+    }
+
     public String getParking_type_location1() {
         return parking_type_location1;
     }
