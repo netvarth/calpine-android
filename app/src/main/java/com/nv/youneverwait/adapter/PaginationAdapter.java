@@ -32,7 +32,6 @@ import com.nv.youneverwait.activities.SearchServiceActivity;
 import com.nv.youneverwait.callback.AdapterCallback;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.CheckIn;
-import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
@@ -85,7 +84,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSearchView = searchview;
         Config.logV("Fragment Context 1" + mFragment);
         this.mAdapterCallback = callback;
-        this.activity=activity;
+        this.activity = activity;
 
     }
 
@@ -127,6 +126,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return new Date(0);
         }
     }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
@@ -154,9 +154,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
                         ParkingModel mType = new ParkingModel();
                         // mType.setTypeicon(R.drawable.icon_24hours);
-                        Config.logV("Park-@@@@--------11111-----------"+searchdetailList.getTitle());
+                        Config.logV("Park-@@@@--------11111-----------" + searchdetailList.getTitle());
                         mType.setId("1");
-                        mType.setTypename("Parking "+searchdetailList.getParking_type_location1());
+                        mType.setTypename("Parking " + searchdetailList.getParking_type_location1());
                         listType.add(mType);
                     }
                 }
@@ -229,12 +229,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (listType.size() > 0) {
                     myViewHolder.mRecycleTypes.setVisibility(View.VISIBLE);
-                    Config.logV("Park-@@@@-------------6666------"+listType.size());
+                    Config.logV("Park-@@@@-------------6666------" + listType.size());
                     mParkTypeAdapter = new ParkingTypesAdapter(listType, context);
                     LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                     myViewHolder.mRecycleTypes.setLayoutManager(horizontalLayoutManager);
                     myViewHolder.mRecycleTypes.setAdapter(mParkTypeAdapter);
-                }else{
+                } else {
                     myViewHolder.mRecycleTypes.setVisibility(View.GONE);
                 }
 
@@ -254,6 +254,21 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
 
+
+                myViewHolder.tv_domain.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
+                    }
+                });
+
+
+                myViewHolder.tv_coupon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
+                    }
+                });
 
                /* Typeface tyface_date = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Light.otf");
@@ -344,20 +359,29 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         Config.logV("Title---111----" + searchdetailList.getAvail_date());
 
                         Config.logV("Title---111---222-" + formattedDate + "" + searchdetailList.getAvail_date() + "online" + searchdetailList.getOnline_checkins());
-                        if ((formattedDate.trim().equalsIgnoreCase(searchdetailList.getAvail_date().trim()) && (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")))) {
-                            Config.logV("Title------333-" + searchdetailList.getTitle());
-                            myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-                            myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.button_gradient_checkin));
-                            myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.app_background));
-                            //   myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#3498db"));
 
-                        } else if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1") && date1.compareTo(date2) < 0) {
-                            myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-                            // myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                            myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                            myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-                            myViewHolder.btncheckin.setEnabled(false);
-                            Config.logV("Title------444-" + searchdetailList.getTitle());
+                        if (searchdetailList.getOnline_checkins() != null) {
+                            if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {
+
+                                if ((formattedDate.trim().equalsIgnoreCase(searchdetailList.getAvail_date().trim()) && (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")))) {
+                                    Config.logV("Title------333-" + searchdetailList.getTitle());
+                                    myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                                    myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.button_gradient_checkin));
+                                    myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.app_background));
+                                    //   myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#3498db"));
+
+                                } else if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1") && date1.compareTo(date2) < 0) {
+                                    myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                                    // myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+                                    myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                    myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+                                    myViewHolder.btncheckin.setEnabled(false);
+                                    Config.logV("Title------444-" + searchdetailList.getTitle());
+                                }
+
+                            } else {
+                                myViewHolder.btncheckin.setVisibility(View.GONE);
+                            }
                         }
                     } else {
                         /*if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())&&searchdetailList.getServices()!=null) {
@@ -382,7 +406,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
-                                        String firstWord = "Est Service Time ";
+                                       // String firstWord = "Est Service Time ";
+                                        String firstWord = "Checked in for ";
                                         /*String firstWord = null;
                                         Date dt = new Date();
                                         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
@@ -417,7 +442,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                             Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                     "fonts/Montserrat_Bold.otf");
-                                            String firstWord = "Est Service Time ";
+                                            //String firstWord = "Est Service Time ";
+                                            String firstWord="";
+                                            if (hours > 0) {
+                                                firstWord = "Checked in for ";
+                                            } else {
+                                                firstWord = "Est Wait Time ";
+
+                                            }
                                             /*String firstWord = null;
                                             Date dt = new Date();
                                             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
@@ -469,7 +501,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
-                                        String firstWord = "Next Wait Time ";
+                                        String firstWord = "Next Available Time ";
                                         String secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
                                         Spannable spannable = new SpannableString(firstWord + secondWord);
                                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -531,93 +563,51 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     // myViewHolder.tv_specialization.setText(searchdetailList.getSpecialization_displayname());
                     final List<String> list_spec = new ArrayList<String>(Arrays.asList(searchdetailList.getSpecialization_displayname().split(",")));
 
+                    Config.logV("SPECIALIZTION SIZE @@@@@@@@@@@@@@@" + list_spec.size());
                     if (list_spec.size() > 0) {
-                        myViewHolder.L_specialization.removeAllViews();
-                        myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-
-                        int size = 0;
                         if (list_spec.size() == 1) {
-                            size = 1;
-                        } else {
-                            size = 2;
-                        }
-                        for (int i = 0; i < size; i++) {
-                            TextView dynaText = new TextView(context);
-                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                                    "fonts/Montserrat_Regular.otf");
-                            dynaText.setTypeface(tyface);
-                            dynaText.setText(list_spec.get(i));
-                            dynaText.setTextSize(13);
-                            dynaText.setPadding(0, 0, 12, 0);
-                            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                            dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                            dynaText.setMaxLines(1);
-                            dynaText.setMaxEms(5);
-                            myViewHolder.L_specialization.addView(dynaText);
-                        }
 
-                        if(size>2) {
-                            TextView dynaText = new TextView(context);
-                            dynaText.setGravity(Gravity.CENTER);
-                            dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_gray));
-                            dynaText.setOnClickListener(new View.OnClickListener() {
+                            myViewHolder.L_specialization.setVisibility(View.GONE);
+                            myViewHolder.tv_spec.setText(list_spec.get(0));
+                            myViewHolder.tv_spec.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+
+                        } else {
+
+
+                            myViewHolder.tv_spec.setText(list_spec.get(0));
+                            myViewHolder.tv_spec.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_arrowright_gray, 0);
+
+
+                            myViewHolder.L_specialization.removeAllViews();
+                            myViewHolder.L_specialization.setVisibility(View.GONE);
+
+
+                            myViewHolder.tv_spec.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     myViewHolder.L_specialization.removeAllViews();
                                     myViewHolder.L_specialization.setOrientation(LinearLayout.VERTICAL);
+                                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+                                    myViewHolder.tv_spec.setVisibility(View.GONE);
 
-                                    int k = 0;
-                                    int add_row = 0;
-                                    int rem = list_spec.size() % 2;
-                                    if (rem == 0) {
+                                    for (int i = 0; i < list_spec.size(); i++) {
 
-                                        add_row = 0;
-
-                                    } else {
-
-                                        add_row = 1;
+                                        TextView dynaText = new TextView(context);
+                                        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                                "fonts/Montserrat_Regular.otf");
+                                        dynaText.setTypeface(tyface);
+                                        dynaText.setText(list_spec.get(i));
+                                        dynaText.setTextSize(12);
+                                        dynaText.setTextColor(context.getResources().getColor(R.color.black));
+                                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                        dynaText.setMaxLines(1);
+                                        myViewHolder.L_specialization.addView(dynaText);
                                     }
 
-                                    for (int i = 0; i < (list_spec.size() / 2) + add_row; i++) {
-                                        LinearLayout parent = new LinearLayout(context);
-
-                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                        //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                                        parent.setOrientation(LinearLayout.HORIZONTAL);
-                                        parent.setLayoutParams(params);
-
-
-                                        for (int j = 0; j < 2; j++) {
-
-                                            if (k >= list_spec.size()) {
-                                                break;
-                                            } else {
-                                                TextView dynaText = new TextView(context);
-                                                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                                                        "fonts/Montserrat_Regular.otf");
-                                                dynaText.setTypeface(tyface);
-                                                dynaText.setText(list_spec.get(k));
-                                                dynaText.setTextSize(13);
-                                                params.setMargins(0, 10, 12, 0);
-                                                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                                                dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                                dynaText.setMaxLines(1);
-                                                dynaText.setMaxEms(5);
-                                                // dynaText.setWidth(dpToPx(50));
-
-                                                // params.setMargins(20, 10, 20, 0);
-                                                dynaText.setLayoutParams(params);
-                                                parent.addView(dynaText);
-
-                                                k++;
-                                            }
-
-                                        }
-                                        myViewHolder.L_specialization.addView(parent);
-                                    }
                                 }
                             });
-                            myViewHolder.L_specialization.addView(dynaText);
                         }
 
 
@@ -650,8 +640,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     "fonts/Montserrat_Regular.otf");
                             dynaText.setTypeface(tyface);
                             dynaText.setText(searchdetailList.getServices().get(i).toString());
-                            dynaText.setTextSize(13);
-                          //  dynaText.setPadding(0, 0, 12, 0);
+                            dynaText.setTextSize(12);
+                            //  dynaText.setPadding(0, 0, 12, 0);
                             dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
                             dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
                             dynaText.setEllipsize(TextUtils.TruncateAt.END);
@@ -661,7 +651,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             dynaText.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ApiService(searchdetailList.getUniqueid(),searchdetailList.getServices().get(finalI).toString(),searchdetailList.getTitle());
+                                    ApiService(searchdetailList.getUniqueid(), searchdetailList.getServices().get(finalI).toString(), searchdetailList.getTitle());
                                 }
                             });
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -671,13 +661,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         }
 
-                        TextView dynaText = new TextView(context);
-                        dynaText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                        if (size > 1) {
+
+                            TextView dynaText = new TextView(context);
+                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
 
-                                mAdapterCallback.onMethodServiceCallback(searchdetailList.getServices(), searchdetailList.getTitle(), searchdetailList.getUniqueid());
+                                    mAdapterCallback.onMethodServiceCallback(searchdetailList.getServices(), searchdetailList.getTitle(), searchdetailList.getUniqueid());
                                 /*ServiceListFragment pfFragment = new ServiceListFragment();
                                 FragmentTransaction transaction = mFragment.getFragmentManager().beginTransaction();
                                 Bundle bundle = new Bundle();
@@ -687,11 +679,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 // Store the Fragment in stack
                                 transaction.addToBackStack(null);
                                 transaction.replace(R.id.mainlayout, pfFragment).commit();*/
-                            }
-                        });
-                        dynaText.setGravity(Gravity.CENTER);
-                        dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_blue));
-                        myViewHolder.L_services.addView(dynaText);
+                                }
+                            });
+                            dynaText.setGravity(Gravity.CENTER);
+                            dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_blue));
+                            myViewHolder.L_services.addView(dynaText);
+                        }
                     } else {
                         myViewHolder.L_services.setVisibility(View.GONE);
 
@@ -820,7 +813,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
 
-                        mAdapterCallback.onMethodMessage(searchdetailList.getTitle(),searchdetailList.getId(),"search");
+                        mAdapterCallback.onMethodMessage(searchdetailList.getTitle(), searchdetailList.getId(), "search");
 
                       /*  Intent iCommunicate = new Intent(v.getContext(), MessageActivity.class);
                         iCommunicate.putExtra("accountID", searchdetailList.getId());
@@ -977,7 +970,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_Open, tv_WaitTime;
+        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_Open, tv_WaitTime,tv_spec;
         LinearLayout L_specialization, L_services;
 
         ImageView profile;
@@ -985,7 +978,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         RelativeLayout mLayout;
         Button btncheckin;
         RecyclerView mRecycleTypes;
-        ImageView tv_Workinghrs, tv_communicate;
+        ImageView tv_Workinghrs, tv_communicate,tv_coupon;
         LinearLayout layout_row;
 
         public MyViewHolder(View view) {
@@ -1001,12 +994,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             btncheckin = (Button) view.findViewById(R.id.btncheckin);
             tv_Futuredate = (TextView) view.findViewById(R.id.txt_diffdate);
             tv_Workinghrs = (ImageView) view.findViewById(R.id.txtWorkinghrs);
+            tv_coupon = (ImageView) view.findViewById(R.id.txtcoupon);
             tv_Open = (TextView) view.findViewById(R.id.txtOpen);
             tv_WaitTime = (TextView) view.findViewById(R.id.txtWaitTime);
             L_specialization = (LinearLayout) view.findViewById(R.id.specialization);
             tv_communicate = (ImageView) view.findViewById(R.id.txtcommunicate);
             mRecycleTypes = (RecyclerView) view.findViewById(R.id.mRecycleTypes);
-            layout_row=(LinearLayout)view.findViewById(R.id.layout_row);
+            layout_row = (LinearLayout) view.findViewById(R.id.layout_row);
+            tv_spec=(TextView)view.findViewById(R.id.txtspec);
 
         }
     }
@@ -1020,7 +1015,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             loadmore_progress = (ProgressBar) itemView.findViewById(R.id.loadmore_progress);
         }
     }
-    private void ApiService(String uniqueID , final String serviceName, final String title) {
+
+    private void ApiService(String uniqueID, final String serviceName, final String title) {
 
 
         ApiInterface apiService =
@@ -1054,26 +1050,24 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (response.code() == 200) {
 
                         SearchService service1 = null;
-                        ArrayList<SearchService> service=new ArrayList<>();
-                        service=response.body();
-                        for(int i=0;i<service.size();i++){
+                        ArrayList<SearchService> service = new ArrayList<>();
+                        service = response.body();
+                        for (int i = 0; i < service.size(); i++) {
                             Config.logV("Response--serviceid-------------------------" + serviceName);
 
-                            if(service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())){
+                            if (service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())) {
                                 Intent iService = new Intent(context, SearchServiceActivity.class);
                                 iService.putExtra("name", service.get(i).getName());
                                 iService.putExtra("duration", service.get(i).getServiceDuration());
                                 iService.putExtra("price", service.get(i).getTotalAmount());
                                 iService.putExtra("desc", service.get(i).getDescription());
                                 iService.putExtra("servicegallery", service.get(i).getServicegallery());
+                                iService.putExtra("taxable", service.get(i).isTaxable());
                                 iService.putExtra("title", title);
                                 context.startActivity(iService);
 
                             }
                         }
-
-
-
 
 
                     }

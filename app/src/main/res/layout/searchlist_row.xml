@@ -101,8 +101,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding2"
                             android:text="Name"
-                            android:textColor="@color/title_grey"
-                            android:textSize="@dimen/txtsize_hint" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_12" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -134,11 +134,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding5"
-                            android:orientation="horizontal"
+                            android:orientation="vertical"
                             android:text=""
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_12"
                             android:visibility="gone"></LinearLayout>
+                        <TextView
+                            android:id="@+id/txtspec"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/padding2"
+                            android:text=""
+                            android:visibility="gone"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_12"
+
+                            />
 
                         <LinearLayout
                             android:id="@+id/service"
@@ -224,6 +235,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding20"
                             android:src="@drawable/icon_message_blue" />
+
+                        <ImageView
+                            android:id="@+id/txtcoupon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding20"
+                            android:src="@drawable/icon_coupon" />
                     </LinearLayout>
                 </LinearLayout>
 
