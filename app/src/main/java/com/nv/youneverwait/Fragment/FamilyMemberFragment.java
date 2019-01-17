@@ -110,7 +110,7 @@ public class FamilyMemberFragment extends RootFragment {
             }
         }
 
-        setupUI(row.findViewById(R.id.LMlayout));
+        //setupUI(row.findViewById(R.id.LMlayout));
 
         calenderclick = (ImageView) row.findViewById(R.id.calenderclick);
         dob = (EditText) row.findViewById(R.id.edtdob);
@@ -462,7 +462,7 @@ public class FamilyMemberFragment extends RootFragment {
                 };
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
+    /*public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
@@ -485,5 +485,5 @@ public class FamilyMemberFragment extends RootFragment {
                 setupUI(innerView);
             }
         }
-    }
+    }*/
 }

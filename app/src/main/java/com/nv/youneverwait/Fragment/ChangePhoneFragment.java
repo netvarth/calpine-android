@@ -66,7 +66,7 @@ public class ChangePhoneFragment extends RootFragment {
 
 
 
-        setupUI(row.findViewById(R.id.mainlayout));
+       // setupUI(row.findViewById(R.id.mainlayout));
 
         tv_title.setText("Change Phone Number");
 
@@ -197,7 +197,7 @@ public class ChangePhoneFragment extends RootFragment {
 
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
+    /*public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
@@ -220,7 +220,7 @@ public class ChangePhoneFragment extends RootFragment {
                 setupUI(innerView);
             }
         }
-    }
+    }*/
 
 
 }

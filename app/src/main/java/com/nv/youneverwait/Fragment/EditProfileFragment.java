@@ -73,14 +73,14 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
     Context mContext;
     SimpleDateFormat simpleDateFormat;
     LinearLayout Llayout;
-    public static void hideSoftKeyboard(Activity activity) {
+    /*public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
     public void setupUI(View view) {
 
         // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof TextInputEditText)) {
+        if (!(view instanceof TextInputEditText)&&!(view instanceof Button)) {
             view.setOnTouchListener(new View.OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
                     hideSoftKeyboard(getActivity());
@@ -96,7 +96,7 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
                 setupUI(innerView);
             }
         }
-    }
+    }*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -145,7 +145,7 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
                 ApiEditProfileDetail();
             }
         });
-        setupUI(row.findViewById(R.id.Llayout));
+        //setupUI(row.findViewById(R.id.Llayout));
 
 
         radio_gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

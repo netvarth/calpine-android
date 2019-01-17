@@ -1034,7 +1034,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 // domainModel=new Domain_Spinner();
                                 for (int i = 0; i < response.body().size(); i++) {
 
-                                    domainList.add(new Domain_Spinner(response.body().get(i).getDisplayName(), response.body().get(i).getDisplayName()));
+                                    domainList.add(new Domain_Spinner(response.body().get(i).getDisplayName(), response.body().get(i).getDomain()));
 
 
                                 }

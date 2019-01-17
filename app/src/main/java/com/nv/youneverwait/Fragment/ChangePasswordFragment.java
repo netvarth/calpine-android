@@ -83,7 +83,7 @@ public class ChangePasswordFragment extends RootFragment {
 
 
 
-        setupUI(row.findViewById(R.id.layout_main));
+        //setupUI(row.findViewById(R.id.layout_main));
 
 
         edtOldpwd=(TextInputEditText) row.findViewById(R.id.edt_oldpwd) ;
@@ -289,7 +289,7 @@ public class ChangePasswordFragment extends RootFragment {
 
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
+    /*public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
@@ -312,6 +312,6 @@ public class ChangePasswordFragment extends RootFragment {
                 setupUI(innerView);
             }
         }
-    }
+    }*/
 
 }
