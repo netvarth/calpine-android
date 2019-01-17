@@ -403,6 +403,8 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
                             transaction.replace(R.id.mainlayout, pfFragment).commit();*/
                         }
 
+                    }else{
+                        Config.logV("Error"+response.errorBody().string());
                     }
 
 

@@ -199,7 +199,7 @@ public class Register extends AppCompatActivity {
 
         }*/
         LogUtil.writeLogTest("**********************Jaldee***************************");
-        mEdtMobno.addTextChangedListener(new MyTextWatcher(mEdtMobno));
+       // mEdtMobno.addTextChangedListener(new MyTextWatcher(mEdtMobno));
 
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
