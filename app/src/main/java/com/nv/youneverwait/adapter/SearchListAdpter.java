@@ -94,7 +94,10 @@ public class SearchListAdpter extends BaseAdapter implements Filterable {
             domain.setText(cell.getCategory());
             name.setText(highlight(text, cell.getMdisplayname()));
         }
-
+        if (cell.getCategory().equalsIgnoreCase("Sub Domain")) {
+            domain.setText(" ");
+            name.setText(highlight(text, cell.getMdisplayname()));
+        }
 
         return v;
     }

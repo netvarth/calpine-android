@@ -157,7 +157,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
-                        if(edt_message.getText().toString().length()>1){
+                        if(edt_message.getText().toString().length()>1&&!edt_message.getText().toString().trim().isEmpty()){
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));

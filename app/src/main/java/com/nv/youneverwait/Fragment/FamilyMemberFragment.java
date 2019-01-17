@@ -1,5 +1,6 @@
 package com.nv.youneverwait.Fragment;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -11,8 +12,10 @@ import android.support.v4.app.DialogFragment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -107,6 +110,7 @@ public class FamilyMemberFragment extends RootFragment {
             }
         }
 
+        setupUI(row.findViewById(R.id.LMlayout));
 
         calenderclick = (ImageView) row.findViewById(R.id.calenderclick);
         dob = (EditText) row.findViewById(R.id.edtdob);
@@ -456,5 +460,30 @@ public class FamilyMemberFragment extends RootFragment {
                         dob.setText(mDate);
                     }
                 };
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+    public void setupUI(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof TextInputEditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(getActivity());
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
     }
 }

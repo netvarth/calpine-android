@@ -178,6 +178,17 @@ public class ActiveCheckIn {
         return provider;
     }
 
+    public String getStars() {
+        return stars;
+    }
+
+    public ActiveCheckIn getRating() {
+        return rating;
+    }
+
+    String stars;
+    ActiveCheckIn rating;
+
     @SerializedName("provider")
     private ActiveCheckIn provider;
 

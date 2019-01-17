@@ -15,6 +15,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -102,7 +103,12 @@ public class ContactusFragment extends RootFragment {
 
         return row;
     }
-
+    /*@Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+    }*/
     public void callPhoneNumber() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

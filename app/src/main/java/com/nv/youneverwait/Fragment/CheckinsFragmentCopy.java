@@ -20,9 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -32,7 +32,7 @@ import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
 import com.nv.youneverwait.activities.Home;
-import com.nv.youneverwait.adapter.FavouriteAdapter;
+import com.nv.youneverwait.adapter.ExpandableListAdapter;
 import com.nv.youneverwait.adapter.HistoryCheckInAdapter;
 import com.nv.youneverwait.callback.HistoryAdapterCallback;
 import com.nv.youneverwait.common.Config;
@@ -42,9 +42,6 @@ import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.response.ActiveCheckIn;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.RatingResponse;
-import com.nv.youneverwait.response.SearchCheckInMessage;
-import com.nv.youneverwait.utils.LogUtil;
-import com.nv.youneverwait.utils.SharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,20 +63,19 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CheckinsFragment extends RootFragment implements HistoryAdapterCallback {
+public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapterCallback {
 
 
-    public CheckinsFragment() {
+    public CheckinsFragmentCopy() {
         // Required empty public constructor
 
     }
 
 
-    boolean firstTimeRating=false;
+    boolean firstTimeRating = false;
     Context mContext;
     Activity mActivity;
-    RecyclerView mrRecylce_checklistFuture, mrRecylce_checklistOLd, mrRecylce_checklistTOday;
-    HistoryCheckInAdapter mCheckAdapter;
+
     //  ArrayList<ArrayList<ActiveCheckIn>> mCheckList = new ArrayList<>();
     ArrayList<ActiveCheckIn> mCheckFutureList = new ArrayList<>();
     ArrayList<ActiveCheckIn> mCheckTodayList = new ArrayList<>();
@@ -88,35 +84,29 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
     ArrayList<ActiveCheckIn> mCheckOldList = new ArrayList<>();
 
-    TextView tv_future, tv_old, tv_today, tv_notodaychekcin, tv_nofuturecheckin, tv_nocheckold;
-    boolean isExpandtoday = true, isExpandOld = false, isExpandFut = true;
 
     HistoryAdapterCallback mInterface;
+    ExpandableListView expandlist;
+    /*TextView  tv_notodaychekcin, tv_nofuturecheckin, tv_nocheckold;*/
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View row = inflater.inflate(R.layout.fragment_checkins, container, false);
+        View row = inflater.inflate(R.layout.fragment_checkins_copy, container, false);
         mContext = getActivity();
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
         Config.logV("CheckIn--------------------------");
-        mrRecylce_checklistFuture = (RecyclerView) row.findViewById(R.id.recylce_checkin);
-        mrRecylce_checklistOLd = (RecyclerView) row.findViewById(R.id.recylce_oldcheckin);
-        mrRecylce_checklistTOday = (RecyclerView) row.findViewById(R.id.recylce_checkintoday);
-        tv_nofuturecheckin = (TextView) row.findViewById(R.id.txtnocheckfuture);
-        tv_notodaychekcin = (TextView) row.findViewById(R.id.txtnocheckintoday);
-        tv_nocheckold = (TextView) row.findViewById(R.id.txtnocheckold);
+
         Home.doubleBackToExitPressedOnce = false;
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //expList = (ExpandableListView) row.findViewById(R.id.exp_list);
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
 
-        tv_future = (TextView) row.findViewById(R.id.txtfuture);
-        tv_old = (TextView) row.findViewById(R.id.txtold);
-        tv_today = (TextView) row.findViewById(R.id.txttoday);
+        expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
 
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setVisibility(View.GONE);
@@ -126,91 +116,22 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
         tv_title.setText("My Check-ins");
         tv_title.setTypeface(tyface);
 
-        tv_today.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isExpandtoday) {
-                    isExpandtoday = false;
-                    mrRecylce_checklistTOday.setVisibility(View.GONE);
-                    tv_today.setBackground(getActivity().getResources().getDrawable(R.drawable.input_background_opaque_round));
-                    tv_today.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                    tv_notodaychekcin.setVisibility(View.GONE);
 
-                } else {
-                    isExpandtoday = true;
-                    mrRecylce_checklistTOday.setVisibility(View.VISIBLE);
-                    tv_today.setBackground(getActivity().getResources().getDrawable(R.drawable.input_border_top));
-                    tv_today.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                    if (mCheckTodayList.size() == 0) {
-                        tv_notodaychekcin.setVisibility(View.VISIBLE);
-                        mrRecylce_checklistTOday.setVisibility(View.GONE);
-                    }
-                }
-
-            }
-        });
-
-        tv_future.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isExpandFut) {
-                    isExpandFut = false;
-                    mrRecylce_checklistFuture.setVisibility(View.GONE);
-                    tv_future.setBackground(getActivity().getResources().getDrawable(R.drawable.input_background_opaque_round));
-                    tv_future.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                    tv_nofuturecheckin.setVisibility(View.GONE);
-                } else {
-                    isExpandFut = true;
-                    mrRecylce_checklistFuture.setVisibility(View.VISIBLE);
-                    tv_future.setBackground(getActivity().getResources().getDrawable(R.drawable.input_border_top));
-                    tv_future.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                    if (mCheckFutureList.size() == 0) {
-                        tv_nofuturecheckin.setVisibility(View.VISIBLE);
-                        mrRecylce_checklistFuture.setVisibility(View.GONE);
-                    }
-                }
-
-            }
-        });
-
-
-        tv_old.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isExpandOld) {
-                    Config.logV("Open@@@@@@@@@@@@@@@@@@@@");
-                    isExpandOld = false;
-                    mrRecylce_checklistOLd.setVisibility(View.GONE);
-                    tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_background_opaque_round));
-                    tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                    tv_nocheckold.setVisibility(View.GONE);
-                } else {
-                    Config.logV("Closed@@@@@@@@@@@@@@@@@@@@");
-                    isExpandOld = true;
-                    mrRecylce_checklistOLd.setVisibility(View.VISIBLE);
-
-                    ApiOldChekInList();
-                    tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_border_top));
-                    tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                    if (mCheckOldList.size() == 0) {
-                        tv_nocheckold.setVisibility(View.VISIBLE);
-                        mrRecylce_checklistOLd.setVisibility(View.GONE);
-                    }
-
-                }
-
-            }
-        });
-
-
+      /*  tv_nofuturecheckin = (TextView) row.findViewById(R.id.txtnocheckfuture);
+        tv_notodaychekcin = (TextView) row.findViewById(R.id.txtnocheckintoday);
+        tv_nocheckold = (TextView) row.findViewById(R.id.txtnocheckold);*/
         ApiFavList();
+
+        ApiTodayChekInList();
+
+
 
         return row;
     }
 
     private void ApiTodayChekInList() {
 
-        Config.logV("API Call");
+        Config.logV("API TODAY Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
@@ -247,14 +168,6 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
                         }
 
-                        if (mCheckTodayList.size() == 0) {
-                            tv_notodaychekcin.setVisibility(View.VISIBLE);
-                            mrRecylce_checklistTOday.setVisibility(View.GONE);
-                        } else {
-                            tv_notodaychekcin.setVisibility(View.GONE);
-                            mrRecylce_checklistTOday.setVisibility(View.VISIBLE);
-                            tv_today.setText("Today "+"( "+mCheckTodayList.size()+" )");
-                        }
 
                         ApiFutureChekInList();
                     } else {
@@ -315,26 +228,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         Config.logV("mCheckList mCheckOldList size-------------------------" + mCheckOldList.size());
 
 
-
-
-                        if (mCheckOldList.size() == 0) {
-                            tv_nocheckold.setVisibility(View.VISIBLE);
-                            mrRecylce_checklistOLd.setVisibility(View.GONE);
-                        } else {
-                            tv_nocheckold.setVisibility(View.GONE);
-                             mrRecylce_checklistOLd.setVisibility(View.VISIBLE);
-                        }
-
-
-
-
-
-                        RecyclerView.LayoutManager mLayoutManager3 = new LinearLayoutManager(mContext);
-                        mrRecylce_checklistOLd.setLayoutManager(mLayoutManager3);
-                        mCheckAdapter = new HistoryCheckInAdapter(mFavList, mCheckOldList, mContext, mActivity, mInterface, "old");
-                        mrRecylce_checklistOLd.setAdapter(mCheckAdapter);
-                        mCheckAdapter.notifyDataSetChanged();
-
+                        setItems();
 
                     } else {
                         // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
@@ -395,53 +289,8 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         mCheckFutureList.clear();
                         mCheckFutureList = response.body();
 
-                        if (mCheckFutureList.size() == 0 && mCheckTodayList.size() == 0) {
-                            isExpandOld = true;
-                            mrRecylce_checklistOLd.setVisibility(View.VISIBLE);
-                            ApiOldChekInList();
-                            tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_border_top));
-                            tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                        } else {
-                            isExpandOld = false;
-                            mrRecylce_checklistOLd.setVisibility(View.GONE);
-                            tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_background_opaque_round));
-                            tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                        }
 
-                        if (mCheckFutureList.size() == 0) {
-                            tv_nofuturecheckin.setVisibility(View.VISIBLE);
-                            mrRecylce_checklistFuture.setVisibility(View.GONE);
-                        } else {
-                            tv_nofuturecheckin.setVisibility(View.GONE);
-                            mrRecylce_checklistFuture.setVisibility(View.VISIBLE);
-                            tv_future.setText("Future"+" ( "+mCheckFutureList.size()+" )");
-                        }
-                       /* mCheckList.add(mCheckOldList);
-                        mCheckList.add(mCheckFutureList);
-
-                        Config.logV("mCheckList  mCheckFutureList size-------------------------" + mCheckFutureList.size());
-                        Config.logV("mCheckList  Final size-------------------------" + mCheckList.size());
-                        expandableAdapter = new ExpandableAdapter(mContext, mCheckList, parents);
-                        expList.setAdapter(expandableAdapter);
-
-
-*/
-
-
-
-                        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(mContext);
-                        mrRecylce_checklistTOday.setLayoutManager(mLayoutManager1);
-                        mCheckAdapter = new HistoryCheckInAdapter(mFavList, mCheckTodayList, mContext, mActivity, mInterface, "today");
-                        mrRecylce_checklistTOday.setAdapter(mCheckAdapter);
-                        mCheckAdapter.notifyDataSetChanged();
-
-                        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(mContext);
-                        mrRecylce_checklistFuture.setLayoutManager(mLayoutManager2);
-                        mCheckAdapter = new HistoryCheckInAdapter(mFavList, mCheckFutureList, mContext, mActivity, mInterface, "future");
-                        mrRecylce_checklistFuture.setAdapter(mCheckAdapter);
-                        mCheckAdapter.notifyDataSetChanged();
-
-                        //ApiOldChekInList();
+                        ApiOldChekInList();
 
 
                     } else {
@@ -507,11 +356,11 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-                if(edt_message.getText().toString().length()>1&&!edt_message.getText().toString().trim().isEmpty()){
+                if (edt_message.getText().toString().length() > 1 && !edt_message.getText().toString().trim().isEmpty()) {
                     btn_send.setEnabled(true);
                     btn_send.setClickable(true);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-                }else{
+                } else {
                     btn_send.setEnabled(false);
                     btn_send.setClickable(false);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
@@ -529,7 +378,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
     }
 
     @Override
-    public void onMethodBillIconCallback(String payStatus,String value, String provider,String accountID ) {
+    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
@@ -640,7 +489,6 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                     if (response.code() == 200) {
 
 
-
                         final ArrayList<RatingResponse> mRatingDATA = response.body();
                         Config.logV("Response--code--------BottomSheetDialog-----------------" + response.code());
                         dialog = new BottomSheetDialog(mContext);
@@ -663,16 +511,15 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                             public void onClick(View v) {
 
 
-
-                                rate=rating.getRating();
+                                rate = rating.getRating();
                                 comment = edt_message.getText().toString();
 
-                                if(response.body().size()==0) {
-                                    firstTimeRating=true;
-                                }else{
-                                    firstTimeRating=false;
+                                if (response.body().size() == 0) {
+                                    firstTimeRating = true;
+                                } else {
+                                    firstTimeRating = false;
                                 }
-                                ApiPUTRating(Math.round(rate), UUID, comment, accountID, dialog,firstTimeRating);
+                                ApiPUTRating(Math.round(rate), UUID, comment, accountID, dialog, firstTimeRating);
 
                             }
                         });
@@ -680,11 +527,11 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
-                                if(edt_message.getText().toString().length()>1&&!edt_message.getText().toString().trim().isEmpty()){
+                                if (edt_message.getText().toString().length() > 1 && !edt_message.getText().toString().trim().isEmpty()) {
                                     btn_rate.setEnabled(true);
                                     btn_rate.setClickable(true);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-                                }else{
+                                } else {
                                     btn_rate.setEnabled(false);
                                     btn_rate.setClickable(false);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
@@ -708,7 +555,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                             }
                         });
 
-                        if(response.body().size()>0) {
+                        if (response.body().size() > 0) {
                             if (mRatingDATA.get(0).getStars() != 0) {
                                 rating.setRating(Float.valueOf(mRatingDATA.get(0).getStars()));
                             }
@@ -719,7 +566,6 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                                 edt_message.setText(mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
                             }
                         }
-
 
 
                     }
@@ -745,7 +591,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
     }
 
 
-    private void ApiPUTRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog,boolean firstTimerate) {
+    private void ApiPUTRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
 
 
         ApiInterface apiService =
@@ -768,10 +614,10 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
 
         Call<ResponseBody> call;
-        if(firstTimerate){
-            call =    apiService.PostRating(accountID, body);
-        }else{
-            call =    apiService.PutRating(accountID, body);
+        if (firstTimerate) {
+            call = apiService.PostRating(accountID, body);
+        } else {
+            call = apiService.PutRating(accountID, body);
         }
 
         Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
@@ -792,7 +638,8 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
 
                         if (response.body().string().equalsIgnoreCase("true")) {
-                            Toast.makeText(mContext,"Rated successfully",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Rated successfully", Toast.LENGTH_LONG).show();
+                            ApiTodayChekInList();
 
                         }
 
@@ -855,7 +702,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_LONG).show();
                         dialog.dismiss();
 
 
@@ -915,7 +762,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
                         if (response.body().string().equalsIgnoreCase("true")) {
 
-                            Toast.makeText(mContext,"Check-In cancelled successfully",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Check-In cancelled successfully", Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                             ApiFavList();
 
@@ -983,7 +830,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         if (response.body().string().equalsIgnoreCase("true")) {
 
                             ApiFavList();
-                            Toast.makeText(mContext,"Added to Favourites",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Added to Favourites", Toast.LENGTH_LONG).show();
                         }
 
 
@@ -1013,7 +860,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
     private void ApiFavList() {
 
-        Config.logV("API Call");
+        Config.logV("API FAV Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
@@ -1084,7 +931,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
-                            Toast.makeText(mContext,"Removed from favourites",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Removed from favourites", Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 
@@ -1111,5 +958,50 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
     }
 
+    ExpandableListAdapter adapter;
+
+    void setItems() {
+
+        // Array list for header
+        ArrayList<String> header = new ArrayList<String>();
+
+
+        // Hash map for both header and child
+        HashMap<String, ArrayList<ActiveCheckIn>> hashMap = new HashMap<String, ArrayList<ActiveCheckIn>>();
+
+        // Adding headers to list
+        header.add("Today");
+        header.add("Future");
+        header.add("Old");
+        // Adding child data
+        Config.logV("Today---#####----" + mCheckTodayList.size());
+        Config.logV("Futrue-------" + mCheckFutureList.size());
+        Config.logV("Old-------" + mCheckOldList.size());
+
+
+        // Adding header and childs to hash map
+        hashMap.put(header.get(0), mCheckTodayList);
+        hashMap.put(header.get(1), mCheckFutureList);
+        hashMap.put(header.get(2), mCheckOldList);
+
+        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap);
+        // Setting adpater over expandablelistview
+        expandlist.setAdapter(adapter);
+        expandlist.setVerticalScrollBarEnabled(false);
+
+
+        if (mCheckTodayList.size() > 0)
+            expandlist.expandGroup(0);
+        if (mCheckFutureList.size() > 0)
+            expandlist.expandGroup(1);
+        if (mCheckTodayList.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) {
+            expandlist.expandGroup(2);
+        }
+
+
+
+
+
+    }
 
 }

@@ -9,6 +9,7 @@
     android:background="@drawable/app_bg_gradient_home"
     android:orientation="vertical">
 <LinearLayout
+    android:id="@+id/LMlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_bg_gradient_home"
@@ -216,6 +217,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/padding5"
                                     android:hint="Date of Birth"
+                                    android:maxLength="15"
+                                    android:maxLines="1"
                                     android:textAppearance="@style/GreyTextInputLayoutHintPwd"
                                     android:textColor="@color/title_grey"
                                     android:textColorHint="@color/sec_title_grey" />

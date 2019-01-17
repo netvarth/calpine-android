@@ -118,7 +118,7 @@ public class LogouFragment  extends RootFragment {
                     if (response.code() == 200) {
                         Config.logV("Response----------------");
 
-                        Toast.makeText(mContext,"Logout successfully ",Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext,"Logged out successfully ",Toast.LENGTH_LONG).show();
                         SharedPreference.getInstance(mContext).clear();
                         DatabaseHandler db=new DatabaseHandler(mContext);
                         db.deleteDatabase();

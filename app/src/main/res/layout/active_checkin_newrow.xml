@@ -111,9 +111,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/padding2"
-                    android:text="Prepaid Amount"
+                    android:text="Amount Due"
                     android:visibility="gone"
-                    android:textColor="@color/sec_title_grey"
+                    android:textColor="@color/orange"
                     android:textSize="@dimen/txtsize_12" />
             </LinearLayout>
 

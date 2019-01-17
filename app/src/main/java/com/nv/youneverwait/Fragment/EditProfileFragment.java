@@ -1,6 +1,7 @@
 package com.nv.youneverwait.Fragment;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -10,10 +11,14 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -67,6 +72,31 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
     DatabaseHandler db;
     Context mContext;
     SimpleDateFormat simpleDateFormat;
+    LinearLayout Llayout;
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+    public void setupUI(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof TextInputEditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(getActivity());
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -86,7 +116,7 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
 
         tv_title.setText("Update Profile");
 
-
+        Llayout= (LinearLayout) row.findViewById(R.id.Llayout);
         calenderclick = (ImageView) row.findViewById(R.id.calenderclick);
         txtdob = (TextInputEditText) row.findViewById(R.id.edtdob);
         txtfirstname = (TextInputEditText) row.findViewById(R.id.edtFirstName);
@@ -115,7 +145,7 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
                 ApiEditProfileDetail();
             }
         });
-
+        setupUI(row.findViewById(R.id.Llayout));
 
 
         radio_gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

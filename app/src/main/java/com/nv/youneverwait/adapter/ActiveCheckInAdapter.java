@@ -151,7 +151,12 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         });
 
 
-
+        if(activelist.getAmountDue()>0) {
+            myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
+            myViewHolder.tv_prepaid.setText("Amount Due: ₹" + activelist.getAmountDue());
+        }else{
+            myViewHolder.tv_prepaid.setVisibility(View.GONE);
+        }
         myViewHolder.tv_status.setVisibility(View.VISIBLE);
         Typeface tyfacestatus = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");

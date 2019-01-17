@@ -119,14 +119,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     static TextView mCurrentLoc;
     Spinner mSpinnerDomain;
     String AWS_URL = "";
+
+
     ArrayList<Domain_Spinner> domainList = new ArrayList<>();
     ArrayList<SearchModel> mGLobalSearch = new ArrayList<>();
-    ArrayList<SearchModel> mSectorSearch = new ArrayList<>();
-    ArrayList<SearchModel> mSectorSubSearch = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSubDomainSubSearch = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSubDomain = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSpecializationDomain = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSpecializationDomainSearch = new ArrayList<>();
+    ArrayList<SearchModel> mSubDomainSubSearch = new ArrayList<>();
+    ArrayList<SearchModel> mSubDomain = new ArrayList<>();
+    ArrayList<SearchModel> mSpecializationDomain = new ArrayList<>();
+    ArrayList<SearchModel> mSpecializationDomainSearch = new ArrayList<>();
 
 
     ArrayList<SearchModel> mPopularSearchList = new ArrayList<>();
@@ -402,9 +402,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                        int position, long id) {
                 searchSrcTextView.setText("");
                 //  Spinnertext = parent.getSelectedItem().toString();
-                mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getSector();
+                mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
 
-                spinnerTxtPass = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
+                spinnerTxtPass = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDisplayName();
                 Config.logV("Selected-----------" + spinnerTxtPass);
 
                 /////////test code///////////////////////////
@@ -418,21 +418,19 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 } else {
                     mPopular_SubSearchList.clear();
-                    for (int i = 0; i < mSectorSearch.size(); i++) {
+                    for (int i = 0; i < mSubDomain.size(); i++) {
 
-                        if (mSectorSearch.get(i).getName().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
+                        if (mSubDomain.get(i).getSector().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
 
-                            for (int k = 0; k < mSectorSearch.get(i).getSectorLabels().size(); k++) {
+
                                 SearchModel search = new SearchModel();
-                                Config.logV("Sector Suggestion---1222-333--" + mSectorSearch.get(i).getSectorLabels().get(k).getName());
+                                 search.setName(mSubDomain.get(i).getName());
+                                search.setQuery(mSubDomain.get(i).getQuery());
+                                search.setSector(mSubDomain.get(i).getSector());
+                                search.setDisplayname(mSubDomain.get(i).getDisplayname());
 
-                                search.setName(mSectorSearch.get(i).getSectorLabels().get(k).getName());
-                                search.setQuery(mSectorSearch.get(i).getSectorLabels().get(k).getQuery());
-                                search.setSector(mSectorSearch.get(i).getSector());
-                                search.setDisplayname(mSectorSearch.get(i).getSectorLabels().get(k).getDisplayname());
-                                Config.logV("Display NAme**************" + mSectorSearch.get(i).getSectorLabels().get(k).getDisplayname());
                                 mPopular_SubSearchList.add(search);
-                            }
+
                         }
 
                     }
@@ -554,63 +552,23 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                                /* ArrayList<ListCell>*/
                     items = new ArrayList<ListCell>();
-                   /* for (int i = 0; i < mGLobalSearch.size(); i++) {
+                    /*for (int i = 0; i < mGLobalSearch.size(); i++) {
 
                         items.add(new ListCell(mGLobalSearch.get(i).getName(), "Suggested Search", mGLobalSearch.get(i).getQuery(), mGLobalSearch.get(i).getDisplayname()));
                     }*/
-
-
-                    /**********************************HEADER+SUBDOMAIN**************************************/
-                    //HEADER+SUBDOMAIN
-                    mSubDomainSubSearch.clear();
-                    for (int i = 0; i < mSubDomain.size(); i++) {
-
-                        Domain_Spinner domain = new Domain_Spinner();
-                        // Config.logV("Sector Search-----1111------" + mSubDomain.get(i).getName());
-                        domain.setSubDomain(mSubDomain.get(i).getSubDomain());
-                        domain.setSector(mSubDomain.get(i).getSector());
-                        domain.setSubDomain_DisplayNAme(mSubDomain.get(i).getSubDomain_DisplayNAme());
-                        mSubDomainSubSearch.add(domain);
-
-                    }
-
-
-                    for (int i = 0; i < mSubDomainSubSearch.size(); i++) {
-                        // Config.logV("mSectorSubSearch.get(i).getName()" + mSectorSubSearch.get(i).getName());
-                        items.add(new ListCell(mSubDomainSubSearch.get(i).getSubDomain(), "Sub Domain", mSubDomainSubSearch.get(i).getSector(), mSubDomainSubSearch.get(i).getSubDomain_DisplayNAme()));
-                    }
 
 
                     /**********************************HEADER+SPECIALIZATION**************************************/
 
                     //HEADER+SPECIALIZATION
 
-                    // Config.logV("Specialization***************" + mSpecializationDomain.size());
-                    mSpecializationDomainSearch.clear();
+                   // mSpecializationDomainSearch.clear();
+
+
+
                     for (int i = 0; i < mSpecializationDomain.size(); i++) {
-                        // Config.logV("mSpecializationDomain).getName()" + mSpecializationDomain.get(i).getSpecializations().size());
-                        // Config.logV("Special Domain).getName()" + mSpecializationDomain.get(i).getDomain());
-
-                        for (int j = 0; j < mSpecializationDomain.get(i).getSpecializations().size(); j++) {
-
-
-                            //  Config.logV("mSpecializationDomain).getName()" + mSpecializationDomain.get(i).getSpecializations().get(j).getName());
-                            Domain_Spinner domain = new Domain_Spinner();
-                            // Config.logV("Sector Search-----1111------" + mSubDomain.get(i).getName());
-                            domain.setName(mSpecializationDomain.get(i).getSpecializations().get(j).getName());
-                            domain.setSector(mSpecializationDomain.get(i).getSector());
-                            domain.setSpecilicationANme(mSpecializationDomain.get(i).getSpecializations().get(j).getSpecilicationANme());
-
-                            mSpecializationDomainSearch.add(domain);
-                        }
-
-                        //items.add(new ListCell(mSectorSubSearch.get(i).getName(), "Suggested Search"));
-                    }
-
-
-                    for (int i = 0; i < mSpecializationDomainSearch.size(); i++) {
                         // Config.logV("mSectorSubSearch.get(i).getName()" + mSectorSubSearch.get(i).getName());
-                        items.add(new ListCell(mSpecializationDomainSearch.get(i).getSpecilicationANme(), "Specializations", mSpecializationDomainSearch.get(i).getSector(), mSpecializationDomainSearch.get(i).getName()));
+                        items.add(new ListCell(mSpecializationDomain.get(i).getName(), "Specializations", mSpecializationDomain.get(i).getSector(), mSpecializationDomain.get(i).getDisplayname()));
                     }
 
 
@@ -668,63 +626,25 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 } else {
 
-                    /**********************************HEADER=SuGGESTED SEARCH*************************************/
-                    /*mSectorSubSearch.clear();
-                    for (int i = 0; i < mSectorSearch.size(); i++) {
 
-                        if (mSectorSearch.get(i).getName().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
-
-                            for (int k = 0; k < mSectorSearch.get(i).getSectorLabels().size(); k++) {
-                                SearchModel search = new SearchModel();
-                                Config.logV("Sector Suggestion---1222-333--" + mSectorSearch.get(i).getSectorLabels().get(k).getName());
-
-                                search.setName(mSectorSearch.get(i).getSectorLabels().get(k).getName());
-                                search.setQuery(mSectorSearch.get(i).getSectorLabels().get(k).getQuery());
-                                search.setSector(mSectorSearch.get(i).getSector());
-                                search.setDisplayname(mSectorSearch.get(i).getSectorLabels().get(k).getDisplayname());
-                                Config.logV("Display NAme**************" + mSectorSearch.get(i).getSectorLabels().get(k).getDisplayname());
-                                mSectorSubSearch.add(search);
-                            }
-                        }
-
-                    }
-
-                    Config.logV("mSectorSubSearch" + mSectorSubSearch.size());
-
-                    //HEADER=SuGGESTED SEARCH
-                    items = new ArrayList<ListCell>();
-                    for (int i = 0; i < mSectorSubSearch.size(); i++) {
-                        items.add(new ListCell(mSectorSubSearch.get(i).getName(), "Suggested Search", mSectorSubSearch.get(i).getQuery(), mSectorSubSearch.get(i).getDisplayname()));
-
-                    }*/
-
-                    /**********************************HEADER+SUBDOMAIN**************************************/
 
                     items = new ArrayList<ListCell>();
                     //HEADER+SUBDOMAIN
                     mSubDomainSubSearch.clear();
-                    Config.logV("mSubDomain.size()------------" + mSubDomain.size());
+
                     for (int i = 0; i < mSubDomain.size(); i++) {
-
-
                         if (mSubDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
 
-                            Domain_Spinner domain = new Domain_Spinner();
-                            Config.logV("Sector Search----^^^^^-----" + mSubDomain.get(i).getName());
-                            domain.setSubDomain(mSubDomain.get(i).getSubDomain());
-                            domain.setSector(mSubDomain.get(i).getSector());
-                            domain.setSubDomain_DisplayNAme(mSubDomain.get(i).getSubDomain_DisplayNAme());
-
-                            mSubDomainSubSearch.add(domain);
-
+                            SearchModel search=new SearchModel();
+                            search.setDisplayname(mSubDomain.get(i).getDisplayname());
+                            search.setSector(mSubDomain.get(i).getSector());
+                            search.setName(mSubDomain.get(i).getName());
+                            mSubDomainSubSearch.add(search);
                         }
-
                     }
-
                     for (int i = 0; i < mSubDomainSubSearch.size(); i++) {
-                        Config.logV("Sector Search-----222-----" + mSubDomainSubSearch.get(i).getSubDomain());
-                        // Config.logV("mSectorSubSearch.get(i).getName()" + mSectorSubSearch.get(i).getName());
-                        items.add(new ListCell(mSubDomainSubSearch.get(i).getSubDomain(), "Sub Domain", mSubDomainSubSearch.get(i).getSector(), mSubDomainSubSearch.get(i).getSubDomain_DisplayNAme()));
+
+                        items.add(new ListCell(mSubDomainSubSearch.get(i).getName(), "Sub Domain", mSubDomainSubSearch.get(i).getSector(), mSubDomainSubSearch.get(i).getDisplayname()));
                     }
 
 
@@ -734,22 +654,22 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     mSpecializationDomainSearch.clear();
                     for (int i = 0; i < mSpecializationDomain.size(); i++) {
                         if (mSpecializationDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
-                            for (int j = 0; j < mSpecializationDomain.get(i).getSpecializations().size(); j++) {
 
-                                Domain_Spinner domain = new Domain_Spinner();
-                                domain.setName(mSpecializationDomain.get(i).getSpecializations().get(j).getName());
+
+                                SearchModel domain = new SearchModel();
+                                domain.setName(mSpecializationDomain.get(i).getName());
                                 domain.setSector(mSpecializationDomain.get(i).getSector());
-                                domain.setSpecilicationANme(mSpecializationDomain.get(i).getSpecializations().get(j).getSpecilicationANme());
+                                domain.setDisplayname(mSpecializationDomain.get(i).getDisplayname());
 
                                 mSpecializationDomainSearch.add(domain);
-                            }
+
                         }
 
                     }
 
 
                     for (int i = 0; i < mSpecializationDomainSearch.size(); i++) {
-                        items.add(new ListCell(mSpecializationDomainSearch.get(i).getSpecilicationANme(), "Specializations", mSpecializationDomainSearch.get(i).getSector(), mSpecializationDomainSearch.get(i).getName()));
+                        items.add(new ListCell(mSpecializationDomainSearch.get(i).getName(), "Specializations", mSpecializationDomainSearch.get(i).getSector(), mSpecializationDomainSearch.get(i).getDisplayname()));
                     }
 
 
@@ -990,83 +910,72 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         mGLobalSearch.clear();
                         if (response.code() == 200) {
 
-
-                            Config.logV("Response--BODY------SearchLabel-------------------" + response.body().getSearchLabels().size());
-
                             SearchModel search = null;
-                            for (int i = 0; i < response.body().getSearchLabels().size(); i++) {
-                                int mGlobalSize = response.body().getSearchLabels().get(0).getGlobalSearchLabels().size();
+                            for (int i = 0; i < response.body().getGlobalSearchLabels().size(); i++) {
+                                int mGlobalSize = response.body().getGlobalSearchLabels().size();
                                 mGLobalSearch.clear();
                                 for (int k = 0; k < mGlobalSize; k++) {
                                     search = new SearchModel();
-                                    search.setName(response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getName());
-                                    search.setDisplayname(response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getDisplayname());
-
-                                    search.setQuery(response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getQuery());
-                                    //  Config.logV("Response--BODY------GlobalSearch-------------------" + response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getName());
+                                    search.setName(response.body().getGlobalSearchLabels().get(k).getName());
+                                    search.setDisplayname(response.body().getGlobalSearchLabels().get(k).getDisplayname());
+                                    search.setQuery(response.body().getGlobalSearchLabels().get(k).getQuery());
                                     mGLobalSearch.add(search);
-                                    Config.logV("Query*****111********" + response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getQuery());
+                                    Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
                                 }
                             }
 
                             Config.logV("Globa lSearch Size-------------" + mGLobalSearch.size());
 
-                            for (int i = 0; i < response.body().getSearchLabels().size(); i++) {
-                                int mSectorSize = response.body().getSearchLabels().get(1).getSectorLevelLabels().size();
-                                mSectorSearch.clear();
+
+
+
+                            mSpecializationDomain.clear();
+                            mSubDomain.clear();
+
+                            for (int i = 0; i < response.body().getSectorLevelLabels().size(); i++) {
+                                int mSectorSize = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels().size();
+
+
+
+
                                 for (int k = 0; k < mSectorSize; k++) {
-                                    ArrayList<SearchModel> getSectorLevel = response.body().getSearchLabels().get(1).getSectorLevelLabels();
-                                    String sector = response.body().getSearchLabels().get(1).getSectorLevelLabels().get(k).getName();
+                                    ArrayList<SearchModel> getSubdomainSectorLevel = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels();
+
                                     // Config.logV("Sector-------------" + sector);
                                     search = new SearchModel();
-                                    search.setName(sector);
-                                    search.setSectorLabels(getSectorLevel.get(k).getSectorLabels());
-                                    search.setSector(getSectorLevel.get(k).getName());
+                                    search.setName(getSubdomainSectorLevel.get(k).getName());
+                                    search.setDisplayname(getSubdomainSectorLevel.get(k).getDisplayname());
+                                    search.setQuery(getSubdomainSectorLevel.get(k).getQuery());
+                                    search.setSector(response.body().getSectorLevelLabels().get(i).getName());
 
-                                    //  Config.logV("Sector Suggestion---1222---" + getSectorLevel.get(k).getSector());
-                                    //  Config.logV("Sector Suggestion---122222444---" + getSectorLevel.get(k).getName());
-                                    mSectorSearch.add(search);
+                                    mSubDomain.add(search);
+                                    //mSpecializationDomain.addAll(getSubdomainSectorLevel.get(k).getSpecializationLabels());
+                                    for(int j=0;j<getSubdomainSectorLevel.get(k).getSpecializationLabels().size();j++){
+                                        search = new SearchModel();
+                                        search.setName(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getName());
+                                        search.setDisplayname(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getDisplayname());
+                                        search.setQuery(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getQuery());
+                                        search.setSector(response.body().getSectorLevelLabels().get(i).getName());
+                                        mSpecializationDomain.add(search);
+                                    }
+
 
 
                                 }
                             }
+                           /* ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinnerDomain.setAdapter(adapter);*/
 
-                            Config.logV("Sector Search Size-------------" + mSectorSearch.size());
 
+                           APiGetDomain();
                             Config.logV("GLobal Search Size-------------" + mGLobalSearch.size());
+                            Config.logV("SUBDOAMIN Search Size-------------" + mSubDomain.size());
+                            Config.logV("SPECIALIZATION Search Size-------------" + mSpecializationDomain.size());
 
 
-                           /* Lhome_mainlayout.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    if (is_MoreClick) {
-                                        is_MoreClick = false;
-                                        LpopularSearch.setVisibility(View.VISIBLE);
-                                        LinearPopularSearch.setVisibility(View.VISIBLE);
-                                        LinearMorePopularSearch.setVisibility(View.GONE);
-                                        tv_More.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                            });
 
 
-                            mainlayout.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    if (is_MoreClick) {
-                                        is_MoreClick = false;
-                                        LpopularSearch.setVisibility(View.VISIBLE);
-                                        LinearPopularSearch.setVisibility(View.VISIBLE);
-                                        LinearMorePopularSearch.setVisibility(View.GONE);
-                                        tv_More.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                            });*/
-
-
-                            APiGetDomain();
                         }
 
 
@@ -1089,14 +998,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         }
     }
-
-    public static int dpToPx(int dp) {
-        float density = mContext.getResources()
-                .getDisplayMetrics()
-                .density;
-        return Math.round((float) dp * density);
-    }
-
     private void APiGetDomain() {
         {
 
@@ -1121,7 +1022,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                         Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-------------------------" + response.code());
-                        // Config.logV("Response--BODY------Domain-------------------" + new Gson().toJson(response));
+
 
                         if (response.code() == 200) {
 
@@ -1131,29 +1032,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 domainList.clear();
                                 domainList.add(new Domain_Spinner("All", "All"));
                                 // domainModel=new Domain_Spinner();
-                                mSubDomain.clear();
-                                mSpecializationDomain.clear();
                                 for (int i = 0; i < response.body().size(); i++) {
 
-                                    domainList.add(new Domain_Spinner(response.body().get(i).getDomain(), response.body().get(i).getSector()));
+                                    domainList.add(new Domain_Spinner(response.body().get(i).getDisplayName(), response.body().get(i).getDisplayName()));
 
-                                    for (int k = 0; k < response.body().get(i).getSubDomains().size(); k++) {
-                                        Domain_Spinner domain = new Domain_Spinner();
-                                        domain.setDomain(response.body().get(i).getDomain());
-                                        domain.setSubDomain(response.body().get(i).getSubDomains().get(k).getSubDomain());
-                                        domain.setSector(response.body().get(i).getSector());
-                                        domain.setSubDomain_DisplayNAme(response.body().get(i).getSubDomains().get(k).getName());
-                                        mSubDomain.add(domain);
-
-
-                                        Domain_Spinner spec = new Domain_Spinner();
-
-                                        spec.setDomain(response.body().get(i).getDomain());
-                                        spec.setSpecializations(response.body().get(i).getSubDomains().get(k).getSpecializations());
-
-                                        spec.setSector(response.body().get(i).getSector());
-                                        mSpecializationDomain.add(spec);
-                                    }
 
                                 }
                                 Config.logV("response.body()) SUBDOMAIN SIZE" + mSubDomain.size());
@@ -1184,6 +1066,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         }
     }
+    public static int dpToPx(int dp) {
+        float density = mContext.getResources()
+                .getDisplayMetrics()
+                .density;
+        return Math.round((float) dp * density);
+    }
+
+
 
 
     List<ActiveCheckIn> MActiveList = new ArrayList<>();

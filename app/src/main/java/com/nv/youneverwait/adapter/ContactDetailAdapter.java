@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.model.ContactModel;
 import com.nv.youneverwait.response.SearchViewDetail;
 
@@ -61,7 +62,7 @@ public class ContactDetailAdapter extends RecyclerView.Adapter<ContactDetailAdap
 
 
 
-        myViewHolder.name.setText(mcontactDetail.getLabel());
+        myViewHolder.name.setText(Config.toTitleCase(mcontactDetail.getLabel()));
         myViewHolder.txtcontact_value.setText(mcontactDetail.getInstance());
 
     }
