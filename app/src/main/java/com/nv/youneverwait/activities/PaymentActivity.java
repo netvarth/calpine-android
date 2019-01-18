@@ -24,7 +24,9 @@ import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.payment.PaymentGateway;
 import com.nv.youneverwait.payment.PaytmPayment;
+import com.nv.youneverwait.response.CheckSumModel;
 import com.nv.youneverwait.response.PaymentModel;
+import com.nv.youneverwait.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
@@ -233,7 +235,11 @@ public class PaymentActivity extends AppCompatActivity {
         btn_payu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
+            //    new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
+
+
+                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
+
 
                 // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
                        /*
@@ -255,23 +261,29 @@ public class PaymentActivity extends AppCompatActivity {
         });
 
     }
-    public static void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
+    public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
         payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
 
 
+        String firstname = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
+        String lastname = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
+
+        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+
+
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
         builder.setAmount(convertStringToDouble(amount))
-                .setTxnId(checksumModel.getTxnId())
-                .setPhone(checksumModel.getMobile())
+                .setTxnId(checksumModel.getTxnid())
+                .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo())
-                .setFirstName(checksumModel.getFirstName())
+                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
-                .setsUrl(checksumModel.getFirstName())
-                .setfUrl(checksumModel.getFurl())
+                .setsUrl(checksumModel.getSuccessUrl())
+                .setfUrl(checksumModel.getFailureUrl())
                 .setUdf1("")
                 .setUdf2("")
                 .setUdf3("")
@@ -283,9 +295,8 @@ public class PaymentActivity extends AppCompatActivity {
                 .setUdf9("")
                 .setUdf10("")
                 .setIsDebug(true)
-                .setKey(checksumModel.getKey())
-                .setMerchantId(checksumModel.getMerchantID());
-
+                .setKey(checksumModel.getMerchantKey())
+                .setMerchantId(checksumModel.getMerchantId());
         try {
             PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
             if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {

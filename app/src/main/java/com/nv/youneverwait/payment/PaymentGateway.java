@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
@@ -50,8 +51,95 @@ public class PaymentGateway {
         mCOntext = mContext;
         mActivity = activity;
     }
+    public void ApiGenerateHash1(String ynwUUID, final String amount, String accountID, final String from) {
 
-    public void ApiGenerateHashTest(String ynwUUID, final String amount, String accountID, final String from) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mCOntext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        //  String uniqueID = UUID.randomUUID().toString();
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+            jsonObj.put("amount", amount);
+            jsonObj.put("paymentMode", "DC");
+            jsonObj.put("uuid", ynwUUID);
+            jsonObj.put("accountId", accountID);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<CheckSumModel> call = apiService.generateHash(body, accountID);
+
+        call.enqueue(new Callback<CheckSumModel>() {
+            @Override
+            public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(mActivity, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+
+                        if (from.equalsIgnoreCase("checkin")) {
+
+                            CheckSumModel response_data = response.body();
+                            Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
+
+                            CheckIn.launchPaymentFlow(amount, response_data);
+
+                        } else if (from.equalsIgnoreCase("bill")) {
+                            CheckSumModel response_data = response.body();
+                            Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
+
+                          BillActivity.launchPaymentFlow(amount, response_data);
+                        } else {
+                            CheckSumModel response_data = response.body();
+
+                            PaymentActivity.launchPaymentFlow(amount, response_data);
+                        }
+
+
+                    } else {
+                        String responseerror = response.errorBody().string();
+                        Config.logV("Response--error-------------------------" + responseerror);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<CheckSumModel> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(mActivity, mDialog);
+
+            }
+        });
+
+
+
+    }
+
+    /*public void ApiGenerateHashTest(String ynwUUID, final String amount, String accountID, final String from) {
 
 
         ApiInterface apiService =
@@ -99,7 +187,7 @@ public class PaymentGateway {
                             CheckSumModelTest response_data = response.body();
                             Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
-                            CheckIn.launchPaymentFlow(amount, response_data);
+                          //  CheckIn.launchPaymentFlow(amount, response_data);
 
                         } else if (from.equalsIgnoreCase("bill")) {
                             CheckSumModelTest response_data = response.body();
@@ -109,7 +197,7 @@ public class PaymentGateway {
                         }else{
                             CheckSumModelTest response_data = response.body();
 
-                            PaymentActivity.launchPaymentFlow(amount, response_data);
+                           // PaymentActivity.launchPaymentFlow(amount, response_data);
                         }
 
 
@@ -139,5 +227,5 @@ public class PaymentGateway {
     }
 
 
-
+*/
 }

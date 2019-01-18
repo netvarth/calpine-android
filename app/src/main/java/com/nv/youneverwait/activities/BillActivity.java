@@ -30,6 +30,7 @@ import com.nv.youneverwait.model.BillModel;
 import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.payment.PaymentGateway;
 import com.nv.youneverwait.payment.PaytmPayment;
+import com.nv.youneverwait.response.CheckSumModel;
 import com.nv.youneverwait.response.PaymentModel;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
@@ -54,7 +55,7 @@ import retrofit2.Response;
 
 public class BillActivity extends AppCompatActivity {
 
-    Context mCOntext;
+    static Context mCOntext;
     static Activity mActivity;
 
     String ynwUUID, mprovider;
@@ -209,7 +210,10 @@ String payStatus;
                         btn_payu.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHashTest(ynwUUID, sAmountPay, accountID, "bill");
+                             //   new PaymentGateway(mCOntext, mActivity).ApiGenerateHashTest(ynwUUID, sAmountPay, accountID, "bill");
+
+                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, "bill");
+
                                 dialog.dismiss();
                                 // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
                        /*
@@ -323,23 +327,27 @@ String payStatus;
 
     // Dialog mDialog1 = null;
 
-    public static void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
+    public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
         payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+        String firstname = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
+        String lastname = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
+
+        String mobile = SharedPreference.getInstance(mCOntext).getStringValue("mobile", "");
 
 
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
         builder.setAmount(convertStringToDouble(amount))
-                .setTxnId(checksumModel.getTxnId())
-                .setPhone(checksumModel.getMobile())
+                .setTxnId(checksumModel.getTxnid())
+                .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo())
-                .setFirstName(checksumModel.getFirstName())
+                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
-                .setsUrl(checksumModel.getFirstName())
-                .setfUrl(checksumModel.getFurl())
+                .setsUrl(checksumModel.getSuccessUrl())
+                .setfUrl(checksumModel.getFailureUrl())
                 .setUdf1("")
                 .setUdf2("")
                 .setUdf3("")
@@ -351,8 +359,8 @@ String payStatus;
                 .setUdf9("")
                 .setUdf10("")
                 .setIsDebug(true)
-                .setKey(checksumModel.getKey())
-                .setMerchantId(checksumModel.getMerchantID());
+                .setKey(checksumModel.getMerchantKey())
+                .setMerchantId(checksumModel.getMerchantId());
 
         try {
             PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();

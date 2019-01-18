@@ -2301,7 +2301,11 @@ public class CheckIn extends AppCompatActivity {
                                         @Override
                                         public void onClick(View v) {
                                             //ApiGenerateHash(value, sAmountPay, accountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
+                                          // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
+
+
+                                             new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, accountID, "checkin");
+
                                             dialog.dismiss();
 
                                         }
@@ -2391,7 +2395,7 @@ public class CheckIn extends AppCompatActivity {
 
     // Dialog mDialog1 = null;
 
-    public static void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
+    public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
@@ -2407,14 +2411,14 @@ public class CheckIn extends AppCompatActivity {
 
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
         builder.setAmount(convertStringToDouble(amount))
-                .setTxnId(checksumModel.getTxnId())
-                .setPhone(checksumModel.getMobile())
+                .setTxnId(checksumModel.getTxnid())
+                .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo())
-                .setFirstName(checksumModel.getFirstName())
+                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
-                .setsUrl(checksumModel.getFirstName())
-                .setfUrl(checksumModel.getFurl())
+                .setsUrl(checksumModel.getSuccessUrl())
+                .setfUrl(checksumModel.getFailureUrl())
                 .setUdf1("")
                 .setUdf2("")
                 .setUdf3("")
@@ -2426,8 +2430,8 @@ public class CheckIn extends AppCompatActivity {
                 .setUdf9("")
                 .setUdf10("")
                 .setIsDebug(true)
-                .setKey(checksumModel.getKey())
-                .setMerchantId(checksumModel.getMerchantID());
+                .setKey(checksumModel.getMerchantKey())
+                .setMerchantId(checksumModel.getMerchantId());
 
         try {
             PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
