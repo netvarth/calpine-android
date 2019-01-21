@@ -1766,4 +1766,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             refreshList();
         }
     }
+
+    
 }

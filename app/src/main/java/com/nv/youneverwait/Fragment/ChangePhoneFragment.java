@@ -24,6 +24,7 @@ import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
+import com.nv.youneverwait.utils.SharedPreference;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -74,6 +75,10 @@ public class ChangePhoneFragment extends RootFragment {
         text_input_phone=(TextInputLayout) row.findViewById(R.id.text_input_phone) ;
         edtPhone.addTextChangedListener(new MyTextWatcher(edtPhone));
         mDone=(Button)row.findViewById(R.id.btnsubmit) ;
+
+        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        edtPhone.setText(mobile);
+
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
