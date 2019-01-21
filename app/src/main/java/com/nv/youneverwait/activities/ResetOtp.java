@@ -102,7 +102,13 @@ public class ResetOtp extends AppCompatActivity {
         otpverify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiForgotResetOtp(editotp.getText().toString());
+                if (editotp.getText().toString() != null && !editotp.getText().toString().equalsIgnoreCase("")) {
+                    ApiForgotResetOtp(editotp.getText().toString());
+                }else{
+                    Toast.makeText(mContext,"Please enter a valid otp",Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
         resendOtp = (TextView) findViewById(R.id.resendOtp);
@@ -151,6 +157,8 @@ public class ResetOtp extends AppCompatActivity {
                 editotp.setText(otp);
                 if(otp.length()>0){
                     ApiForgotResetOtp(editotp.getText().toString());
+                }else{
+                    Toast.makeText(mContext,"Please enter a valid otp",Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -204,7 +212,7 @@ public class ResetOtp extends AppCompatActivity {
         ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
 
-        String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        final String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
 
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -223,7 +231,7 @@ public class ResetOtp extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext,"Otp has been resend to your registered number",Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext,"Otp has been resend to "+loginId,Toast.LENGTH_LONG).show();
                     }
 
 
@@ -275,10 +283,17 @@ public class ResetOtp extends AppCompatActivity {
                             startActivity(iPass);
                             finish();
 
+                        }else{
+                            Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
                         }
 
 
+                    }else{
+                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
                     }
+
+
+
 
 
                 } catch (Exception e) {

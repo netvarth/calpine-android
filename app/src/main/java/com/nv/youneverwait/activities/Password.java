@@ -517,6 +517,8 @@ public class Password extends AppCompatActivity {
                         finish();
 
 
+                    }else{
+                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
                     }
 
 

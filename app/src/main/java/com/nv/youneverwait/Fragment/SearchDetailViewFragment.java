@@ -1070,7 +1070,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                 dialog = new BottomSheetDialog(mContext);
                                 dialog.setContentView(R.layout.checkin_loclist);
-                                dialog.setCancelable(false);
+                                dialog.setCancelable(true);
                                 dialog.show();
                                 TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);
 

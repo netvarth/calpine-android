@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.adapter.BIllDiscountAdapter;
 import com.nv.youneverwait.adapter.BillServiceAdapter;
@@ -343,7 +344,8 @@ String payStatus;
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                //.setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setProductName(new Gson().toJson(checksumModel.getProductinfo()))
                 .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
                 .setsUrl(checksumModel.getSuccessUrl())

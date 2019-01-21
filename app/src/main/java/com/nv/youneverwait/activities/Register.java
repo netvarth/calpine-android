@@ -339,6 +339,18 @@ public class Register extends AppCompatActivity {
                     if (response.code() == 200) {
                         Config.logV("Response123---------------------------");
 
+
+                       /* String cookie = response.headers().get("Set-Cookie");
+
+                        Config.logV("Response--Cookie-------------------------" + cookie);
+                        if (!cookie.isEmpty()) {
+                            String header = response.headers().get("Set-Cookie");
+                            String Cookie_header = header.substring(0, header.indexOf(";"));
+
+                            SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
+                            Config.logV("Cookie @@@@@@@@@@@" + Cookie_header);
+                        }*/
+
                         if (response.body().string().equalsIgnoreCase("false")) {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Signup.class);

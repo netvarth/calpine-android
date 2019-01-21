@@ -2414,7 +2414,7 @@ public class CheckIn extends AppCompatActivity {
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setProductName(new Gson().toJson(checksumModel.getProductinfo()))
                 .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
                 .setsUrl(checksumModel.getSuccessUrl())

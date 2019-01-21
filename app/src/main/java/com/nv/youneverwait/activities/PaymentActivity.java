@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
@@ -279,7 +280,8 @@ public class PaymentActivity extends AppCompatActivity {
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                //.setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setProductName(new Gson().toJson(checksumModel.getProductinfo()))
                 .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
                 .setsUrl(checksumModel.getSuccessUrl())

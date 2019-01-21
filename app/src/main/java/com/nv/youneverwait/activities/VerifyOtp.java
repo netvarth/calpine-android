@@ -215,7 +215,7 @@ public class VerifyOtp extends AppCompatActivity {
 
         ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
-        String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        final String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
 
         JSONObject userProfile = new JSONObject();
         JSONObject jsonObj = new JSONObject();
@@ -253,7 +253,7 @@ public class VerifyOtp extends AppCompatActivity {
 
                           //  Toast.makeText(mContext, "OTP resend", Toast.LENGTH_LONG).show();
 
-                            Toast.makeText(mContext,"Otp has been resend to your registered number",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext,"Otp has been resend to  "+mobno,Toast.LENGTH_LONG).show();
                         }
 
                     }
@@ -305,9 +305,13 @@ public class VerifyOtp extends AppCompatActivity {
                             iPass.putExtra("from", "signup");
                             startActivity(iPass);
                             finish();
+                        }else{
+                            Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
                         }
 
 
+                    }else{
+                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -332,6 +336,8 @@ public class VerifyOtp extends AppCompatActivity {
     public void BtnOtpVerify(View view) {
         if (editotp.getText().toString() != null && !editotp.getText().toString().equalsIgnoreCase("")) {
             ApiVerifyOtp(editotp.getText().toString());
+        }else{
+            Toast.makeText(mContext,"Please enter a valid otp",Toast.LENGTH_SHORT).show();
         }
     }
 

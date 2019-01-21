@@ -46,7 +46,7 @@ public class ChangePhoneFragment extends RootFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        
+
         View row = inflater.inflate(R.layout.changephone, container, false);
 
         mContext = getActivity();
