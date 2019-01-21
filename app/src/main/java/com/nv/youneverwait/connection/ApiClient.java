@@ -11,6 +11,7 @@ import com.nv.youneverwait.utils.SharedPreference;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -20,7 +21,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL ="http://35.154.241.175/v1/rest/";//"http://54.215.5.201:8181/v1/rest/";
+    public static final String BASE_URL ="http://35.154.241.175/v1/rest/";
+    //"http://54.215.5.201:8181/v1/rest/";
     //""; /*"https://www.youneverwait.com/v1/rest/"; */
 
 
@@ -42,6 +44,7 @@ public class ApiClient {
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkttpClient(context))
                     .build();
+
         }
         return retrofit;
     }
@@ -102,6 +105,10 @@ public class ApiClient {
 
     public static OkHttpClient OkttpClient(Context context) {
 
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+
         OkHttpClient okHttpClient = new OkHttpClient();
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
@@ -110,6 +117,9 @@ public class ApiClient {
         builder.addInterceptor(new ConnectivityInterceptor(context));
 
         builder.addInterceptor(new ResponseInteceptor(context));
+
+
+        builder.addInterceptor(logging);
 
 
         builder.readTimeout(90, TimeUnit.SECONDS);

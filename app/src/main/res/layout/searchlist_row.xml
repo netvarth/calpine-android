@@ -96,6 +96,16 @@
                             android:textSize="@dimen/txtsize_hint" />
 
                         <TextView
+                            android:id="@+id/ynw_verified"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:text="Name"
+                            android:visibility="gone"
+                            android:textColor="@color/violet"
+                            android:textSize="@dimen/txtsize_12" />
+
+                        <TextView
                             android:id="@+id/domain"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -137,7 +147,6 @@
                             android:orientation="vertical"
                             android:text=""
                             android:textColor="@color/title_grey"
-                            android:textSize="@dimen/txtsize_12"
                             android:visibility="gone"></LinearLayout>
                         <TextView
                             android:id="@+id/txtspec"

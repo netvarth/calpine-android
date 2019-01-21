@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -14,10 +15,12 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -31,6 +34,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,7 +57,10 @@ import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
 import com.nv.youneverwait.activities.Home;
-import com.nv.youneverwait.activities.Register;
+import com.nv.youneverwait.activities.PaymentActivity;
+import com.nv.youneverwait.database.DatabaseHandler;
+import com.nv.youneverwait.payment.PaymentGateway;
+import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.activities.SearchLocationActivity;
 import com.nv.youneverwait.adapter.ActiveCheckInAdapter;
 import com.nv.youneverwait.adapter.SearchListAdpter;
@@ -61,24 +69,35 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
-import com.nv.youneverwait.database.DatabaseHandler;
+import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.model.Domain_Spinner;
 import com.nv.youneverwait.model.LanLong;
 import com.nv.youneverwait.model.ListCell;
 import com.nv.youneverwait.model.SearchModel;
 import com.nv.youneverwait.response.ActiveCheckIn;
+import com.nv.youneverwait.response.PaymentModel;
 import com.nv.youneverwait.response.RefinedFilters;
 import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
+import com.payumoney.core.PayUmoneyConfig;
+import com.payumoney.core.PayUmoneySdkInitializer;
+import com.payumoney.core.entity.TransactionResponse;
+import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
+import com.payumoney.sdkui.ui.utils.ResultModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.crypto.Mac;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,14 +119,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     static TextView mCurrentLoc;
     Spinner mSpinnerDomain;
     String AWS_URL = "";
+
+
     ArrayList<Domain_Spinner> domainList = new ArrayList<>();
     ArrayList<SearchModel> mGLobalSearch = new ArrayList<>();
-    ArrayList<SearchModel> mSectorSearch = new ArrayList<>();
-    ArrayList<SearchModel> mSectorSubSearch = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSubDomainSubSearch = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSubDomain = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSpecializationDomain = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSpecializationDomainSearch = new ArrayList<>();
+    ArrayList<SearchModel> mSubDomainSubSearch = new ArrayList<>();
+    ArrayList<SearchModel> mSubDomain = new ArrayList<>();
+    ArrayList<SearchModel> mSpecializationDomain = new ArrayList<>();
+    ArrayList<SearchModel> mSpecializationDomainSearch = new ArrayList<>();
 
 
     ArrayList<SearchModel> mPopularSearchList = new ArrayList<>();
@@ -125,12 +144,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     private Location mylocation;
     private GoogleApiClient googleApiClient;
-    private final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
+    public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
     static double latitude;
     static double longitude;
     TextView tv_activechkin, tv_popular;
-    LinearLayout LpopularSearch, LActiveCheckin, LinearPopularSearch, LinearMorePopularSearch;
+    LinearLayout LpopularSearch, LActiveCheckin, LinearPopularSearch, LinearMorePopularSearch, LMore;
     TextView tv_More;
     boolean is_MoreClick = false;
     LinearLayout Lhome_mainlayout;
@@ -142,6 +161,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     String spinnerTxtPass;
     ActiveAdapterOnCallback mInterface;
     static String mlocName;
+    ImageView img_arrow;
+
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
@@ -152,8 +173,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             LinearPopularSearch.removeAllViews();
             if (mPopularSearchList.size() > 6) {
                 tv_More.setVisibility(View.VISIBLE);
+                LMore.setVisibility(View.VISIBLE);
             } else {
                 tv_More.setVisibility(View.GONE);
+                LMore.setVisibility(View.GONE);
             }
 
             int k = 0;
@@ -187,7 +210,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         dynaText.setPadding(15, 10, 15, 10);
                         //dynaText.setEllipsize(TextUtils.TruncateAt.END);
                         dynaText.setMaxLines(1);
-                       // dynaText.setMaxEms(8);
+                        // dynaText.setMaxEms(8);
                         dynaText.setWidth(dpToPx(130));
                         dynaText.setGravity(Gravity.CENTER);
 
@@ -203,7 +226,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
                                 mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
-                                Config.logV("Popular Text__________@@@____"+mPopularSearchtxt);
+                                Config.logV("Popular Text__________@@@____" + mPopularSearchtxt);
                                 FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
                             }
                         });
@@ -219,8 +242,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     TextView txt_sorry;
-    boolean activeCheckin=false;
+    boolean activeCheckin = false;
     ImageView ic_refinedFilter;
+    static Activity mActivity;
+    DatabaseHandler db;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -228,24 +254,18 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         View row = inflater.inflate(R.layout.fragment_myhome, container, false);
         mRecycleActive = (RecyclerView) row.findViewById(R.id.recycleActive);
         Lhome_mainlayout = (LinearLayout) row.findViewById(R.id.homemainlayout);
+        LMore = (LinearLayout) row.findViewById(R.id.LMore);
+        img_arrow = (ImageView) row.findViewById(R.id.img_arrow);
 
-        Home.doubleBackToExitPressedOnce=false;
+        Home.doubleBackToExitPressedOnce = false;
+        mActivity = getActivity();
 
         txt_sorry = (TextView) row.findViewById(R.id.txt_sorry);
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
         mCurrentLoc = (TextView) row.findViewById(R.id.currentloc);
-        if (Config.isOnline(getActivity())) {
-            Config.logV("Active Checkin------@@@@@@@@@@@-------------"+activeCheckin);
-            if(!activeCheckin){
-                activeCheckin=true;
-                ApiActiveCheckIn();
 
-            }
 
-            ApiAWSearchDomain();
-        }
-
-        ic_refinedFilter=(ImageView) row.findViewById(R.id.ic_refinedFilter);
+        ic_refinedFilter = (ImageView) row.findViewById(R.id.ic_refinedFilter);
 
         ic_refinedFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,9 +288,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             //Config.logV("UpdateLocation noooooooooooooooooo" + latitude);
         } else if (s_currentLoc.equalsIgnoreCase("no")) {
 
-            latitude=Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("lat",""));
-            longitude=Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("longitu",""));
-            mlocName=SharedPreference.getInstance(mContext).getStringValue("locnme","");
+            latitude = Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("lat", ""));
+            longitude = Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("longitu", ""));
+            mlocName = SharedPreference.getInstance(mContext).getStringValue("locnme", "");
             UpdateLocation(latitude, longitude, mlocName);
 
 
@@ -285,8 +305,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 mCurrentLoc.setText(addresses.get(0).getLocality());
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
+        }
+
+        if (mCurrentLoc.getText().equals("")) {
+            DefaultLocation();
         }
 
         mContext = getActivity();
@@ -332,6 +356,39 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         });
         /////////////////////////////////////
 
+
+        if (Config.isOnline(getActivity())) {
+            Config.logV("Active Checkin------@@@@@@@@@@@-------------" + activeCheckin);
+            if (!activeCheckin) {
+                activeCheckin = true;
+                ApiActiveCheckIn();
+
+            }
+            ApiAWSearchDomain();
+
+        } else {
+            MActiveList.clear();
+            db = new DatabaseHandler(getActivity());
+            MActiveList = db.getAllCheckinList();
+            Config.logV("Mactivie" + MActiveList.size());
+            if (MActiveList.size() > 0) {
+                tv_activechkin.setText("Active Check-ins " + "(" + String.valueOf(MActiveList.size()) + ")");
+                LActiveCheckin.setVisibility(View.VISIBLE);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                mRecycleActive.setLayoutManager(mLayoutManager);
+                activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active, mInterface);
+                mRecycleActive.setAdapter(activeAdapter);
+                activeAdapter.notifyDataSetChanged();
+            } else {
+
+                tv_activechkin.setText("Active Check-ins ");
+                txt_sorry.setVisibility(View.VISIBLE);
+                LActiveCheckin.setVisibility(View.VISIBLE);
+            }
+
+        }
+
+
         // ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), android.R.layout.simple_spinner_dropdown_item, domainList);
 
         ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
@@ -345,10 +402,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                        int position, long id) {
                 searchSrcTextView.setText("");
                 //  Spinnertext = parent.getSelectedItem().toString();
-                mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getSector();
+                mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
 
-                spinnerTxtPass = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
+                spinnerTxtPass = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDisplayName();
                 Config.logV("Selected-----------" + spinnerTxtPass);
+
                 /////////test code///////////////////////////
 
 
@@ -360,21 +418,19 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 } else {
                     mPopular_SubSearchList.clear();
-                    for (int i = 0; i < mSectorSearch.size(); i++) {
+                    for (int i = 0; i < mSubDomain.size(); i++) {
 
-                        if (mSectorSearch.get(i).getName().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
+                        if (mSubDomain.get(i).getSector().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
 
-                            for (int k = 0; k < mSectorSearch.get(i).getSectorLabels().size(); k++) {
+
                                 SearchModel search = new SearchModel();
-                                Config.logV("Sector Suggestion---1222-333--" + mSectorSearch.get(i).getSectorLabels().get(k).getName());
+                                 search.setName(mSubDomain.get(i).getName());
+                                search.setQuery(mSubDomain.get(i).getQuery());
+                                search.setSector(mSubDomain.get(i).getSector());
+                                search.setDisplayname(mSubDomain.get(i).getDisplayname());
 
-                                search.setName(mSectorSearch.get(i).getSectorLabels().get(k).getName());
-                                search.setQuery(mSectorSearch.get(i).getSectorLabels().get(k).getQuery());
-                                search.setSector(mSectorSearch.get(i).getSector());
-                                search.setDisplayname(mSectorSearch.get(i).getSectorLabels().get(k).getDisplayname());
-                                Config.logV("Display NAme**************" + mSectorSearch.get(i).getSectorLabels().get(k).getDisplayname());
                                 mPopular_SubSearchList.add(search);
-                            }
+
                         }
 
                     }
@@ -385,85 +441,99 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 }
 
 
-                tv_More.setOnClickListener(new View.OnClickListener() {
+                LMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
 
                         if (mPopularSearchList.size() > 0) {
 
-                            is_MoreClick = true;
-                            tv_More.setVisibility(View.GONE);
-                            LpopularSearch.setVisibility(View.VISIBLE);
-                            LinearPopularSearch.setVisibility(View.GONE);
-                            LinearMorePopularSearch.setVisibility(View.VISIBLE);
-                            LinearMorePopularSearch.removeAllViews();
-
-                            int k = 0;
-                            int add_row = 0;
-                            int rem = mPopularSearchList.size() % 3;
-                            if (rem == 0) {
-
-                                add_row = 0;
-
+                            if (is_MoreClick) {
+                                is_MoreClick = false;
+                                LpopularSearch.setVisibility(View.VISIBLE);
+                                LinearPopularSearch.setVisibility(View.VISIBLE);
+                                LinearMorePopularSearch.setVisibility(View.GONE);
+                                tv_More.setVisibility(View.VISIBLE);
+                                LMore.setVisibility(View.VISIBLE);
+                                img_arrow.setImageResource(R.drawable.icon_down_arrow_blue);
+                                tv_More.setText("More");
                             } else {
+                                is_MoreClick = true;
+                                tv_More.setText("Less");
+                                img_arrow.setImageResource(R.drawable.icon_up_arrow_blue);
+                                tv_More.setVisibility(View.VISIBLE);
+                                LMore.setVisibility(View.VISIBLE);
+                                LpopularSearch.setVisibility(View.VISIBLE);
+                                LinearPopularSearch.setVisibility(View.GONE);
+                                LinearMorePopularSearch.setVisibility(View.VISIBLE);
+                                LinearMorePopularSearch.removeAllViews();
 
-                                add_row = 1;
-                            }
-                            for (int i = 0; i < (mPopularSearchList.size() / 3) + add_row; i++) {
-                                LinearLayout parent = new LinearLayout(mContext);
+                                int k = 0;
+                                int add_row = 0;
+                                int rem = mPopularSearchList.size() % 3;
+                                if (rem == 0) {
 
-                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                                parent.setOrientation(LinearLayout.HORIZONTAL);
-                                parent.setLayoutParams(params);
+                                    add_row = 0;
 
+                                } else {
 
-                                for (int j = 0; j < 3; j++) {
-
-                                    if (k >= mPopularSearchList.size()) {
-                                        break;
-                                    } else {
-
-
-                                        TextView dynaText = new TextView(mContext);
-                                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                                "fonts/Montserrat_Regular.otf");
-                                        dynaText.setTypeface(tyface);
-                                        dynaText.setText(mPopularSearchList.get(k).getDisplayname());
-                                        dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
-                                        dynaText.setTextSize(12);
-                                        dynaText.setTextColor(getResources().getColor(R.color.black));
-                                        dynaText.setPadding(15, 10, 15, 10);
-                                       // dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                        dynaText.setMaxLines(1);
-                                        //dynaText.setMaxEms(8);
-                                        dynaText.setGravity(Gravity.CENTER);
-                                        dynaText.setWidth(dpToPx(130));
-
-                                        params.setMargins(12, 10, 12, 0);
-                                        dynaText.setLayoutParams(params);
-
-                                        //   dynaText.setTag("" + i);
-                                        final int finalK = k;
-                                        dynaText.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-
-                                                mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
-                                                Config.logV("Popular Text______________"+mPopularSearchtxt);
-                                                FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
-
-
-                                            }
-                                        });
-                                        parent.addView(dynaText);
-
-                                        k++;
-                                    }
-
+                                    add_row = 1;
                                 }
-                                LinearMorePopularSearch.addView(parent);
+                                for (int i = 0; i < (mPopularSearchList.size() / 3) + add_row; i++) {
+                                    LinearLayout parent = new LinearLayout(mContext);
+
+                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                                    parent.setOrientation(LinearLayout.HORIZONTAL);
+                                    parent.setLayoutParams(params);
+
+
+                                    for (int j = 0; j < 3; j++) {
+
+                                        if (k >= mPopularSearchList.size()) {
+                                            break;
+                                        } else {
+
+
+                                            TextView dynaText = new TextView(mContext);
+                                            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                                    "fonts/Montserrat_Regular.otf");
+                                            dynaText.setTypeface(tyface);
+                                            dynaText.setText(mPopularSearchList.get(k).getDisplayname());
+                                            dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
+                                            dynaText.setTextSize(12);
+                                            dynaText.setTextColor(getResources().getColor(R.color.black));
+                                            dynaText.setPadding(15, 10, 15, 10);
+                                            // dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                            dynaText.setMaxLines(1);
+                                            //dynaText.setMaxEms(8);
+                                            dynaText.setGravity(Gravity.CENTER);
+                                            dynaText.setWidth(dpToPx(130));
+
+                                            params.setMargins(12, 10, 12, 0);
+                                            dynaText.setLayoutParams(params);
+
+                                            //   dynaText.setTag("" + i);
+                                            final int finalK = k;
+                                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+
+                                                    mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
+                                                    Config.logV("Popular Text______________" + mPopularSearchtxt);
+                                                    FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName());
+
+
+                                                }
+                                            });
+                                            parent.addView(dynaText);
+
+                                            k++;
+                                        }
+
+                                    }
+                                    LinearMorePopularSearch.addView(parent);
+                                }
                             }
 
                         }
@@ -482,63 +552,23 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                                /* ArrayList<ListCell>*/
                     items = new ArrayList<ListCell>();
-                   /* for (int i = 0; i < mGLobalSearch.size(); i++) {
+                    /*for (int i = 0; i < mGLobalSearch.size(); i++) {
 
                         items.add(new ListCell(mGLobalSearch.get(i).getName(), "Suggested Search", mGLobalSearch.get(i).getQuery(), mGLobalSearch.get(i).getDisplayname()));
                     }*/
-
-
-                    /**********************************HEADER+SUBDOMAIN**************************************/
-                    //HEADER+SUBDOMAIN
-                    mSubDomainSubSearch.clear();
-                    for (int i = 0; i < mSubDomain.size(); i++) {
-
-                        Domain_Spinner domain = new Domain_Spinner();
-                        // Config.logV("Sector Search-----1111------" + mSubDomain.get(i).getName());
-                        domain.setSubDomain(mSubDomain.get(i).getSubDomain());
-                        domain.setSector(mSubDomain.get(i).getSector());
-                        domain.setSubDomain_DisplayNAme(mSubDomain.get(i).getSubDomain_DisplayNAme());
-                        mSubDomainSubSearch.add(domain);
-
-                    }
-
-
-                    for (int i = 0; i < mSubDomainSubSearch.size(); i++) {
-                        // Config.logV("mSectorSubSearch.get(i).getName()" + mSectorSubSearch.get(i).getName());
-                        items.add(new ListCell(mSubDomainSubSearch.get(i).getSubDomain(), "Sub Domain", mSubDomainSubSearch.get(i).getSector(), mSubDomainSubSearch.get(i).getSubDomain_DisplayNAme()));
-                    }
 
 
                     /**********************************HEADER+SPECIALIZATION**************************************/
 
                     //HEADER+SPECIALIZATION
 
-                    // Config.logV("Specialization***************" + mSpecializationDomain.size());
-                    mSpecializationDomainSearch.clear();
+                   // mSpecializationDomainSearch.clear();
+
+
+
                     for (int i = 0; i < mSpecializationDomain.size(); i++) {
-                        // Config.logV("mSpecializationDomain).getName()" + mSpecializationDomain.get(i).getSpecializations().size());
-                        // Config.logV("Special Domain).getName()" + mSpecializationDomain.get(i).getDomain());
-
-                        for (int j = 0; j < mSpecializationDomain.get(i).getSpecializations().size(); j++) {
-
-
-                            //  Config.logV("mSpecializationDomain).getName()" + mSpecializationDomain.get(i).getSpecializations().get(j).getName());
-                            Domain_Spinner domain = new Domain_Spinner();
-                            // Config.logV("Sector Search-----1111------" + mSubDomain.get(i).getName());
-                            domain.setName(mSpecializationDomain.get(i).getSpecializations().get(j).getName());
-                            domain.setSector(mSpecializationDomain.get(i).getSector());
-                            domain.setSpecilicationANme(mSpecializationDomain.get(i).getSpecializations().get(j).getSpecilicationANme());
-
-                            mSpecializationDomainSearch.add(domain);
-                        }
-
-                        //items.add(new ListCell(mSectorSubSearch.get(i).getName(), "Suggested Search"));
-                    }
-
-
-                    for (int i = 0; i < mSpecializationDomainSearch.size(); i++) {
                         // Config.logV("mSectorSubSearch.get(i).getName()" + mSectorSubSearch.get(i).getName());
-                        items.add(new ListCell(mSpecializationDomainSearch.get(i).getSpecilicationANme(), "Specializations", mSpecializationDomainSearch.get(i).getSector(), mSpecializationDomainSearch.get(i).getName()));
+                        items.add(new ListCell(mSpecializationDomain.get(i).getName(), "Specializations", mSpecializationDomain.get(i).getSector(), mSpecializationDomain.get(i).getDisplayname()));
                     }
 
 
@@ -596,62 +626,25 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 } else {
 
-                    /**********************************HEADER=SuGGESTED SEARCH*************************************/
-                    /*mSectorSubSearch.clear();
-                    for (int i = 0; i < mSectorSearch.size(); i++) {
 
-                        if (mSectorSearch.get(i).getName().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
 
-                            for (int k = 0; k < mSectorSearch.get(i).getSectorLabels().size(); k++) {
-                                SearchModel search = new SearchModel();
-                                Config.logV("Sector Suggestion---1222-333--" + mSectorSearch.get(i).getSectorLabels().get(k).getName());
-
-                                search.setName(mSectorSearch.get(i).getSectorLabels().get(k).getName());
-                                search.setQuery(mSectorSearch.get(i).getSectorLabels().get(k).getQuery());
-                                search.setSector(mSectorSearch.get(i).getSector());
-                                search.setDisplayname(mSectorSearch.get(i).getSectorLabels().get(k).getDisplayname());
-                                Config.logV("Display NAme**************" + mSectorSearch.get(i).getSectorLabels().get(k).getDisplayname());
-                                mSectorSubSearch.add(search);
-                            }
-                        }
-
-                    }
-
-                    Config.logV("mSectorSubSearch" + mSectorSubSearch.size());
-
-                    //HEADER=SuGGESTED SEARCH
                     items = new ArrayList<ListCell>();
-                    for (int i = 0; i < mSectorSubSearch.size(); i++) {
-                        items.add(new ListCell(mSectorSubSearch.get(i).getName(), "Suggested Search", mSectorSubSearch.get(i).getQuery(), mSectorSubSearch.get(i).getDisplayname()));
-
-                    }*/
-
-                    /**********************************HEADER+SUBDOMAIN**************************************/
-
                     //HEADER+SUBDOMAIN
                     mSubDomainSubSearch.clear();
-                    Config.logV("mSubDomain.size()------------" + mSubDomain.size());
+
                     for (int i = 0; i < mSubDomain.size(); i++) {
-
-
                         if (mSubDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
 
-                            Domain_Spinner domain = new Domain_Spinner();
-                            Config.logV("Sector Search----^^^^^-----" + mSubDomain.get(i).getName());
-                            domain.setSubDomain(mSubDomain.get(i).getSubDomain());
-                            domain.setSector(mSubDomain.get(i).getSector());
-                            domain.setSubDomain_DisplayNAme(mSubDomain.get(i).getSubDomain_DisplayNAme());
-
-                            mSubDomainSubSearch.add(domain);
-
+                            SearchModel search=new SearchModel();
+                            search.setDisplayname(mSubDomain.get(i).getDisplayname());
+                            search.setSector(mSubDomain.get(i).getSector());
+                            search.setName(mSubDomain.get(i).getName());
+                            mSubDomainSubSearch.add(search);
                         }
-
                     }
-
                     for (int i = 0; i < mSubDomainSubSearch.size(); i++) {
-                        Config.logV("Sector Search-----222-----" + mSubDomainSubSearch.get(i).getSubDomain());
-                        // Config.logV("mSectorSubSearch.get(i).getName()" + mSectorSubSearch.get(i).getName());
-                        items.add(new ListCell(mSubDomainSubSearch.get(i).getSubDomain(), "Sub Domain", mSubDomainSubSearch.get(i).getSector(), mSubDomainSubSearch.get(i).getSubDomain_DisplayNAme()));
+
+                        items.add(new ListCell(mSubDomainSubSearch.get(i).getName(), "Sub Domain", mSubDomainSubSearch.get(i).getSector(), mSubDomainSubSearch.get(i).getDisplayname()));
                     }
 
 
@@ -661,22 +654,22 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     mSpecializationDomainSearch.clear();
                     for (int i = 0; i < mSpecializationDomain.size(); i++) {
                         if (mSpecializationDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
-                            for (int j = 0; j < mSpecializationDomain.get(i).getSpecializations().size(); j++) {
 
-                                Domain_Spinner domain = new Domain_Spinner();
-                                domain.setName(mSpecializationDomain.get(i).getSpecializations().get(j).getName());
+
+                                SearchModel domain = new SearchModel();
+                                domain.setName(mSpecializationDomain.get(i).getName());
                                 domain.setSector(mSpecializationDomain.get(i).getSector());
-                                domain.setSpecilicationANme(mSpecializationDomain.get(i).getSpecializations().get(j).getSpecilicationANme());
+                                domain.setDisplayname(mSpecializationDomain.get(i).getDisplayname());
 
                                 mSpecializationDomainSearch.add(domain);
-                            }
+
                         }
 
                     }
 
 
                     for (int i = 0; i < mSpecializationDomainSearch.size(); i++) {
-                        items.add(new ListCell(mSpecializationDomainSearch.get(i).getSpecilicationANme(), "Specializations", mSpecializationDomainSearch.get(i).getSector(), mSpecializationDomainSearch.get(i).getName()));
+                        items.add(new ListCell(mSpecializationDomainSearch.get(i).getName(), "Specializations", mSpecializationDomainSearch.get(i).getSector(), mSpecializationDomainSearch.get(i).getDisplayname()));
                     }
 
 
@@ -753,6 +746,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
         final View dropDownAnchor = mSearchView.findViewById(searchSrcTextView.getDropDownAnchor());
+
 
         if (dropDownAnchor != null) {
             dropDownAnchor.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -863,6 +857,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 bundle.putString("latitude", String.valueOf(latitude));
                 bundle.putString("longitude", String.valueOf(longitude));
                 bundle.putString("spinnervalue", spinnerTxtPass);
+
+                mSearchtxt = cell.getMdisplayname();
                 Config.logV("SEARCH TXT 99999" + mSearchtxt);
                 bundle.putString("searchtxt", mSearchtxt);
                 pfFragment.setArguments(bundle);
@@ -914,83 +910,72 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         mGLobalSearch.clear();
                         if (response.code() == 200) {
 
-
-                            Config.logV("Response--BODY------SearchLabel-------------------" + response.body().getSearchLabels().size());
-
                             SearchModel search = null;
-                            for (int i = 0; i < response.body().getSearchLabels().size(); i++) {
-                                int mGlobalSize = response.body().getSearchLabels().get(0).getGlobalSearchLabels().size();
+                            for (int i = 0; i < response.body().getGlobalSearchLabels().size(); i++) {
+                                int mGlobalSize = response.body().getGlobalSearchLabels().size();
                                 mGLobalSearch.clear();
                                 for (int k = 0; k < mGlobalSize; k++) {
                                     search = new SearchModel();
-                                    search.setName(response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getName());
-                                    search.setDisplayname(response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getDisplayname());
-
-                                    search.setQuery(response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getQuery());
-                                    //  Config.logV("Response--BODY------GlobalSearch-------------------" + response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getName());
+                                    search.setName(response.body().getGlobalSearchLabels().get(k).getName());
+                                    search.setDisplayname(response.body().getGlobalSearchLabels().get(k).getDisplayname());
+                                    search.setQuery(response.body().getGlobalSearchLabels().get(k).getQuery());
                                     mGLobalSearch.add(search);
-                                    Config.logV("Query*****111********" + response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getQuery());
+                                    Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
                                 }
                             }
 
                             Config.logV("Globa lSearch Size-------------" + mGLobalSearch.size());
 
-                            for (int i = 0; i < response.body().getSearchLabels().size(); i++) {
-                                int mSectorSize = response.body().getSearchLabels().get(1).getSectorLevelLabels().size();
-                                mSectorSearch.clear();
+
+
+
+                            mSpecializationDomain.clear();
+                            mSubDomain.clear();
+
+                            for (int i = 0; i < response.body().getSectorLevelLabels().size(); i++) {
+                                int mSectorSize = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels().size();
+
+
+
+
                                 for (int k = 0; k < mSectorSize; k++) {
-                                    ArrayList<SearchModel> getSectorLevel = response.body().getSearchLabels().get(1).getSectorLevelLabels();
-                                    String sector = response.body().getSearchLabels().get(1).getSectorLevelLabels().get(k).getName();
+                                    ArrayList<SearchModel> getSubdomainSectorLevel = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels();
+
                                     // Config.logV("Sector-------------" + sector);
                                     search = new SearchModel();
-                                    search.setName(sector);
-                                    search.setSectorLabels(getSectorLevel.get(k).getSectorLabels());
-                                    search.setSector(getSectorLevel.get(k).getName());
+                                    search.setName(getSubdomainSectorLevel.get(k).getName());
+                                    search.setDisplayname(getSubdomainSectorLevel.get(k).getDisplayname());
+                                    search.setQuery(getSubdomainSectorLevel.get(k).getQuery());
+                                    search.setSector(response.body().getSectorLevelLabels().get(i).getName());
 
-                                    //  Config.logV("Sector Suggestion---1222---" + getSectorLevel.get(k).getSector());
-                                    //  Config.logV("Sector Suggestion---122222444---" + getSectorLevel.get(k).getName());
-                                    mSectorSearch.add(search);
+                                    mSubDomain.add(search);
+                                    //mSpecializationDomain.addAll(getSubdomainSectorLevel.get(k).getSpecializationLabels());
+                                    for(int j=0;j<getSubdomainSectorLevel.get(k).getSpecializationLabels().size();j++){
+                                        search = new SearchModel();
+                                        search.setName(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getName());
+                                        search.setDisplayname(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getDisplayname());
+                                        search.setQuery(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getQuery());
+                                        search.setSector(response.body().getSectorLevelLabels().get(i).getName());
+                                        mSpecializationDomain.add(search);
+                                    }
+
 
 
                                 }
                             }
+                           /* ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinnerDomain.setAdapter(adapter);*/
 
-                            Config.logV("Sector Search Size-------------" + mSectorSearch.size());
 
+                           APiGetDomain();
                             Config.logV("GLobal Search Size-------------" + mGLobalSearch.size());
+                            Config.logV("SUBDOAMIN Search Size-------------" + mSubDomain.size());
+                            Config.logV("SPECIALIZATION Search Size-------------" + mSpecializationDomain.size());
 
 
-                            Lhome_mainlayout.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    if (is_MoreClick) {
-                                        is_MoreClick = false;
-                                        LpopularSearch.setVisibility(View.VISIBLE);
-                                        LinearPopularSearch.setVisibility(View.VISIBLE);
-                                        LinearMorePopularSearch.setVisibility(View.GONE);
-                                        tv_More.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                            });
 
 
-                            mainlayout.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    if (is_MoreClick) {
-                                        is_MoreClick = false;
-                                        LpopularSearch.setVisibility(View.VISIBLE);
-                                        LinearPopularSearch.setVisibility(View.VISIBLE);
-                                        LinearMorePopularSearch.setVisibility(View.GONE);
-                                        tv_More.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                            });
-
-
-                            APiGetDomain();
                         }
 
 
@@ -1013,14 +998,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         }
     }
-
-    public static int dpToPx(int dp) {
-        float density = mContext.getResources()
-                .getDisplayMetrics()
-                .density;
-        return Math.round((float) dp * density);
-    }
-
     private void APiGetDomain() {
         {
 
@@ -1045,7 +1022,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                         Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-------------------------" + response.code());
-                        Config.logV("Response--BODY------Domain-------------------" + new Gson().toJson(response));
+
 
                         if (response.code() == 200) {
 
@@ -1055,29 +1032,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 domainList.clear();
                                 domainList.add(new Domain_Spinner("All", "All"));
                                 // domainModel=new Domain_Spinner();
-                                mSubDomain.clear();
-                                mSpecializationDomain.clear();
                                 for (int i = 0; i < response.body().size(); i++) {
 
-                                    domainList.add(new Domain_Spinner(response.body().get(i).getDomain(), response.body().get(i).getSector()));
+                                    domainList.add(new Domain_Spinner(response.body().get(i).getDisplayName(), response.body().get(i).getDomain()));
 
-                                    for (int k = 0; k < response.body().get(i).getSubDomains().size(); k++) {
-                                        Domain_Spinner domain = new Domain_Spinner();
-                                        domain.setDomain(response.body().get(i).getDomain());
-                                        domain.setSubDomain(response.body().get(i).getSubDomains().get(k).getSubDomain());
-                                        domain.setSector(response.body().get(i).getSector());
-                                        domain.setSubDomain_DisplayNAme(response.body().get(i).getSubDomains().get(k).getName());
-                                        mSubDomain.add(domain);
-
-
-                                        Domain_Spinner spec = new Domain_Spinner();
-
-                                        spec.setDomain(response.body().get(i).getDomain());
-                                        spec.setSpecializations(response.body().get(i).getSubDomains().get(k).getSpecializations());
-
-                                        spec.setSector(response.body().get(i).getSector());
-                                        mSpecializationDomain.add(spec);
-                                    }
 
                                 }
                                 Config.logV("response.body()) SUBDOMAIN SIZE" + mSubDomain.size());
@@ -1108,6 +1066,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         }
     }
+    public static int dpToPx(int dp) {
+        float density = mContext.getResources()
+                .getDisplayMetrics()
+                .density;
+        return Math.round((float) dp * density);
+    }
+
+
 
 
     List<ActiveCheckIn> MActiveList = new ArrayList<>();
@@ -1163,7 +1129,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     public void ApiActiveCheckIn() {
 
-        Config.logV("Active Checkin------%%%%%%%%%%%%%%%%%%%%------------"+activeCheckin);
+        Config.logV("Active Checkin------%%%%%%%%%%%%%%%%%%%%------------" + activeCheckin);
         final ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
@@ -1184,7 +1150,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-                    activeCheckin=false;
+                    activeCheckin = false;
                     if (response.code() == 200) {
 
 
@@ -1199,6 +1165,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             }
                             Config.logV("MActiveList----------------------" + MActiveList.size());
                             if (MActiveList.size() > 0) {
+                                db = new DatabaseHandler(mContext);
+                                db.DeleteCheckin();
+                                db.insertCheckinInfo(MActiveList);
+                                MActiveList.clear();
+                                MActiveList = db.getAllCheckinList();
+                                Config.logV("MActiveList---DB-------------------" + MActiveList.size());
                                 tv_activechkin.setText("Active Check-ins " + "(" + MActiveList.size() + ")");
                                 LActiveCheckin.setVisibility(View.VISIBLE);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
@@ -1214,11 +1186,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             txt_sorry.setVisibility(View.VISIBLE);
                             LActiveCheckin.setVisibility(View.VISIBLE);
                         }
-                    }else{
-                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
-                        if(response.code()==419){
-                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
-                            LogUtil.writeLogTest(response.errorBody().string()+" "+cookie);
+                    } else {
+                        // Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
+                        if (response.code() == 419) {
+                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
+                            LogUtil.writeLogTest(response.errorBody().string() + " " + cookie);
                         }
                     }
 
@@ -1333,7 +1305,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         bundle.putString("longitude", String.valueOf(longitude));
         bundle.putString("spinnervalue", spinnerTxtPass);
 
-        Config.logV("Popular Text_______$$$$_______"+mPopularSearchtxt);
+        Config.logV("Popular Text_______$$$$_______" + mPopularSearchtxt);
         bundle.putString("searchtxt", mPopularSearchtxt);
         pfFragment.setArguments(bundle);
 
@@ -1362,22 +1334,41 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
             if (googleApiClient != null) {
                 googleApiClient.connect();
+                Config.logV("Google ONREUME");
 
-
-            }else{
+            } else {
                 setUpGClient();
             }
 
         }
+        if (Config.isOnline(getActivity())) {
+            Config.logV("Active Checkin------@@@@@@@@@@@--------##########-----" + activeCheckin);
+            if (!activeCheckin) {
+                activeCheckin = true;
+                ApiActiveCheckIn();
+            }
 
-        Config.logV("Active Checkin------@@@@@@@@@@@--------##########-----"+activeCheckin);
-        if(!activeCheckin) {
-            activeCheckin=true;
-            ApiActiveCheckIn();
+        } else {
+            MActiveList.clear();
+            db = new DatabaseHandler(getActivity());
+            MActiveList = db.getAllCheckinList();
+            Config.logV("Mactivie" + MActiveList.size());
+            if (MActiveList.size() > 0) {
+                tv_activechkin.setText("Active Check-ins " + "(" + String.valueOf(MActiveList.size()) + ")");
+                LActiveCheckin.setVisibility(View.VISIBLE);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                mRecycleActive.setLayoutManager(mLayoutManager);
+                activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active, mInterface);
+                mRecycleActive.setAdapter(activeAdapter);
+                activeAdapter.notifyDataSetChanged();
+            } else {
+
+                tv_activechkin.setText("Active Check-ins ");
+                txt_sorry.setVisibility(View.VISIBLE);
+                LActiveCheckin.setVisibility(View.VISIBLE);
+            }
 
         }
-
-
 
 
     }
@@ -1386,6 +1377,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     @Override
     public void onConnected(Bundle bundle) {
         checkPermissions();
+        Config.logV("CONNECTED ");
     }
 
     @Override
@@ -1416,13 +1408,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 .build();
         //SharedPreference.getInstance(mContext).setValue("map_intial","true");
         googleApiClient.connect();
-        Config.logV("Update Location SetUpFConnected---------------------------");
+        Config.logV("Google Update Location SetUpFConnected---------------------------");
     }
 
     @Override
     public void onLocationChanged(Location location) {
         mylocation = location;
-        Config.logV("Update Location Changed Connected---------------------------" + location);
+        Config.logV("Google Update Location Changed Connected---------------------------" + location);
         if (mylocation != null) {
             latitude = mylocation.getLatitude();
             longitude = mylocation.getLongitude();
@@ -1435,7 +1427,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 mCurrentLoc.setVisibility(View.VISIBLE);
                 mCurrentLoc.setText(addresses.get(0).getLocality());
 
-                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude),String.valueOf(longitude),addresses.get(0).getLocality());
+                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude), String.valueOf(longitude), addresses.get(0).getLocality());
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
 
@@ -1452,10 +1444,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     private void getMyLocation() {
         if (googleApiClient != null) {
+
             if (googleApiClient.isConnected()) {
+
+                Config.logV("Google api connected granted");
                 int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+
+                    Config.logV("Google api connected granted@2@@@");
                     mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                     LocationRequest locationRequest = new LocationRequest();
                     locationRequest.setInterval(0);        // 10 seconds, in milliseconds
@@ -1467,7 +1464,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     builder.setAlwaysShow(true);
                     LocationServices.FusedLocationApi
                             .requestLocationUpdates(googleApiClient, locationRequest, this);
-                    DefaultLocation();
+                    //DefaultLocation();
 
                     PendingResult<LocationSettingsResult> result =
                             LocationServices.SettingsApi
@@ -1489,6 +1486,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                                 .getLastLocation(googleApiClient);
                                     }
 
+                                    Config.logV("Google apiClient LocationSettingsStatusCodes.SUCCESS");
                                     break;
                                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                                     // Location settings are not satisfied.
@@ -1497,10 +1495,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                         // Show the dialog by calling startResolutionForResult(),
                                         // and check the result in onActivityResult().
                                         // Ask to turn on GPS automatically
-                                        status.startResolutionForResult(getActivity(),
-                                                REQUEST_CHECK_SETTINGS_GPS);
+
+                                        Config.logV("Google Ask to turn on GPS automatically");
+                                        /*status.startResolutionForResult(getActivity(),
+                                                REQUEST_CHECK_SETTINGS_GPS);*/
+                                        startIntentSenderForResult(status.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS_GPS, null, 0, 0, 0, null);
                                     } catch (IntentSender.SendIntentException e) {
                                         // Ignore the error.
+                                        e.printStackTrace();
                                     }
 
 
@@ -1511,7 +1513,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                     // to fix the
                                     // settings so we won't show the dialog.
                                     // finish();
-
+                                    Config.logV("Google Location settings are not satisfied");
                                     break;
                             }
                         }
@@ -1521,21 +1523,66 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
+        Config.logV("GPS ON Google ##################");
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS_GPS:
+                Config.logV("GPS ON Google resultCode ##################" + resultCode);
                 switch (resultCode) {
-                    case Activity.RESULT_OK:
+
+                    case RESULT_OK:
+                        Config.logV("GPS ON Google");
                         getMyLocation();
                         break;
-                    case Activity.RESULT_CANCELED:
-                        getActivity().finish();
+                    case RESULT_CANCELED:
+                        Config.logV("GPS ON Google Cancelled");
+                        //getActivity().finish();
                         DefaultLocation();
                         break;
+
+
                 }
+
                 break;
         }
+       /* if (requestCode == REQUEST_CHECK_SETTINGS_GPS && resultCode == RESULT_OK && data != null) {
+            Config.logV("GPS ON Google");
+            getMyLocation();
+        } else if (requestCode == REQUEST_CHECK_SETTINGS_GPS && resultCode == RESULT_CANCELED) {
+            Config.logV("GPS ON Google Cancelled");
+            //getActivity().finish();
+            DefaultLocation();
+        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
+            Config.logV("PayU Monry");
+
+            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
+            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
+
+            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
+
+                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
+                    showAlert("Payment Successful");
+
+                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
+                    showAlert("Payment Cancelled");
+                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
+                    showAlert("Payment Failed");
+                }
+
+            } else if (resultModel != null && resultModel.getError() != null) {
+                Toast.makeText(getActivity(), "Error check log", Toast.LENGTH_SHORT).show();
+            } else {
+                // Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
+            showAlert("Payment Cancelled");
+        }*/
+
+
     }
 
     private void checkPermissions() {
@@ -1543,39 +1590,61 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
         List<String> listPermissionsNeeded = new ArrayList<>();
         if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+            Config.logV("Google Not Granted" + permissionLocation);
             listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
             if (!listPermissionsNeeded.isEmpty()) {
-                ActivityCompat.requestPermissions(getActivity(),
-                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);
+               /*requestPermissions(getActivity(),
+                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);*/
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ID_MULTIPLE_PERMISSIONS);
+
+                Config.logV("GoogleNot Granted" + permissionLocation);
             }
+
         } else {
             getMyLocation();
         }
-
     }
 
-    public void DefaultLocation(){
-        if(mCurrentLoc.getText().toString().equalsIgnoreCase("Locating...")){
-            latitude = 12.971599;
-            longitude = 77.594563;
-            try {
+
+    public void DefaultLocation() {
+        Config.logV("Google DEFAULT LOCATION" + mCurrentLoc.getText().toString());
+        //if (mCurrentLoc.getText().toString().equalsIgnoreCase("Locating...")) {
+        latitude = 12.971599;
+        longitude = 77.594563;
+        Config.logV("Not Google DEFAULT LOCATION @@@ YES");
+        try {
+            if (Config.isOnline(getActivity())) {
                 Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
                 List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
                 mCurrentLoc.setVisibility(View.VISIBLE);
                 mCurrentLoc.setText(addresses.get(0).getLocality());
-                //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
-            } catch (Exception e) {
-
+                Config.logV("Google DEFAULT LOCATION @@@" + addresses.get(0).getLocality());
+            } else {
+                mCurrentLoc.setVisibility(View.VISIBLE);
+                mCurrentLoc.setText("Bengaluru");
             }
+
+            //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        /*} else {
+            Config.logV("Not Google DEFAULT LOCATION @@@");
+        }*/
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+            Config.logV("Google Granted@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%");
             getMyLocation();
+        } else {
+            DefaultLocation();
         }
+
     }
 
 
@@ -1594,9 +1663,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
 
+        String querycreate = "";
+        if (!mDomainSpinner.equalsIgnoreCase("All")) {
+            querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
+        } else {
+            querycreate = "(phrase " + "'" + query + "')";
+        }
 
-        String querycreate = "(phrase " + "'" + query + "')";
-        ;
         //  Config.logV("Query-----------" + querycreate);
 
 
@@ -1635,25 +1708,24 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
 
-
     public static boolean UpdateLocation(Double mlatitude, Double mlongitude, String locNme) {
-        Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude+""+locNme);
+        Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude + "" + locNme);
         try {
             latitude = mlatitude;
             longitude = mlongitude;
             mlocName = locNme;
 
 
-            SharedPreference.getInstance(mContext).setValue("lat",latitude);
-            SharedPreference.getInstance(mContext).setValue("longitu",longitude);
-            SharedPreference.getInstance(mContext).setValue("locnme",mlocName);
+            SharedPreference.getInstance(mContext).setValue("lat", latitude);
+            SharedPreference.getInstance(mContext).setValue("longitu", longitude);
+            SharedPreference.getInstance(mContext).setValue("locnme", mlocName);
 
 
-            SharedPreference.getInstance(mContext).setValue("locnme",mlocName);
+            SharedPreference.getInstance(mContext).setValue("locnme", mlocName);
             Config.logV("UpdateLocation 4444----" + mlocName);
             mCurrentLoc.setVisibility(View.VISIBLE);
 
-            if(mlocName.equalsIgnoreCase("")){
+            if (mlocName.equalsIgnoreCase("")) {
                 Config.logV("UpdateLocation banglore");
                 latitude = 12.971599;
                 longitude = 77.594563;
@@ -1666,12 +1738,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 } catch (Exception e) {
 
                 }
-            }else{
+            } else {
                 mCurrentLoc.setText(mlocName);
             }
 
 
-          //  SharedPreference.getInstance(mContext).setValue("map_intial","false");
+            //  SharedPreference.getInstance(mContext).setValue("map_intial","false");
         } catch (Exception e) {
 
         }
@@ -1710,16 +1782,85 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String value, String provider) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
+        iBill.putExtra("accountID", accountID);
+        iBill.putExtra("payStatus", payStatus);
         startActivity(iBill);
 
     }
 
 
-    ArrayList<RefinedFilters> commonFilterList=new ArrayList<>();
+
+
+    @Override
+    public void onMethodActivePayIconCallback(String payStatus, final String ynwUUID, String provider, final String accountID, final double amountDue) {
+       // APIPayment(accountID, ynwUUID, amountDue);
+        Intent i=new Intent(mContext, PaymentActivity.class);
+        i.putExtra("ynwUUID",ynwUUID);
+        i.putExtra("accountID",accountID);
+        i.putExtra("amountDue",amountDue);
+        startActivity(i);
+    }
+
+    /*public void PaymentFunc(final String ynwUUID, final String accountID, final double amountDue) {
+        try {
+
+            final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+            dialog.setContentView(R.layout.prepayment);
+            dialog.show();
+
+            Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+            Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+            if (showPaytmWallet) {
+                btn_paytm.setVisibility(View.VISIBLE);
+            } else {
+                btn_paytm.setVisibility(View.GONE);
+            }
+            if (showPayU) {
+                btn_payu.setVisibility(View.VISIBLE);
+            } else {
+                btn_payu.setVisibility(View.GONE);
+            }
+
+            final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+            TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+            txtamt.setText("Rs." + String.valueOf(amountDue));
+            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            txtamt.setTypeface(tyface1);
+            btn_payu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
+                    dialog.dismiss();
+                    // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
+                       *//*
+                        dialog.dismiss();*//*
+
+                }
+            });
+
+            btn_paytm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    PaytmPayment payment = new PaytmPayment(mContext);
+                    // payment.generateCheckSum(sAmountPay);
+                    payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, mContext, mActivity, "home");
+                    //  payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
+                    dialog.dismiss();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
+
+    ArrayList<RefinedFilters> commonFilterList = new ArrayList<>();
+
     private void ApiFilters() {
 
 
@@ -1748,14 +1889,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         Config.logV("Response----------------");
 
                         commonFilterList.clear();
-                        commonFilterList=response.body().getCommonFilters();
-                        Config.logV("Common Filters----------------"+commonFilterList.size());
+                        commonFilterList = response.body().getCommonFilters();
+                        Config.logV("Common Filters----------------" + commonFilterList.size());
 
 
-                    }else{
-                        if(response.code()==419){
-                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
-                            LogUtil.writeLogTest(" Session Expired "+cookie);
+                    } else {
+                        if (response.code() == 419) {
+                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
+                            LogUtil.writeLogTest(" Session Expired " + cookie);
                         }
                     }
 
@@ -1776,8 +1917,64 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             }
         });
 
-
     }
+
+
+    /*public static void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
+        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
+
+        // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
+        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+
+
+        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
+        builder.setAmount(convertStringToDouble(amount))
+                .setTxnId(checksumModel.getTxnId())
+                .setPhone(checksumModel.getMobile())
+                // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setProductName(checksumModel.getProductinfo())
+                .setFirstName(checksumModel.getFirstName())
+                .setEmail(checksumModel.getEmail())
+                .setsUrl(checksumModel.getFirstName())
+                .setfUrl(checksumModel.getFurl())
+                .setUdf1("")
+                .setUdf2("")
+                .setUdf3("")
+                .setUdf4("")
+                .setUdf5("")
+                .setUdf6("")
+                .setUdf7("")
+                .setUdf8("")
+                .setUdf9("")
+                .setUdf10("")
+                .setIsDebug(true)
+                .setKey(checksumModel.getKey())
+                .setMerchantId(checksumModel.getMerchantID());
+
+        try {
+            PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
+            if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
+                //  Toast.makeText(mCOntext, "Could not generate hash", Toast.LENGTH_SHORT).show();
+            } else {
+
+
+                mPaymentParams.setMerchantHash(checksumModel.getChecksum());
+                Config.logV("Checksum id---22222222222222--------" + mPaymentParams);
+
+                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.PayUMoney, true);
+            }
+        } catch (Exception e) {
+            Config.logV("e.getMessage()------" + e.getMessage());
+            Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+
+            // mTxvBuy.setEnabled(true);
+        }
+    }*/
+
+
+
+
+
 
 
 }

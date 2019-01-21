@@ -241,7 +241,7 @@ public class Login extends AppCompatActivity {
                         String version = headerList.get("Version");
                         Config.logV("Header----------" + version);
 
-                        SharedPreference.getInstance(mContext).setValue("Version", version);
+                      //  SharedPreference.getInstance(mContext).setValue("Version", version);
 
                         // Config.logV("Email------------------"+response.body().get);
                         SharedPreference.getInstance(mContext).setValue("consumerId", response.body().getId());
@@ -259,6 +259,7 @@ public class Login extends AppCompatActivity {
 
 
                     }else{
+                        if(response.code()!=419)
                         Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_LONG).show();
                     }
 

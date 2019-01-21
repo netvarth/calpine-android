@@ -8,11 +8,26 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class InboxModel {
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    String accountId;
     public String getMsg() {
         return msg;
     }
 
 
+    public int getLineCount() {
+        return lineCount;
+    }
+
+    public void setLineCount(int lineCount) {
+        this.lineCount = lineCount;
+    }
+
+    int lineCount=0;
     public String getMessageStatus() {
         return messageStatus;
     }

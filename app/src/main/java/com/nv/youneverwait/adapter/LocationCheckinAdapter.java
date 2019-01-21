@@ -246,7 +246,7 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
         AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
                 //set message, title, and icon
                 .setTitle("Delete")
-                .setMessage("Are you sure you want to delete this Check-in?")
+                .setMessage("Are you sure you want to cancel this Check-in?")
 
 
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

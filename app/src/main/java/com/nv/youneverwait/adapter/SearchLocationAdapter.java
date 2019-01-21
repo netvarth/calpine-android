@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
+import android.util.LayoutDirection;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,13 +51,13 @@ import java.util.Locale;
 public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAdapter.MyViewHolder> {
 
     private List<SearchLocation> mSearchLocationList;
-    Context mContext;
+    static Context mContext;
     ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate;
         Button btn_checkin;
-        LinearLayout mLSeriveLayout, mLayouthide,LexpandCheckin;
+        LinearLayout mLSeriveLayout, mLayouthide,LexpandCheckin,Ldirectionlayout;
         ImageView img_arrow;
         RecyclerView recycle_parking;
         RelativeLayout layout_exapnd;
@@ -84,7 +85,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txt_diffdate_expand = (TextView) view.findViewById(R.id.txt_diffdate_expand);
             btn_checkin_expand = (Button) view.findViewById(R.id.btn_checkin_expand);
             LexpandCheckin=(LinearLayout) view.findViewById(R.id.LexpandCheckin);
-
+            Ldirectionlayout=(LinearLayout) view.findViewById(R.id.Ldirectionlayout);
 
         }
     }
@@ -146,6 +147,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
 
 
+
         for (int i = 0; i < mCheckInMessage.size(); i++) {
             if (searchLoclist.getId() == mCheckInMessage.get(i).getLocid()) {
 
@@ -177,13 +179,24 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         });
 
+
+        if(searchLoclist.getGoogleMapUrl()!=null&&!searchLoclist.getGoogleMapUrl().equalsIgnoreCase("")){
+            myViewHolder.Ldirectionlayout.setVisibility(View.VISIBLE);
+        }else{
+            myViewHolder.Ldirectionlayout.setVisibility(View.GONE);
+        }
+
         myViewHolder.txtdirection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Config.logV("googlemap url--------" + searchLoclist.getGoogleMapUrl());
                 String geoUri = searchLoclist.getGoogleMapUrl();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                mContext.startActivity(intent);
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                    mContext.startActivity(intent);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -565,7 +578,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
                         dynaText.setEllipsize(TextUtils.TruncateAt.END);
                         dynaText.setMaxLines(1);
-                        dynaText.setMaxEms(8);
+                        dynaText.setMaxEms(6);
+
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         params.setMargins(0, 0, 10, 0);
                         dynaText.setLayoutParams(params);
@@ -574,8 +588,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(j).getTotalAmount();
                         final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(j).getDescription();
                         final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(j).getServiceDuration();
+                        final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(j).isTaxable();
                         final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(j).getServicegallery();
 
+                        final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(j).isPrePayment();
+                        final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(j).getMinPrePaymentAmount();
                         dynaText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -585,7 +602,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 iService.putExtra("price", mServiceprice);
                                 iService.putExtra("desc", mServicedesc);
                                 iService.putExtra("servicegallery", mServiceGallery);
+                                iService.putExtra("taxable", mTaxable);
                                 iService.putExtra("title", mTitle);
+                                iService.putExtra("isPrePayment", isPrepayment);
+                                iService.putExtra("MinPrePaymentAmount", minPrepayment);
                                 mContext.startActivity(iService);
 
                             }
@@ -593,11 +613,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.mLSeriveLayout.addView(dynaText);
                     }
 
-                    TextView dynaText = new TextView(mContext);
-                    final int finalI = i;
-                    dynaText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                    if(size>1) {
+
+                        TextView dynaText = new TextView(mContext);
+                        final int finalI = i;
+                        dynaText.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
                            /* ServiceListFragment pfFragment = new ServiceListFragment();
                             FragmentTransaction transaction = DashboardFragment.getHomeFragment().getFragmentManager().beginTransaction();
                             Bundle bundle = new Bundle();
@@ -608,12 +630,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             transaction.addToBackStack(null);
                             transaction.replace(R.id.mainlayout, pfFragment).commit();*/
 
-                            adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle);
-                        }
-                    });
-                    dynaText.setGravity(Gravity.CENTER);
-                    dynaText.setBackground(mContext.getResources().getDrawable(R.drawable.icon_arrowright_blue));
-                    myViewHolder.mLSeriveLayout.addView(dynaText);
+                                adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle);
+                            }
+                        });
+                        dynaText.setGravity(Gravity.CENTER);
+                        dynaText.setBackground(mContext.getResources().getDrawable(R.drawable.icon_arrowright_blue));
+                        myViewHolder.mLSeriveLayout.addView(dynaText);
+                    }
                 }
 
 
@@ -733,8 +756,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     }*/
 
-
-                                    String firstWord = "Est Service Time \n";
+                                    String firstWord = "Checked in for ";
+                                    //String firstWord = "Est Service Time \n";
                                     String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -768,7 +791,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
-                                    String firstWord = "Next Wait Time \n";
+                                    String firstWord = "Next Available Time \n";
                                     String secondWord = monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

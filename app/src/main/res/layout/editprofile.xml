@@ -5,10 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainlayout"
     android:layout_width="match_parent"
+    android:clickable="true"
     android:layout_height="match_parent"
     android:background="@drawable/app_bg_gradient_home"
     android:orientation="vertical">
     <LinearLayout
+        android:id="@+id/Llayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -263,6 +265,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/padding5"
                                 android:hint="Date of Birth"
+                                android:maxLines="1"
+                                android:maxLength="15"
                                 android:textAppearance="@style/GreyTextInputLayoutHintPwd"
                                 android:textColor="@color/title_grey"
                                 android:textColorHint="@color/sec_title_grey" />

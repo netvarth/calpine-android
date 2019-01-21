@@ -10,7 +10,16 @@ import java.util.ArrayList;
 
 public class ActiveCheckIn {
 
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
 
+    String paymentStatus;
+    public int getPartySize() {
+        return partySize;
+    }
+
+    int partySize;
     public boolean isFavourite() {
         return favourite;
     }
@@ -24,8 +33,31 @@ public class ActiveCheckIn {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     int id;
 
+    double amountPaid;
+
+    public double getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(double amountPaid) {
+        this.amountPaid = amountPaid;
+    }
+
+    public double getAmountDue() {
+        return amountDue;
+    }
+
+    public void setAmountDue(double amountDue) {
+        this.amountDue = amountDue;
+    }
+
+    double amountDue;
 
     int personsAhead=-1;
     public String getYnwUuid() {
@@ -54,8 +86,54 @@ public class ActiveCheckIn {
 
     String billStatus;
 
+    public String getBillViewStatus() {
+        return billViewStatus;
+    }
+
+    public void setBillViewStatus(String billViewStatus) {
+        this.billViewStatus = billViewStatus;
+    }
+
+    String billViewStatus;
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public void setPartySize(int partySize) {
+        this.partySize = partySize;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
+    }
+
+    public void setPersonsAhead(int personsAhead) {
+        this.personsAhead = personsAhead;
+    }
+
+    public void setGoogleMapUrl(String googleMapUrl) {
+        this.googleMapUrl = googleMapUrl;
+    }
+
+    public void setProvider(ActiveCheckIn provider) {
+        this.provider = provider;
+    }
+
+    public void setWaitlistingFor(ArrayList<ActiveCheckIn> waitlistingFor) {
+        this.waitlistingFor = waitlistingFor;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
+
+    public void setQueue(ActiveCheckIn queue) {
+        Queue = queue;
+    }
 
     @SerializedName("consumer")
+
     private ActiveCheckIn consumer;
 
     public ActiveCheckIn getConsumer() {
@@ -99,6 +177,17 @@ public class ActiveCheckIn {
     public ActiveCheckIn getProvider() {
         return provider;
     }
+
+    public String getStars() {
+        return stars;
+    }
+
+    public ActiveCheckIn getRating() {
+        return rating;
+    }
+
+    String stars;
+    ActiveCheckIn rating;
 
     @SerializedName("provider")
     private ActiveCheckIn provider;

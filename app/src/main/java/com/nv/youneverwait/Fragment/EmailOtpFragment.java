@@ -185,7 +185,7 @@ public class EmailOtpFragment extends RootFragment {
                     if (response.code() == 200) {
                         Config.logV("Response----------------");
                         if (response.body().string().equals("true")) {
-
+                            Config.logV("Response------#################----------");
                             Toast.makeText(mContext,"Phone Number has been updated successfully ",Toast.LENGTH_LONG).show();
                             getFragmentManager().popBackStack();
 

@@ -179,7 +179,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
                         Config.logV("Response--Array size-------------------------" + response.body().size());
                         Config.logV("Response--Array ----Family List---------------------" + new Gson().toJson(response.body()));
 
-                        if (response.body().size() > 0) {
+
 
 
                             LuserProfileList.clear();
@@ -189,8 +189,9 @@ public class CheckinFamilyMember extends AppCompatActivity {
                             family.setLastName(lastname);
                             family.setId(consumerID);
                             LuserProfileList.add(family);
+                            if (LuserProfileList.size()>0){
 
-
+                        if (response.body().size() > 0) {
                             //  LuserProfileList.addAll(response.body());
                             for (int i = 0; i < response.body().size(); i++) {
                                 FamilyArrayModel family1 = new FamilyArrayModel();
@@ -199,6 +200,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
                                 family1.setId(response.body().get(i).getUserProfile().getId());
                                 LuserProfileList.add(family1);
                             }
+                        }
 
 
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);

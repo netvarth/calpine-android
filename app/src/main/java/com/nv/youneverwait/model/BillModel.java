@@ -10,13 +10,56 @@ import java.util.ArrayList;
 
 public class BillModel {
 
+    public double getTaxableTotal() {
+        return taxableTotal;
+    }
 
+    public double getTotalTaxAmount() {
+        return totalTaxAmount;
+    }
+
+    public double getTaxPercentage() {
+        return taxPercentage;
+    }
+
+    double taxableTotal;
+    double totalTaxAmount;
+    double taxPercentage;
+
+
+    public double getNetTotal() {
+        return netTotal;
+    }
+
+    double netTotal;
+    public ArrayList<BillModel> getProviderCoupon() {
+        return providerCoupon;
+    }
+
+    ArrayList<BillModel>providerCoupon;
+
+    public String getName() {
+        return name;
+    }
+
+    String name;
     public int getGSTpercentage() {
         return GSTpercentage;
     }
 
     int GSTpercentage;
 
+    public String getCouponName() {
+        return couponName;
+    }
+
+    String couponName;
+
+    public String getDiscountName() {
+        return discountName;
+    }
+
+    String discountName;
 
     public int getId() {
         return id;
@@ -40,6 +83,11 @@ public class BillModel {
         return totalAmountPaid;
     }
 
+    public double getDiscValue() {
+        return discValue;
+    }
+
+    double discValue;
     double discountValue;
     double couponValue;
     double totalAmountPaid;
@@ -86,6 +134,15 @@ public class BillModel {
     public ArrayList<BillModel> getItems() {
         return items;
     }
+
+    public ArrayList<BillModel> getDiscount() {
+        return discount;
+    }
+
+
+
+    private ArrayList<BillModel>  discount;
+
 
     private ArrayList<BillModel>  items;
 

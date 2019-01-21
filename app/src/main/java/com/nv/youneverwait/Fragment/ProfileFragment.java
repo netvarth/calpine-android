@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
@@ -38,7 +40,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
 
     Context mContext;
-    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm,mLcontactus,mLshare;
+    LinearLayout mLprofile,mLchangepwd,mLchangeEmail,mLchangePhone,mLmember,mLogout,mLTerm,mLcontactus,mLshare,mLappfeed;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -66,6 +68,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         tv_title.setTypeface(tyface);
 
 
+        mLappfeed=(LinearLayout) row.findViewById(R.id.lappfeed);
         mLprofile = (LinearLayout) row.findViewById(R.id.lprofile);
         mLchangepwd=(LinearLayout)row.findViewById(R.id.lchangepwd);
         mLchangeEmail=(LinearLayout)row.findViewById(R.id.lchangeemail);
@@ -75,6 +78,23 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         mLTerm=(LinearLayout)row.findViewById(R.id.lterm);
         mLcontactus=(LinearLayout)row.findViewById(R.id.lcontactus);
         mLshare=(LinearLayout)row.findViewById(R.id.lshare);
+
+
+        mLappfeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","support@netvarth.com", null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                try {
+                    startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
 
         mLshare.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -76,8 +76,8 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_businessname, tv_estTime, tv_service, tv_place, tv_personahead, tv_token, icon_message, icon_cancel,tv_status;
-        TextView icon_bill,tv_date,icon_rate;
+        public TextView tv_partysize, tv_businessname, tv_estTime, tv_service, tv_place, tv_personahead, tv_token, icon_message, icon_cancel, tv_status;
+        TextView icon_bill, tv_date, icon_rate;
         LinearLayout layout_token;
         TextView icon_fav;
 
@@ -97,8 +97,9 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             icon_cancel = (TextView) view.findViewById(R.id.icon_cancel);
             icon_rate = (TextView) view.findViewById(R.id.icon_rate);
             layout_token = (LinearLayout) view.findViewById(R.id.layout_token);
-            tv_status=(TextView) view.findViewById(R.id.txt_status);
-            tv_date=(TextView) view.findViewById(R.id.txt_date);
+            tv_status = (TextView) view.findViewById(R.id.txt_status);
+            tv_date = (TextView) view.findViewById(R.id.txt_date);
+            tv_partysize = (TextView) view.findViewById(R.id.txt_partysizevalue);
         }
     }
 
@@ -108,13 +109,14 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
     HistoryAdapterCallback callback;
     String header;
     ArrayList<FavouriteModel> FavList;
-    public HistoryCheckInAdapter(ArrayList<FavouriteModel> mFavList,List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, String header) {
+
+    public HistoryCheckInAdapter(ArrayList<FavouriteModel> mFavList, List<ActiveCheckIn> mactiveChekinList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, String header) {
         this.mContext = mContext;
         this.activeChekinList = mactiveChekinList;
         this.activity = mActivity;
-        this.callback=callback;
-        this.header=header;
-        this.FavList=mFavList;
+        this.callback = callback;
+        this.header = header;
+        this.FavList = mFavList;
 
     }
 
@@ -132,12 +134,6 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
 
 
         myViewHolder.tv_businessname.setText(toTitleCase(activelist.getProvider().getBusinessName()));
-
-        if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn") || activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
-            myViewHolder.icon_cancel.setVisibility(View.VISIBLE);
-        } else {
-            myViewHolder.icon_cancel.setVisibility(View.GONE);
-        }
 
 
         myViewHolder.icon_cancel.setOnClickListener(new View.OnClickListener() {
@@ -157,35 +153,52 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             }
         });
 
-        if (activelist.getQueue() != null) {
+       /* if (activelist.getQueue() != null) {
             if (activelist.getQueue().getLocation().getPlace() != null) {
                 myViewHolder.tv_place.setVisibility(View.VISIBLE);
                 myViewHolder.tv_place.setText(activelist.getQueue().getLocation().getPlace());
             } else {
                 myViewHolder.tv_place.setVisibility(View.GONE);
             }
+        }*/
+
+
+        try {
+            if (activelist.getQueue() != null) {
+                String geoUri = activelist.getQueue().getLocation().getGoogleMapUrl();
+                if (activelist.getQueue().getLocation().getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
+
+                    myViewHolder.tv_place.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_place.setText(activelist.getQueue().getLocation().getPlace());
+                } else {
+                    myViewHolder.tv_place.setVisibility(View.GONE);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
         for (int i = 0; i < FavList.size(); i++) {
-            Config.logV("Fav List-----##&&&-----"+FavList.get(i).getId());
-            Config.logV("Fav Fav List--------%%%%--"+activelist.getProvider().getId());
+            Config.logV("Fav List-----##&&&-----" + FavList.get(i).getId());
+            Config.logV("Fav Fav List--------%%%%--" + activelist.getProvider().getId());
 
-            if(FavList.get(i).getId()==activelist.getProvider().getId()){
+            if (FavList.get(i).getId() == activelist.getProvider().getId()) {
 
-            myViewHolder.icon_fav.setVisibility(View.VISIBLE);
-            myViewHolder.icon_fav.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.icon_favourited,0,0);
-            activelist.setFavFlag(true);
+                myViewHolder.icon_fav.setVisibility(View.VISIBLE);
+                myViewHolder.icon_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
+                activelist.setFavFlag(true);
+            }
         }
-    }
 
         myViewHolder.icon_fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (activelist.isFavFlag()) {
 
+                    callback.onMethodDeleteFavourite(activelist.getProvider().getId());
 
-                    AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
+                   /* AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
                             //set message, title, and icon
                             .setTitle("Delete")
                             .setMessage("Do you want to remove "+toTitleCase(activelist.getProvider().getBusinessName())+" from favourite list?")
@@ -211,10 +224,10 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                                 }
                             })
                             .create();
-                    myQuittingDialogBox.show();
+                    myQuittingDialogBox.show();*/
 
 
-                }else{
+                } else {
                     callback.onMethodAddFavourite(activelist.getProvider().getId());
                 }
             }
@@ -235,63 +248,295 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 String firstWord = activelist.getService().getName();
-                String secondWord = " for " + activelist.getWaitlistingFor().get(0).getFirstName() + " " + activelist.getWaitlistingFor().get(0).getLastName();
-                Spannable spannable = new SpannableString(firstWord + secondWord);
+                String secondWord = " for ";
+                String thirdWord = activelist.getWaitlistingFor().get(0).getFirstName() + " " + activelist.getWaitlistingFor().get(0).getLastName();
+                Spannable spannable = new SpannableString(firstWord + secondWord + thirdWord);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() + secondWord.length(), firstWord.length() + secondWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 myViewHolder.tv_service.setText(spannable);
             } else {
                 myViewHolder.tv_service.setVisibility(View.GONE);
             }
         }
 
-        Config.logV("Bill------------" + activelist.getWaitlistStatus());
-        if (activelist.getBillStatus() != null) {
-            myViewHolder.icon_bill.setVisibility(View.VISIBLE);
+        if (activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid")) {
+            myViewHolder.icon_bill.setText("Receipt");
         } else {
+            myViewHolder.icon_bill.setText("Bill");
+        }
+
+        Config.logV("Bill------------" + activelist.getWaitlistStatus());
+        if (activelist.getBillViewStatus() != null) {
+            if (activelist.getBillViewStatus().equalsIgnoreCase("Show")) {
+                myViewHolder.icon_bill.setVisibility(View.VISIBLE);
+            } else {
+                myViewHolder.icon_bill.setVisibility(View.GONE);
+            }
+        } else
+
+        {
             myViewHolder.icon_bill.setVisibility(View.GONE);
         }
 
 
-        myViewHolder.icon_bill.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.icon_bill.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
-                   callback.onMethodBillIconCallback(activelist.getYnwUuid(),activelist.getProvider().getBusinessName());
+                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getProvider().getBusinessName(), String.valueOf(activelist.getProvider().getId()));
             }
         });
 
 
         Config.logV("Date------------" + activelist.getDate());
 
-        if (!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")&&!header.equalsIgnoreCase("old")) {
-            myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-            if (activelist.getServiceTime() != null) {
 
-                String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                if (date.equalsIgnoreCase(activelist.getDate())) {
+        myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
+        if (activelist.getServiceTime() != null)
 
+        {
+
+            String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            if (date.equalsIgnoreCase(activelist.getDate())) {
+
+                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                String firstWord = "";
+               /* if(header.equalsIgnoreCase("future")){
+                    firstWord = "Est Service Time ";
+                }
+
+                if(header.equalsIgnoreCase("today")){
+                    firstWord = "Est Service Time ";
+                }*/
+                firstWord = "Checked in for ";
+
+                String secondWord = "Today," + activelist.getServiceTime();
+                Spannable spannable = new SpannableString(firstWord + secondWord);
+                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                        firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                    myViewHolder.tv_status.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_status.setText(secondWord + " - Cancelled ");
+                    myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+                }
+
+                if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
+                    myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_estTime.setText(spannable);
+                } else {
+                    myViewHolder.tv_estTime.setVisibility(View.GONE);
+                }
+
+
+            } else {
+
+
+                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                String inputDateStr = activelist.getDate();
+                Date datechange = null;
+                try {
+                    datechange = inputFormat.parse(inputDateStr);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String outputDateStr = outputFormat.format(datechange);
+
+
+                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                String firstWord = "";
+                /*if(header.equalsIgnoreCase("future")){
+                    firstWord = "Est Service Time ";
+                }
+
+                if(header.equalsIgnoreCase("today")){
+                    firstWord = "Est Wait Time ";
+                }*/
+                firstWord = "Checked in for ";
+
+                //   String secondWord = outputDateStr + ", " + activelist.getServiceTime();
+
+                String dtStart = outputDateStr;
+                Date dateParse = null;
+                SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                try {
+                    dateParse = format1.parse(dtStart);
+                    System.out.println(dateParse);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                SimpleDateFormat format = new SimpleDateFormat("d");
+                String date1 = format.format(dateParse);
+
+                if (date1.endsWith("1") && !date1.endsWith("11"))
+                    format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                else if (date1.endsWith("2") && !date1.endsWith("12"))
+                    format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                else if (date1.endsWith("3") && !date1.endsWith("13"))
+                    format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                else
+                    format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                String yourDate = format.format(dateParse);
+                String secondWord = yourDate + ", " + activelist.getServiceTime();
+
+
+                Spannable spannable = new SpannableString(firstWord + secondWord);
+                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                        firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                    myViewHolder.tv_status.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_status.setText(secondWord + " - Cancelled ");
+                    myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+                }
+                if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
+                    myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_estTime.setText(spannable);
+                } else {
+                    myViewHolder.tv_estTime.setVisibility(View.GONE);
+                }
+
+
+                // myViewHolder.tv_estTime.setText(Html.fromHtml("Approx Wait Time " +"<font color=\"#6065FF\"><b>"+ activelist.getAppxWaitingTime() +" Mins "+"</font><b>")) ;
+
+            }
+
+
+        } else
+
+        {
+            String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+            if (date.equalsIgnoreCase(activelist.getDate())) {
+                Config.logV("getAppxWaitingTime------------" + activelist.getAppxWaitingTime());
+                if (activelist.getAppxWaitingTime() == 0) {
+                    // myViewHolder.tv_estTime.setText("Estimated Time Now");
+                    myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
-                    String firstWord = null;
-                    if(header.equalsIgnoreCase("future")){
-                         firstWord = "Est Service Time ";
-                    }
-
-                    if(header.equalsIgnoreCase("today")){
-                        firstWord = "Est Service Time ";
-                    }
-                   
-                    String secondWord = "Today," + activelist.getServiceTime();
+                    String firstWord = "Est Time ";
+                    String secondWord = "Now";
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_estTime.setText(spannable);
+
+
+                    if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                        myViewHolder.tv_status.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_status.setText("Cancelled " + secondWord);
+                        myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+                    }
+                    if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
+                        myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_estTime.setText(spannable);
+                    } else {
+                        myViewHolder.tv_estTime.setVisibility(View.GONE);
+                    }
 
 
                 } else {
+                    if (activelist.getAppxWaitingTime() == -1) {
+                        myViewHolder.tv_estTime.setVisibility(View.GONE);
+                        if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                            myViewHolder.tv_status.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_status.setText(" Cancelled ");
+                            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+                        }
+                    } else {
+                        myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
+                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                        String firstWord = "";
+                        if(header.equalsIgnoreCase("future")){
+                            firstWord = "Checked in for ";
+                        }
+
+                        if(header.equalsIgnoreCase("today")){
+                            firstWord = "Est Wait Time ";
+                        }
 
 
+
+
+                        String secondWord = activelist.getAppxWaitingTime() + " Mins ";
+                        Spannable spannable = new SpannableString(firstWord + secondWord);
+                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                                firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+                        if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                            myViewHolder.tv_status.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_status.setText(secondWord + " - Cancelled ");
+                            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+                        }
+
+
+                        if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
+                            myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_estTime.setText(spannable);
+                        } else {
+                            myViewHolder.tv_estTime.setVisibility(View.GONE);
+                        }
+                    }
+
+
+                    // myViewHolder.tv_estTime.setText(Html.fromHtml("Approx Wait Time " +"<font color=\"#6065FF\"><b>"+ activelist.getAppxWaitingTime() +" Mins "+"</font><b>")) ;
+
+                }
+            } else {
+
+                Config.logV("response.body().get(i).getQueue().getQueueStartTime()" + activelist.getQueue().getQueueStartTime());
+                //Calulate appxtime+questime
+                Config.logV("Quueue Time----------------" + activelist.getQueue().getQueueStartTime());
+                Config.logV("App Time----------------" + activelist.getAppxWaitingTime());
+                long appwaittime;
+                if (activelist.getAppxWaitingTime() != -1) {
+                    appwaittime = TimeUnit.MINUTES.toMillis(activelist.getAppxWaitingTime());
+                } else {
+                    appwaittime = 0;
+                }
+
+                if (activelist.getQueue().getQueueStartTime() != null) {
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                    Date Timeconvert = null;
+                    long millis = 0;
+                    try {
+                        // sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        Timeconvert = sdf.parse(activelist.getQueue().getQueueStartTime());
+                        millis = Timeconvert.getTime();
+                        Config.logV("millsss----" + millis);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    long finalcheckin = appwaittime + millis;
+
+
+                    String timeFORAMT = getDate(finalcheckin, "hh:mm a");
+
+                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                            "fonts/Montserrat_Bold.otf");
+                    String firstWord = "";
+
+                    /*if(header.equalsIgnoreCase("future")){
+                        firstWord = "Checked in for ";
+                    }
+
+                    if(header.equalsIgnoreCase("today")){
+                        firstWord = "Est Wait Time ";
+                    }
+*/
                     DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                     DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
                     String inputDateStr = activelist.getDate();
@@ -304,193 +549,178 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
                     String outputDateStr = outputFormat.format(datechange);
 
 
-                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                            "fonts/Montserrat_Bold.otf");
-                    String firstWord = null;
-                    if(header.equalsIgnoreCase("future")){
-                        firstWord = "Est Service Time ";
+
+                     firstWord = "Checked in for ";
+                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                    String dtStart = outputDateStr;
+                    Date dateParse = null;
+                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                    try {
+                        dateParse = format1.parse(dtStart);
+                        System.out.println(dateParse);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
 
-                    if(header.equalsIgnoreCase("today")){
-                        firstWord = "Est Wait Time ";
-                    }
+                    SimpleDateFormat format = new SimpleDateFormat("d");
+                    String date1 = format.format(dateParse);
 
-                    String secondWord = outputDateStr + ", " + activelist.getServiceTime();
+                    if (date1.endsWith("1") && !date1.endsWith("11"))
+                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                    else if (date1.endsWith("2") && !date1.endsWith("12"))
+                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                    else if (date1.endsWith("3") && !date1.endsWith("13"))
+                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                    else
+                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                    String yourDate = format.format(dateParse);
+
+
+                    String secondWord = yourDate+", "+timeFORAMT;
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_estTime.setText(spannable);
+
+                    if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                        myViewHolder.tv_status.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_status.setText(secondWord + " - Cancelled ");
+                        myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+                    }
 
 
-                    // myViewHolder.tv_estTime.setText(Html.fromHtml("Approx Wait Time " +"<font color=\"#6065FF\"><b>"+ activelist.getAppxWaitingTime() +" Mins "+"</font><b>")) ;
-
-                }
-
-
-            } else {
-                String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                if (date.equalsIgnoreCase(activelist.getDate())) {
-                    Config.logV("getAppxWaitingTime------------" + activelist.getAppxWaitingTime());
-                    if (activelist.getAppxWaitingTime() == 0) {
-                        // myViewHolder.tv_estTime.setText("Estimated Time Now");
+                    if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                         myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        String firstWord = "Est Time ";
-                        String secondWord = "Now";
-                        Spannable spannable = new SpannableString(firstWord + secondWord);
-                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                         myViewHolder.tv_estTime.setText(spannable);
-
-
                     } else {
-                        if (activelist.getAppxWaitingTime() == -1) {
-                            myViewHolder.tv_estTime.setVisibility(View.GONE);
-                        } else {
-                            myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                    "fonts/Montserrat_Bold.otf");
-                            String firstWord = null;
-                            if(header.equalsIgnoreCase("future")){
-                                firstWord = "Est Service Time ";
-                            }
-
-                            if(header.equalsIgnoreCase("today")){
-                                firstWord = "Est Wait Time ";
-                            }
-
-                            String secondWord = activelist.getAppxWaitingTime() + " Mins ";
-                            Spannable spannable = new SpannableString(firstWord + secondWord);
-                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                            myViewHolder.tv_estTime.setText(spannable);
-                        }
-
-
-                        // myViewHolder.tv_estTime.setText(Html.fromHtml("Approx Wait Time " +"<font color=\"#6065FF\"><b>"+ activelist.getAppxWaitingTime() +" Mins "+"</font><b>")) ;
-
+                        myViewHolder.tv_estTime.setVisibility(View.GONE);
                     }
                 } else {
 
-                    Config.logV("response.body().get(i).getQueue().getQueueStartTime()" + activelist.getQueue().getQueueStartTime());
-                    //Calulate appxtime+questime
-                    Config.logV("Quueue Time----------------" + activelist.getQueue().getQueueStartTime());
-                    Config.logV("App Time----------------" + activelist.getAppxWaitingTime());
-                    long appwaittime;
                     if (activelist.getAppxWaitingTime() != -1) {
-                        appwaittime = TimeUnit.MINUTES.toMillis(activelist.getAppxWaitingTime());
-                    } else {
-                        appwaittime = 0;
-                    }
-
-                    if (activelist.getQueue().getQueueStartTime() != null) {
-
-                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
-                        Date Timeconvert = null;
-                        long millis = 0;
+                        String sTime = null;
+                        String firstWord = "";
                         try {
-                            // sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                            Timeconvert = sdf.parse(activelist.getQueue().getQueueStartTime());
-                            millis = Timeconvert.getTime();
-                            Config.logV("millsss----" + millis);
+                            String startTime = "00:00";
+                            String newtime;
+                            int minutes = activelist.getAppxWaitingTime();
+                            int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
+                            int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
+
+                            if(header.equalsIgnoreCase("future")){
+                                firstWord = "Checked in for ";
+                            }
+
+                            if(header.equalsIgnoreCase("today")){
+
+                                firstWord = "Est Wait Time ";
+                            }
+
+
+
+                          //  firstWord = "Est Wait Time ";
+
+                            if (m > 0 && h > 0) {
+                                newtime = h + " Hour :" + m + " Minutes";
+                            } else if (h > 0 && m == 0) {
+                                newtime = h + " Hour";
+                            } else {
+                                newtime = m + " Minutes";
+                            }
+                            sTime = newtime;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+
+                        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                        String inputDateStr = activelist.getDate();
+                        Date datechange = null;
+                        try {
+                            datechange = inputFormat.parse(inputDateStr);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        String outputDateStr = outputFormat.format(datechange);
+
+
+
+                        //firstWord = "Checked in for ";
+                        // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                        String dtStart = outputDateStr;
+                        Date dateParse = null;
+                        SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                        try {
+                            dateParse = format1.parse(dtStart);
+                            System.out.println(dateParse);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
 
+                        SimpleDateFormat format = new SimpleDateFormat("d");
+                        String date1 = format.format(dateParse);
 
-                        long finalcheckin = appwaittime + millis;
+                        if (date1.endsWith("1") && !date1.endsWith("11"))
+                            format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                        else if (date1.endsWith("2") && !date1.endsWith("12"))
+                            format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                        else if (date1.endsWith("3") && !date1.endsWith("13"))
+                            format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                        else
+                            format = new SimpleDateFormat("EE, MMM d'th' yyyy");
 
+                        String yourDate = format.format(dateParse);
 
-                        String timeFORAMT = getDate(finalcheckin, "hh:mm a");
-
-                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Bold.otf");
-                        String firstWord=null;
-
-                        if(header.equalsIgnoreCase("future")){
-                            firstWord = "Est Service Time ";
-                        }
-
-                        if(header.equalsIgnoreCase("today")){
-                            firstWord = "Est Wait Time ";
-                        }
-
-                        String secondWord = timeFORAMT;
+                        String secondWord = yourDate+", "+sTime;
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_estTime.setText(spannable);
-                    } else {
 
-                        if (activelist.getAppxWaitingTime() != -1) {
-                            String sTime = null;
-                            String firstWord=null;
-                            try {
-                                String startTime = "00:00";
-                                String newtime;
-                                int minutes = activelist.getAppxWaitingTime();
-                                int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
-                                int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
 
-                                if(header.equalsIgnoreCase("future")){
-                                    firstWord = "Est Service Time ";
-                                }
+                        if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                            myViewHolder.tv_status.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_status.setText(secondWord + " - Cancelled ");
+                            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+                        }
 
-                                if(header.equalsIgnoreCase("today")){
-
-                                    if(h>0) {
-                                        firstWord = "Est Service Time ";
-                                    }else{
-                                        firstWord = "Est Wait Time ";
-                                    }
-                                }
-                                if (m > 0 && h > 0) {
-                                    newtime = h + " Hour :" + m + " Minutes";
-                                } else if (h > 0 && m == 0) {
-                                    newtime = h + " Hour";
-                                } else {
-                                    newtime = m + " Minutes";
-                                }
-                                sTime = newtime;
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                    "fonts/Montserrat_Bold.otf");
-                            String secondWord = sTime;
-                            Spannable spannable = new SpannableString(firstWord + secondWord);
-                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                             myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                             myViewHolder.tv_estTime.setText(spannable);
                         } else {
                             myViewHolder.tv_estTime.setVisibility(View.GONE);
                         }
+                    } else {
+                        myViewHolder.tv_estTime.setVisibility(View.GONE);
                     }
-
                 }
 
             }
-        } else {
-            myViewHolder.tv_estTime.setVisibility(View.GONE);
+
         }
+        /*} else {
+            myViewHolder.tv_estTime.setVisibility(View.GONE);
+        }*/
 
 
-        if(!header.equalsIgnoreCase("old")) {
+        if (!header.equalsIgnoreCase("old") && !activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("started")&& !activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("cancelled") && !(activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("done")))
+
+        {
             myViewHolder.tv_token.setVisibility(View.VISIBLE);
             myViewHolder.layout_token.setVisibility(View.VISIBLE);
-            String firstWord = "Token No ";
+            String firstWord = "Token # ";
             String secondWord = String.valueOf(activelist.getToken());
             Spannable spannable = new SpannableString(firstWord + secondWord);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
@@ -498,15 +728,48 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             myViewHolder.tv_token.setText(spannable);
 
-        }else{
+
+            if (String.valueOf(activelist.getPartySize()) != null) {
+                if (activelist.getPartySize() > 1) {
+                    String partyWord = "Party Size ";
+                    String ValueWord = String.valueOf(activelist.getPartySize());
+                    Spannable spannable1 = new SpannableString(partyWord + ValueWord);
+                    spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                            0, partyWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    myViewHolder.tv_partysize.setVisibility(View.VISIBLE);
+                    // myViewHolder.tv_partysize.setText(String.valueOf(activelist.getPartySize()));
+
+                    spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), partyWord.length(), partyWord.length() + ValueWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                            partyWord.length(), partyWord.length() + ValueWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    myViewHolder.tv_partysize.setText(spannable1);
+                } else {
+                    myViewHolder.tv_partysize.setVisibility(View.GONE);
+                }
+            } else {
+                myViewHolder.tv_partysize.setVisibility(View.GONE);
+            }
+
+
+        } else
+
+        {
             myViewHolder.layout_token.setVisibility(View.GONE);
             myViewHolder.tv_estTime.setVisibility(View.GONE);
         }
 
 
-        if (activelist.getPersonsAhead() != -1) {
+        if (activelist.getPersonsAhead() != -1 && !activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("cancelled"))
+
+        {
             myViewHolder.tv_personahead.setVisibility(View.VISIBLE);
             String firstWord1 = "Persons Ahead ";
             String secondWord1 = String.valueOf(activelist.getPersonsAhead());
@@ -516,91 +779,158 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
             Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                    firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             myViewHolder.tv_personahead.setText(spannable1);
-        } else {
+        } else
+
+        {
             myViewHolder.tv_personahead.setVisibility(View.INVISIBLE);
         }
 
 
-        myViewHolder.icon_message.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.icon_message.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
-                callback.onMethodMessageCallback(activelist.getYnwUuid(),String.valueOf(activelist.getProvider().getId()),activelist.getProvider().getBusinessName());
+                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getProvider().getId()), activelist.getProvider().getBusinessName());
 
             }
         });
 
 
+        if (header.equalsIgnoreCase("old"))
 
-       if(header.equalsIgnoreCase("old")) {
+        {
 
-           myViewHolder.tv_status.setVisibility(View.VISIBLE);
-           myViewHolder.tv_date.setVisibility(View.VISIBLE);
 
-           try {
+            myViewHolder.tv_date.setVisibility(View.VISIBLE);
 
-              String mDate= Config.ChangeDateFormat(activelist.getDate());
-              if(mDate!=null)
-               myViewHolder.tv_date.setText(mDate);
-           } catch (ParseException e) {
-               e.printStackTrace();
-           }
-           Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                   "fonts/Montserrat_Bold.otf");
-           myViewHolder.tv_status.setTypeface(tyface1);
+            try {
 
-           myViewHolder.tv_status.setText(activelist.getWaitlistStatus());
-           if(activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
-               myViewHolder.tv_status.setText("Done");
-               myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
-           }
+                String mDate = Config.ChangeDateFormat(activelist.getDate());
+                if (mDate != null)
+                    myViewHolder.tv_date.setText(mDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else
 
-           if(activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
-               myViewHolder.tv_status.setText("Arrived");
-               myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
-           }
+        {
 
-           if(activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
-               myViewHolder.tv_status.setText("Checked In");
-               myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.violet));
-           }
+            myViewHolder.tv_date.setVisibility(View.GONE);
+        }
 
-           if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+
+        myViewHolder.tv_status.setVisibility(View.VISIBLE);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        myViewHolder.tv_status.setTypeface(tyface1);
+
+        // myViewHolder.tv_status.setText(activelist.getWaitlistStatus());
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("done"))
+
+        {
+            myViewHolder.tv_status.setText("Complete");
+            myViewHolder.tv_status.setVisibility(View.VISIBLE);
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
+        }
+
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("arrived"))
+
+        {
+            myViewHolder.tv_status.setText("Arrived");
+            myViewHolder.tv_status.setVisibility(View.VISIBLE);
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
+        }
+
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("checkedIn"))
+
+        {
+            myViewHolder.tv_status.setVisibility(View.GONE);
+            //  myViewHolder.tv_status.setText("Checked In");
+            //  myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.violet));
+        }
+
+          /* if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                myViewHolder.tv_status.setText("Cancelled");
                myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
-           }
-           if(activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
-               myViewHolder.tv_status.setText("Started");
-               myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
-           }
+           }*/
+        if (activelist.getWaitlistStatus().
 
-       }else{
-           myViewHolder.tv_status.setVisibility(View.GONE);
-           myViewHolder.tv_date.setVisibility(View.GONE);
-       }
+                equalsIgnoreCase("started"))
 
-        if(header.equalsIgnoreCase("old")) {
-            if(activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
-                myViewHolder.icon_rate.setVisibility(View.VISIBLE);
-            }else{
-                myViewHolder.icon_rate.setVisibility(View.GONE);
-            }
-        }else {
+        {
+            myViewHolder.tv_status.setText("Started");
+            myViewHolder.tv_status.setVisibility(View.VISIBLE);
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
+        }
+
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("prepaymentPending"))
+
+        {
+            myViewHolder.tv_status.setText("Prepayment Pending");
+            myViewHolder.tv_status.setVisibility(View.VISIBLE);
+            myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.gray));
+        }
+
+        /*if(header.equalsIgnoreCase("old")) {*/
+        if (activelist.getWaitlistStatus().
+
+                equalsIgnoreCase("done"))
+
+        {
+            myViewHolder.icon_rate.setVisibility(View.VISIBLE);
+        } else
+
+        {
             myViewHolder.icon_rate.setVisibility(View.GONE);
         }
-       myViewHolder.icon_rate.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
+        if(activelist.getRating()!=null){
+            if(Integer.parseInt(activelist.getRating().getStars())>0){
 
-               callback.onMethodRating(String.valueOf(activelist.getProvider().getId()),activelist.getYnwUuid());
-           }
-       });
+                myViewHolder.icon_rate.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.star_full,0,0);
+            }else{
+                myViewHolder.icon_rate.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.icon_star_line,0,0);
+            }
+        }
 
-        if(header.equalsIgnoreCase("old")) {
+        /*}else {
+            myViewHolder.icon_rate.setVisibility(View.GONE);
+        }*/
+        myViewHolder.icon_rate.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View v) {
+
+                callback.onMethodRating(String.valueOf(activelist.getProvider().getId()), activelist.getYnwUuid());
+            }
+        });
+
+        if (header.equalsIgnoreCase("old"))
+
+        {
             myViewHolder.icon_cancel.setVisibility(View.GONE);
-        }else{
-            myViewHolder.icon_cancel.setVisibility(View.VISIBLE);
+        } else
 
+        {
+
+            if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn") || activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
+                myViewHolder.icon_cancel.setVisibility(View.VISIBLE);
+            } else {
+                myViewHolder.icon_cancel.setVisibility(View.GONE);
+            }
         }
 
 

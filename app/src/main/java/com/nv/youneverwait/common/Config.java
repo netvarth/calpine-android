@@ -126,6 +126,7 @@ public class Config {
         SharedPreferences pref = context.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
         Config.logV("REGISTARION ID______RENEW________@@@@@@@___"+regId);
+        LogUtil.writeLogTest("REG ID @@@@@@@@@@@"+regId);
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("loginId", loginId);
@@ -150,6 +151,8 @@ public class Config {
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response-- LOGIN RESERT code-------------------------" + response.code());
+
+                    LogUtil.writeLogTest("REG ID RESP CODE@@@@@@@@@@@"+response.code());
                     if (response.code() == 200) {
                         Config.logV("Response--code-------------------------" + response.body().getFirstName());
 
@@ -190,7 +193,7 @@ public class Config {
                         Intent iReg = new Intent(context, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(iReg);
-                        ((Activity)context).finish();
+                       // ((Activity)context).finish();
 
 
                     }else{
@@ -292,5 +295,31 @@ public class Config {
         return  convertdate;
 
     }
+    public static String toTitleCase(String str) {
 
+        if (str == null) {
+            return null;
+        }
+
+        boolean space = true;
+        StringBuilder builder = new StringBuilder(str);
+        final int len = builder.length();
+
+        for (int i = 0; i < len; ++i) {
+            char c = builder.charAt(i);
+            if (space) {
+                if (!Character.isWhitespace(c)) {
+                    // Convert to title case and switch out of whitespace mode.
+                    builder.setCharAt(i, Character.toTitleCase(c));
+                    space = false;
+                }
+            } else if (Character.isWhitespace(c)) {
+                space = true;
+            } else {
+                builder.setCharAt(i, Character.toLowerCase(c));
+            }
+        }
+
+        return builder.toString();
+    }
 }

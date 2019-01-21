@@ -1,11 +1,20 @@
 package com.nv.youneverwait.connection.rest;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
+import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.activities.Register;
 import com.nv.youneverwait.common.Config;
@@ -26,6 +35,7 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -41,6 +51,7 @@ public class ResponseInteceptor implements Interceptor {
         this.context = context;
     }
 
+
     @Override
     public Response intercept(Interceptor.Chain chain) throws IOException {
 
@@ -55,8 +66,18 @@ public class ResponseInteceptor implements Interceptor {
 
         Response response =  chain.proceed(request);
 
+        Headers headerList = response.headers();
+      //  String versionheader = headerList.get("Version");
+        Config.logV("Header-----Response-----" + headerList.toString());
+       /* if(versionheader.equalsIgnoreCase("api-1.1.0,config-1.1.0")){
+            String version="v2";
+            Config.logV("Header-----Response--@@@@@---" + versionheader);
 
+           SharedPreference.getInstance(context).setValue("BASE_URL","http://35.154.241.175/"+version+"/rest/");
+        }
+*/
 
+        Config.logV("RESPONSE CODE@@@@@@@@@@@@@@@@@"+response.code());
         if (response.code() == 419){
             // Magic is here ( Handle the error as your way )
             Config.logV("RESPONSE @@@@@@@@@@@@@@@@@"+response.code());
@@ -74,8 +95,31 @@ public class ResponseInteceptor implements Interceptor {
 
             return response;
         }
+
+        if(response.code()==301){
+
+            Config.logV(" ERROR  301 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            SharedPreference.getInstance(context).clear();
+            DatabaseHandler db=new DatabaseHandler(context);
+            db.deleteDatabase();
+            // if(response.body().equals("true")) {
+
+            Intent iLogout=new Intent(context, Register.class);
+            iLogout.putExtra("forceupdate","true");
+            iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(iLogout);
+
+
+        }
         return response;
     }
+
+
+
+
+
+
+
     public void ApiLogin(String loginId, String password) {
 
         ApiInterface apiService =
@@ -85,6 +129,10 @@ public class ResponseInteceptor implements Interceptor {
         SharedPreferences pref = context.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
         Config.logV("REGISTARION ID______________@@@@@@@___"+regId);
+
+        Config.logV("login ID______________@@@@@@@___"+loginId);
+        Config.logV("password ID______________@@@@@@@___"+password);
+
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("loginId", loginId);
@@ -153,7 +201,9 @@ public class ResponseInteceptor implements Interceptor {
 
 
                     }else{
-                      //  Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                        /*if(response.code()!=419)
+                        Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();*/
+                        Config.logV("Response Error-----------"+response.errorBody().string());
                     }
 
 

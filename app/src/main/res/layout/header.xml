@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginLeft="@dimen/padding3"
+    android:layout_marginRight="@dimen/padding3"
+    android:paddingTop="@dimen/default_padding"
+    android:paddingBottom="2dp">
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/input_border_top"
+        android:drawableRight="@drawable/icon_up_light"
+        android:padding="@dimen/padding5"
+        android:text="Today"
+        android:textColor="#000000"
+        android:textSize="@dimen/txtsize_hint" />
+    <TextView
+        android:id="@+id/txtnocheckold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/input_border_bottom"
+        android:padding="@dimen/padding5"
+        android:text="No Old Check-ins"
+        android:textColor="@color/title_grey"
+        android:textSize="@dimen/txtsize_hint"
+        android:visibility="gone" />
+</LinearLayout>

@@ -55,17 +55,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/padding5"
         android:orientation="horizontal">
-        <Button
-            android:id="@+id/btn_send"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="wrap_content"
-            style="?android:attr/borderlessButtonStyle"
-            android:background="@drawable/roundedrect_blue"
-            android:textAllCaps="true"
-            android:textColor="@color/app_background"
-            android:textSize="@dimen/txtsize_hint"
-            android:text="@string/send"/>
+
 
         <Button
             android:id="@+id/btn_cancel"
@@ -73,10 +63,23 @@
             android:layout_width="0dp"
             android:layout_weight="0.5"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_marginLeft="@dimen/default_padding"
+
             android:textColor="@color/app_background"
             android:background="@drawable/roundedrect_grey"
             android:textSize="@dimen/txtsize_hint"
             android:text="@string/cancel"/>
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:layout_height="wrap_content"
+            style="?android:attr/borderlessButtonStyle"
+            android:background="@drawable/roundedrect_blue"
+            android:textAllCaps="true"
+            android:textColor="@color/app_background"
+            android:textSize="@dimen/txtsize_hint"
+            android:text="@string/send"/>
     </LinearLayout>
 </RelativeLayout>

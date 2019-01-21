@@ -178,18 +178,22 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
             @Override
             public void onClick(View v) {
                 if (isExpandOld) {
+                    Config.logV("Open@@@@@@@@@@@@@@@@@@@@");
                     isExpandOld = false;
                     mrRecylce_checklistOLd.setVisibility(View.GONE);
                     tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_background_opaque_round));
                     tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
                     tv_nocheckold.setVisibility(View.GONE);
                 } else {
+                    Config.logV("Closed@@@@@@@@@@@@@@@@@@@@");
                     isExpandOld = true;
                     mrRecylce_checklistOLd.setVisibility(View.VISIBLE);
+
+                    ApiOldChekInList();
                     tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_border_top));
                     tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
                     if (mCheckOldList.size() == 0) {
-                        tv_notodaychekcin.setVisibility(View.VISIBLE);
+                        tv_nocheckold.setVisibility(View.VISIBLE);
                         mrRecylce_checklistOLd.setVisibility(View.GONE);
                     }
 
@@ -249,12 +253,14 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         } else {
                             tv_notodaychekcin.setVisibility(View.GONE);
                             mrRecylce_checklistTOday.setVisibility(View.VISIBLE);
-                            tv_today.setText("TODAY "+"( "+mCheckTodayList.size()+" )");
+                            tv_today.setText("Today "+"( "+mCheckTodayList.size()+" )");
                         }
 
                         ApiFutureChekInList();
                     } else {
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        if (response.code() != 419) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
 
@@ -309,38 +315,18 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         Config.logV("mCheckList mCheckOldList size-------------------------" + mCheckOldList.size());
 
 
-                        if (mCheckFutureList.size() == 0 && mCheckTodayList.size() == 0) {
-                            isExpandOld = true;
-                            mrRecylce_checklistOLd.setVisibility(View.VISIBLE);
-                            tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_border_top));
-                            tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                        } else {
-                            isExpandOld = false;
-                            mrRecylce_checklistOLd.setVisibility(View.GONE);
-                            tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_background_opaque_round));
-                            tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                        }
+
 
                         if (mCheckOldList.size() == 0) {
                             tv_nocheckold.setVisibility(View.VISIBLE);
                             mrRecylce_checklistOLd.setVisibility(View.GONE);
                         } else {
                             tv_nocheckold.setVisibility(View.GONE);
-                            //  mrRecylce_checklistOLd.setVisibility(View.VISIBLE);
+                             mrRecylce_checklistOLd.setVisibility(View.VISIBLE);
                         }
 
 
-                        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(mContext);
-                        mrRecylce_checklistTOday.setLayoutManager(mLayoutManager1);
-                        mCheckAdapter = new HistoryCheckInAdapter(mFavList, mCheckTodayList, mContext, mActivity, mInterface, "today");
-                        mrRecylce_checklistTOday.setAdapter(mCheckAdapter);
-                        mCheckAdapter.notifyDataSetChanged();
 
-                        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(mContext);
-                        mrRecylce_checklistFuture.setLayoutManager(mLayoutManager2);
-                        mCheckAdapter = new HistoryCheckInAdapter(mFavList, mCheckFutureList, mContext, mActivity, mInterface, "future");
-                        mrRecylce_checklistFuture.setAdapter(mCheckAdapter);
-                        mCheckAdapter.notifyDataSetChanged();
 
 
                         RecyclerView.LayoutManager mLayoutManager3 = new LinearLayoutManager(mContext);
@@ -351,12 +337,12 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
 
                     } else {
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        if(response.code()==419){
+                        // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                       /* if(response.code()==419){
                             String cookie= SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
                             LogUtil.writeLogTest(" Session Expired "+cookie);
                         }
-
+*/
                     }
 
 
@@ -409,13 +395,26 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                         mCheckFutureList.clear();
                         mCheckFutureList = response.body();
 
+                        if (mCheckFutureList.size() == 0 && mCheckTodayList.size() == 0) {
+                            isExpandOld = true;
+                            mrRecylce_checklistOLd.setVisibility(View.VISIBLE);
+                            ApiOldChekInList();
+                            tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_border_top));
+                            tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                        } else {
+                            isExpandOld = false;
+                            mrRecylce_checklistOLd.setVisibility(View.GONE);
+                            tv_old.setBackground(getActivity().getResources().getDrawable(R.drawable.input_background_opaque_round));
+                            tv_old.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
+                        }
+
                         if (mCheckFutureList.size() == 0) {
                             tv_nofuturecheckin.setVisibility(View.VISIBLE);
                             mrRecylce_checklistFuture.setVisibility(View.GONE);
                         } else {
                             tv_nofuturecheckin.setVisibility(View.GONE);
                             mrRecylce_checklistFuture.setVisibility(View.VISIBLE);
-                            tv_future.setText("FUTURE"+" ( "+mCheckFutureList.size()+" )");
+                            tv_future.setText("Future"+" ( "+mCheckFutureList.size()+" )");
                         }
                        /* mCheckList.add(mCheckOldList);
                         mCheckList.add(mCheckFutureList);
@@ -429,11 +428,26 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 */
 
 
-                        ApiOldChekInList();
+
+                        RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(mContext);
+                        mrRecylce_checklistTOday.setLayoutManager(mLayoutManager1);
+                        mCheckAdapter = new HistoryCheckInAdapter(mFavList, mCheckTodayList, mContext, mActivity, mInterface, "today");
+                        mrRecylce_checklistTOday.setAdapter(mCheckAdapter);
+                        mCheckAdapter.notifyDataSetChanged();
+
+                        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(mContext);
+                        mrRecylce_checklistFuture.setLayoutManager(mLayoutManager2);
+                        mCheckAdapter = new HistoryCheckInAdapter(mFavList, mCheckFutureList, mContext, mActivity, mInterface, "future");
+                        mrRecylce_checklistFuture.setAdapter(mCheckAdapter);
+                        mCheckAdapter.notifyDataSetChanged();
+
+                        //ApiOldChekInList();
 
 
                     } else {
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        if (response.code() != 419) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
 
@@ -493,13 +507,15 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-               if(edt_message.getText().toString().length()>1){
-                   btn_send.setEnabled(true);
-                   btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-               }else{
-                   btn_send.setEnabled(false);
-                   btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-               }
+                if(edt_message.getText().toString().length()>1&&!edt_message.getText().toString().trim().isEmpty()){
+                    btn_send.setEnabled(true);
+                    btn_send.setClickable(true);
+                    btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                }else{
+                    btn_send.setEnabled(false);
+                    btn_send.setClickable(false);
+                    btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                }
             }
 
             @Override
@@ -513,10 +529,12 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
     }
 
     @Override
-    public void onMethodBillIconCallback(String value, String provider) {
+    public void onMethodBillIconCallback(String payStatus,String value, String provider,String accountID ) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
+        iBill.putExtra("accountID", accountID);
+        iBill.putExtra("payStatus", payStatus);
         startActivity(iBill);
     }
 
@@ -623,50 +641,52 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
 
 
-                            final ArrayList<RatingResponse> mRatingDATA = response.body();
-                            Config.logV("Response--code--------BottomSheetDialog-----------------" + response.code());
-                            dialog = new BottomSheetDialog(mContext);
-                            dialog.setContentView(R.layout.rating);
-                            dialog.setCancelable(true);
-                            dialog.show();
-                            TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
+                        final ArrayList<RatingResponse> mRatingDATA = response.body();
+                        Config.logV("Response--code--------BottomSheetDialog-----------------" + response.code());
+                        dialog = new BottomSheetDialog(mContext);
+                        dialog.setContentView(R.layout.rating);
+                        dialog.setCancelable(true);
+                        dialog.show();
+                        TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
 
-                            final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                            final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
+                        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                        final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
 
-                            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                    "fonts/Montserrat_Bold.otf");
-                            tv_title.setTypeface(tyface);
-                            final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
+                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                        tv_title.setTypeface(tyface);
+                        final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
 
-                            final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
-                            btn_rate.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                        final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
+                        btn_rate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
 
 
-                                    rate=rating.getRating();
-                                    comment = edt_message.getText().toString();
+                                rate=rating.getRating();
+                                comment = edt_message.getText().toString();
 
-                                   if(response.body().size()==0) {
-                                       firstTimeRating=true;
-                                   }else{
-                                       firstTimeRating=false;
-                                   }
-                                    ApiPUTRating(Math.round(rate), UUID, comment, accountID, dialog,firstTimeRating);
-
+                                if(response.body().size()==0) {
+                                    firstTimeRating=true;
+                                }else{
+                                    firstTimeRating=false;
                                 }
-                            });
+                                ApiPUTRating(Math.round(rate), UUID, comment, accountID, dialog,firstTimeRating);
+
+                            }
+                        });
 
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
-                                if(edt_message.getText().toString().length()>1){
+                                if(edt_message.getText().toString().length()>1&&!edt_message.getText().toString().trim().isEmpty()){
                                     btn_rate.setEnabled(true);
+                                    btn_rate.setClickable(true);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
                                 }else{
                                     btn_rate.setEnabled(false);
+                                    btn_rate.setClickable(false);
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                                 }
                             }
@@ -679,26 +699,26 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
                             }
                         });
-                            btn_close.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.dismiss();
+                        btn_close.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
 
 
-                                }
-                            });
-
-                            if(response.body().size()>0) {
-                                if (mRatingDATA.get(0).getStars() != 0) {
-                                    rating.setRating(Float.valueOf(mRatingDATA.get(0).getStars()));
-                                }
-
-
-                                if (mRatingDATA.get(0).getFeedback() != null) {
-                                    Config.logV("Comments---------" + mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
-                                    edt_message.setText(mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
-                                }
                             }
+                        });
+
+                        if(response.body().size()>0) {
+                            if (mRatingDATA.get(0).getStars() != 0) {
+                                rating.setRating(Float.valueOf(mRatingDATA.get(0).getStars()));
+                            }
+
+
+                            if (mRatingDATA.get(0).getFeedback() != null) {
+                                Config.logV("Comments---------" + mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
+                                edt_message.setText(mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
+                            }
+                        }
 
 
 
@@ -749,9 +769,9 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
         Call<ResponseBody> call;
         if(firstTimerate){
-         call =    apiService.PostRating(accountID, body);
+            call =    apiService.PostRating(accountID, body);
         }else{
-           call =    apiService.PutRating(accountID, body);
+            call =    apiService.PutRating(accountID, body);
         }
 
         Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
@@ -772,6 +792,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext,"Rated successfully",Toast.LENGTH_LONG).show();
 
                         }
 
@@ -834,11 +855,14 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
                     if (response.code() == 200) {
 
+                        Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_LONG).show();
                         dialog.dismiss();
 
 
                     } else {
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
 
@@ -890,6 +914,8 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+
+                            Toast.makeText(mContext,"Check-In cancelled successfully",Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                             ApiFavList();
 
@@ -897,7 +923,9 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
 
                     } else {
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        if (response.code() != 419) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
 
@@ -953,7 +981,9 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+
                             ApiFavList();
+                            Toast.makeText(mContext,"Added to Favourites",Toast.LENGTH_LONG).show();
                         }
 
 
@@ -1054,6 +1084,7 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext,"Removed from favourites",Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 

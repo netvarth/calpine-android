@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.model.WorkingModel;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +33,7 @@ public class WorkingHourFragment extends RootFragment {
     Context mContext;
 
     TextView txt_workinghr_mon,txt_workinghr_tue,txt_workinghr_wed,txt_workinghr_thu,txt_workinghr_fri,txt_workinghr_sat,txt_workinghr_sun;
-    ArrayList<WorkingModel> workingHrList;
+    ArrayList<WorkingModel> workingHrList=new ArrayList<>();
     String txtdataMon="",txtdataTue="",txtdataWed="",txtdataThu="",txtdataFri="",txtdataSat="",txtdataSun="";
     TextView tv_Monday,tv_Tuesday,tv_Wednesday,tv_Thursay,tv_Friday,tv_Saturday,tv_Sunday;
     TextView tv_subtitle;
@@ -45,6 +46,7 @@ public class WorkingHourFragment extends RootFragment {
 
         mContext = getActivity();
         Bundle bundle = this.getArguments();
+         txtdataMon="";txtdataTue="";txtdataWed="";txtdataThu="";txtdataFri="";txtdataSat="";txtdataSun="";
         if (bundle != null) {
             workingHrList = (ArrayList<WorkingModel>)getArguments().getSerializable("workinghrlist");
             title=bundle.getString("title", "");
@@ -52,6 +54,7 @@ public class WorkingHourFragment extends RootFragment {
         }
 
 
+        Config.logV("Working Hrs------------------"+workingHrList.size());
 
         tv_subtitle=(TextView)row.findViewById(R.id.txttitle) ;
         txt_workinghr_mon=(TextView)row.findViewById(R.id.txt_workinghr_mon);

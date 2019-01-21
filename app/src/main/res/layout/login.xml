@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding5"
-        android:hint="Enter Password"
+        android:hint="Enter your password"
         android:textAppearance="@style/GreyTextInputLayoutHint"
         android:textColor="@color/title_grey"
         android:textColorHint="@color/title_grey"

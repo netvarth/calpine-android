@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".Fragment.UpdateProfileFragment"
     android:background="@color/app_background"
+    android:clickable="true"
     android:id="@+id/fragment_mainLayout">
 <LinearLayout
     android:orientation="vertical" android:layout_width="match_parent"

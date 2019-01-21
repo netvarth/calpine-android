@@ -13,7 +13,7 @@ import java.util.Date;
 public class LogUtil {
 
     public static final String TAG = "Jaldee";
-    private static boolean isDebuging = true;
+    private static boolean isDebuging = false;
 
     public static File getFileLocation() {
 

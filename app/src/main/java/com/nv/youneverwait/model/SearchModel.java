@@ -35,34 +35,29 @@ public class SearchModel {
     ArrayList<SearchModel> sectorLevelLabels;
 
 
-    public ArrayList<SearchModel> getSectorLabels() {
-        return sectorLabels;
+    public ArrayList<SearchModel> getSubSectorLevelLabels() {
+        return subSectorLevelLabels;
     }
 
-    public void setSectorLabels(ArrayList<SearchModel> sectorLabels) {
-        this.sectorLabels = sectorLabels;
+    @SerializedName("subSectorLevelLabels")
+    ArrayList<SearchModel> subSectorLevelLabels;
+
+    public ArrayList<SearchModel> getSpecializationLabels() {
+        return specializationLabels;
     }
 
-    @SerializedName("sectorLabels")
-    ArrayList<SearchModel> sectorLabels;
-
-
-    public ArrayList<SearchModel> getSearchLabels() {
-        return searchLabels;
-    }
-
-    public void setSearchLabels(ArrayList<SearchModel> searchLabels) {
-        this.searchLabels = searchLabels;
-    }
-
-    @SerializedName("searchLabels")
-    ArrayList<SearchModel> searchLabels;
-
+    @SerializedName("specializationLabels")
+    ArrayList<SearchModel> specializationLabels;
 
     public String getName() {
         return name;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
+    String group;
     public void setName(String name) {
         this.name = name;
     }

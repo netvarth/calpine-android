@@ -57,7 +57,7 @@
                         android:background="@drawable/input_border_top"
                         android:drawableRight="@drawable/icon_up_light"
                         android:padding="@dimen/padding5"
-                        android:text="TODAY"
+                        android:text="Today"
                         android:textColor="#000000"
                         android:textSize="@dimen/txtsize_hint" />
 
@@ -97,7 +97,8 @@
                         android:background="@drawable/input_border_top"
                         android:drawableRight="@drawable/icon_up_light"
                         android:padding="@dimen/padding5"
-                        android:text="FUTURE"
+                        android:text="Future"
+                        android:textAllCaps="false"
                         android:textColor="#000000"
                         android:textSize="@dimen/txtsize_hint" />
 
@@ -138,7 +139,7 @@
                         android:background="@drawable/input_background_opaque_round"
                         android:drawableRight="@drawable/icon_down_light"
                         android:padding="@dimen/padding5"
-                        android:text="OLD"
+                        android:text="Old"
                         android:textColor="#000000"
                         android:textSize="@dimen/txtsize_hint" />
 

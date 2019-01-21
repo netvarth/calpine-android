@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public interface FavAdapterOnCallback {
 
-    void onMethodViewCallback(int value, ArrayList<Integer> ids,  RecyclerView mrRecylce_favloc,int uniqueID,String title);
+    void onMethodViewCallback(int value, ArrayList<String> ids,  RecyclerView mrRecylce_favloc,int uniqueID,String title);
 
     void onMethodMessageCallback(String accountID, String message,  BottomSheetDialog mBottomDialog);
 

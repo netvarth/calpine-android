@@ -10,9 +10,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+  <!--  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
 
     <!--Permission for checking for SMS -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
@@ -51,7 +51,12 @@
         <activity
             android:name="com.nv.youneverwait.activities.Home"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="FCM_PLUGIN_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.nv.youneverwait.activities.Login"
             android:screenOrientation="portrait"></activity>
@@ -79,6 +84,11 @@
         <activity
             android:name="com.nv.youneverwait.activities.CheckInCopy"
             android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name="com.nv.youneverwait.activities.PaymentActivity"
+            android:screenOrientation="portrait"></activity>
+
 
 
         <activity
@@ -122,11 +132,11 @@
             </intent-filter>
         </service>
 
-        <service android:name="com.nv.youneverwait.service.FirebaseInstanceIDService">
+       <!-- <service android:name="com.nv.youneverwait.service.FirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
-        </service>
+        </service>-->
     </application>
 
 </manifest>

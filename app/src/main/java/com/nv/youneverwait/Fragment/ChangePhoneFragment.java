@@ -1,5 +1,6 @@
 package com.nv.youneverwait.Fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -10,9 +11,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +24,7 @@ import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
+import com.nv.youneverwait.utils.SharedPreference;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -63,12 +67,18 @@ public class ChangePhoneFragment extends RootFragment {
 
 
 
+       // setupUI(row.findViewById(R.id.mainlayout));
+
         tv_title.setText("Change Phone Number");
 
         edtPhone=(TextInputEditText) row.findViewById(R.id.edtPhone) ;
         text_input_phone=(TextInputLayout) row.findViewById(R.id.text_input_phone) ;
         edtPhone.addTextChangedListener(new MyTextWatcher(edtPhone));
         mDone=(Button)row.findViewById(R.id.btnsubmit) ;
+
+        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        edtPhone.setText(mobile);
+
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,9 +172,9 @@ public class ChangePhoneFragment extends RootFragment {
                             Bundle bundle = new Bundle();
                             bundle.putString("email", mPhone);
                             emailFragment.setArguments(bundle);
-                            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
                             transaction.addToBackStack(null);
-                            transaction.replace(R.id.fragment_mainLayout, emailFragment).commit();
+                            transaction.replace(R.id.mainlayout, emailFragment).commit();
 
 
                             //}
@@ -191,5 +201,31 @@ public class ChangePhoneFragment extends RootFragment {
 
 
     }
+
+    /*public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+    public void setupUI(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof TextInputEditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(getActivity());
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
+    }*/
+
 
 }

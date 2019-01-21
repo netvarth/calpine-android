@@ -75,6 +75,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         return new DetailInboxAdapter.MyViewHolder(itemView);
     }
 
+
     @Override
     public void onBindViewHolder(final DetailInboxAdapter.MyViewHolder myViewHolder, final int position) {
         final InboxModel inboxList = mInboxList.get(position);
@@ -103,42 +104,89 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         }
 
 
-        myViewHolder.tv_message.post(new Runnable() {
-            @Override
-            public void run() {
-                int lineCount = myViewHolder.tv_message.getLineCount();
-                //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
 
-                if (lineCount > 3) {
-                    myViewHolder.tv_message.setMaxLines(3);
-                    myViewHolder.tv_message.setEllipsize(TextUtils.TruncateAt.END);
-                    myViewHolder.tv_seemore.setVisibility(View.VISIBLE);
-                } else {
-                    myViewHolder.tv_seemore.setVisibility(View.INVISIBLE);
+
+        if (!inboxList.isIs_see()) {
+            myViewHolder.tv_message.post(new Runnable() {
+                @Override
+                public void run() {
+                    int lineCount = myViewHolder.tv_message.getLineCount();
+
+                    if(inboxList.getLineCount()==0){
+                        inboxList.setLineCount(lineCount);
+
+                    }
+                    //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
+                    Config.logV("SeeMore " + inboxList.isIs_see() + "message" + inboxList.getMsg());
+                    Config.logV("No of line---------------" + lineCount);
+                    if (inboxList.getLineCount() > 3) {
+                        myViewHolder.tv_message.setMaxLines(3);
+                        myViewHolder.tv_message.setEllipsize(TextUtils.TruncateAt.END);
+                        myViewHolder.tv_seemore.setText("See More");
+                        myViewHolder.tv_seemore.setVisibility(View.VISIBLE);
+                    } else {
+                        myViewHolder.tv_seemore.setVisibility(View.INVISIBLE);
+                    }
+                    // Use lineCount here
+
+
                 }
-                // Use lineCount here
+            });
+        } else {
+            myViewHolder.tv_message.post(new Runnable() {
+                @Override
+                public void run() {
+                    int lineCount = myViewHolder.tv_message.getLineCount();
+
+                    if(inboxList.getLineCount()==0){
+                        inboxList.setLineCount(lineCount);
+
+                    }
+
+                    //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
+                    Config.logV("SeeMore @@@" + inboxList.isIs_see() + "message@@@" + inboxList.getMsg());
+                    Config.logV("No of line@@@@---------------" + lineCount);
+                    if (inboxList.getLineCount() > 3) {
+                        myViewHolder.tv_message.setMaxLines(Integer.MAX_VALUE);
+                        myViewHolder.tv_message.setEllipsize(null);
+                        // is_seemore=true;
+                        myViewHolder.tv_seemore.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_seemore.setText("See Less");
+                    } else {
+                        myViewHolder.tv_seemore.setVisibility(View.INVISIBLE);
+                    }
+                    // Use lineCount here
 
 
-            }
-        });
+                }
+            });
+
+        }
+
 
         myViewHolder.tv_seemore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Config.logV("Is seemore------------------" + inboxList.isIs_see());
                 if (!inboxList.isIs_see()) {
+
                     myViewHolder.tv_message.setMaxLines(Integer.MAX_VALUE);
                     myViewHolder.tv_message.setEllipsize(null);
                     // is_seemore=true;
                     myViewHolder.tv_seemore.setText("See Less");
                     inboxList.setIs_see(true);
-                    // notifyDataSetChanged();
+
+                    notifyDataSetChanged();
+
+
                 } else {
+
                     myViewHolder.tv_message.setMaxLines(3);
                     myViewHolder.tv_message.setEllipsize(TextUtils.TruncateAt.END);
                     myViewHolder.tv_seemore.setText("See More");
                     inboxList.setIs_see(false);
-                    // notifyDataSetChanged();
+                    notifyDataSetChanged();
+
                     // is_seemore=false;
 
                 }
@@ -154,7 +202,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
             @Override
             public void onClick(View v) {
 
-                callback.onMethodCallback(inboxList.getWaitlistId(),inboxList.getId());
+                callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId());
 
             }
         });

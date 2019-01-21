@@ -130,7 +130,7 @@ public class CheckIn extends AppCompatActivity {
     LinearLayout LcheckinDatepicker;
     static String mFrom;
     String title, place;
-    TextView tv_titlename, tv_place, tv_checkin_service;
+    TextView tv_titlename, tv_place, tv_checkin_service,txtprepay;
     static ImageView ic_left, ic_right;
     static TextView tv_queuetime;
     static TextView tv_queuename;
@@ -157,13 +157,13 @@ public class CheckIn extends AppCompatActivity {
     static String selectedDateFormat;
     String serviceSelected;
 
-    TextView tv_addnote;
+    TextView tv_addnote,txtprepayamount;
     static TextView txtnocheckin;
 
     String txt_message = "";
     String googlemap;
     String sector, subsector;
-    LinearLayout layout_party;
+    LinearLayout layout_party,LservicePrepay;
     EditText editpartysize;
     int maxPartysize;
     static RecyclerView recycle_family;
@@ -193,6 +193,10 @@ public class CheckIn extends AppCompatActivity {
         btn_checkin = (Button) findViewById(R.id.btn_checkin);
         editpartysize = (EditText) findViewById(R.id.editpartysize);
         LSinglemember = (LinearLayout) findViewById(R.id.familymember);
+        LservicePrepay=(LinearLayout) findViewById(R.id.LservicePrepay);
+        txtprepayamount=(TextView) findViewById(R.id.txtprepayamount);
+        txtprepay=(TextView) findViewById(R.id.txtprepay);
+
         LSinglemember.setVisibility(View.VISIBLE);
         recycle_family.setVisibility(View.GONE);
 
@@ -254,7 +258,7 @@ public class CheckIn extends AppCompatActivity {
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
-                        if (edt_message.getText().toString().length() > 1) {
+                        if (edt_message.getText().toString().length() > 1&&!edt_message.getText().toString().trim().isEmpty()) {
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
@@ -543,8 +547,11 @@ public class CheckIn extends AppCompatActivity {
                 isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
                 Config.logV("Payment------------" + isPrepayment);
                 if (isPrepayment) {
+
+                    sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
+
+                    Config.logV("Payment----sAmountPay--------" + sAmountPay);
                     APIPayment(modifyAccountID);
-                    sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getTotalAmount();
 
                 } else {
                     // Lpayment.setVisibility(View.GONE);
@@ -975,7 +982,7 @@ public class CheckIn extends AppCompatActivity {
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL----%%%%%-----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -990,6 +997,20 @@ public class CheckIn extends AppCompatActivity {
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
                                 showPayU = true;
                             }
+                        }
+                        if((showPayU)||showPaytmWallet){
+                            Config.logV("URL----%%%%%---@@--");
+                            LservicePrepay.setVisibility(View.VISIBLE);
+                            Typeface tyface = Typeface.createFromAsset(getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                            txtprepay.setTypeface(tyface);
+                            txtprepayamount.setTypeface(tyface);
+                            String firstWord="Prepayment Amount: ";
+                            String secondWord="₹"+sAmountPay;
+                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
+                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            txtprepayamount.setText(spannable);
                         }
                         /*if (mPaymentData.size() > 0) {
                             Lpayment.setVisibility(View.VISIBLE);
@@ -1100,6 +1121,8 @@ public class CheckIn extends AppCompatActivity {
                                     newtime = m + " Minutes";
                                 }
 
+
+
                                 secondWord = newtime;
 
 
@@ -1110,7 +1133,7 @@ public class CheckIn extends AppCompatActivity {
 
 
                                     if (h > 0) {
-                                        firstWord = "Checked in for ";
+                                         firstWord = "Checked in for Today, ";
                                     } else {
                                         firstWord = "Est Wait Time ";
 
@@ -1132,8 +1155,46 @@ public class CheckIn extends AppCompatActivity {
                                           }*/
 
                                 } else {
+                                    firstWord = "Next Available Time ";
+                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                    Date datechange = null;
+                                    try {
+                                        datechange = inputFormat.parse(inputDateStr);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String outputDateStr = outputFormat.format(datechange);
 
-                                    firstWord = "Checked in for ";
+
+                                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                    String dtStart = outputDateStr;
+                                    Date dateParse = null;
+                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                    try {
+                                        dateParse = format1.parse(dtStart);
+                                        System.out.println(dateParse);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    SimpleDateFormat format = new SimpleDateFormat("d");
+                                    String date1 = format.format(dateParse);
+
+                                    if (date1.endsWith("1") && !date1.endsWith("11"))
+                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                    else
+                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                    String yourDate = format.format(dateParse);
+
+                                    secondWord=yourDate+", "+newtime;
                                 }
                                 Config.logV("Second WORD---@@@@----222--------" + secondWord + "Datecompare" + dateCompareOne);
 
@@ -1146,16 +1207,12 @@ public class CheckIn extends AppCompatActivity {
                             }
 
                             if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
-                                secondWord = mQueueTimeSlotList.get(0).getServiceTime();
-
-
                                 //  dateCompareOne = parseDate(secondWord);
 
 
                                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                    firstWord = "Checked in for ";
-                                    /*Date dt = new Date();
+                                    firstWord = "Checked in for Today, ";
+                                   /*Date dt = new Date();
                                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
                                     String currentTime = sdf.format(dt);
                                     Date datenow=parseDate(currentTime);
@@ -1169,10 +1226,53 @@ public class CheckIn extends AppCompatActivity {
 
                                         Config.logV("Second WORD---@@@@------------"+secondWord+"Datecompare"+dateCompareOne);    }
 */
+                                    secondWord = mQueueTimeSlotList.get(0).getServiceTime();
                                 } else {
 
-                                    firstWord = "Checked in for ";
+                                    firstWord = "Next Available Time ";
+                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                    Date datechange = null;
+                                    try {
+                                        datechange = inputFormat.parse(inputDateStr);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String outputDateStr = outputFormat.format(datechange);
+
+
+                                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                    String dtStart = outputDateStr;
+                                    Date dateParse = null;
+                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                    try {
+                                        dateParse = format1.parse(dtStart);
+                                        System.out.println(dateParse);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    SimpleDateFormat format = new SimpleDateFormat("d");
+                                    String date1 = format.format(dateParse);
+
+                                    if (date1.endsWith("1") && !date1.endsWith("11"))
+                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                    else
+                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                    String yourDate = format.format(dateParse);
+
+
+                                    secondWord = yourDate+", "+mQueueTimeSlotList.get(0).getServiceTime();
                                 }
+
+
                                 Config.logV("Second WORD---------------" + secondWord);
                             }
 
@@ -1241,15 +1341,58 @@ public class CheckIn extends AppCompatActivity {
                                     }*/
 
                                     if (h > 0) {
-                                        firstWord = "Checked in for ";
+
+                                        firstWord = "Checked in for Today, ";
+
                                     } else {
                                         firstWord = "Est Wait Time ";
-                                    }
 
+                                    }
 
                                 } else {
 
-                                    firstWord = "Checked in for ";
+
+                                    firstWord = "Next Available Time ";
+                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                    Date datechange = null;
+                                    try {
+                                        datechange = inputFormat.parse(inputDateStr);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String outputDateStr = outputFormat.format(datechange);
+
+
+                                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                    String dtStart = outputDateStr;
+                                    Date dateParse = null;
+                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                    try {
+                                        dateParse = format1.parse(dtStart);
+                                        System.out.println(dateParse);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    SimpleDateFormat format = new SimpleDateFormat("d");
+                                    String date1 = format.format(dateParse);
+
+                                    if (date1.endsWith("1") && !date1.endsWith("11"))
+                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                    else
+                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                    String yourDate = format.format(dateParse);
+
+                                    secondWord=yourDate+", "+newtime;
+
                                 }
 
 
@@ -1262,7 +1405,7 @@ public class CheckIn extends AppCompatActivity {
                             }
 
                             if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
-                                secondWord = mQueueTimeSlotList.get(0).getServiceTime();
+
                                 Config.logV("Second WORD---@@@@-------111--2222222---" + secondWord);
 
 
@@ -1285,11 +1428,56 @@ public class CheckIn extends AppCompatActivity {
 
                                         Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                     }*/
-                                    firstWord = "Checked in for ";
+
+                                    firstWord = "Checked in for Today, ";
+                                    secondWord = mQueueTimeSlotList.get(0).getServiceTime();
+
 
                                 } else {
 
-                                    firstWord = "Checked in for ";
+
+                                    firstWord = "Next Available Time ";
+                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                    Date datechange = null;
+                                    try {
+                                        datechange = inputFormat.parse(inputDateStr);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                    String outputDateStr = outputFormat.format(datechange);
+
+
+                                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                    String dtStart = outputDateStr;
+                                    Date dateParse = null;
+                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                    try {
+                                        dateParse = format1.parse(dtStart);
+                                        System.out.println(dateParse);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    SimpleDateFormat format = new SimpleDateFormat("d");
+                                    String date1 = format.format(dateParse);
+
+                                    if (date1.endsWith("1") && !date1.endsWith("11"))
+                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                    else
+                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                    String yourDate = format.format(dateParse);
+
+
+                                    secondWord = yourDate+", "+mQueueTimeSlotList.get(0).getServiceTime();
+
                                 }
 
 
@@ -1401,14 +1589,58 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-                                                firstWord = "Checked in for ";
+
+                                                firstWord = "Checked in for Today, ";
+
                                             } else {
                                                 firstWord = "Est Wait Time ";
+
                                             }
 
                                         } else {
 
-                                            firstWord = "Checked in for ";
+
+                                            firstWord = "Next Available Time ";
+                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                            Date datechange = null;
+                                            try {
+                                                datechange = inputFormat.parse(inputDateStr);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String outputDateStr = outputFormat.format(datechange);
+
+
+                                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                            String dtStart = outputDateStr;
+                                            Date dateParse = null;
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                            try {
+                                                dateParse = format1.parse(dtStart);
+                                                System.out.println(dateParse);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            SimpleDateFormat format = new SimpleDateFormat("d");
+                                            String date1 = format.format(dateParse);
+
+                                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                            else
+                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                            String yourDate = format.format(dateParse);
+
+                                            secondWord=yourDate+", "+newtime;
+
                                         }
 
                                     } catch (Exception e) {
@@ -1421,7 +1653,7 @@ public class CheckIn extends AppCompatActivity {
                                     }
 
                                     if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
-                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime();
+                                       // secondWord = mQueueTimeSlotList.get(i).getServiceTime();
 
 
                                         //  dateCompareOne = parseDate(secondWord);
@@ -1443,11 +1675,56 @@ public class CheckIn extends AppCompatActivity {
 
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }*/
-                                            firstWord = "Checked in for ";
+
+                                            firstWord = "Checked in for Today, ";
+                                            secondWord = mQueueTimeSlotList.get(i).getServiceTime();
+
 
                                         } else {
 
-                                            firstWord = "Checked in for ";
+
+                                            firstWord = "Next Available Time ";
+                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                            Date datechange = null;
+                                            try {
+                                                datechange = inputFormat.parse(inputDateStr);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String outputDateStr = outputFormat.format(datechange);
+
+
+                                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                            String dtStart = outputDateStr;
+                                            Date dateParse = null;
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                            try {
+                                                dateParse = format1.parse(dtStart);
+                                                System.out.println(dateParse);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            SimpleDateFormat format = new SimpleDateFormat("d");
+                                            String date1 = format.format(dateParse);
+
+                                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                            else
+                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                            String yourDate = format.format(dateParse);
+
+
+                                            secondWord = yourDate+", "+mQueueTimeSlotList.get(i).getServiceTime();
+
                                         }
                                     }
 
@@ -1548,14 +1825,57 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-                                                firstWord = "Checked in for ";
+
+                                                firstWord = "Checked in for Today, ";
+
                                             } else {
                                                 firstWord = "Est Wait Time ";
-                                            }
 
+                                            }
+                                            secondWord = newtime;
+                                            Config.logV("First Word@@@@@@@@@@@@@"+firstWord+"Second"+secondWord);
                                         } else {
 
-                                            firstWord = "Checked in for ";
+                                            firstWord = "Next Available Time ";
+                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                            Date datechange = null;
+                                            try {
+                                                datechange = inputFormat.parse(inputDateStr);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String outputDateStr = outputFormat.format(datechange);
+
+
+                                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                            String dtStart = outputDateStr;
+                                            Date dateParse = null;
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                            try {
+                                                dateParse = format1.parse(dtStart);
+                                                System.out.println(dateParse);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            SimpleDateFormat format = new SimpleDateFormat("d");
+                                            String date1 = format.format(dateParse);
+
+                                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                            else
+                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                            String yourDate = format.format(dateParse);
+
+                                            secondWord=yourDate+", "+newtime;
+
                                         }
 
                                     } catch (Exception e) {
@@ -1564,7 +1884,8 @@ public class CheckIn extends AppCompatActivity {
 
 
                                     if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
-                                        secondWord = mQueueTimeSlotList.get(i).getServiceTime();
+
+                                      //  secondWord = mQueueTimeSlotList.get(i).getServiceTime();
 
 
                                         // dateCompareOne = parseDate(secondWord);
@@ -1585,12 +1906,61 @@ public class CheckIn extends AppCompatActivity {
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }
 */
-                                            firstWord = "Checked in for ";
+
+                                            firstWord = "Checked in for Today, ";
+                                            secondWord = mQueueTimeSlotList.get(i).getServiceTime();
+                                            Config.logV("First Word@@@@@@@@@@@@@"+firstWord+"Second777"+secondWord);
+
+
                                         } else {
 
-                                            firstWord = "Checked in for ";
+
+                                            firstWord = "Next Available Time ";
+                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                                            Date datechange = null;
+                                            try {
+                                                datechange = inputFormat.parse(inputDateStr);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String outputDateStr = outputFormat.format(datechange);
+
+
+                                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                                            String dtStart = outputDateStr;
+                                            Date dateParse = null;
+                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                                            try {
+                                                dateParse = format1.parse(dtStart);
+                                                System.out.println(dateParse);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            SimpleDateFormat format = new SimpleDateFormat("d");
+                                            String date1 = format.format(dateParse);
+
+                                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                                            else
+                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                                            String yourDate = format.format(dateParse);
+
+
+                                            secondWord = yourDate+", "+mQueueTimeSlotList.get(i).getServiceTime();
+
+
                                         }
                                     }
+
 
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
@@ -1690,6 +2060,7 @@ public class CheckIn extends AppCompatActivity {
                             mService.setId(response.body().get(i).getId());
                             mService.setPrePayment(response.body().get(i).isPrePayment());
                             mService.setTotalAmount(response.body().get(i).getTotalAmount());
+                            mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
                             LServicesList.add(mService);
                         }
 
@@ -1736,8 +2107,12 @@ public class CheckIn extends AppCompatActivity {
                                 isPrepayment = LServicesList.get(0).isPrePayment();
                                 Config.logV("Payment------------" + isPrepayment);
                                 if (isPrepayment) {
+
+
+                                    sAmountPay = LServicesList.get(0).getMinPrePaymentAmount();
                                     APIPayment(modifyAccountID);
-                                    sAmountPay = LServicesList.get(0).getTotalAmount();
+
+                                    Config.logV("Payment----sAmountPay--------" + sAmountPay);
 
                                 } else {
                                     // Lpayment.setVisibility(View.GONE);
@@ -2015,7 +2390,7 @@ public class CheckIn extends AppCompatActivity {
 
                         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
                         txt_message = "";
-                        Toast.makeText(mContext, " Check-in saved successfully ", Toast.LENGTH_LONG).show();
+
                         JSONObject reader = new JSONObject(response.body().string());
                         Iterator iteratorObj = reader.keys();
 
@@ -2056,6 +2431,11 @@ public class CheckIn extends AppCompatActivity {
                                     }
                                     final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                                     TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+
+                                    TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
+
+                                    txtprepayment.setText("Prepayment Amount ");
+
                                     txtamt.setText("Rs." + sAmountPay);
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
@@ -2064,7 +2444,11 @@ public class CheckIn extends AppCompatActivity {
                                         @Override
                                         public void onClick(View v) {
                                             //ApiGenerateHash(value, sAmountPay, accountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
+                                          // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
+
+
+                                             new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, accountID, "checkin");
+
                                             dialog.dismiss();
 
                                         }
@@ -2075,7 +2459,7 @@ public class CheckIn extends AppCompatActivity {
                                         public void onClick(View v) {
 
                                             PaytmPayment payment = new PaytmPayment(mContext);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, accountID, mContext, mActivity);
+                                            payment.ApiGenerateHashPaytm(value, sAmountPay, accountID,mContext,mActivity,"");
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
@@ -2088,6 +2472,7 @@ public class CheckIn extends AppCompatActivity {
 
 
                         } else {
+                            Toast.makeText(mContext, " Check-in saved successfully ", Toast.LENGTH_LONG).show();
                             finish();
                         }
                     } else {
@@ -2102,6 +2487,7 @@ public class CheckIn extends AppCompatActivity {
                             tokens.put("provider", mSearchTerminology.getProvider());
                             tokens.put("arrived", mSearchTerminology.getArrived());
                             tokens.put("waitlist", mSearchTerminology.getWaitlist());
+
                             tokens.put("start", mSearchTerminology.getStart());
                             tokens.put("cancelled", mSearchTerminology.getCancelled());
                             tokens.put("done", mSearchTerminology.getDone());
@@ -2152,7 +2538,9 @@ public class CheckIn extends AppCompatActivity {
 
     // Dialog mDialog1 = null;
 
-    public static void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
+
+    public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
+
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
@@ -2168,11 +2556,12 @@ public class CheckIn extends AppCompatActivity {
 
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
         builder.setAmount(convertStringToDouble(amount))
-                .setTxnId(checksumModel.getTxnId())
-                .setPhone(checksumModel.getMobile())
+
+                .setTxnId(checksumModel.getTxnid())
+                .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo())
-                .setFirstName(checksumModel.getFirstName())
+                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
                 .setsUrl(checksumModel.getFirstName())
                 .setfUrl(checksumModel.getFurl())
@@ -2221,6 +2610,7 @@ public class CheckIn extends AppCompatActivity {
 
                 if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
                     showAlert("Payment Successful");
+                    finish();
                 } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
                     showAlert("Payment Cancelled");
                 } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {

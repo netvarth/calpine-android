@@ -9,6 +9,15 @@ import java.util.ArrayList;
 
 public class SearchListModel implements Serializable{
 
+    public boolean isIs_SpecOpen() {
+        return is_SpecOpen;
+    }
+
+    public void setIs_SpecOpen(boolean is_SpecOpen) {
+        this.is_SpecOpen = is_SpecOpen;
+    }
+
+    private boolean is_SpecOpen=false;
     private String id;
     private String Logo;
     private String title;
@@ -72,6 +81,16 @@ public class SearchListModel implements Serializable{
     }
 
     int ynw_verified;
+
+    public void setYnw_verified_level(String ynw_verified_level) {
+        this.ynw_verified_level = ynw_verified_level;
+    }
+
+    String ynw_verified_level;
+
+    public String getYnw_verified_level() {
+        return ynw_verified_level;
+    }
 
     public String getParking_type_location1() {
         return parking_type_location1;

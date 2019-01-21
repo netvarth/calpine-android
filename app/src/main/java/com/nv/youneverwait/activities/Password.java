@@ -110,7 +110,7 @@ public class Password extends AppCompatActivity {
 
 
 
-            String firstWord = "Change ";
+           /* String firstWord = "Change ";
             String secondWord = "Password";
 
 
@@ -126,7 +126,8 @@ public class Password extends AppCompatActivity {
 
 
 
-            tv_password_title.setText( spannable );
+            tv_password_title.setText( spannable );*/
+            tv_password_title.setVisibility(View.INVISIBLE);
 
         }else{
             LinearLayout layout_toolbar=(LinearLayout)findViewById(R.id.layout_toolbar) ;
@@ -154,7 +155,7 @@ public class Password extends AppCompatActivity {
             spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-
+            tv_password_title.setVisibility(View.VISIBLE);
             tv_password_title.setText( spannable );
 
         }
@@ -429,6 +430,9 @@ public class Password extends AppCompatActivity {
                 ApiClient.getClient(this).create(ApiInterface.class);
        /* String androidId = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);*/
+
+        SharedPreference.getInstance(mContext).setValue("password", password);
+
         SharedPreferences pref = mContext.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
         Config.logV("REGISTARION ID_________________"+regId);
@@ -497,7 +501,7 @@ public class Password extends AppCompatActivity {
                         String version=headerList.get("Version");
                         Config.logV("Header----------"+version);
 
-                        SharedPreference.getInstance(mContext).setValue("Version",version);
+                      //  SharedPreference.getInstance(mContext).setValue("Version",version);
 
 
                         SharedPreference.getInstance(mContext).setValue("firstname",response.body().getFirstName());

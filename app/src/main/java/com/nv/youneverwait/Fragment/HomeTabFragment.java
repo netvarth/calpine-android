@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,24 +40,35 @@ public class HomeTabFragment extends Fragment {
 
     FavouriteFragment favFragment;
     DashboardFragment homeFragment;
-    CheckinsFragment checkinFragment;
+    CheckinsFragmentCopy checkinFragment;
     InboxFragment inboxFragment;
     ProfileFragment profileFragment;
 
     MenuItem prevMenuItem;
     static Fragment hometabFragment;
 
+    String tab;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.bottomtab_fragment, container, false);
         viewPager = (CustomViewPager) rootView.findViewById(R.id.viewpager);
+        mContext = getActivity();
 
+        Config.logV("Current @@@@@@@@@@@@@@@@11111");
 
         //Initializing the bottomNavigationView
         bottomNavigationView = (BottomNavigationView) rootView.findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
         bottomNavigationView.setItemIconTintList(null);
+
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            tab = bundle.getString("tab");
+
+        }
 
         return rootView;
     }
@@ -145,9 +157,9 @@ public class HomeTabFragment extends Fragment {
                 }
                 Log.d("page", "onPageSelected: " + position);
 
-
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+
 
             }
 
@@ -176,13 +188,12 @@ public class HomeTabFragment extends Fragment {
     }
 
 
-
     ViewPagerAdapter adapter;
 
     private void setupViewPager(CustomViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         homeFragment = new DashboardFragment();
-        checkinFragment = new CheckinsFragment();
+        checkinFragment = new CheckinsFragmentCopy();
         favFragment = new FavouriteFragment();
         inboxFragment = new InboxFragment();
         profileFragment = new ProfileFragment();
@@ -195,9 +206,19 @@ public class HomeTabFragment extends Fragment {
 
         // int limit = (adapter.getCount() > 1 ? adapter.getCount() - 1 : 1);
         // Config.logV("Limit------------@@@@@@@@@@@@@@@@@@@@---------"+limit);
-
+        Config.logV("Current @@@@@@@@@@@@@@@@");
         viewPager.setOffscreenPageLimit(0);
         viewPager.setAdapter(adapter);
+
+
+        if (tab != null) {
+            Config.logV("Tab@@@@@@@@@@@@@@@@@@@@@@@@@@@" + tab);
+            if (tab.equalsIgnoreCase("1")) {
+                viewPager.setCurrentItem(1);
+            }
+        }
+
+
 
     }
 

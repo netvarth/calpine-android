@@ -15,14 +15,15 @@ public class CheckSumModel {
     String merchantId;
     String email;
     String merchantKey;
+    String amount;
+    String txnid;
+
 
     public String getAmount() {
         return amount;
     }
 
-    String amount;
 
-   String txnid;
 
     public String getTxnid() {
         return txnid;

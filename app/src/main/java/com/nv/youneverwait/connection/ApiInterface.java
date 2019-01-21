@@ -2,6 +2,7 @@ package com.nv.youneverwait.connection;
 
 
 import com.nv.youneverwait.model.BillModel;
+import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.model.Domain_Spinner;
 import com.nv.youneverwait.model.FamilyArrayModel;
 import com.nv.youneverwait.model.SearchModel;
@@ -9,11 +10,13 @@ import com.nv.youneverwait.model.TestModel;
 import com.nv.youneverwait.response.ActiveCheckIn;
 import com.nv.youneverwait.response.CheckInModel;
 import com.nv.youneverwait.response.CheckSumModel;
+import com.nv.youneverwait.response.CoupnResponse;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.InboxModel;
 import com.nv.youneverwait.response.LocationResponse;
 import com.nv.youneverwait.response.LoginResponse;
 import com.nv.youneverwait.response.PaymentModel;
+import com.nv.youneverwait.response.PaytmChecksum;
 import com.nv.youneverwait.response.ProfileModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.QueueTimeSlotModel;
@@ -26,6 +29,7 @@ import com.nv.youneverwait.response.SearchService;
 import com.nv.youneverwait.response.SearchSetting;
 import com.nv.youneverwait.response.SearchTerminology;
 import com.nv.youneverwait.response.SearchViewDetail;
+import com.nv.youneverwait.response.SearchVirtualFields;
 import com.nv.youneverwait.response.SectorCheckin;
 
 
@@ -36,8 +40,11 @@ import java.util.Map;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
@@ -214,6 +221,10 @@ public interface ApiInterface {
     @POST("consumer/payment")
     Call<CheckSumModel> generateHash(@Body RequestBody jsonObj,@Query("accountId") String account);
 
+    @Headers("User-Agent: android")
+    @POST("consumer/payment")
+    Call<PaytmChecksum> generateHashPaytm(@Body RequestBody jsonObj);
+
     @POST("consumer/waitlist")
     Call<ResponseBody> Checkin(@Query("account") String account,@Body RequestBody jsonObj);
 
@@ -261,5 +272,21 @@ public interface ApiInterface {
     @GET("ynwConf/refinedFilters")
     Call<RefinedFilters> getFilters();
 
+    @FormUrlEncoded
+    @POST("checksum")
+    Call<ArrayList<PaytmChecksum>>getPaytmCheckSum(@Field("TXN_AMOUNT") String txnAmount);
 
+
+    @FormUrlEncoded
+    @POST("hashgenerator")
+    Call<CheckSumModelTest>getPayUCheckSum(@Field("TXN_AMOUNT") String txnAmount);
+
+
+
+    @GET("{consumerID}/virtualFields.json")
+    Call<SearchVirtualFields> getVirtualFields(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+
+
+    @GET("{consumerID}/coupon.json")
+    Call<ArrayList<CoupnResponse>> getCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 }

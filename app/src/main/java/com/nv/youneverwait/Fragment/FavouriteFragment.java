@@ -28,6 +28,7 @@ import com.nv.youneverwait.callback.FavAdapterOnCallback;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
+import com.nv.youneverwait.database.DatabaseHandler;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchSetting;
@@ -39,7 +40,9 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -68,7 +71,9 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
     FavAdapterOnCallback callback;
     ArrayList<QueueList> mSearchQueueList = new ArrayList<>();
 
+    ArrayList<FavouriteModel> mFavModelList = new ArrayList<>();
     TextView tv_nofav;
+    DatabaseHandler db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,7 +98,29 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         mrRecylce_fav = (RecyclerView) row.findViewById(R.id.recylce_fav);
 
-        ApiFavList();
+        if (Config.isOnline(getActivity())) {
+            ApiFavList();
+        } else {
+            mFavList.clear();
+            db = new DatabaseHandler(getActivity());
+            mFavList = db.getFavourites();
+            Config.logV("mFavList 22@@@@@@@@@@@@@@@@@" + mFavList.size());
+            if (mFavList.size() > 0) {
+
+                mrRecylce_fav.setVisibility(View.VISIBLE);
+                tv_nofav.setVisibility(View.GONE);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                mrRecylce_fav.setLayoutManager(mLayoutManager);
+                mFavAdapter = new FavouriteAdapter(mFavList, mContext, mActivity, callback);
+                mrRecylce_fav.setAdapter(mFavAdapter);
+                mFavAdapter.notifyDataSetChanged();
+            } else {
+                mrRecylce_fav.setVisibility(View.GONE);
+                tv_nofav.setVisibility(View.VISIBLE);
+            }
+
+
+        }
 
 
         return row;
@@ -120,8 +147,45 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
+
                         mFavList = response.body();
-                        if(mFavList.size()>0) {
+                        mFavModelList.addAll(response.body());
+                        if (mFavList.size() > 0) {
+
+                            db = new DatabaseHandler(mContext);
+                            db.DeleteFav();
+
+                            for (int i = 0; i < mFavList.size(); i++) {
+                                FavouriteModel fav = new FavouriteModel();
+                                fav.setRevealPhoneNumber(mFavList.get(i).isRevealPhoneNumber());
+                                fav.setId(mFavList.get(i).getId());
+                                fav.setUniqueId(mFavList.get(i).getUniqueId());
+                                fav.setBusinessName(mFavList.get(i).getBusinessName());
+                                String locid = "";
+                                String place = "";
+                                for (int j = 0; j < mFavList.get(i).getLocations().size(); j++) {
+                                    if (j == 0) {
+                                        locid += mFavList.get(i).getLocations().get(j).getLocId();
+                                    } else {
+                                        locid += "," + mFavList.get(i).getLocations().get(j).getLocId();
+                                    }
+
+                                    if (j == 0) {
+                                        place += mFavList.get(i).getLocations().get(j).getPlace();
+                                    } else {
+                                        place += "," + mFavList.get(i).getLocations().get(j).getPlace();
+                                    }
+                                }
+                                Config.logV("Loc ID @@@@@@@@@@@" + locid);
+                                fav.setLocationId(locid);
+                                fav.setPlace(place);
+                                db.insertFavInfo(fav);
+                            }
+
+                            mFavList.clear();
+                            mFavList = db.getFavourites();
+
+
 
                             mrRecylce_fav.setVisibility(View.VISIBLE);
                             tv_nofav.setVisibility(View.GONE);
@@ -130,15 +194,15 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                             mFavAdapter = new FavouriteAdapter(mFavList, mContext, mActivity, callback);
                             mrRecylce_fav.setAdapter(mFavAdapter);
                             mFavAdapter.notifyDataSetChanged();
-                        }else{
+                        } else {
                             mrRecylce_fav.setVisibility(View.GONE);
                             tv_nofav.setVisibility(View.VISIBLE);
                         }
 
-                    }else{
-                        if(response.code()==419){
-                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
-                            LogUtil.writeLogTest(response.errorBody().string()+" "+cookie);
+                    } else {
+                        if (response.code() == 419) {
+                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
+                            LogUtil.writeLogTest(response.errorBody().string() + " " + cookie);
                         }
                     }
 
@@ -165,10 +229,12 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
     String mTitle;
 
     @Override
-    public void onMethodViewCallback(int mProviderid, ArrayList<Integer> ids, RecyclerView rfavlocRecycleview, int uniqueID, String title) {
-        ApiSearchViewID(mProviderid, ids, rfavlocRecycleview);
+    public void onMethodViewCallback(int mProviderid, ArrayList<String> ids, RecyclerView rfavlocRecycleview, int uniqueID, String title) {
+
         uniQueID = uniqueID;
         mTitle = title;
+
+        ApiSearchViewID(mProviderid, ids, rfavlocRecycleview);
 
     }
 
@@ -238,6 +304,8 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
 
+                    Config.logV("mFavModelList------------------" + mFavModelList);
+
                     if (response.code() == 200) {
 
                         mSearchSettings = response.body();
@@ -245,20 +313,19 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
 
-
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavList, mSearchSettings, String.valueOf(uniQueID), mTitle);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
                     } else {
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavList, mSearchSettings, String.valueOf(uniQueID), mTitle);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
-                        if(response.code()==419){
-                            String cookie= SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
-                            LogUtil.writeLogTest(response.errorBody().string()+" "+cookie);
+                        if (response.code() == 419) {
+                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
+                            LogUtil.writeLogTest(response.errorBody().string() + " " + cookie);
                         }
                     }
 
@@ -282,7 +349,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
     }
 
-    private void ApiSearchViewID(int mProviderid, ArrayList<Integer> ids, final RecyclerView rfavlocRecycleview) {
+    private void ApiSearchViewID(int mProviderid, ArrayList<String> ids, final RecyclerView rfavlocRecycleview) {
 
 
         ApiInterface apiService =
@@ -292,9 +359,14 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
+        Config.logV("IDS SIZE @@@@@@@@@@@@@@@@@@@@"+ids.size());
+        List<String> idList = Arrays.asList(ids.get(0).split(","));
+
+
         String idPass = "";
-        for (int i = 0; i < ids.size(); i++) {
-            idPass += mProviderid + "-" + ids.get(i) + ",";
+        for (int i = 0; i < idList.size(); i++) {
+
+            idPass += mProviderid + "-" + idList.get(i) + ",";
         }
 
         Config.logV("IDS_--------------------" + idPass);
@@ -481,6 +553,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext,"Removed from favourites",Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 

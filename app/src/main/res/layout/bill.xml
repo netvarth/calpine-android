@@ -52,7 +52,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding3"
-                        android:gravity="left"
+                        android:gravity="center"
 
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_title" />
@@ -66,7 +66,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.4"
+                            android:layout_weight="0.7"
                             android:gravity="left"
                             android:text="@string/customer"
                             android:textColor="@color/sec_title_grey"
@@ -91,7 +91,7 @@
                             android:id="@+id/txtcustomer"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.4"
+                            android:layout_weight="0.7"
                             android:gravity="left"
 
                             android:textColor="@color/title_grey"
@@ -116,7 +116,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.4"
+                            android:layout_weight="0.7"
                             android:gravity="left"
                             android:text="@string/bill"
                             android:textColor="@color/sec_title_grey"
@@ -141,7 +141,7 @@
                             android:id="@+id/txtbill"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.4"
+                            android:layout_weight="0.7"
                             android:gravity="left"
 
                             android:textColor="@color/title_grey"
@@ -170,20 +170,103 @@
                         android:layout_marginTop="@dimen/padding7"
                         android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
 
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding7"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:gravity="left"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                        <TextView
+                            android:id="@+id/tv_gross"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Gross Amount"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+
+                        <TextView
+                            android:id="@+id/grosstotal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:gravity="right"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                    </LinearLayout>
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycle_discount_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding3"
+                        android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
+
+                    <LinearLayout
+                        android:id="@+id/taxlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding3"
+                        android:visibility="gone"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:gravity="left"
+                            android:visibility="invisible"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                        <TextView
+                            android:id="@+id/tv_tax"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Tax(CGST: %, SGST: %)"
+                            android:textColor="@color/sec_title_grey"
+                            android:textSize="@dimen/txtsize_12" />
+
+                        <TextView
+                            android:id="@+id/txtaxval"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:gravity="right"
+                            android:textColor="@color/sec_title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                    </LinearLayout>
+
                     <LinearLayout
                         android:id="@+id/amountlayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/default_padding"
+                        android:layout_marginTop="@dimen/padding3"
                         android:orientation="horizontal">
-
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:gravity="left"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
                         <TextView
                             android:id="@+id/txtnetRate"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.4"
+                            android:layout_weight="0.5"
+                            android:text="Net Total"
                             android:gravity="right"
-                            android:text="@string/amount"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
@@ -191,14 +274,14 @@
                             android:id="@+id/txtamt"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.6"
+                            android:layout_weight="0.3"
                             android:gravity="right"
 
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
 
-                    <LinearLayout
+                   <!-- <LinearLayout
                         android:id="@+id/discountlayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -206,6 +289,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/txtdiscount_head"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
@@ -233,6 +317,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/txtcoupan_head"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.4"
@@ -250,7 +335,7 @@
 
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <LinearLayout
                         android:id="@+id/paidlayout"
@@ -258,13 +343,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding3"
                         android:orientation="horizontal">
-
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.4"
-                            android:gravity="right"
+                            android:layout_weight="0.2"
+                            android:gravity="left"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
                             android:text="@string/amt_pay"
+                            android:gravity="right"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_12" />
 
@@ -272,7 +363,7 @@
                             android:id="@+id/amtpaid"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.6"
+                            android:layout_weight="0.3"
                             android:gravity="right"
 
                             android:textColor="@color/title_grey"
@@ -282,17 +373,23 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding7"
+                        android:layout_marginTop="@dimen/padding5"
                         android:orientation="horizontal">
-
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:gravity="left"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
                         <TextView
 
                             android:id="@+id/txttotal"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.4"
+                            android:layout_weight="0.5"
+                            android:text="Amount Due"
                             android:gravity="right"
-                            android:text="Total Amount"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
@@ -300,7 +397,7 @@
                             android:id="@+id/totalamt"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.6"
+                            android:layout_weight="0.3"
                             android:gravity="right"
 
                             android:textColor="@color/colorAccent"
@@ -315,6 +412,19 @@
                         android:layout_marginTop="@dimen/default_padding"
                         android:orientation="horizontal">
 
+                       <!-- <Button
+                            android:id="@+id/btn_cancel"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+
+                            android:layout_weight="0.3"
+                            android:background="@drawable/roundedrect_grey"
+                            android:text="@string/cancel"
+                            android:textAllCaps="false"
+                            android:textColor="@color/app_background"
+                            android:textSize="@dimen/txtsize_hint" />-->
+
                         <Button
                             android:id="@+id/btn_pay"
                             style="?android:attr/borderlessButtonStyle"
@@ -324,19 +434,7 @@
                             android:background="@drawable/roundedrect_blue"
                             android:text="Make Payment"
                             android:textAllCaps="false"
-                            android:textColor="@color/app_background"
-                            android:textSize="@dimen/txtsize_hint" />
 
-                        <Button
-                            android:id="@+id/btn_cancel"
-                            style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/default_padding"
-                            android:layout_weight="0.3"
-                            android:background="@drawable/roundedrect_grey"
-                            android:text="@string/cancel"
-                            android:textAllCaps="false"
                             android:textColor="@color/app_background"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>

@@ -1,6 +1,7 @@
 package com.nv.youneverwait.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.nv.youneverwait.model.SocialMediaModel;
 
 import java.util.ArrayList;
 
@@ -10,11 +11,31 @@ import java.util.ArrayList;
 
 public class SearchViewDetail {
 
+    String label;
+    String resource;
+    String instance;
+    String permission;
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getResource() {
+        return resource;
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    public String getPermission() {
+        return permission;
+    }
 
     int id;
     String businessName;
     String displayName;
-    String   domain;
+    String domain;
     String businessDesc;
     String experience;
 
@@ -23,6 +44,30 @@ public class SearchViewDetail {
     String awardName;
     String awardIssuedBy;
     String awardMonth;
+
+    public ArrayList<SocialMediaModel> getSocialMedia() {
+        return socialMedia;
+    }
+
+    public ArrayList getSpecialization() {
+        return specialization;
+    }
+
+    ArrayList specialization;
+
+    ArrayList<SocialMediaModel> socialMedia;
+
+    public ArrayList<SearchViewDetail> getEmails() {
+        return emails;
+    }
+
+    ArrayList<SearchViewDetail> emails;
+
+    public ArrayList<SearchViewDetail> getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    ArrayList<SearchViewDetail> phoneNumbers;
 
     public String getAwardName() {
         return awardName;
@@ -104,6 +149,7 @@ public class SearchViewDetail {
     public void setAwardsrecognitions(ArrayList<SearchViewDetail> awardsrecognitions) {
         this.awardsrecognitions = awardsrecognitions;
     }
+
     public String getExperience() {
         return experience;
     }
@@ -144,7 +190,6 @@ public class SearchViewDetail {
     public void setDomainVirtualFields(SearchViewDetail domainVirtualFields) {
         this.domainVirtualFields = domainVirtualFields;
     }
-
 
 
     public int getId() {

@@ -39,8 +39,4 @@ public class CoupnResponse {
 
     String couponName;
 
-
-
-
-
 }

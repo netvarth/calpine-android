@@ -146,6 +146,35 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
+                Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
+                if(searchdetailList.getYnw_verified_level()!=null) {
+                    if (searchdetailList.getYnw_verified() == 1) {
+                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("1")) {
+
+                            myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_ynw_verified.setText("Basic");
+                        }
+
+
+                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("2")) {
+                            myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_ynw_verified.setText("Basic Plus");
+                        }
+
+
+                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("3")) {
+
+                            myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_ynw_verified.setText("Premium");
+                        }
+                    }else{
+                        myViewHolder.tv_ynw_verified.setVisibility(View.GONE);
+                    }
+                }else{
+                    myViewHolder.tv_ynw_verified.setVisibility(View.GONE);
+                }
+
+
 ////////////////////////////7 types////////////////////////////////////////////
                 ArrayList<ParkingModel> listType = new ArrayList<>();
                 listType.clear();
@@ -254,25 +283,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
 
-
-                myViewHolder.tv_domain.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
-                    }
-                });
-
-
                 myViewHolder.tv_coupon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
                     }
                 });
-
-               /* Typeface tyface_date = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Light.otf");
-                myViewHolder.tv_Futuredate.setTypeface(tyface_date);*/
 
 
                 if (searchdetailList.getQualification() != null) {
@@ -406,7 +422,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
-                                       // String firstWord = "Est Service Time ";
+
                                         String firstWord = "Checked in for ";
                                         /*String firstWord = null;
                                         Date dt = new Date();
@@ -443,7 +459,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                     "fonts/Montserrat_Bold.otf");
                                             //String firstWord = "Est Service Time ";
-                                            String firstWord="";
+
+                                            String firstWord = "";
+
                                             if (hours > 0) {
                                                 firstWord = "Checked in for ";
                                             } else {
@@ -563,59 +581,131 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     // myViewHolder.tv_specialization.setText(searchdetailList.getSpecialization_displayname());
                     final List<String> list_spec = new ArrayList<String>(Arrays.asList(searchdetailList.getSpecialization_displayname().split(",")));
 
-                    Config.logV("SPECIALIZTION SIZE @@@@@@@@@@@@@@@" + list_spec.size());
                     if (list_spec.size() > 0) {
                         if (list_spec.size() == 1) {
 
                             myViewHolder.L_specialization.setVisibility(View.GONE);
                             myViewHolder.tv_spec.setText(list_spec.get(0));
+                            myViewHolder.tv_spec.setTextSize(13);
                             myViewHolder.tv_spec.setVisibility(View.VISIBLE);
                             myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
                         } else {
-
-
+                            myViewHolder.L_specialization.setVisibility(View.GONE);
                             myViewHolder.tv_spec.setText(list_spec.get(0));
                             myViewHolder.tv_spec.setVisibility(View.VISIBLE);
                             myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_arrowright_gray, 0);
-
-
                             myViewHolder.L_specialization.removeAllViews();
                             myViewHolder.L_specialization.setVisibility(View.GONE);
+                            myViewHolder.tv_spec.setTextSize(13);
+                            if(!searchdetailList.isIs_SpecOpen()) {
+                                myViewHolder.tv_spec.setText(list_spec.get(0));
+                                myViewHolder.tv_spec.setVisibility(View.VISIBLE);
+                                myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_bottom, 0);
+                                myViewHolder.L_specialization.removeAllViews();
+                                myViewHolder.L_specialization.setVisibility(View.GONE);
+                            }else{
+                                myViewHolder.L_specialization.removeAllViews();
+                                myViewHolder.L_specialization.setOrientation(LinearLayout.VERTICAL);
+                                myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+                                myViewHolder.tv_spec.setVisibility(View.GONE);
+                                for (int i = 0; i < list_spec.size(); i++) {
 
+                                    TextView dynaText = new TextView(context);
+                                    Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                            "fonts/Montserrat_Regular.otf");
+                                    dynaText.setTypeface(tyface);
+                                    String word = list_spec.get(i);
+                                    word = word.replaceFirst("^\\s*", "");
 
-                            myViewHolder.tv_spec.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    myViewHolder.L_specialization.removeAllViews();
-                                    myViewHolder.L_specialization.setOrientation(LinearLayout.VERTICAL);
-                                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-                                    myViewHolder.tv_spec.setVisibility(View.GONE);
-
-                                    for (int i = 0; i < list_spec.size(); i++) {
-
-                                        TextView dynaText = new TextView(context);
-                                        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                                                "fonts/Montserrat_Regular.otf");
-                                        dynaText.setTypeface(tyface);
-                                        dynaText.setText(list_spec.get(i));
-                                        dynaText.setTextSize(12);
-                                        dynaText.setTextColor(context.getResources().getColor(R.color.black));
-                                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                        dynaText.setMaxLines(1);
-                                        myViewHolder.L_specialization.addView(dynaText);
+                                    dynaText.setText(word);
+                                    //  dynaText.setText(list_spec.get(i));
+                                    dynaText.setTextSize(13);
+                                    dynaText.setTextColor(context.getResources().getColor(R.color.black));
+                                    dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                    dynaText.setMaxLines(1);
+                                    if(i==list_spec.size()-1){
+                                        dynaText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_top, 0);
+                                        dynaText.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Config.logV("SpEc Open @@@@%%%");
+                                                myViewHolder.tv_spec.setText(list_spec.get(0));
+                                                myViewHolder.tv_spec.setVisibility(View.VISIBLE);
+                                                myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_bottom, 0);
+                                                myViewHolder.L_specialization.removeAllViews();
+                                                searchdetailList.setIs_SpecOpen(false);
+                                                myViewHolder.L_specialization.setVisibility(View.GONE);
+                                            }
+                                        });
                                     }
-
+                                    myViewHolder.L_specialization.addView(dynaText);
                                 }
-                            });
+                            }
+
+                            Config.logV("SpEc Open----------"+searchdetailList.isIs_SpecOpen()+"Prov"+searchdetailList.getTitle());
+
+
+                                myViewHolder.tv_spec.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Config.logV("SpEc Open @@@@");
+                                        myViewHolder.L_specialization.removeAllViews();
+                                        myViewHolder.L_specialization.setOrientation(LinearLayout.VERTICAL);
+                                        myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+                                        myViewHolder.tv_spec.setVisibility(View.GONE);
+
+                                        for (int i = 0; i < list_spec.size(); i++) {
+
+                                            TextView dynaText = new TextView(context);
+                                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                                    "fonts/Montserrat_Regular.otf");
+                                            dynaText.setTypeface(tyface);
+                                            String word = list_spec.get(i);
+                                            word = word.replaceFirst("^\\s*", "");
+
+                                            dynaText.setText(word);
+                                            //  dynaText.setText(list_spec.get(i));
+                                            dynaText.setTextSize(13);
+                                            dynaText.setTextColor(context.getResources().getColor(R.color.black));
+                                            dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                            dynaText.setMaxLines(1);
+                                            if(i==list_spec.size()-1){
+                                                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_top, 0);
+                                                dynaText.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        Config.logV("SpEc Open @@@@%%%");
+                                                        myViewHolder.tv_spec.setText(list_spec.get(0));
+                                                        myViewHolder.tv_spec.setVisibility(View.VISIBLE);
+                                                        myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_bottom, 0);
+                                                        myViewHolder.L_specialization.removeAllViews();
+                                                        searchdetailList.setIs_SpecOpen(false);
+                                                        myViewHolder.L_specialization.setVisibility(View.GONE);
+                                                    }
+                                                });
+                                            }
+
+                                            myViewHolder.L_specialization.addView(dynaText);
+                                        }
+
+                                        searchdetailList.setIs_SpecOpen(true);
+
+
+
+                                    }
+                                });
+                           // }
                         }
 
 
                     } else {
+                        myViewHolder.tv_spec.setVisibility(View.GONE);
                         myViewHolder.L_specialization.setVisibility(View.GONE);
 
                     }
                 } else {
+                    myViewHolder.tv_spec.setVisibility(View.GONE);
                     myViewHolder.L_specialization.setVisibility(View.GONE);
 
                 }
@@ -640,7 +730,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     "fonts/Montserrat_Regular.otf");
                             dynaText.setTypeface(tyface);
                             dynaText.setText(searchdetailList.getServices().get(i).toString());
-                            dynaText.setTextSize(12);
+                            dynaText.setTextSize(13);
+
                             //  dynaText.setPadding(0, 0, 12, 0);
                             dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
                             dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
@@ -970,7 +1061,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_Open, tv_WaitTime,tv_spec;
+
+        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_Open, tv_WaitTime, tv_spec,tv_ynw_verified;
+
         LinearLayout L_specialization, L_services;
 
         ImageView profile;
@@ -983,6 +1076,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public MyViewHolder(View view) {
             super(view);
+            tv_ynw_verified= (TextView) view.findViewById(R.id.ynw_verified);
             tv_name = (TextView) view.findViewById(R.id.name);
             tv_location = (TextView) view.findViewById(R.id.location);
             tv_domain = (TextView) view.findViewById(R.id.domain);
@@ -1001,7 +1095,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             tv_communicate = (ImageView) view.findViewById(R.id.txtcommunicate);
             mRecycleTypes = (RecyclerView) view.findViewById(R.id.mRecycleTypes);
             layout_row = (LinearLayout) view.findViewById(R.id.layout_row);
-            tv_spec=(TextView)view.findViewById(R.id.txtspec);
+
+            tv_spec = (TextView) view.findViewById(R.id.txtspec);
+
 
         }
     }
@@ -1064,6 +1160,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iService.putExtra("servicegallery", service.get(i).getServicegallery());
                                 iService.putExtra("taxable", service.get(i).isTaxable());
                                 iService.putExtra("title", title);
+                                iService.putExtra("isPrePayment", service.get(i).isPrePayment());
+                                iService.putExtra("MinPrePaymentAmount", service.get(i).getMinPrePaymentAmount());
                                 context.startActivity(iService);
 
                             }

@@ -26,14 +26,14 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
+                android:layout_weight="0.9"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/txt_businessname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/padding3"
+                    android:layout_margin="@dimen/padding2"
                     android:textColor="@color/title_consu"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -41,7 +41,7 @@
                     android:id="@+id/txt_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/padding3"
+                    android:layout_margin="@dimen/padding2"
                     android:drawableLeft="@drawable/icon_location_lightgray"
                     android:drawablePadding="3dp"
                     android:textColor="@color/sec_title_grey"
@@ -69,10 +69,27 @@
 
         </LinearLayout>
 
+
+                <TextView
+                    android:id="@+id/txt_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text=""
+                    android:layout_margin="@dimen/padding2"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+                <TextView
+                    android:id="@+id/txt_esttime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding2"
+                    android:text="esttime"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding3"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -80,14 +97,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.9"
                 android:orientation="vertical">
-
                 <TextView
-                    android:id="@+id/txt_esttime"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/txt_status"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/padding3"
-                    android:text="esttime"
-                    android:textColor="@color/title_grey"
+                    android:visibility="gone"
+                    android:layout_margin="@dimen/padding2"
                     android:textSize="@dimen/txtsize_12" />
 
 
@@ -95,10 +110,10 @@
                     android:id="@+id/txtprepaid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/padding3"
-                    android:text="Prepaid Amount"
+                    android:layout_margin="@dimen/padding2"
+                    android:text="Amount Due"
                     android:visibility="gone"
-                    android:textColor="@color/sec_title_grey"
+                    android:textColor="@color/orange"
                     android:textSize="@dimen/txtsize_12" />
             </LinearLayout>
 
@@ -106,7 +121,7 @@
                 android:id="@+id/layout_btnpay"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="0.2"
                 android:layout_gravity="bottom"
                 android:orientation="vertical">
 
@@ -119,10 +134,11 @@
                     android:textAllCaps="true"
                     android:layout_gravity="right"
                     android:textColor="@color/app_background"
-                    android:textSize="@dimen/txtsize_12"
+                    android:textSize="@dimen/txtsize_10"
+                    android:visibility="gone"
                     android:paddingLeft="@dimen/padding2"
                     android:paddingRight="@dimen/padding2"
-                    android:enabled="false"
+
                     style="?android:attr/borderlessButtonStyle" />
             </LinearLayout>
         </LinearLayout>

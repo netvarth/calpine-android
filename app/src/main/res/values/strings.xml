@@ -2,7 +2,7 @@
     <string name="app_name">Jaldee</string>
     <string name="layout_button_ok">Ok</string>
     <string name="submit">Submit</string>
-    <string name="hint_mobile">Enter Your Mobile Number</string>
+    <string name="hint_mobile">Enter your mobile number</string>
     <string name="hint_lastname">Last Name</string>
     <string name="hint_firstname">First Name</string>
     <string name="signup">SignUp</string>
@@ -96,7 +96,7 @@
     <string name="searchhint_loc">Eg: Majestic, Bangalore, Karnataka</string>
     <string name="customer">Customer</string>
     <string name="datetime"><![CDATA[Date & Time]]></string>
-    <string name="bill">Bill Number</string>
+    <string name="bill">Bill #</string>
     <string name="GSTIN">GSTIN</string>
     <string name="amount">Amount</string>
     <string name="discount">Discount</string>
@@ -112,6 +112,10 @@
     <string name="eduqualif">Educational Qualification</string>
     <string name="experience">Experience</string>
     <string name="awards"><![CDATA[Awards & Recognitions]]></string>
+    <string name="call_permission_denied_message">Call permission denied</string>
+    <string name="db_table_checkin">tb_checkin</string>
+    <string name="db_table_fav">tb_favour</string>
+    <string name="serve_prepay">The service needs prepayment for Check-in</string>
 
 
 </resources>

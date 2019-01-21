@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.response.FavouriteModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -43,8 +45,9 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_provider, tv_removefav, tv_privacy, tv_message, tv_view;
-        LinearLayout Lfavlisiting;
+        LinearLayout Lfavlisiting,Layout_fav;
         RecyclerView mrRecylce_fav;
+        ImageView imgarrow;
 
         public MyViewHolder(View view) {
             super(view);
@@ -55,6 +58,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
             tv_message = (TextView) view.findViewById(R.id.txtmessage);
             tv_view = (TextView) view.findViewById(R.id.txtview);
             Lfavlisiting = (LinearLayout) view.findViewById(R.id.favlisiting);
+            imgarrow=(ImageView) view.findViewById(R.id.imgarrow);
+            Layout_fav=(LinearLayout) view.findViewById(R.id.layout_fav);
 
 
         }
@@ -62,13 +67,15 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
 
     Activity activity;
     FavAdapterOnCallback callback;
-    ArrayList<Integer> ids = new ArrayList<>();
+    ArrayList<String> ids = new ArrayList<>();
+
 
     public FavouriteAdapter(List<FavouriteModel> mFAVList, Context mContext, Activity mActivity, FavAdapterOnCallback callback) {
         this.mContext = mContext;
         this.mFavList = mFAVList;
         this.activity = mActivity;
         this.callback = callback;
+
 
     }
 
@@ -90,35 +97,43 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         myViewHolder.tv_provider.setTypeface(tyface);
 
         myViewHolder.tv_provider.setText(favList.getBusinessName());
-        myViewHolder.tv_provider.setOnClickListener(new View.OnClickListener() {
+
+        myViewHolder.imgarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                if (!favList.isExpandFlag()) {
-                    favList.setExpandFlag(true);
-                    myViewHolder.Lfavlisiting.setVisibility(View.VISIBLE);
-                    ids.clear();
-                    for (int i = 0; i < favList.getLocations().size(); i++) {
+                if(Config.isOnline(mContext)) {
+                    if (!favList.isExpandFlag()) {
+                        favList.setExpandFlag(true);
+                        myViewHolder.Lfavlisiting.setVisibility(View.VISIBLE);
+                        ids.clear();
+                    /*for (int i = 0; i < favList.getLocations().size(); i++) {
                         ids.add(favList.getLocations().get(i).getLocId());
+                    }*/
+                        ids = new ArrayList<String>(Arrays.asList(favList.getLocationId().split(" , ")));
+
+                        Config.logV("Ids------------" + ids.size());
+                        for (int i = 0; i < ids.size(); i++) {
+
+                            Config.logV("Ids---1111---------" + ids.get(i));
+                        }
+                        callback.onMethodViewCallback(favList.getId(), ids, myViewHolder.mrRecylce_fav, favList.getUniqueId(), favList.getBusinessName());
+                        myViewHolder.imgarrow.setImageResource(R.drawable.icon_up_light);
+                        myViewHolder.Layout_fav.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top_white));
+                    } else {
+                        favList.setExpandFlag(false);
+                        myViewHolder.Lfavlisiting.setVisibility(View.GONE);
+                        myViewHolder.imgarrow.setImageResource(R.drawable.icon_down_light);
+                        myViewHolder.Layout_fav.setBackground(mContext.getResources().getDrawable(R.drawable.input_background_white_round));
+
                     }
-
-
-                    Config.logV("Ids------------" + ids.size());
-                    for (int i = 0; i < ids.size(); i++) {
-
-                        Config.logV("Ids---1111---------" + ids.get(i));
-                    }
-                    callback.onMethodViewCallback(favList.getId(), ids, myViewHolder.mrRecylce_fav, favList.getUniqueId(), favList.getBusinessName());
-                    myViewHolder.tv_provider.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                    myViewHolder.tv_provider.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top_white));
-                } else {
-                    favList.setExpandFlag(false);
-                    myViewHolder.Lfavlisiting.setVisibility(View.GONE);
-                    myViewHolder.tv_provider.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                    myViewHolder.tv_provider.setBackground(mContext.getResources().getDrawable(R.drawable.input_background_white_round));
-
                 }
+            }
+        });
+        myViewHolder.tv_provider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onMethodSearchDetailCallback(favList.getUniqueId());
             }
 
 
@@ -142,11 +157,13 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
-                        if(edt_message.getText().toString().length()>1){
+                        if(edt_message.getText().toString().length()>1&&!edt_message.getText().toString().trim().isEmpty()){
                             btn_send.setEnabled(true);
+                            btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
                         }else{
                             btn_send.setEnabled(false);
+                            btn_send.setClickable(false);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
                     }
@@ -196,9 +213,10 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
             @Override
             public void onClick(View v) {
 
-                AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
+                callback.onMethodDeleteFavourite(favList.getId());
+                /*AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
                         //set message, title, and icon
-                        .setTitle("Delete")
+                        //.setTitle("Delete")
                         .setMessage("Do you want to remove "+favList.getBusinessName()+" from favourite list?")
 
 
@@ -222,7 +240,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                             }
                         })
                         .create();
-                 myQuittingDialogBox.show();
+                 myQuittingDialogBox.show();*/
             }
         });
 

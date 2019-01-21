@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -82,13 +83,13 @@ public class ChangePasswordFragment extends RootFragment {
 
 
 
-
+        //setupUI(row.findViewById(R.id.layout_main));
 
 
         edtOldpwd=(TextInputEditText) row.findViewById(R.id.edt_oldpwd) ;
         edtNewpwd=(TextInputEditText) row.findViewById(R.id.edt_newpwd) ;
         edtconfirmpwd=(TextInputEditText) row.findViewById(R.id.confirmpwd) ;
-        edtOldpwd.setTransformationMethod(new PasswordTransformationMethod());
+       // edtOldpwd.setTransformationMethod(new PasswordTransformationMethod());
         edtNewpwd.setTransformationMethod(new PasswordTransformationMethod());
         edtconfirmpwd.setTransformationMethod(new PasswordTransformationMethod());
 
@@ -118,7 +119,7 @@ public class ChangePasswordFragment extends RootFragment {
             @Override
             public void onClick(View v) {
                 if(Config.isOnline(mContext)){
-                    if(validatePassword()&&validateConfirmPassword()&&validateOldPassword()) {
+                    if(validatePassword()&&validateConfirmPassword()/*&&validateOldPassword()*/) {
                         if (edtNewpwd.getText().toString().equalsIgnoreCase(edtconfirmpwd.getText().toString())) {
                             ApiChangePwd(edtOldpwd.getText().toString(), edtNewpwd.getText().toString());
                         }else{
@@ -174,7 +175,7 @@ public class ChangePasswordFragment extends RootFragment {
         return true;
     }
 
-    private boolean validateOldPassword() {
+    /*private boolean validateOldPassword() {
         if (!validatePwd(edtOldpwd.getText().toString())) {
             txt_Old_InputPwd.setError(getString(R.string.err_pwd_valid));
             requestFocus(edtOldpwd);
@@ -185,7 +186,7 @@ public class ChangePasswordFragment extends RootFragment {
         }
 
         return true;
-    }
+    }*/
     private class MyTextWatcher implements TextWatcher {
 
         private View view;
@@ -202,9 +203,9 @@ public class ChangePasswordFragment extends RootFragment {
 
         public void afterTextChanged(Editable editable) {
             switch (view.getId()) {
-                case R.id.edt_oldpwd:
-                    validateOldPassword();
-                    break;
+               /* case R.id.edt_oldpwd:
+                    //validateOldPassword();
+                    break;*/
                 case R.id.edt_newpwd:
                     validatePassword();
                     break;
@@ -263,7 +264,9 @@ public class ChangePasswordFragment extends RootFragment {
 
 
                     }else{
-                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
+                        if (response.code() != 419) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
 
@@ -286,6 +289,29 @@ public class ChangePasswordFragment extends RootFragment {
 
     }
 
+    /*public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+    public void setupUI(View view) {
 
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof TextInputEditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(getActivity());
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
+    }*/
 
 }

@@ -15,22 +15,22 @@
         <TextView
             android:id="@+id/txtservice"
             android:layout_width="0dp"
-            android:layout_weight="0.6"
+            android:layout_weight="0.75"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:textSize="@dimen/txtsize_12"
+            android:textSize="@dimen/dimen_12dp"
             android:textColor="@color/title_grey"
             android:text="Service" />
 
         <TextView
             android:id="@+id/txtdomain"
             android:layout_width="0dp"
-            android:layout_weight="0.4"
+            android:layout_weight="0.3"
             android:layout_height="wrap_content"
             android:gravity="right"
             android:textSize="@dimen/txtsize_10"
             android:textColor="@color/title_grey"
-            android:paddingRight="@dimen/default_padding"
+            android:paddingRight="@dimen/padding7"
             android:text="Domain" />
     </LinearLayout>
     <View

@@ -172,6 +172,10 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
                             Toast.makeText(mContext, "Member deleted successfully ", Toast.LENGTH_LONG).show();
                             notifyDataSetChanged();
                         }
+                    }else{
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
+                        }
                     }
 
 

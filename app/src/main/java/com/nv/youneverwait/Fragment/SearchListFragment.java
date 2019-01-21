@@ -54,6 +54,7 @@ import com.nv.youneverwait.model.ListCell;
 import com.nv.youneverwait.model.SearchListModel;
 import com.nv.youneverwait.model.SearchModel;
 import com.nv.youneverwait.model.WorkingModel;
+import com.nv.youneverwait.response.CoupnResponse;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchAWsResponse;
 import com.nv.youneverwait.response.SearchTerminology;
@@ -109,14 +110,18 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     int total_foundcount = 0;
     Fragment searchDetail;
+
+
+
+
     ArrayList<Domain_Spinner> domainList = new ArrayList<>();
     ArrayList<SearchModel> mGLobalSearch = new ArrayList<>();
-    ArrayList<SearchModel> mSectorSearch = new ArrayList<>();
-    ArrayList<SearchModel> mSectorSubSearch = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSubDomainSubSearch = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSubDomain = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSpecializationDomain = new ArrayList<>();
-    ArrayList<Domain_Spinner> mSpecializationDomainSearch = new ArrayList<>();
+    ArrayList<SearchModel> mSubDomainSubSearch = new ArrayList<>();
+    ArrayList<SearchModel> mSubDomain = new ArrayList<>();
+    ArrayList<SearchModel> mSpecializationDomain = new ArrayList<>();
+    ArrayList<SearchModel> mSpecializationDomainSearch = new ArrayList<>();
+
+
     Spinner mSpinnerDomain;
 
     SearchView mSearchView;
@@ -125,203 +130,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     SearchListAdpter listadapter;
     ArrayList<ListCell> items;
     AdapterCallback mInterface;
-
-
-    private void APiSearchList() {
-        {
-
-
-            final ApiInterface apiService =
-                    ApiClient.getClient(getActivity()).create(ApiInterface.class);
-
-            final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
-            mDialog.show();
-
-            Call<SearchModel> call = apiService.getAllSearch();
-
-
-            call.enqueue(new Callback<SearchModel>() {
-                @Override
-                public void onResponse(Call<SearchModel> call, Response<SearchModel> response) {
-
-                    try {
-
-                        if (mDialog.isShowing())
-                            Config.closeDialog(getActivity(), mDialog);
-
-                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                        Config.logV("Response--code-------------------------" + response.code());
-                        // Config.logV("Response--BODY------Search-------------------" + new Gson().toJson(response));
-                        mGLobalSearch.clear();
-                        if (response.code() == 200) {
-
-
-                            Config.logV("Response--BODY------SearchLabel-------------------" + response.body().getSearchLabels().size());
-
-                            SearchModel search = null;
-                            for (int i = 0; i < response.body().getSearchLabels().size(); i++) {
-                                int mGlobalSize = response.body().getSearchLabels().get(0).getGlobalSearchLabels().size();
-                                mGLobalSearch.clear();
-                                for (int k = 0; k < mGlobalSize; k++) {
-                                    search = new SearchModel();
-                                    search.setName(response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getName());
-                                    search.setDisplayname(response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getDisplayname());
-
-                                    search.setQuery(response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getQuery());
-                                    //  Config.logV("Response--BODY------GlobalSearch-------------------" + response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getName());
-                                    mGLobalSearch.add(search);
-                                    Config.logV("Query*****111********" + response.body().getSearchLabels().get(0).getGlobalSearchLabels().get(k).getQuery());
-                                }
-                            }
-
-                            Config.logV("Globa lSearch Size-------------" + mGLobalSearch.size());
-
-                            for (int i = 0; i < response.body().getSearchLabels().size(); i++) {
-                                int mSectorSize = response.body().getSearchLabels().get(1).getSectorLevelLabels().size();
-                                mSectorSearch.clear();
-                                for (int k = 0; k < mSectorSize; k++) {
-                                    ArrayList<SearchModel> getSectorLevel = response.body().getSearchLabels().get(1).getSectorLevelLabels();
-                                    String sector = response.body().getSearchLabels().get(1).getSectorLevelLabels().get(k).getName();
-                                    // Config.logV("Sector-------------" + sector);
-                                    search = new SearchModel();
-                                    search.setName(sector);
-                                    search.setSectorLabels(getSectorLevel.get(k).getSectorLabels());
-                                    search.setSector(getSectorLevel.get(k).getName());
-
-                                    //  Config.logV("Sector Suggestion---1222---" + getSectorLevel.get(k).getSector());
-                                    //  Config.logV("Sector Suggestion---122222444---" + getSectorLevel.get(k).getName());
-                                    mSectorSearch.add(search);
-
-
-                                }
-                            }
-
-                            Config.logV("Sector Search Size-------------" + mSectorSearch.size());
-
-                            Config.logV("GLobal Search Size-------------" + mGLobalSearch.size());
-
-
-                            APiGetDomain();
-                        }
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<SearchModel> call, Throwable t) {
-                    // Log error here since request failed
-                    Config.logV("Fail---------------" + t.toString());
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-
-                }
-            });
-
-
-        }
-    }
-
-
-    private void APiGetDomain() {
-        {
-
-
-            final ApiInterface apiService =
-                    ApiClient.getClient(getActivity()).create(ApiInterface.class);
-
-            final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
-            mDialog.show();
-
-            Call<ArrayList<Domain_Spinner>> call = apiService.getAllDomains();
-
-
-            call.enqueue(new Callback<ArrayList<Domain_Spinner>>() {
-                @Override
-                public void onResponse(Call<ArrayList<Domain_Spinner>> call, Response<ArrayList<Domain_Spinner>> response) {
-
-                    try {
-
-                        if (mDialog.isShowing())
-                            Config.closeDialog(getActivity(), mDialog);
-
-                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                        Config.logV("Response--code-------------------------" + response.code());
-                        Config.logV("Response--BODY------Domain-------------------" + new Gson().toJson(response));
-
-                        if (response.code() == 200) {
-
-                            Config.logV("Response--Array size-------------------------" + response.body().size());
-
-                            if (response.body().size() > 0) {
-                                domainList.clear();
-                                domainList.add(new Domain_Spinner("All", "All"));
-                                // domainModel=new Domain_Spinner();
-                                mSubDomain.clear();
-                                mSpecializationDomain.clear();
-                                for (int i = 0; i < response.body().size(); i++) {
-
-                                    domainList.add(new Domain_Spinner(response.body().get(i).getDomain(), response.body().get(i).getSector()));
-
-                                    for (int k = 0; k < response.body().get(i).getSubDomains().size(); k++) {
-                                        Domain_Spinner domain = new Domain_Spinner();
-                                        domain.setDomain(response.body().get(i).getDomain());
-                                        domain.setSubDomain(response.body().get(i).getSubDomains().get(k).getSubDomain());
-                                        domain.setSector(response.body().get(i).getSector());
-                                        domain.setSubDomain_DisplayNAme(response.body().get(i).getSubDomains().get(k).getName());
-                                        mSubDomain.add(domain);
-
-
-                                        Domain_Spinner spec = new Domain_Spinner();
-
-                                        spec.setDomain(response.body().get(i).getDomain());
-                                        spec.setSpecializations(response.body().get(i).getSubDomains().get(k).getSpecializations());
-
-                                        spec.setSector(response.body().get(i).getSector());
-                                        mSpecializationDomain.add(spec);
-                                    }
-
-                                }
-                                Config.logV("response.body()) SUBDOMAIN SIZE" + mSubDomain.size());
-                                ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
-                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                mSpinnerDomain.setAdapter(adapter);
-
-                                int pos = getIndex(domainList, spinnerTxt);
-                                Config.logV("Selected POSITION ####################" + pos);
-                                mSpinnerDomain.setSelection(pos);
-
-                                SharedPreference.getInstance(mContext).setValue("ALL_SELECTED", true);
-
-
-
-                            }
-                        }
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ArrayList<Domain_Spinner>> call, Throwable t) {
-                    // Log error here since request failed
-                    Config.logV("Fail---------------" + t.toString());
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-
-                }
-            });
-
-
-        }
-    }
-
     static String latitude;
     static String longitude;
     String searchTxt, spinnerTxt;
@@ -336,7 +144,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     ImageView ibackpress;
     String s_LocName;
 
-    TextView tv_nosearchresult;
+    TextView tv_nosearchresult,tv_searchresult;
     LinearLayout Lnosearchresult;
 
 
@@ -354,14 +162,17 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             if (!getQuery_previous.equalsIgnoreCase("true")) {
                 query = bundle.getString("query", "");
                 url = bundle.getString("url", "");
+                spinnerTxt = bundle.getString("spinnervalue", "");
+                searchTxt = bundle.getString("searchtxt", "");
             }
             latitude = bundle.getString("latitude", "");
             longitude = bundle.getString("longitude", "");
-            spinnerTxt = bundle.getString("spinnervalue", "");
-            searchTxt = bundle.getString("searchtxt", "");
+
             s_LocName = bundle.getString("locName", "");
         }
 
+
+        Config.logV("LATITUDE--------------------------------" + latitude + ", " + longitude);
 
         isLastPage = false;
         isLoading = false;
@@ -373,6 +184,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         ibackpress = (ImageView) row.findViewById(R.id.backpress);
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
         txt_toolbarlocation = (TextView) row.findViewById(R.id.txt_toolbarlocation);
+        tv_searchresult= (TextView) row.findViewById(R.id.searchresult);
 
         Lnosearchresult = (LinearLayout) row.findViewById(R.id.Lnosearchresult);
         tv_nosearchresult = (TextView) row.findViewById(R.id.txtnosearchresult);
@@ -390,16 +202,20 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
         try {
+
+            Config.logV("LATITUDE------------@@@@--------------------" + latitude + ", " + longitude);
+
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(latitude), Double.parseDouble(longitude), 1);
 
-            Config.logV("Latitude-----11111--------" + addresses.get(0).getLocality());
+           // Config.logV("Latitude-----11111--------" + addresses.get(0).getLocality());
             if (!s_LocName.equalsIgnoreCase("")) {
                 txt_toolbarlocation.setVisibility(View.VISIBLE);
                 // txt_toolbarlocation.setText(addresses.get(0).getLocality());
                 txt_toolbarlocation.setText(s_LocName);
             }
         } catch (Exception e) {
+            e.printStackTrace();
 
         }
 
@@ -431,8 +247,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         mRecySearchDetail.setAdapter(pageadapter);
 
 
-
-
         mRecySearchDetail.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
             @Override
             protected void loadMoreItems() {
@@ -448,7 +262,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Config.logV("Query--------------------" + query);
+                        Config.logV("loadNextPage--------------------" + query);
                         loadNextPage(query, url);
                     }
                 }, 1000);
@@ -492,8 +306,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 searchSrcTextView.setText("");
-                mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getSector();
+                //tv_searchresult.setVisibility(View.GONE);
+                mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
 
+
+                spinnerTxt = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDisplayName();
                 Config.logV("Selected---423333333333--------" + mDomainSpinner);
 
 
@@ -508,7 +325,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     mSearchView.setQuery(searchTxt, false);
 
                     Config.logV("Selected  FIRST RUN-----------------------" + searchTxt);
-                }  else {
+                    if(!searchTxt.equalsIgnoreCase("")){
+                        ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+                        searchIcon.setImageDrawable(null);
+                        searchIcon.setVisibility(View.GONE);
+                    }
+                } else {
 
                     Config.logV("Selected NOT FIRST RUN-----------------------" + searchTxt);
                     isLastPage = false;
@@ -521,13 +343,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     pageadapter.clear();
                     Lnosearchresult.setVisibility(View.VISIBLE);
                     tv_nosearchresult.setVisibility(View.VISIBLE);
+                    tv_searchresult.setVisibility(View.GONE);
                     mRecySearchDetail.setVisibility(View.GONE);
                     tv_nosearchresult.setText("No search result found for this location");
                     progressBar.setVisibility(View.GONE);
 
                 }
-
-
 
 
                 if (mDomainSpinner.equalsIgnoreCase("ALL")) {
@@ -544,59 +365,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     }
 
 
-                    /**********************************HEADER+SUBDOMAIN**************************************/
-                    //HEADER+SUBDOMAIN
-                    mSubDomainSubSearch.clear();
-                    for (int i = 0; i < mSubDomain.size(); i++) {
-
-                        Domain_Spinner domain = new Domain_Spinner();
-                        // Config.logV("Sector Search-----1111------" + mSubDomain.get(i).getName());
-                        domain.setSubDomain(mSubDomain.get(i).getSubDomain());
-                        domain.setSector(mSubDomain.get(i).getSector());
-                        domain.setSubDomain_DisplayNAme(mSubDomain.get(i).getSubDomain_DisplayNAme());
-                        mSubDomainSubSearch.add(domain);
-
-                    }
-
-
-                    for (int i = 0; i < mSubDomainSubSearch.size(); i++) {
-                        // Config.logV("mSectorSubSearch.get(i).getName()" + mSectorSubSearch.get(i).getName());
-                        items.add(new ListCell(mSubDomainSubSearch.get(i).getSubDomain(), "Sub Domain", mSubDomainSubSearch.get(i).getSector(), mSubDomainSubSearch.get(i).getSubDomain_DisplayNAme()));
-                    }
-
-
-                    /**********************************HEADER+SPECIALIZATION**************************************/
-
-                    //HEADER+SPECIALIZATION
-
-                    // Config.logV("Specialization***************" + mSpecializationDomain.size());
-                    mSpecializationDomainSearch.clear();
                     for (int i = 0; i < mSpecializationDomain.size(); i++) {
-                        // Config.logV("mSpecializationDomain).getName()" + mSpecializationDomain.get(i).getSpecializations().size());
-                        // Config.logV("Special Domain).getName()" + mSpecializationDomain.get(i).getDomain());
-
-                        for (int j = 0; j < mSpecializationDomain.get(i).getSpecializations().size(); j++) {
-
-
-                            //  Config.logV("mSpecializationDomain).getName()" + mSpecializationDomain.get(i).getSpecializations().get(j).getName());
-                            Domain_Spinner domain = new Domain_Spinner();
-                            // Config.logV("Sector Search-----1111------" + mSubDomain.get(i).getName());
-                            domain.setName(mSpecializationDomain.get(i).getSpecializations().get(j).getName());
-                            domain.setSector(mSpecializationDomain.get(i).getSector());
-                            domain.setSpecilicationANme(mSpecializationDomain.get(i).getSpecializations().get(j).getSpecilicationANme());
-
-                            mSpecializationDomainSearch.add(domain);
-                        }
-
-                        //items.add(new ListCell(mSectorSubSearch.get(i).getName(), "Suggested Search"));
-                    }
-
-
-                    for (int i = 0; i < mSpecializationDomainSearch.size(); i++) {
                         // Config.logV("mSectorSubSearch.get(i).getName()" + mSectorSubSearch.get(i).getName());
-                        items.add(new ListCell(mSpecializationDomainSearch.get(i).getSpecilicationANme(), "Specializations", mSpecializationDomainSearch.get(i).getSector(), mSpecializationDomainSearch.get(i).getName()));
+                        items.add(new ListCell(mSpecializationDomain.get(i).getName(), "Specializations", mSpecializationDomain.get(i).getSector(), mSpecializationDomain.get(i).getDisplayname()));
                     }
-
 
                            /*     *******************************************************************/
 
@@ -654,62 +426,24 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 } else {
 
-                    /**********************************HEADER=SuGGESTED SEARCH*************************************/
-                    mSectorSubSearch.clear();
-                    for (int i = 0; i < mSectorSearch.size(); i++) {
-
-                        if (mSectorSearch.get(i).getName().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
-
-                            for (int k = 0; k < mSectorSearch.get(i).getSectorLabels().size(); k++) {
-                                SearchModel search = new SearchModel();
-                                Config.logV("Sector Suggestion---1222-333--" + mSectorSearch.get(i).getSectorLabels().get(k).getName());
-
-                                search.setName(mSectorSearch.get(i).getSectorLabels().get(k).getName());
-                                search.setQuery(mSectorSearch.get(i).getSectorLabels().get(k).getQuery());
-                                search.setSector(mSectorSearch.get(i).getSector());
-                                search.setDisplayname(mSectorSearch.get(i).getSectorLabels().get(k).getDisplayname());
-                                Config.logV("Display NAme**************" + mSectorSearch.get(i).getSectorLabels().get(k).getDisplayname());
-                                mSectorSubSearch.add(search);
-                            }
-                        }
-
-                    }
-
-                    Config.logV("mSectorSubSearch" + mSectorSubSearch.size());
-
-                    //HEADER=SuGGESTED SEARCH
                     items = new ArrayList<ListCell>();
-                    for (int i = 0; i < mSectorSubSearch.size(); i++) {
-                        items.add(new ListCell(mSectorSubSearch.get(i).getName(), "Suggested Search", mSectorSubSearch.get(i).getQuery(), mSectorSubSearch.get(i).getDisplayname()));
-
-                    }
-
-                    /**********************************HEADER+SUBDOMAIN**************************************/
-
                     //HEADER+SUBDOMAIN
                     mSubDomainSubSearch.clear();
-                    Config.logV("mSubDomain.size()------------" + mSubDomain.size());
+
                     for (int i = 0; i < mSubDomain.size(); i++) {
-
-
                         if (mSubDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
 
-                            Domain_Spinner domain = new Domain_Spinner();
-                            Config.logV("Sector Search----^^^^^-----" + mSubDomain.get(i).getName());
-                            domain.setSubDomain(mSubDomain.get(i).getSubDomain());
-                            domain.setSector(mSubDomain.get(i).getSector());
-                            domain.setSubDomain_DisplayNAme(mSubDomain.get(i).getSubDomain_DisplayNAme());
-
-                            mSubDomainSubSearch.add(domain);
-
+                            SearchModel search=new SearchModel();
+                            search.setDisplayname(mSubDomain.get(i).getDisplayname());
+                            search.setSector(mSubDomain.get(i).getSector());
+                            search.setName(mSubDomain.get(i).getName());
+                            search.setQuery(mSubDomain.get(i).getQuery());
+                            mSubDomainSubSearch.add(search);
                         }
-
                     }
-
                     for (int i = 0; i < mSubDomainSubSearch.size(); i++) {
-                        Config.logV("Sector Search-----222-----" + mSubDomainSubSearch.get(i).getSubDomain());
-                        // Config.logV("mSectorSubSearch.get(i).getName()" + mSectorSubSearch.get(i).getName());
-                        items.add(new ListCell(mSubDomainSubSearch.get(i).getSubDomain(), "Sub Domain", mSubDomainSubSearch.get(i).getSector(), mSubDomainSubSearch.get(i).getSubDomain_DisplayNAme()));
+
+                        items.add(new ListCell(mSubDomainSubSearch.get(i).getName(), "Sub Domain", mSubDomainSubSearch.get(i).getSector(), mSubDomainSubSearch.get(i).getDisplayname()));
                     }
 
 
@@ -719,23 +453,24 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     mSpecializationDomainSearch.clear();
                     for (int i = 0; i < mSpecializationDomain.size(); i++) {
                         if (mSpecializationDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
-                            for (int j = 0; j < mSpecializationDomain.get(i).getSpecializations().size(); j++) {
 
-                                Domain_Spinner domain = new Domain_Spinner();
-                                domain.setName(mSpecializationDomain.get(i).getSpecializations().get(j).getName());
-                                domain.setSector(mSpecializationDomain.get(i).getSector());
-                                domain.setSpecilicationANme(mSpecializationDomain.get(i).getSpecializations().get(j).getSpecilicationANme());
 
-                                mSpecializationDomainSearch.add(domain);
-                            }
+                            SearchModel domain = new SearchModel();
+                            domain.setName(mSpecializationDomain.get(i).getName());
+                            domain.setSector(mSpecializationDomain.get(i).getSector());
+                            domain.setDisplayname(mSpecializationDomain.get(i).getDisplayname());
+
+                            mSpecializationDomainSearch.add(domain);
+
                         }
 
                     }
 
 
                     for (int i = 0; i < mSpecializationDomainSearch.size(); i++) {
-                        items.add(new ListCell(mSpecializationDomainSearch.get(i).getSpecilicationANme(), "Specializations", mSpecializationDomainSearch.get(i).getSector(), mSpecializationDomainSearch.get(i).getName()));
+                        items.add(new ListCell(mSpecializationDomainSearch.get(i).getName(), "Specializations", mSpecializationDomainSearch.get(i).getSector(), mSpecializationDomainSearch.get(i).getDisplayname()));
                     }
+
 
 
                     listadapter = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), DashboardFragment.getHomeFragment(), mSearchView);
@@ -783,7 +518,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 listadapter.notifyDataSetChanged();
                                 listadapter.getFilter().filter(query);
                             }
-
 
 
                             return false;
@@ -913,6 +647,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 total_foundcount = 0;
                 TOTAL_PAGES = 0;
                 currentPage = PAGE_START;
+
+
+                searchTxt = cell.getMdisplayname();
+                mSearchView.setQuery(searchTxt, false);
 
 
                 pageadapter.clear();
@@ -1051,6 +789,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
                                     search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
+
+                                }
+
+
+                                if (response.body().getHits().getHit().get(i).getFields().getYnw_verified_level() != null) {
+                                    search.setYnw_verified_level(response.body().getHits().getHit().get(i).getFields().getYnw_verified_level());
 
                                 }
 
@@ -1244,6 +988,20 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             mRecySearchDetail.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.VISIBLE);
                             Lnosearchresult.setVisibility(View.GONE);
+                            tv_searchresult.setVisibility(View.VISIBLE);
+                            String firstWord = String.valueOf(total_foundcount);
+                            String secondWord="";
+                            if(total_foundcount>1) {
+                                 secondWord = " results found ";
+                            }else{
+                                secondWord = " result found ";
+                                }
+                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                            Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), 0, firstWord.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            tv_searchresult.setText(spannable);
+
 
                             mSearchResp.clear();
                             ArrayList<String> ids = new ArrayList<>();
@@ -1262,6 +1020,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
                                     search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
+
+                                }
+                                if (response.body().getHits().getHit().get(i).getFields().getYnw_verified_level() != null) {
+                                    search.setYnw_verified_level(response.body().getHits().getHit().get(i).getFields().getYnw_verified_level());
 
                                 }
 
@@ -1365,6 +1127,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             mRecySearchDetail.setVisibility(View.GONE);
                             tv_nosearchresult.setText("No search result found for this location");
                             progressBar.setVisibility(View.GONE);
+                            tv_searchresult.setVisibility(View.GONE);
 
 
                         }
@@ -1497,6 +1260,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 if (mSearchRespPass.get(i).getYnw_verified() != null) {
                                     searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
+
+                                }
+
+                                if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
+                                    searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
 
                                 }
 
@@ -1648,6 +1416,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
 
                                 }
+
+                                if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
+                                    searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
+
+                                }
+
+
                                 if (mSearchRespPass.get(i).getServices() != null) {
                                     searchList.setServices(mSearchRespPass.get(i).getServices());
                                 }
@@ -1741,6 +1516,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             pageadapter.notifyDataSetChanged();
 
 
+                            Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
                             Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
                             Config.logV("CURRENT PAGE**333*************" + currentPage);
                             if (TOTAL_PAGES > 0 && total_foundcount > 10) {
@@ -1778,7 +1554,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         int index = 0;
 
         for (int i = 0; i < spinner.size(); i++) {
-            if (spinner.get(i).getDomain().equals(myString)) {
+            if (spinner.get(i).getDisplayName().equals(myString)) {
                 index = i;
             }
         }
@@ -1808,6 +1584,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     public void onMethodWorkingCallback(ArrayList<WorkingModel> workingModelArrayList, String value, String uniqueid) {
         WorkingHourFragment pfFragment = new WorkingHourFragment();
 
+        refreshQuery();
+
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putSerializable("workinghrlist", workingModelArrayList);
@@ -1823,6 +1601,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     @Override
     public void onMethodServiceCallback(ArrayList services, String value, String uniqueid) {
         ServiceListFragment pfFragment = new ServiceListFragment();
+        refreshQuery();
+
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putSerializable("servicelist", services);
@@ -1846,7 +1626,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
-    public void QuerySubmitCLick(String query) {
+    public void QuerySubmitCLick(String querypass) {
 
         //  mSearchView.setQuery("", false);
         LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
@@ -1855,7 +1635,43 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         double lowerRightLat = Lanlong.getLowerRightLat();
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
-        String querycreate = "(phrase " + "'" + query + "')";
+        //  String querycreate = "(phrase " + "'" + query + "')";
+
+        String querycreate = null;
+
+        if (!mDomainSpinner.equalsIgnoreCase("All")) {
+
+            for (int i=0;i<mSubDomain.size();i++ ){
+                if(mSubDomain.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())){
+
+                        Config.logV("Query------------" + mSubDomain.get(i).getQuery());
+                        String requiredString = mSubDomain.get(i).getQuery().substring(mSubDomain.get(i).getQuery().indexOf("]") + 1, mSubDomain.get(i).getQuery().indexOf(")"));
+                        Config.logV("Second----@@@@@@-----" + requiredString);
+                        querycreate = requiredString;
+
+                }
+            }
+            Config.logV("Query @@@@@@@@@@-----------" + querycreate);
+        }else{
+            for (int i=0;i<mGLobalSearch.size();i++ ){
+                if(mGLobalSearch.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())){
+                    Config.logV("Query-ALL-----------" + mGLobalSearch.get(i).getQuery());
+                    String requiredString = mGLobalSearch.get(i).getQuery().substring(mGLobalSearch.get(i).getQuery().indexOf("]") + 1, mGLobalSearch.get(i).getQuery().indexOf(")"));
+                    Config.logV("Second---All-@@@@@@-----" + requiredString);
+                    querycreate = requiredString;
+                }
+            }
+            Config.logV("Query  ALL @@@@@@@@@@-----------" + querycreate);
+        }
+
+
+        if (querycreate==null) {
+            if (!mDomainSpinner.equalsIgnoreCase("All")) {
+                querycreate = "(phrase " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
+            } else {
+                querycreate = "(phrase " + "'" + querypass + "')";
+            }
+        }
 
 
         isLastPage = false;
@@ -1865,6 +1681,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         TOTAL_PAGES = 0;
         currentPage = PAGE_START;
         pageadapter.clear();
+
 
         Config.logV("Query-----------" + querycreate);
 
@@ -1923,11 +1740,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-                if(edt_message.getText().toString().length()>1){
+                if (edt_message.getText().toString().length() > 1&&!edt_message.getText().toString().trim().isEmpty()) {
                     btn_send.setEnabled(true);
+                    btn_send.setClickable(true);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-                }else{
+                } else {
                     btn_send.setEnabled(false);
+                    btn_send.setClickable(false);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                 }
             }
@@ -1960,6 +1779,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             }
         });
 
+
+    }
+
+    @Override
+    public void onMethodCoupn(String uniqueID) {
+
+      //  ApiJaldeeCoupan(uniqueID);
 
     }
 
@@ -2021,6 +1847,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     }
 
+
+
+
+
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
 
 
@@ -2030,6 +1860,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
+
 
 
         JSONObject jsonObj = new JSONObject();
@@ -2083,5 +1914,196 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     }
 
+    private void APiSearchList() {
+        {
+
+
+            final ApiInterface apiService =
+                    ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+            final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+            mDialog.show();
+
+            Call<SearchModel> call = apiService.getAllSearch();
+
+
+            call.enqueue(new Callback<SearchModel>() {
+                @Override
+                public void onResponse(Call<SearchModel> call, Response<SearchModel> response) {
+
+                    try {
+
+                        if (mDialog.isShowing())
+                            Config.closeDialog(getActivity(), mDialog);
+
+                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                        Config.logV("Response--code-------------------------" + response.code());
+                        // Config.logV("Response--BODY------Search-------------------" + new Gson().toJson(response));
+                        mGLobalSearch.clear();
+                        if (response.code() == 200) {
+
+                            SearchModel search = null;
+                            for (int i = 0; i < response.body().getGlobalSearchLabels().size(); i++) {
+                                int mGlobalSize = response.body().getGlobalSearchLabels().size();
+                                mGLobalSearch.clear();
+                                for (int k = 0; k < mGlobalSize; k++) {
+                                    search = new SearchModel();
+                                    search.setName(response.body().getGlobalSearchLabels().get(k).getName());
+                                    search.setDisplayname(response.body().getGlobalSearchLabels().get(k).getDisplayname());
+                                    search.setQuery(response.body().getGlobalSearchLabels().get(k).getQuery());
+                                    mGLobalSearch.add(search);
+                                    Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
+                                }
+                            }
+
+                            Config.logV("Globa lSearch Size-------------" + mGLobalSearch.size());
+
+
+
+
+                            mSpecializationDomain.clear();
+                            mSubDomain.clear();
+
+                            for (int i = 0; i < response.body().getSectorLevelLabels().size(); i++) {
+                                int mSectorSize = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels().size();
+
+
+
+                                for (int k = 0; k < mSectorSize; k++) {
+                                    ArrayList<SearchModel> getSubdomainSectorLevel = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels();
+
+                                    // Config.logV("Sector-------------" + sector);
+                                    search = new SearchModel();
+                                    search.setName(getSubdomainSectorLevel.get(k).getName());
+                                    search.setDisplayname(getSubdomainSectorLevel.get(k).getDisplayname());
+                                    search.setQuery(getSubdomainSectorLevel.get(k).getQuery());
+                                    search.setSector(response.body().getSectorLevelLabels().get(i).getName());
+
+                                    mSubDomain.add(search);
+                                    //mSpecializationDomain.addAll(getSubdomainSectorLevel.get(k).getSpecializationLabels());
+                                    for(int j=0;j<getSubdomainSectorLevel.get(k).getSpecializationLabels().size();j++){
+                                        search = new SearchModel();
+                                        search.setName(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getName());
+                                        search.setDisplayname(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getDisplayname());
+                                        search.setQuery(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getQuery());
+                                        search.setSector(response.body().getSectorLevelLabels().get(i).getName());
+                                        mSpecializationDomain.add(search);
+                                    }
+
+
+
+                                }
+                            }
+
+                           APiGetDomain();
+
+                            Config.logV("GLobal Search Size-------------" + mGLobalSearch.size());
+                            Config.logV("SUBDOAMIN Search Size-------------" + mSubDomain.size());
+                            Config.logV("SPECIALIZATION Search Size-------------" + mSpecializationDomain.size());
+
+
+
+
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<SearchModel> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Fail---------------" + t.toString());
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                }
+            });
+
+
+        }
+    }
+
+    private void APiGetDomain() {
+        {
+
+
+            final ApiInterface apiService =
+                    ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+            final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+            mDialog.show();
+
+            Call<ArrayList<Domain_Spinner>> call = apiService.getAllDomains();
+
+
+            call.enqueue(new Callback<ArrayList<Domain_Spinner>>() {
+                @Override
+                public void onResponse(Call<ArrayList<Domain_Spinner>> call, Response<ArrayList<Domain_Spinner>> response) {
+
+                    try {
+
+                        if (mDialog.isShowing())
+                            Config.closeDialog(getActivity(), mDialog);
+
+                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                        Config.logV("Response--code-------------------------" + response.code());
+                        Config.logV("Response--BODY------Domain-------------------" + new Gson().toJson(response));
+
+                        if (response.code() == 200) {
+
+                            Config.logV("Response--Array size-------------------------" + response.body().size());
+
+                            if (response.body().size() > 0) {
+                                domainList.clear();
+                                domainList.add(new Domain_Spinner("All", "All"));
+                                // domainModel=new Domain_Spinner();
+
+                                for (int i = 0; i < response.body().size(); i++) {
+
+                                    domainList.add(new Domain_Spinner(response.body().get(i).getDisplayName(), response.body().get(i).getDomain()));
+
+
+
+                                }
+
+
+                                ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinnerDomain.setAdapter(adapter);
+
+                                int pos = getIndex(domainList, spinnerTxt);
+                                Config.logV("Selected POSITION ####################" + pos);
+                                mSpinnerDomain.setSelection(pos);
+
+                                SharedPreference.getInstance(mContext).setValue("ALL_SELECTED", true);
+
+
+                            }
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<Domain_Spinner>> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Fail---------------" + t.toString());
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                }
+            });
+
+
+        }
+    }
 
 }

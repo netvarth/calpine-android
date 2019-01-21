@@ -1,10 +1,12 @@
 package com.nv.youneverwait.Fragment;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.FragmentTransaction;
@@ -26,11 +28,17 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.activities.SwipeGalleryImage;
+import com.nv.youneverwait.adapter.ContactDetailAdapter;
 import com.nv.youneverwait.adapter.LocationCheckinAdapter;
 import com.nv.youneverwait.adapter.SearchLocationAdapter;
+import com.nv.youneverwait.adapter.VirtualFieldAdapter;
 import com.nv.youneverwait.callback.LocationCheckinCallback;
 import com.nv.youneverwait.callback.SearchLocationAdpterCallback;
 import com.nv.youneverwait.common.Config;
@@ -39,6 +47,8 @@ import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CircleTransform;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.custom.ResizableCustomView;
+import com.nv.youneverwait.model.ContactModel;
+import com.nv.youneverwait.model.SocialMediaModel;
 import com.nv.youneverwait.model.WorkingModel;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.QueueList;
@@ -48,11 +58,14 @@ import com.nv.youneverwait.response.SearchService;
 import com.nv.youneverwait.response.SearchSetting;
 import com.nv.youneverwait.response.SearchTerminology;
 import com.nv.youneverwait.response.SearchViewDetail;
+import com.nv.youneverwait.response.SearchVirtualFields;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.ls.LSException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,6 +80,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -96,7 +111,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     TextView tv_busName, tv_domain, tv_desc, tv_msg;
 
-    RecyclerView mRecyLocDetail;
+    RecyclerView mRecyLocDetail, mRecycle_virtualfield, mrecycle_contactdetail;
     SearchLocationAdapter mSearchLocAdapter;
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
 
@@ -104,13 +119,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<String> ids;
     String uniqueID;
 
-    TextView tv_ImageViewText;
+    TextView tv_ImageViewText, tv_Moredetails, tv_contactdetails,tv_specializtion;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
     LocationCheckinCallback callback;
     String location;
     ImageView ic_fav;
 
+    boolean flag_more = false;
+    ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link;
+    LinearLayout LsocialMedia;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,7 +136,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         mContext = getActivity();
         mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
+        mRecycle_virtualfield = (RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
+        mrecycle_contactdetail = (RecyclerView) row.findViewById(R.id.mrecycle_contactdetail);
+
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
+        tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
+        tv_specializtion = (TextView) row.findViewById(R.id.txt_specializtion);
 
         count = 0;
         mBusinessDataList = new SearchViewDetail();
@@ -131,6 +154,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
         callback = (LocationCheckinCallback) this;
+        isContact=false;
+        Config.logV("Refresh @@@@@@@@@@@@@@@@@@");
 
 
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -151,7 +176,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             uniqueID = bundle.getString("uniqueID");
 
         }
-
+        SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mRecyLocDetail.setNestedScrollingEnabled(false);
 
         Config.logV("UNIUE ID---------1111-------" + uniqueID);
@@ -164,6 +189,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_ImageViewText = (TextView) row.findViewById(R.id.mImageViewText);
         mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
         ic_fav = (ImageView) row.findViewById(R.id.txtfav);
+        tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
+
+
+        LsocialMedia = (LinearLayout) row.findViewById(R.id.LsocialMedia);
+
+
+        ic_fac = (ImageView) row.findViewById(R.id.ic_fac);
+        ic_gplus = (ImageView) row.findViewById(R.id.ic_gplus);
+        ic_pin = (ImageView) row.findViewById(R.id.ic_pin);
+        ic_link = (ImageView) row.findViewById(R.id.ic_link);
+        ic_twitt = (ImageView) row.findViewById(R.id.ic_twitt);
+        ic_yout = (ImageView) row.findViewById(R.id.ic_yout);
+
 
         //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
         tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
@@ -174,12 +212,36 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_ImageViewText.setTypeface(tyface);
 
 
-
-
-
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
+        ApiSearchVirtualFields(uniqueID);
+
+        tv_Moredetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!flag_more) {
+                    flag_more = true;
+                    mRecycle_virtualfield.setVisibility(View.VISIBLE);
+                    Config.logV("Domain Size@@@@@@@@@@@@@" + domainVirtual.size());
+                    Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
+
+                    tv_Moredetails.setText("Click here to view Less Details");
+                    tv_Moredetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_arrow_blue, 0);
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext);
+                    mRecycle_virtualfield.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    flag_more = false;
+                    tv_Moredetails.setText("Click here to view More Details");
+                    tv_Moredetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_arrow_blue, 0);
+                    mRecycle_virtualfield.setVisibility(View.GONE);
+                }
+            }
+        });
 
 
         mInterface = (SearchLocationAdpterCallback) this;
@@ -205,11 +267,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
-                        if(edt_message.getText().toString().length()>1){
+                        if (edt_message.getText().toString().length() > 1&&!edt_message.getText().toString().trim().isEmpty()) {
                             btn_send.setEnabled(true);
+                            btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-                        }else{
+                        } else {
                             btn_send.setEnabled(false);
+                            btn_send.setClickable(false);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
                     }
@@ -312,70 +376,387 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         //  Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
 
         Config.logV("Gallery--------------333-----" + mGallery.size());
-        Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+        try {
+            if (mGallery.size() > 0) {
 
-        if (mGallery.size() > 1) {
-            mImgthumbProfile.setVisibility(View.VISIBLE);
-            // Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(mImgthumbProfile);
+                if (mGallery.get(0).getUrl() != null) {
+                    mImgeProfile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-            Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
-
-
-            if (mGallery.size() == 3) {
-                mImgthumbProfile1.setVisibility(View.VISIBLE);
-                Config.logV("Gallery--------");
-                Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-            } else {
-                mImgthumbProfile1.setVisibility(View.GONE);
-            }
-
-            if (mGallery.size() > 3) {
-
-                mImgthumbProfile1.setVisibility(View.VISIBLE);
-                Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-                mImgthumbProfile2.setVisibility(View.VISIBLE);
-                Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
-                tv_ImageViewText.setVisibility(View.VISIBLE);
-                tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
-                Config.logV("Galeery--------------11111-----------" + mGallery.size());
-                mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Config.logV("Gallery------------------------------" + mGallery.size());
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-                        for (int i = 1; i < mGallery.size(); i++) {
+                            Config.logV("Gallery------------------------------" + mGallery.size());
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            for (int i = 0; i < mGallery.size(); i++) {
                         /*SearchViewDetail data = new SearchViewDetail();
                         data.setUrl(mGallery.get(i).getUrl());*/
-                            mGalleryList.add(mGallery.get(i).getUrl());
+                                mGalleryList.add(mGallery.get(i).getUrl());
+                            }
+
+
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                            if (mValue) {
+
+                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                startActivity(intent);
+                            }
+
+
                         }
+                    });
+                }
+
+                if (mGallery.get(1).getUrl() != null) {
+                    mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Config.logV("Gallery------------------------------" + mGallery.size());
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            for (int i = 1; i < mGallery.size(); i++) {
+                        /*SearchViewDetail data = new SearchViewDetail();
+                        data.setUrl(mGallery.get(i).getUrl());*/
+                                mGalleryList.add(mGallery.get(i).getUrl());
+                            }
 
 
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                        if (mValue) {
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                            if (mValue) {
 
-                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                            startActivity(intent);
+                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                startActivity(intent);
+                            }
+
+
                         }
+                    });
+                }
+
+                if (mGallery.get(2).getUrl() != null) {
+                    mImgthumbProfile1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Config.logV("Gallery------------------------------" + mGallery.size());
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            for (int i = 1; i < mGallery.size(); i++) {
+                        /*SearchViewDetail data = new SearchViewDetail();
+                        data.setUrl(mGallery.get(i).getUrl());*/
+                                mGalleryList.add(mGallery.get(i).getUrl());
+                            }
 
 
-                    }
-                });
-            } else {
-                mImgthumbProfile2.setVisibility(View.GONE);
-                tv_ImageViewText.setVisibility(View.GONE);
-                // mImgthumbProfile1.setVisibility(View.GONE);
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                            if (mValue) {
+
+                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                startActivity(intent);
+                            }
+
+
+                        }
+                    });
+                }
             }
 
+            Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
 
-        } else {
-            mImgthumbProfile.setVisibility(View.GONE);
+            if (mGallery.size() > 1) {
+                mImgthumbProfile.setVisibility(View.VISIBLE);
+                // Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(mImgthumbProfile);
+
+                Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
+
+
+                if (mGallery.size() == 3) {
+                    mImgthumbProfile1.setVisibility(View.VISIBLE);
+                    Config.logV("Gallery--------");
+                    Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+                } else {
+                    mImgthumbProfile1.setVisibility(View.GONE);
+                }
+
+                if (mGallery.size() > 3) {
+
+                    mImgthumbProfile1.setVisibility(View.VISIBLE);
+                    Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+                    mImgthumbProfile2.setVisibility(View.VISIBLE);
+                    Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
+                    tv_ImageViewText.setVisibility(View.VISIBLE);
+                    tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
+                    Config.logV("Galeery--------------11111-----------" + mGallery.size());
+                    mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Config.logV("Gallery------------------------------" + mGallery.size());
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            for (int i = 1; i < mGallery.size(); i++) {
+                        /*SearchViewDetail data = new SearchViewDetail();
+                        data.setUrl(mGallery.get(i).getUrl());*/
+                                mGalleryList.add(mGallery.get(i).getUrl());
+                            }
+
+
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                            if (mValue) {
+
+                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                startActivity(intent);
+                            }
+
+
+                        }
+                    });
+                } else {
+                    mImgthumbProfile2.setVisibility(View.GONE);
+                    tv_ImageViewText.setVisibility(View.GONE);
+                    // mImgthumbProfile1.setVisibility(View.GONE);
+                }
+
+
+            } else {
+                mImgthumbProfile.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-  //  boolean expand =false;
-    public void UpdateMainUI(SearchViewDetail getBussinessData) {
+    /*  ArrayList<SearchViewDetail> emails = new ArrayList<>();
+      ArrayList<SearchViewDetail> phoneNumber = new ArrayList<>();*/
+    ArrayList<ContactModel> contactDetail = new ArrayList<>();
+    boolean isContact = false;
 
+    ArrayList<SocialMediaModel> socialMedia = new ArrayList<>();
+
+    //  boolean expand =false;
+    public void UpdateMainUI(final SearchViewDetail getBussinessData) {
+
+        String txt_specValue="";
+        if(getBussinessData.getSpecialization()!=null){
+            if(getBussinessData.getSpecialization().size()>0){
+
+                tv_specializtion.setVisibility(View.VISIBLE);
+
+
+                    for (int i = 0; i < getBussinessData.getSpecialization().size(); i++) {
+
+                        if(i==getBussinessData.getSpecialization().size()-1){
+
+                            txt_specValue += getBussinessData.getSpecialization().get(i) ;
+                        }else {
+
+                            txt_specValue += getBussinessData.getSpecialization().get(i) + ", ";
+                        }
+
+
+
+                    tv_specializtion.setText(txt_specValue);
+                }
+
+            }else{
+                tv_specializtion.setVisibility(View.GONE);
+            }
+        }else{
+          tv_specializtion.setVisibility(View.GONE);
+        }
+
+        if (getBussinessData.getSocialMedia() != null) {
+            if (getBussinessData.getSocialMedia().size() > 0) {
+                LsocialMedia.setVisibility(View.VISIBLE);
+                for (int i = 0; i < getBussinessData.getSocialMedia().size(); i++) {
+
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
+                        ic_fac.setVisibility(View.VISIBLE);
+                        final int finalI = i;
+                        ic_fac.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+
+
+
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("googleplus")) {
+                        ic_gplus.setVisibility(View.VISIBLE);
+                        final int finalI3 = i;
+                        ic_gplus.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI3).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("twitter")) {
+                        ic_twitt.setVisibility(View.VISIBLE);
+                        final int finalI1 = i;
+                        ic_twitt.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI1).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("linkedin")) {
+                        ic_link.setVisibility(View.VISIBLE);
+                        final int finalI5 = i;
+                        ic_link.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI5).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+
+
+
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("pinterest")) {
+                        ic_pin.setVisibility(View.VISIBLE);
+                        final int finalI4 = i;
+                        ic_pin.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI4).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+
+
+                    if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("youtube")) {
+                        ic_yout.setVisibility(View.VISIBLE);
+
+                        final int finalI2 = i;
+                        ic_yout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBussinessData.getSocialMedia().get(finalI2).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                        });
+                    }
+
+                }
+
+
+
+
+
+            } else {
+                LsocialMedia.setVisibility(View.GONE);
+            }
+        } else {
+            LsocialMedia.setVisibility(View.GONE);
+        }
+        contactDetail.clear();
+        if (getBussinessData.getPhoneNumbers().size() > 0) {
+            for (int i = 0; i < getBussinessData.getPhoneNumbers().size(); i++) {
+                Config.logV("Phone @@@@@@@@@@@@" + getBussinessData.getPhoneNumbers().get(i).getInstance());
+                ContactModel contact = new ContactModel();
+                contact.setInstance(getBussinessData.getPhoneNumbers().get(i).getInstance());
+                contact.setResource(getBussinessData.getPhoneNumbers().get(i).getResource());
+                contact.setLabel(getBussinessData.getPhoneNumbers().get(i).getLabel());
+                contactDetail.add(contact);
+            }
+
+        }
+
+        if (getBussinessData.getEmails().size() > 0) {
+            for (int i = 0; i < getBussinessData.getEmails().size(); i++) {
+                ContactModel contact = new ContactModel();
+                contact.setInstance(getBussinessData.getEmails().get(i).getInstance());
+                contact.setResource(getBussinessData.getEmails().get(i).getResource());
+                contact.setLabel(getBussinessData.getEmails().get(i).getLabel());
+                contactDetail.add(contact);
+            }
+        }
+
+
+        if (getBussinessData.getPhoneNumbers().size() > 0 || getBussinessData.getEmails().size() > 0 && contactDetail.size() > 0) {
+
+            tv_contactdetails.setVisibility(View.VISIBLE);
+            tv_contactdetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isContact) {
+                        Config.logV("Open");
+                        isContact = true;
+                        mrecycle_contactdetail.setVisibility(View.VISIBLE);
+                        tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue_hidden, 0);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                        mrecycle_contactdetail.setLayoutManager(mLayoutManager);
+                        ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity());
+                        mrecycle_contactdetail.setAdapter(checkAdapter);
+                        checkAdapter.notifyDataSetChanged();
+                    } else {
+                        Config.logV("CLosed");
+                        isContact = false;
+                        tv_contactdetails.setText("Contact Details");
+                        tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue, 0);
+                        mrecycle_contactdetail.setVisibility(View.GONE);
+                    }
+                }
+            });
+
+        } else {
+            tv_contactdetails.setVisibility(View.GONE);
+            mrecycle_contactdetail.setVisibility(View.GONE);
+        }
 
         if (getBussinessData.getVerifyLevel() != null) {
             if (!getBussinessData.getVerifyLevel().equalsIgnoreCase("NONE")) {
@@ -409,7 +790,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
 
                     if (lineCount > 3) {
-                        ResizableCustomView.doResizeTextView(mContext, tv_desc, 3, "more", true);
+                        ResizableCustomView.doResizeTextView(mContext, tv_desc, 3, "More", true);
                     } else {
 
                     }
@@ -454,7 +835,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----detail--------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -516,7 +897,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----gallery--------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -577,7 +958,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL---3333------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--Location-----------------------" + response.code());
                     mSearchLocList.clear();
 
@@ -585,6 +966,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                         mSearchLocList = response.body();
+
                         for (int i = 0; i < response.body().size(); i++) {
                             ids.add(String.valueOf(response.body().get(i).getId()));
                         }
@@ -674,7 +1056,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL----------Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
+                    Config.logV("URL-----4444-----Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--------Message-----------------" + response.code());
 
                     if (response.code() == 200) {
@@ -775,8 +1157,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code----------Service---------------" + response.code());
+
 
                     if (response.code() == 200) {
 
@@ -787,11 +1170,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mServicesList.add(mService);
 
 
+                        Config.logV("mServicesList @@@@" + response.body().size());
                         Config.logV("mServicesList" + mServicesList.size());
 
-                        Config.logV("Count " + count);
-                        count++;
 
+                        count++;
+                        Config.logV("Count " + count);
                         if (count == mSearchLocList.size()) {
 
 
@@ -853,7 +1237,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL-------SEARCH--------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----SearchViewID--------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -913,7 +1297,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -938,6 +1322,97 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
             @Override
             public void onFailure(Call<SearchSetting> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
+    VirtualFieldAdapter mAdapter;
+    SearchVirtualFields resultData;
+    ArrayList<SearchVirtualFields> domainVirtual = new ArrayList<>();
+    ArrayList<SearchVirtualFields> sub_domainVirtual = new ArrayList<>();
+
+    ArrayList<SearchVirtualFields> mergeResult = new ArrayList<>();
+
+    private void ApiSearchVirtualFields(String muniqueID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+
+       /* Gson gson = new GsonBuilder()
+                .registerTypeAdapter(SearchVirtualFields.class, new SearchVirtualFields.DataStateDeserializer())
+                .create();*/
+
+       /* String url=SharedPreference.getInstance(mContext).getStringValue("s3Url", "")+"/";
+        Retrofit retrofit  = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiInterface apiService =retrofit.create(ApiInterface.class);*/
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+
+
+        Call<SearchVirtualFields> call = apiService.getVirtualFields(Integer.parseInt(muniqueID), sdf.format(currentTime));
+
+        call.enqueue(new Callback<SearchVirtualFields>() {
+            @Override
+            public void onResponse(Call<SearchVirtualFields> call, Response<SearchVirtualFields> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL----VIRTUAL---8888--------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------VIRTUAL-------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+
+                        resultData = response.body();
+                        if (resultData != null) {
+                            tv_Moredetails.setVisibility(View.VISIBLE);
+                            domainVirtual.clear();
+                            domainVirtual = response.body().getDomain();
+                            sub_domainVirtual.clear();
+                            sub_domainVirtual = response.body().getSubdomain();
+
+
+                            domainVirtual.addAll(sub_domainVirtual);
+
+
+                        } else {
+                            tv_Moredetails.setVisibility(View.GONE);
+                        }
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SearchVirtualFields> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -978,7 +1453,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL-------9999--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----Terminl--------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -1046,13 +1521,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     @Override
     public void onMethodCallback() {
 
-        Toast.makeText(mContext, "No Checkin exists at " + location, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "Check-In cancelled successfully", Toast.LENGTH_LONG).show();
         dialog.dismiss();
         refreshList();
     }
 
     public void refreshList() {
+        Config.logV("Refresh $$$$$@@@@@@@@@@@@@@@@@@");
         count = 0;
+        isContact=false;
+
         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
@@ -1064,6 +1542,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mServicesList.clear();
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
+        contactDetail = new ArrayList<>();
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
@@ -1097,6 +1576,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext, "Added to Favourites", Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 
@@ -1142,7 +1622,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 try {
 
                     ic_fav.setImageResource(R.drawable.icon_favourite_line);
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
@@ -1167,7 +1647,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             @Override
                             public void onClick(View v) {
                                 if (favFlag) {
-                                    AlertDialog myQuittingDialogBox = new AlertDialog.Builder(mContext)
+
+                                    ApiRemoveFavo(mBusinessDataList.getId());
+                                    /*AlertDialog myQuittingDialogBox = new AlertDialog.Builder(mContext)
                                             //set message, title, and icon
                                             .setTitle("Delete")
                                             .setMessage("Do you want to remove " + mBusinessDataList.getBusinessName() + " from favourite list?")
@@ -1192,7 +1674,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                                 }
                                             })
                                             .create();
-                                    myQuittingDialogBox.show();
+                                    myQuittingDialogBox.show();*/
                                 } else {
                                     ApiAddFavo(mBusinessDataList.getId());
                                 }
@@ -1248,6 +1730,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
+                            Toast.makeText(mContext,"Removed from favourites",Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 
@@ -1277,9 +1760,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     @Override
     public void onResume() {
         super.onResume();
+
         String refresh = SharedPreference.getInstance(mContext).getStringValue("refreshcheckin", "");
         if (refresh.equalsIgnoreCase("true")) {
             refreshList();
         }
     }
+
+    
 }

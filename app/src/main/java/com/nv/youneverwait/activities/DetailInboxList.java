@@ -72,7 +72,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             }
         });
         TextView tv_title = (TextView)findViewById(R.id.toolbartitle);
-        tv_title.setText(provider);
+        tv_title.setText(Config.toTitleCase(provider));
 
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -129,11 +129,13 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-                if(edt_message.getText().toString().length()>1){
+                if(edt_message.getText().toString().length()>1&&!edt_message.getText().toString().trim().isEmpty()){
                     btn_send.setEnabled(true);
+                    btn_send.setClickable(true);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
                 }else{
                     btn_send.setEnabled(false);
+                    btn_send.setClickable(false);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                 }
             }
@@ -202,6 +204,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
                         Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_SHORT).show();
                        dialog.dismiss();
+                       finish();
 
 
 
