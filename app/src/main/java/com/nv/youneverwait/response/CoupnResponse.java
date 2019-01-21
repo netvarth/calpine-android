@@ -19,7 +19,6 @@ public class CoupnResponse {
 
     String couponDescription;
 
-
     public String getConsumerTermsAndconditions() {
         return consumerTermsAndconditions;
     }

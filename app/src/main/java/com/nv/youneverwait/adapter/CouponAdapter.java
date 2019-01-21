@@ -17,7 +17,6 @@ public class CouponAdapter  extends ArrayAdapter<CoupnResponse> {
 
     List<CoupnResponse> couponList;
     Context mContext;
-
     public CouponAdapter(@NonNull Context context, int resource, List<CoupnResponse> coupanList) {
         super(context, resource, coupanList);
 

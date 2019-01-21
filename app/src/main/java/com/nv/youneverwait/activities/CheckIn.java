@@ -395,8 +395,6 @@ public class CheckIn extends AppCompatActivity {
                 title = extras.getString("title", "");
                 place = extras.getString("place", "");
                 ApiSearchViewDetail(uniqueID);
-
-
             } else {
                 serviceId = extras.getInt("serviceId");
                 uniqueID = extras.getString("uniqueID");
@@ -1675,13 +1673,10 @@ public class CheckIn extends AppCompatActivity {
 
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }*/
-
                                             firstWord = "Checked in for Today, ";
                                             secondWord = mQueueTimeSlotList.get(i).getServiceTime();
 
-
                                         } else {
-
 
                                             firstWord = "Next Available Time ";
                                             DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -1724,7 +1719,6 @@ public class CheckIn extends AppCompatActivity {
 
 
                                             secondWord = yourDate+", "+mQueueTimeSlotList.get(i).getServiceTime();
-
                                         }
                                     }
 
@@ -1825,9 +1819,7 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-
                                                 firstWord = "Checked in for Today, ";
-
                                             } else {
                                                 firstWord = "Est Wait Time ";
 
@@ -1860,6 +1852,7 @@ public class CheckIn extends AppCompatActivity {
                                             } catch (ParseException e) {
                                                 e.printStackTrace();
                                             }
+                          
                                             SimpleDateFormat format = new SimpleDateFormat("d");
                                             String date1 = format.format(dateParse);
 
@@ -1875,7 +1868,6 @@ public class CheckIn extends AppCompatActivity {
                                             String yourDate = format.format(dateParse);
 
                                             secondWord=yourDate+", "+newtime;
-
                                         }
 
                                     } catch (Exception e) {
@@ -1884,7 +1876,6 @@ public class CheckIn extends AppCompatActivity {
 
 
                                     if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
-
                                       //  secondWord = mQueueTimeSlotList.get(i).getServiceTime();
 
 
@@ -2556,15 +2547,14 @@ public class CheckIn extends AppCompatActivity {
 
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
         builder.setAmount(convertStringToDouble(amount))
-
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
                 .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
                 .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
-                .setsUrl(checksumModel.getFirstName())
-                .setfUrl(checksumModel.getFurl())
+                .setsUrl(checksumModel.getSuccessUrl())
+                .setfUrl(checksumModel.getFailureUrl())
                 .setUdf1("")
                 .setUdf2("")
                 .setUdf3("")
@@ -2576,8 +2566,8 @@ public class CheckIn extends AppCompatActivity {
                 .setUdf9("")
                 .setUdf10("")
                 .setIsDebug(true)
-                .setKey(checksumModel.getKey())
-                .setMerchantId(checksumModel.getMerchantID());
+                .setKey(checksumModel.getMerchantKey())
+                .setMerchantId(checksumModel.getMerchantId());
 
         try {
             PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
@@ -2764,6 +2754,5 @@ public class CheckIn extends AppCompatActivity {
             }
         });
     }
-
 
 }

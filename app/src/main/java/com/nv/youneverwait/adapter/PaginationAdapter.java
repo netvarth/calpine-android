@@ -32,6 +32,7 @@ import com.nv.youneverwait.activities.SearchServiceActivity;
 import com.nv.youneverwait.callback.AdapterCallback;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.CheckIn;
+import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
@@ -422,7 +423,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
-
+                                        // String firstWord = "Est Service Time ";
                                         String firstWord = "Checked in for ";
                                         /*String firstWord = null;
                                         Date dt = new Date();
@@ -459,9 +460,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                     "fonts/Montserrat_Bold.otf");
                                             //String firstWord = "Est Service Time ";
-
                                             String firstWord = "";
-
                                             if (hours > 0) {
                                                 firstWord = "Checked in for ";
                                             } else {
@@ -581,6 +580,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     // myViewHolder.tv_specialization.setText(searchdetailList.getSpecialization_displayname());
                     final List<String> list_spec = new ArrayList<String>(Arrays.asList(searchdetailList.getSpecialization_displayname().split(",")));
 
+
                     if (list_spec.size() > 0) {
                         if (list_spec.size() == 1) {
 
@@ -591,17 +591,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
                         } else {
-                            myViewHolder.L_specialization.setVisibility(View.GONE);
-                            myViewHolder.tv_spec.setText(list_spec.get(0));
-                            myViewHolder.tv_spec.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_arrowright_gray, 0);
-                            myViewHolder.L_specialization.removeAllViews();
-                            myViewHolder.L_specialization.setVisibility(View.GONE);
+
                             myViewHolder.tv_spec.setTextSize(13);
                             if(!searchdetailList.isIs_SpecOpen()) {
                                 myViewHolder.tv_spec.setText(list_spec.get(0));
                                 myViewHolder.tv_spec.setVisibility(View.VISIBLE);
                                 myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_bottom, 0);
+
+
                                 myViewHolder.L_specialization.removeAllViews();
                                 myViewHolder.L_specialization.setVisibility(View.GONE);
                             }else{
@@ -639,6 +636,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             }
                                         });
                                     }
+
                                     myViewHolder.L_specialization.addView(dynaText);
                                 }
                             }
@@ -731,7 +729,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             dynaText.setTypeface(tyface);
                             dynaText.setText(searchdetailList.getServices().get(i).toString());
                             dynaText.setTextSize(13);
-
                             //  dynaText.setPadding(0, 0, 12, 0);
                             dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
                             dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));

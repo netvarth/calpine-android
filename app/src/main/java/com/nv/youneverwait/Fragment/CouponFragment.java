@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.adapter.CouponAdapter;
 import com.nv.youneverwait.common.Config;
