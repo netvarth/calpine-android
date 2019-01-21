@@ -79,6 +79,7 @@ public class ChangePhoneFragment extends RootFragment {
         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
         edtPhone.setText(mobile);
 
+        
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
