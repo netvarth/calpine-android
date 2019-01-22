@@ -13,6 +13,7 @@
         android:background="@color/hometopbar"
         android:orientation="vertical">
 
+
         <include
             android:id="@+id/toolbar"
             layout="@layout/custom_toolbar" />
