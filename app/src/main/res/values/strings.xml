@@ -116,6 +116,7 @@
     <string name="db_table_checkin">tb_checkin</string>
     <string name="db_table_fav">tb_favour</string>
     <string name="serve_prepay">The service needs prepayment for Check-in</string>
+    <string name="terms"><![CDATA[T & C]]></string>
 
 
 </resources>
