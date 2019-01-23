@@ -219,21 +219,26 @@ public class Login extends AppCompatActivity {
                             e.printStackTrace();
                         }*/
 
-                        // get header value
-                        String cookie = response.headers().get("Set-Cookie");
+                        String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
 
-                        Config.logV("Response--Cookie-------------------------" + cookie);
-                        if (!cookie.isEmpty()) {
+                        Config.logV("Cookie Stored"+cookieStored);
+                        if(cookieStored.equalsIgnoreCase("")) {
+                            // get header value
+                            String cookie = response.headers().get("Set-Cookie");
 
-                            SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
-                            String header = response.headers().get("Set-Cookie");
-                            String Cookie_header = header.substring(0, header.indexOf(";"));
+                            Config.logV("Response--Cookie-------------------------" + cookie);
+                            if (!cookie.isEmpty()) {
 
-                            SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
-                            Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+                                SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
+                                String header = response.headers().get("Set-Cookie");
+                                String Cookie_header = header.substring(0, header.indexOf(";"));
 
-                            LogUtil.writeLogTest("****Login Cookie****"+Cookie_header);
+                                SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
+                                Config.logV("Set Cookie sharedpref------------" + Cookie_header);
 
+                                LogUtil.writeLogTest("****Login Cookie****" + Cookie_header);
+
+                            }
                         }
 
 
@@ -322,6 +327,23 @@ public class Login extends AppCompatActivity {
                         startActivity(iReg);
 
 
+                        String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+
+                        Config.logV("Cookie Stored"+cookieStored);
+                        if(cookieStored.equalsIgnoreCase("")) {
+                            String cookie = response.headers().get("Set-Cookie");
+
+                            Config.logV("Response--Cookie-------------------------" + cookie);
+                            if (!cookie.isEmpty()) {
+
+                                String header = response.headers().get("Set-Cookie");
+                                String Cookie_header = header.substring(0, header.indexOf(";"));
+
+                                SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
+                                Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+
+                            }
+                        }
                     }
 
 

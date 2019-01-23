@@ -147,10 +147,24 @@ String header;
         } else {
             // If group is not expanded then change the text back into normal
             // and change the icon
-
-            //header_text.setTypeface(null, Typeface.NORMAL);
-            header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-            header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_background_opaque_round));
+            if (getChildrenCount(groupPosition) == 0) {
+                if (groupPosition == 0) {
+                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                    header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
+                }
+                if (groupPosition == 1) {
+                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                    header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
+                }
+                if (groupPosition == 2) {
+                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                    header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
+                }
+            }else {
+                //header_text.setTypeface(null, Typeface.NORMAL);
+                header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
+                header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_background_opaque_round));
+            }
         }
 
         return convertView;

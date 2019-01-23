@@ -481,20 +481,24 @@ public class Password extends AppCompatActivity {
                         }*/
 
 
-                        // get header value
-                        String cookie = response.headers().get("Set-Cookie");
+                     String cookiestored=   SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
 
-                        Config.logV("Response--Cookie-------------------------" + cookie);
-                        if (!cookie.isEmpty()) {
+                      if(cookiestored.equalsIgnoreCase("")) {
+                          // get header value
+                          String cookie = response.headers().get("Set-Cookie");
 
-                            SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
-                            String header = response.headers().get("Set-Cookie");
-                            String Cookie_header = header.substring(0, header.indexOf(";"));
+                          Config.logV("Response--Cookie-------------------------" + cookie);
+                          if (!cookie.isEmpty()) {
 
-                            SharedPreference.getInstance(mContext).setValue("PREF_COOKIES",Cookie_header);
-                            Config.logV("Set Cookie sharedpref------------"+Cookie_header);
-                            LogUtil.writeLogTest("*******Signup Cookie*****"+Cookie_header);
-                        }
+
+                              String header = response.headers().get("Set-Cookie");
+                              String Cookie_header = header.substring(0, header.indexOf(";"));
+
+                              SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
+                              Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+                              LogUtil.writeLogTest("*******Signup Cookie*****" + Cookie_header);
+                          }
+                      }
 
 
                         Headers headerList = response.headers();

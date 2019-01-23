@@ -22,6 +22,7 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.nv.youneverwait.utils.TypefaceFont;
 
@@ -199,6 +200,26 @@ public class Signup extends AppCompatActivity {
                             Intent iReg = new Intent(mContext, VerifyOtp.class);
                             startActivity(iReg);
                             finish();
+
+                            String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+
+                            Config.logV("Cookie Stored"+cookieStored);
+                            if(cookieStored.equalsIgnoreCase("")) {
+                                String cookie = response.headers().get("Set-Cookie");
+
+                                Config.logV("Response--Cookie-------------------------" + cookie);
+                                if (!cookie.isEmpty()) {
+
+                                    String header = response.headers().get("Set-Cookie");
+                                    String Cookie_header = header.substring(0, header.indexOf(";"));
+
+                                    SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
+                                    Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+
+                                }
+                            }
+
+
 
                         }
 

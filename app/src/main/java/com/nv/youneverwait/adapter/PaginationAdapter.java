@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -140,45 +141,159 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                 Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
-                if (searchdetailList.getYnw_verified() == 1) {
+                /*if (searchdetailList.getYnw_verified() == 1) {
                     myViewHolder.tv_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_verified, 0);
                 } else {
                     myViewHolder.tv_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                }
+                }*/
 
 
                 Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
-                if(searchdetailList.getYnw_verified_level()!=null) {
+                if (searchdetailList.getYnw_verified_level() != null) {
                     if (searchdetailList.getYnw_verified() == 1) {
                         if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("1")) {
 
-                            myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_ynw_verified.setText("Basic");
+                            myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
+                            myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
+                            //myViewHolder.tv_ynw_verified.setText("Basic");
                         }
 
 
                         if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("2")) {
-                            myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_ynw_verified.setText("Basic Plus");
+                          /*  myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_ynw_verified.setText("Basic Plus");*/
+                            myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
+                            myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basicplus);
                         }
 
 
                         if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("3")) {
 
-                            myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_ynw_verified.setText("Premium");
+                           /* myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_ynw_verified.setText("Premium");*/
+                            myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
+                            myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_adv);
                         }
-                    }else{
-                        myViewHolder.tv_ynw_verified.setVisibility(View.GONE);
+                    } else {
+                        myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.INVISIBLE);
+
                     }
-                }else{
-                    myViewHolder.tv_ynw_verified.setVisibility(View.GONE);
+                } else {
+                    myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.INVISIBLE);
                 }
 
 
 ////////////////////////////7 types////////////////////////////////////////////
                 ArrayList<ParkingModel> listType = new ArrayList<>();
                 listType.clear();
+
+                if (searchdetailList.getBusiness_hours1() != null) {
+                    ParkingModel mType = new ParkingModel();
+                    // mType.setTypeicon(R.drawable.icon_24hours);
+                    Config.logV("Working-@@@@--------11111-----------" + searchdetailList.getTitle());
+                    mType.setId("0");
+                    mType.setTypename("Working Hours");
+                    if (searchdetailList.getBusiness_hours1() != null) {
+                        try {
+                            String array_json = searchdetailList.getBusiness_hours1().toString();
+
+
+                            try {
+
+
+                                //Get the instance of JSONArray that contains JSONObjects
+                                JSONArray jsonArray = new JSONArray(array_json);
+                                String jsonarry = jsonArray.getString(0);
+                                JSONArray jsonArray1 = new JSONArray(jsonarry);
+
+                                //Iterate the jsonArray and print the info of JSONObjects
+
+                                workingModelArrayList.clear();
+
+                                for (int i = 0; i < jsonArray1.length(); i++) {
+                                    JSONObject jsonObject = jsonArray1.getJSONObject(i);
+
+                                    String id = jsonObject.optString("recurringType").toString();
+                                    String repeatinterval = jsonObject.optString("repeatIntervals").toString();
+                                    String timeslot = jsonObject.optString("timeSlots").toString();
+                                    // String publish_date = jsonObject.optString("publish_date").toString();
+                                    JSONArray jsonArray_time = new JSONArray(timeslot);
+                                    JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
+                                    String sTime = jsonObject_time.optString("sTime").toString();
+                                    String eTime = jsonObject_time.optString("eTime").toString();
+
+
+                                    JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
+
+                                    for (int k = 0; k < jsonArray_repeat.length(); k++) {
+                                        String repeat = jsonArray_repeat.getString(k);
+
+                                        WorkingModel work = new WorkingModel();
+                                        if (repeat.equalsIgnoreCase("2")) {
+
+                                            work.setDay("Monday");
+                                            work.setTime_value(sTime + "-" + eTime);
+
+                                        }
+                                        if (repeat.equalsIgnoreCase("3")) {
+
+                                            work.setDay("Tuesday");
+                                            work.setTime_value(sTime + "-" + eTime);
+
+                                        }
+                                        if (repeat.equalsIgnoreCase("4")) {
+                                            work.setDay("Wednesday");
+                                            work.setTime_value(sTime + "-" + eTime);
+                                        }
+                                        if (repeat.equalsIgnoreCase("5")) {
+
+                                            work.setDay("Thursday");
+                                            work.setTime_value(sTime + "-" + eTime);
+                                        }
+                                        if (repeat.equalsIgnoreCase("6")) {
+
+                                            work.setDay("Friday");
+                                            work.setTime_value(sTime + "-" + eTime);
+
+                                        }
+                                        if (repeat.equalsIgnoreCase("7")) {
+
+                                            work.setDay("Saturday");
+                                            work.setTime_value(sTime + "-" + eTime);
+
+                                        }
+                                        if (repeat.equalsIgnoreCase("1")) {
+
+                                            work.setDay("Sunday");
+                                            work.setTime_value(sTime + "-" + eTime);
+
+                                        }
+
+                                        workingModelArrayList.add(work);
+
+                                    }
+
+
+                                }
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                    //mAdapterCallback.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getTitle(), searchdetailList.getUniqueid());
+
+
+                    mType.setWorkingModelArrayList(workingModelArrayList);
+                    listType.add(mType);
+                    // myViewHolder.tv_Workinghrs.setText(workingHrs);
+                }
 
                 if (searchdetailList.getParking_type_location1() != null) {
                     if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
@@ -275,7 +390,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         "fonts/Montserrat_Bold.otf");
                 myViewHolder.tv_name.setTypeface(tyface_confm);
                 myViewHolder.btncheckin.setTypeface(tyface_confm);
-                myViewHolder.tv_Open.setTypeface(tyface_confm);
+               // myViewHolder.tv_Open.setTypeface(tyface_confm);
 
                 myViewHolder.tv_location.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -388,14 +503,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 if ((formattedDate.trim().equalsIgnoreCase(searchdetailList.getAvail_date().trim()) && (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")))) {
                                     Config.logV("Title------333-" + searchdetailList.getTitle());
                                     myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-                                    myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.button_gradient_checkin));
+                                    //  myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.button_gradient_checkin));
                                     myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.app_background));
-                                    //   myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#3498db"));
+                                    myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#28a745"));
 
                                 } else if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1") && date1.compareTo(date2) < 0) {
                                     myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-                                    // myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                                    myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                    myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+                                    // myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
                                     myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
                                     myViewHolder.btncheckin.setEnabled(false);
                                     Config.logV("Title------444-" + searchdetailList.getTitle());
@@ -445,12 +560,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         }*/
 
                                         String secondWord = "\nToday, " + searchdetailList.getServiceTime();
-                                        Spannable spannable = new SpannableString(firstWord + secondWord);
+                                       /* Spannable spannable = new SpannableString(firstWord + secondWord);
                                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
-                                                firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
-                                        myViewHolder.tv_WaitTime.setText(spannable);
+                                        myViewHolder.tv_WaitTime.setText(firstWord+secondWord);
 
                                     } else {
 
@@ -487,12 +602,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             }*/
 
                                             String secondWord = "\n" + mtime;
-                                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                                            /*Spannable spannable = new SpannableString(firstWord + secondWord);
                                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                             spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
-                                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
-                                            myViewHolder.tv_WaitTime.setText(spannable);
+                                            myViewHolder.tv_WaitTime.setText(firstWord+secondWord);
 
 
                                         } else {
@@ -503,12 +618,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                                     "fonts/Montserrat_Bold.otf");
                                             String firstWord = "Est Wait Time ";
                                             String secondWord = "\n" + searchdetailList.getQueueWaitingTime() + " Mins";
-                                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                                            /*Spannable spannable = new SpannableString(firstWord + secondWord);
                                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                             spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
-                                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
-                                            myViewHolder.tv_WaitTime.setText(spannable);
+                                            myViewHolder.tv_WaitTime.setText(firstWord+secondWord);
                                         }
                                     }
                                 }
@@ -525,12 +640,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                                 "fonts/Montserrat_Bold.otf");
                                         String firstWord = "Next Available Time ";
                                         String secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
-                                        Spannable spannable = new SpannableString(firstWord + secondWord);
+                                       /* Spannable spannable = new SpannableString(firstWord + secondWord);
                                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                         spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
-                                                firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
-                                        myViewHolder.tv_WaitTime.setText(spannable);
+                                        myViewHolder.tv_WaitTime.setText(firstWord+secondWord);
 
                                     } catch (ParseException e) {
                                         e.printStackTrace();
@@ -547,11 +662,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                     //Open Tag
 
-                    if (searchdetailList.isIsopen()) {
+                    /*if (searchdetailList.isIsopen()) {
                         myViewHolder.tv_Open.setVisibility(View.VISIBLE);
                     } else {
                         myViewHolder.tv_Open.setVisibility(View.GONE);
-                    }
+                    }*/
 
 
                 } else {
@@ -589,127 +704,60 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (list_spec.size() > 0) {
                         if (list_spec.size() == 1) {
 
-                            myViewHolder.L_specialization.setVisibility(View.GONE);
-                            myViewHolder.tv_spec.setText(list_spec.get(0));
-                            myViewHolder.tv_spec.setTextSize(13);
-                            myViewHolder.tv_spec.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
+                            myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_spec1.setText(list_spec.get(0));
+                            myViewHolder.tv_spec1.setTextSize(13);
+
+                            myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_spec2.setVisibility(View.GONE);
+                            myViewHolder.tv_spec3.setVisibility(View.GONE);
                         } else {
 
-                            myViewHolder.tv_spec.setTextSize(13);
-                            if(!searchdetailList.isIs_SpecOpen()) {
-                                myViewHolder.tv_spec.setText(list_spec.get(0));
-                                myViewHolder.tv_spec.setVisibility(View.VISIBLE);
-                                myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_bottom, 0);
+                            myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_spec1.setText(list_spec.get(0));
+                            myViewHolder.tv_spec1.setTextSize(13);
+                            myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
 
-                                myViewHolder.L_specialization.removeAllViews();
-                                myViewHolder.L_specialization.setVisibility(View.GONE);
+                            if(list_spec.get(0).length()>10) {
+                                myViewHolder.tv_spec2.setVisibility(View.GONE);
                             }else{
-                                myViewHolder.L_specialization.removeAllViews();
-                                myViewHolder.L_specialization.setOrientation(LinearLayout.VERTICAL);
-                                myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-                                myViewHolder.tv_spec.setVisibility(View.GONE);
-                                for (int i = 0; i < list_spec.size(); i++) {
-
-                                    TextView dynaText = new TextView(context);
-                                    Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                                            "fonts/Montserrat_Regular.otf");
-                                    dynaText.setTypeface(tyface);
-                                    String word = list_spec.get(i);
-                                    word = word.replaceFirst("^\\s*", "");
-
-                                    dynaText.setText(word);
-                                    //  dynaText.setText(list_spec.get(i));
-                                    dynaText.setTextSize(13);
-                                    dynaText.setTextColor(context.getResources().getColor(R.color.black));
-                                    dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                    dynaText.setMaxLines(1);
-                                    if(i==list_spec.size()-1){
-                                        dynaText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_top, 0);
-                                        dynaText.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                Config.logV("SpEc Open @@@@%%%");
-                                                myViewHolder.tv_spec.setText(list_spec.get(0));
-                                                myViewHolder.tv_spec.setVisibility(View.VISIBLE);
-                                                myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_bottom, 0);
-                                                myViewHolder.L_specialization.removeAllViews();
-                                                searchdetailList.setIs_SpecOpen(false);
-                                                myViewHolder.L_specialization.setVisibility(View.GONE);
-                                            }
-                                        });
-                                    }
-
-                                    myViewHolder.L_specialization.addView(dynaText);
-                                }
+                                myViewHolder.tv_spec2.setText(" " + list_spec.get(1));
+                                myViewHolder.tv_spec2.setTextSize(13);
+                                myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
                             }
 
-                            Config.logV("SpEc Open----------"+searchdetailList.isIs_SpecOpen()+"Prov"+searchdetailList.getTitle());
+
+                            myViewHolder.tv_spec3.setText(" ...");
+                            myViewHolder.tv_spec3.setTextSize(13);
+                            myViewHolder.tv_spec3.setVisibility(View.VISIBLE);
+
+                            }
+
+                            Config.logV("SpEc Open----------" + searchdetailList.isIs_SpecOpen() + "Prov" + searchdetailList.getTitle());
 
 
-                                myViewHolder.tv_spec.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Config.logV("SpEc Open @@@@");
-                                        myViewHolder.L_specialization.removeAllViews();
-                                        myViewHolder.L_specialization.setOrientation(LinearLayout.VERTICAL);
-                                        myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-                                        myViewHolder.tv_spec.setVisibility(View.GONE);
-
-                                        for (int i = 0; i < list_spec.size(); i++) {
-
-                                            TextView dynaText = new TextView(context);
-                                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                                                    "fonts/Montserrat_Regular.otf");
-                                            dynaText.setTypeface(tyface);
-                                            String word = list_spec.get(i);
-                                            word = word.replaceFirst("^\\s*", "");
-
-                                            dynaText.setText(word);
-                                            //  dynaText.setText(list_spec.get(i));
-                                            dynaText.setTextSize(13);
-                                            dynaText.setTextColor(context.getResources().getColor(R.color.black));
-                                            dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                            dynaText.setMaxLines(1);
-                                            if(i==list_spec.size()-1){
-                                                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_top, 0);
-                                                dynaText.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        Config.logV("SpEc Open @@@@%%%");
-                                                        myViewHolder.tv_spec.setText(list_spec.get(0));
-                                                        myViewHolder.tv_spec.setVisibility(View.VISIBLE);
-                                                        myViewHolder.tv_spec.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_gray_bottom, 0);
-                                                        myViewHolder.L_specialization.removeAllViews();
-                                                        searchdetailList.setIs_SpecOpen(false);
-                                                        myViewHolder.L_specialization.setVisibility(View.GONE);
-                                                    }
-                                                });
-                                            }
-
-                                            myViewHolder.L_specialization.addView(dynaText);
-                                        }
-
-                                        searchdetailList.setIs_SpecOpen(true);
+                            myViewHolder.tv_spec3.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
 
 
+                                }
+                            });
 
-                                    }
-                                });
-                           // }
+
                         }
 
 
                     } else {
-                        myViewHolder.tv_spec.setVisibility(View.GONE);
-                        myViewHolder.L_specialization.setVisibility(View.GONE);
-
-                    }
-                } else {
-                    myViewHolder.tv_spec.setVisibility(View.GONE);
+                        myViewHolder.tv_spec1.setVisibility(View.GONE);
+                        myViewHolder.tv_spec2.setVisibility(View.GONE);
+                      myViewHolder.tv_spec3.setVisibility(View.GONE);
                     myViewHolder.L_specialization.setVisibility(View.GONE);
+
 
                 }
                 //  Picasso.with(context).load(searchdetailList.getLogo()).fit().into(myViewHolder.profile);
@@ -789,117 +837,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
-                if (searchdetailList.getBusiness_hours1() != null) {
-                    myViewHolder.tv_Workinghrs.setVisibility(View.VISIBLE);
-                    // myViewHolder.tv_Workinghrs.setText(workingHrs);
-                } else {
-                    myViewHolder.tv_Workinghrs.setVisibility(View.GONE);
-                }
-
-
-                myViewHolder.tv_Workinghrs.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (searchdetailList.getBusiness_hours1() != null) {
-                            try {
-                                String array_json = searchdetailList.getBusiness_hours1().toString();
-
-
-                                try {
-
-
-                                    //Get the instance of JSONArray that contains JSONObjects
-                                    JSONArray jsonArray = new JSONArray(array_json);
-                                    String jsonarry = jsonArray.getString(0);
-                                    JSONArray jsonArray1 = new JSONArray(jsonarry);
-
-                                    //Iterate the jsonArray and print the info of JSONObjects
-
-                                    workingModelArrayList.clear();
-
-                                    for (int i = 0; i < jsonArray1.length(); i++) {
-                                        JSONObject jsonObject = jsonArray1.getJSONObject(i);
-
-                                        String id = jsonObject.optString("recurringType").toString();
-                                        String repeatinterval = jsonObject.optString("repeatIntervals").toString();
-                                        String timeslot = jsonObject.optString("timeSlots").toString();
-                                        // String publish_date = jsonObject.optString("publish_date").toString();
-                                        JSONArray jsonArray_time = new JSONArray(timeslot);
-                                        JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
-                                        String sTime = jsonObject_time.optString("sTime").toString();
-                                        String eTime = jsonObject_time.optString("eTime").toString();
-
-
-                                        JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
-
-                                        for (int k = 0; k < jsonArray_repeat.length(); k++) {
-                                            String repeat = jsonArray_repeat.getString(k);
-
-                                            WorkingModel work = new WorkingModel();
-                                            if (repeat.equalsIgnoreCase("2")) {
-
-                                                work.setDay("Monday");
-                                                work.setTime_value(sTime + "-" + eTime);
-
-                                            }
-                                            if (repeat.equalsIgnoreCase("3")) {
-
-                                                work.setDay("Tuesday");
-                                                work.setTime_value(sTime + "-" + eTime);
-
-                                            }
-                                            if (repeat.equalsIgnoreCase("4")) {
-                                                work.setDay("Wednesday");
-                                                work.setTime_value(sTime + "-" + eTime);
-                                            }
-                                            if (repeat.equalsIgnoreCase("5")) {
-
-                                                work.setDay("Thursday");
-                                                work.setTime_value(sTime + "-" + eTime);
-                                            }
-                                            if (repeat.equalsIgnoreCase("6")) {
-
-                                                work.setDay("Friday");
-                                                work.setTime_value(sTime + "-" + eTime);
-
-                                            }
-                                            if (repeat.equalsIgnoreCase("7")) {
-
-                                                work.setDay("Saturday");
-                                                work.setTime_value(sTime + "-" + eTime);
-
-                                            }
-                                            if (repeat.equalsIgnoreCase("1")) {
-
-                                                work.setDay("Sunday");
-                                                work.setTime_value(sTime + "-" + eTime);
-
-                                            }
-
-                                            workingModelArrayList.add(work);
-
-                                        }
-
-
-                                    }
-
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-
-                        mAdapterCallback.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getTitle(), searchdetailList.getUniqueid());
-
-
-                    }
-                });
 
 
                 myViewHolder.tv_communicate.setOnClickListener(new View.OnClickListener() {
@@ -1063,38 +1000,42 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_Open, tv_WaitTime, tv_spec,tv_ynw_verified;
-        LinearLayout L_specialization, L_services;
+        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_WaitTime, tv_spec1,tv_spec2,tv_spec3;
+        LinearLayout  L_specialization,L_services;
 
+        ImageView ic_jaldeeverifiedIcon;
         ImageView profile;
         RatingBar rating;
-        RelativeLayout mLayout;
+
         Button btncheckin;
         RecyclerView mRecycleTypes;
-        ImageView tv_Workinghrs, tv_communicate;
+        ImageView tv_communicate;
         LinearLayout layout_row;
 
         public MyViewHolder(View view) {
             super(view);
-            tv_ynw_verified= (TextView) view.findViewById(R.id.ynw_verified);
+           // tv_ynw_verified = (TextView) view.findViewById(R.id.ynw_verified);
+            ic_jaldeeverifiedIcon= (ImageView) view.findViewById(R.id.ic_jaldeeverifiedIcon);
             tv_name = (TextView) view.findViewById(R.id.name);
             tv_location = (TextView) view.findViewById(R.id.location);
             tv_domain = (TextView) view.findViewById(R.id.domain);
             profile = (ImageView) view.findViewById(R.id.profile);
             rating = (RatingBar) view.findViewById(R.id.mRatingBar);
             L_services = (LinearLayout) view.findViewById(R.id.service);
-            mLayout = (RelativeLayout) view.findViewById(R.id.mLayout);
+
             //tv_Date = (TextView) view.findViewById(R.id.mDate);
             btncheckin = (Button) view.findViewById(R.id.btncheckin);
             tv_Futuredate = (TextView) view.findViewById(R.id.txt_diffdate);
-            tv_Workinghrs = (ImageView) view.findViewById(R.id.txtWorkinghrs);
-            tv_Open = (TextView) view.findViewById(R.id.txtOpen);
+          //  tv_Workinghrs = (ImageView) view.findViewById(R.id.txtWorkinghrs);
+           // tv_Open = (TextView) view.findViewById(R.id.txtOpen);
             tv_WaitTime = (TextView) view.findViewById(R.id.txtWaitTime);
-            L_specialization = (LinearLayout) view.findViewById(R.id.specialization);
+            L_specialization = (LinearLayout) view.findViewById(R.id.Lspec);
             tv_communicate = (ImageView) view.findViewById(R.id.txtcommunicate);
             mRecycleTypes = (RecyclerView) view.findViewById(R.id.mRecycleTypes);
             layout_row = (LinearLayout) view.findViewById(R.id.layout_row);
-            tv_spec = (TextView) view.findViewById(R.id.txtspec);
+            tv_spec1 = (TextView) view.findViewById(R.id.txtspec1);
+            tv_spec2 = (TextView) view.findViewById(R.id.txtspec2);
+            tv_spec3 = (TextView) view.findViewById(R.id.txtspec3);
 
         }
     }
