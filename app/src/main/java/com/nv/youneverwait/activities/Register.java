@@ -143,7 +143,7 @@ public class Register extends AppCompatActivity {
 
 
         mContext = this;
-
+        SharedPreference.getInstance(mContext).removeKey("PREF_COOKIES");
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             sforceupdate = extras.getString("forceupdate", "");
@@ -340,16 +340,7 @@ public class Register extends AppCompatActivity {
                         Config.logV("Response123---------------------------");
 
 
-                       /* String cookie = response.headers().get("Set-Cookie");
 
-                        Config.logV("Response--Cookie-------------------------" + cookie);
-                        if (!cookie.isEmpty()) {
-                            String header = response.headers().get("Set-Cookie");
-                            String Cookie_header = header.substring(0, header.indexOf(";"));
-
-                            SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
-                            Config.logV("Cookie @@@@@@@@@@@" + Cookie_header);
-                        }*/
 
                         if (response.body().string().equalsIgnoreCase("false")) {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
@@ -437,5 +428,9 @@ public class Register extends AppCompatActivity {
         alertDialog.show();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreference.getInstance(mContext).removeKey("PREF_COOKIES");
+    }
 }

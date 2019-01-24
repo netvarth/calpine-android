@@ -18,6 +18,7 @@ import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
+import com.nv.youneverwait.utils.SharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -152,7 +153,7 @@ public class EmailOtpFragment extends RootFragment {
     }
 
 
-    private void ApiOtpEmail(String otp, String email) {
+    private void ApiOtpEmail(String otp, final String email) {
 
 
         ApiInterface apiService =
@@ -185,7 +186,8 @@ public class EmailOtpFragment extends RootFragment {
                     if (response.code() == 200) {
                         Config.logV("Response----------------");
                         if (response.body().string().equals("true")) {
-                            Config.logV("Response------#################----------");
+                            Config.logV("Response------#################----------"+email);
+                            SharedPreference.getInstance(mContext).setValue("mobile",email);
                             Toast.makeText(mContext,"Phone Number has been updated successfully ",Toast.LENGTH_LONG).show();
                             getFragmentManager().popBackStack();
 

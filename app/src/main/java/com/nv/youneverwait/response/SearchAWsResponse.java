@@ -67,6 +67,16 @@ public class SearchAWsResponse {
 
     String ynw_verified;
 
+    public ArrayList getGallery_thumb_nails() {
+        return gallery_thumb_nails;
+    }
+
+    public void setGallery_thumb_nails(ArrayList gallery_thumb_nails) {
+        this.gallery_thumb_nails = gallery_thumb_nails;
+    }
+
+    ArrayList gallery_thumb_nails;
+
     public String getLocation1() {
         return location1;
     }

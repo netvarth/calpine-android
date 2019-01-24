@@ -131,10 +131,7 @@ public class LogouFragment  extends RootFragment {
 
 
                     }else{
-                        /*if(response.code()==419){
-                            String cookie=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
-                            LogUtil.writeLogTest(" Session Expired "+cookie);
-                        }*/
+
                     }
 
 

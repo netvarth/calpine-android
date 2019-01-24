@@ -338,11 +338,8 @@ public class CheckinsFragment extends RootFragment implements HistoryAdapterCall
 
                     } else {
                         // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                       /* if(response.code()==419){
-                            String cookie= SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
-                            LogUtil.writeLogTest(" Session Expired "+cookie);
-                        }
-*/
+
+
                     }
 
 

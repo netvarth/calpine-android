@@ -1072,8 +1072,15 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getParking_location1() != null) {
 
-                                    Config.logV("Park-@@@@---111----------------" + response.body().getHits().getHit().get(i).getFields().getParking_location1());
+                                    Config.logV("@@@@@--111----------------" + response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                     search.setParking_location1(response.body().getHits().getHit().get(i).getFields().getParking_location1());
+                                }
+
+
+
+                                if (response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails() != null) {
+                                    Config.logV("Gallery-@@@@---111----------------" + response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails());
+                                    search.setGallery_thumb_nails(response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails());
                                 }
 
 
@@ -1290,6 +1297,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 }
 
 
+                                if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
+                                    searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
+                                }
+
                                 //7types
 
                                 if (mSearchRespPass.get(i).getParking_type_location1() != null) {
@@ -1442,6 +1453,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (mSearchRespPass.get(i).getShow_waiting_time() != null) {
                                     searchList.setShow_waiting_time(mSearchRespPass.get(i).getShow_waiting_time());
                                 }
+
+
+                                if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
+                                    Config.logV("Gallery @@@@@@@ 1111"+mSearchRespPass.get(i).getGallery_thumb_nails());
+                                    searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
+                                }
+
 
 
                                 if (mSearchRespPass.get(i).getParking_type_location1() != null) {

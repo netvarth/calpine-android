@@ -67,7 +67,7 @@ public class ResetOtp extends AppCompatActivity {
             }
         });
         TextView tv_title = (TextView)findViewById(R.id.title);
-        tv_title.setText("Forgot Password");
+        tv_title.setText("Forgot password");
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");

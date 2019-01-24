@@ -327,10 +327,10 @@ public class Login extends AppCompatActivity {
                         startActivity(iReg);
 
 
-                        String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                       /* String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
 
                         Config.logV("Cookie Stored"+cookieStored);
-                        if(cookieStored.equalsIgnoreCase("")) {
+                        if(cookieStored.equalsIgnoreCase("")) {*/
                             String cookie = response.headers().get("Set-Cookie");
 
                             Config.logV("Response--Cookie-------------------------" + cookie);
@@ -343,7 +343,7 @@ public class Login extends AppCompatActivity {
                                 Config.logV("Set Cookie sharedpref------------" + Cookie_header);
 
                             }
-                        }
+                       // }
                     }
 
 

@@ -124,8 +124,8 @@ public class ApiClient {
         builder.addInterceptor(logging);
 
 
-        builder.readTimeout(90, TimeUnit.SECONDS);
-        builder.connectTimeout(90, TimeUnit.SECONDS);
+        builder.readTimeout(60, TimeUnit.SECONDS);
+        builder.connectTimeout(60, TimeUnit.SECONDS);
         okHttpClient = builder.build();
        /* OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new ConnectivityInterceptor(context))
@@ -145,8 +145,8 @@ public class ApiClient {
        // builder.addInterceptor(new AddCookiesInterceptor(context)); // VERY VERY IMPORTANT
         //  builder.addInterceptor(new ReceivedCookiesInterceptor(context));
         builder.addInterceptor(new ConnectivityInterceptor(context));
-        builder.readTimeout(90, TimeUnit.SECONDS);
-        builder.connectTimeout(90, TimeUnit.SECONDS);
+        builder.readTimeout(60, TimeUnit.SECONDS);
+        builder.connectTimeout(60, TimeUnit.SECONDS);
         okHttpClient = builder.build();
        /* OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new ConnectivityInterceptor(context))

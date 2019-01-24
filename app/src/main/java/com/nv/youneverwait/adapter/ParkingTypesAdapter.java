@@ -42,9 +42,6 @@ public class ParkingTypesAdapter extends RecyclerView.Adapter<ParkingTypesAdapte
 
 
         holder.tv_type.setText(horizontaltypeList.get(position).getTypename());
-
-        if (horizontaltypeList.get(position).getId().equalsIgnoreCase("0"))
-            holder.ic_type.setImageResource(R.drawable.icon_work);
         if (horizontaltypeList.get(position).getId().equalsIgnoreCase("1"))
             holder.ic_type.setImageResource(R.drawable.icon_parking);
         if (horizontaltypeList.get(position).getId().equalsIgnoreCase("2"))

@@ -200,10 +200,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                         }
 
                     } else {
-                        if (response.code() == 419) {
-                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
-                            LogUtil.writeLogTest(response.errorBody().string() + " " + cookie);
-                        }
+
                     }
 
 
@@ -323,10 +320,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                         FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
-                        if (response.code() == 419) {
-                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
-                            LogUtil.writeLogTest(response.errorBody().string() + " " + cookie);
-                        }
+
                     }
 
 

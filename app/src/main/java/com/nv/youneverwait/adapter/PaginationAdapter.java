@@ -11,11 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -33,12 +29,10 @@ import com.nv.youneverwait.activities.SearchServiceActivity;
 import com.nv.youneverwait.callback.AdapterCallback;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.CheckIn;
-import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CircleTransform;
-import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.model.SearchListModel;
 import com.nv.youneverwait.model.WorkingModel;
 import com.nv.youneverwait.response.SearchService;
@@ -116,7 +110,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return viewHolder;
     }
 
-    ParkingTypesAdapter mParkTypeAdapter;
+
     static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
     private static Date dateCompareOne;
 
@@ -184,205 +178,298 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
 ////////////////////////////7 types////////////////////////////////////////////
-                ArrayList<ParkingModel> listType = new ArrayList<>();
-                listType.clear();
+               /* ArrayList<ParkingModel> listType = new ArrayList<>();
+                listType.clear();*/
+
+                myViewHolder.layout_type.removeAllViews();
+                LinearLayout parent = new LinearLayout(context);
+
+                LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                parent.setOrientation(LinearLayout.HORIZONTAL);
+                parent.setLayoutParams(params1);
+
 
                 if (searchdetailList.getBusiness_hours1() != null) {
-                    ParkingModel mType = new ParkingModel();
-                    // mType.setTypeicon(R.drawable.icon_24hours);
-                    Config.logV("Working-@@@@--------11111-----------" + searchdetailList.getTitle());
-                    mType.setId("0");
-                    mType.setTypename("Working Hours");
-                    if (searchdetailList.getBusiness_hours1() != null) {
-                        try {
-                            String array_json = searchdetailList.getBusiness_hours1().toString();
+                    TextView dynaText = new TextView(context);
+                    Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                            "fonts/Montserrat_Regular.otf");
+                    dynaText.setTypeface(tyface);
+                    dynaText.setText("Working Hours");
+                    dynaText.setTextSize(13);
+                    dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                    dynaText.setPadding(5, 5, 5, 5);
+                    dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_clock, 0, 0);
+                    //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                    dynaText.setMaxLines(1);
+
+                    dynaText.setLayoutParams(params1);
+                    params1.setMargins(10, 7, 10, 7);
+                    dynaText.setGravity(Gravity.LEFT);
+                    parent.addView(dynaText);
+                    dynaText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (searchdetailList.getBusiness_hours1() != null) {
+
+                                if (searchdetailList.getBusiness_hours1() != null) {
+                                    try {
+                                        String array_json = searchdetailList.getBusiness_hours1().toString();
 
 
-                            try {
+                                        try {
 
 
-                                //Get the instance of JSONArray that contains JSONObjects
-                                JSONArray jsonArray = new JSONArray(array_json);
-                                String jsonarry = jsonArray.getString(0);
-                                JSONArray jsonArray1 = new JSONArray(jsonarry);
+                                            //Get the instance of JSONArray that contains JSONObjects
+                                            JSONArray jsonArray = new JSONArray(array_json);
+                                            String jsonarry = jsonArray.getString(0);
+                                            JSONArray jsonArray1 = new JSONArray(jsonarry);
 
-                                //Iterate the jsonArray and print the info of JSONObjects
+                                            //Iterate the jsonArray and print the info of JSONObjects
 
-                                workingModelArrayList.clear();
+                                            workingModelArrayList.clear();
 
-                                for (int i = 0; i < jsonArray1.length(); i++) {
-                                    JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                                            for (int i = 0; i < jsonArray1.length(); i++) {
+                                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
 
-                                    String id = jsonObject.optString("recurringType").toString();
-                                    String repeatinterval = jsonObject.optString("repeatIntervals").toString();
-                                    String timeslot = jsonObject.optString("timeSlots").toString();
-                                    // String publish_date = jsonObject.optString("publish_date").toString();
-                                    JSONArray jsonArray_time = new JSONArray(timeslot);
-                                    JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
-                                    String sTime = jsonObject_time.optString("sTime").toString();
-                                    String eTime = jsonObject_time.optString("eTime").toString();
+                                                String id = jsonObject.optString("recurringType").toString();
+                                                String repeatinterval = jsonObject.optString("repeatIntervals").toString();
+                                                String timeslot = jsonObject.optString("timeSlots").toString();
+                                                // String publish_date = jsonObject.optString("publish_date").toString();
+                                                JSONArray jsonArray_time = new JSONArray(timeslot);
+                                                JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
+                                                String sTime = jsonObject_time.optString("sTime").toString();
+                                                String eTime = jsonObject_time.optString("eTime").toString();
 
 
-                                    JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
+                                                JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
 
-                                    for (int k = 0; k < jsonArray_repeat.length(); k++) {
-                                        String repeat = jsonArray_repeat.getString(k);
+                                                for (int k = 0; k < jsonArray_repeat.length(); k++) {
+                                                    String repeat = jsonArray_repeat.getString(k);
 
-                                        WorkingModel work = new WorkingModel();
-                                        if (repeat.equalsIgnoreCase("2")) {
+                                                    WorkingModel work = new WorkingModel();
+                                                    if (repeat.equalsIgnoreCase("2")) {
 
-                                            work.setDay("Monday");
-                                            work.setTime_value(sTime + "-" + eTime);
+                                                        work.setDay("Monday");
+                                                        work.setTime_value(sTime + "-" + eTime);
 
+                                                    }
+                                                    if (repeat.equalsIgnoreCase("3")) {
+
+                                                        work.setDay("Tuesday");
+                                                        work.setTime_value(sTime + "-" + eTime);
+
+                                                    }
+                                                    if (repeat.equalsIgnoreCase("4")) {
+                                                        work.setDay("Wednesday");
+                                                        work.setTime_value(sTime + "-" + eTime);
+                                                    }
+                                                    if (repeat.equalsIgnoreCase("5")) {
+
+                                                        work.setDay("Thursday");
+                                                        work.setTime_value(sTime + "-" + eTime);
+                                                    }
+                                                    if (repeat.equalsIgnoreCase("6")) {
+
+                                                        work.setDay("Friday");
+                                                        work.setTime_value(sTime + "-" + eTime);
+
+                                                    }
+                                                    if (repeat.equalsIgnoreCase("7")) {
+
+                                                        work.setDay("Saturday");
+                                                        work.setTime_value(sTime + "-" + eTime);
+
+                                                    }
+                                                    if (repeat.equalsIgnoreCase("1")) {
+
+                                                        work.setDay("Sunday");
+                                                        work.setTime_value(sTime + "-" + eTime);
+
+                                                    }
+
+                                                    workingModelArrayList.add(work);
+
+                                                }
+
+
+                                            }
+
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
                                         }
-                                        if (repeat.equalsIgnoreCase("3")) {
-
-                                            work.setDay("Tuesday");
-                                            work.setTime_value(sTime + "-" + eTime);
-
-                                        }
-                                        if (repeat.equalsIgnoreCase("4")) {
-                                            work.setDay("Wednesday");
-                                            work.setTime_value(sTime + "-" + eTime);
-                                        }
-                                        if (repeat.equalsIgnoreCase("5")) {
-
-                                            work.setDay("Thursday");
-                                            work.setTime_value(sTime + "-" + eTime);
-                                        }
-                                        if (repeat.equalsIgnoreCase("6")) {
-
-                                            work.setDay("Friday");
-                                            work.setTime_value(sTime + "-" + eTime);
-
-                                        }
-                                        if (repeat.equalsIgnoreCase("7")) {
-
-                                            work.setDay("Saturday");
-                                            work.setTime_value(sTime + "-" + eTime);
-
-                                        }
-                                        if (repeat.equalsIgnoreCase("1")) {
-
-                                            work.setDay("Sunday");
-                                            work.setTime_value(sTime + "-" + eTime);
-
-                                        }
-
-                                        workingModelArrayList.add(work);
-
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
 
 
                                 }
 
+                                mAdapterCallback.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getTitle(), searchdetailList.getUniqueid());
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+
+                                //   Config.logV("Working-----------" + workingModelArrayList.size() + "tt" + searchdetailList.getTitle());
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
-
-
-                    }
-
-                    //mAdapterCallback.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getTitle(), searchdetailList.getUniqueid());
-
-
-                    mType.setWorkingModelArrayList(workingModelArrayList);
-                    listType.add(mType);
-                    // myViewHolder.tv_Workinghrs.setText(workingHrs);
+                    });
                 }
+
+
+
+
 
                 if (searchdetailList.getParking_type_location1() != null) {
                     if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
-                        ParkingModel mType = new ParkingModel();
-                        // mType.setTypeicon(R.drawable.icon_24hours);
-                        Config.logV("Park-@@@@--------11111-----------" + searchdetailList.getTitle());
-                        mType.setId("1");
-                        mType.setTypename("Parking " + searchdetailList.getParking_type_location1());
-                        listType.add(mType);
+                        TextView dynaText = new TextView(context);
+                        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                "fonts/Montserrat_Regular.otf");
+                        dynaText.setTypeface(tyface);
+                        dynaText.setText("Parking " + searchdetailList.getParking_type_location1());
+                        dynaText.setTextSize(13);
+                        dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                        dynaText.setPadding(5, 5, 5, 5);
+                        dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_parking, 0, 0);
+                        dynaText.setMaxLines(1);
+                        params1.setMargins(10, 7, 10, 7);
+                        dynaText.setGravity(Gravity.LEFT);
+                        dynaText.setLayoutParams(params1);
+                        parent.addView(dynaText);
                     }
                 }
 
                 if (searchdetailList.getAlways_open_location1() != null) {
                     if (searchdetailList.getAlways_open_location1().equalsIgnoreCase("1")) {
-                        ParkingModel mType = new ParkingModel();
-                        //mType.setTypeicon(R.drawable.);
-                        mType.setId("2");
-                        mType.setTypename("24 Hours");
-                        listType.add(mType);
+                        TextView dynaText = new TextView(context);
+                        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                "fonts/Montserrat_Regular.otf");
+                        dynaText.setTypeface(tyface);
+                        dynaText.setText("24 Hours");
+                        dynaText.setTextSize(13);
+                        dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                        dynaText.setPadding(5, 5, 5, 5);
+                        dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_24hours, 0, 0);
+                        dynaText.setMaxLines(1);
+                        params1.setMargins(10, 7, 10, 7);
+                        dynaText.setGravity(Gravity.LEFT);
+                        dynaText.setLayoutParams(params1);
+                        parent.addView(dynaText);
                     }
+
                 }
 
 
                 if (searchdetailList.getDentistemergencyservices_location1() != null) {
                     if (searchdetailList.getDentistemergencyservices_location1().equalsIgnoreCase("1")) {
-                        ParkingModel mType = new ParkingModel();
-                        //mType.setTypeicon(R.drawable.);
-                        mType.setId("3");
-                        mType.setTypename("Emergency");
-                        listType.add(mType);
+
+                        TextView dynaText = new TextView(context);
+                        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                "fonts/Montserrat_Regular.otf");
+                        dynaText.setTypeface(tyface);
+                        dynaText.setText("Emergency");
+                        dynaText.setTextSize(13);
+                        dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                        dynaText.setPadding(5, 5, 5, 5);
+                        dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+                        dynaText.setMaxLines(1);
+
+                        dynaText.setLayoutParams(params1);
+                        params1.setMargins(10, 7, 10, 7);
+                        dynaText.setGravity(Gravity.LEFT);
+                        parent.addView(dynaText);
                     }
                 }
 
 
                 if (searchdetailList.getDocambulance_location1() != null) {
                     if (searchdetailList.getDocambulance_location1().equalsIgnoreCase("1")) {
-                        ParkingModel mType = new ParkingModel();
-                        //mType.setTypeicon(R.drawable.);
-                        mType.setId("4");
-                        mType.setTypename("Ambulance");
-                        listType.add(mType);
+
+                        TextView dynaText = new TextView(context);
+                        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                "fonts/Montserrat_Regular.otf");
+                        dynaText.setTypeface(tyface);
+                        dynaText.setText("Ambulance");
+                        dynaText.setTextSize(13);
+                        dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                        dynaText.setPadding(5, 5, 5, 5);
+                        dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_ambulance, 0, 0);
+                        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                        dynaText.setMaxLines(1);
+
+                        dynaText.setLayoutParams(params1);
+                        params1.setMargins(10, 7, 10, 7);
+                        dynaText.setGravity(Gravity.LEFT);
+                        parent.addView(dynaText);
                     }
                 }
 
 
                 if (searchdetailList.getFirstaid_location1() != null) {
                     if (searchdetailList.getFirstaid_location1().equalsIgnoreCase("1")) {
-                        ParkingModel mType = new ParkingModel();
-                        //mType.setTypeicon(R.drawable.);
-                        mType.setId("5");
-                        mType.setTypename("First Aid");
-                        listType.add(mType);
+                        TextView dynaText = new TextView(context);
+                        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                "fonts/Montserrat_Regular.otf");
+                        dynaText.setTypeface(tyface);
+                        dynaText.setText("First Aid");
+                        dynaText.setTextSize(13);
+                        dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                        dynaText.setPadding(5, 5, 5, 5);
+                        dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_firstaid, 0, 0);
+                        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                        dynaText.setMaxLines(1);
+                        dynaText.setLayoutParams(params1);
+                        params1.setMargins(10, 7, 10, 7);
+                        dynaText.setGravity(Gravity.LEFT);
+                        parent.addView(dynaText);
                     }
                 }
 
 
                 if (searchdetailList.getPhysiciansemergencyservices_location1() != null) {
                     if (searchdetailList.getPhysiciansemergencyservices_location1().equalsIgnoreCase("1")) {
-                        ParkingModel mType = new ParkingModel();
-                        //mType.setTypeicon(R.drawable.);
-                        mType.setId("6");
-                        mType.setTypename("Emergency");
-                        listType.add(mType);
+                        TextView dynaText = new TextView(context);
+                        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                "fonts/Montserrat_Regular.otf");
+                        dynaText.setTypeface(tyface);
+                        dynaText.setText("Emergency");
+                        dynaText.setTextSize(13);
+                        dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                        dynaText.setPadding(5, 5, 5, 5);
+                        dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+                        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                        dynaText.setMaxLines(1);
+                        dynaText.setLayoutParams(params1);
+                        params1.setMargins(10, 7, 10, 7);
+                        dynaText.setGravity(Gravity.LEFT);
+                        parent.addView(dynaText);
                     }
                 }
 
 
                 if (searchdetailList.getTraumacentre_location1() != null) {
                     if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
-                        ParkingModel mType = new ParkingModel();
-                        //mType.setTypeicon(R.drawable.);
-                        mType.setId("7");
-                        mType.setTypename("Trauma");
-                        listType.add(mType);
+
+                        TextView dynaText = new TextView(context);
+                        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                "fonts/Montserrat_Regular.otf");
+                        dynaText.setTypeface(tyface);
+                        dynaText.setText("Trauma");
+                        dynaText.setTextSize(13);
+                        dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                        dynaText.setPadding(5, 5, 5, 5);
+                        dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_trauma, 0, 0);
+                        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                        dynaText.setMaxLines(1);
+
+                        dynaText.setLayoutParams(params1);
+                        params1.setMargins(10, 7, 10, 7);
+                        dynaText.setGravity(Gravity.LEFT);
+                        parent.addView(dynaText);
+
                     }
                 }
 
 
-                if (listType.size() > 0) {
-                    myViewHolder.mRecycleTypes.setVisibility(View.VISIBLE);
-                    Config.logV("Park-@@@@-------------6666------" + listType.size());
-                    mParkTypeAdapter = new ParkingTypesAdapter(listType, context);
-                    LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                    myViewHolder.mRecycleTypes.setLayoutManager(horizontalLayoutManager);
-                    myViewHolder.mRecycleTypes.setAdapter(mParkTypeAdapter);
-                } else {
-                    myViewHolder.mRecycleTypes.setVisibility(View.GONE);
-                }
-
+                myViewHolder.layout_type.addView(parent);
 
                 //////////////////////////////////////////////////////////////
 
@@ -390,7 +477,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         "fonts/Montserrat_Bold.otf");
                 myViewHolder.tv_name.setTypeface(tyface_confm);
                 myViewHolder.btncheckin.setTypeface(tyface_confm);
-               // myViewHolder.tv_Open.setTypeface(tyface_confm);
+                // myViewHolder.tv_Open.setTypeface(tyface_confm);
 
                 myViewHolder.tv_location.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -565,7 +652,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
                                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
-                                        myViewHolder.tv_WaitTime.setText(firstWord+secondWord);
+                                        myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
 
                                     } else {
 
@@ -607,7 +694,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
                                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
-                                            myViewHolder.tv_WaitTime.setText(firstWord+secondWord);
+                                            myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
 
 
                                         } else {
@@ -623,7 +710,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
                                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
-                                            myViewHolder.tv_WaitTime.setText(firstWord+secondWord);
+                                            myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
                                         }
                                     }
                                 }
@@ -645,7 +732,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
                                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
-                                        myViewHolder.tv_WaitTime.setText(firstWord+secondWord);
+                                        myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
 
                                     } catch (ParseException e) {
                                         e.printStackTrace();
@@ -721,9 +808,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
 
-                            if(list_spec.get(0).length()>10) {
+                            if (list_spec.get(0).length() > 10) {
                                 myViewHolder.tv_spec2.setVisibility(View.GONE);
-                            }else{
+                            } else {
                                 myViewHolder.tv_spec2.setText(" " + list_spec.get(1));
                                 myViewHolder.tv_spec2.setTextSize(13);
                                 myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
@@ -734,34 +821,47 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             myViewHolder.tv_spec3.setTextSize(13);
                             myViewHolder.tv_spec3.setVisibility(View.VISIBLE);
 
-                            }
-
-                            Config.logV("SpEc Open----------" + searchdetailList.isIs_SpecOpen() + "Prov" + searchdetailList.getTitle());
-
-
-                            myViewHolder.tv_spec3.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
-
-
-                                }
-                            });
-
-
                         }
 
+                        Config.logV("SpEc Open----------" + searchdetailList.isIs_SpecOpen() + "Prov" + searchdetailList.getTitle());
 
-                    } else {
-                        myViewHolder.tv_spec1.setVisibility(View.GONE);
-                        myViewHolder.tv_spec2.setVisibility(View.GONE);
-                      myViewHolder.tv_spec3.setVisibility(View.GONE);
+
+                        myViewHolder.tv_spec3.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
+
+
+                            }
+                        });
+
+
+                    }
+
+
+                } else {
+                    myViewHolder.tv_spec1.setVisibility(View.GONE);
+                    myViewHolder.tv_spec2.setVisibility(View.GONE);
+                    myViewHolder.tv_spec3.setVisibility(View.GONE);
                     myViewHolder.L_specialization.setVisibility(View.GONE);
 
 
                 }
                 //  Picasso.with(context).load(searchdetailList.getLogo()).fit().into(myViewHolder.profile);
                 Picasso.with(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+
+                if (searchdetailList.getGallery_thumb_nails() != null) {
+                    if (searchdetailList.getGallery_thumb_nails().size() > 0) {
+                        myViewHolder.mImageViewText.setVisibility(View.VISIBLE);
+                        myViewHolder.mImageViewText.setText("+" + searchdetailList.getGallery_thumb_nails().size());
+                    } else {
+                        myViewHolder.mImageViewText.setVisibility(View.GONE);
+                    }
+                } else {
+                    myViewHolder.mImageViewText.setVisibility(View.GONE);
+                }
+
+
                 if (searchdetailList.getServices() != null) {
 
 
@@ -835,8 +935,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.L_services.setVisibility(View.GONE);
 
                 }
-
-
 
 
                 myViewHolder.tv_communicate.setOnClickListener(new View.OnClickListener() {
@@ -1000,8 +1098,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_WaitTime, tv_spec1,tv_spec2,tv_spec3;
-        LinearLayout  L_specialization,L_services;
+        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3;
+        LinearLayout L_specialization, L_services;
 
         ImageView ic_jaldeeverifiedIcon;
         ImageView profile;
@@ -1009,13 +1107,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         Button btncheckin;
         RecyclerView mRecycleTypes;
-        ImageView tv_communicate;
+        TextView tv_communicate;
         LinearLayout layout_row;
+        TextView mImageViewText;
+        LinearLayout layout_type;
 
         public MyViewHolder(View view) {
             super(view);
-           // tv_ynw_verified = (TextView) view.findViewById(R.id.ynw_verified);
-            ic_jaldeeverifiedIcon= (ImageView) view.findViewById(R.id.ic_jaldeeverifiedIcon);
+            // tv_ynw_verified = (TextView) view.findViewById(R.id.ynw_verified);
+            ic_jaldeeverifiedIcon = (ImageView) view.findViewById(R.id.ic_jaldeeverifiedIcon);
             tv_name = (TextView) view.findViewById(R.id.name);
             tv_location = (TextView) view.findViewById(R.id.location);
             tv_domain = (TextView) view.findViewById(R.id.domain);
@@ -1026,17 +1126,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             //tv_Date = (TextView) view.findViewById(R.id.mDate);
             btncheckin = (Button) view.findViewById(R.id.btncheckin);
             tv_Futuredate = (TextView) view.findViewById(R.id.txt_diffdate);
-          //  tv_Workinghrs = (ImageView) view.findViewById(R.id.txtWorkinghrs);
-           // tv_Open = (TextView) view.findViewById(R.id.txtOpen);
+            //  tv_Workinghrs = (ImageView) view.findViewById(R.id.txtWorkinghrs);
+            // tv_Open = (TextView) view.findViewById(R.id.txtOpen);
             tv_WaitTime = (TextView) view.findViewById(R.id.txtWaitTime);
             L_specialization = (LinearLayout) view.findViewById(R.id.Lspec);
-            tv_communicate = (ImageView) view.findViewById(R.id.txtcommunicate);
-            mRecycleTypes = (RecyclerView) view.findViewById(R.id.mRecycleTypes);
+            tv_communicate = (TextView) view.findViewById(R.id.txtcommunicate);
+           // mRecycleTypes = (RecyclerView) view.findViewById(R.id.mRecycleTypes);
             layout_row = (LinearLayout) view.findViewById(R.id.layout_row);
             tv_spec1 = (TextView) view.findViewById(R.id.txtspec1);
             tv_spec2 = (TextView) view.findViewById(R.id.txtspec2);
             tv_spec3 = (TextView) view.findViewById(R.id.txtspec3);
-
+            mImageViewText = (TextView) view.findViewById(R.id.mImageViewText);
+            layout_type= (LinearLayout) view.findViewById(R.id.layout_type);
         }
     }
 

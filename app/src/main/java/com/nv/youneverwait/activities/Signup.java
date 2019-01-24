@@ -201,10 +201,7 @@ public class Signup extends AppCompatActivity {
                             startActivity(iReg);
                             finish();
 
-                            String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
 
-                            Config.logV("Cookie Stored"+cookieStored);
-                            if(cookieStored.equalsIgnoreCase("")) {
                                 String cookie = response.headers().get("Set-Cookie");
 
                                 Config.logV("Response--Cookie-------------------------" + cookie);
@@ -217,7 +214,7 @@ public class Signup extends AppCompatActivity {
                                     Config.logV("Set Cookie sharedpref------------" + Cookie_header);
 
                                 }
-                            }
+
 
 
 

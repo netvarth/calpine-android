@@ -41,6 +41,15 @@ public class SearchListModel implements Serializable{
         this.parking_location1 = parking_location1;
     }
 
+    public ArrayList getGallery_thumb_nails() {
+        return gallery_thumb_nails;
+    }
+
+    public void setGallery_thumb_nails(ArrayList gallery_thumb_nails) {
+        this.gallery_thumb_nails = gallery_thumb_nails;
+    }
+
+    ArrayList gallery_thumb_nails;
     String parking_location1;
     public String getSectorname() {
         return sectorname;
