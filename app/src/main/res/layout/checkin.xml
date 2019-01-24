@@ -485,7 +485,7 @@
                                     </LinearLayout>
 
 
-                                    <RelativeLayout 
+                                    <RelativeLayout
                                         android:orientation="vertical"
                                         android:layout_margin="10dp"
                                         android:layout_width="match_parent"
@@ -549,11 +549,18 @@
                                             android:textColor="@color/title_grey"
                                             android:textSize="@dimen/txtsize_12" />
 
+
+
                                     </RelativeLayout>
 
-
+                                    <ListView
+                                        android:id="@+id/list"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="100dp" />
 
                                 </LinearLayout>
+
+
 
 
                                 <Button

@@ -29,6 +29,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.adapter.CouponlistAdapter;
 import com.nv.youneverwait.adapter.MultipleFamilyMemberAdapter;
 import com.nv.youneverwait.adapter.PaymentAdapter;
 import com.nv.youneverwait.adapter.QueueTimeSlotAdapter;
@@ -44,7 +46,6 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
-import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.model.FamilyArrayModel;
 import com.nv.youneverwait.payment.PaymentGateway;
 import com.nv.youneverwait.payment.PaytmPayment;
@@ -145,6 +146,8 @@ public class CheckIn extends AppCompatActivity {
     EditText couponEdit;
     Button applycouponbtn;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
+    ArrayList<CoupnResponse> couponCode = new ArrayList<>();
+    ArrayList<CoupnResponse> couponDiscount = new ArrayList<>();
     String couponEntered;
     TextView mtermsandCond;
     TextView mtxtTermsandCondition;
@@ -169,11 +172,16 @@ public class CheckIn extends AppCompatActivity {
     static RecyclerView recycle_family;
     static LinearLayout LSinglemember, Lbottomlayout;
 
+    ListView list;
+    private CouponlistAdapter mAdapter;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkin);
+
+        list = (ListView) findViewById(R.id.list);
 
         mtermsAndConditionDetail = (TextView) findViewById(R.id.termsAndConditionDetail);
         mtermsandCond = (TextView) findViewById(R.id.termsandCond);
@@ -618,7 +626,6 @@ public class CheckIn extends AppCompatActivity {
         applycouponbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 couponEntered = couponEdit.getEditableText().toString();
 
                 boolean found = false;
@@ -629,20 +636,15 @@ public class CheckIn extends AppCompatActivity {
                     }
                 }
                 if (found) {
-                    mtermsandCond.setText("Coupon Already Added");
-                    mtermsandCond.setTextColor(getResources().getColor(R.color.orange));
-                    mtermsandCond.setVisibility(View.VISIBLE);
-                    mtxtDele.setVisibility(View.INVISIBLE);
-                    mtxtTermsandCondition.setVisibility(View.INVISIBLE);
-                    mtermsAndConditionDetail.setVisibility(View.INVISIBLE);
+
+                    Toast.makeText(CheckIn.this, "Coupon already added", Toast.LENGTH_SHORT).show();
+
                     return;
                 }
                 found = false;
                 for (int i = 0; i < s3couponList.size(); i++) {
                     if (s3couponList.get(i).getJaldeeCouponCode().equals(couponEntered)) {
                         found = true;
-                        mtermsAndConditionDetail.setText(s3couponList.get(i).getConsumerTermsAndconditions());
-                        mtermsAndConditionDetail.setVisibility(View.INVISIBLE);
                         break;
                     }
                 }
@@ -650,24 +652,17 @@ public class CheckIn extends AppCompatActivity {
 
                     couponArraylist.add(couponEntered);
                     couponList.put(couponEntered);
-                    mtermsandCond.setText(couponEntered+" Added !");
-                    mtermsandCond.setTextColor(getResources().getColor(R.color.green));
-                    mtermsandCond.setVisibility(View.VISIBLE);
-                    mtxtTermsandCondition.setText(R.string.terms);
-                    mtxtTermsandCondition.setTextColor(getResources().getColor(R.color.blue));
-                    mtxtTermsandCondition.setVisibility(View.VISIBLE);
-                    mtxtDele.setVisibility(View.VISIBLE);
+
+                    Toast.makeText(CheckIn.this, couponEntered + "Added", Toast.LENGTH_SHORT).show();
 
 
                 } else {
-                    Log.i("zxc", "Coupon invalid !!");
-                    mtermsandCond.setText("Coupon invalid !!");
-                    mtermsandCond.setVisibility(View.VISIBLE);
-                    mtxtDele.setVisibility(View.INVISIBLE);
-                    mtxtTermsandCondition.setVisibility(View.INVISIBLE);
-                    mtermsAndConditionDetail.setVisibility(View.INVISIBLE);
+                    Toast.makeText(CheckIn.this,   "Coupon Invalid", Toast.LENGTH_SHORT).show();
+
                 }
                 Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+                mAdapter = new CouponlistAdapter(mContext,0,s3couponList,couponEntered,couponArraylist,couponList);
+                list.setAdapter((ListAdapter) mAdapter);
             }
         });
 
@@ -2295,7 +2290,7 @@ public class CheckIn extends AppCompatActivity {
     private void ApiCheckin(String txt_addnote) {
 
 
-        Log.i("couponEnteredCheck", couponEntered);
+
 
 
         ApiInterface apiService =
