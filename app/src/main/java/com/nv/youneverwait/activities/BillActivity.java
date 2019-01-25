@@ -29,6 +29,7 @@ import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.model.BillModel;
 import com.nv.youneverwait.model.CheckSumModelTest;
+import com.nv.youneverwait.payment.PayUMoneyWebview;
 import com.nv.youneverwait.payment.PaymentGateway;
 import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.response.CheckSumModel;
@@ -213,8 +214,12 @@ String payStatus;
                             public void onClick(View v) {
                              //   new PaymentGateway(mCOntext, mActivity).ApiGenerateHashTest(ynwUUID, sAmountPay, accountID, "bill");
 
-                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, "bill");
-
+                               // new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, "bill");
+                                Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
+                                iPayu.putExtra("ynwUUID",ynwUUID);
+                                iPayu.putExtra("amount",sAmountPay);
+                                iPayu.putExtra("accountID",accountID);
+                                startActivity(iPayu);
                                 dialog.dismiss();
                                 // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
                        /*

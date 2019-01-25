@@ -43,6 +43,7 @@ import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.model.FamilyArrayModel;
+import com.nv.youneverwait.payment.PayUMoneyWebview;
 import com.nv.youneverwait.payment.PaymentGateway;
 import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.response.CheckSumModel;
@@ -2304,7 +2305,14 @@ public class CheckIn extends AppCompatActivity {
                                           // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
 
-                                             new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, accountID, "checkin");
+                                            Intent iPayu=new Intent(mContext, PayUMoneyWebview.class);
+                                            iPayu.putExtra("ynwUUID",value);
+                                            iPayu.putExtra("amount",sAmountPay);
+                                            iPayu.putExtra("accountID",accountID);
+                                            startActivity(iPayu);
+
+
+                                            // new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, accountID, "checkin");
 
                                             dialog.dismiss();
 
@@ -2338,12 +2346,12 @@ public class CheckIn extends AppCompatActivity {
 
                             String errorString = response.errorBody().string();
 
-
+Config.logV("Error String-----------"+errorString);
                             Map<String, String> tokens = new HashMap<String, String>();
                             tokens.put("customer", mSearchTerminology.getCustomer());
                             tokens.put("provider", mSearchTerminology.getProvider());
                             tokens.put("arrived", mSearchTerminology.getArrived());
-                            tokens.put("waitlist", mSearchTerminology.getWaitlist());
+                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
 
                             tokens.put("start", mSearchTerminology.getStart());
                             tokens.put("cancelled", mSearchTerminology.getCancelled());

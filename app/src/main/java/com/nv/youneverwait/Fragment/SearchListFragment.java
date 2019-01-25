@@ -1456,7 +1456,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
-                                    Config.logV("Gallery @@@@@@@ 1111"+mSearchRespPass.get(i).getGallery_thumb_nails());
+
                                     searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
                                 }
 

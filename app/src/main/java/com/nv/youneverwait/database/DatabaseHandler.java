@@ -161,7 +161,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 fav.setBusinessName(cursor.getString(1));
                 fav.setLocationId(cursor.getString(2));
                 fav.setUniqueId(cursor.getInt(3));
-                fav.setRevealPhoneNumber(cursor.getWantsAllOnMoveCalls());
+                boolean phone=cursor.getInt(4)>0;
+                fav.setRevealPhoneNumber(phone);
 
 
 

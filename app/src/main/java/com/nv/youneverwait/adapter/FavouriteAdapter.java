@@ -257,7 +257,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                 Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
                 TextView txtmangeprivacy = (TextView) dialog.findViewById(R.id.txtmangeprivacy);
                 final CheckBox chkeprivacy = (CheckBox) dialog.findViewById(R.id.chkphone);
-                Config.logV("Revel Phone--------------"+favList.isRevealPhoneNumber());
+                Config.logV("Revel Phone--------------"+favList.isRevealPhoneNumber()+"Title"+favList.getBusinessName());
                 chkeprivacy.setChecked(favList.isRevealPhoneNumber());
                 btn_send.setText("SAVE");
                 Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),

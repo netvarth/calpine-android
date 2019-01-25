@@ -1,0 +1,348 @@
+package com.nv.youneverwait.payment;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.webkit.JavascriptInterface;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.nv.youneverwait.R;
+import com.nv.youneverwait.activities.BillActivity;
+import com.nv.youneverwait.activities.CheckIn;
+import com.nv.youneverwait.activities.PaymentActivity;
+import com.nv.youneverwait.common.Config;
+import com.nv.youneverwait.connection.ApiClient;
+import com.nv.youneverwait.connection.ApiInterface;
+import com.nv.youneverwait.response.CheckSumModel;
+import com.nv.youneverwait.utils.SharedPreference;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class PayUMoneyWebview extends Activity {
+
+	//private Button button;
+
+	private static final String TAG = "PayUMoneyWebview";
+	WebView webviewPayment;
+	WebView mwebview;
+	TextView  txtview;
+	/*
+	protected  void writeStatus(String str){
+		txtview.setText(str);
+	}*/
+
+	Activity mActivity;
+	Context mContext;
+	String ynwUUID,amount,accountID;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.payumoneyweb);
+
+		mActivity=this;
+		mContext=this;
+		//button=(Button)findViewById(R.id.button1);
+
+		webviewPayment = (WebView) findViewById(R.id.webView1);
+		webviewPayment.getSettings().setJavaScriptEnabled(true);
+		webviewPayment.getSettings().setDomStorageEnabled(true);
+		webviewPayment.getSettings().setLoadWithOverviewMode(true);
+		webviewPayment.getSettings().setUseWideViewPort(true);
+		webviewPayment.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+		webviewPayment.getSettings().setSupportMultipleWindows(true);
+		webviewPayment.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+		webviewPayment.addJavascriptInterface(new PayUJavaScriptInterface(), "PayUMoney");
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			ynwUUID = extras.getString("ynwUUID");
+			amount = extras.getString("amount");
+			accountID = extras.getString("accountID");
+
+		}
+
+		ApiGenerateHash1(ynwUUID,amount,accountID);
+
+
+	}
+
+	public void loadWebView(CheckSumModel responseDATA){
+
+
+
+		StringBuilder url_s = new StringBuilder();
+
+		url_s.append("https://test.payu.in/_payment");
+
+		Log.e(TAG, "call url " + url_s);
+
+
+		//	webviewPayment.postUrl(url_s.toString(),EncodingUtils.getBytes(getPostString(), "utf-8"));
+
+		webviewPayment.postUrl(url_s.toString(),getPostString(responseDATA,amount).getBytes(Charset.forName("UTF-8")));
+
+		webviewPayment.setWebViewClient(new WebViewClient() {
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				super.onPageFinished(view, url);
+			}
+
+			@SuppressWarnings("unused")
+			public void onReceivedSslError(WebView view, SslErrorHandler handler) {
+				Log.e("Error", "Exception caught!");
+				handler.cancel();
+			}
+
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				view.loadUrl(url);
+				return true;
+			}
+
+		});
+	}
+
+	private final class PayUJavaScriptInterface {
+        PayUJavaScriptInterface() {
+        }
+
+		@JavascriptInterface
+        public void success( long id, final String paymentId) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+
+                	Toast.makeText(PayUMoneyWebview.this, "Status is txn is success "+" payment id is "+paymentId, Toast.LENGTH_SHORT).show();
+
+                	finish();
+                	//String str="Status is txn is success "+" payment id is "+paymentId;
+                  // new MainActivity().writeStatus(str);
+
+                	/*TextView  txtview;
+                	txtview = (TextView) findViewById(R.id.textView1);
+                	txtview.setText("Status is txn is success "+" payment id is "+paymentId);*/
+
+                }
+            });
+        }
+		@JavascriptInterface
+		public void failure( long id, final String paymentId) {
+			runOnUiThread(new Runnable() {
+				public void run() {
+
+					Toast.makeText(PayUMoneyWebview.this, "Status is txn is failed "+" payment id is "+paymentId, Toast.LENGTH_SHORT).show();
+					//String str="Status is txn is failed "+" payment id is "+paymentId;
+					// new MainActivity().writeStatus(str);
+
+					/*TextView  txtview;
+					txtview = (TextView) findViewById(R.id.textView1);
+					txtview.setText("Status is txn is failed "+" payment id is "+paymentId);*/
+
+				}
+			});
+		}
+
+    }
+
+
+
+
+	private String getPostString(CheckSumModel checkSumModel,String amountPass)
+	{
+
+		String firstnamePass = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
+
+
+		String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+
+		String key  = checkSumModel.getMerchantKey();
+		String salt  = "Bwxo1cPe";
+		String txnid = checkSumModel.getTxnid();
+		String amount = amountPass;
+		String firstname = firstnamePass;
+		String email = checkSumModel.getEmail();
+		String productInfo = new Gson().toJson(checkSumModel.getProductinfo());
+		String mobilePass=mobile;
+
+		String surlPass= checkSumModel.getSuccessUrl();
+		String furlpass=checkSumModel.getFailureUrl();
+
+		StringBuilder post = new StringBuilder();
+		post.append("key=");
+		post.append(key);
+		post.append("&");
+		post.append("txnid=");
+		post.append(txnid);
+		post.append("&");
+		post.append("amount=");
+		post.append(amount);
+		post.append("&");
+		post.append("productinfo=");
+		post.append(productInfo);
+		post.append("&");
+		post.append("firstname=");
+		post.append(firstname);
+		post.append("&");
+		post.append("email=");
+		post.append(email);
+		post.append("&");
+		post.append("phone=");
+		post.append(mobilePass);
+		post.append("&");
+		post.append("surl=");
+		post.append(surlPass);
+		//https://www.payumoney.com/mobileapp/payumoney/success.php
+		//https://www.payumoney.com/mobileapp/payumoney/failure.php
+		post.append("&");
+		post.append("furl=");
+		post.append(furlpass);
+		post.append("&");
+
+		StringBuilder checkSumStr = new StringBuilder();
+		/* =sha512(key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||salt) */
+	    MessageDigest digest=null;
+	    String hash;
+	    try {
+	        digest = MessageDigest.getInstance("SHA-512");// MessageDigest.getInstance("SHA-256");
+
+	        checkSumStr.append(key);
+	        checkSumStr.append("|");
+	        checkSumStr.append(txnid);
+	        checkSumStr.append("|");
+	        checkSumStr.append(amount);
+	        checkSumStr.append("|");
+	        checkSumStr.append(productInfo);
+	        checkSumStr.append("|");
+	        checkSumStr.append(firstname);
+	        checkSumStr.append("|");
+	        checkSumStr.append(email);
+	        checkSumStr.append("|||||||||||");
+	        checkSumStr.append(salt);
+
+	        digest.update(checkSumStr.toString().getBytes());
+
+	        hash = bytesToHexString(digest.digest());
+	    	post.append("hash=");
+	        post.append(hash);
+	        post.append("&");
+	        Log.i(TAG, "SHA result is " + hash);
+	    } catch (NoSuchAlgorithmException e1) {
+	        // TODO Auto-generated catch block
+	        e1.printStackTrace();
+	    }
+
+		post.append("service_provider=");
+		post.append("payu_paisa");
+		return post.toString();
+	}
+
+
+
+	private static String bytesToHexString(byte[] bytes) {
+        // http://stackoverflow.com/questions/332079
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < bytes.length; i++) {
+            String hex = Integer.toHexString(0xFF & bytes[i]);
+            if (hex.length() == 1) {
+                sb.append('0');
+
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
+    }
+
+
+	public void ApiGenerateHash1(String ynwUUID, final String amount, String accountID) {
+
+
+		ApiInterface apiService =
+				ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+		final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+		mDialog.show();
+
+		//  String uniqueID = UUID.randomUUID().toString();
+		JSONObject jsonObj = new JSONObject();
+		try {
+
+			jsonObj.put("amount", amount);
+			jsonObj.put("paymentMode", "DC");
+			jsonObj.put("uuid", ynwUUID);
+			jsonObj.put("accountId", accountID);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+
+		RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+		Call<CheckSumModel> call = apiService.generateHash(body, accountID);
+
+		call.enqueue(new Callback<CheckSumModel>() {
+			@Override
+			public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {
+
+				try {
+
+					if (mDialog.isShowing())
+						Config.closeDialog(mActivity, mDialog);
+
+					Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+					Config.logV("Response--code-------------------------" + response.code());
+
+
+					if (response.code() == 200) {
+
+
+						CheckSumModel response_data = response.body();
+						loadWebView(response_data);
+
+
+					} else {
+						String responseerror = response.errorBody().string();
+						Config.logV("Response--error-------------------------" + responseerror);
+					}
+
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+
+			@Override
+			public void onFailure(Call<CheckSumModel> call, Throwable t) {
+				// Log error here since request failed
+				Config.logV("Fail---------------" + t.toString());
+				if (mDialog.isShowing())
+					Config.closeDialog(mActivity, mDialog);
+
+			}
+		});
+
+
+
+	}
+
+}

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -198,7 +199,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     dynaText.setTextSize(13);
                     dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                     dynaText.setPadding(5, 5, 5, 5);
-                    dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_clock, 0, 0);
+                    dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_clock, 0, 0);
                     //dynaText.setEllipsize(TextUtils.TruncateAt.END);
                     dynaText.setMaxLines(1);
 
@@ -313,9 +314,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     });
                 }
-
-
-
 
 
                 if (searchdetailList.getParking_type_location1() != null) {
@@ -604,14 +602,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 }
 
                             } else {
-                                myViewHolder.btncheckin.setVisibility(View.GONE);
+                                myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
                             }
                         }
                     } else {
                         /*if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())&&searchdetailList.getServices()!=null) {
                             myViewHolder.btncheckin.setVisibility(View.VISIBLE);
                         } else {*/
-                        myViewHolder.btncheckin.setVisibility(View.GONE);
+                        myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
                         //}
                     }
 
@@ -757,7 +755,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                 } else {
-                    myViewHolder.btncheckin.setVisibility(View.GONE);
+                    myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
                     myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                 }
 
@@ -806,15 +804,17 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             myViewHolder.tv_spec1.setTextSize(13);
                             myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
                             myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                            myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+                            myViewHolder.tv_spec1.setMaxLines(1);
+                            myViewHolder.tv_spec1.setMaxEms(8);
 
 
-                            if (list_spec.get(0).length() > 10) {
-                                myViewHolder.tv_spec2.setVisibility(View.GONE);
-                            } else {
-                                myViewHolder.tv_spec2.setText(" " + list_spec.get(1));
-                                myViewHolder.tv_spec2.setTextSize(13);
-                                myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
-                            }
+                            myViewHolder.tv_spec2.setText( list_spec.get(1));
+                            myViewHolder.tv_spec2.setTextSize(13);
+                            myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
+                            myViewHolder.tv_spec2.setMaxLines(1);
+                            myViewHolder.tv_spec2.setMaxEms(8);
 
 
                             myViewHolder.tv_spec3.setText(" ...");
@@ -882,12 +882,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             dynaText.setTypeface(tyface);
                             dynaText.setText(searchdetailList.getServices().get(i).toString());
                             dynaText.setTextSize(13);
-                            //  dynaText.setPadding(0, 0, 12, 0);
+                            dynaText.setPadding(5, 0, 5, 0);
                             dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
-                            dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
+                            // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
+
+                            dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                             dynaText.setEllipsize(TextUtils.TruncateAt.END);
                             dynaText.setMaxLines(1);
-                            dynaText.setMaxEms(5);
+                            if (size > 1)
+                                dynaText.setMaxEms(8);
                             final int finalI = i;
                             dynaText.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -896,7 +899,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 }
                             });
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            params.setMargins(0, 0, 7, 0);
+                            params.setMargins(0, 0, 10, 0);
+
                             dynaText.setLayoutParams(params);
                             myViewHolder.L_services.addView(dynaText);
 
@@ -923,7 +927,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 }
                             });
                             dynaText.setGravity(Gravity.CENTER);
-                            dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_blue));
+                            dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+                            dynaText.setText(" ... ");
+                            // dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_blue));
                             myViewHolder.L_services.addView(dynaText);
                         }
                     } else {
@@ -1131,13 +1137,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             tv_WaitTime = (TextView) view.findViewById(R.id.txtWaitTime);
             L_specialization = (LinearLayout) view.findViewById(R.id.Lspec);
             tv_communicate = (TextView) view.findViewById(R.id.txtcommunicate);
-           // mRecycleTypes = (RecyclerView) view.findViewById(R.id.mRecycleTypes);
+            // mRecycleTypes = (RecyclerView) view.findViewById(R.id.mRecycleTypes);
             layout_row = (LinearLayout) view.findViewById(R.id.layout_row);
             tv_spec1 = (TextView) view.findViewById(R.id.txtspec1);
             tv_spec2 = (TextView) view.findViewById(R.id.txtspec2);
             tv_spec3 = (TextView) view.findViewById(R.id.txtspec3);
             mImageViewText = (TextView) view.findViewById(R.id.mImageViewText);
-            layout_type= (LinearLayout) view.findViewById(R.id.layout_type);
+            layout_type = (LinearLayout) view.findViewById(R.id.layout_type);
         }
     }
 
