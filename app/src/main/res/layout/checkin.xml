@@ -497,6 +497,7 @@
                                             android:layout_height="wrap_content">
 
                                             <LinearLayout
+                                                android:visibility="gone"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:orientation="horizontal">
@@ -543,9 +544,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_alignParentRight="true"
                                             android:layout_marginTop="@dimen/padding5"
-                                            android:drawableTop="@drawable/icon_delete"
                                             android:paddingRight="@dimen/padding5"
-                                            android:text="Delete"
                                             android:textColor="@color/title_grey"
                                             android:textSize="@dimen/txtsize_12" />
 
@@ -554,6 +553,7 @@
                                     </RelativeLayout>
 
                                     <ListView
+                                        android:layout_margin="10dp"
                                         android:id="@+id/list"
                                         android:layout_width="wrap_content"
                                         android:layout_height="100dp" />

@@ -99,7 +99,7 @@ public class CheckIn extends AppCompatActivity {
     private AdapterCallback mAdapterCallback;
 
     ArrayList<String> couponArraylist = new ArrayList<String>();
-    JSONArray couponList = new JSONArray();
+
 
 
     static Context mContext;
@@ -651,7 +651,6 @@ public class CheckIn extends AppCompatActivity {
                 if (found) {
 
                     couponArraylist.add(couponEntered);
-                    couponList.put(couponEntered);
 
                     Toast.makeText(CheckIn.this, couponEntered + "Added", Toast.LENGTH_SHORT).show();
 
@@ -661,10 +660,11 @@ public class CheckIn extends AppCompatActivity {
 
                 }
                 Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-                mAdapter = new CouponlistAdapter(mContext,0,s3couponList,couponEntered,couponArraylist,couponList);
+                mAdapter = new CouponlistAdapter(mContext,0,s3couponList,couponEntered,couponArraylist);
                 list.setAdapter((ListAdapter) mAdapter);
             }
         });
+
 
         mtxtDele.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -688,6 +688,15 @@ public class CheckIn extends AppCompatActivity {
 
             }
         });
+
+
+    }
+
+    public void setCouponList(ArrayList couponArraylistNew)
+
+    {
+        this.couponArraylist = couponArraylistNew;
+        Log.i("cooooooo",couponArraylist.toString());
 
 
     }
@@ -2289,10 +2298,6 @@ public class CheckIn extends AppCompatActivity {
 
     private void ApiCheckin(String txt_addnote) {
 
-
-
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
@@ -2324,7 +2329,21 @@ public class CheckIn extends AppCompatActivity {
             qjsonObj.put("id", queueId);
             queueobj.put("date", formattedDate);
             queueobj.put("consumerNote", txt_addnote);
+
+
+            JSONArray couponList = new JSONArray();
+
+            for (int i =0;i<couponArraylist.size();i++){
+
+                couponList.put(couponArraylist.get(i));
+
+            }
+
+            Log.i("kooooooo",couponList.toString());
+
             queueobj.put("coupons", couponList);
+
+
             Log.i("couponList", couponList.toString());
 
             service.put("id", serviceId);

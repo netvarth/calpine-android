@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.activities.CheckIn;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.response.CoupnResponse;
 
@@ -25,9 +26,9 @@ public class CouponlistAdapter extends ArrayAdapter<CoupnResponse> {
     ArrayList<CoupnResponse> m3couponList;
     String mcouponEntered;
     ArrayList<String> mcouponArraylist;
-    JSONArray mcouponList = new JSONArray();
 
-    public CouponlistAdapter(@NonNull Context Context, int resource, ArrayList<CoupnResponse> s3couponList, String couponEntered, ArrayList<String> couponArraylist, JSONArray couponList) {
+
+    public CouponlistAdapter(@NonNull Context Context, int resource, ArrayList<CoupnResponse> s3couponList, String couponEntered, ArrayList<String> couponArraylist) {
         super(Context, resource, s3couponList);
 
 
@@ -35,7 +36,7 @@ public class CouponlistAdapter extends ArrayAdapter<CoupnResponse> {
         this.m3couponList = s3couponList;
         this.mcouponEntered = couponEntered;
         this.mcouponArraylist = couponArraylist;
-        this.mcouponList = couponList;
+
 
     }
 
@@ -70,29 +71,34 @@ public class CouponlistAdapter extends ArrayAdapter<CoupnResponse> {
             public void onClick(View view) {
 
                 mcouponArraylist.remove(position);
+                notifyDataSetChanged();
+
+                CheckIn checkIn = new CheckIn();
+                checkIn.setCouponList(mcouponArraylist);
 
             }
         });
 
 
-//
+
+
+
 //        TextView mcouponDesc = (TextView) listItem.findViewById(R.id.type);
 //        mcouponDesc.setText(coupnResponse.getCouponDescription());
 
 //        TextView mcouponTerms = (TextView) listItem.findViewById(R.id.couponTerms);
 //        mcouponTerms.setText(coupnResponse.getConsumerTermsAndconditions());
-//
+
 //        TextView mcouponDisc = (TextView) listItem.findViewById(R.id.couponDisc);
 //        mcouponDisc.setText(coupnResponse.getDiscountValue());
-//
+
 //        TextView mcouponName = (TextView) listItem.findViewById(R.id.couponName);
 //        mcouponName.setText(coupnResponse.getCouponName());
 
 
         return listItem;
+
     }
-
-
 
 
 }
