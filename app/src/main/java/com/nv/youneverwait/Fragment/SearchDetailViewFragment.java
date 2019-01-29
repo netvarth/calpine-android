@@ -252,9 +252,15 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     flag_more = false;
                     tv_Moredetails.setText("See All");
 
+                    int size=domainVirtual.size();
+                    if(size==1){
+                        size=1;
+                    }else{
+                        size=2;
+                    }
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                     mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, 2);
+                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
                     mRecycle_virtualfield.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 }
@@ -1517,7 +1523,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mRecycle_virtualfield.setVisibility(View.VISIBLE);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, 2);
+                                int size=domainVirtual.size();
+                                if(size==1){
+                                    size=1;
+                                }else{
+                                    size=2;
+                                }
+                                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
                                 mRecycle_virtualfield.setAdapter(mAdapter);
                                 mAdapter.notifyDataSetChanged();
                             }

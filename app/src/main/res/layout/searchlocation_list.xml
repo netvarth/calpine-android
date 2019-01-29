@@ -197,7 +197,7 @@
             android:paddingTop="@dimen/padding7"
             android:visibility="visible">
 
-            <TextView
+           <!-- <TextView
                 android:id="@+id/txtservices"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -215,6 +215,61 @@
                 android:orientation="horizontal">
 
 
+            </LinearLayout>-->
+            <TextView
+                android:id="@+id/txtservices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding7"
+                android:text="Services"
+                android:textColor="@color/title_grey_light"
+                android:textSize="@dimen/txtsize_hint"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/lServicelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding3"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LService_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding3"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txtservice1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Service1"
+                    android:gravity="left"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+                <TextView
+                    android:id="@+id/txtservice2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Service2"
+                    android:gravity="left"
+                    android:layout_marginTop="@dimen/padding3"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+                <TextView
+                    android:id="@+id/txtSeeAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="See All"
+                    android:gravity="left"
+                    android:layout_marginTop="@dimen/padding3"
+                    android:textColor="@color/title_consu"
+                    android:textSize="@dimen/txtsize_12" />
             </LinearLayout>
 
             <TextView

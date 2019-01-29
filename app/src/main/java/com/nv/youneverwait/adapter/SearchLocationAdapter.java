@@ -57,13 +57,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate;
         Button btn_checkin;
-        LinearLayout mLSeriveLayout, mLayouthide, LexpandCheckin, Ldirectionlayout;
+        LinearLayout mLSeriveLayout, mLayouthide, LexpandCheckin, Ldirectionlayout,LService_2;
         ImageView img_arrow;
         RecyclerView recycle_parking;
         RelativeLayout layout_exapnd;
         TextView txtdirection, tv_checkin;
         Button btn_checkin_expand;
-        TextView txtwaittime_expand, txt_diffdate_expand,txtlocation_amentites,txtparkingSeeAll,txtservices;
+        TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices;
+        TextView txtservice1,txtservice2,txtSeeAll;
 
         public MyViewHolder(View view) {
             super(view);
@@ -86,9 +87,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             btn_checkin_expand = (Button) view.findViewById(R.id.btn_checkin_expand);
             LexpandCheckin = (LinearLayout) view.findViewById(R.id.LexpandCheckin);
             Ldirectionlayout = (LinearLayout) view.findViewById(R.id.Ldirectionlayout);
-            txtlocation_amentites= (TextView) view.findViewById(R.id.txtlocation_amentites);
-            txtparkingSeeAll= (TextView) view.findViewById(R.id.txtparkingSeeAll);
-            txtservices=(TextView) view.findViewById(R.id.txtservices);
+            txtlocation_amentites = (TextView) view.findViewById(R.id.txtlocation_amentites);
+            txtparkingSeeAll = (TextView) view.findViewById(R.id.txtparkingSeeAll);
+            txtservices = (TextView) view.findViewById(R.id.txtservices);
+            LService_2 = (LinearLayout) view.findViewById(R.id.LService_2);
+            txtservice1 = (TextView) view.findViewById(R.id.txtservice1);
+            txtservice2 = (TextView) view.findViewById(R.id.txtservice2);
+            txtSeeAll = (TextView) view.findViewById(R.id.txtSeeAll);
         }
     }
 
@@ -142,6 +147,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             return new Date(0);
         }
     }
+
     ArrayList<ParkingModel> listType = new ArrayList<>();
 
     @Override
@@ -149,6 +155,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
 
 
+        Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        myViewHolder.txtservices.setTypeface(tyface3);
         for (int i = 0; i < mCheckInMessage.size(); i++) {
             if (searchLoclist.getId() == mCheckInMessage.get(i).getLocid()) {
 
@@ -205,7 +214,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.tv_place.setTypeface(tyface);
         myViewHolder.tv_open.setTypeface(tyface);
         myViewHolder.btn_checkin.setTypeface(tyface);
-
 
 
         if (searchLoclist.getParkingType() != null) {
@@ -285,23 +293,30 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
         if (listType.size() > 0) {
-            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+            Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
 
-            myViewHolder.txtlocation_amentites.setTypeface(tyface1);
-            Config.logV("Location Ament---------------"+listType.size());
-            if(listType.size()>2) {
+            myViewHolder.txtlocation_amentites.setTypeface(tyface2);
+            Config.logV("Location Ament---------------" + listType.size());
+            if (listType.size() > 2) {
                 myViewHolder.txtparkingSeeAll.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 myViewHolder.txtparkingSeeAll.setVisibility(View.GONE);
             }
             myViewHolder.txtlocation_amentites.setVisibility(View.VISIBLE);
             myViewHolder.recycle_parking.setVisibility(View.VISIBLE);
-            ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext,2);
+
+            int size=listType.size();
+            if(size==1){
+                size=1;
+            }else{
+                size=2;
+            }
+            ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext, size);
             LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
             myViewHolder.recycle_parking.setLayoutManager(horizontalLayoutManager);
             myViewHolder.recycle_parking.setAdapter(mParkTypeAdapter);
-        }else{
+        } else {
             myViewHolder.txtparkingSeeAll.setVisibility(View.GONE);
             myViewHolder.txtlocation_amentites.setVisibility(View.GONE);
             myViewHolder.recycle_parking.setVisibility(View.GONE);
@@ -311,16 +326,22 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             @Override
             public void onClick(View v) {
 
-                if(!searchLoclist.isLocationAmentOpen()){
-                    ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext,listType.size());
+                if (!searchLoclist.isLocationAmentOpen()) {
+                    ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext, listType.size());
                     LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                     myViewHolder.recycle_parking.setLayoutManager(horizontalLayoutManager);
                     myViewHolder.recycle_parking.setAdapter(mParkTypeAdapter);
                     myViewHolder.txtparkingSeeAll.setText("See Less");
                     searchLoclist.setLocationAmentOpen(true);
 
-                }else{
-                    ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext,2);
+                } else {
+                    int size=listType.size();
+                    if(size==1){
+                        size=1;
+                    }else{
+                        size=2;
+                    }
+                    ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext, size);
                     LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                     myViewHolder.recycle_parking.setLayoutManager(horizontalLayoutManager);
                     myViewHolder.recycle_parking.setAdapter(mParkTypeAdapter);
@@ -605,8 +626,96 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                 if (size > 0) {
 
-                    for (int j = 0; j < size; j++) {
-                        TextView dynaText = new TextView(mContext);
+
+
+                        if (size == 1) {
+                            myViewHolder.mLSeriveLayout.setVisibility(View.GONE);
+                            myViewHolder.LService_2.setVisibility(View.VISIBLE);
+                            myViewHolder. txtservice1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtservice2.setVisibility(View.GONE);
+                            myViewHolder.txtSeeAll.setVisibility(View.GONE);
+                            myViewHolder.txtservices.setVisibility(View.VISIBLE);
+                            myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());
+
+                        } else {
+                            myViewHolder.mLSeriveLayout.setVisibility(View.GONE);
+                            myViewHolder.LService_2.setVisibility(View.VISIBLE);
+                            myViewHolder.txtservices.setVisibility(View.VISIBLE);
+                            myViewHolder.txtservice1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtservice2.setVisibility(View.VISIBLE);
+                            myViewHolder.txtSeeAll.setVisibility(View.VISIBLE);
+                            myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());
+                            myViewHolder.txtservice2.setText(mSearchServiceList.get(i).getmAllService().get(1).getName());
+
+                            final int finalI1 = i;
+                            myViewHolder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myViewHolder.LService_2.setVisibility(View.GONE);
+                                    myViewHolder.mLSeriveLayout.setVisibility(View.VISIBLE);
+                                    myViewHolder.mLSeriveLayout.removeAllViews();
+                                    LinearLayout parent1 = new LinearLayout(mContext);
+                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    parent1.setOrientation(LinearLayout.VERTICAL);
+                                    parent1.setLayoutParams(params);
+                                    int size = mSearchServiceList.get(finalI1).getmAllService().size();
+                                    for (int j = 0; j < size; j++) {
+
+                                        TextView dynaText = new TextView(mContext);
+                                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                                "fonts/Montserrat_Regular.otf");
+                                        dynaText.setTypeface(tyface);
+                                        dynaText.setText(mSearchServiceList.get(finalI1).getmAllService().get(j).getName());
+
+
+                                        dynaText.setTextSize(14);
+                                        dynaText.setTextColor(mContext.getResources().getColor(R.color.title_grey));
+                                        //  dynaText.setPadding(5, 5, 5, 5);
+                                        dynaText.setMaxLines(1);
+                                        dynaText.setLayoutParams(params);
+
+
+                                        params.setMargins(0, 10, 0, 0);
+                                        dynaText.setGravity(Gravity.LEFT);
+                                        parent1.addView(dynaText);
+
+                                    }
+                                    TextView dynaText = new TextView(mContext);
+                                    Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                            "fonts/Montserrat_Regular.otf");
+                                    dynaText.setTypeface(tyface);
+                                    dynaText.setText("See Less");
+
+                                    dynaText.setTextSize(14);
+                                    dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
+                                    // dynaText.setPadding(5, 5, 5, 5);
+                                    dynaText.setMaxLines(1);
+                                    dynaText.setLayoutParams(params);
+
+
+                                    params.setMargins(0, 10, 0, 0);
+                                    dynaText.setGravity(Gravity.LEFT);
+                                    parent1.addView(dynaText);
+                                    dynaText.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            myViewHolder.LService_2.setVisibility(View.VISIBLE);
+                                            myViewHolder.mLSeriveLayout.setVisibility(View.GONE);
+                                            myViewHolder.txtservice1.setVisibility(View.VISIBLE);
+                                            myViewHolder.txtservice2.setVisibility(View.VISIBLE);
+                                            myViewHolder.txtSeeAll.setVisibility(View.VISIBLE);
+                                            myViewHolder.txtservice1.setText(mSearchServiceList.get(finalI1).getmAllService().get(0).getName());
+                                            myViewHolder.txtservice2.setText(mSearchServiceList.get(finalI1).getmAllService().get(1).getName());
+
+                                        }
+                                    });
+
+                                    myViewHolder.mLSeriveLayout.addView(parent1);
+                                }
+                            });
+
+
+                      /*  TextView dynaText = new TextView(mContext);
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Regular.otf");
                         dynaText.setTypeface(tyface1);
@@ -659,7 +768,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         dynaText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                           /* ServiceListFragment pfFragment = new ServiceListFragment();
+                           *//* ServiceListFragment pfFragment = new ServiceListFragment();
                             FragmentTransaction transaction = DashboardFragment.getHomeFragment().getFragmentManager().beginTransaction();
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("servicelist", mSearchServiceList.get(finalI).getmAllService());
@@ -667,7 +776,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             pfFragment.setArguments(bundle);
                             // Store the Fragment in stack
                             transaction.addToBackStack(null);
-                            transaction.replace(R.id.mainlayout, pfFragment).commit();*/
+                            transaction.replace(R.id.mainlayout, pfFragment).commit();*//*
 
                                 adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle);
                             }
@@ -675,7 +784,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         dynaText.setGravity(Gravity.CENTER);
                         dynaText.setBackground(mContext.getResources().getDrawable(R.drawable.icon_arrowright_blue));
                         myViewHolder.mLSeriveLayout.addView(dynaText);
-                    }
+                    }*/
+                        }
                 }
 
 
