@@ -20,12 +20,14 @@ import java.util.List;
 public class ParkingTypesAdapter extends RecyclerView.Adapter<ParkingTypesAdapter.ParkingTypesAdapterViewHolder> {
     private List<ParkingModel> horizontaltypeList;
     Context context;
+    int msize;
 
 
-    public ParkingTypesAdapter(List<ParkingModel> horizontaltypeList, Context context) {
+    public ParkingTypesAdapter(List<ParkingModel> horizontaltypeList, Context context,int size) {
         this.horizontaltypeList = horizontaltypeList;
         this.context = context;
-        Config.logV("List-------------" + horizontaltypeList.size());
+        this.msize=size;
+        Config.logV("List-------------" + size);
     }
 
     @Override
@@ -42,25 +44,13 @@ public class ParkingTypesAdapter extends RecyclerView.Adapter<ParkingTypesAdapte
 
 
         holder.tv_type.setText(horizontaltypeList.get(position).getTypename());
-        if (horizontaltypeList.get(position).getId().equalsIgnoreCase("1"))
-            holder.ic_type.setImageResource(R.drawable.icon_parking);
-        if (horizontaltypeList.get(position).getId().equalsIgnoreCase("2"))
-            holder.ic_type.setImageResource(R.drawable.icon_24hours);
-        if (horizontaltypeList.get(position).getId().equalsIgnoreCase("4"))
-            holder.ic_type.setImageResource(R.drawable.icon_ambulance);
-        if (horizontaltypeList.get(position).getId().equalsIgnoreCase("5"))
-            holder.ic_type.setImageResource(R.drawable.icon_firstaid);
-        if (horizontaltypeList.get(position).getId().equalsIgnoreCase("7"))
-            holder.ic_type.setImageResource(R.drawable.icon_trauma);
-        if (horizontaltypeList.get(position).getId().equalsIgnoreCase("6")||horizontaltypeList.get(position).getId().equalsIgnoreCase("3"))
-            holder.ic_type.setImageResource(R.drawable.icon_emergency);
 
 
     }
 
     @Override
     public int getItemCount() {
-        return horizontaltypeList.size();
+        return msize;
     }
 
     public class ParkingTypesAdapterViewHolder extends RecyclerView.ViewHolder {
@@ -71,7 +61,7 @@ public class ParkingTypesAdapter extends RecyclerView.Adapter<ParkingTypesAdapte
         public ParkingTypesAdapterViewHolder(View view) {
             super(view);
             tv_type = view.findViewById(R.id.txt_type);
-            ic_type = view.findViewById(R.id.ic__image);
+           // ic_type = view.findViewById(R.id.ic__image);
 
 
         }

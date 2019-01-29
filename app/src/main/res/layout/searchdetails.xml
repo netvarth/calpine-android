@@ -94,61 +94,75 @@
                                 android:layout_marginLeft="@dimen/padding5"
                                 android:layout_marginTop="@dimen/default_padding"
                                 android:layout_toRightOf="@+id/mProfile"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/txtbus_name"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:drawablePadding="@dimen/default_padding"
-                                    android:fontFamily="@font/customfont"
-                                    android:gravity="left"
-                                    android:text="Name"
-                                    android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_hint"
-                                    android:textStyle="bold" />
+                                android:orientation="horizontal">
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
+                                    android:layout_weight="0.8"
+                                    android:orientation="vertical">
 
-                                    <LinearLayout
-                                        android:layout_width="0dp"
+                                    <TextView
+                                        android:id="@+id/txtbus_name"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_weight="0.8"
-                                        android:orientation="vertical">
+                                        android:drawablePadding="@dimen/default_padding"
+                                        android:fontFamily="@font/customfont"
+                                        android:gravity="left"
+                                        android:text="Name"
+                                        android:textColor="@color/title_grey"
+                                        android:textSize="@dimen/txtsize_hint"
+                                        android:textStyle="bold" />
 
-                                        <TextView
-                                            android:id="@+id/txt_domain"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginTop="@dimen/padding2"
-                                            android:text="Name"
-                                            android:textColor="@color/title_grey"
-                                            android:textSize="@dimen/txtsize_hint" />
 
-                                        <!--<TextView
-                                            android:id="@+id/txt_expe"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginTop="@dimen/padding2"
-                                            android:text="Name"
-                                            android:textColor="@color/opaque_title_grey"
-                                            android:textSize="@dimen/txtsize_12"
-                                            android:visibility="gone"
-                                            />-->
-                                    </LinearLayout>
+                                    <TextView
+                                        android:id="@+id/txt_domain"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/padding2"
+                                        android:text="Name"
+                                        android:textColor="@color/title_grey"
+                                        android:textSize="@dimen/txtsize_hint" />
+
+                                    <!--<TextView
+                                        android:id="@+id/txt_expe"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/padding2"
+                                        android:text="Name"
+                                        android:textColor="@color/opaque_title_grey"
+                                        android:textSize="@dimen/txtsize_12"
+                                        android:visibility="gone"
+                                        />-->
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.2"
+                                    android:orientation="vertical">
 
                                     <ImageView
                                         android:id="@+id/txtfav"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_centerInParent="true"
-                                        android:layout_gravity="center"
-                                        android:gravity="center"
+                                        android:layout_gravity="left"
+                                        android:gravity="left"
                                         android:paddingRight="@dimen/default_padding"
                                         android:src="@drawable/icon_favourite_line" />
+
+                                    <TextView
+                                        android:id="@+id/txtmsg"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="left"
+                                        android:gravity="left"
+                                        android:layout_marginTop="@dimen/padding5"
+                                        android:drawableTop="@drawable/icon_message_gray"
+                                        android:textColor="@color/title_grey"
+                                        android:textSize="@dimen/txtsize_12" />
+
                                 </LinearLayout>
                             </LinearLayout>
 
@@ -177,85 +191,68 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/padding7"
-                                android:text=""
-                                android:textColor="@color/title_grey"
-                                android:textSize="@dimen/txtsize_12"
+                                android:text="Specialization"
+                                android:textColor="@color/title_grey_light"
+                                android:textSize="@dimen/txtsize_hint"
                                 android:visibility="gone" />
 
                             <LinearLayout
-                                android:id="@+id/LsocialMedia"
+                                android:id="@+id/LSpecialization"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/padding7"
-                                android:visibility="gone"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:id="@+id/ic_fac"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/icon_facebook"
-                                    android:padding="@dimen/padding3"
-                                    android:visibility="gone"
-                                    />
-
-                                <ImageView
-                                    android:id="@+id/ic_yout"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/icon_youtube"
-                                    android:padding="@dimen/padding3"
-                                    android:visibility="gone"
-                                    />
-
-                                <ImageView
-                                    android:id="@+id/ic_gplus"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:padding="@dimen/padding3"
-                                    android:src="@drawable/icon_googleplus"
-                                    android:visibility="gone"
-                                 />
-
-                                <ImageView
-                                    android:id="@+id/ic_twitt"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:padding="@dimen/padding3"
-                                    android:src="@drawable/icon_twitter"
-                                    android:visibility="gone"
-                                  />
-
-                                <ImageView
-                                    android:id="@+id/ic_link"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:padding="@dimen/padding3"
-                                    android:src="@drawable/icon_linkedin"
-                                    android:visibility="gone"
-                                    />
-
-                                <ImageView
-                                    android:id="@+id/ic_pin"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:padding="@dimen/padding3"
-                                    android:src="@drawable/icon_pinterest"
-                                    android:visibility="gone"
-                                   />
+                                android:layout_marginTop="@dimen/padding3"
+                                android:orientation="vertical"
+                                android:visibility="gone">
 
                             </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/LSpecialization_2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding3"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/txtspec1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Specialization1"
+                                    android:gravity="left"
+                                    android:textColor="@color/title_grey"
+                                    android:textSize="@dimen/txtsize_12" />
+                                <TextView
+                                    android:id="@+id/txtspec2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Specialization1"
+                                    android:gravity="left"
+                                    android:layout_marginTop="@dimen/padding3"
+                                    android:textColor="@color/title_grey"
+                                    android:textSize="@dimen/txtsize_12" />
+                                <TextView
+                                    android:id="@+id/txtSeeAll"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="See All"
+                                    android:gravity="left"
+                                    android:layout_marginTop="@dimen/padding3"
+                                    android:textColor="@color/title_consu"
+                                    android:textSize="@dimen/txtsize_12" />
+                            </LinearLayout>
+
+
+
 
                             <TextView
                                 android:id="@+id/txt_contactdetails"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/padding7"
-                                android:drawablePadding="@dimen/padding3"
-                                android:drawableRight="@drawable/icon_eye_blue"
                                 android:text="Contact Details"
-                                android:textColor="@color/title_consu"
-                                android:textSize="@dimen/txtsize_12"
+                                android:textColor="@color/title_grey_light"
+                                android:textSize="@dimen/txtsize_hint"
                                 android:visibility="gone" />
 
                             <android.support.v7.widget.RecyclerView
@@ -263,13 +260,23 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:nestedScrollingEnabled="false"
-                                android:visibility="gone"></android.support.v7.widget.RecyclerView>
+                                android:visibility="visible"></android.support.v7.widget.RecyclerView>
 
+
+                            <TextView
+                                android:id="@+id/txtGallery"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding7"
+                                android:text="Gallery"
+                                android:textColor="@color/title_grey_light"
+                                android:textSize="@dimen/txtsize_hint"
+                                android:visibility="gone" />
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/default_padding"
+                                android:layout_marginTop="@dimen/padding5"
                                 android:orientation="horizontal">
 
                                 <ImageView
@@ -319,7 +326,7 @@
                                     android:textStyle="bold"
                                     android:visibility="gone" />
 
-                                <TextView
+                                <!--<TextView
                                     android:id="@+id/txtmsg"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -328,30 +335,113 @@
                                     android:paddingLeft="@dimen/padding3"
                                     android:text="Message"
                                     android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_12" />
+                                    android:textSize="@dimen/txtsize_12" />-->
                             </RelativeLayout>
+
+                            <TextView
+                                android:id="@+id/txtMore"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding7"
+                                android:text="More Details"
+                                android:textColor="@color/title_grey_light"
+                                android:textSize="@dimen/txtsize_hint"
+                                android:visibility="gone" />
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/mrecycle_virtualfield"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:nestedScrollingEnabled="false"
+                                android:visibility="gone"></android.support.v7.widget.RecyclerView>
+
+                            <TextView
+                                android:id="@+id/txtMoredetails"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_marginTop="@dimen/padding3"
+                                android:text="See All"
+                                android:textColor="@color/title_consu"
+                                android:textSize="@dimen/txtsize_12"
+                                android:visibility="gone" />
+
+
+                            <TextView
+                                android:id="@+id/txtSocialMedia"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding7"
+                                android:text="Social Media"
+                                android:textColor="@color/title_grey_light"
+                                android:textSize="@dimen/txtsize_hint"
+                                android:visibility="gone" />
+
+                            <LinearLayout
+                                android:id="@+id/LsocialMedia"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding5"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+
+                                <ImageView
+                                    android:id="@+id/ic_fac"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/padding3"
+                                    android:src="@drawable/icon_facebook"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/ic_yout"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/padding3"
+                                    android:src="@drawable/icon_youtube"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/ic_gplus"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/padding3"
+                                    android:src="@drawable/icon_googleplus"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/ic_twitt"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/padding3"
+                                    android:src="@drawable/icon_twitter"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/ic_link"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/padding3"
+                                    android:src="@drawable/icon_linkedin"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/ic_pin"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/padding3"
+                                    android:src="@drawable/icon_pinterest"
+                                    android:visibility="gone" />
+
+                            </LinearLayout>
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/txtMoredetails"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="@dimen/padding5"
-                            android:drawablePadding="@dimen/padding3"
 
-                            android:drawableRight="@drawable/icon_down_arrow_blue"
-                            android:text="@string/clickhere"
-                            android:textColor="@color/title_consu"
-                            android:textSize="@dimen/txtsize_10"
-                            android:visibility="gone" />
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/mrecycle_virtualfield"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:nestedScrollingEnabled="false"
-                            android:visibility="gone"></android.support.v7.widget.RecyclerView>
+
+
+
 
 
                         <android.support.v7.widget.RecyclerView

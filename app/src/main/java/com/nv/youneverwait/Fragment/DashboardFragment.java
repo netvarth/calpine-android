@@ -409,7 +409,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 /////////test code///////////////////////////
 
-
+                is_MoreClick=false;
+                img_arrow.setImageResource(R.drawable.icon_down_arrow_blue);
+                tv_More.setText("More");
                 mPopularSearchList.clear();
                 if (mDomainSpinner.equalsIgnoreCase("All")) {
                     mPopular_AllSearchList.addAll(mGLobalSearch);

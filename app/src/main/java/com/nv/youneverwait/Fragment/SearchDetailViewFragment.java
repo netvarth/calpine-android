@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,7 +112,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchCheckInMessage> mSearchmCheckListShow = new ArrayList<>();
 
 
-    TextView tv_busName, tv_domain, tv_desc, tv_msg;
+    TextView tv_busName, tv_domain, tv_desc, tv_msg, txtMore;
 
     RecyclerView mRecyLocDetail, mRecycle_virtualfield, mrecycle_contactdetail;
     SearchLocationAdapter mSearchLocAdapter;
@@ -119,7 +122,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<String> ids;
     String uniqueID;
 
-    TextView tv_ImageViewText, tv_Moredetails, tv_contactdetails,tv_specializtion;
+    TextView tv_ImageViewText, tv_Moredetails, tv_contactdetails, tv_specializtion, tv_SocialMedia, tv_Gallery;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
     LocationCheckinCallback callback;
@@ -129,6 +132,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     boolean flag_more = false;
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link;
     LinearLayout LsocialMedia;
+    LinearLayout LSpecialization, LSpecialization_2;
+    TextView tv_spec1, tv_spec2, tv_seeAll;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -142,7 +147,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
         tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
         tv_specializtion = (TextView) row.findViewById(R.id.txt_specializtion);
-
+        LSpecialization = (LinearLayout) row.findViewById(R.id.LSpecialization);
+        tv_Gallery = (TextView) row.findViewById(R.id.txtGallery);
+        tv_SocialMedia = (TextView) row.findViewById(R.id.txtSocialMedia);
+        txtMore = (TextView) row.findViewById(R.id.txtMore);
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
@@ -154,7 +162,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
         callback = (LocationCheckinCallback) this;
-        isContact=false;
+        //isContact = false;
         Config.logV("Refresh @@@@@@@@@@@@@@@@@@");
 
 
@@ -193,6 +201,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
         LsocialMedia = (LinearLayout) row.findViewById(R.id.LsocialMedia);
+        LSpecialization_2 = (LinearLayout) row.findViewById(R.id.LSpecialization_2);
+        tv_spec1 = (TextView) row.findViewById(R.id.txtspec1);
+        tv_spec2 = (TextView) row.findViewById(R.id.txtspec2);
+        tv_seeAll = (TextView) row.findViewById(R.id.txtSeeAll);
 
 
         ic_fac = (ImageView) row.findViewById(R.id.ic_fac);
@@ -210,7 +222,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 "fonts/Montserrat_Bold.otf");
         tv_busName.setTypeface(tyface);
         tv_ImageViewText.setTypeface(tyface);
-
+        tv_SocialMedia.setTypeface(tyface);
+        tv_Gallery.setTypeface(tyface);
+        tv_specializtion.setTypeface(tyface);
+        txtMore.setTypeface(tyface);
+        tv_contactdetails.setTypeface(tyface);
 
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
@@ -226,19 +242,21 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     mRecycle_virtualfield.setVisibility(View.VISIBLE);
                     Config.logV("Domain Size@@@@@@@@@@@@@" + domainVirtual.size());
                     Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
-
-                    tv_Moredetails.setText("Click here to view Less Details");
-                    tv_Moredetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_arrow_blue, 0);
+                    tv_Moredetails.setText("See Less");
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                     mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext);
+                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, domainVirtual.size());
                     mRecycle_virtualfield.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 } else {
                     flag_more = false;
-                    tv_Moredetails.setText("Click here to view More Details");
-                    tv_Moredetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_arrow_blue, 0);
-                    mRecycle_virtualfield.setVisibility(View.GONE);
+                    tv_Moredetails.setText("See All");
+
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, 2);
+                    mRecycle_virtualfield.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -267,7 +285,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
-                        if (edt_message.getText().toString().length() > 1&&!edt_message.getText().toString().trim().isEmpty()) {
+                        if (edt_message.getText().toString().length() > 1 && !edt_message.getText().toString().trim().isEmpty()) {
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
@@ -379,6 +397,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         try {
             if (mGallery.size() > 0) {
 
+
                 if (mGallery.get(0).getUrl() != null) {
                     mImgeProfile.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -404,6 +423,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         }
                     });
                 }
+
 
                 if (mGallery.get(1).getUrl() != null) {
                     mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
@@ -456,11 +476,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         }
                     });
                 }
-            }
+            } /*else {
+                tv_Gallery.setVisibility(View.GONE);
+            }*/
 
             Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
 
             if (mGallery.size() > 1) {
+                tv_Gallery.setVisibility(View.VISIBLE);
                 mImgthumbProfile.setVisibility(View.VISIBLE);
                 // Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(mImgthumbProfile);
 
@@ -516,6 +539,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
             } else {
                 mImgthumbProfile.setVisibility(View.GONE);
+                tv_Gallery.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -529,44 +553,124 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     ArrayList<SocialMediaModel> socialMedia = new ArrayList<>();
 
+
     //  boolean expand =false;
     public void UpdateMainUI(final SearchViewDetail getBussinessData) {
 
-        String txt_specValue="";
-        if(getBussinessData.getSpecialization()!=null){
-            if(getBussinessData.getSpecialization().size()>0){
+        if (getBussinessData.getSpecialization() != null) {
+            if (getBussinessData.getSpecialization().size() > 0) {
+
 
                 tv_specializtion.setVisibility(View.VISIBLE);
+                LSpecialization.setVisibility(View.VISIBLE);
+                int size = getBussinessData.getSpecialization().size();
+                if (size > 0) {
+                    if (size == 1) {
+                        LSpecialization.setVisibility(View.GONE);
+                        LSpecialization_2.setVisibility(View.VISIBLE);
+                        tv_spec1.setVisibility(View.VISIBLE);
+                        tv_spec2.setVisibility(View.GONE);
+                        tv_seeAll.setVisibility(View.GONE);
+                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString());
+
+                    } else {
+                        LSpecialization.setVisibility(View.GONE);
+                        LSpecialization_2.setVisibility(View.VISIBLE);
+                        tv_spec1.setVisibility(View.VISIBLE);
+                        tv_spec2.setVisibility(View.VISIBLE);
+                        tv_seeAll.setVisibility(View.VISIBLE);
+                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString());
+                        tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
+
+                        tv_seeAll.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                LSpecialization_2.setVisibility(View.GONE);
+                                LSpecialization.setVisibility(View.VISIBLE);
+                                LSpecialization.removeAllViews();
+                                LinearLayout parent1 = new LinearLayout(mContext);
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                parent1.setOrientation(LinearLayout.VERTICAL);
+                                parent1.setLayoutParams(params);
+                                for (int i = 0; i < getBussinessData.getSpecialization().size(); i++) {
+
+                                    TextView dynaText = new TextView(mContext);
+                                    Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                            "fonts/Montserrat_Regular.otf");
+                                    dynaText.setTypeface(tyface);
+                                    dynaText.setText(getBussinessData.getSpecialization().get(i).toString());
 
 
-                    for (int i = 0; i < getBussinessData.getSpecialization().size(); i++) {
-
-                        if(i==getBussinessData.getSpecialization().size()-1){
-
-                            txt_specValue += getBussinessData.getSpecialization().get(i) ;
-                        }else {
-
-                            txt_specValue += getBussinessData.getSpecialization().get(i) + ", ";
-                        }
+                                    dynaText.setTextSize(14);
+                                    dynaText.setTextColor(mContext.getResources().getColor(R.color.title_grey));
+                                    //  dynaText.setPadding(5, 5, 5, 5);
+                                    dynaText.setMaxLines(1);
+                                    dynaText.setLayoutParams(params);
 
 
+                                    params.setMargins(0, 10, 0, 0);
+                                    dynaText.setGravity(Gravity.LEFT);
+                                    parent1.addView(dynaText);
 
-                    tv_specializtion.setText(txt_specValue);
+                                }
+                                TextView dynaText = new TextView(mContext);
+                                Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                        "fonts/Montserrat_Regular.otf");
+                                dynaText.setTypeface(tyface);
+                                dynaText.setText("See Less");
+
+                                dynaText.setTextSize(14);
+                                dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
+                                // dynaText.setPadding(5, 5, 5, 5);
+                                dynaText.setMaxLines(1);
+                                dynaText.setLayoutParams(params);
+
+
+                                params.setMargins(0, 10, 0, 0);
+                                dynaText.setGravity(Gravity.LEFT);
+                                parent1.addView(dynaText);
+                                dynaText.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        LSpecialization_2.setVisibility(View.VISIBLE);
+                                        LSpecialization.setVisibility(View.GONE);
+                                        tv_spec1.setVisibility(View.VISIBLE);
+                                        tv_spec2.setVisibility(View.VISIBLE);
+                                        tv_seeAll.setVisibility(View.VISIBLE);
+                                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString());
+                                        tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
+
+                                    }
+                                });
+
+                                LSpecialization.addView(parent1);
+                            }
+                        });
+
+
+                    }
                 }
 
-            }else{
+
+            } else {
                 tv_specializtion.setVisibility(View.GONE);
+                LSpecialization.setVisibility(View.GONE);
+                LSpecialization_2.setVisibility(View.GONE);
             }
-        }else{
-          tv_specializtion.setVisibility(View.GONE);
+        } else {
+            tv_specializtion.setVisibility(View.GONE);
+            LSpecialization.setVisibility(View.GONE);
+            LSpecialization_2.setVisibility(View.GONE);
         }
 
         if (getBussinessData.getSocialMedia() != null) {
             if (getBussinessData.getSocialMedia().size() > 0) {
                 LsocialMedia.setVisibility(View.VISIBLE);
+
                 for (int i = 0; i < getBussinessData.getSocialMedia().size(); i++) {
 
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
+                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_fac.setVisibility(View.VISIBLE);
                         final int finalI = i;
                         ic_fac.setOnClickListener(new View.OnClickListener() {
@@ -577,7 +681,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     startActivity(myIntent);
                                 } catch (ActivityNotFoundException e) {
                                     Toast.makeText(mContext, "No application can handle this request."
-                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
                                     e.printStackTrace();
                                 }
                             }
@@ -587,8 +691,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     }
 
 
-
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("googleplus")) {
+                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_gplus.setVisibility(View.VISIBLE);
                         final int finalI3 = i;
                         ic_gplus.setOnClickListener(new View.OnClickListener() {
@@ -599,7 +703,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     startActivity(myIntent);
                                 } catch (ActivityNotFoundException e) {
                                     Toast.makeText(mContext, "No application can handle this request."
-                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
                                     e.printStackTrace();
                                 }
                             }
@@ -608,6 +712,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         });
                     }
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("twitter")) {
+                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_twitt.setVisibility(View.VISIBLE);
                         final int finalI1 = i;
                         ic_twitt.setOnClickListener(new View.OnClickListener() {
@@ -618,7 +723,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     startActivity(myIntent);
                                 } catch (ActivityNotFoundException e) {
                                     Toast.makeText(mContext, "No application can handle this request."
-                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
                                     e.printStackTrace();
                                 }
                             }
@@ -628,6 +733,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     }
 
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("linkedin")) {
+                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_link.setVisibility(View.VISIBLE);
                         final int finalI5 = i;
                         ic_link.setOnClickListener(new View.OnClickListener() {
@@ -638,7 +744,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     startActivity(myIntent);
                                 } catch (ActivityNotFoundException e) {
                                     Toast.makeText(mContext, "No application can handle this request."
-                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
                                     e.printStackTrace();
                                 }
                             }
@@ -648,8 +754,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     }
 
 
-
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("pinterest")) {
+                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_pin.setVisibility(View.VISIBLE);
                         final int finalI4 = i;
                         ic_pin.setOnClickListener(new View.OnClickListener() {
@@ -660,7 +766,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     startActivity(myIntent);
                                 } catch (ActivityNotFoundException e) {
                                     Toast.makeText(mContext, "No application can handle this request."
-                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
                                     e.printStackTrace();
                                 }
                             }
@@ -671,6 +777,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("youtube")) {
+                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_yout.setVisibility(View.VISIBLE);
 
                         final int finalI2 = i;
@@ -682,7 +789,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     startActivity(myIntent);
                                 } catch (ActivityNotFoundException e) {
                                     Toast.makeText(mContext, "No application can handle this request."
-                                            + " Please install a webbrowser",  Toast.LENGTH_LONG).show();
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
                                     e.printStackTrace();
                                 }
                             }
@@ -694,14 +801,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 }
 
 
-
-
-
             } else {
                 LsocialMedia.setVisibility(View.GONE);
+                tv_SocialMedia.setVisibility(View.GONE);
             }
         } else {
             LsocialMedia.setVisibility(View.GONE);
+            tv_SocialMedia.setVisibility(View.GONE);
         }
         contactDetail.clear();
         if (getBussinessData.getPhoneNumbers().size() > 0) {
@@ -729,7 +835,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         if (getBussinessData.getPhoneNumbers().size() > 0 || getBussinessData.getEmails().size() > 0 && contactDetail.size() > 0) {
 
+            mrecycle_contactdetail.setVisibility(View.VISIBLE);
             tv_contactdetails.setVisibility(View.VISIBLE);
+          //  tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue_hidden, 0);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+            mrecycle_contactdetail.setLayoutManager(mLayoutManager);
+            ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity());
+            mrecycle_contactdetail.setAdapter(checkAdapter);
+            checkAdapter.notifyDataSetChanged();
+
+            /*tv_contactdetails.setVisibility(View.VISIBLE);
             tv_contactdetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -751,7 +866,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mrecycle_contactdetail.setVisibility(View.GONE);
                     }
                 }
-            });
+            });*/
 
         } else {
             tv_contactdetails.setVisibility(View.GONE);
@@ -1396,9 +1511,22 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                             domainVirtual.addAll(sub_domainVirtual);
 
+                            if (domainVirtual.size() > 0) {
+
+                                txtMore.setVisibility(View.VISIBLE);
+                                mRecycle_virtualfield.setVisibility(View.VISIBLE);
+                                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                                mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, 2);
+                                mRecycle_virtualfield.setAdapter(mAdapter);
+                                mAdapter.notifyDataSetChanged();
+                            }
+
 
                         } else {
                             tv_Moredetails.setVisibility(View.GONE);
+                            mRecycle_virtualfield.setVisibility(View.GONE);
+                            txtMore.setVisibility(View.GONE);
                         }
 
 
@@ -1529,7 +1657,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     public void refreshList() {
         Config.logV("Refresh $$$$$@@@@@@@@@@@@@@@@@@");
         count = 0;
-        isContact=false;
+        isContact = false;
 
         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mBusinessDataList = new SearchViewDetail();
@@ -1730,7 +1858,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
 
                         if (response.body().string().equalsIgnoreCase("true")) {
-                            Toast.makeText(mContext,"Removed from favourites",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Removed from favourites", Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
 
@@ -1767,5 +1895,5 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
     }
 
-    
+
 }

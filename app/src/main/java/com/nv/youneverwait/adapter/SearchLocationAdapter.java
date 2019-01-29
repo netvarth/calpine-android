@@ -2,6 +2,7 @@ package com.nv.youneverwait.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,13 +57,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate;
         Button btn_checkin;
-        LinearLayout mLSeriveLayout, mLayouthide,LexpandCheckin,Ldirectionlayout;
+        LinearLayout mLSeriveLayout, mLayouthide, LexpandCheckin, Ldirectionlayout;
         ImageView img_arrow;
         RecyclerView recycle_parking;
         RelativeLayout layout_exapnd;
         TextView txtdirection, tv_checkin;
         Button btn_checkin_expand;
-        TextView txtwaittime_expand, txt_diffdate_expand;
+        TextView txtwaittime_expand, txt_diffdate_expand,txtlocation_amentites,txtparkingSeeAll,txtservices;
 
         public MyViewHolder(View view) {
             super(view);
@@ -83,9 +84,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txtwaittime_expand = (TextView) view.findViewById(R.id.txtwaittime_expand);
             txt_diffdate_expand = (TextView) view.findViewById(R.id.txt_diffdate_expand);
             btn_checkin_expand = (Button) view.findViewById(R.id.btn_checkin_expand);
-            LexpandCheckin=(LinearLayout) view.findViewById(R.id.LexpandCheckin);
-            Ldirectionlayout=(LinearLayout) view.findViewById(R.id.Ldirectionlayout);
-
+            LexpandCheckin = (LinearLayout) view.findViewById(R.id.LexpandCheckin);
+            Ldirectionlayout = (LinearLayout) view.findViewById(R.id.Ldirectionlayout);
+            txtlocation_amentites= (TextView) view.findViewById(R.id.txtlocation_amentites);
+            txtparkingSeeAll= (TextView) view.findViewById(R.id.txtparkingSeeAll);
+            txtservices=(TextView) view.findViewById(R.id.txtservices);
         }
     }
 
@@ -139,12 +142,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             return new Date(0);
         }
     }
-
+    ArrayList<ParkingModel> listType = new ArrayList<>();
 
     @Override
     public void onBindViewHolder(final SearchLocationAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
-
 
 
         for (int i = 0; i < mCheckInMessage.size(); i++) {
@@ -179,9 +181,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         });
 
 
-        if(searchLoclist.getGoogleMapUrl()!=null&&!searchLoclist.getGoogleMapUrl().equalsIgnoreCase("")){
+        if (searchLoclist.getGoogleMapUrl() != null && !searchLoclist.getGoogleMapUrl().equalsIgnoreCase("")) {
             myViewHolder.Ldirectionlayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             myViewHolder.Ldirectionlayout.setVisibility(View.GONE);
         }
 
@@ -193,7 +195,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 try {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
                     mContext.startActivity(intent);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -205,7 +207,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.btn_checkin.setTypeface(tyface);
 
 
-        ArrayList<ParkingModel> listType = new ArrayList<>();
+
         if (searchLoclist.getParkingType() != null) {
             if (searchLoclist.getParkingType().equalsIgnoreCase("free") || searchLoclist.getParkingType().equalsIgnoreCase("none")) {
                 ParkingModel mType = new ParkingModel();
@@ -283,11 +285,50 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
         if (listType.size() > 0) {
-            ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext);
-            LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+
+            myViewHolder.txtlocation_amentites.setTypeface(tyface1);
+            Config.logV("Location Ament---------------"+listType.size());
+            if(listType.size()>2) {
+                myViewHolder.txtparkingSeeAll.setVisibility(View.VISIBLE);
+            }else{
+                myViewHolder.txtparkingSeeAll.setVisibility(View.GONE);
+            }
+            myViewHolder.txtlocation_amentites.setVisibility(View.VISIBLE);
+            myViewHolder.recycle_parking.setVisibility(View.VISIBLE);
+            ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext,2);
+            LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
             myViewHolder.recycle_parking.setLayoutManager(horizontalLayoutManager);
             myViewHolder.recycle_parking.setAdapter(mParkTypeAdapter);
+        }else{
+            myViewHolder.txtparkingSeeAll.setVisibility(View.GONE);
+            myViewHolder.txtlocation_amentites.setVisibility(View.GONE);
+            myViewHolder.recycle_parking.setVisibility(View.GONE);
         }
+
+        myViewHolder.txtparkingSeeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!searchLoclist.isLocationAmentOpen()){
+                    ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext,listType.size());
+                    LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+                    myViewHolder.recycle_parking.setLayoutManager(horizontalLayoutManager);
+                    myViewHolder.recycle_parking.setAdapter(mParkTypeAdapter);
+                    myViewHolder.txtparkingSeeAll.setText("See Less");
+                    searchLoclist.setLocationAmentOpen(true);
+
+                }else{
+                    ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext,2);
+                    LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+                    myViewHolder.recycle_parking.setLayoutManager(horizontalLayoutManager);
+                    myViewHolder.recycle_parking.setAdapter(mParkTypeAdapter);
+                    myViewHolder.txtparkingSeeAll.setText("See All");
+                    searchLoclist.setLocationAmentOpen(false);
+                }
+            }
+        });
 
 
         Config.logV("Place-------------" + searchLoclist.getPlace());
@@ -403,7 +444,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         });
 
 
-
         myViewHolder.layout_exapnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -413,7 +453,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     searchLoclist.setExpandFlag(true);
                     myViewHolder.LexpandCheckin.setVisibility(View.GONE);
 
-                }else{
+                } else {
                     myViewHolder.mLayouthide.setVisibility(View.GONE);
                     myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_down);
                     searchLoclist.setExpandFlag(false);
@@ -574,7 +614,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         dynaText.setTextSize(13);
                         dynaText.setPadding(10, 10, 10, 10);
                         dynaText.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
-                        dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
+                        dynaText.setTextColor(mContext.getResources().getColor(R.color.title_grey));
                         dynaText.setEllipsize(TextUtils.TruncateAt.END);
                         dynaText.setMaxLines(1);
                         dynaText.setMaxEms(6);
@@ -612,7 +652,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.mLSeriveLayout.addView(dynaText);
                     }
 
-                    if(size>1) {
+                    if (size > 1) {
 
                         TextView dynaText = new TextView(mContext);
                         final int finalI = i;
@@ -695,23 +735,24 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) {
 
                                 myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
-                                myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.button_gradient_checkin));
-
+                                // myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.button_gradient_checkin));
+                                myViewHolder.btn_checkin.setBackgroundColor(mContext.getResources().getColor(R.color.blue));
+                                myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.white));
                                 myViewHolder.btn_checkin_expand.setVisibility(View.VISIBLE);
 
 
                             } else if (date1.compareTo(date2) < 0) {
                                 myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
                                 // myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                                myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                //   myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                                 myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
                                 myViewHolder.btn_checkin.setEnabled(false);
 
-
-                                    myViewHolder.btn_checkin_expand.setVisibility(View.VISIBLE);
-                                    myViewHolder.btn_checkin_expand.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                                    myViewHolder.btn_checkin_expand.setTextColor(mContext.getResources().getColor(R.color.button_grey));
-                                    myViewHolder.btn_checkin_expand.setEnabled(false);
+                                myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+                                myViewHolder.btn_checkin_expand.setVisibility(View.VISIBLE);
+                                myViewHolder.btn_checkin_expand.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                myViewHolder.btn_checkin_expand.setTextColor(mContext.getResources().getColor(R.color.button_grey));
+                                myViewHolder.btn_checkin_expand.setEnabled(false);
 
 
                             }
@@ -760,8 +801,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                            firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    /*spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                                            firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
                                     myViewHolder.tv_waittime.setText(spannable);
                                     myViewHolder.txtwaittime_expand.setText(spannable);
@@ -773,9 +814,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     String secondWord = mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime() + " Minutes";
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                                   /* spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+*/
                                     myViewHolder.tv_waittime.setText(spannable);
                                     myViewHolder.txtwaittime_expand.setText(spannable);
                                 }
@@ -794,8 +835,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     String secondWord = monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                            firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    /*spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                                            firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
                                     myViewHolder.tv_waittime.setText(spannable);
                                     myViewHolder.txtwaittime_expand.setText(spannable);
