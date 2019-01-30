@@ -5,7 +5,7 @@
     android:background="@drawable/app_bg_gradient_home"
     android:clickable="true"
     android:orientation="vertical">
-    
+
 
     <LinearLayout
         android:id="@+id/layout_toolbar"

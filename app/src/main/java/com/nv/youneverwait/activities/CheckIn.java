@@ -2758,8 +2758,7 @@ public class CheckIn extends AppCompatActivity {
                 }
 
             }
-
-
+            
             @Override
             public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
                 // Log error here since request failed
