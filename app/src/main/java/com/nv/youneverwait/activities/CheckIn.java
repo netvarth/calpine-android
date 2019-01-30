@@ -1015,7 +1015,7 @@ public class CheckIn extends AppCompatActivity {
 
 
                                     if (h > 0) {
-                                         firstWord = "Checked in for Today, ";
+                                         firstWord = "Next Available Time Today, ";
                                     } else {
                                         firstWord = "Est Wait Time ";
 
@@ -1098,7 +1098,7 @@ public class CheckIn extends AppCompatActivity {
 
                                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                                    firstWord = "Checked in for Today, ";
+                                    firstWord = "Next Available Time Today, ";
                                     /*Date dt = new Date();
                                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
                                     String currentTime = sdf.format(dt);
@@ -1228,7 +1228,7 @@ public class CheckIn extends AppCompatActivity {
                                     }*/
 
                                     if (h > 0) {
-                                        firstWord = "Checked in for Today, ";
+                                        firstWord = "Next Available Time Today, ";
                                     } else {
                                         firstWord = "Est Wait Time ";
 
@@ -1311,7 +1311,7 @@ public class CheckIn extends AppCompatActivity {
 
                                         Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                     }*/
-                                    firstWord = "Checked in for Today, ";
+                                    firstWord = "Next Available Time Today, ";
                                     secondWord = mQueueTimeSlotList.get(0).getServiceTime();
 
                                 } else {
@@ -1468,7 +1468,7 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-                                                firstWord = "Checked in for Today, ";
+                                                firstWord = "Next Available Time Today, ";
                                             } else {
                                                 firstWord = "Est Wait Time ";
 
@@ -1550,7 +1550,7 @@ public class CheckIn extends AppCompatActivity {
 
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }*/
-                                            firstWord = "Checked in for Today, ";
+                                            firstWord = "Next Available Time Today, ";
                                             secondWord = mQueueTimeSlotList.get(i).getServiceTime();
 
                                         } else {
@@ -1696,7 +1696,7 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-                                                firstWord = "Checked in for Today, ";
+                                                firstWord = "Next Available Time Today, ";
                                             } else {
                                                 firstWord = "Est Wait Time ";
 
@@ -1774,7 +1774,7 @@ public class CheckIn extends AppCompatActivity {
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }
 */
-                                            firstWord = "Checked in for Today, ";
+                                            firstWord = "Next Available Time Today, ";
                                             secondWord = mQueueTimeSlotList.get(i).getServiceTime();
                                             Config.logV("First Word@@@@@@@@@@@@@"+firstWord+"Second777"+secondWord);
 

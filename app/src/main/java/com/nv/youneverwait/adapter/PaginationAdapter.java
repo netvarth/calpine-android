@@ -629,7 +629,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
                                         // String firstWord = "Est Service Time ";
-                                        String firstWord = "Checked in for ";
+                                        String firstWord = "Next Available Time ";
                                         /*String firstWord = null;
                                         Date dt = new Date();
                                         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
@@ -667,7 +667,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             //String firstWord = "Est Service Time ";
                                             String firstWord = "";
                                             if (hours > 0) {
-                                                firstWord = "Checked in for ";
+                                                firstWord = "Next Available Time ";
                                             } else {
                                                 firstWord = "Est Wait Time ";
 

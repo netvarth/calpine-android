@@ -1010,7 +1010,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     }*/
 
-                                    String firstWord = "Checked in for ";
+                                    String firstWord = "Next Available Time ";
                                     //String firstWord = "Est Service Time \n";
                                     String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
