@@ -5,4 +5,5 @@ android:duration="@android:integer/config_mediumAnimTime"
     android:interpolator="@android:anim/accelerate_interpolator"
     android:toYDelta="100%p">
 
+
 </translate>
