@@ -2348,7 +2348,7 @@ public class CheckIn extends AppCompatActivity {
 
 Config.logV("Error String-----------"+errorString);
                             Map<String, String> tokens = new HashMap<String, String>();
-                            tokens.put("customer", mSearchTerminology.getCustomer());
+                            tokens.put("customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
                             tokens.put("provider", mSearchTerminology.getProvider());
                             tokens.put("arrived", mSearchTerminology.getArrived());
                             tokens.put("waitlisted", mSearchTerminology.getWaitlist());

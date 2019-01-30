@@ -91,7 +91,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        tv_title.setText("My Favorites");
+        tv_title.setText("My Favourites");
         tv_title.setTypeface(tyface);
         callback = (FavAdapterOnCallback) this;
         tv_nofav = (TextView) row.findViewById(R.id.txt_nofav);
