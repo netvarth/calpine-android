@@ -219,21 +219,26 @@ public class Login extends AppCompatActivity {
                             e.printStackTrace();
                         }*/
 
-                        // get header value
-                        String cookie = response.headers().get("Set-Cookie");
+                        String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
 
-                        Config.logV("Response--Cookie-------------------------" + cookie);
-                        if (!cookie.isEmpty()) {
+                        Config.logV("Cookie Stored"+cookieStored);
+                        if(cookieStored.equalsIgnoreCase("")) {
+                            // get header value
+                            String cookie = response.headers().get("Set-Cookie");
 
-                            SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
-                            String header = response.headers().get("Set-Cookie");
-                            String Cookie_header = header.substring(0, header.indexOf(";"));
+                            Config.logV("Response--Cookie-------------------------" + cookie);
+                            if (!cookie.isEmpty()) {
 
-                            SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
-                            Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+                                SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
+                                String header = response.headers().get("Set-Cookie");
+                                String Cookie_header = header.substring(0, header.indexOf(";"));
 
-                            LogUtil.writeLogTest("****Login Cookie****"+Cookie_header);
+                                SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
+                                Config.logV("Set Cookie sharedpref------------" + Cookie_header);
 
+                                LogUtil.writeLogTest("****Login Cookie****" + Cookie_header);
+
+                            }
                         }
 
 
@@ -299,7 +304,7 @@ public class Login extends AppCompatActivity {
         ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
 
-        String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        final String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
 
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -317,11 +322,28 @@ public class Login extends AppCompatActivity {
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        Toast.makeText(mContext,"Otp has been send to your registered number",Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext,"Otp has been send to "+loginId,Toast.LENGTH_LONG).show();
                         Intent iReg = new Intent(mContext, ResetOtp.class);
                         startActivity(iReg);
 
 
+                       /* String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+
+                        Config.logV("Cookie Stored"+cookieStored);
+                        if(cookieStored.equalsIgnoreCase("")) {*/
+                            String cookie = response.headers().get("Set-Cookie");
+
+                            Config.logV("Response--Cookie-------------------------" + cookie);
+                            if (!cookie.isEmpty()) {
+
+                                String header = response.headers().get("Set-Cookie");
+                                String Cookie_header = header.substring(0, header.indexOf(";"));
+
+                                SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
+                                Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+
+                            }
+                       // }
                     }
 
 

@@ -1,5 +1,9 @@
 package com.nv.youneverwait.adapter;
 
+import com.nv.youneverwait.model.WorkingModel;
+
+import java.util.ArrayList;
+
 /**
  * Created by sharmila on 10/9/18.
  */
@@ -24,4 +28,14 @@ class ParkingModel {
     }
 
     private String id;
+
+    public ArrayList<WorkingModel> getWorkingModelArrayList() {
+        return workingModelArrayList;
+    }
+
+    public void setWorkingModelArrayList(ArrayList<WorkingModel> workingModelArrayList) {
+        this.workingModelArrayList = workingModelArrayList;
+    }
+
+    ArrayList<WorkingModel> workingModelArrayList=new ArrayList<>();
 }

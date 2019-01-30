@@ -35,6 +35,16 @@ public class SearchLocation {
     private String sTime;
     private ArrayList repeatIntervals;
 
+    public boolean isLocationAmentOpen() {
+        return isLocationAmentOpen;
+    }
+
+    public void setLocationAmentOpen(boolean locationAmentOpen) {
+        isLocationAmentOpen = locationAmentOpen;
+    }
+
+    boolean isLocationAmentOpen=false;
+
     public String getDocambulance() {
         return docambulance;
     }

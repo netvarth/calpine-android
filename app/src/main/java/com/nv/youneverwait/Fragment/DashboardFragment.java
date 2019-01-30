@@ -409,7 +409,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 /////////test code///////////////////////////
 
-
+                is_MoreClick=false;
+                img_arrow.setImageResource(R.drawable.icon_down_arrow_blue);
+                tv_More.setText("More");
                 mPopularSearchList.clear();
                 if (mDomainSpinner.equalsIgnoreCase("All")) {
                     mPopular_AllSearchList.addAll(mGLobalSearch);
@@ -1188,10 +1190,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         }
                     } else {
                         // Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
-                        if (response.code() == 419) {
-                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
-                            LogUtil.writeLogTest(response.errorBody().string() + " " + cookie);
-                        }
+
                     }
 
 
@@ -1894,10 +1893,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
                     } else {
-                        if (response.code() == 419) {
-                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
-                            LogUtil.writeLogTest(" Session Expired " + cookie);
-                        }
+
                     }
 
 

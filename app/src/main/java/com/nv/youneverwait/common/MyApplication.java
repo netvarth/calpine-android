@@ -2,7 +2,9 @@ package com.nv.youneverwait.common;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 
+import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.custom.FontOverride;
 import com.nv.youneverwait.database.DatabaseHandler;
 import com.nv.youneverwait.utils.NotificationUtils;
@@ -52,6 +54,5 @@ public class MyApplication extends Application implements AppLifeCycleHandler.Ap
             Config.logV("App@@@ ForeBackGround Reset");
             Config.ApiSessionResetLogin(loginId, password, this);
         }
-
     }
 }

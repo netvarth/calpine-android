@@ -17,11 +17,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.model.CheckSumModelTest;
+import com.nv.youneverwait.payment.PayUMoneyWebview;
 import com.nv.youneverwait.payment.PaymentGateway;
 import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.response.CheckSumModel;
@@ -238,8 +240,14 @@ public class PaymentActivity extends AppCompatActivity {
             //    new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
 
 
-                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
+               // new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
 
+
+                Intent iPayu=new Intent(mContext, PayUMoneyWebview.class);
+                iPayu.putExtra("ynwUUID",ynwUUID);
+                iPayu.putExtra("amount",String.valueOf(amountDue));
+                iPayu.putExtra("accountID",accountID);
+                startActivity(iPayu);
 
                 // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
                        /*
@@ -279,7 +287,8 @@ public class PaymentActivity extends AppCompatActivity {
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                //.setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setProductName(new Gson().toJson(checksumModel.getProductinfo()))
                 .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
                 .setsUrl(checksumModel.getSuccessUrl())

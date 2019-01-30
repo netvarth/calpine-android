@@ -43,6 +43,7 @@ import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.model.CheckSumModelTest;
 import com.nv.youneverwait.model.FamilyArrayModel;
+import com.nv.youneverwait.payment.PayUMoneyWebview;
 import com.nv.youneverwait.payment.PaymentGateway;
 import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.response.CheckSumModel;
@@ -1014,7 +1015,7 @@ public class CheckIn extends AppCompatActivity {
 
 
                                     if (h > 0) {
-                                         firstWord = "Checked in for Today, ";
+                                         firstWord = "Next Available Time Today, ";
                                     } else {
                                         firstWord = "Est Wait Time ";
 
@@ -1097,7 +1098,7 @@ public class CheckIn extends AppCompatActivity {
 
                                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                                    firstWord = "Checked in for Today, ";
+                                    firstWord = "Next Available Time Today, ";
                                     /*Date dt = new Date();
                                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
                                     String currentTime = sdf.format(dt);
@@ -1227,7 +1228,7 @@ public class CheckIn extends AppCompatActivity {
                                     }*/
 
                                     if (h > 0) {
-                                        firstWord = "Checked in for Today, ";
+                                        firstWord = "Next Available Time Today, ";
                                     } else {
                                         firstWord = "Est Wait Time ";
 
@@ -1310,7 +1311,7 @@ public class CheckIn extends AppCompatActivity {
 
                                         Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                     }*/
-                                    firstWord = "Checked in for Today, ";
+                                    firstWord = "Next Available Time Today, ";
                                     secondWord = mQueueTimeSlotList.get(0).getServiceTime();
 
                                 } else {
@@ -1467,7 +1468,7 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-                                                firstWord = "Checked in for Today, ";
+                                                firstWord = "Next Available Time Today, ";
                                             } else {
                                                 firstWord = "Est Wait Time ";
 
@@ -1549,7 +1550,7 @@ public class CheckIn extends AppCompatActivity {
 
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }*/
-                                            firstWord = "Checked in for Today, ";
+                                            firstWord = "Next Available Time Today, ";
                                             secondWord = mQueueTimeSlotList.get(i).getServiceTime();
 
                                         } else {
@@ -1695,7 +1696,7 @@ public class CheckIn extends AppCompatActivity {
                                             }*/
 
                                             if (h > 0) {
-                                                firstWord = "Checked in for Today, ";
+                                                firstWord = "Next Available Time Today, ";
                                             } else {
                                                 firstWord = "Est Wait Time ";
 
@@ -1773,7 +1774,7 @@ public class CheckIn extends AppCompatActivity {
                                                     Config.logV("Second WORD---@@@@------------" + secondWord + "Datecompare" + dateCompareOne);
                                                 }
 */
-                                            firstWord = "Checked in for Today, ";
+                                            firstWord = "Next Available Time Today, ";
                                             secondWord = mQueueTimeSlotList.get(i).getServiceTime();
                                             Config.logV("First Word@@@@@@@@@@@@@"+firstWord+"Second777"+secondWord);
 
@@ -2304,7 +2305,14 @@ public class CheckIn extends AppCompatActivity {
                                           // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
 
-                                             new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, accountID, "checkin");
+                                            Intent iPayu=new Intent(mContext, PayUMoneyWebview.class);
+                                            iPayu.putExtra("ynwUUID",value);
+                                            iPayu.putExtra("amount",sAmountPay);
+                                            iPayu.putExtra("accountID",accountID);
+                                            startActivity(iPayu);
+
+
+                                            // new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, accountID, "checkin");
 
                                             dialog.dismiss();
 
@@ -2338,12 +2346,12 @@ public class CheckIn extends AppCompatActivity {
 
                             String errorString = response.errorBody().string();
 
-
+Config.logV("Error String-----------"+errorString);
                             Map<String, String> tokens = new HashMap<String, String>();
-                            tokens.put("customer", mSearchTerminology.getCustomer());
+                            tokens.put("customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
                             tokens.put("provider", mSearchTerminology.getProvider());
                             tokens.put("arrived", mSearchTerminology.getArrived());
-                            tokens.put("waitlist", mSearchTerminology.getWaitlist());
+                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
 
                             tokens.put("start", mSearchTerminology.getStart());
                             tokens.put("cancelled", mSearchTerminology.getCancelled());
@@ -2414,7 +2422,7 @@ public class CheckIn extends AppCompatActivity {
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
+                .setProductName(new Gson().toJson(checksumModel.getProductinfo()))
                 .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
                 .setsUrl(checksumModel.getSuccessUrl())

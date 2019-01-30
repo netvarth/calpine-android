@@ -6,6 +6,7 @@ package com.nv.youneverwait.common;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -194,10 +195,14 @@ public class Config {
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(iReg);
                        // ((Activity)context).finish();
-
+                        Config.logV("App@@@ ForeBackGround Sucess");
 
                     }else{
                        // Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                        Config.logV("App@@@ ForeBackGround fail");
+                        Intent iReg = new Intent(context, Home.class);
+                        iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        context.startActivity(iReg);
                     }
 
 

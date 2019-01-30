@@ -91,7 +91,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        tv_title.setText("My Favorites");
+        tv_title.setText("My Favourites");
         tv_title.setTypeface(tyface);
         callback = (FavAdapterOnCallback) this;
         tv_nofav = (TextView) row.findViewById(R.id.txt_nofav);
@@ -161,6 +161,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                                 fav.setId(mFavList.get(i).getId());
                                 fav.setUniqueId(mFavList.get(i).getUniqueId());
                                 fav.setBusinessName(mFavList.get(i).getBusinessName());
+                                Config.logV("Revel Phone--@@@------------"+mFavList.get(i).isRevealPhoneNumber()+"Title"+mFavList.get(i).getBusinessName());
                                 String locid = "";
                                 String place = "";
                                 for (int j = 0; j < mFavList.get(i).getLocations().size(); j++) {
@@ -200,10 +201,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                         }
 
                     } else {
-                        if (response.code() == 419) {
-                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
-                            LogUtil.writeLogTest(response.errorBody().string() + " " + cookie);
-                        }
+
                     }
 
 
@@ -323,10 +321,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                         FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
-                        if (response.code() == 419) {
-                            String cookie = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
-                            LogUtil.writeLogTest(response.errorBody().string() + " " + cookie);
-                        }
+
                     }
 
 

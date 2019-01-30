@@ -22,7 +22,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
 
     public static final String BASE_URL ="http://35.154.241.175/v1/rest/";
-    //"http://54.215.5.201:8181/v1/rest/";
+            //"http://54.215.5.201:8181/v1/rest/";
+            //"http://35.154.241.175/v1/rest/";
+    //
     //""; /*"https://www.youneverwait.com/v1/rest/"; */
 
 
@@ -122,8 +124,8 @@ public class ApiClient {
         builder.addInterceptor(logging);
 
 
-        builder.readTimeout(90, TimeUnit.SECONDS);
-        builder.connectTimeout(90, TimeUnit.SECONDS);
+        builder.readTimeout(60, TimeUnit.SECONDS);
+        builder.connectTimeout(60, TimeUnit.SECONDS);
         okHttpClient = builder.build();
        /* OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new ConnectivityInterceptor(context))
@@ -143,8 +145,8 @@ public class ApiClient {
        // builder.addInterceptor(new AddCookiesInterceptor(context)); // VERY VERY IMPORTANT
         //  builder.addInterceptor(new ReceivedCookiesInterceptor(context));
         builder.addInterceptor(new ConnectivityInterceptor(context));
-        builder.readTimeout(90, TimeUnit.SECONDS);
-        builder.connectTimeout(90, TimeUnit.SECONDS);
+        builder.readTimeout(60, TimeUnit.SECONDS);
+        builder.connectTimeout(60, TimeUnit.SECONDS);
         okHttpClient = builder.build();
        /* OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new ConnectivityInterceptor(context))

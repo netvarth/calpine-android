@@ -22,6 +22,7 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
+import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.nv.youneverwait.utils.TypefaceFont;
 
@@ -160,7 +161,7 @@ public class Signup extends AppCompatActivity {
 
         ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
-        String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+        final String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
 
         JSONObject userProfile = new JSONObject();
         JSONObject jsonObj = new JSONObject();
@@ -193,12 +194,29 @@ public class Signup extends AppCompatActivity {
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
 
-                            Toast.makeText(mContext,"Otp has been send to your registered number",Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext,"Otp has been send to  "+mobno,Toast.LENGTH_LONG).show();
                             SharedPreference.getInstance(mContext).setValue("firstName", firstname);
                             SharedPreference.getInstance(mContext).setValue("LastName", lastname);
                             Intent iReg = new Intent(mContext, VerifyOtp.class);
                             startActivity(iReg);
                             finish();
+
+
+                                String cookie = response.headers().get("Set-Cookie");
+
+                                Config.logV("Response--Cookie-------------------------" + cookie);
+                                if (!cookie.isEmpty()) {
+
+                                    String header = response.headers().get("Set-Cookie");
+                                    String Cookie_header = header.substring(0, header.indexOf(";"));
+
+                                    SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
+                                    Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+
+                                }
+
+
+
 
                         }
 

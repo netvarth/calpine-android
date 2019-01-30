@@ -143,7 +143,7 @@ public class Register extends AppCompatActivity {
 
 
         mContext = this;
-
+        SharedPreference.getInstance(mContext).removeKey("PREF_COOKIES");
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             sforceupdate = extras.getString("forceupdate", "");
@@ -339,6 +339,9 @@ public class Register extends AppCompatActivity {
                     if (response.code() == 200) {
                         Config.logV("Response123---------------------------");
 
+
+
+
                         if (response.body().string().equalsIgnoreCase("false")) {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Signup.class);
@@ -425,5 +428,9 @@ public class Register extends AppCompatActivity {
         alertDialog.show();
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreference.getInstance(mContext).removeKey("PREF_COOKIES");
+    }
 }

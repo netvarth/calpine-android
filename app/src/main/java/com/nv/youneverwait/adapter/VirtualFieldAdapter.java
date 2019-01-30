@@ -33,11 +33,13 @@ import java.util.List;
 public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapter.VirtualFieldAdapterViewHolder> {
     private List<SearchVirtualFields> virtualFieldList;
     Context context;
+    int mSizeshown;
 
-
-    public VirtualFieldAdapter(List<SearchVirtualFields> virtualFieldList, Context context) {
+    public VirtualFieldAdapter(List<SearchVirtualFields> virtualFieldList, Context context,int mSizeshown) {
         this.virtualFieldList = virtualFieldList;
         this.context = context;
+        this.mSizeshown=mSizeshown;
+
     }
 
     @Override
@@ -57,9 +59,9 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
 
             String name = t.get("displayName").toString();
 
-            String dataType=null;
-            if(t.containsKey("dataType")) {
-                 dataType = t.get("dataType").toString();
+            String dataType = null;
+            if (t.containsKey("dataType")) {
+                dataType = t.get("dataType").toString();
             }
 
             if (name.equalsIgnoreCase("Gender")) {
@@ -72,7 +74,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
                     "fonts/Montserrat_Bold.otf");
             myViewHolder.tv_head.setTypeface(tyface);
 
-            if(dataType!=null) {
+            if (dataType != null) {
                 if (dataType.equalsIgnoreCase("Enum") || dataType.equalsIgnoreCase("EnumList") || dataType.equalsIgnoreCase("DataGrid")) {
                     myViewHolder.tv_value.setVisibility(View.VISIBLE);
 
@@ -180,7 +182,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
 
                 }
 
-            }else{
+            } else {
                 String value = t.get("value").toString();
                 if (name.equalsIgnoreCase("Gender")) {
                     myViewHolder.tv_value.setVisibility(View.GONE);
@@ -192,10 +194,9 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
 
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 
     }
@@ -203,11 +204,12 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
 
     @Override
     public int getItemCount() {
-        return virtualFieldList.size();
+        return /*virtualFieldList.size();*/
+        mSizeshown;
     }
 
     public class VirtualFieldAdapterViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_head,tv_value;
+        TextView tv_head, tv_value;
 
 
         public VirtualFieldAdapterViewHolder(View view) {

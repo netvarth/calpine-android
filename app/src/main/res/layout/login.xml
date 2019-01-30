@@ -76,7 +76,7 @@
         android:gravity="right"
         android:onClick="ForgotPwd"
         android:textSize="@dimen/txtsize_title_term_small"
-        android:text="Forgot Password ?"
+        android:text="Forgot password ?"
         android:textColor="@color/title_consu" />
 
     <Button
