@@ -1508,7 +1508,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         resultData = response.body();
                         if (resultData != null) {
-                            tv_Moredetails.setVisibility(View.VISIBLE);
+
                             domainVirtual.clear();
                             domainVirtual = response.body().getDomain();
                             sub_domainVirtual.clear();
@@ -1524,11 +1524,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mRecycle_virtualfield.setLayoutManager(mLayoutManager);
                                 int size=domainVirtual.size();
+                                if(size>2){
+                                    tv_Moredetails.setVisibility(View.VISIBLE);
+                                }else{
+                                    tv_Moredetails.setVisibility(View.GONE);
+                                }
                                 if(size==1){
                                     size=1;
                                 }else{
                                     size=2;
                                 }
+
+
                                 mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
                                 mRecycle_virtualfield.setAdapter(mAdapter);
                                 mAdapter.notifyDataSetChanged();
