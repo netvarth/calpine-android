@@ -42,10 +42,6 @@
                 android:gravity="right|center"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/icon_location_blue" />
 
                 <TextView
                     android:id="@+id/txt_toolbarlocation"
@@ -56,7 +52,7 @@
                     android:minHeight="?attr/actionBarSize"
                     android:paddingRight="@dimen/padding3"
                     android:text="Locating..."
-                    android:textColor="@color/title_consu"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/txtsize_12"
                     android:textStyle="bold" />
 

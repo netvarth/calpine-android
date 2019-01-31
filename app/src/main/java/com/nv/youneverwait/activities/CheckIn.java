@@ -20,6 +20,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,15 +29,19 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.adapter.CouponlistAdapter;
 import com.nv.youneverwait.adapter.MultipleFamilyMemberAdapter;
 import com.nv.youneverwait.adapter.PaymentAdapter;
 import com.nv.youneverwait.adapter.QueueTimeSlotAdapter;
+import com.nv.youneverwait.callback.AdapterCallback;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
@@ -47,6 +52,7 @@ import com.nv.youneverwait.payment.PayUMoneyWebview;
 import com.nv.youneverwait.payment.PaymentGateway;
 import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.response.CheckSumModel;
+import com.nv.youneverwait.response.CoupnResponse;
 import com.nv.youneverwait.response.PaymentModel;
 import com.nv.youneverwait.response.QueueTimeSlotModel;
 import com.nv.youneverwait.response.SearchService;
@@ -91,6 +97,13 @@ import retrofit2.Response;
  */
 
 public class CheckIn extends AppCompatActivity {
+
+    private AdapterCallback mAdapterCallback;
+
+    ArrayList<String> couponArraylist = new ArrayList<String>();
+
+
+
     static Context mContext;
     static Activity mActivity;
     Spinner mSpinnerService;
@@ -132,6 +145,18 @@ public class CheckIn extends AppCompatActivity {
     Button btn_checkin;
     static int queueId = 0;
 
+    EditText couponEdit;
+    Button applycouponbtn;
+    ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
+    ArrayList<CoupnResponse> couponCode = new ArrayList<>();
+    ArrayList<CoupnResponse> couponDiscount = new ArrayList<>();
+    String couponEntered;
+    TextView mtermsandCond;
+    TextView mtxtTermsandCondition;
+    TextView mtxtDele;
+    TextView mtermsAndConditionDetail;
+    boolean clickFirst = true;
+
     int selectedService;
 
     static String selectedDateFormat;
@@ -149,10 +174,29 @@ public class CheckIn extends AppCompatActivity {
     static RecyclerView recycle_family;
     static LinearLayout LSinglemember, Lbottomlayout;
 
+    ListView list;
+    private CouponlistAdapter mAdapter;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkin);
+
+        list = (ListView) findViewById(R.id.list);
+
+        mtermsAndConditionDetail = (TextView) findViewById(R.id.termsAndConditionDetail);
+        mtermsandCond = (TextView) findViewById(R.id.termsandCond);
+        mtxtTermsandCondition = (TextView) findViewById(R.id.txtTermsandCondition);
+        mtxtDele = (TextView) findViewById(R.id.txtDele);
+        mtxtTermsandCondition = (TextView) findViewById(R.id.txtTermsandCondition);
+
+        mtxtDele.setVisibility(View.INVISIBLE);
+        mtermsandCond.setVisibility(View.INVISIBLE);
+        mtxtTermsandCondition.setVisibility(View.INVISIBLE);
+
+        couponEdit = (EditText) findViewById(R.id.coupon_edit);
+        applycouponbtn = (Button) findViewById(R.id.applybtn);
 
         mActivity = this;
         recycle_family = (RecyclerView) findViewById(R.id.recycle_family);
@@ -568,15 +612,98 @@ public class CheckIn extends AppCompatActivity {
 
         }
 
+
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment newFragment = new MyDatePickerDialog();
                 newFragment.show(getSupportFragmentManager(), "date picker");
 
+            }
+        });
+
+
+        Bundle extrasnew = getIntent().getExtras();
+        if (extrasnew != null) {
+            uniqueID = extras.getString("uniqueID");
+            ApiJaldeegetS3Coupons(uniqueID);
+        }
+
+        applycouponbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                couponEntered = couponEdit.getEditableText().toString();
+
+                boolean found = false;
+                for (int index = 0; index < couponArraylist.size(); index++) {
+                    if (couponArraylist.get(index).equals(couponEntered)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+
+                    Toast.makeText(CheckIn.this, "Coupon already added", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+                found = false;
+                for (int i = 0; i < s3couponList.size(); i++) {
+                    if (s3couponList.get(i).getJaldeeCouponCode().equals(couponEntered)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+
+                    couponArraylist.add(couponEntered);
+
+                    Toast.makeText(CheckIn.this, couponEntered + "Added", Toast.LENGTH_SHORT).show();
+
+
+                } else {
+                    Toast.makeText(CheckIn.this,   "Coupon Invalid", Toast.LENGTH_SHORT).show();
+
+                }
+                Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+                mAdapter = new CouponlistAdapter(mContext,0,s3couponList,couponEntered,couponArraylist);
+                list.setAdapter((ListAdapter) mAdapter);
+            }
+        });
+
+
+        mtxtDele.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mtermsandCond.setVisibility(View.INVISIBLE);
+                mtxtDele.setVisibility(View.INVISIBLE);
+                mtxtTermsandCondition.setVisibility(View.INVISIBLE);
+                couponEdit.setText("");
+                mtermsAndConditionDetail.setVisibility(View.INVISIBLE);
 
             }
         });
+
+        mtxtTermsandCondition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                mtermsAndConditionDetail.setVisibility(mtermsAndConditionDetail.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+
+
+            }
+        });
+
+
+    }
+
+    public void setCouponList(ArrayList couponArraylistNew)
+
+    {
+        this.couponArraylist = couponArraylistNew;
+        Log.i("cooooooo",couponArraylist.toString());
+
 
     }
 
@@ -1015,7 +1142,7 @@ public class CheckIn extends AppCompatActivity {
 
 
                                     if (h > 0) {
-                                         firstWord = "Next Available Time Today, ";
+                                         firstWord = "Checked in for Today, ";
                                     } else {
                                         firstWord = "Est Wait Time ";
 
@@ -2200,6 +2327,23 @@ public class CheckIn extends AppCompatActivity {
             qjsonObj.put("id", queueId);
             queueobj.put("date", formattedDate);
             queueobj.put("consumerNote", txt_addnote);
+
+
+            JSONArray couponList = new JSONArray();
+
+            for (int i =0;i<couponArraylist.size();i++){
+
+                couponList.put(couponArraylist.get(i));
+
+            }
+
+            Log.i("kooooooo",couponList.toString());
+
+            queueobj.put("coupons", couponList);
+
+
+            Log.i("couponList", couponList.toString());
+
             service.put("id", serviceId);
             if (enableparty) {
                 queueobj.put("partySize", editpartysize.getText().toString());
@@ -2290,6 +2434,7 @@ public class CheckIn extends AppCompatActivity {
                                     }
                                     final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                                     TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+
                                     TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
 
                                     txtprepayment.setText("Prepayment Amount ");
@@ -2422,7 +2567,7 @@ Config.logV("Error String-----------"+errorString);
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
                 // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(new Gson().toJson(checksumModel.getProductinfo()))
+                .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
                 .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
                 .setsUrl(checksumModel.getSuccessUrl())
@@ -2581,7 +2726,54 @@ Config.logV("Error String-----------"+errorString);
             }
         });
 
+    }
 
+
+    private void ApiJaldeegetS3Coupons(String uniqueID) {
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+
+        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+
+        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
+            @Override
+            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+
+                try {
+
+                    Config.logV("Response---------------------------" + response.body().toString());
+                    Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+
+                    if (response.code() == 200) {
+                        s3couponList.clear();
+                        s3couponList = response.body();
+                        Log.i("CouponResponse", s3couponList.toString());
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
     }
 
 }

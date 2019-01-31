@@ -2095,13 +2095,31 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
     }
+//
+//    @Override
+//    public void onMethodCoupn(String uniqueID) {
+//
+//      //  ApiJaldeeCoupan(uniqueID);
+//
+//    }
 
     @Override
     public void onMethodCoupn(String uniqueID) {
+        CouponFragment cfFragment = new CouponFragment();
 
-      //  ApiJaldeeCoupan(uniqueID);
+//        ApiJaldeeCoupan(uniqueID);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("uniqueID", uniqueID);
+        cfFragment.setArguments(bundle);
+
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, cfFragment).commit();
 
     }
+
 
     SearchTerminology mSearchTerminology = new SearchTerminology();
 

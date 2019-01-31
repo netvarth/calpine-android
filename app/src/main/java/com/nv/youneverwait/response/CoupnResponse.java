@@ -11,4 +11,31 @@ public class CoupnResponse {
     }
 
     String jaldeeCouponCode;
+
+
+    public String getCouponDescription() {
+        return couponDescription;
+    }
+
+    String couponDescription;
+
+    public String getConsumerTermsAndconditions() {
+        return consumerTermsAndconditions;
+    }
+
+    String consumerTermsAndconditions;
+
+    public String getDiscountValue() {
+        return discountValue;
+    }
+
+    String discountValue;
+
+
+    public String getCouponName() {
+        return couponName;
+    }
+
+    String couponName;
+
 }

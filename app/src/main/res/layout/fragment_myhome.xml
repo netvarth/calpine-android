@@ -59,10 +59,6 @@
                     android:gravity="right|center"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/icon_location_blue" />
 
                     <TextView
                         android:id="@+id/currentloc"
@@ -72,7 +68,7 @@
                         android:gravity="right|center"
                         android:paddingRight="@dimen/padding3"
 
-                        android:textColor="@color/title_consu"
+                        android:textColor="#ffffff"
                         android:textSize="@dimen/txtsize_12" />
                     <!--     android:text="Locating..."-->
 
@@ -104,7 +100,8 @@
                     android:layout_gravity="center"
                     android:layout_margin="5dp"
                     android:layout_weight="0.4"
-                    android:background="@drawable/gridview_bg"></Spinner>
+                    android:background="@drawable/gridview_bg">
+                </Spinner>
 
 
                 <android.support.v7.widget.SearchView
@@ -132,6 +129,8 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginRight="@dimen/padding5"
                 android:id="@+id/LpopularSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -142,6 +141,7 @@
                 android:visibility="gone">
 
                 <TextView
+                    android:background="#ffffff"
                     android:id="@+id/txt_popular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -150,6 +150,10 @@
                     android:textColor="@color/title_grey" />
 
                 <HorizontalScrollView
+
+
+
+                android:padding="@dimen/padding5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fillViewport="true"
@@ -176,7 +180,9 @@
                             android:layout_marginTop="@dimen/padding5"
                             android:orientation="vertical"
 
-                            android:visibility="gone"></LinearLayout>
+                            android:visibility="gone">
+
+                        </LinearLayout>
 
 
                     </LinearLayout>
@@ -222,6 +228,8 @@
                  android:overScrollMode="never">-->
 
             <LinearLayout
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginRight="@dimen/padding5"
                 android:id="@+id/LActiveCheckin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -231,6 +239,7 @@
                 android:visibility="gone">
 
                 <TextView
+                    android:background="#ffffff"
                     android:id="@+id/txt_activechkin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
