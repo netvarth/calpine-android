@@ -151,7 +151,7 @@ public class Home extends AppCompatActivity {
             }
 
             this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "Press back button twice to exist from the application", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
 
 
 

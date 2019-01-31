@@ -109,7 +109,6 @@
                                         android:drawablePadding="@dimen/default_padding"
                                         android:fontFamily="@font/customfont"
                                         android:gravity="left"
-                                        android:text="Name"
                                         android:textColor="@color/title_grey"
                                         android:textSize="@dimen/txtsize_hint"
                                         android:textStyle="bold" />
@@ -120,7 +119,6 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/padding2"
-                                        android:text="Name"
                                         android:textColor="@color/title_grey"
                                         android:textSize="@dimen/txtsize_hint" />
 

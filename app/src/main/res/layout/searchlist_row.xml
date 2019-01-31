@@ -143,19 +143,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/padding7"
-                        android:paddingRight="@dimen/padding3"
                         android:gravity="top|center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingRight="@dimen/padding3">
 
-                        <TextView
-                            android:id="@+id/txtcommunicate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableTop="@drawable/icon_message_gray"
-                            android:text="Message"
-                            android:textColor="@color/title_grey"
-                            android:textSize="10sp" />
+                        <ImageView
+                            android:id="@+id/ic_jaldeeverifiedIcon"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/jaldee_adv" />
+
+
                         <!-- <ImageView
                              android:id="@+id/txtcommunicate"
                              android:layout_width="wrap_content"
@@ -170,136 +168,121 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/padding5"
-            android:background="@color/view_border" />
 
-        <LinearLayout
-            android:id="@+id/mLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding5"
-            android:orientation="horizontal">
+
+
 
             <LinearLayout
-                android:id="@+id/LJaldeeverifiedIcon"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginRight="@dimen/padding5"
-                android:layout_marginTop="@dimen/padding5"
-                android:layout_weight="0.27"
+                android:layout_marginTop="@dimen/padding7"
                 android:orientation="vertical">
 
-
-                <ImageView
-                    android:id="@+id/ic_jaldeeverifiedIcon"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:src="@drawable/jaldee_adv" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginTop="@dimen/padding5"
-                android:layout_weight="0.7"
-                android:orientation="horizontal">
-
                 <LinearLayout
+                    android:id="@+id/Lspec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="@dimen/padding5"
+                    android:layout_marginLeft="@dimen/padding5"
+                    android:layout_marginRight="@dimen/padding5"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/txtspec1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="Spec1"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="gone"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/txtspec2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/padding2"
+                        android:text="SPEC2"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="gone"
+
+                        />
+                    <TextView
+                        android:id="@+id/txtspec22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/padding2"
+                        android:text="SPEC2"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="gone"
+
+                        />
+                    <TextView
+                        android:id="@+id/txtspec3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="..."
+                        android:layout_marginLeft="@dimen/padding5"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_12"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+
+                        />
+                </LinearLayout>
+
+                <!--<android.support.v7.widget.RecyclerView
+                    android:id="@+id/mRecycleTypes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_border_cyan_bg"
+                    android:visibility="visible"></android.support.v7.widget.RecyclerView>-->
+
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:scrollbars="none">
+
 
                     <LinearLayout
-                        android:id="@+id/Lspec"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/padding5"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:id="@+id/txtspec1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:maxLines="1"
-                            android:text="Spec1"
-                            android:textColor="@color/title_grey"
-                            android:textSize="@dimen/txtsize_12"
-                            android:visibility="gone"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/txtspec2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:maxLines="1"
-                            android:text="SPEC2"
-                            android:paddingLeft="@dimen/padding3"
-                            android:textColor="@color/title_grey"
-                            android:textSize="@dimen/txtsize_12"
-                            android:visibility="gone"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/txtspec3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="..."
-                            android:textColor="@color/title_grey"
-                            android:textSize="@dimen/txtsize_12"
-                            android:textStyle="bold"
-                            android:visibility="gone"
-
-                            />
-                    </LinearLayout>
-
-                    <!--<android.support.v7.widget.RecyclerView
-                        android:id="@+id/mRecycleTypes"
-                        android:layout_width="match_parent"
+                        android:id="@+id/layout_type"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/input_border_cyan_bg"
-                        android:visibility="visible"></android.support.v7.widget.RecyclerView>-->
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="none"
-                        android:fillViewport="true">
-
-                        <LinearLayout
-                            android:id="@+id/layout_type"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:padding="@dimen/padding5"
-                            android:background="@drawable/input_border_cyan_bg"
-                            android:orientation="horizontal"
-                           >
-                        </LinearLayout>
-                    </HorizontalScrollView>
-
-                    <LinearLayout
-                        android:id="@+id/service"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding5"
                         android:gravity="left"
+                        android:layout_marginTop="@dimen/default_padding"
                         android:orientation="horizontal"
-                        android:textColor="@color/title_consu"
-                        android:textSize="@dimen/txtsize_12"
-                        android:visibility="gone"></LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
+                        android:padding="@dimen/padding5"></LinearLayout>
+
+
+                </HorizontalScrollView>
+
+                <LinearLayout
+                    android:id="@+id/service"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_padding"
+                    android:layout_marginLeft="@dimen/padding5"
+                    android:layout_marginRight="@dimen/padding5"
+                    android:gravity="left"
+                    android:orientation="horizontal"
+                    android:textColor="@color/title_consu"
+                    android:textSize="@dimen/txtsize_12"
+                    android:visibility="gone"></LinearLayout>
+
 
 
         </LinearLayout>
@@ -309,7 +292,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/padding7"
+            android:layout_marginTop="@dimen/default_padding"
             android:orientation="horizontal">
 
             <TextView

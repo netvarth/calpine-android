@@ -7,7 +7,7 @@
         android:bottomRightRadius="10dp"
         />
 
-    <solid android:color="@color/app_background_opaque" />
+    <solid android:color="#99ffffff" />
 
 
 </shape>
