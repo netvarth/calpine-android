@@ -163,6 +163,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     static String mlocName;
     ImageView img_arrow;
 
+
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
@@ -246,7 +247,16 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     ImageView ic_refinedFilter;
     static Activity mActivity;
     DatabaseHandler db;
-
+    boolean userIsInteracting=false;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // do something when visible.
+            userIsInteracting=false;
+            Config.logV("Spinner ITEM NOT CLICKED @@@@@@@@@@@@@@@@"+userIsInteracting);
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -264,6 +274,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
         mCurrentLoc = (TextView) row.findViewById(R.id.currentloc);
 
+        Config.logV("OnCreateView-@@@@@@@@@------------------");
 
         ic_refinedFilter = (ImageView) row.findViewById(R.id.ic_refinedFilter);
 
@@ -395,17 +406,28 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-        mSpinnerDomain.setAdapter(adapter);
+       // mSpinnerDomain.setAdapter(adapter);
 
         mSpinnerDomain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
+
+
                 searchSrcTextView.setText("");
                 //  Spinnertext = parent.getSelectedItem().toString();
                 mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
 
                 spinnerTxtPass = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDisplayName();
                 Config.logV("Selected-----------" + spinnerTxtPass);
+
+
+                Config.logV("Spinner ITEM NOT CLICKED $$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+userIsInteracting);
+                if(userIsInteracting){
+                    Config.logV("Spinner ITEM CLICKED $$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                    SpinnerItemCLick();
+                }
+                userIsInteracting=true;
+
 
                 /////////test code///////////////////////////
 
@@ -922,7 +944,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                     search.setDisplayname(response.body().getGlobalSearchLabels().get(k).getDisplayname());
                                     search.setQuery(response.body().getGlobalSearchLabels().get(k).getQuery());
                                     mGLobalSearch.add(search);
-                                    Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
+                                   // Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
                                 }
                             }
 
@@ -1667,6 +1689,62 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
         } else {
             querycreate = "(phrase " + "'" + query + "')";
+        }
+
+        //  Config.logV("Query-----------" + querycreate);
+
+
+        // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
+
+
+        String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+
+        Bundle bundle = new Bundle();
+
+
+      /*  bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
+        bundle.putString("url", pass);*/
+
+        //VALID QUERY PASS
+        bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+        bundle.putString("url", pass);
+        SearchListFragment pfFragment = new SearchListFragment();
+
+        bundle.putString("locName", mCurrentLoc.getText().toString());
+        bundle.putString("latitude", String.valueOf(latitude));
+        bundle.putString("longitude", String.valueOf(longitude));
+        bundle.putString("spinnervalue", spinnerTxtPass);
+        Config.logV("SEARCH TXT 99999" + mSearchtxt);
+        bundle.putString("searchtxt", mSearchtxt);
+        pfFragment.setArguments(bundle);
+
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        searchSrcTextView.clearFocus();
+        mSearchView.clearFocus();
+    }
+
+
+    public void SpinnerItemCLick() {
+
+        mSearchView.setQuery("", false);
+
+        LanLong Lanlong = getLocationNearBy(latitude, longitude);
+        double upperLeftLat = Lanlong.getUpperLeftLat();
+        double upperLeftLon = Lanlong.getUpperLeftLon();
+        double lowerRightLat = Lanlong.getLowerRightLat();
+        double lowerRightLon = Lanlong.getLowerRightLon();
+        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+
+        String querycreate = "";
+        if (!mDomainSpinner.equalsIgnoreCase("All")) {
+            querycreate = "sector :'" + mDomainSpinner + "'";
+        } else {
+            querycreate = " ";
         }
 
         //  Config.logV("Query-----------" + querycreate);

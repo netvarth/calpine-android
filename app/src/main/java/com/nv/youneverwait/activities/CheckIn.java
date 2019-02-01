@@ -103,7 +103,7 @@ public class CheckIn extends AppCompatActivity {
     ArrayList<String> couponArraylist = new ArrayList<String>();
 
 
-
+    static TextView tv_personahead;
     static Context mContext;
     static Activity mActivity;
     Spinner mSpinnerService;
@@ -184,7 +184,7 @@ public class CheckIn extends AppCompatActivity {
         setContentView(R.layout.checkin);
 
         list = (ListView) findViewById(R.id.list);
-
+        tv_personahead= (TextView) findViewById(R.id.txt_personahead);
         mtermsAndConditionDetail = (TextView) findViewById(R.id.termsAndConditionDetail);
         mtermsandCond = (TextView) findViewById(R.id.termsandCond);
         mtxtTermsandCondition = (TextView) findViewById(R.id.txtTermsandCondition);
@@ -1095,6 +1095,20 @@ public class CheckIn extends AppCompatActivity {
                     if (response.code() == 200) {
                         mQueueTimeSlotList = response.body();
                         i = 0;
+                        if(mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")&&String.valueOf(mQueueTimeSlotList.get(0).getQueueSize())!=null) {
+                            tv_personahead.setVisibility(View.VISIBLE);
+                            String firstWord = "Person Ahead ";
+                            String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize());
+
+                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            tv_personahead.setText(spannable);
+
+                        }else {
+                            tv_personahead.setVisibility(View.GONE);
+                        }
                         if (mQueueTimeSlotList.size() > 1) {
                             Lbottomlayout.setVisibility(View.VISIBLE);
                             tv_queuename.setVisibility(View.VISIBLE);

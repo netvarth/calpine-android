@@ -108,4 +108,10 @@ public class QueueTimeSlotModel {
     }
 
     String calculationMode;
+
+    public int getQueueSize() {
+        return queueSize;
+    }
+
+    int queueSize;
 }

@@ -801,24 +801,32 @@ String header;
                 equalsIgnoreCase("done")))
 
         {
-            tv_token.setVisibility(View.VISIBLE);
-            layout_token.setVisibility(View.VISIBLE);
-            String firstWord = "Token # ";
-            String secondWord = String.valueOf(activelist.getToken());
-            Spannable spannable = new SpannableString(firstWord + secondWord);
-            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
-                    0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
-            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if(activelist.getToken()!=-1&&activelist.getToken()>=0) {
+                tv_token.setVisibility(View.VISIBLE);
+                layout_token.setVisibility(View.VISIBLE);
+                String firstWord = "Token # ";
 
-            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            tv_token.setText(spannable);
+                Config.logV("Token------------" + activelist.getToken());
+                String secondWord = String.valueOf(activelist.getToken());
+                Spannable spannable = new SpannableString(firstWord + secondWord);
+                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                        0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                        firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv_token.setText(spannable);
+            }else{
+                tv_token.setVisibility(View.GONE);
+            }
 
 
             if (String.valueOf(activelist.getPartySize()) != null) {
                 if (activelist.getPartySize() > 1) {
+                    layout_token.setVisibility(View.VISIBLE);
                     String partyWord = "Party Size ";
                     String ValueWord = String.valueOf(activelist.getPartySize());
                     Spannable spannable1 = new SpannableString(partyWord + ValueWord);
@@ -853,6 +861,7 @@ String header;
                 equalsIgnoreCase("cancelled")&&!header.equalsIgnoreCase("old"))
 
         {
+            layout_token.setVisibility(View.VISIBLE);
             tv_personahead.setVisibility(View.VISIBLE);
             String firstWord1 = "Persons Ahead ";
             String secondWord1 = String.valueOf(activelist.getPersonsAhead());

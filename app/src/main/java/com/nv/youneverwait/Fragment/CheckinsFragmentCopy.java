@@ -98,7 +98,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         mContext = getActivity();
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
-        Config.logV("CheckIn--------------------------");
 
         Home.doubleBackToExitPressedOnce = false;
 

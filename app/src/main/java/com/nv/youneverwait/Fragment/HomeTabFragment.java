@@ -157,6 +157,7 @@ public class HomeTabFragment extends Fragment {
                 }
                 Log.d("page", "onPageSelected: " + position);
 
+
                 bottomNavigationView.getMenu().getItem(position).setChecked(true);
                 prevMenuItem = bottomNavigationView.getMenu().getItem(position);
 

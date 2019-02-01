@@ -137,6 +137,16 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     TextView tv_More;
     String mPopularSearchtxt;
     ImageView img_arrow;
+     boolean userIsInteracting;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // do something when visible.
+            userIsInteracting=false;
+            Config.logV(" Search List Spinner ITEM NOT CLICKED @@@@@@@@@@@@@@@@"+userIsInteracting);
+        }
+    }
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
@@ -285,11 +295,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         url = pass1;
 
         Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
+
+        Config.logV("SearchList URL POPULAR SEARCH@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         ApiSEARCHAWSLoadFirstData(query, url);
 
 
 
     }
+
 
 
     public static int dpToPx(int dp) {
@@ -306,7 +319,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         // Inflate the layout for this fragment
         View row = inflater.inflate(R.layout.fragment_searchdetail, container, false);
 
-        Config.logV("SELECTED SEARCH LIST---------------------------------");
+        Config.logV(" Search List &&&&&&&&&&&&&&&&");
         mContext = getActivity();
         mInterface = (AdapterCallback) this;
         Bundle bundle = this.getArguments();
@@ -322,7 +335,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
             s_LocName = bundle.getString("locName", "");
         }
-
+        userIsInteracting=false;
 
         Config.logV("LATITUDE--------------------------------" + latitude + ", " + longitude);
 
@@ -449,6 +462,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         //init service and load data
 
+        Config.logV("SearchList URL ONCREATEVIEW@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
         ApiSEARCHAWSLoadFirstData(query, url);
 
 
@@ -462,7 +477,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-        mSpinnerDomain.setAdapter(adapter);
+    //    mSpinnerDomain.setAdapter(adapter);
 
         mSpinnerDomain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -480,6 +495,15 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 boolean FirstRun = SharedPreference.getInstance(mContext).getBoolanValue("ALL_SELECTED", false);
 
+
+
+                if(userIsInteracting){
+                    Config.logV("Spinner ITEM CLICKED $$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                    SpinnerItemClick();
+                }
+                userIsInteracting=true;
+
+
                 if (FirstRun) {
 
                     int pos = getIndex(domainList, spinnerTxt);
@@ -496,7 +520,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     }
                 } else {
 
-                    Config.logV("Selected NOT FIRST RUN-----------------------" + searchTxt);
+                  /*  Config.logV("Selected NOT FIRST RUN-----------------------" + searchTxt);
                     isLastPage = false;
                     isLoading = false;
                     PAGE_START = 0;
@@ -510,7 +534,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     tv_searchresult.setVisibility(View.GONE);
                     mRecySearchDetail.setVisibility(View.GONE);
                     tv_nosearchresult.setText("No search result found for this location");
-                    progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);*/
 
                 }
 
@@ -978,6 +1002,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 url = pass1;
 
                 Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
+
+                Config.logV("SearchList URLSPINNER ITEMCLICK@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
                 ApiSEARCHAWSLoadFirstData(query, url);
 
 
@@ -2012,10 +2039,101 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         url = pass1;
 
         Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
+        Config.logV("SearchList URL QUERYSUBMIT@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
         ApiSEARCHAWSLoadFirstData(query, url);
 
 
     }
+
+
+    public void SpinnerItemClick() {
+
+        //  mSearchView.setQuery("", false);
+        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        double upperLeftLat = Lanlong.getUpperLeftLat();
+        double upperLeftLon = Lanlong.getUpperLeftLon();
+        double lowerRightLat = Lanlong.getLowerRightLat();
+        double lowerRightLon = Lanlong.getLowerRightLon();
+        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+        //  String querycreate = "(phrase " + "'" + query + "')";
+
+        /*String querycreate = null;
+
+        if (!mDomainSpinner.equalsIgnoreCase("All")) {
+
+            for (int i=0;i<mSubDomain.size();i++ ){
+                if(mSubDomain.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())){
+
+                    Config.logV("Query------------" + mSubDomain.get(i).getQuery());
+                    String requiredString = mSubDomain.get(i).getQuery().substring(mSubDomain.get(i).getQuery().indexOf("]") + 1, mSubDomain.get(i).getQuery().indexOf(")"));
+                    Config.logV("Second----@@@@@@-----" + requiredString);
+                    querycreate = requiredString;
+
+                }
+            }
+            Config.logV("Query @@@@@@@@@@-----------" + querycreate);
+        }else{
+            for (int i=0;i<mGLobalSearch.size();i++ ){
+                if(mGLobalSearch.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())){
+                    Config.logV("Query-ALL-----------" + mGLobalSearch.get(i).getQuery());
+                    String requiredString = mGLobalSearch.get(i).getQuery().substring(mGLobalSearch.get(i).getQuery().indexOf("]") + 1, mGLobalSearch.get(i).getQuery().indexOf(")"));
+                    Config.logV("Second---All-@@@@@@-----" + requiredString);
+                    querycreate = requiredString;
+                }
+            }
+            Config.logV("Query  ALL @@@@@@@@@@-----------" + querycreate);
+        }*/
+
+
+        /*if (querycreate==null) {
+            if (!mDomainSpinner.equalsIgnoreCase("All")) {
+                querycreate = "(phrase " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
+            } else {
+                querycreate = "(phrase " + "'" + querypass + "')";
+            }
+        }*/
+
+        String querycreate = "";
+        if (!mDomainSpinner.equalsIgnoreCase("All")) {
+            querycreate = "sector :'" + mDomainSpinner + "'";
+        } else {
+            querycreate = " ";
+        }
+
+
+        isLastPage = false;
+        isLoading = false;
+        PAGE_START = 0;
+        total_foundcount = 0;
+        TOTAL_PAGES = 0;
+        currentPage = PAGE_START;
+        pageadapter.clear();
+
+
+        Config.logV("Query-----------" + querycreate);
+
+     /*   final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
+
+        final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";*/
+
+
+        final String query1 = "(and location1:" + locationRange + querycreate + ")";
+
+        final String pass1 = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+
+        query = query1;
+        url = pass1;
+
+        Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
+        Config.logV("SearchList URL ITEM CLICK SPINNER 222@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+        ApiSEARCHAWSLoadFirstData(query, url);
+
+
+    }
+
+
 
     public static boolean UpdateLocationSearch(String mlatitude, String mlongitude, String locNme) {
         Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude);
@@ -2284,7 +2402,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     search.setDisplayname(response.body().getGlobalSearchLabels().get(k).getDisplayname());
                                     search.setQuery(response.body().getGlobalSearchLabels().get(k).getQuery());
                                     mGLobalSearch.add(search);
-                                    Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
+                                   // Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
                                 }
                             }
 

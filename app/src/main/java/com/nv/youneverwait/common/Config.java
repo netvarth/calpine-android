@@ -200,9 +200,9 @@ public class Config {
                     }else{
                        // Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();
                         Config.logV("App@@@ ForeBackGround fail");
-                        Intent iReg = new Intent(context, Home.class);
+                       /* Intent iReg = new Intent(context, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        context.startActivity(iReg);
+                        context.startActivity(iReg);*/
                     }
 
 

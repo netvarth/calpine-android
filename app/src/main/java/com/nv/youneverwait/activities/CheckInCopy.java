@@ -208,6 +208,7 @@ public class CheckInCopy extends AppCompatActivity {
 
 
     }
+    static TextView tv_personahead;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,7 +220,7 @@ public class CheckInCopy extends AppCompatActivity {
         //  Lpayment = (LinearLayout) findViewById(R.id.Lpayment);
         queuelayout = (LinearLayout) findViewById(R.id.queuelayout);
         txt_chooseservice = (TextView) findViewById(R.id.txt_chooseservice);
-
+        tv_personahead= (TextView) findViewById(R.id.txt_personahead);
 
         tv_amount = (TextView) findViewById(R.id.txtamount);
         tv_name = (TextView) findViewById(R.id.txtname);
@@ -745,10 +746,12 @@ public class CheckInCopy extends AppCompatActivity {
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-                    Config.logV("mQueueTimeSlotList--------11111-----------------" + response.code());
+                    Config.logV("mQueueTimeSlotList--------PPPPPPPPPPP--------------" + response.code());
+                    Config.logV("Person Ahead----@@@@@@@@@@@@@---------");
                     if (response.code() == 200) {
                         mQueueTimeSlotList = response.body();
                         i = 0;
+                        Config.logV("Person Ahead----@@@@@@@@@@@@@---------"+response.body().get(0).getQueueSize());
                         if (mQueueTimeSlotList.size() > 0) {
 
                             tv_queuename.setVisibility(View.VISIBLE);
@@ -761,6 +764,21 @@ public class CheckInCopy extends AppCompatActivity {
                             Config.logV("mQueueTimeSlotList-------------------------" + mQueueTimeSlotList.size());
                             tv_queue.setVisibility(View.VISIBLE);
                             queuelayout.setVisibility(View.VISIBLE);
+                            Config.logV("Person Ahead-------------"+mQueueTimeSlotList.get(0).getQueueSize());
+                            if(mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")&&String.valueOf(mQueueTimeSlotList.get(0).getQueueSize())!=null) {
+                                tv_personahead.setVisibility(View.VISIBLE);
+                                String firstWord = "Person Ahead";
+                                String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize());
+
+                                Spannable spannable = new SpannableString(firstWord + secondWord);
+                                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                        "fonts/Montserrat_Bold.otf");
+                                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                tv_personahead.setText(spannable);
+
+                            }else {
+                                tv_personahead.setVisibility(View.GONE);
+                            }
 
 
                             tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
@@ -808,7 +826,21 @@ public class CheckInCopy extends AppCompatActivity {
 
                         } else {
 
+                            Config.logV("Person Ahead---------------@@@@");
+                            if(mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")&&String.valueOf(mQueueTimeSlotList.get(0).getQueueSize())!=null) {
+                                tv_personahead.setVisibility(View.VISIBLE);
+                                String firstWord = "Person Ahead";
+                                String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize());
 
+                                Spannable spannable = new SpannableString(firstWord + secondWord);
+                                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                        "fonts/Montserrat_Bold.otf");
+                                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                tv_personahead.setText(spannable);
+
+                            }else {
+                                tv_personahead.setVisibility(View.GONE);
+                            }
                             tv_queue.setVisibility(View.GONE);
                             queuelayout.setVisibility(View.GONE);
                             tv_queuename.setVisibility(View.GONE);
