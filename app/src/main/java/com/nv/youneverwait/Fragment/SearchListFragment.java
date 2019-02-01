@@ -129,14 +129,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     String s_LocName;
     TextView tv_nosearchresult,tv_searchresult;
     LinearLayout Lnosearchresult;
-    ArrayList<SearchModel> mPopularSearchList = new ArrayList<>();
-    ArrayList<SearchModel> mPopular_SubSearchList = new ArrayList<>();
-    ArrayList<SearchModel> mPopular_AllSearchList = new ArrayList<>();
-    LinearLayout LpopularSearch, LinearPopularSearch, LinearMorePopularSearch, LMore;
-    boolean is_MoreClick = false;
-    TextView tv_More;
-    String mPopularSearchtxt;
-    ImageView img_arrow;
      boolean userIsInteracting;
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -147,161 +139,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             Config.logV(" Search List Spinner ITEM NOT CLICKED @@@@@@@@@@@@@@@@"+userIsInteracting);
         }
     }
-    public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
-        if (mPopularSearchList.size() > 0) {
 
-            is_MoreClick = false;
-            LpopularSearch.setVisibility(View.VISIBLE);
-            LinearPopularSearch.setVisibility(View.VISIBLE);
-            LinearMorePopularSearch.setVisibility(View.GONE);
-            LinearPopularSearch.removeAllViews();
-            if (mPopularSearchList.size() > 6) {
-                tv_More.setVisibility(View.VISIBLE);
-                LMore.setVisibility(View.VISIBLE);
-            } else {
-                tv_More.setVisibility(View.GONE);
-                LMore.setVisibility(View.GONE);
-            }
-
-            int k = 0;
-            int rowsize = 0;
-
-            if (mPopularSearchList.size() > 3) {
-                rowsize = 2;
-            } else {
-                rowsize = 1;
-            }
-            for (int i = 0; i < rowsize; i++) {
-                LinearLayout parent1 = new LinearLayout(mContext);
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                parent1.setOrientation(LinearLayout.HORIZONTAL);
-                parent1.setLayoutParams(params);
-
-                for (int j = 0; j < 3; j++) {
-                    if (k >= mPopularSearchList.size()) {
-                        break;
-                    } else {
-                        TextView dynaText = new TextView(mContext);
-                        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Regular.otf");
-                        dynaText.setTypeface(tyface);
-                        dynaText.setText(mPopularSearchList.get(k).getDisplayname());
-                        dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
-                        dynaText.setTextSize(12);
-                        dynaText.setTextColor(getResources().getColor(R.color.black));
-                        dynaText.setPadding(15, 10, 15, 10);
-                        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                        dynaText.setMaxLines(1);
-                        // dynaText.setMaxEms(8);
-                        dynaText.setWidth(dpToPx(130));
-                        dynaText.setGravity(Gravity.CENTER);
-
-                        params.setMargins(12, 10, 12, 0);
-                        dynaText.setLayoutParams(params);
-
-
-                        //   dynaText.setTag("" + i);
-                        final int finalK = k;
-                        dynaText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-
-                                mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
-                                Config.logV("Popular Text__________@@@____" + mPopularSearchtxt);
-                                FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName(),mPopularSearchList.get(finalK).getDisplayname());
-                            }
-                        });
-                        parent1.addView(dynaText);
-                        k++;
-                    }
-
-                }
-                LinearPopularSearch.addView(parent1);
-            }
-
-        }
-    }
-
-    public void FunPopularSearch(String sector, String category, String name,String displayname) {
-
-
-
-        //////////////////
-        String mSector;
-        LanLong Lanlong =  getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
-        double upperLeftLat = Lanlong.getUpperLeftLat();
-        double upperLeftLon = Lanlong.getUpperLeftLon();
-        double lowerRightLat = Lanlong.getLowerRightLat();
-        double lowerRightLon = Lanlong.getLowerRightLon();
-        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
-        String sub = "";
-        String querycreate = "";
-        mSector = sector;
-        Config.logV("Sector--------------" + mSector);
-
-        if (category.equalsIgnoreCase("Specializations")) {
-            sub = "specialization:" + "'" + name + "'";
-            querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
-        }
-        if (category.equalsIgnoreCase("Sub Domain")) {
-
-            sub = "sub_sector:" + "'" + name + "'";
-            querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
-        }
-
-        if (category.equalsIgnoreCase("Suggested Search")) {
-
-            String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf(")"));
-            Config.logV("Second---------" + requiredString);
-            querycreate = requiredString;
-        }
-
-        if (category.equalsIgnoreCase("Business Name as")) {
-
-
-            if (mSector.equalsIgnoreCase("All")) {
-                querycreate = "title:" + "'" + name + "'";
-            } else {
-                sub = "title:" + "'" + name + "'";
-                querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
-            }
-        }
-
-
-        isLastPage = false;
-        isLoading = false;
-        PAGE_START = 0;
-        total_foundcount = 0;
-        TOTAL_PAGES = 0;
-        currentPage = PAGE_START;
-
-
-      //  searchTxt = cell.getMdisplayname();
-        searchTxt=displayname;
-        mSearchView.setQuery(searchTxt, false);
-        pageadapter.clear();
-        Config.logV("Query-----------" + querycreate);
-
-        // final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
-
-        final String query1 = "(and location1:" + locationRange + querycreate + ")";
-        //  final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
-        final String pass1 = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
-
-        query = query1;
-        url = pass1;
-
-        Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
-
-        Config.logV("SearchList URL POPULAR SEARCH@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        ApiSEARCHAWSLoadFirstData(query, url);
-
-
-
-    }
 
 
 
@@ -312,7 +150,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         return Math.round((float) dp * density);
     }
 
-    TextView tv_popular;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -345,16 +183,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         total_foundcount = 0;
         TOTAL_PAGES = 0;
         currentPage = PAGE_START;
-        img_arrow = (ImageView) row.findViewById(R.id.img_arrow);
-        tv_popular = (TextView) row.findViewById(R.id.txt_popular);
+
+
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        tv_popular.setTypeface(tyface);
-        LMore = (LinearLayout) row.findViewById(R.id.LMore);
-        LpopularSearch = (LinearLayout) row.findViewById(R.id.LpopularSearch);
-        LinearPopularSearch = (LinearLayout) row.findViewById(R.id.LinearPopularSearch);
-        LinearMorePopularSearch = (LinearLayout) row.findViewById(R.id.LinearMorePopularSearch);
-        tv_More = (TextView) row.findViewById(R.id.txtMore);
+
+
 
 
         ibackpress = (ImageView) row.findViewById(R.id.backpress);
@@ -486,9 +320,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 //tv_searchresult.setVisibility(View.GONE);
                 mDomainSpinner = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDomain();
 
-                is_MoreClick=false;
-                img_arrow.setImageResource(R.drawable.icon_down_arrow_blue);
-                tv_More.setText("More");
                 spinnerTxt = ((Domain_Spinner) mSpinnerDomain.getSelectedItem()).getDisplayName();
                 Config.logV("Selected---423333333333--------" + mDomainSpinner);
 
@@ -538,137 +369,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 }
 
-                //Popular Search
-
-                mPopularSearchList.clear();
-                if (mDomainSpinner.equalsIgnoreCase("All")) {
-                    mPopular_AllSearchList.addAll(mGLobalSearch);
-                    mPopularSearchList = mPopular_AllSearchList;
-                    funPopulateSearchList(mPopularSearchList);
-
-                } else {
-                    mPopular_SubSearchList.clear();
-                    for (int i = 0; i < mSubDomain.size(); i++) {
-
-                        if (mSubDomain.get(i).getSector().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
-
-
-                            SearchModel search = new SearchModel();
-                            search.setName(mSubDomain.get(i).getName());
-                            search.setQuery(mSubDomain.get(i).getQuery());
-                            search.setSector(mSubDomain.get(i).getSector());
-                            search.setDisplayname(mSubDomain.get(i).getDisplayname());
-
-                            mPopular_SubSearchList.add(search);
-
-                        }
-
-                    }
-
-                    mPopularSearchList = mPopular_SubSearchList;
-                    funPopulateSearchList(mPopularSearchList);
-
-                }
-
-
-                LMore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-
-                        if (mPopularSearchList.size() > 0) {
-
-                            if (is_MoreClick) {
-                                is_MoreClick = false;
-                                LpopularSearch.setVisibility(View.VISIBLE);
-                                LinearPopularSearch.setVisibility(View.VISIBLE);
-                                LinearMorePopularSearch.setVisibility(View.GONE);
-                                tv_More.setVisibility(View.VISIBLE);
-                                LMore.setVisibility(View.VISIBLE);
-                                img_arrow.setImageResource(R.drawable.icon_down_arrow_blue);
-                                tv_More.setText("More");
-                            } else {
-                                is_MoreClick = true;
-                                tv_More.setText("Less");
-                                img_arrow.setImageResource(R.drawable.icon_up_arrow_blue);
-                                tv_More.setVisibility(View.VISIBLE);
-                                LMore.setVisibility(View.VISIBLE);
-                                LpopularSearch.setVisibility(View.VISIBLE);
-                                LinearPopularSearch.setVisibility(View.GONE);
-                                LinearMorePopularSearch.setVisibility(View.VISIBLE);
-                                LinearMorePopularSearch.removeAllViews();
-
-                                int k = 0;
-                                int add_row = 0;
-                                int rem = mPopularSearchList.size() % 3;
-                                if (rem == 0) {
-
-                                    add_row = 0;
-
-                                } else {
-
-                                    add_row = 1;
-                                }
-                                for (int i = 0; i < (mPopularSearchList.size() / 3) + add_row; i++) {
-                                    LinearLayout parent = new LinearLayout(mContext);
-
-                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                    //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                                    parent.setOrientation(LinearLayout.HORIZONTAL);
-                                    parent.setLayoutParams(params);
-
-
-                                    for (int j = 0; j < 3; j++) {
-
-                                        if (k >= mPopularSearchList.size()) {
-                                            break;
-                                        } else {
-
-
-                                            TextView dynaText = new TextView(mContext);
-                                            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                                    "fonts/Montserrat_Regular.otf");
-                                            dynaText.setTypeface(tyface);
-                                            dynaText.setText(mPopularSearchList.get(k).getDisplayname());
-                                            dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
-                                            dynaText.setTextSize(12);
-                                            dynaText.setTextColor(getResources().getColor(R.color.black));
-                                            dynaText.setPadding(15, 10, 15, 10);
-                                            // dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                            dynaText.setMaxLines(1);
-                                            //dynaText.setMaxEms(8);
-                                            dynaText.setGravity(Gravity.CENTER);
-                                            dynaText.setWidth(dpToPx(130));
-
-                                            params.setMargins(12, 10, 12, 0);
-                                            dynaText.setLayoutParams(params);
-
-                                            //   dynaText.setTag("" + i);
-                                            final int finalK = k;
-                                            dynaText.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-
-                                                    mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
-                                                    Config.logV("Popular Text______________" + mPopularSearchtxt);
-                                                    FunPopularSearch(mPopularSearchList.get(finalK).getQuery(), "Suggested Search", mPopularSearchList.get(finalK).getName(),mPopularSearchList.get(finalK).getDisplayname());
-
-
-                                                }
-                                            });
-                                            parent.addView(dynaText);
-
-                                            k++;
-                                        }
-
-                                    }
-                                    LinearMorePopularSearch.addView(parent);
-                                }
-                            }
-
-                        }
-                    }
-                });
 
 
                 if (mDomainSpinner.equalsIgnoreCase("ALL")) {
