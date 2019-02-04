@@ -127,13 +127,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     SearchLocationAdpterCallback mInterface;
     LocationCheckinCallback callback;
     String location;
-    ImageView ic_fav;
+    TextView tv_fav;
 
     boolean flag_more = false;
-    ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link;
+    ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link,ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
-    TextView tv_spec1, tv_spec2, tv_seeAll;
+    TextView tv_spec1, tv_spec2, tv_seeAll,tv_contact;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -151,6 +151,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_Gallery = (TextView) row.findViewById(R.id.txtGallery);
         tv_SocialMedia = (TextView) row.findViewById(R.id.txtSocialMedia);
         txtMore = (TextView) row.findViewById(R.id.txtMore);
+        tv_contact= (TextView) row.findViewById(R.id.txtcontact);
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
@@ -196,7 +197,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mImgthumbProfile2 = (ImageView) row.findViewById(R.id.iThumb_profile2);
         tv_ImageViewText = (TextView) row.findViewById(R.id.mImageViewText);
         mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
-        ic_fav = (ImageView) row.findViewById(R.id.txtfav);
+        tv_fav = (TextView) row.findViewById(R.id.txtfav);
         tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
 
 
@@ -213,6 +214,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ic_link = (ImageView) row.findViewById(R.id.ic_link);
         ic_twitt = (ImageView) row.findViewById(R.id.ic_twitt);
         ic_yout = (ImageView) row.findViewById(R.id.ic_yout);
+        ic_jaldeeverifiedIcon = (ImageView) row.findViewById(R.id.ic_jaldeeverifiedIcon);
 
 
         //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
@@ -841,14 +843,34 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         if (getBussinessData.getPhoneNumbers().size() > 0 || getBussinessData.getEmails().size() > 0 && contactDetail.size() > 0) {
 
-            mrecycle_contactdetail.setVisibility(View.VISIBLE);
-            tv_contactdetails.setVisibility(View.VISIBLE);
-          //  tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue_hidden, 0);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-            mrecycle_contactdetail.setLayoutManager(mLayoutManager);
-            ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity());
-            mrecycle_contactdetail.setAdapter(checkAdapter);
-            checkAdapter.notifyDataSetChanged();
+            tv_contact.setVisibility(View.VISIBLE);
+            tv_contact.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isContact) {
+                        Config.logV("Open");
+                        isContact = true;
+                        tv_contact.setText("Hide Contact");
+                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_selected,0,0);
+                        mrecycle_contactdetail.setVisibility(View.VISIBLE);
+                        tv_contactdetails.setVisibility(View.VISIBLE);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                        mrecycle_contactdetail.setLayoutManager(mLayoutManager);
+                        ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity());
+                        mrecycle_contactdetail.setAdapter(checkAdapter);
+                        checkAdapter.notifyDataSetChanged();
+                    } else {
+                        Config.logV("CLosed");
+                        isContact = false;
+                        tv_contact.setText("Show Contact");
+                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_contact,0,0);
+                        tv_contactdetails.setVisibility(View.GONE);
+                        mrecycle_contactdetail.setVisibility(View.GONE);
+                    }
+                }
+            });
+
+
 
             /*tv_contactdetails.setVisibility(View.VISIBLE);
             tv_contactdetails.setOnClickListener(new View.OnClickListener() {
@@ -877,19 +899,29 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         } else {
             tv_contactdetails.setVisibility(View.GONE);
             mrecycle_contactdetail.setVisibility(View.GONE);
+            tv_contact.setVisibility(View.GONE);
         }
 
         if (getBussinessData.getVerifyLevel() != null) {
             if (!getBussinessData.getVerifyLevel().equalsIgnoreCase("NONE")) {
-                tv_busName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_verified, 0);
+                ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
+                if (getBussinessData.getVerifyLevel().equalsIgnoreCase("BASIC_PLUS")) {
+                    ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basicplus);
+                }
+                if (getBussinessData.getVerifyLevel().equalsIgnoreCase("BASIC")) {
+                    ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
+                }
+                if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM")) {
+                    ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_adv);
+                }
 
             } else {
 
-                tv_busName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                ic_jaldeeverifiedIcon.setVisibility(View.GONE);
             }
 
         } else {
-            tv_busName.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            ic_jaldeeverifiedIcon.setVisibility(View.GONE);
         }
 
 
@@ -1768,7 +1800,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                 try {
 
-                    ic_fav.setImageResource(R.drawable.icon_favourite_line);
+                    tv_fav.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.icon_favourite_line,0,0);
+                    tv_fav.setText("Add to Fav");
                     Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
@@ -1783,14 +1816,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             if (mFavList.get(i).getId() == mBusinessDataList.getId()) {
 
                                 favFlag = true;
-                                ic_fav.setVisibility(View.VISIBLE);
-                                ic_fav.setImageResource(R.drawable.icon_favourited);
-
+                                tv_fav.setVisibility(View.VISIBLE);
+                                tv_fav.setText("Remove from Fav");
+                                tv_fav.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.icon_favourited,0,0);
 
                             }
                         }
 
-                        ic_fav.setOnClickListener(new View.OnClickListener() {
+                        tv_fav.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (favFlag) {

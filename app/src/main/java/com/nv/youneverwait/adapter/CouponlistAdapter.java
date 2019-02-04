@@ -3,34 +3,36 @@ package com.nv.youneverwait.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.CheckIn;
 import com.nv.youneverwait.common.Config;
+import com.nv.youneverwait.response.ActiveCheckIn;
 import com.nv.youneverwait.response.CoupnResponse;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 
-public class CouponlistAdapter extends ArrayAdapter<CoupnResponse> {
+public class CouponlistAdapter extends RecyclerView.Adapter<CouponlistAdapter.MyViewHolder> {
     Context mContext;
     ArrayList<CoupnResponse> m3couponList;
     String mcouponEntered;
     ArrayList<String> mcouponArraylist;
 
 
-    public CouponlistAdapter(@NonNull Context Context, int resource, ArrayList<CoupnResponse> s3couponList, String couponEntered, ArrayList<String> couponArraylist) {
-        super(Context, resource, s3couponList);
-
+    public CouponlistAdapter( Context Context, ArrayList<CoupnResponse> s3couponList, String couponEntered, ArrayList<String> couponArraylist) {
 
         this.mContext = Context;
         this.m3couponList = s3couponList;
@@ -39,65 +41,46 @@ public class CouponlistAdapter extends ArrayAdapter<CoupnResponse> {
 
 
     }
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView mcouponCode;
+        ImageView delete;
 
-
+        public MyViewHolder(View view) {
+            super(view);
+             mcouponCode = (TextView) view.findViewById(R.id.name);
+             delete = (ImageView) view.findViewById(R.id.deletecoupon);
+        }
+    }
     @Override
-    public int getCount()
-    {
-        return mcouponArraylist.size();
+    public CouponlistAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.coupon_list_row, parent, false);
+
+        return new CouponlistAdapter.MyViewHolder(itemView);
     }
 
     @Override
-    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public void onBindViewHolder(CouponlistAdapter.MyViewHolder myViewHolder, final int position) {
+        final String  coupan = mcouponArraylist.get(position);
 
+        Config.logV("Coupan NAme-------------------" + mcouponArraylist.get(position));
+        myViewHolder.mcouponCode.setText(coupan);
 
-        View listItem = convertView;
-        if(listItem == null)
-            listItem = LayoutInflater.from(this.getContext()).inflate(R.layout.coupon_list_row,parent,false);
-
-        Log.i("position",String.valueOf(position));
-        Log.i("coupoooon",mcouponArraylist.get(position).toString());
-
-
-        final TextView mcouponCode = (TextView) listItem.findViewById(R.id.name);
-        mcouponCode.setText(mcouponArraylist.get(position));
-
-        ImageView delete = (ImageView) listItem.findViewById(R.id.deletecoupon);
-
-
-
-        delete.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View v) {
                 mcouponArraylist.remove(position);
                 notifyDataSetChanged();
 
                 CheckIn checkIn = new CheckIn();
                 checkIn.setCouponList(mcouponArraylist);
-
             }
         });
 
-
-
-
-
-//        TextView mcouponDesc = (TextView) listItem.findViewById(R.id.type);
-//        mcouponDesc.setText(coupnResponse.getCouponDescription());
-
-//        TextView mcouponTerms = (TextView) listItem.findViewById(R.id.couponTerms);
-//        mcouponTerms.setText(coupnResponse.getConsumerTermsAndconditions());
-
-//        TextView mcouponDisc = (TextView) listItem.findViewById(R.id.couponDisc);
-//        mcouponDisc.setText(coupnResponse.getDiscountValue());
-
-//        TextView mcouponName = (TextView) listItem.findViewById(R.id.couponName);
-//        mcouponName.setText(coupnResponse.getCouponName());
-
-
-        return listItem;
-
+    }
+    @Override
+    public int getItemCount() {
+        return mcouponArraylist.size();
     }
 
 

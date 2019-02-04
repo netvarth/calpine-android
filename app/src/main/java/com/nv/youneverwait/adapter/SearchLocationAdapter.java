@@ -53,18 +53,19 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     private List<SearchLocation> mSearchLocationList;
     static Context mContext;
     ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
-    String txtdataMon="",txtdataTue="",txtdataWed="",txtdataThu="",txtdataFri="",txtdataSat="",txtdataSun="";
+    String txtdataMon = "", txtdataTue = "", txtdataWed = "", txtdataThu = "", txtdataFri = "", txtdataSat = "", txtdataSun = "";
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate;
         Button btn_checkin;
-        LinearLayout mLSeriveLayout, mLayouthide, LexpandCheckin, Ldirectionlayout,LService_2,LWorkinHrs;
+        LinearLayout mLSeriveLayout, mLayouthide, LexpandCheckin, Ldirectionlayout, LService_2, LWorkinHrs;
         ImageView img_arrow;
         RecyclerView recycle_parking;
         RelativeLayout layout_exapnd;
         TextView txtdirection, tv_checkin;
         Button btn_checkin_expand;
         TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices;
-        TextView txtservice1,txtservice2,txtSeeAll,txtwork1,txtwork2,txtworkSeeAll,txtworking;
+        TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
 
         public MyViewHolder(View view) {
             super(view);
@@ -96,10 +97,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txtSeeAll = (TextView) view.findViewById(R.id.txtSeeAll);
 
             txtwork1 = (TextView) view.findViewById(R.id.txtwork1);
-            txtwork2 = (TextView) view.findViewById(R.id.txtwork2);
+            //   txtwork2 = (TextView) view.findViewById(R.id.txtwork2);
             txtworkSeeAll = (TextView) view.findViewById(R.id.txtworkSeeAll);
             LWorkinHrs = (LinearLayout) view.findViewById(R.id.LWorkinHrs);
-            txtworking= (TextView) view.findViewById(R.id.txtworking);
+            txtworking = (TextView) view.findViewById(R.id.txtworking);
         }
     }
 
@@ -313,11 +314,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             myViewHolder.txtlocation_amentites.setVisibility(View.VISIBLE);
             myViewHolder.recycle_parking.setVisibility(View.VISIBLE);
 
-            int size=listType.size();
-            if(size==1){
-                size=1;
-            }else{
-                size=2;
+            int size = listType.size();
+            if (size == 1) {
+                size = 1;
+            } else {
+                size = 2;
             }
             ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext, size);
             LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
@@ -342,11 +343,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     searchLoclist.setLocationAmentOpen(true);
 
                 } else {
-                    int size=listType.size();
-                    if(size==1){
-                        size=1;
-                    }else{
-                        size=2;
+                    int size = listType.size();
+                    if (size == 1) {
+                        size = 1;
+                    } else {
+                        size = 2;
                     }
                     ParkingTypesAdapter mParkTypeAdapter = new ParkingTypesAdapter(listType, mContext, size);
                     LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
@@ -523,11 +524,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         });*/
 
 
-
-
-
         if (searchLoclist.getbSchedule() != null) {
             workingModelArrayList.clear();
+            txtdataMon = "";
+            txtdataTue = "";
+            txtdataWed = "";
+            txtdataThu = "";
+            txtdataFri = "";
+            txtdataSat = "";
+            txtdataSun = "";
             if (searchLoclist.getbSchedule().getTimespec().size() > 0) {
                 myViewHolder.txtworking.setVisibility(View.VISIBLE);
                 myViewHolder.LWorkinHrs.setVisibility(View.VISIBLE);
@@ -589,63 +594,174 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                 }
 
-                for(int i=0;i<workingModelArrayList.size();i++){
-                    if(workingModelArrayList.get(i).getDay().equalsIgnoreCase("Monday")){
-                        if(workingModelArrayList.get(i).getTime_value()!=null) {
-                            if(txtdataMon.equalsIgnoreCase("")) {
+
+                for (int i = 0; i < workingModelArrayList.size(); i++) {
+                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Monday")) {
+                        if (workingModelArrayList.get(i).getTime_value() != null) {
+                            if (txtdataMon.equalsIgnoreCase("")) {
                                 txtdataMon += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
-                            }else{
-                                txtdataMon += "\n"+workingModelArrayList.get(i).getTime_value();
+                            } else {
+                                txtdataMon += "\n" + workingModelArrayList.get(i).getTime_value();
                             }
                         }
                     }
-                    if(workingModelArrayList.get(i).getDay().equalsIgnoreCase("Tuesday")){
-                        if(workingModelArrayList.get(i).getTime_value()!=null)
+                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Tuesday")) {
+                        if (workingModelArrayList.get(i).getTime_value() != null) {
 
-                        if(txtdataTue.equalsIgnoreCase("")) {
-                            txtdataTue += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
-                        }else{
-                            txtdataTue += "\n"+workingModelArrayList.get(i).getTime_value();
+                            if (txtdataTue.equalsIgnoreCase("")) {
+                                txtdataTue += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                            } else {
+                                txtdataTue += "\n" + workingModelArrayList.get(i).getTime_value();
+                            }
                         }
                     }
-                    if(workingModelArrayList.get(i).getDay().equalsIgnoreCase("Wednesday")){
-                        if(workingModelArrayList.get(i).getTime_value()!=null)
-                            txtdataWed+=workingModelArrayList.get(i).getTime_value()+"\n";
+                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Wednesday")) {
+                        if (workingModelArrayList.get(i).getTime_value() != null) {
+                            if (txtdataWed.equalsIgnoreCase("")) {
+                                txtdataWed += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                            } else {
+                                txtdataWed += "\n" + workingModelArrayList.get(i).getTime_value();
+                            }
+                        }
+                        // txtdataWed += workingModelArrayList.get(i).getTime_value() + "\n";
                     }
-                    if(workingModelArrayList.get(i).getDay().equalsIgnoreCase("Thursday")){
-                        if(workingModelArrayList.get(i).getTime_value()!=null)
-                            txtdataThu+=workingModelArrayList.get(i).getTime_value()+"\n";
+                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Thursday")) {
+                        if (workingModelArrayList.get(i).getTime_value() != null) {
+                            if (txtdataThu.equalsIgnoreCase("")) {
+                                txtdataThu += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                            } else {
+                                txtdataThu += "\n" + workingModelArrayList.get(i).getTime_value();
+                            }
+                        }
+                        // txtdataThu += workingModelArrayList.get(i).getTime_value() + "\n";
                     }
-                    if(workingModelArrayList.get(i).getDay().equalsIgnoreCase("Friday")){
-                        if(workingModelArrayList.get(i).getTime_value()!=null)
-                            txtdataFri+=workingModelArrayList.get(i).getTime_value()+"\n";
+                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Friday")) {
+                        if (workingModelArrayList.get(i).getTime_value() != null) {
+                            if (txtdataFri.equalsIgnoreCase("")) {
+                                txtdataFri += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                            } else {
+                                txtdataFri += "\n" + workingModelArrayList.get(i).getTime_value();
+                            }
+                        }
+                        //txtdataFri += workingModelArrayList.get(i).getTime_value() + "\n";
                     }
-                    if(workingModelArrayList.get(i).getDay().equalsIgnoreCase("Saturday")){
-                        if(workingModelArrayList.get(i).getTime_value()!=null)
-                            txtdataSat+=workingModelArrayList.get(i).getTime_value()+"\n";
-                    }
-                    if(workingModelArrayList.get(i).getDay().equalsIgnoreCase("Sunday")){
-                        if(workingModelArrayList.get(i).getTime_value()!=null)
-                            txtdataSun+=workingModelArrayList.get(i).getTime_value()+"\n";
+                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Saturday")) {
+                        if (workingModelArrayList.get(i).getTime_value() != null) {
+                            if (txtdataSat.equalsIgnoreCase("")) {
+                                txtdataSat += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                            } else {
+                                txtdataSat += "\n" + workingModelArrayList.get(i).getTime_value();
+                            }
+                            // txtdataSat += workingModelArrayList.get(i).getTime_value() + "\n";
+                        }
+                        if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Sunday")) {
+                            if (workingModelArrayList.get(i).getTime_value() != null) {
+                                if (txtdataSun.equalsIgnoreCase("")) {
+                                    txtdataSun += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                                } else {
+                                    txtdataSun += "\n" + workingModelArrayList.get(i).getTime_value();
+                                }
+                            }
+                            //txtdataSun += workingModelArrayList.get(i).getTime_value() + "\n";
+                        }
+
                     }
 
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+                    Date d = new Date();
+                    String dayOfTheWeek = sdf.format(d);
+                    if (dayOfTheWeek.equalsIgnoreCase("Monday")) {
+
+
+                        if (!txtdataMon.equalsIgnoreCase("")) {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText(txtdataMon);
+                        } else {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText("CLOSED");
+                        }
+                    }
+
+                    if (dayOfTheWeek.equalsIgnoreCase("Tuesday")) {
+
+
+                        if (!txtdataTue.equalsIgnoreCase("")) {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText(txtdataTue);
+                        } else {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText("CLOSED");
+                        }
+                    }
+
+
+                    if (dayOfTheWeek.equalsIgnoreCase("Wednesday")) {
+
+
+                        if (!txtdataWed.equalsIgnoreCase("")) {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText(txtdataWed);
+                        } else {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText("CLOSED");
+                        }
+                    }
+                    if (dayOfTheWeek.equalsIgnoreCase("Thursday")) {
+
+
+                        if (!txtdataThu.equalsIgnoreCase("")) {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText(txtdataThu);
+                        } else {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText("CLOSED");
+                        }
+                    }
+                    if (dayOfTheWeek.equalsIgnoreCase("Friday")) {
+
+
+                        if (!txtdataFri.equalsIgnoreCase("")) {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText(txtdataFri);
+                        } else {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText("CLOSED");
+                        }
+                    }
+
+                    if (dayOfTheWeek.equalsIgnoreCase("Saturday")) {
+
+
+                        if (!txtdataSat.equalsIgnoreCase("")) {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText(txtdataSat);
+                        } else {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText("CLOSED");
+                        }
+                    }
+
+                    if (dayOfTheWeek.equalsIgnoreCase("Sunday")) {
+
+
+                        if (!txtdataSun.equalsIgnoreCase("")) {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText(txtdataSun);
+                        } else {
+                            myViewHolder.txtwork1.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwork1.setText("CLOSED");
+                        }
+                    }
                 }
 
-                if(!txtdataMon.equalsIgnoreCase("")) {
-                   myViewHolder.txtwork1.setVisibility(View.VISIBLE);
-                    myViewHolder.txtwork1.setText(txtdataMon);
-                }else{
-                    myViewHolder.txtwork1.setVisibility(View.VISIBLE);
-                    myViewHolder.txtwork1.setText("CLOSED");
-                }
-
-                if(!txtdataTue.equalsIgnoreCase("")) {
+               /* if(!txtdataTue.equalsIgnoreCase("")) {
                     myViewHolder.txtwork2.setVisibility(View.VISIBLE);
                     myViewHolder.txtwork2.setText(txtdataTue);
                 }else{
                     myViewHolder.txtwork2.setVisibility(View.VISIBLE);
                     myViewHolder.txtwork2.setText("CLOSED");
-                }
+                }*/
 
                 myViewHolder.txtworkSeeAll.setVisibility(View.VISIBLE);
                 myViewHolder.txtworkSeeAll.setOnClickListener(new View.OnClickListener() {
@@ -655,8 +771,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     }
                 });
 
-               // adaptercallback.onMethodWorkingCallback(workingModelArrayList, mTitle);
-            }else{
+                // adaptercallback.onMethodWorkingCallback(workingModelArrayList, mTitle);
+            } else {
                 myViewHolder.txtworking.setVisibility(View.GONE);
                 myViewHolder.LWorkinHrs.setVisibility(View.GONE);
             }
@@ -700,124 +816,123 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 int size = mSearchServiceList.get(i).getmAllService().size();
                 if (size == 1) {
                     size = 1;
-                } else if (size >=2) {
+                } else if (size >= 2) {
                     size = 2;
                 }
 
                 if (size > 0) {
 
 
+                    if (size == 1) {
+                        myViewHolder.mLSeriveLayout.setVisibility(View.GONE);
+                        myViewHolder.LService_2.setVisibility(View.VISIBLE);
+                        myViewHolder.txtservice1.setVisibility(View.VISIBLE);
+                        myViewHolder.txtservice2.setVisibility(View.GONE);
+                        myViewHolder.txtSeeAll.setVisibility(View.GONE);
+                        myViewHolder.txtservices.setVisibility(View.VISIBLE);
+                        myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());
 
-                        if (size == 1) {
-                            myViewHolder.mLSeriveLayout.setVisibility(View.GONE);
-                            myViewHolder.LService_2.setVisibility(View.VISIBLE);
-                            myViewHolder. txtservice1.setVisibility(View.VISIBLE);
-                            myViewHolder.txtservice2.setVisibility(View.GONE);
-                            myViewHolder.txtSeeAll.setVisibility(View.GONE);
-                            myViewHolder.txtservices.setVisibility(View.VISIBLE);
-                            myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());
+                        final String mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
+                        final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
+                        final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
+                        final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
+                        final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(0).isTaxable();
+                        final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(0).getServicegallery();
 
-                            final String mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
-                            final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
-                            final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
-                            final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
-                            final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(0).isTaxable();
-                            final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(0).getServicegallery();
-
-                            final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(0).isPrePayment();
-                            final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(0).getMinPrePaymentAmount();
-                            myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                                    iService.putExtra("name", mServicename);
-                                    iService.putExtra("duration", mServiceduration);
-                                    iService.putExtra("price", mServiceprice);
-                                    iService.putExtra("desc", mServicedesc);
-                                    iService.putExtra("servicegallery", mServiceGallery);
-                                    iService.putExtra("taxable", mTaxable);
-                                    iService.putExtra("title", mTitle);
-                                    iService.putExtra("isPrePayment", isPrepayment);
-                                    iService.putExtra("MinPrePaymentAmount", minPrepayment);
-                                    mContext.startActivity(iService);
-                                }
-                            });
-
-                        } else {
-                            myViewHolder.mLSeriveLayout.setVisibility(View.GONE);
-                            myViewHolder.LService_2.setVisibility(View.VISIBLE);
-                            myViewHolder.txtservices.setVisibility(View.VISIBLE);
-                            myViewHolder.txtservice1.setVisibility(View.VISIBLE);
-                            myViewHolder.txtservice2.setVisibility(View.VISIBLE);
-                            if(mSearchServiceList.get(i).getmAllService().size()==2){
-                                myViewHolder.txtSeeAll.setVisibility(View.GONE);
-                            }else{
-                                myViewHolder.txtSeeAll.setVisibility(View.VISIBLE);
+                        final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(0).isPrePayment();
+                        final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(0).getMinPrePaymentAmount();
+                        myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                iService.putExtra("name", mServicename);
+                                iService.putExtra("duration", mServiceduration);
+                                iService.putExtra("price", mServiceprice);
+                                iService.putExtra("desc", mServicedesc);
+                                iService.putExtra("servicegallery", mServiceGallery);
+                                iService.putExtra("taxable", mTaxable);
+                                iService.putExtra("title", mTitle);
+                                iService.putExtra("isPrePayment", isPrepayment);
+                                iService.putExtra("MinPrePaymentAmount", minPrepayment);
+                                mContext.startActivity(iService);
                             }
+                        });
 
-                            myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());
-                            myViewHolder.txtservice2.setText(mSearchServiceList.get(i).getmAllService().get(1).getName());
+                    } else {
+                        myViewHolder.mLSeriveLayout.setVisibility(View.GONE);
+                        myViewHolder.LService_2.setVisibility(View.VISIBLE);
+                        myViewHolder.txtservices.setVisibility(View.VISIBLE);
+                        myViewHolder.txtservice1.setVisibility(View.VISIBLE);
+                        myViewHolder.txtservice2.setVisibility(View.VISIBLE);
+                        if (mSearchServiceList.get(i).getmAllService().size() == 2) {
+                            myViewHolder.txtSeeAll.setVisibility(View.GONE);
+                        } else {
+                            myViewHolder.txtSeeAll.setVisibility(View.VISIBLE);
+                        }
+
+                        myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());
+                        myViewHolder.txtservice2.setText(mSearchServiceList.get(i).getmAllService().get(1).getName());
 
 
-                            final int finalI = i;
-                            myViewHolder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle);
-                                }
-                            });
+                        final int finalI = i;
+                        myViewHolder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle);
+                            }
+                        });
 
-                            final String mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
-                            final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
-                            final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
-                            final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
-                            final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(0).isTaxable();
-                            final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(0).getServicegallery();
+                        final String mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
+                        final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
+                        final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
+                        final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
+                        final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(0).isTaxable();
+                        final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(0).getServicegallery();
 
-                            final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(0).isPrePayment();
-                            final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(0).getMinPrePaymentAmount();
-                            myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                                    iService.putExtra("name", mServicename);
-                                    iService.putExtra("duration", mServiceduration);
-                                    iService.putExtra("price", mServiceprice);
-                                    iService.putExtra("desc", mServicedesc);
-                                    iService.putExtra("servicegallery", mServiceGallery);
-                                    iService.putExtra("taxable", mTaxable);
-                                    iService.putExtra("title", mTitle);
-                                    iService.putExtra("isPrePayment", isPrepayment);
-                                    iService.putExtra("MinPrePaymentAmount", minPrepayment);
-                                    mContext.startActivity(iService);
-                                }
-                            });
+                        final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(0).isPrePayment();
+                        final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(0).getMinPrePaymentAmount();
+                        myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                iService.putExtra("name", mServicename);
+                                iService.putExtra("duration", mServiceduration);
+                                iService.putExtra("price", mServiceprice);
+                                iService.putExtra("desc", mServicedesc);
+                                iService.putExtra("servicegallery", mServiceGallery);
+                                iService.putExtra("taxable", mTaxable);
+                                iService.putExtra("title", mTitle);
+                                iService.putExtra("isPrePayment", isPrepayment);
+                                iService.putExtra("MinPrePaymentAmount", minPrepayment);
+                                mContext.startActivity(iService);
+                            }
+                        });
 
-                            final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName();
-                            final String mServiceprice1 = mSearchServiceList.get(i).getmAllService().get(1).getTotalAmount();
-                            final String mServicedesc1 = mSearchServiceList.get(i).getmAllService().get(1).getDescription();
-                            final String mServiceduration1 = mSearchServiceList.get(i).getmAllService().get(1).getServiceDuration();
-                            final boolean mTaxable1 = mSearchServiceList.get(i).getmAllService().get(1).isTaxable();
-                            final ArrayList<SearchService> mServiceGallery1 = mSearchServiceList.get(i).getmAllService().get(1).getServicegallery();
+                        final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName();
+                        final String mServiceprice1 = mSearchServiceList.get(i).getmAllService().get(1).getTotalAmount();
+                        final String mServicedesc1 = mSearchServiceList.get(i).getmAllService().get(1).getDescription();
+                        final String mServiceduration1 = mSearchServiceList.get(i).getmAllService().get(1).getServiceDuration();
+                        final boolean mTaxable1 = mSearchServiceList.get(i).getmAllService().get(1).isTaxable();
+                        final ArrayList<SearchService> mServiceGallery1 = mSearchServiceList.get(i).getmAllService().get(1).getServicegallery();
 
-                            final boolean isPrepayment1 = mSearchServiceList.get(i).getmAllService().get(1).isPrePayment();
-                            final String minPrepayment1= mSearchServiceList.get(i).getmAllService().get(1).getMinPrePaymentAmount();
-                            myViewHolder.txtservice2.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                                    iService.putExtra("name", mServicename1);
-                                    iService.putExtra("duration", mServiceduration1);
-                                    iService.putExtra("price", mServiceprice1);
-                                    iService.putExtra("desc", mServicedesc1);
-                                    iService.putExtra("servicegallery", mServiceGallery1);
-                                    iService.putExtra("taxable", mTaxable1);
-                                    iService.putExtra("title", mTitle);
-                                    iService.putExtra("isPrePayment", isPrepayment1);
-                                    iService.putExtra("MinPrePaymentAmount", minPrepayment1);
-                                    mContext.startActivity(iService);
-                                }
-                            });
+                        final boolean isPrepayment1 = mSearchServiceList.get(i).getmAllService().get(1).isPrePayment();
+                        final String minPrepayment1 = mSearchServiceList.get(i).getmAllService().get(1).getMinPrePaymentAmount();
+                        myViewHolder.txtservice2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                iService.putExtra("name", mServicename1);
+                                iService.putExtra("duration", mServiceduration1);
+                                iService.putExtra("price", mServiceprice1);
+                                iService.putExtra("desc", mServicedesc1);
+                                iService.putExtra("servicegallery", mServiceGallery1);
+                                iService.putExtra("taxable", mTaxable1);
+                                iService.putExtra("title", mTitle);
+                                iService.putExtra("isPrePayment", isPrepayment1);
+                                iService.putExtra("MinPrePaymentAmount", minPrepayment1);
+                                mContext.startActivity(iService);
+                            }
+                        });
 
                       /*  TextView dynaText = new TextView(mContext);
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
@@ -889,7 +1004,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         dynaText.setBackground(mContext.getResources().getDrawable(R.drawable.icon_arrowright_blue));
                         myViewHolder.mLSeriveLayout.addView(dynaText);
                     }*/
-                        }
+                    }
                 }
 
 
@@ -950,7 +1065,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                 myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
                                 // myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.button_gradient_checkin));
-                                myViewHolder.btn_checkin.setBackgroundColor(mContext.getResources().getColor(R.color.blue));
+                                myViewHolder.btn_checkin.setBackgroundColor(mContext.getResources().getColor(R.color.green));
                                 myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.white));
                                 myViewHolder.btn_checkin_expand.setVisibility(View.VISIBLE);
 
@@ -1014,7 +1129,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     //String firstWord = "Est Service Time \n";
                                     String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
-                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     /*spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
@@ -1027,7 +1142,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     String firstWord = "Est Wait Time ";
                                     String secondWord = mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime() + " Minutes";
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
-                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    //  spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                    /* spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 */
@@ -1048,7 +1163,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     String firstWord = "Next Available Time \n";
                                     String secondWord = monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
-                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     /*spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 

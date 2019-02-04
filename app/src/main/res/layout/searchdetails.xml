@@ -137,34 +137,24 @@
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="0.2"
-                                    android:orientation="vertical">
+                                    android:layout_weight="0.25"
+                                    android:orientation="vertical"
+                                    android:gravity="center"
+                                    android:layout_marginRight="@dimen/padding5">
 
                                     <ImageView
-                                        android:id="@+id/txtfav"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:layout_gravity="left"
-                                        android:gravity="left"
-                                        android:paddingRight="@dimen/default_padding"
-                                        android:src="@drawable/icon_favourite_line" />
+                                        android:id="@+id/ic_jaldeeverifiedIcon"
+                                        android:layout_width="60dp"
+                                        android:layout_height="60dp"
+                                        android:visibility="gone"
+                                        android:src="@drawable/jaldee_adv" />
 
-                                    <TextView
-                                        android:id="@+id/txtmsg"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="left"
-                                        android:gravity="left"
-                                        android:layout_marginTop="@dimen/padding5"
-                                        android:drawableTop="@drawable/icon_message_gray"
-                                        android:textColor="@color/title_grey"
-                                        android:textSize="@dimen/txtsize_12" />
 
                                 </LinearLayout>
                             </LinearLayout>
 
                         </RelativeLayout>
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -173,6 +163,54 @@
                             android:layout_marginRight="@dimen/default_padding"
                             android:orientation="vertical"
                             android:paddingBottom="@dimen/padding5">
+
+                            <LinearLayout
+                                android:id="@+id/layout_type"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/input_border_cyan_bg"
+                                android:layout_marginTop="@dimen/default_padding"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/padding5">
+
+                                <TextView
+                                    android:id="@+id/txtcontact"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Show Contact"
+                                    android:layout_gravity="center"
+                                    android:drawablePadding="@dimen/padding2"
+                                    android:drawableTop="@drawable/ic_contact"
+                                    android:textColor="@color/title_grey"
+                                    android:textSize="@dimen/txtsize_12"/>
+
+                                <TextView
+                                    android:id="@+id/txtfav"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Add to Fav"
+                                    android:layout_marginLeft="@dimen/padding5"
+                                    android:layout_gravity="center"
+                                    android:drawablePadding="@dimen/padding2"
+                                    android:drawableTop="@drawable/icon_favourite_line"
+                                    android:textColor="@color/title_grey"
+                                    android:textSize="@dimen/txtsize_12"/>
+
+                                <TextView
+                                    android:id="@+id/txtmsg"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Messsage"
+                                    android:drawablePadding="@dimen/padding2"
+                                    android:drawableTop="@drawable/icon_message_gray"
+                                    android:textColor="@color/title_grey"
+                                    android:layout_marginLeft="@dimen/padding5"
+                                    android:textSize="@dimen/txtsize_12" />
+
+                            </LinearLayout>
+
 
                             <TextView
                                 android:id="@+id/txt_bus_desc"

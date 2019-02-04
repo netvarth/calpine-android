@@ -329,7 +329,7 @@
                         android:textSize="@dimen/txtsize_12" />
                 </LinearLayout>
 
-                <LinearLayout
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding3"
@@ -353,7 +353,7 @@
                         android:textSize="@dimen/txtsize_12" />
 
 
-                </LinearLayout>
+                </LinearLayout>-->
 
                 <TextView
                     android:id="@+id/txtworkSeeAll"
@@ -411,12 +411,12 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@color/orange"
+                    android:background="@color/blue"
                     android:gravity="center"
                     android:paddingLeft="@dimen/padding3"
                     android:paddingRight="@dimen/padding3"
                     android:text="Est WaitTime"
-                    android:textColor="@color/title_grey"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/txtsize_12"
                     android:visibility="invisible" />
 
@@ -427,7 +427,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@color/blue"
+                    android:background="@color/green"
                     android:gravity="center"
                     android:paddingLeft="@dimen/padding3"
                     android:paddingRight="@dimen/padding3"

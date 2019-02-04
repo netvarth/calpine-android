@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.adapter.ActiveCheckInAdapter;
 import com.nv.youneverwait.adapter.CouponlistAdapter;
 import com.nv.youneverwait.adapter.MultipleFamilyMemberAdapter;
 import com.nv.youneverwait.adapter.PaymentAdapter;
@@ -174,7 +175,7 @@ public class CheckIn extends AppCompatActivity {
     static RecyclerView recycle_family;
     static LinearLayout LSinglemember, Lbottomlayout;
 
-    ListView list;
+    RecyclerView list;
     private CouponlistAdapter mAdapter;
 
 
@@ -183,7 +184,7 @@ public class CheckIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkin);
 
-        list = (ListView) findViewById(R.id.list);
+        list = (RecyclerView) findViewById(R.id.list);
         tv_personahead= (TextView) findViewById(R.id.txt_personahead);
         mtermsAndConditionDetail = (TextView) findViewById(R.id.termsAndConditionDetail);
         mtermsandCond = (TextView) findViewById(R.id.termsandCond);
@@ -658,6 +659,7 @@ public class CheckIn extends AppCompatActivity {
 
                     couponArraylist.add(couponEntered);
 
+                    couponEdit.setText("");
                     Toast.makeText(CheckIn.this, couponEntered + "Added", Toast.LENGTH_SHORT).show();
 
 
@@ -666,8 +668,14 @@ public class CheckIn extends AppCompatActivity {
 
                 }
                 Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-                mAdapter = new CouponlistAdapter(mContext,0,s3couponList,couponEntered,couponArraylist);
-                list.setAdapter((ListAdapter) mAdapter);
+               /* mAdapter = new CouponlistAdapter(mContext,0,s3couponList,couponEntered,couponArraylist);
+                list.setAdapter((ListAdapter) mAdapter);*/
+                list.setVisibility(View.VISIBLE);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                list.setLayoutManager(mLayoutManager);
+                mAdapter = new CouponlistAdapter(mContext,s3couponList,couponEntered,couponArraylist);
+                list.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
             }
         });
 
