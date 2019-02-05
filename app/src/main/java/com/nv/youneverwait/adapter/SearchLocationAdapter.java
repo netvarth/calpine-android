@@ -52,8 +52,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
     private List<SearchLocation> mSearchLocationList;
     static Context mContext;
-    ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
+   /* ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
     String txtdataMon = "", txtdataTue = "", txtdataWed = "", txtdataThu = "", txtdataFri = "", txtdataSat = "", txtdataSun = "";
+*/
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate;
@@ -64,8 +65,17 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         RelativeLayout layout_exapnd;
         TextView txtdirection, tv_checkin;
         Button btn_checkin_expand;
-        TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices;
+        TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices,txtdayofweek;
         TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
+
+        ArrayList<WorkingModel> workingModelArrayList=new ArrayList<>();
+        String txtdataMon ="";
+        String txtdataTue ="";
+        String txtdataWed ="";
+        String txtdataThu ="";
+        String txtdataFri ="";
+        String txtdataSat ="";
+        String txtdataSun ="";
 
         public MyViewHolder(View view) {
             super(view);
@@ -95,7 +105,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txtservice1 = (TextView) view.findViewById(R.id.txtservice1);
             txtservice2 = (TextView) view.findViewById(R.id.txtservice2);
             txtSeeAll = (TextView) view.findViewById(R.id.txtSeeAll);
-
+            txtdayofweek= (TextView) view.findViewById(R.id.txtdayofweek);
             txtwork1 = (TextView) view.findViewById(R.id.txtwork1);
             //   txtwork2 = (TextView) view.findViewById(R.id.txtwork2);
             txtworkSeeAll = (TextView) view.findViewById(R.id.txtworkSeeAll);
@@ -525,14 +535,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
         if (searchLoclist.getbSchedule() != null) {
-            workingModelArrayList.clear();
+            /*workingModelArrayList.clear();
             txtdataMon = "";
             txtdataTue = "";
             txtdataWed = "";
             txtdataThu = "";
             txtdataFri = "";
             txtdataSat = "";
-            txtdataSun = "";
+            txtdataSun = "";*/
             if (searchLoclist.getbSchedule().getTimespec().size() > 0) {
                 myViewHolder.txtworking.setVisibility(View.VISIBLE);
                 myViewHolder.LWorkinHrs.setVisibility(View.VISIBLE);
@@ -587,79 +597,90 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                         }
 
-                        workingModelArrayList.add(work);
+                        myViewHolder.workingModelArrayList.add(work);
+                        Config.logV("workingModelPassArrayList @@@@@@@@@@" +  myViewHolder.workingModelArrayList.size());
+
+
 
                     }
 
 
                 }
+                myViewHolder.txtworkSeeAll.setVisibility(View.VISIBLE);
+                myViewHolder.txtworkSeeAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
+                        Config.logV("workingModelPassArrayList" +  myViewHolder.workingModelArrayList.size());
+                        adaptercallback.onMethodWorkingCallback( myViewHolder.workingModelArrayList, mTitle);
+                    }
+                });
 
-                for (int i = 0; i < workingModelArrayList.size(); i++) {
-                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Monday")) {
-                        if (workingModelArrayList.get(i).getTime_value() != null) {
-                            if (txtdataMon.equalsIgnoreCase("")) {
-                                txtdataMon += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                for (int i = 0; i <  myViewHolder.workingModelArrayList.size(); i++) {
+                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Monday")) {
+                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                            if (myViewHolder.txtdataMon.equalsIgnoreCase("")) {
+                                myViewHolder. txtdataMon +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                txtdataMon += "\n" + workingModelArrayList.get(i).getTime_value();
+                                myViewHolder. txtdataMon += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                         }
                     }
-                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Tuesday")) {
-                        if (workingModelArrayList.get(i).getTime_value() != null) {
+                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Tuesday")) {
+                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
 
-                            if (txtdataTue.equalsIgnoreCase("")) {
-                                txtdataTue += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                            if (myViewHolder.txtdataTue.equalsIgnoreCase("")) {
+                                myViewHolder.txtdataTue +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                txtdataTue += "\n" + workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataTue += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                         }
                     }
-                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Wednesday")) {
-                        if (workingModelArrayList.get(i).getTime_value() != null) {
-                            if (txtdataWed.equalsIgnoreCase("")) {
-                                txtdataWed += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Wednesday")) {
+                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                            if (myViewHolder.txtdataWed.equalsIgnoreCase("")) {
+                                myViewHolder.txtdataWed +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                txtdataWed += "\n" + workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataWed += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                         }
                         // txtdataWed += workingModelArrayList.get(i).getTime_value() + "\n";
                     }
-                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Thursday")) {
-                        if (workingModelArrayList.get(i).getTime_value() != null) {
-                            if (txtdataThu.equalsIgnoreCase("")) {
-                                txtdataThu += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Thursday")) {
+                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                            if (myViewHolder.txtdataThu.equalsIgnoreCase("")) {
+                                myViewHolder.txtdataThu += myViewHolder. workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                txtdataThu += "\n" + workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataThu += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                         }
                         // txtdataThu += workingModelArrayList.get(i).getTime_value() + "\n";
                     }
-                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Friday")) {
-                        if (workingModelArrayList.get(i).getTime_value() != null) {
-                            if (txtdataFri.equalsIgnoreCase("")) {
-                                txtdataFri += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Friday")) {
+                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                            if (myViewHolder.txtdataFri.equalsIgnoreCase("")) {
+                                myViewHolder.txtdataFri +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                txtdataFri += "\n" + workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataFri += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                         }
                         //txtdataFri += workingModelArrayList.get(i).getTime_value() + "\n";
                     }
-                    if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Saturday")) {
-                        if (workingModelArrayList.get(i).getTime_value() != null) {
-                            if (txtdataSat.equalsIgnoreCase("")) {
-                                txtdataSat += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Saturday")) {
+                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                            if (myViewHolder.txtdataSat.equalsIgnoreCase("")) {
+                                myViewHolder.txtdataSat +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                txtdataSat += "\n" + workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataSat += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                             // txtdataSat += workingModelArrayList.get(i).getTime_value() + "\n";
                         }
-                        if (workingModelArrayList.get(i).getDay().equalsIgnoreCase("Sunday")) {
-                            if (workingModelArrayList.get(i).getTime_value() != null) {
-                                if (txtdataSun.equalsIgnoreCase("")) {
-                                    txtdataSun += workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                        if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Sunday")) {
+                            if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                                if (myViewHolder.txtdataSun.equalsIgnoreCase("")) {
+                                    myViewHolder. txtdataSun +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                                 } else {
-                                    txtdataSun += "\n" + workingModelArrayList.get(i).getTime_value();
+                                    myViewHolder.txtdataSun += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
                                 }
                             }
                             //txtdataSun += workingModelArrayList.get(i).getTime_value() + "\n";
@@ -671,12 +692,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
                     Date d = new Date();
                     String dayOfTheWeek = sdf.format(d);
+                    Config.logV("DAY OF WEEK ##################"+dayOfTheWeek);
                     if (dayOfTheWeek.equalsIgnoreCase("Monday")) {
 
-
-                        if (!txtdataMon.equalsIgnoreCase("")) {
+                        myViewHolder.txtdayofweek.setVisibility(View.VISIBLE);
+                        myViewHolder.txtdayofweek.setText("Monday - ");
+                        if (!myViewHolder.txtdataMon.equalsIgnoreCase("")) {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
-                            myViewHolder.txtwork1.setText(txtdataMon);
+                            myViewHolder.txtwork1.setText(myViewHolder.txtdataMon);
+
                         } else {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
                             myViewHolder.txtwork1.setText("CLOSED");
@@ -684,11 +708,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     }
 
                     if (dayOfTheWeek.equalsIgnoreCase("Tuesday")) {
+                        myViewHolder.txtdayofweek.setVisibility(View.VISIBLE);
+                        myViewHolder.txtdayofweek.setText("Tuesday - ");
 
-
-                        if (!txtdataTue.equalsIgnoreCase("")) {
+                        if (!myViewHolder.txtdataTue.equalsIgnoreCase("")) {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
-                            myViewHolder.txtwork1.setText(txtdataTue);
+                            myViewHolder.txtwork1.setText(myViewHolder.txtdataTue);
                         } else {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
                             myViewHolder.txtwork1.setText("CLOSED");
@@ -698,10 +723,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                     if (dayOfTheWeek.equalsIgnoreCase("Wednesday")) {
 
-
-                        if (!txtdataWed.equalsIgnoreCase("")) {
+                        myViewHolder.txtdayofweek.setVisibility(View.VISIBLE);
+                        myViewHolder.txtdayofweek.setText("Wednesday - ");
+                        if (!myViewHolder.txtdataWed.equalsIgnoreCase("")) {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
-                            myViewHolder.txtwork1.setText(txtdataWed);
+                            myViewHolder.txtwork1.setText(myViewHolder.txtdataWed);
                         } else {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
                             myViewHolder.txtwork1.setText("CLOSED");
@@ -709,21 +735,23 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     }
                     if (dayOfTheWeek.equalsIgnoreCase("Thursday")) {
 
-
-                        if (!txtdataThu.equalsIgnoreCase("")) {
+                        myViewHolder.txtdayofweek.setVisibility(View.VISIBLE);
+                        myViewHolder.txtdayofweek.setText("Thursday - ");
+                        if (!myViewHolder.txtdataThu.equalsIgnoreCase("")) {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
-                            myViewHolder.txtwork1.setText(txtdataThu);
+                            myViewHolder.txtwork1.setText(myViewHolder.txtdataThu);
                         } else {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
                             myViewHolder.txtwork1.setText("CLOSED");
                         }
                     }
                     if (dayOfTheWeek.equalsIgnoreCase("Friday")) {
+                        myViewHolder.txtdayofweek.setVisibility(View.VISIBLE);
+                        myViewHolder.txtdayofweek.setText("Friday - ");
 
-
-                        if (!txtdataFri.equalsIgnoreCase("")) {
+                        if (!myViewHolder.txtdataFri.equalsIgnoreCase("")) {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
-                            myViewHolder.txtwork1.setText(txtdataFri);
+                            myViewHolder.txtwork1.setText(myViewHolder.txtdataFri);
                         } else {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
                             myViewHolder.txtwork1.setText("CLOSED");
@@ -732,10 +760,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                     if (dayOfTheWeek.equalsIgnoreCase("Saturday")) {
 
+                        myViewHolder.txtdayofweek.setVisibility(View.VISIBLE);
+                        myViewHolder.txtdayofweek.setText("Saturday - ");
 
-                        if (!txtdataSat.equalsIgnoreCase("")) {
+                        if (!myViewHolder.txtdataSat.equalsIgnoreCase("")) {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
-                            myViewHolder.txtwork1.setText(txtdataSat);
+                            myViewHolder.txtwork1.setText(myViewHolder.txtdataSat);
                         } else {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
                             myViewHolder.txtwork1.setText("CLOSED");
@@ -744,10 +774,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                     if (dayOfTheWeek.equalsIgnoreCase("Sunday")) {
 
+                        myViewHolder.txtdayofweek.setVisibility(View.VISIBLE);
+                        myViewHolder.txtdayofweek.setText("Sunday - ");
 
-                        if (!txtdataSun.equalsIgnoreCase("")) {
+
+                        if (!myViewHolder.txtdataSun.equalsIgnoreCase("")) {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
-                            myViewHolder.txtwork1.setText(txtdataSun);
+                            myViewHolder.txtwork1.setText(myViewHolder.txtdataSun);
                         } else {
                             myViewHolder.txtwork1.setVisibility(View.VISIBLE);
                             myViewHolder.txtwork1.setText("CLOSED");
@@ -763,13 +796,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     myViewHolder.txtwork2.setText("CLOSED");
                 }*/
 
-                myViewHolder.txtworkSeeAll.setVisibility(View.VISIBLE);
-                myViewHolder.txtworkSeeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        adaptercallback.onMethodWorkingCallback(workingModelArrayList, mTitle);
-                    }
-                });
 
                 // adaptercallback.onMethodWorkingCallback(workingModelArrayList, mTitle);
             } else {
