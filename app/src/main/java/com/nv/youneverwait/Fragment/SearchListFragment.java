@@ -22,11 +22,9 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -40,7 +38,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
-import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.activities.SearchLocationActivity;
 import com.nv.youneverwait.adapter.PaginationAdapter;
 import com.nv.youneverwait.adapter.SearchListAdpter;
@@ -55,7 +52,6 @@ import com.nv.youneverwait.model.ListCell;
 import com.nv.youneverwait.model.SearchListModel;
 import com.nv.youneverwait.model.SearchModel;
 import com.nv.youneverwait.model.WorkingModel;
-import com.nv.youneverwait.response.CoupnResponse;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchAWsResponse;
 import com.nv.youneverwait.response.SearchTerminology;
@@ -121,26 +117,27 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     static String longitude;
     String searchTxt, spinnerTxt;
     String getQuery_previous = "";
+
     public void refreshQuery() {
         getQuery_previous = "true";
     }
+
     static TextView txt_toolbarlocation;
     ImageView ibackpress;
     String s_LocName;
-    TextView tv_nosearchresult,tv_searchresult;
+    TextView tv_nosearchresult, tv_searchresult;
     LinearLayout Lnosearchresult;
-     boolean userIsInteracting;
+    boolean userIsInteracting;
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // do something when visible.
-            userIsInteracting=false;
-            Config.logV(" Search List Spinner ITEM NOT CLICKED @@@@@@@@@@@@@@@@"+userIsInteracting);
+            userIsInteracting = false;
+            Config.logV(" Search List Spinner ITEM NOT CLICKED @@@@@@@@@@@@@@@@" + userIsInteracting);
         }
     }
-
-
 
 
     public static int dpToPx(int dp) {
@@ -173,7 +170,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
             s_LocName = bundle.getString("locName", "");
         }
-        userIsInteracting=false;
+        userIsInteracting = false;
 
         Config.logV("LATITUDE--------------------------------" + latitude + ", " + longitude);
 
@@ -189,12 +186,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 "fonts/Montserrat_Bold.otf");
 
 
-
-
         ibackpress = (ImageView) row.findViewById(R.id.backpress);
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
         txt_toolbarlocation = (TextView) row.findViewById(R.id.txt_toolbarlocation);
-        tv_searchresult= (TextView) row.findViewById(R.id.searchresult);
+        tv_searchresult = (TextView) row.findViewById(R.id.searchresult);
 
         Lnosearchresult = (LinearLayout) row.findViewById(R.id.Lnosearchresult);
         tv_nosearchresult = (TextView) row.findViewById(R.id.txtnosearchresult);
@@ -217,7 +212,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(latitude), Double.parseDouble(longitude), 1);
 
-           // Config.logV("Latitude-----11111--------" + addresses.get(0).getLocality());
+            // Config.logV("Latitude-----11111--------" + addresses.get(0).getLocality());
             if (!s_LocName.equalsIgnoreCase("")) {
                 txt_toolbarlocation.setVisibility(View.VISIBLE);
                 // txt_toolbarlocation.setText(addresses.get(0).getLocality());
@@ -246,6 +241,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         progressBar = (ProgressBar) row.findViewById(R.id.main_progress);
         //  Config.logV("Pass Fragment" + searchDetail);
         mSearchView = (SearchView) row.findViewById(R.id.search);
+
+
         pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this);
 
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
@@ -311,7 +308,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-    //    mSpinnerDomain.setAdapter(adapter);
+        //    mSpinnerDomain.setAdapter(adapter);
 
         mSpinnerDomain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -327,12 +324,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 boolean FirstRun = SharedPreference.getInstance(mContext).getBoolanValue("ALL_SELECTED", false);
 
 
-
-                if(userIsInteracting){
+                if (userIsInteracting) {
                     Config.logV("Spinner ITEM CLICKED $$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                     SpinnerItemClick();
                 }
-                userIsInteracting=true;
+                userIsInteracting = true;
 
 
                 if (FirstRun) {
@@ -344,7 +340,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     mSearchView.setQuery(searchTxt, false);
 
                     Config.logV("Selected  FIRST RUN-----------------------" + searchTxt);
-                    if(!searchTxt.equalsIgnoreCase("")){
+                    if (!searchTxt.equalsIgnoreCase("")) {
                         ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
                         searchIcon.setImageDrawable(null);
                         searchIcon.setVisibility(View.GONE);
@@ -370,7 +366,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 }
 
 
-
                 if (mDomainSpinner.equalsIgnoreCase("ALL")) {
 
                     /**********************************HEADER=SuGGESTED SEARCH*************************************/
@@ -394,6 +389,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     listadapter = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), DashboardFragment.getHomeFragment(), mSearchView);
                     searchSrcTextView.setAdapter(listadapter);
+
 
                     mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
@@ -453,7 +449,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     for (int i = 0; i < mSubDomain.size(); i++) {
                         if (mSubDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
 
-                            SearchModel search=new SearchModel();
+                            SearchModel search = new SearchModel();
                             search.setDisplayname(mSubDomain.get(i).getDisplayname());
                             search.setSector(mSubDomain.get(i).getSector());
                             search.setName(mSubDomain.get(i).getName());
@@ -492,9 +488,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     }
 
 
-
                     listadapter = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), DashboardFragment.getHomeFragment(), mSearchView);
                     searchSrcTextView.setAdapter(listadapter);
+
 
                     mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
@@ -533,12 +529,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
 
-
                                 // searchSrcTextView.setAdapter(listadapter);
                                 listadapter.notifyDataSetChanged();
                                 listadapter.getFilter().filter(query);
                             }
-
 
                             return false;
                         }
@@ -564,6 +558,29 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         SearchManager searchMng = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchMng.getSearchableInfo(getActivity().getComponentName()));
         searchSrcTextView.setDropDownHeight(450);
+
+
+
+
+      /* searchSrcTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Config.logV("On Clickkkkkkkkkkkkkkkkkkkkkkkkkk");
+               *//* listadapter = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), DashboardFragment.getHomeFragment(), mSearchView);
+                searchSrcTextView.setAdapter(listadapter);
+                listadapter.notifyDataSetChanged();
+                listadapter.getFilter().filter("a");*//*
+                Config.logV("Filter ########@@WWWW@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+                SearchListAdpter listadapter1 = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), DashboardFragment.getHomeFragment(), mSearchView);
+                searchSrcTextView.setAdapter(listadapter1);
+                listadapter1.getFilter().filter(null);
+
+                listadapter1.notifyDataSetChanged();
+
+            }
+        });*/
+
 
         ImageView searchClose = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
         searchClose.setImageResource(R.drawable.icon_cancel);
@@ -1013,16 +1030,16 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             Lnosearchresult.setVisibility(View.GONE);
                             tv_searchresult.setVisibility(View.VISIBLE);
                             String firstWord = String.valueOf(total_foundcount);
-                            String secondWord="";
-                            if(total_foundcount>1) {
-                                 secondWord = " results found ";
-                            }else{
+                            String secondWord = "";
+                            if (total_foundcount > 1) {
+                                secondWord = " results found ";
+                            } else {
                                 secondWord = " result found ";
-                                }
+                            }
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), 0, firstWord.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             tv_searchresult.setText(spannable);
 
 
@@ -1098,7 +1115,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     Config.logV("@@@@@--111----------------" + response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                     search.setParking_location1(response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                 }
-
 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails() != null) {
@@ -1484,7 +1500,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 }
 
 
-
                                 if (mSearchRespPass.get(i).getParking_type_location1() != null) {
                                     searchList.setParking_type_location1(mSearchRespPass.get(i).getParking_type_location1());
                                 }
@@ -1682,20 +1697,20 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
 
-            for (int i=0;i<mSubDomain.size();i++ ){
-                if(mSubDomain.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())){
+            for (int i = 0; i < mSubDomain.size(); i++) {
+                if (mSubDomain.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())) {
 
-                        Config.logV("Query------------" + mSubDomain.get(i).getQuery());
-                        String requiredString = mSubDomain.get(i).getQuery().substring(mSubDomain.get(i).getQuery().indexOf("]") + 1, mSubDomain.get(i).getQuery().indexOf(")"));
-                        Config.logV("Second----@@@@@@-----" + requiredString);
-                        querycreate = requiredString;
+                    Config.logV("Query------------" + mSubDomain.get(i).getQuery());
+                    String requiredString = mSubDomain.get(i).getQuery().substring(mSubDomain.get(i).getQuery().indexOf("]") + 1, mSubDomain.get(i).getQuery().indexOf(")"));
+                    Config.logV("Second----@@@@@@-----" + requiredString);
+                    querycreate = requiredString;
 
                 }
             }
             Config.logV("Query @@@@@@@@@@-----------" + querycreate);
-        }else{
-            for (int i=0;i<mGLobalSearch.size();i++ ){
-                if(mGLobalSearch.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())){
+        } else {
+            for (int i = 0; i < mGLobalSearch.size(); i++) {
+                if (mGLobalSearch.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())) {
                     Config.logV("Query-ALL-----------" + mGLobalSearch.get(i).getQuery());
                     String requiredString = mGLobalSearch.get(i).getQuery().substring(mGLobalSearch.get(i).getQuery().indexOf("]") + 1, mGLobalSearch.get(i).getQuery().indexOf(")"));
                     Config.logV("Second---All-@@@@@@-----" + requiredString);
@@ -1706,7 +1721,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }
 
 
-        if (querycreate==null) {
+        if (querycreate == null) {
             if (!mDomainSpinner.equalsIgnoreCase("All")) {
                 querycreate = "(phrase " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
             } else {
@@ -1834,7 +1849,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
-
     public static boolean UpdateLocationSearch(String mlatitude, String mlongitude, String locNme) {
         Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude);
         try {
@@ -1872,7 +1886,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-                if (edt_message.getText().toString().length() > 1&&!edt_message.getText().toString().trim().isEmpty()) {
+                if (edt_message.getText().toString().length() > 1 && !edt_message.getText().toString().trim().isEmpty()) {
                     btn_send.setEnabled(true);
                     btn_send.setClickable(true);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
@@ -1998,9 +2012,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
-
-
-
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
 
 
@@ -2010,7 +2021,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
 
 
         JSONObject jsonObj = new JSONObject();
@@ -2102,13 +2112,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     search.setDisplayname(response.body().getGlobalSearchLabels().get(k).getDisplayname());
                                     search.setQuery(response.body().getGlobalSearchLabels().get(k).getQuery());
                                     mGLobalSearch.add(search);
-                                   // Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
+                                    // Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
                                 }
                             }
 
                             Config.logV("Globa lSearch Size-------------" + mGLobalSearch.size());
-
-
 
 
                             mSpecializationDomain.clear();
@@ -2116,7 +2124,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                             for (int i = 0; i < response.body().getSectorLevelLabels().size(); i++) {
                                 int mSectorSize = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels().size();
-
 
 
                                 for (int k = 0; k < mSectorSize; k++) {
@@ -2131,7 +2138,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                     mSubDomain.add(search);
                                     //mSpecializationDomain.addAll(getSubdomainSectorLevel.get(k).getSpecializationLabels());
-                                    for(int j=0;j<getSubdomainSectorLevel.get(k).getSpecializationLabels().size();j++){
+                                    for (int j = 0; j < getSubdomainSectorLevel.get(k).getSpecializationLabels().size(); j++) {
                                         search = new SearchModel();
                                         search.setName(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getName());
                                         search.setDisplayname(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getDisplayname());
@@ -2141,17 +2148,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     }
 
 
-
                                 }
                             }
 
-                           APiGetDomain();
+                            APiGetDomain();
 
                             Config.logV("GLobal Search Size-------------" + mGLobalSearch.size());
                             Config.logV("SUBDOAMIN Search Size-------------" + mSubDomain.size());
                             Config.logV("SPECIALIZATION Search Size-------------" + mSpecializationDomain.size());
-
-
 
 
                         }
@@ -2215,7 +2219,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 for (int i = 0; i < response.body().size(); i++) {
 
                                     domainList.add(new Domain_Spinner(response.body().get(i).getDisplayName(), response.body().get(i).getDomain()));
-
 
 
                                 }

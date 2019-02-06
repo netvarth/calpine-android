@@ -45,4 +45,6 @@ public class ContactModel {
 
     String instance;
     String permission;
+
+
 }

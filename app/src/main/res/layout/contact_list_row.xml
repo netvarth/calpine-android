@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contact_list_row_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/padding5"
+    android:padding="@dimen/padding5"
     android:orientation="vertical">
 
     <TextView
@@ -10,13 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/title_grey"
-        android:textSize="@dimen/txtsize_12" />
+        android:textSize="@dimen/txtsize_hint" />
 
     <TextView
         android:id="@+id/txtcontact_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/title_grey"
+        android:layout_marginTop="@dimen/padding3"
         android:textSize="@dimen/txtsize_12" />
 
 </LinearLayout>

@@ -803,13 +803,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 myViewHolder.LWorkinHrs.setVisibility(View.GONE);
             }
         }
-        myViewHolder.tv_working.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-
-            }
-        });
 
 
 //Services------------

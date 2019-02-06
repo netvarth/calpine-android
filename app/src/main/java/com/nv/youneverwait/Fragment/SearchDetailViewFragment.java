@@ -1,16 +1,20 @@
 package com.nv.youneverwait.Fragment;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +46,7 @@ import com.nv.youneverwait.adapter.ContactDetailAdapter;
 import com.nv.youneverwait.adapter.LocationCheckinAdapter;
 import com.nv.youneverwait.adapter.SearchLocationAdapter;
 import com.nv.youneverwait.adapter.VirtualFieldAdapter;
+import com.nv.youneverwait.callback.ContactAdapterCallback;
 import com.nv.youneverwait.callback.LocationCheckinCallback;
 import com.nv.youneverwait.callback.SearchLocationAdpterCallback;
 import com.nv.youneverwait.common.Config;
@@ -92,7 +97,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 
-public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback {
+public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback ,ContactAdapterCallback{
 
     Context mContext;
 
@@ -114,7 +119,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     TextView tv_busName, tv_domain, tv_desc, tv_msg, txtMore;
 
-    RecyclerView mRecyLocDetail, mRecycle_virtualfield, mrecycle_contactdetail;
+    RecyclerView mRecyLocDetail, mRecycle_virtualfield;
     SearchLocationAdapter mSearchLocAdapter;
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
 
@@ -122,9 +127,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<String> ids;
     String uniqueID;
 
-    TextView tv_ImageViewText, tv_Moredetails, tv_contactdetails, tv_specializtion, tv_SocialMedia, tv_Gallery;
+    TextView tv_ImageViewText, tv_Moredetails, tv_specializtion, tv_SocialMedia, tv_Gallery;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
+    ContactAdapterCallback mInterfaceContact;
     LocationCheckinCallback callback;
     String location;
     TextView tv_fav;
@@ -142,10 +148,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mContext = getActivity();
         mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
         mRecycle_virtualfield = (RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
-        mrecycle_contactdetail = (RecyclerView) row.findViewById(R.id.mrecycle_contactdetail);
 
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
-        tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
+       // tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
         tv_specializtion = (TextView) row.findViewById(R.id.txt_specializtion);
         LSpecialization = (LinearLayout) row.findViewById(R.id.LSpecialization);
         tv_Gallery = (TextView) row.findViewById(R.id.txtGallery);
@@ -163,6 +168,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
         callback = (LocationCheckinCallback) this;
+        mInterfaceContact = (ContactAdapterCallback) this;
         //isContact = false;
         Config.logV("Refresh @@@@@@@@@@@@@@@@@@");
 
@@ -228,7 +234,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_Gallery.setTypeface(tyface);
         tv_specializtion.setTypeface(tyface);
         txtMore.setTypeface(tyface);
-        tv_contactdetails.setTypeface(tyface);
+        //tv_contactdetails.setTypeface(tyface);
 
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
@@ -852,53 +858,29 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         isContact = true;
                         tv_contact.setText("Hide Contact");
                         tv_contact.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_selected,0,0);
-                        mrecycle_contactdetail.setVisibility(View.VISIBLE);
+                       /* mrecycle_contactdetail.setVisibility(View.VISIBLE);
                         tv_contactdetails.setVisibility(View.VISIBLE);
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mrecycle_contactdetail.setLayoutManager(mLayoutManager);
                         ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity());
                         mrecycle_contactdetail.setAdapter(checkAdapter);
-                        checkAdapter.notifyDataSetChanged();
+                        checkAdapter.notifyDataSetChanged();*/
+                        BottomSheetContactDialog();
                     } else {
                         Config.logV("CLosed");
-                        isContact = false;
-                        tv_contact.setText("Show Contact");
-                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_contact,0,0);
-                        tv_contactdetails.setVisibility(View.GONE);
-                        mrecycle_contactdetail.setVisibility(View.GONE);
+
+                     //   tv_contactdetails.setVisibility(View.GONE);
+                       /* mrecycle_contactdetail.setVisibility(View.GONE);*/
                     }
                 }
             });
 
 
 
-            /*tv_contactdetails.setVisibility(View.VISIBLE);
-            tv_contactdetails.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!isContact) {
-                        Config.logV("Open");
-                        isContact = true;
-                        mrecycle_contactdetail.setVisibility(View.VISIBLE);
-                        tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue_hidden, 0);
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                        mrecycle_contactdetail.setLayoutManager(mLayoutManager);
-                        ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity());
-                        mrecycle_contactdetail.setAdapter(checkAdapter);
-                        checkAdapter.notifyDataSetChanged();
-                    } else {
-                        Config.logV("CLosed");
-                        isContact = false;
-                        tv_contactdetails.setText("Contact Details");
-                        tv_contactdetails.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_eye_blue, 0);
-                        mrecycle_contactdetail.setVisibility(View.GONE);
-                    }
-                }
-            });*/
 
         } else {
-            tv_contactdetails.setVisibility(View.GONE);
-            mrecycle_contactdetail.setVisibility(View.GONE);
+         //   tv_contactdetails.setVisibility(View.GONE);
+          //  mrecycle_contactdetail.setVisibility(View.GONE);
             tv_contact.setVisibility(View.GONE);
         }
 
@@ -1177,6 +1159,53 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     }
 
+    BottomSheetDialog bdialog;
+    public void BottomSheetContactDialog(){
+        bdialog = new BottomSheetDialog(mContext);
+        bdialog.setContentView(R.layout.contact_list);
+        bdialog.setCancelable(true);
+        bdialog.show();
+
+        RecyclerView contactlist = (RecyclerView) bdialog.findViewById(R.id.contactlist);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        TextView txtcontact=(TextView)bdialog.findViewById(R.id.txtcontact) ;
+        txtcontact.setTypeface(tyface);
+        Button btn_close=(Button) bdialog.findViewById(R.id.btn_close) ;
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                isContact = false;
+                tv_contact.setText("Show Contact");
+                tv_contact.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_contact,0,0);
+                bdialog.dismiss();
+
+            }
+        });
+        bdialog.setOnCancelListener(
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        //When you touch outside of dialog bounds,
+                        //the dialog gets canceled and this method executes.
+                        Config.logV("CANCEL @@@@@@@@@@@");
+                        isContact = false;
+                        tv_contact.setText("Show Contact");
+                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_contact,0,0);
+                        bdialog.dismiss();
+                    }
+                }
+        );
+
+        contactlist.setLayoutManager(mLayoutManager);
+        ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity(),mInterfaceContact);
+        contactlist.setAdapter(checkAdapter);
+        checkAdapter.notifyDataSetChanged();
+
+
+    }
 
     BottomSheetDialog dialog;
 
@@ -1948,4 +1977,70 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
 
+    @Override
+    public void onMethodContactCallback(String type, String value) {
+
+        if(type.equalsIgnoreCase("Phoneno")){
+            callPhoneNumber(value);
+        }
+
+        if(type.equalsIgnoreCase("Email")){
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto",value, null));
+           // emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+            try {
+                startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+    private final int CALL_REQUEST = 100;
+    String phoneNumber;
+    public void callPhoneNumber(String phNo) {
+        try {
+
+            phoneNumber=phNo;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+
+                    //requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST);
+
+                    requestPermissions(new String[]{
+                            Manifest.permission.CALL_PHONE}, CALL_REQUEST);
+
+                    return;
+                }else{
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:"+phNo));
+                    startActivity(callIntent);
+                }
+            }else {
+
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:"+phNo));
+                startActivity(callIntent);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == CALL_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Config.logV("CALL GRANTED @@@@@@@@@@@@@@");
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:"+phoneNumber));
+                startActivity(callIntent);
+            } else {
+                Toast.makeText(mContext, getResources().getString(R.string.call_permission_denied_message), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
