@@ -97,7 +97,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 
-public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback ,ContactAdapterCallback{
+public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback {
 
     Context mContext;
 
@@ -136,10 +136,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     TextView tv_fav;
 
     boolean flag_more = false;
-    ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link,ic_jaldeeverifiedIcon;
+    ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
-    TextView tv_spec1, tv_spec2, tv_seeAll,tv_contact;
+    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -150,13 +150,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mRecycle_virtualfield = (RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
 
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
-       // tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
+        // tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
         tv_specializtion = (TextView) row.findViewById(R.id.txt_specializtion);
         LSpecialization = (LinearLayout) row.findViewById(R.id.LSpecialization);
         tv_Gallery = (TextView) row.findViewById(R.id.txtGallery);
         tv_SocialMedia = (TextView) row.findViewById(R.id.txtSocialMedia);
         txtMore = (TextView) row.findViewById(R.id.txtMore);
-        tv_contact= (TextView) row.findViewById(R.id.txtcontact);
+        tv_contact = (TextView) row.findViewById(R.id.txtcontact);
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
@@ -260,11 +260,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     flag_more = false;
                     tv_Moredetails.setText("See All");
 
-                    int size=domainVirtual.size();
-                    if(size==1){
-                        size=1;
-                    }else{
-                        size=2;
+                    int size = domainVirtual.size();
+                    if (size == 1) {
+                        size = 1;
+                    } else {
+                        size = 2;
                     }
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                     mRecycle_virtualfield.setLayoutManager(mLayoutManager);
@@ -438,57 +438,59 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     });
                 }
 
+                if (mGallery.size() >= 2) {
+                    if (mGallery.get(1).getUrl() != null) {
+                        mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                if (mGallery.get(1).getUrl() != null) {
-                    mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            Config.logV("Gallery------------------------------" + mGallery.size());
-                            ArrayList<String> mGalleryList = new ArrayList<>();
-                            for (int i = 1; i < mGallery.size(); i++) {
+                                Config.logV("Gallery------------------------------" + mGallery.size());
+                                ArrayList<String> mGalleryList = new ArrayList<>();
+                                for (int i = 1; i < mGallery.size(); i++) {
                         /*SearchViewDetail data = new SearchViewDetail();
                         data.setUrl(mGallery.get(i).getUrl());*/
-                                mGalleryList.add(mGallery.get(i).getUrl());
+                                    mGalleryList.add(mGallery.get(i).getUrl());
+                                }
+
+
+                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                                if (mValue) {
+
+                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                    startActivity(intent);
+                                }
+
+
                             }
-
-
-                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                            if (mValue) {
-
-                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                startActivity(intent);
-                            }
-
-
-                        }
-                    });
+                        });
+                    }
                 }
+                if (mGallery.size() >= 3) {
+                    if (mGallery.get(2).getUrl() != null) {
+                        mImgthumbProfile1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                if (mGallery.get(2).getUrl() != null) {
-                    mImgthumbProfile1.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            Config.logV("Gallery------------------------------" + mGallery.size());
-                            ArrayList<String> mGalleryList = new ArrayList<>();
-                            for (int i = 1; i < mGallery.size(); i++) {
+                                Config.logV("Gallery------------------------------" + mGallery.size());
+                                ArrayList<String> mGalleryList = new ArrayList<>();
+                                for (int i = 1; i < mGallery.size(); i++) {
                         /*SearchViewDetail data = new SearchViewDetail();
                         data.setUrl(mGallery.get(i).getUrl());*/
-                                mGalleryList.add(mGallery.get(i).getUrl());
+                                    mGalleryList.add(mGallery.get(i).getUrl());
+                                }
+
+
+                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                                if (mValue) {
+
+                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                    startActivity(intent);
+                                }
+
+
                             }
-
-
-                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                            if (mValue) {
-
-                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                startActivity(intent);
-                            }
-
-
-                        }
-                    });
+                        });
+                    }
                 }
             } /*else {
                 tv_Gallery.setVisibility(View.GONE);
@@ -857,7 +859,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Config.logV("Open");
                         isContact = true;
                         tv_contact.setText("Hide Contact");
-                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_selected,0,0);
+                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.contact_selected, 0, 0);
                        /* mrecycle_contactdetail.setVisibility(View.VISIBLE);
                         tv_contactdetails.setVisibility(View.VISIBLE);
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
@@ -869,18 +871,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     } else {
                         Config.logV("CLosed");
 
-                     //   tv_contactdetails.setVisibility(View.GONE);
+                        //   tv_contactdetails.setVisibility(View.GONE);
                        /* mrecycle_contactdetail.setVisibility(View.GONE);*/
                     }
                 }
             });
 
 
-
-
         } else {
-         //   tv_contactdetails.setVisibility(View.GONE);
-          //  mrecycle_contactdetail.setVisibility(View.GONE);
+            //   tv_contactdetails.setVisibility(View.GONE);
+            //  mrecycle_contactdetail.setVisibility(View.GONE);
             tv_contact.setVisibility(View.GONE);
         }
 
@@ -1160,7 +1160,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
     BottomSheetDialog bdialog;
-    public void BottomSheetContactDialog(){
+
+    public void BottomSheetContactDialog() {
         bdialog = new BottomSheetDialog(mContext);
         bdialog.setContentView(R.layout.contact_list);
         bdialog.setCancelable(true);
@@ -1170,16 +1171,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        TextView txtcontact=(TextView)bdialog.findViewById(R.id.txtcontact) ;
+        TextView txtcontact = (TextView) bdialog.findViewById(R.id.txtcontact);
         txtcontact.setTypeface(tyface);
-        Button btn_close=(Button) bdialog.findViewById(R.id.btn_close) ;
+        Button btn_close = (Button) bdialog.findViewById(R.id.btn_close);
         btn_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 isContact = false;
                 tv_contact.setText("Show Contact");
-                tv_contact.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_contact,0,0);
+                tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_contact, 0, 0);
                 bdialog.dismiss();
 
             }
@@ -1193,14 +1194,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Config.logV("CANCEL @@@@@@@@@@@");
                         isContact = false;
                         tv_contact.setText("Show Contact");
-                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.ic_contact,0,0);
+                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_contact, 0, 0);
                         bdialog.dismiss();
                     }
                 }
         );
 
         contactlist.setLayoutManager(mLayoutManager);
-        ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity(),mInterfaceContact);
+        ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity(), mInterfaceContact);
         contactlist.setAdapter(checkAdapter);
         checkAdapter.notifyDataSetChanged();
 
@@ -1584,16 +1585,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mRecycle_virtualfield.setVisibility(View.VISIBLE);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                                int size=domainVirtual.size();
-                                if(size>2){
+                                int size = domainVirtual.size();
+                                if (size > 2) {
                                     tv_Moredetails.setVisibility(View.VISIBLE);
-                                }else{
+                                } else {
                                     tv_Moredetails.setVisibility(View.GONE);
                                 }
-                                if(size==1){
-                                    size=1;
-                                }else{
-                                    size=2;
+                                if (size == 1) {
+                                    size = 1;
+                                } else {
+                                    size = 2;
                                 }
 
 
@@ -1829,7 +1830,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                 try {
 
-                    tv_fav.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.icon_favourite_line,0,0);
+                    tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourite_line, 0, 0);
                     tv_fav.setText("Add to Fav");
                     Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
@@ -1847,7 +1848,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 favFlag = true;
                                 tv_fav.setVisibility(View.VISIBLE);
                                 tv_fav.setText("Remove from Fav");
-                                tv_fav.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.icon_favourited,0,0);
+                                tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
 
                             }
                         }
@@ -1980,14 +1981,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     @Override
     public void onMethodContactCallback(String type, String value) {
 
-        if(type.equalsIgnoreCase("Phoneno")){
+        if (type.equalsIgnoreCase("Phoneno")) {
             callPhoneNumber(value);
         }
 
-        if(type.equalsIgnoreCase("Email")){
+        if (type.equalsIgnoreCase("Email")) {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                    "mailto",value, null));
-           // emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
+                    "mailto", value, null));
+            // emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
             emailIntent.putExtra(Intent.EXTRA_TEXT, "");
             try {
                 startActivity(Intent.createChooser(emailIntent, "Send mail..."));
@@ -1997,12 +1998,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
 
     }
+
     private final int CALL_REQUEST = 100;
     String phoneNumber;
+
     public void callPhoneNumber(String phNo) {
         try {
 
-            phoneNumber=phNo;
+            phoneNumber = phNo;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
@@ -2013,15 +2016,15 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             Manifest.permission.CALL_PHONE}, CALL_REQUEST);
 
                     return;
-                }else{
+                } else {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:"+phNo));
+                    callIntent.setData(Uri.parse("tel:" + phNo));
                     startActivity(callIntent);
                 }
-            }else {
+            } else {
 
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:"+phNo));
+                callIntent.setData(Uri.parse("tel:" + phNo));
                 startActivity(callIntent);
             }
         } catch (Exception ex) {
@@ -2036,7 +2039,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Config.logV("CALL GRANTED @@@@@@@@@@@@@@");
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:"+phoneNumber));
+                callIntent.setData(Uri.parse("tel:" + phoneNumber));
                 startActivity(callIntent);
             } else {
                 Toast.makeText(mContext, getResources().getString(R.string.call_permission_denied_message), Toast.LENGTH_SHORT).show();

@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/serviceList"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/padding3"
+    android:layout_marginTop="@dimen/padding5"
     android:layout_height="wrap_content">
     <TextView
         android:id="@+id/tv_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/title_grey"
+        android:textColor="@color/title_grey_light"
         android:textSize="@dimen/txtsize_12"
         android:text="Head"
      />
@@ -16,7 +16,7 @@
         android:id="@+id/tv_value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/txtsize_10"
+        android:textSize="@dimen/txtsize_12"
         android:text="value"
         android:textColor="@color/title_grey"
         android:layout_marginTop="@dimen/padding3"

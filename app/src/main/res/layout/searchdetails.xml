@@ -228,7 +228,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/padding7"
                                 android:text="Specialization"
-                                android:textColor="@color/title_grey_light"
+                                android:textColor="@color/title_grey"
                                 android:textSize="@dimen/txtsize_hint"
                                 android:visibility="gone" />
 
@@ -305,7 +305,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/padding7"
                                 android:text="Gallery"
-                                android:textColor="@color/title_grey_light"
+                                android:textColor="@color/title_grey"
                                 android:textSize="@dimen/txtsize_hint"
                                 android:visibility="gone" />
 
@@ -380,7 +380,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/padding7"
                                 android:text="More Details"
-                                android:textColor="@color/title_grey_light"
+                                android:textColor="@color/title_grey"
                                 android:textSize="@dimen/txtsize_hint"
                                 android:visibility="gone" />
 
@@ -409,7 +409,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/padding7"
                                 android:text="Social Media"
-                                android:textColor="@color/title_grey_light"
+                                android:textColor="@color/title_grey"
                                 android:textSize="@dimen/txtsize_hint"
                                 android:visibility="gone" />
 

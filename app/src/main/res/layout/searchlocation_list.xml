@@ -221,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding7"
                 android:text="Services"
-                android:textColor="@color/title_grey_light"
+                android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_hint"
                 android:visibility="gone" />
 
@@ -292,7 +292,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding7"
                 android:text="Working Hours"
-                android:textColor="@color/title_grey_light"
+                android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_hint"
                 android:visibility="gone" />
 
@@ -374,7 +374,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding7"
                 android:text="Location Amenities"
-                android:textColor="@color/title_grey_light"
+                android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_hint" />
 
             <android.support.v7.widget.RecyclerView

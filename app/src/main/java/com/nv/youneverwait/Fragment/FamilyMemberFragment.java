@@ -410,6 +410,8 @@ public class FamilyMemberFragment extends RootFragment {
                         // Store the Fragment in stack
                         //transaction.addToBackStack(null);
                         transaction.replace(R.id.mainlayout, pfFragment).commit();*/
+                    }else{
+                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_LONG).show();
                     }
 
 

@@ -567,7 +567,7 @@ public class CheckIn extends AppCompatActivity {
                     APIPayment(modifyAccountID);
 
                 } else {
-                    // Lpayment.setVisibility(View.GONE);
+                    LservicePrepay.setVisibility(View.GONE);
                 }
 
             }
@@ -2128,7 +2128,7 @@ public class CheckIn extends AppCompatActivity {
                                     Config.logV("Payment----sAmountPay--------" + sAmountPay);
 
                                 } else {
-                                    // Lpayment.setVisibility(View.GONE);
+                                    LservicePrepay.setVisibility(View.GONE);
                                 }
 
                             }

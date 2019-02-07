@@ -146,7 +146,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
                 if (searchdetailList.getYnw_verified_level() != null) {
                     if (searchdetailList.getYnw_verified() == 1) {
-                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("1")) {
+                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("2")) {
 
                             myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
                             myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
@@ -154,7 +154,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
 
 
-                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("2")) {
+                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("3")) {
                           /*  myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
                             myViewHolder.tv_ynw_verified.setText("Basic Plus");*/
                             myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
@@ -162,7 +162,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
 
 
-                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("3")) {
+                        if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("4")) {
 
                            /* myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
                             myViewHolder.tv_ynw_verified.setText("Premium");*/
@@ -348,7 +348,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                                 "fonts/Montserrat_Regular.otf");
                         dynaText.setTypeface(tyface);
-                        dynaText.setText("Parking " + searchdetailList.getParking_type_location1());
+                        dynaText.setText(Config.toTitleCase(searchdetailList.getParking_type_location1())+" Parking " );
                         dynaText.setTextSize(13);
                         dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                         dynaText.setPadding(5, 5, 5, 5);

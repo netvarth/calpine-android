@@ -75,7 +75,7 @@ public class CustomPopUpWindow {
                     dialog.dismiss();
                 }else{
 
-                        SpannableString s = new SpannableString("InValid Email ID");
+                        SpannableString s = new SpannableString("Invalid Email ID");
                         Typeface tyface_edittext_hint = Typeface.createFromAsset(context.getAssets(),
                                 "fonts/Montserrat_Light.otf");
                         s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

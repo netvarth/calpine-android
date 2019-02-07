@@ -239,7 +239,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 ParkingModel mType = new ParkingModel();
                 mType.setId("1");
                 // mType.setTypeicon(R.drawable.icon_24hours);
-                mType.setTypename("Parking " + searchLoclist.getParkingType());
+                mType.setTypename(Config.toTitleCase(searchLoclist.getParkingType())+" Parking "  );
                 listType.add(mType);
             }
         }
