@@ -2471,11 +2471,12 @@ public class CheckIn extends AppCompatActivity {
                                             //ApiGenerateHash(value, sAmountPay, accountID);
                                           // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
+                                            Config.logV("Account ID --------------"+modifyAccountID);
 
                                             Intent iPayu=new Intent(mContext, PayUMoneyWebview.class);
                                             iPayu.putExtra("ynwUUID",value);
                                             iPayu.putExtra("amount",sAmountPay);
-                                            iPayu.putExtra("accountID",accountID);
+                                            iPayu.putExtra("accountID",modifyAccountID);
                                             startActivity(iPayu);
 
 
@@ -2490,8 +2491,10 @@ public class CheckIn extends AppCompatActivity {
                                         @Override
                                         public void onClick(View v) {
 
+
+                                            Config.logV("Account ID --------Paytm------"+modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, accountID,mContext,mActivity,"");
+                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID,mContext,mActivity,"");
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);

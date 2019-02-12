@@ -561,7 +561,16 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
 
-
+        /*searchSrcTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    Config.logV("QUEry @@@@@@@@@@@@@@@@@@@@@@");
+                    searchSrcTextView.showDropDown();
+                }
+            }
+        });
+*/
       /* searchSrcTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
