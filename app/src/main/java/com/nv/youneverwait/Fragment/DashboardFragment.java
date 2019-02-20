@@ -605,7 +605,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         @Override
                         public boolean onQueryTextSubmit(String query) {
 
-                            Config.logV("Click-------------------------");
+                            Config.logV("Keyboard CLick @@@@@@@@@@@@@@@@@@");
 
 
                             QuerySubmitCLick(query);
@@ -704,6 +704,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         @Override
                         public boolean onQueryTextSubmit(String query) {
 
+                            Config.logV("Keyboard CLick @@@@@@@@@@@@@@@@@@");
                             QuerySubmitCLick(query);
                             return true;
                         }

@@ -1543,7 +1543,7 @@ public class CheckIn extends AppCompatActivity {
                             Lbottomlayout.setVisibility(View.GONE);
 
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText("Check-In for this service is not accepted for this date");
+                            txtnocheckin.setText("Check-In for this service is not accepted ");
                         }
 
 
