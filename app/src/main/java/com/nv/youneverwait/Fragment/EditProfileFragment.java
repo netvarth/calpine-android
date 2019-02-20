@@ -23,6 +23,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.DatePickerDialog;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
@@ -51,12 +52,12 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import com.tsongkha.spinnerdatepicker.DatePickerDialog;
+
 /**
  * Created by sharmila on 10/7/18.
  */
 
-public class EditProfileFragment extends RootFragment  implements DatePickerDialog.OnDateSetListener{
+public class EditProfileFragment extends RootFragment  /*implements DatePickerDialog.OnDateSetListener*/ {
 
 
     ImageView calenderclick;
@@ -71,8 +72,9 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
     TextInputEditText tv_email;
     DatabaseHandler db;
     Context mContext;
-    SimpleDateFormat simpleDateFormat;
+    static SimpleDateFormat simpleDateFormat;
     LinearLayout Llayout;
+
     /*public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
@@ -104,7 +106,7 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
 
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
 
-        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,7 +118,7 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
 
         tv_title.setText("Update Profile");
 
-        Llayout= (LinearLayout) row.findViewById(R.id.Llayout);
+        Llayout = (LinearLayout) row.findViewById(R.id.Llayout);
         calenderclick = (ImageView) row.findViewById(R.id.calenderclick);
         txtdob = (TextInputEditText) row.findViewById(R.id.edtdob);
         txtfirstname = (TextInputEditText) row.findViewById(R.id.edtFirstName);
@@ -170,11 +172,11 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
         calenderclick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* DialogFragment newFragment = new MyDatePickerDialog();
-                newFragment.show(getChildFragmentManager(), "date picker");*/
+                DialogFragment newFragment = new MyDatePickerDialog();
+                newFragment.show(getChildFragmentManager(), "date picker");
 
 
-                if(!txtdob.getText().toString().equalsIgnoreCase("")){
+              /*  if(!txtdob.getText().toString().equalsIgnoreCase("")){
 
                     Date date = null;
                     try {
@@ -194,8 +196,7 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
                     int month = c.get(Calendar.MONTH);
                     int day = c.get(Calendar.DAY_OF_MONTH);
                     showDate(year, month, day, R.style.DatePickerSpinner);
-                }
-
+                }*/
 
 
             }
@@ -209,7 +210,7 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
 
             int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
             db = new DatabaseHandler(mContext);
-            if(db.checkForTables()) {
+            if (db.checkForTables()) {
                 ProfileModel getProfile = db.getProfileDetail(consumerId);
                 showProfileDetail(getProfile);
             }
@@ -295,8 +296,8 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
         txtlastname.setText(getProfile.getLastName());
         tv_phone.setText(getProfile.getPrimaryMobileNo());
 
-        String selectedDate=getProfile.getDob();
-        if(selectedDate!=null) {
+        String selectedDate = getProfile.getDob();
+        if (selectedDate != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             Date myDate = null;
@@ -353,10 +354,10 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
             }*/
             jsonObj.put("gender", radiogender);
 
-            String selectedDate=txtdob.getText().toString();
+            String selectedDate = txtdob.getText().toString();
 
-            String finalDate="";
-            if(selectedDate!=null&&!selectedDate.equalsIgnoreCase("")) {
+            String finalDate = "";
+            if (selectedDate != null && !selectedDate.equalsIgnoreCase("")) {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(
                         "dd-MM-yyyy");
 
@@ -369,7 +370,7 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
                 }
 
                 SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
-                 finalDate = timeFormat.format(myDate);
+                finalDate = timeFormat.format(myDate);
             }
 
 
@@ -403,8 +404,12 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
                             transaction.replace(R.id.mainlayout, pfFragment).commit();*/
                         }
 
-                    }else{
-                        Config.logV("Error"+response.errorBody().string());
+                    } else {
+                        if(response.code()==422){
+                            Toast.makeText(mContext,response.errorBody().string(), Toast.LENGTH_LONG).show();
+                        }
+                        Config.logV("Error" + response.errorBody().string());
+
                     }
 
 
@@ -429,6 +434,7 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
 
 
 
+/*
 
     @VisibleForTesting
     void showDate(int year, int monthOfYear, int dayOfMonth, int spinnerTheme) {
@@ -447,9 +453,10 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
         Calendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth);
         txtdob.setText(simpleDateFormat.format(calendar.getTime()));
     }
+*/
 
 
-   /* static String mDate;
+    static String mDate;
 
     public static class MyDatePickerDialog extends DialogFragment {
         @Override
@@ -465,15 +472,18 @@ public class EditProfileFragment extends RootFragment  implements DatePickerDial
 
         private DatePickerDialog.OnDateSetListener dateSetListener =
                 new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker view, int year, int month, int day) {
-                        *//*Toast.makeText(getActivity(), "selected date is " + view.getYear() +
-                                " - " + (view.getMonth() + 1) +
-                                " - " + view.getDayOfMonth(), Toast.LENGTH_SHORT).show();*//*
-                        mDate = view.getYear() +
+                    @Override
+                    public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
+                      /*  mDate = view.getYear() +
                                 "-" + (view.getMonth() + 1) +
                                 "-" + view.getDayOfMonth();
-                        txtdob.setText(mDate);
+*/
+                        Calendar calendar = new GregorianCalendar(year, month, dayOfMonth);
+                        txtdob.setText(simpleDateFormat.format(calendar.getTime()));
+                        // txtdob.setText(mDate);
                     }
+
+
                 };
-    }*/
+    }
 }

@@ -2,13 +2,14 @@ package com.nv.youneverwait.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by sharmila on 3/10/18.
  */
 
-public class CheckSumModel {
+public class CheckSumModel implements Serializable {
     String checksum;
     String successUrl;
     String failureUrl;

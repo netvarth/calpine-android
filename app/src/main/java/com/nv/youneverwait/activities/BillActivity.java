@@ -212,17 +212,16 @@ String payStatus;
                         btn_payu.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                             //   new PaymentGateway(mCOntext, mActivity).ApiGenerateHashTest(ynwUUID, sAmountPay, accountID, "bill");
 
-                               // new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, "bill");
-
+                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, "bill");
 
 
-                                Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
+
+                               /* Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
                                 iPayu.putExtra("ynwUUID",ynwUUID);
                                 iPayu.putExtra("amount",sAmountPay);
                                 iPayu.putExtra("accountID",accountID);
-                                startActivity(iPayu);
+                                startActivity(iPayu);*/
                                 dialog.dismiss();
                                 // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
                        /*

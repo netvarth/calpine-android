@@ -99,23 +99,39 @@ public class PaymentGateway {
                             CheckSumModel response_data = response.body();
                             Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
-                            CheckIn.launchPaymentFlow(amount, response_data);
+                            //CheckIn.launchPaymentFlow(amount, response_data);
+
+                            Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
+                            iPayu.putExtra("responsedata",response_data);
+                            iPayu.putExtra("amount",amount);
+                            mCOntext.startActivity(iPayu);
 
                         } else if (from.equalsIgnoreCase("bill")) {
                             CheckSumModel response_data = response.body();
                             Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
-                          BillActivity.launchPaymentFlow(amount, response_data);
+                        //  BillActivity.launchPaymentFlow(amount, response_data);
+
+                            Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
+                            iPayu.putExtra("responsedata",response_data);
+                            iPayu.putExtra("amount",amount);
+                            mCOntext.startActivity(iPayu);
                         } else {
                             CheckSumModel response_data = response.body();
 
-                            PaymentActivity.launchPaymentFlow(amount, response_data);
+                           // PaymentActivity.launchPaymentFlow(amount, response_data);
+
+                            Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
+                            iPayu.putExtra("responsedata",response_data);
+                            iPayu.putExtra("amount",amount);
+                            mCOntext.startActivity(iPayu);
                         }
 
 
                     } else {
                         String responseerror = response.errorBody().string();
                         Config.logV("Response--error-------------------------" + responseerror);
+                        Toast.makeText(mCOntext,responseerror,Toast.LENGTH_LONG).show();
                     }
 
 

@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +57,9 @@ public class PayUMoneyWebview extends Activity {
 
 	Activity mActivity;
 	Context mContext;
-	String ynwUUID,amount,accountID;
+	String amount;
+	CheckSumModel response_data;
+	ProgressBar mProgress;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,16 +77,22 @@ public class PayUMoneyWebview extends Activity {
 		webviewPayment.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 		webviewPayment.getSettings().setSupportMultipleWindows(true);
 		webviewPayment.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+		mProgress=(ProgressBar)findViewById(R.id.progressbar);
+		mProgress.setVisibility(View.VISIBLE);
+		webviewPayment.setVisibility(View.GONE);
 		webviewPayment.addJavascriptInterface(new PayUJavaScriptInterface(), "PayUMoney");
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			ynwUUID = extras.getString("ynwUUID");
+			/*ynwUUID = extras.getString("ynwUUID");
+			accountID = extras.getString("accountID");*/
 			amount = extras.getString("amount");
-			accountID = extras.getString("accountID");
+			 response_data =(CheckSumModel)getIntent().getSerializableExtra("responsedata");
+
 
 		}
+		if(response_data!=null)
+		loadWebView(response_data);
 
-		ApiGenerateHash1(ynwUUID,amount,accountID);
 
 
 	}
@@ -100,6 +111,34 @@ public class PayUMoneyWebview extends Activity {
 		//	webviewPayment.postUrl(url_s.toString(),EncodingUtils.getBytes(getPostString(), "utf-8"));
 
 		webviewPayment.postUrl(url_s.toString(),getPostString(responseDATA,amount).getBytes(Charset.forName("UTF-8")));
+
+		webviewPayment.setWebChromeClient(new WebChromeClient() {
+
+			// this will be called on page loading progress
+
+			@Override
+
+			public void onProgressChanged(WebView view, int newProgress) {
+
+				//super.onProgressChanged(view, newProgress);
+
+
+				mProgress.setProgress(newProgress);
+
+				// hide the progress bar if the loading is complete
+
+				if (newProgress == 100) {
+
+  				/* call after laoding splash.html  */
+
+					webviewPayment.setVisibility(View.VISIBLE);
+					mProgress.setVisibility(View.GONE);
+
+				}
+
+			}
+
+		});
 
 		webviewPayment.setWebViewClient(new WebViewClient() {
 			@Override
@@ -156,6 +195,7 @@ public class PayUMoneyWebview extends Activity {
 					/*TextView  txtview;
 					txtview = (TextView) findViewById(R.id.textView1);
 					txtview.setText("Status is txn is failed "+" payment id is "+paymentId);*/
+					finish();
 
 				}
 			});
@@ -272,77 +312,5 @@ public class PayUMoneyWebview extends Activity {
     }
 
 
-	public void ApiGenerateHash1(String ynwUUID, final String amount, String accountID) {
-
-
-		ApiInterface apiService =
-				ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-		final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-		mDialog.show();
-
-		//  String uniqueID = UUID.randomUUID().toString();
-		JSONObject jsonObj = new JSONObject();
-		try {
-
-			jsonObj.put("amount", amount);
-			jsonObj.put("paymentMode", "DC");
-			jsonObj.put("uuid", ynwUUID);
-			jsonObj.put("accountId", accountID);
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-
-		RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-		Call<CheckSumModel> call = apiService.generateHash(body, accountID);
-
-		call.enqueue(new Callback<CheckSumModel>() {
-			@Override
-			public void onResponse(Call<CheckSumModel> call, Response<CheckSumModel> response) {
-
-				try {
-
-					if (mDialog.isShowing())
-						Config.closeDialog(mActivity, mDialog);
-
-					Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-					Config.logV("Response--code-------------------------" + response.code());
-
-
-					if (response.code() == 200) {
-
-
-						CheckSumModel response_data = response.body();
-						loadWebView(response_data);
-
-
-					} else {
-						String responseerror = response.errorBody().string();
-						Config.logV("Response--error-------------------------" + responseerror);
-					}
-
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-
-			@Override
-			public void onFailure(Call<CheckSumModel> call, Throwable t) {
-				// Log error here since request failed
-				Config.logV("Fail---------------" + t.toString());
-				if (mDialog.isShowing())
-					Config.closeDialog(mActivity, mDialog);
-
-			}
-		});
-
-
-
-	}
 
 }

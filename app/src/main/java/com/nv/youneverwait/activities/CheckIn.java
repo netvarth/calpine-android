@@ -1102,20 +1102,23 @@ public class CheckIn extends AppCompatActivity {
                     Config.logV("mQueueTimeSlotList--------11111-----------------" + response.code());
                     if (response.code() == 200) {
                         mQueueTimeSlotList = response.body();
-                        i = 0;
-                        if(mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")&&String.valueOf(mQueueTimeSlotList.get(0).getQueueSize())!=null) {
-                            tv_personahead.setVisibility(View.VISIBLE);
-                            String firstWord = "Person Ahead ";
-                            String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize());
 
-                            Spannable spannable = new SpannableString(firstWord + secondWord);
-                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                    "fonts/Montserrat_Bold.otf");
-                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            tv_personahead.setText(spannable);
+                        if(mQueueTimeSlotList.size()>0) {
+                            i = 0;
+                            if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null) {
+                                tv_personahead.setVisibility(View.VISIBLE);
+                                String firstWord = "Person Ahead ";
+                                String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize());
 
-                        }else {
-                            tv_personahead.setVisibility(View.GONE);
+                                Spannable spannable = new SpannableString(firstWord + secondWord);
+                                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                        "fonts/Montserrat_Bold.otf");
+                                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                tv_personahead.setText(spannable);
+
+                            } else {
+                                tv_personahead.setVisibility(View.GONE);
+                            }
                         }
                         if (mQueueTimeSlotList.size() > 1) {
                             Lbottomlayout.setVisibility(View.VISIBLE);
@@ -1540,7 +1543,7 @@ public class CheckIn extends AppCompatActivity {
                             Lbottomlayout.setVisibility(View.GONE);
 
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText("Check-ins are not accepted for this date");
+                            txtnocheckin.setText("Check-In for this service is not accepted for this date");
                         }
 
 
@@ -2472,15 +2475,15 @@ public class CheckIn extends AppCompatActivity {
                                           // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
                                             Config.logV("Account ID --------------"+modifyAccountID);
-
+/*
                                             Intent iPayu=new Intent(mContext, PayUMoneyWebview.class);
                                             iPayu.putExtra("ynwUUID",value);
                                             iPayu.putExtra("amount",sAmountPay);
                                             iPayu.putExtra("accountID",modifyAccountID);
-                                            startActivity(iPayu);
+                                            startActivity(iPayu);*/
 
 
-                                            // new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, accountID, "checkin");
+                                             new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, accountID, "checkin");
 
                                             dialog.dismiss();
 
@@ -2518,10 +2521,10 @@ public class CheckIn extends AppCompatActivity {
 
 Config.logV("Error String-----------"+errorString);
                             Map<String, String> tokens = new HashMap<String, String>();
-                            tokens.put("customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
+                            tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
                             tokens.put("provider", mSearchTerminology.getProvider());
                             tokens.put("arrived", mSearchTerminology.getArrived());
-                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
+                            tokens.put("waitlist", mSearchTerminology.getWaitlist());
 
                             tokens.put("start", mSearchTerminology.getStart());
                             tokens.put("cancelled", mSearchTerminology.getCancelled());

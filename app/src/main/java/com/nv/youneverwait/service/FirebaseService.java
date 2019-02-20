@@ -31,6 +31,7 @@ import com.nv.youneverwait.utils.SharedPreference;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
 import java.util.Random;
 
 
@@ -98,6 +99,10 @@ public class FirebaseService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
+
+          /* Map<String, String> params = remoteMessage.getData();
+            JSONObject object = new JSONObject(params);
+            Log.e("JSON_OBJECT", object.toString());*/
         //    sendNotification(remoteMessage.getData().get("title").toString(),remoteMessage.getData().get("message").toString());
         }
     }

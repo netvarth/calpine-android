@@ -115,6 +115,15 @@
                     android:visibility="gone"
                     android:textColor="@color/orange"
                     android:textSize="@dimen/txtsize_12" />
+
+                <TextView
+                    android:id="@+id/txtmakepay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding2"
+                    android:visibility="gone"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
             </LinearLayout>
 
             <LinearLayout

@@ -50,18 +50,19 @@ public class PaymentActivity extends AppCompatActivity {
 
     static Context mContext;
     static Activity mActivity;
-    String ynwUUID,accountID;
+    String ynwUUID, accountID;
     double amountDue;
     boolean showPaytmWallet = false;
     boolean showPayU = false;
-    Button btn_paytm ;
+    Button btn_paytm;
     Button btn_payu;
+
     @Override
-    public void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.prepayment_layout);
-        mContext=this;
-        mActivity=this;
+        mContext = this;
+        mActivity = this;
         TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
         tv_title.setText("Payment");
 
@@ -76,19 +77,20 @@ public class PaymentActivity extends AppCompatActivity {
                 finish();
             }
         });
-         btn_paytm = (Button) findViewById(R.id.btn_paytm);
-         btn_payu = (Button) findViewById(R.id.btn_payu);
+        btn_paytm = (Button) findViewById(R.id.btn_paytm);
+        btn_payu = (Button) findViewById(R.id.btn_payu);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             ynwUUID = extras.getString("ynwUUID");
             accountID = extras.getString("accountID");
-            amountDue= extras.getDouble("amountDue");
+            amountDue = extras.getDouble("amountDue");
         }
 
-        APIPayment(accountID,ynwUUID,amountDue);
+        APIPayment(accountID, ynwUUID, amountDue);
 
 
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
@@ -237,17 +239,15 @@ public class PaymentActivity extends AppCompatActivity {
         btn_payu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //    new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
+
+                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
 
 
-               // new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
-
-
-                Intent iPayu=new Intent(mContext, PayUMoneyWebview.class);
+               /* Intent iPayu=new Intent(mContext, PayUMoneyWebview.class);
                 iPayu.putExtra("ynwUUID",ynwUUID);
                 iPayu.putExtra("amount",String.valueOf(amountDue));
                 iPayu.putExtra("accountID",accountID);
-                startActivity(iPayu);
+                startActivity(iPayu);*/
 
                 // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
                        /*
@@ -269,6 +269,7 @@ public class PaymentActivity extends AppCompatActivity {
         });
 
     }
+
     public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 

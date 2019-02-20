@@ -81,7 +81,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_businessname, tv_estTime, tv_place, tv_status;
-        TextView icon_bill, tv_prepaid, tv_service;
+        TextView icon_bill, tv_prepaid, tv_service,tv_makepay;
         LinearLayout layout_btnpay;
         Button btn_pay;
 
@@ -97,6 +97,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             tv_prepaid = (TextView) view.findViewById(R.id.txtprepaid);
             tv_status = (TextView) view.findViewById(R.id.txt_status);
             tv_service = (TextView) view.findViewById(R.id.txt_service);
+            tv_makepay= (TextView) view.findViewById(R.id.txtmakepay);
         }
     }
 
@@ -258,13 +259,17 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
            }
             if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                 myViewHolder.btn_pay.setVisibility(View.VISIBLE);
+                myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
                 myViewHolder.btn_pay.setText("PRE-PAY");
+                myViewHolder.tv_makepay.setText("Click PRE-PAY button in 15 minutes to complete your check-in");
+
             }
 
 
         } else {
 
             myViewHolder.btn_pay.setVisibility(View.GONE);
+            myViewHolder.tv_makepay.setVisibility(View.GONE);
         }
 
         if ((activelist.getBillViewStatus()!=null) ) {
