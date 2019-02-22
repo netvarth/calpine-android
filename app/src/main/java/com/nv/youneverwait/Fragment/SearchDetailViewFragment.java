@@ -237,7 +237,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         //tv_contactdetails.setTypeface(tyface);
 
         ApiSearchViewDetail(uniqueID);
-        ApiSearchGallery(uniqueID);
+
         ApiSearchViewTerminology(uniqueID);
         ApiSearchVirtualFields(uniqueID);
 
@@ -412,16 +412,20 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             if (mGallery.size() > 0) {
 
 
-                if (mGallery.get(0).getUrl() != null) {
+
                     mImgeProfile.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
                             Config.logV("Gallery------------------------------" + mGallery.size());
                             ArrayList<String> mGalleryList = new ArrayList<>();
+
+                            if (mBusinessDataList.getLogo() != null) {
+                                mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                            }
+
                             for (int i = 0; i < mGallery.size(); i++) {
-                        /*SearchViewDetail data = new SearchViewDetail();
-                        data.setUrl(mGallery.get(i).getUrl());*/
+
                                 mGalleryList.add(mGallery.get(i).getUrl());
                             }
 
@@ -430,25 +434,30 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             if (mValue) {
 
                                 Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                intent.putExtra("pos",0);
                                 startActivity(intent);
                             }
 
 
                         }
                     });
-                }
 
-                if (mGallery.size() >= 2) {
-                    if (mGallery.get(1).getUrl() != null) {
+
+
+
                         mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
                                 Config.logV("Gallery------------------------------" + mGallery.size());
                                 ArrayList<String> mGalleryList = new ArrayList<>();
-                                for (int i = 1; i < mGallery.size(); i++) {
-                        /*SearchViewDetail data = new SearchViewDetail();
-                        data.setUrl(mGallery.get(i).getUrl());*/
+
+
+                                if (mBusinessDataList.getLogo() != null) {
+
+                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                                }
+                                for (int i = 0; i < mGallery.size(); i++) {
                                     mGalleryList.add(mGallery.get(i).getUrl());
                                 }
 
@@ -457,23 +466,174 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 if (mValue) {
 
                                     Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                    intent.putExtra("pos",1);
                                     startActivity(intent);
                                 }
 
 
                             }
                         });
-                    }
-                }
-                if (mGallery.size() >= 3) {
-                    if (mGallery.get(2).getUrl() != null) {
+
+
+
+
                         mImgthumbProfile1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
                                 Config.logV("Gallery------------------------------" + mGallery.size());
                                 ArrayList<String> mGalleryList = new ArrayList<>();
-                                for (int i = 1; i < mGallery.size(); i++) {
+
+
+                                if (mBusinessDataList.getLogo() != null) {
+
+                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                                }
+                                for (int i = 0; i < mGallery.size(); i++) {
+
+                                    mGalleryList.add(mGallery.get(i).getUrl());
+                                }
+
+
+                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                                if (mValue) {
+
+                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                    intent.putExtra("pos",2);
+                                    startActivity(intent);
+                                }
+
+
+                            }
+                        });
+
+
+            } /*else {
+                tv_Gallery.setVisibility(View.GONE);
+            }*/
+
+            Config.logV("Bussiness logo @@@@@@@@@@"+mBusinessDataList.getLogo());
+            if (mBusinessDataList.getLogo() != null) {
+                Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+
+            } else {
+                Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+
+            }
+
+
+            if (mBusinessDataList.getLogo() != null && mGallery.size() > 0 || mGallery.size() > 1) {
+                tv_Gallery.setVisibility(View.VISIBLE);
+                mImgthumbProfile.setVisibility(View.VISIBLE);
+
+                if (mBusinessDataList.getLogo() != null) {
+
+
+                    Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
+
+
+                    if (mGallery.size() == 2) {
+                        mImgthumbProfile1.setVisibility(View.VISIBLE);
+                        Config.logV("Gallery--------");
+                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+                    } else {
+                        mImgthumbProfile1.setVisibility(View.GONE);
+                    }
+
+                    if (mGallery.size() == 3) {
+
+                        mImgthumbProfile1.setVisibility(View.VISIBLE);
+                        Config.logV("Gallery----333----");
+                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+                        mImgthumbProfile2.setVisibility(View.VISIBLE);
+                        Config.logV("Gallery----3333----");
+                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
+                    }
+
+                    if (mGallery.size() > 3) {
+
+                        mImgthumbProfile1.setVisibility(View.VISIBLE);
+                        Config.logV("Gallery----4444----");
+                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+
+                        mImgthumbProfile2.setVisibility(View.VISIBLE);
+                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
+                        tv_ImageViewText.setVisibility(View.VISIBLE);
+                        tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
+                        Config.logV("Gallery-------------444----------" + mGallery.size());
+                        mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Config.logV("Gallery------------------------------" + mGallery.size());
+                                ArrayList<String> mGalleryList = new ArrayList<>();
+
+
+                                if (mBusinessDataList.getLogo() != null) {
+
+                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                                }
+
+                                for (int i = 0; i < mGallery.size(); i++) {
+
+                                    mGalleryList.add(mGallery.get(i).getUrl());
+                                }
+
+
+                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                                if (mValue) {
+
+                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                    intent.putExtra("pos",3);
+                                    startActivity(intent);
+                                }
+
+
+                            }
+                        });
+                    } else {
+                        //mImgthumbProfile2.setVisibility(View.GONE);
+                        tv_ImageViewText.setVisibility(View.GONE);
+                        // mImgthumbProfile1.setVisibility(View.GONE);
+                    }
+
+                } else {
+
+
+                    Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
+
+
+                    if (mGallery.size() == 3) {
+                        mImgthumbProfile1.setVisibility(View.VISIBLE);
+                        Config.logV("Gallery--------");
+                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+                    } else {
+                        mImgthumbProfile1.setVisibility(View.GONE);
+                    }
+
+                    if (mGallery.size() > 3) {
+
+                        mImgthumbProfile1.setVisibility(View.VISIBLE);
+                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+                        mImgthumbProfile2.setVisibility(View.VISIBLE);
+                        Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
+                        tv_ImageViewText.setVisibility(View.VISIBLE);
+                        tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
+                        Config.logV("Galeery--------------11111-----------" + mGallery.size());
+                        mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Config.logV("Gallery------------------------------" + mGallery.size());
+                                ArrayList<String> mGalleryList = new ArrayList<>();
+                                if (mBusinessDataList.getLogo() != null) {
+
+                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                                }
+
+
+
+                                for (int i = 0; i < mGallery.size(); i++) {
                         /*SearchViewDetail data = new SearchViewDetail();
                         data.setUrl(mGallery.get(i).getUrl());*/
                                     mGalleryList.add(mGallery.get(i).getUrl());
@@ -484,75 +644,21 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 if (mValue) {
 
                                     Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                                    intent.putExtra("pos",3);
                                     startActivity(intent);
                                 }
 
 
                             }
                         });
+                    } else {
+                        mImgthumbProfile2.setVisibility(View.GONE);
+                        tv_ImageViewText.setVisibility(View.GONE);
+                        // mImgthumbProfile1.setVisibility(View.GONE);
                     }
+
+
                 }
-            } /*else {
-                tv_Gallery.setVisibility(View.GONE);
-            }*/
-
-            Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
-
-            if (mGallery.size() > 1) {
-                tv_Gallery.setVisibility(View.VISIBLE);
-                mImgthumbProfile.setVisibility(View.VISIBLE);
-                // Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(mImgthumbProfile);
-
-                Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
-
-
-                if (mGallery.size() == 3) {
-                    mImgthumbProfile1.setVisibility(View.VISIBLE);
-                    Config.logV("Gallery--------");
-                    Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-                } else {
-                    mImgthumbProfile1.setVisibility(View.GONE);
-                }
-
-                if (mGallery.size() > 3) {
-
-                    mImgthumbProfile1.setVisibility(View.VISIBLE);
-                    Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-                    mImgthumbProfile2.setVisibility(View.VISIBLE);
-                    Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
-                    tv_ImageViewText.setVisibility(View.VISIBLE);
-                    tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
-                    Config.logV("Galeery--------------11111-----------" + mGallery.size());
-                    mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            Config.logV("Gallery------------------------------" + mGallery.size());
-                            ArrayList<String> mGalleryList = new ArrayList<>();
-                            for (int i = 1; i < mGallery.size(); i++) {
-                        /*SearchViewDetail data = new SearchViewDetail();
-                        data.setUrl(mGallery.get(i).getUrl());*/
-                                mGalleryList.add(mGallery.get(i).getUrl());
-                            }
-
-
-                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                            if (mValue) {
-
-                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                startActivity(intent);
-                            }
-
-
-                        }
-                    });
-                } else {
-                    mImgthumbProfile2.setVisibility(View.GONE);
-                    tv_ImageViewText.setVisibility(View.GONE);
-                    // mImgthumbProfile1.setVisibility(View.GONE);
-                }
-
-
             } else {
                 mImgthumbProfile.setVisibility(View.GONE);
                 tv_Gallery.setVisibility(View.GONE);
@@ -979,6 +1085,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Config.logV("Provider------------" + response.body().getId());
                         mProvoderId = response.body().getId();
                         UpdateMainUI(mBusinessDataList);
+                        ApiSearchGallery(uniqueID);
                         ApiFavList();
                         ApiSearchViewLocation(uniqueID);
 
@@ -1038,6 +1145,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
 
                         mSearchGallery = response.body();
+
                         UpdateGallery(mSearchGallery);
 
                     }
@@ -1753,7 +1861,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ids = new ArrayList<>();
         contactDetail = new ArrayList<>();
         ApiSearchViewDetail(uniqueID);
-        ApiSearchGallery(uniqueID);
+        //ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
 
     }

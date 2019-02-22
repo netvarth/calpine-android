@@ -1,5 +1,7 @@
 package com.nv.youneverwait.response;
 
+import android.widget.SearchView;
+
 import com.google.gson.annotations.SerializedName;
 import com.nv.youneverwait.model.SocialMediaModel;
 
@@ -92,6 +94,17 @@ public class SearchViewDetail {
     }
 
     String verifyLevel;
+
+    public SearchViewDetail getLogo() {
+        return logo;
+    }
+
+    public void setLogo(SearchViewDetail logo) {
+        this.logo = logo;
+    }
+
+
+    public SearchViewDetail logo;
 
     public float getAvgRating() {
         return avgRating;

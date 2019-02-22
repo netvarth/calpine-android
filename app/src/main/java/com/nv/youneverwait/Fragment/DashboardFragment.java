@@ -77,6 +77,7 @@ import com.nv.youneverwait.model.SearchModel;
 import com.nv.youneverwait.response.ActiveCheckIn;
 import com.nv.youneverwait.response.PaymentModel;
 import com.nv.youneverwait.response.RefinedFilters;
+import com.nv.youneverwait.utils.EmptySubmitSearchView;
 import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
@@ -136,7 +137,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     ArrayList<SearchModel> mPopular_AllSearchList = new ArrayList<>();
 
 
-    SearchView mSearchView;
+    EmptySubmitSearchView mSearchView;
     SearchView.SearchAutoComplete searchSrcTextView;
     String mDomainSpinner;
     SearchListAdpter listadapter;
@@ -760,7 +761,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
         //SEARCH
-        mSearchView = (SearchView) row.findViewById(R.id.search);
+        mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
         searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         SearchManager searchMng = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchMng.getSearchableInfo(getActivity().getComponentName()));
@@ -1716,7 +1717,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         bundle.putString("longitude", String.valueOf(longitude));
         bundle.putString("spinnervalue", spinnerTxtPass);
         Config.logV("SEARCH TXT 99999" + mSearchtxt);
-        bundle.putString("searchtxt", mSearchtxt);
+        if(!query.equalsIgnoreCase("")) {
+            bundle.putString("searchtxt", mSearchtxt);
+        }else{
+            bundle.putString("searchtxt", "");
+        }
         pfFragment.setArguments(bundle);
 
 

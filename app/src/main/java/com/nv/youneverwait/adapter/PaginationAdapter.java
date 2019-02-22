@@ -135,7 +135,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 final MyViewHolder myViewHolder = (MyViewHolder) holder;
 
 
-                Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
+               // Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
                 /*if (searchdetailList.getYnw_verified() == 1) {
                     myViewHolder.tv_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_verified, 0);
                 } else {
@@ -143,7 +143,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }*/
 
 
-                Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
+              //  Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
                 if (searchdetailList.getYnw_verified_level() != null) {
                     if (searchdetailList.getYnw_verified() == 1) {
                         if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("2")) {
@@ -603,10 +603,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     if (searchdetailList.getAvail_date() != null && searchdetailList.getOnline_checkins() != null && searchdetailList.getServices() != null) {
 
-                        Config.logV("Title-------" + searchdetailList.getTitle());
-                        Config.logV("Title---111----" + searchdetailList.getAvail_date());
 
-                        Config.logV("Title---111---222-" + formattedDate + "" + searchdetailList.getAvail_date() + "online" + searchdetailList.getOnline_checkins());
+
+                      //  Config.logV("Title---111---222-" + formattedDate + "" + searchdetailList.getAvail_date() + "online" + searchdetailList.getOnline_checkins());
 
                         if (searchdetailList.getOnline_checkins() != null) {
                             if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {
@@ -877,7 +876,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         }
 
-                        Config.logV("SpEc Open----------" + searchdetailList.isIs_SpecOpen() + "Prov" + searchdetailList.getTitle());
+                     //   Config.logV("SpEc Open----------" + searchdetailList.isIs_SpecOpen() + "Prov" + searchdetailList.getTitle());
 
 
                         myViewHolder.tv_spec3.setOnClickListener(new View.OnClickListener() {
@@ -905,7 +904,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 //  Picasso.with(context).load(searchdetailList.getLogo()).fit().into(myViewHolder.profile);
                 Picasso.with(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
 
+
                 if (searchdetailList.getGallery_thumb_nails() != null) {
+                 //   Config.logV("Name PRofile "+searchdetailList.getTitle()+"gallery "+searchdetailList.getGallery_thumb_nails().size());
                     if (searchdetailList.getGallery_thumb_nails().size() > 0) {
                         myViewHolder.mImageViewText.setVisibility(View.VISIBLE);
                         myViewHolder.mImageViewText.setText("+" + searchdetailList.getGallery_thumb_nails().size());

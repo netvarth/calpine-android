@@ -55,6 +55,7 @@ import com.nv.youneverwait.model.WorkingModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchAWsResponse;
 import com.nv.youneverwait.response.SearchTerminology;
+import com.nv.youneverwait.utils.EmptySubmitSearchView;
 import com.nv.youneverwait.utils.PaginationScrollListener;
 import com.nv.youneverwait.utils.SharedPreference;
 
@@ -107,7 +108,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     ArrayList<SearchModel> mSpecializationDomain = new ArrayList<>();
     ArrayList<SearchModel> mSpecializationDomainSearch = new ArrayList<>();
     Spinner mSpinnerDomain;
-    SearchView mSearchView;
+    EmptySubmitSearchView mSearchView;
     SearchView.SearchAutoComplete searchSrcTextView;
     String mDomainSpinner;
     SearchListAdpter listadapter;
@@ -240,7 +241,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Config.logV("Fragment Context--43343---" + searchDetail);
         progressBar = (ProgressBar) row.findViewById(R.id.main_progress);
         //  Config.logV("Pass Fragment" + searchDetail);
-        mSearchView = (SearchView) row.findViewById(R.id.search);
+        mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
 
 
         pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this);
@@ -880,7 +881,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     search.setFuture_checkins(response.body().getHits().getHit().get(i).getFields().getFuture_checkins());
                                 }
 
-
+                                if (response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails() != null) {
+                                    search.setGallery_thumb_nails(response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails());
+                                }
                                 //7 types
 
                                 if (response.body().getHits().getHit().get(i).getFields().getParking_type_location1() != null) {
@@ -1127,7 +1130,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails() != null) {
-                                    Config.logV("Gallery-@@@@---111----------------" + response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails());
+                                    //Config.logV("Gallery-@@@@---111----------------" + response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails());
                                     search.setGallery_thumb_nails(response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails());
                                 }
 
@@ -1346,6 +1349,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
+                                 //   Config.logV("Gallery-@@@@---111-------5555---------" + mSearchRespPass.get(i).getGallery_thumb_nails());
                                     searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
                                 }
 
@@ -1504,7 +1508,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
-
+                               // Config.logV("Gallery ###########"+mSearchRespPass.get(i).getGallery_thumb_nails());
                                     searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
                                 }
 

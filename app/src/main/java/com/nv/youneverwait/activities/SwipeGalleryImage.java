@@ -27,7 +27,7 @@ public class SwipeGalleryImage extends AppCompatActivity {
     static ViewPager mViewPager;
     static ArrayList<String> mGalleryList;
 
-
+int position;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,11 +58,14 @@ public class SwipeGalleryImage extends AppCompatActivity {
 
 
         Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            position = extras.getInt("pos", 0);
+        }
 
 
             CustomPageAdapter mCustomPagerAdapter = new CustomPageAdapter(this, mGalleryList);
             mViewPager.setAdapter(mCustomPagerAdapter);
-            mViewPager.setCurrentItem(0);
+            mViewPager.setCurrentItem(position);
 
 
         //title.setText(myGalleryNameList.get(intValue));
