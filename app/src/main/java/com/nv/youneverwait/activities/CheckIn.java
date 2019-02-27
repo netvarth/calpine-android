@@ -2483,7 +2483,8 @@ public class CheckIn extends AppCompatActivity {
                                             startActivity(iPayu);*/
 
 
-                                             new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, accountID, "checkin");
+                                             new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, "checkin");
+
 
                                             dialog.dismiss();
 
