@@ -964,7 +964,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (!isContact) {
                         Config.logV("Open");
                         isContact = true;
-                        tv_contact.setText("Hide Contact");
+                        tv_contact.setText("Contact");
                         tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.contact_selected, 0, 0);
                        /* mrecycle_contactdetail.setVisibility(View.VISIBLE);
                         tv_contactdetails.setVisibility(View.VISIBLE);
@@ -1287,7 +1287,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             public void onClick(View v) {
 
                 isContact = false;
-                tv_contact.setText("Show Contact");
+                tv_contact.setText("Contact");
                 tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_contact, 0, 0);
                 bdialog.dismiss();
 
@@ -1301,7 +1301,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         //the dialog gets canceled and this method executes.
                         Config.logV("CANCEL @@@@@@@@@@@");
                         isContact = false;
-                        tv_contact.setText("Show Contact");
+                        tv_contact.setText("Contact");
                         tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_contact, 0, 0);
                         bdialog.dismiss();
                     }

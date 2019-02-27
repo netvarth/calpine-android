@@ -3,7 +3,9 @@ package com.nv.youneverwait.payment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,9 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.nv.youneverwait.Fragment.HomeTabFragment;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
 import com.nv.youneverwait.activities.CheckIn;
+import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.activities.PaymentActivity;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
@@ -144,6 +148,8 @@ public class PayUMoneyWebview extends Activity {
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				super.onPageFinished(view, url);
+
+				Config.logV("URL FINISH------------"+url);
 			}
 
 			@SuppressWarnings("unused")
@@ -154,6 +160,8 @@ public class PayUMoneyWebview extends Activity {
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+				Config.logV("Load URL--------------"+url);
 				view.loadUrl(url);
 				return true;
 			}
@@ -172,7 +180,12 @@ public class PayUMoneyWebview extends Activity {
 
                 	Toast.makeText(PayUMoneyWebview.this, "Status is txn is success "+" payment id is "+paymentId, Toast.LENGTH_SHORT).show();
 
-                	finish();
+
+					Intent intent = new Intent(mContext, Home.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					intent.putExtra("message", "payu");
+					startActivity(intent);
+					finish();
                 	//String str="Status is txn is success "+" payment id is "+paymentId;
                   // new MainActivity().writeStatus(str);
 
@@ -195,6 +208,10 @@ public class PayUMoneyWebview extends Activity {
 					/*TextView  txtview;
 					txtview = (TextView) findViewById(R.id.textView1);
 					txtview.setText("Status is txn is failed "+" payment id is "+paymentId);*/
+					Intent intent = new Intent(mContext, Home.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					intent.putExtra("message", "payu");
+					startActivity(intent);
 					finish();
 
 				}

@@ -33,7 +33,6 @@ import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
 import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.adapter.ExpandableListAdapter;
-import com.nv.youneverwait.adapter.HistoryCheckInAdapter;
 import com.nv.youneverwait.callback.HistoryAdapterCallback;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;

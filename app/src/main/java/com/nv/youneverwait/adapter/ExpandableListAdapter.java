@@ -863,7 +863,7 @@ String header;
         {
             layout_token.setVisibility(View.VISIBLE);
             tv_personahead.setVisibility(View.VISIBLE);
-            String firstWord1 = "Persons Ahead ";
+            String firstWord1 = "People ahead of you ";
             String secondWord1 = String.valueOf(activelist.getPersonsAhead());
             Spannable spannable1 = new SpannableString(firstWord1 + secondWord1);
             spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),

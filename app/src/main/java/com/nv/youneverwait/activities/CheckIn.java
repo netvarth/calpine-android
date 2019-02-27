@@ -1107,7 +1107,7 @@ public class CheckIn extends AppCompatActivity {
                             i = 0;
                             if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null) {
                                 tv_personahead.setVisibility(View.VISIBLE);
-                                String firstWord = "Person Ahead ";
+                                String firstWord = "People ahead of you ";
                                 String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize());
 
                                 Spannable spannable = new SpannableString(firstWord + secondWord);

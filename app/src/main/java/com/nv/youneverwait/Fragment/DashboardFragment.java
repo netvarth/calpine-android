@@ -577,10 +577,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                                /* ArrayList<ListCell>*/
                     items = new ArrayList<ListCell>();
-                    /*for (int i = 0; i < mGLobalSearch.size(); i++) {
+                    for (int i = 0; i < mGLobalSearch.size(); i++) {
 
                         items.add(new ListCell(mGLobalSearch.get(i).getName(), "Suggested Search", mGLobalSearch.get(i).getQuery(), mGLobalSearch.get(i).getDisplayname()));
-                    }*/
+                    }
 
 
                     /**********************************HEADER+SPECIALIZATION**************************************/

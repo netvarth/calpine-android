@@ -447,7 +447,9 @@ public class FamilyMemberFragment extends RootFragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            return new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            DatePickerDialog  da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            da.getDatePicker().setMaxDate(System.currentTimeMillis());
+            return  da;
         }
 
         private DatePickerDialog.OnDateSetListener dateSetListener =

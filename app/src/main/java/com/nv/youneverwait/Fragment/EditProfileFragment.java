@@ -462,12 +462,14 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-
-            return new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            DatePickerDialog  da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            da.getDatePicker().setMaxDate(System.currentTimeMillis());
+            return  da;
         }
 
         private DatePickerDialog.OnDateSetListener dateSetListener =

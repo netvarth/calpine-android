@@ -152,12 +152,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         });
 
 
-        if(activelist.getAmountDue()>0) {
-            myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
-            myViewHolder.tv_prepaid.setText("Amount Due: ₹" + activelist.getAmountDue());
-        }else{
-            myViewHolder.tv_prepaid.setVisibility(View.GONE);
-        }
+
         myViewHolder.tv_status.setVisibility(View.VISIBLE);
         Typeface tyfacestatus = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -255,6 +250,12 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                if (activelist.getBillViewStatus().equalsIgnoreCase("Show") && activelist.getAmountDue() > 0) {
                    myViewHolder.btn_pay.setVisibility(View.VISIBLE);
                    myViewHolder.btn_pay.setText("PAY");
+                   if(activelist.getAmountDue()>0) {
+                       myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
+                       myViewHolder.tv_prepaid.setText("Amount Due: ₹" + activelist.getAmountDue());
+                   }else{
+                       myViewHolder.tv_prepaid.setVisibility(View.GONE);
+                   }
                }
            }
             if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
@@ -262,6 +263,12 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
                 myViewHolder.btn_pay.setText("PRE-PAY");
                 myViewHolder.tv_makepay.setText("Click PRE-PAY button in 15 minutes to complete your check-in");
+                if(activelist.getAmountDue()>0) {
+                    myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_prepaid.setText("Amount Due: ₹" + activelist.getAmountDue());
+                }else{
+                    myViewHolder.tv_prepaid.setVisibility(View.GONE);
+                }
 
             }
 
