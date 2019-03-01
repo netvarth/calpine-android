@@ -306,8 +306,8 @@ public class FamilyMemberFragment extends RootFragment {
                     if (response.code() == 200) {
 
 
-                            Toast.makeText(mContext, "Member updated successfully ", Toast.LENGTH_LONG).show();
-                            getFragmentManager().popBackStack();
+                        Toast.makeText(mContext, "Member updated successfully ", Toast.LENGTH_LONG).show();
+                        getFragmentManager().popBackStack();
 
                       /*  Bundle bundle = new Bundle();
                         bundle.putString("refersh", "update");
@@ -397,10 +397,10 @@ public class FamilyMemberFragment extends RootFragment {
                     Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
 
-                       // if(response.body().string().equalsIgnoreCase("true")) {
-                            Toast.makeText(mContext, "Member added successfully ", Toast.LENGTH_LONG).show();
-                            getFragmentManager().popBackStackImmediate();
-                       // }
+                        // if(response.body().string().equalsIgnoreCase("true")) {
+                        Toast.makeText(mContext, "Member added successfully ", Toast.LENGTH_LONG).show();
+                        getFragmentManager().popBackStackImmediate();
+                        // }
 
                        /* Bundle bundle = new Bundle();
                         bundle.putString("refersh", "update");
