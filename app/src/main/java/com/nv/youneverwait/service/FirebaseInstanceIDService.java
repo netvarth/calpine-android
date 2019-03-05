@@ -29,13 +29,15 @@ public class FirebaseInstanceIDService extends FirebaseService {
 
         // Notify UI that registration has completed, so the progress indicator can be hidden.
 
-        Config.logV("TOKEN REFRESH__________@@@@@@________"+refreshedToken);
+        Config.logV("TOKEN REFRESH____EEEEEE______@@@@@@________"+refreshedToken);
 
-        String loginId = SharedPreference.getInstance(this).getStringValue("mobno", "");
+       Config.ApiUpdateToken(this);
+
+        /*String loginId = SharedPreference.getInstance(this).getStringValue("mobno", "");
         String password = SharedPreference.getInstance(this).getStringValue("password", "");
         if(!loginId.equalsIgnoreCase("")&&!password.equalsIgnoreCase("")) {
             Config.ApiSessionResetLogin(loginId,password,this);
-        }
+        }*/
     }
 
 
