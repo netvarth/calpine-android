@@ -81,7 +81,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_businessname, tv_estTime, tv_place, tv_status;
-        TextView icon_bill, tv_prepaid, tv_service,tv_makepay;
+        TextView icon_bill, tv_prepaid, tv_service,tv_makepay,tv_peopleahead;
         LinearLayout layout_btnpay;
         Button btn_pay;
 
@@ -98,6 +98,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             tv_status = (TextView) view.findViewById(R.id.txt_status);
             tv_service = (TextView) view.findViewById(R.id.txt_service);
             tv_makepay= (TextView) view.findViewById(R.id.txtmakepay);
+            tv_peopleahead= (TextView) view.findViewById(R.id.txt_peopleahead);
         }
     }
 
@@ -163,6 +164,27 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             myViewHolder.tv_status.setText("Complete");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
+        }
+
+        Config.logV("activelist.getPersonsAhead()"+activelist.getPersonsAhead());
+        if(activelist.getPersonsAhead()!=-1){
+            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+           // myViewHolder.tv_peopleahead.setText("People ahead of you : "+activelist.getPersonsAhead());
+            String firstWord1 = "People ahead of you ";
+            String secondWord1 = String.valueOf(activelist.getPersonsAhead());
+            Spannable spannable1 = new SpannableString(firstWord1 + secondWord1);
+            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                    0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                    firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            myViewHolder.tv_peopleahead.setText(spannable1);
+
+        }else{
+            myViewHolder.tv_peopleahead.setVisibility(View.GONE);
         }
 
         if (activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {

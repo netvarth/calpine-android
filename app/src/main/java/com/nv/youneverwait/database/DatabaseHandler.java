@@ -204,6 +204,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "billStatus TEXT,"
                 + "amountPaid DOUBLE,"
                 + "amountDue DOUBLE,"
+                + "personsAhead INTEGER,"
                 + "serviceTime TEXT)";
 
         //create table
@@ -240,6 +241,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("billStatus", activeCheckIn.getBillStatus());
                 values.put("amountPaid", activeCheckIn.getAmountPaid());
                 values.put("amountDue", activeCheckIn.getAmountDue());
+                values.put("personsAhead", activeCheckIn.getPersonsAhead());
                 values.put("serviceTime", activeCheckIn.getServiceTime());
 
                 db.insert(mContext.getString(R.string.db_table_checkin), null, values);
@@ -264,7 +266,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_checkin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","serviceTime"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime"};
 
         db.beginTransaction();
 
@@ -295,7 +297,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setAmountPaid(cursor.getDouble(17));
                 activeModel.setAmountDue(cursor.getDouble(18));
 
-                activeModel.setServiceTime(cursor.getString(19));
+                activeModel.setPersonsAhead(cursor.getInt(19));
+
+                activeModel.setServiceTime(cursor.getString(20));
 
 
 

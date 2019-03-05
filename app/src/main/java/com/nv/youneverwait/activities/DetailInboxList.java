@@ -152,6 +152,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Config.logV("WAITLIST ID @@@@@@@@@@@"+waitListId);
                 ApiCommunicate(waitListId,String.valueOf(accountID),edt_message.getText().toString(),dialog);
 
             }
