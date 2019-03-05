@@ -142,14 +142,14 @@ public interface ApiInterface {
 
 
     @GET("search")
-    Call<SearchAWsResponse> getSearchAWS(@QueryMap(encoded = true) Map<String, String>   query, @QueryMap(encoded = true) Map<String, String> params);
+    Call<SearchAWsResponse> getSearchAWS(@QueryMap(encoded = true) Map<String, String> query, @QueryMap(encoded = true) Map<String, String> params);
 
 
     @GET("{consumerID}/businessProfile.json")
-    Call<SearchViewDetail> getSearchViewDetail(@Path("consumerID") int consumerid,@Query("modifiedDate") String mDate);
+    Call<SearchViewDetail> getSearchViewDetail(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
     @GET("{consumerID}/gallery.json")
-    Call<ArrayList<SearchViewDetail>> getSearchGallery(@Path("consumerID") int consumerid,@Query("modifiedDate") String mDate);
+    Call<ArrayList<SearchViewDetail>> getSearchGallery(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
     @GET("{consumerID}/location.json")
     Call<ArrayList<SearchLocation>> getSearchViewLoc(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
@@ -161,18 +161,16 @@ public interface ApiInterface {
     Call<SearchTerminology> getSearchViewTerminology(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
 
-
     @GET("consumer/waitlist/services/{id}")
     Call<ArrayList<SearchService>> getSearchService(@Path("id") int id);
 
 
     @GET("consumer/waitlist")
-    Call<ArrayList<SearchCheckInMessage>> getSearchCheckInMessage(@QueryMap(encoded = true) Map<String, String>   query);
+    Call<ArrayList<SearchCheckInMessage>> getSearchCheckInMessage(@QueryMap(encoded = true) Map<String, String> query);
 
 
     @GET("provider/waitlist/queues/waitingTime/{id}")
     Call<ArrayList<QueueList>> getSearchID(@Path("id") String id);
-
 
 
     @GET(" provider/waitlist/queues/waitingTime/{queueId}")
@@ -183,8 +181,7 @@ public interface ApiInterface {
     Call<ArrayList<LocationResponse>> getSearchLocation(@Query("criteria") String criteria);
 
     @GET("consumer/waitlist/queues/{serviceID}/{sub_serviceid}/{modifiedDate}")
-    Call<ArrayList<QueueTimeSlotModel>> getQueueTimeSlot(@Path("serviceID") String serviceID,@Path("sub_serviceid") String sub_serviceid,@Path("modifiedDate") String modifiedDate,@Query("account")String acountid);
-
+    Call<ArrayList<QueueTimeSlotModel>> getQueueTimeSlot(@Path("serviceID") String serviceID, @Path("sub_serviceid") String sub_serviceid, @Path("modifiedDate") String modifiedDate, @Query("account") String acountid);
 
 
     @GET(" consumer/payment/modes/{accountid}")
@@ -199,8 +196,7 @@ public interface ApiInterface {
 
 
     @POST("consumer/communications")
-    Call<ResponseBody> PostMessage(@Query("account") String account,@Body RequestBody jsonObj);
-
+    Call<ResponseBody> PostMessage(@Query("account") String account, @Body RequestBody jsonObj);
 
 
     @GET("consumer/communications")
@@ -211,29 +207,27 @@ public interface ApiInterface {
     Call<ArrayList<FavouriteModel>> getFavourites();
 
 
-
     @POST("consumer/waitlist/communicate/{waitlistid}")
-    Call<ResponseBody> WaitListMessage(@Path("waitlistid") String otp,@Query("account") String account,@Body RequestBody jsonObj);
-
+    Call<ResponseBody> WaitListMessage(@Path("waitlistid") String otp, @Query("account") String account, @Body RequestBody jsonObj);
 
 
     @Headers("User-Agent: android")
     @POST("consumer/payment")
-    Call<CheckSumModel> generateHash(@Body RequestBody jsonObj,@Query("accountId") String account);
+    Call<CheckSumModel> generateHash(@Body RequestBody jsonObj, @Query("accountId") String account);
 
     @Headers("User-Agent: android")
     @POST("consumer/payment")
     Call<PaytmChecksum> generateHashPaytm(@Body RequestBody jsonObj);
 
     @POST("consumer/waitlist")
-    Call<ResponseBody> Checkin(@Query("account") String account,@Body RequestBody jsonObj);
+    Call<ResponseBody> Checkin(@Query("account") String account, @Body RequestBody jsonObj);
 
 
     @GET("consumer/bill/{ynwuuid}")
     Call<BillModel> getBill(@Path("ynwuuid") String uuid);
 
     @DELETE("consumer/waitlist/{ynwuuid}")
-    Call<ResponseBody> deleteActiveCheckIn(@Path("ynwuuid") String uuid,@Query("account") String account);
+    Call<ResponseBody> deleteActiveCheckIn(@Path("ynwuuid") String uuid, @Query("account") String account);
 
 
     @GET("{serviceid}/services.json")
@@ -251,7 +245,7 @@ public interface ApiInterface {
 
 
     @PUT("consumer/providers/revealPhoneNo/{providerID}/{revelphone}")
-    Call<ResponseBody> RevealPhoneNo(@Path("providerID") int providerID,@Path("revelphone") boolean revealphone);
+    Call<ResponseBody> RevealPhoneNo(@Path("providerID") int providerID, @Path("revelphone") boolean revealphone);
 
 
     @DELETE("consumer/providers/{providerID}")
@@ -261,26 +255,25 @@ public interface ApiInterface {
     Call<ResponseBody> AddFavourite(@Path("providerID") int id);
 
     @GET("consumer/waitlist/rating")
-    Call<ArrayList<RatingResponse>> getRating(@QueryMap(encoded = true) Map<String, String>   query);
+    Call<ArrayList<RatingResponse>> getRating(@QueryMap(encoded = true) Map<String, String> query);
 
     @PUT("consumer/waitlist/rating")
-    Call<ResponseBody> PutRating(@Query("account") String account,@Body RequestBody jsonObj);
+    Call<ResponseBody> PutRating(@Query("account") String account, @Body RequestBody jsonObj);
 
     @POST("consumer/waitlist/rating")
-    Call<ResponseBody> PostRating(@Query("account") String account,@Body RequestBody jsonObj);
+    Call<ResponseBody> PostRating(@Query("account") String account, @Body RequestBody jsonObj);
 
     @GET("ynwConf/refinedFilters")
     Call<RefinedFilters> getFilters();
 
     @FormUrlEncoded
     @POST("checksum")
-    Call<ArrayList<PaytmChecksum>>getPaytmCheckSum(@Field("TXN_AMOUNT") String txnAmount);
+    Call<ArrayList<PaytmChecksum>> getPaytmCheckSum(@Field("TXN_AMOUNT") String txnAmount);
 
 
     @FormUrlEncoded
     @POST("hashgenerator")
-    Call<CheckSumModelTest>getPayUCheckSum(@Field("TXN_AMOUNT") String txnAmount);
-
+    Call<CheckSumModelTest> getPayUCheckSum(@Field("TXN_AMOUNT") String txnAmount);
 
 
     @GET("{consumerID}/virtualFields.json")
@@ -289,4 +282,7 @@ public interface ApiInterface {
 
     @GET("{consumerID}/coupon.json")
     Call<ArrayList<CoupnResponse>> getCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+
+    @PUT("consumer/updatePushToken")
+    Call<ResponseBody> updatePushToken(@Body RequestBody jsonObj);
 }

@@ -68,11 +68,13 @@ public class FirebaseService extends FirebaseMessagingService {
         Config.logV("TOKEN REFRESH #################__________________"+refreshedToken);
         //LogUtil.writeLogTest("Token@@"+refreshedToken);
 
-        String loginId = SharedPreference.getInstance(this).getStringValue("mobno", "");
+        Config.ApiUpdateToken(this);
+
+       /* String loginId = SharedPreference.getInstance(this).getStringValue("mobno", "");
         String password = SharedPreference.getInstance(this).getStringValue("password", "");
         if(!loginId.equalsIgnoreCase("")&&!password.equalsIgnoreCase("")) {
             Config.ApiSessionResetLogin(loginId,password,this);
-        }
+        }*/
     }
 
     private void storeRegIdInPref(String token) {

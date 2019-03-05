@@ -46,6 +46,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -99,6 +101,10 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
             }
         }
     }*/
+
+    private static final String DATE_PATTERN =
+            "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -144,7 +150,22 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         btn_edtSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiEditProfileDetail();
+                if(!txtdob.getText().toString().equalsIgnoreCase("")) {
+                    String dateSelected = txtdob.getText().toString().replaceAll("-", "/");
+                    Matcher matcher = Pattern.compile(DATE_PATTERN).matcher(dateSelected);
+                    if (matcher.matches()) {
+
+                        ApiEditProfileDetail();
+                    } else {
+                        Toast.makeText(mContext, "Invalid Date!", Toast.LENGTH_LONG).show();
+
+                    }
+                }else{
+                    ApiEditProfileDetail();
+                }
+
+
+
             }
         });
         //setupUI(row.findViewById(R.id.Llayout));
@@ -405,9 +426,9 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
                         }
 
                     } else {
-                        if(response.code()==422){
-                            Toast.makeText(mContext,response.errorBody().string(), Toast.LENGTH_LONG).show();
-                        }
+
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
+
                         Config.logV("Error" + response.errorBody().string());
 
                     }
@@ -467,9 +488,9 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            DatePickerDialog  da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+            DatePickerDialog da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
             da.getDatePicker().setMaxDate(System.currentTimeMillis());
-            return  da;
+            return da;
         }
 
         private DatePickerDialog.OnDateSetListener dateSetListener =

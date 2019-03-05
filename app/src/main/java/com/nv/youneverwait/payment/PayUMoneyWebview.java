@@ -254,6 +254,7 @@ public class PayUMoneyWebview extends Activity {
 		post.append(amount);
 		post.append("&");
 		post.append("productinfo=");
+		Config.logV("Product Info @@@@@@@@@@@@@@"+productInfo);
 		post.append(productInfo);
 		post.append("&");
 		post.append("firstname=");
@@ -274,8 +275,12 @@ public class PayUMoneyWebview extends Activity {
 		post.append(furlpass);
 		post.append("&");
 
-		StringBuilder checkSumStr = new StringBuilder();
-		/* =sha512(key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||salt) */
+		post.append("hash=");
+		post.append(checkSumModel.getChecksum());
+		post.append("&");
+
+		/*StringBuilder checkSumStr = new StringBuilder();
+		*//* =sha512(key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5||||||salt) *//*
 	    MessageDigest digest=null;
 	    String hash;
 	    try {
@@ -305,7 +310,7 @@ public class PayUMoneyWebview extends Activity {
 	    } catch (NoSuchAlgorithmException e1) {
 	        // TODO Auto-generated catch block
 	        e1.printStackTrace();
-	    }
+	    }*/
 
 		post.append("service_provider=");
 		post.append("payu_paisa");

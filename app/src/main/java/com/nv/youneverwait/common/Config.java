@@ -43,6 +43,7 @@ import java.util.Vector;
 
 import okhttp3.Headers;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -222,7 +223,62 @@ public class Config {
         });
 
     }
+    public static void ApiUpdateToken(final Context context) {
 
+        ApiInterface apiService =
+                ApiClient.getClient(context).create(ApiInterface.class);
+
+
+        SharedPreferences pref = context.getSharedPreferences(Config.SHARED_PREF, 0);
+        String regId = pref.getString("regId", null);
+        LogUtil.writeLogTest("REG ID @@@@@@@@@@@"+regId);
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("token", regId);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Config.logV("JSON--------------" + jsonObj);
+
+        Call<ResponseBody> call = apiService.updatePushToken(body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
+                try {
+
+
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+
+                    if (response.code() == 200) {
+
+
+                    }else{
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+
+            }
+        });
+
+    }
     public static void closeDialog(Activity mActivity,Dialog mDialog) {
 
         try {
