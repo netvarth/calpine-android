@@ -1145,7 +1145,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     }*/
 
-                                    String firstWord = "Next Available Time ";
+                                    String firstWord = "Next Available Time \n";
                                     //String firstWord = "Est Service Time \n";
                                     String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -1159,7 +1159,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
-                                    String firstWord = "Est Wait Time ";
+                                    String firstWord = "Est Wait Time \n";
                                     String secondWord = mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime() + " Minutes";
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     //  spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
