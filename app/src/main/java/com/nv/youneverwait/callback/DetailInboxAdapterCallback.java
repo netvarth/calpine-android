@@ -6,5 +6,5 @@ package com.nv.youneverwait.callback;
 
 public interface DetailInboxAdapterCallback {
 
-    void onMethodCallback(String waitlistId,int accountID) ;
+    void onMethodCallback(String waitlistId,int accountID,long timestamp) ;
 }

@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Jaldee</string>
+
+    <string name="url">https://test.jaldee.com/v1/rest/</string>
+    <string name="url_terms">https://test.jaldee.com/jaldee/#/terms</string>
+    <string name="url_privacy">https://test.jaldee.com/jaldee/#/privacy</string>
+
     <string name="layout_button_ok">Ok</string>
     <string name="submit">Submit</string>
     <string name="hint_mobile">Enter your mobile number</string>
