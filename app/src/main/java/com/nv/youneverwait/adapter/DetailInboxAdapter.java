@@ -202,7 +202,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
             @Override
             public void onClick(View v) {
 
-                callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId());
+                callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId(),inboxList.getTimeStamp());
 
             }
         });

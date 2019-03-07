@@ -162,7 +162,7 @@ public class AboutUsFragment extends RootFragment {
                             // Ignore SSL certificate errors
                         }
                     });
-                    privacyWeb.loadUrl("http://35.154.241.175/jaldee/#/privacy/mobile");
+                    privacyWeb.loadUrl(mContext.getResources().getString(R.string.url_privacy));
                     /*privacyWeb.setWebViewClient(new WebViewClient() {
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
@@ -210,7 +210,7 @@ public class AboutUsFragment extends RootFragment {
                     progressBar.show();
 
                     //termsWeb.loadUrl("https://www.youneverwait.com/#/terms/mobile");
-                    termsWeb.loadUrl("http://35.154.241.175/jaldee/#/terms/mobile");
+                    termsWeb.loadUrl(mContext.getResources().getString(R.string.url_terms));
                     termsWeb.setWebViewClient(new WebViewClient() {
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 

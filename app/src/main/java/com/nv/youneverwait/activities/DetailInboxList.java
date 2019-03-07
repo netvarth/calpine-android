@@ -28,9 +28,13 @@ import com.nv.youneverwait.response.InboxModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -42,28 +46,29 @@ import retrofit2.Response;
  * Created by sharmila on 27/8/18.
  */
 
-public class DetailInboxList extends AppCompatActivity implements DetailInboxAdapterCallback{
+public class DetailInboxList extends AppCompatActivity implements DetailInboxAdapterCallback {
     RecyclerView recylce_inbox_detail;
     Context mContext;
     DetailInboxAdapter mDetailAdapter;
-    static ArrayList<InboxModel> mDetailInboxList=new ArrayList<>();
+    static ArrayList<InboxModel> mDetailInboxList = new ArrayList<>();
     TextView txtprovider;
     String provider;
     DetailInboxAdapterCallback mInterface;
+
     @Override
-    public void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailinbox);
-        recylce_inbox_detail=(RecyclerView) findViewById(R.id.recylce_inbox_detail);
+        recylce_inbox_detail = (RecyclerView) findViewById(R.id.recylce_inbox_detail);
 
-        mContext=this;
+        mContext = this;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             provider = extras.getString("provider");
 
         }
 
-        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        ImageView iBackPress = (ImageView) findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +76,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 finish();
             }
         });
-        TextView tv_title = (TextView)findViewById(R.id.toolbartitle);
+        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
         tv_title.setText(Config.toTitleCase(provider));
 
 
@@ -80,18 +85,16 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         tv_title.setTypeface(tyface);
 
 
-
-
         //tv_title.setGravity(Gravity.CENTER);
-        txtprovider= (TextView) findViewById(R.id.txtprovider);
+        txtprovider = (TextView) findViewById(R.id.txtprovider);
 
         tv_title.setTypeface(tyface);
         txtprovider.setTypeface(tyface);
         txtprovider.setText(provider);
 
 
-        mInterface=(DetailInboxAdapterCallback) this;
-        Config.logV("mDetailInboxList SIZE #############"+mDetailInboxList.size());
+        mInterface = (DetailInboxAdapterCallback) this;
+        Config.logV("mDetailInboxList SIZE #############" + mDetailInboxList.size());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recylce_inbox_detail.setLayoutManager(mLayoutManager);
 
@@ -103,37 +106,37 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         });
 
 
-        mDetailAdapter = new DetailInboxAdapter(mDetailInboxList, mContext,mInterface);
+        mDetailAdapter = new DetailInboxAdapter(mDetailInboxList, mContext, mInterface);
         recylce_inbox_detail.setAdapter(mDetailAdapter);
         mDetailAdapter.notifyDataSetChanged();
     }
 
-    public static boolean setInboxList(ArrayList<InboxModel> data){
-        mDetailInboxList= data;
-        Config.logV("mDetailInboxList SIZE"+mDetailInboxList.size());
+    public static boolean setInboxList(ArrayList<InboxModel> data) {
+        mDetailInboxList = data;
+        Config.logV("mDetailInboxList SIZE" + mDetailInboxList.size());
         return true;
 
     }
 
     @Override
-    public void onMethodCallback(final String waitListId, final int accountID) {
-        final BottomSheetDialog dialog = new BottomSheetDialog(mContext,R.style.DialogStyle);
+    public void onMethodCallback(final String waitListId, final int accountID, final long timestamp) {
+        final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();
 
-        final Button btn_send=(Button)dialog.findViewById(R.id.btn_send);
-        Button btn_cancel=(Button)dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message=(EditText) dialog.findViewById(R.id.edt_message);
-        TextView txtsendmsg=(TextView) dialog.findViewById(R.id.txtsendmsg);
+        final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+        Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
 
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-                if(edt_message.getText().toString().length()>1&&!edt_message.getText().toString().trim().isEmpty()){
+                if (edt_message.getText().toString().length() > 1 && !edt_message.getText().toString().trim().isEmpty()) {
                     btn_send.setEnabled(true);
                     btn_send.setClickable(true);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-                }else{
+                } else {
                     btn_send.setEnabled(false);
                     btn_send.setClickable(false);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
@@ -152,8 +155,36 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("WAITLIST ID @@@@@@@@@@@"+waitListId);
-                ApiCommunicate(waitListId,String.valueOf(accountID),edt_message.getText().toString(),dialog);
+                Config.logV("WAITLIST ID @@@@@@@@@@@" + waitListId);
+                if (waitListId != null) {
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    String dateString = formatter.format(new Date(timestamp));
+
+
+                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                    String currentformattedDate = df.format(new Date());
+                    Date currentdate=null;
+                    try {
+                         currentdate = df.parse(currentformattedDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        if (new SimpleDateFormat("dd/MM/yyyy").parse(dateString).before(currentdate)) {
+                            Config.logV("WAITLIST Past Date --------------------" + new Date());
+                            ApiCommunicate("h_" + waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                        } else {
+                            Config.logV("WAITLIST Today Date --------------------");
+                            ApiCommunicate(waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    ApiCommunicateWithoutWaitListID(String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                }
 
             }
         });
@@ -164,6 +195,71 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 dialog.dismiss();
             }
         });
+    }
+
+
+    private void ApiCommunicateWithoutWaitListID(String accountID, String message, final BottomSheetDialog dialog) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("communicationMessage", message);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.PostMessage(accountID, body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        finish();
+
+                    } else {
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+
+
     }
 
     private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
@@ -182,12 +278,11 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             jsonObj.put("communicationMessage", message);
 
 
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.WaitListMessage(waitListId,String.valueOf(accountID),body);
+        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -203,14 +298,13 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext,"Message send successfully",Toast.LENGTH_SHORT).show();
-                       dialog.dismiss();
-                       finish();
+                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        finish();
 
 
-
-                    }else{
-                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                     }
 
 
