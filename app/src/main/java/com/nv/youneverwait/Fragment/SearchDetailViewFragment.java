@@ -99,7 +99,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback {
 
-    Context mContext;
+     Context mContext;
 
     SearchViewDetail mBusinessDataList;
     ArrayList<SearchViewDetail> mSearchGallery;
@@ -676,6 +676,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SocialMediaModel> socialMedia = new ArrayList<>();
 
 
+
     //  boolean expand =false;
     public void UpdateMainUI(final SearchViewDetail getBussinessData) {
 
@@ -723,7 +724,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     dynaText.setText(getBussinessData.getSpecialization().get(i).toString());
 
 
-                                    dynaText.setTextSize(14);
+                                    dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                                     dynaText.setTextColor(mContext.getResources().getColor(R.color.title_grey));
                                     //  dynaText.setPadding(5, 5, 5, 5);
                                     dynaText.setMaxLines(1);
@@ -741,7 +742,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 dynaText.setTypeface(tyface);
                                 dynaText.setText("See Less");
 
-                                dynaText.setTextSize(14);
+                                dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                                 dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
                                 // dynaText.setPadding(5, 5, 5, 5);
                                 dynaText.setMaxLines(1);
@@ -1148,6 +1149,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         UpdateGallery(mSearchGallery);
 
+                    }else{
+                        if (mBusinessDataList.getLogo() != null) {
+                            Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+
+                        }
                     }
 
 
