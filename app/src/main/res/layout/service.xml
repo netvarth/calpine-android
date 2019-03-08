@@ -3,7 +3,8 @@
     xmlns:local="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/app_bg_gradient_home"
+    android:background="@drawable/input_border_cyan_bg"
+
     android:orientation="vertical">
 
     <LinearLayout

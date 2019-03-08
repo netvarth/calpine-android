@@ -106,25 +106,23 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="-5dp"
                             android:layout_marginTop="@dimen/padding5"
                             android:gravity="right|center"
                             android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/icon_location_blue" />
 
                             <TextView
                                 android:id="@+id/location"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="-2dp"
                                 android:gravity="left"
                                 android:text="Kakkanad"
                                 android:textColor="@color/title_consu"
                                 android:textSize="@dimen/txtsize_12" />
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/icon_location_blue" />
+
                         </LinearLayout>
 
 
@@ -189,6 +187,7 @@
                     android:visibility="gone">
 
                     <TextView
+                        android:textStyle="bold"
                         android:id="@+id/txtspec1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -202,6 +201,8 @@
                         />
 
                     <TextView
+                        android:textStyle="bold"
+
                         android:id="@+id/txtspec2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -215,6 +216,8 @@
 
                         />
                     <TextView
+                        android:textStyle="bold"
+
                         android:id="@+id/txtspec22"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -228,6 +231,7 @@
 
                         />
                     <TextView
+
                         android:id="@+id/txtspec3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -281,7 +285,8 @@
                     android:orientation="horizontal"
                     android:textColor="@color/title_consu"
                     android:textSize="@dimen/txtsize_12"
-                    android:visibility="gone"></LinearLayout>
+                    android:visibility="gone">
+                </LinearLayout>
 
 
 
@@ -339,8 +344,98 @@
             android:paddingRight="@dimen/padding5"
             android:text="@string/diff_date"
             android:textColor="@color/title_consu"
-            android:textSize="@dimen/txtsize_title_term_small"
-            android:visibility="visible" />
+            android:textSize="@dimen/txtsize_12"
+            />
+
+
+        <View
+            android:visibility="gone"
+
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/view_border" />
+
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:id="@+id/serviceappointment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="@dimen/padding5"
+            android:layout_marginRight="@dimen/padding5"
+            android:gravity="left"
+            android:orientation="horizontal"
+            android:textColor="@color/title_consu"
+            android:textSize="@dimen/txtsize_12">
+
+            <TextView
+                android:textSize="13dp"
+                android:textColor="@color/title_consu"
+                android:layout_weight="0.5"
+                android:text="@string/gold_loan_doorstep"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:textSize="13dp"
+                android:textColor="@color/title_consu"
+                android:layout_weight="0.5"
+                android:text="@string/gold_loan_branch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/default_padding"
+            android:orientation="horizontal">
+
+
+
+            <Button
+                android:fontFamily="@font/montserrat_bold"
+                android:id="@+id/btnappointment"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="#EE9334"
+                android:gravity="center"
+                android:paddingLeft="@dimen/padding3"
+                android:paddingRight="@dimen/padding3"
+                android:text="Request for Appointment"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/txtsize_12" />
+
+
+            <!--  android:textSize="@dimen/txtsize_subtitle" />-->
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/txt_diffdates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding2"
+            android:layout_marginTop="@dimen/padding2"
+            android:gravity="center"
+            android:paddingRight="@dimen/padding5"
+            android:text="@string/diff_date"
+            android:textColor="@color/title_consu"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone" />
 
 
     </LinearLayout>

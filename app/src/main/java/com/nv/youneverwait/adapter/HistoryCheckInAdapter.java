@@ -828,14 +828,14 @@ public class HistoryCheckInAdapter extends RecyclerView.Adapter<HistoryCheckInAd
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_status.setTypeface(tyface1);
-
+    
         // myViewHolder.tv_status.setText(activelist.getWaitlistStatus());
         if (activelist.getWaitlistStatus().
 
                 equalsIgnoreCase("done"))
 
         {
-            myViewHolder.tv_status.setText("Complete");
+            myViewHolder.tv_status.setText("Completed");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
         }

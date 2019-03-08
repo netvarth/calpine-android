@@ -26,6 +26,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 
+import com.nv.youneverwait.activities.Appointment;
 import com.nv.youneverwait.activities.SearchServiceActivity;
 import com.nv.youneverwait.callback.AdapterCallback;
 import com.nv.youneverwait.R;
@@ -135,7 +136,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 final MyViewHolder myViewHolder = (MyViewHolder) holder;
 
 
-               // Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
+                Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
                 /*if (searchdetailList.getYnw_verified() == 1) {
                     myViewHolder.tv_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_verified, 0);
                 } else {
@@ -143,7 +144,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }*/
 
 
-              //  Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
+                Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
                 if (searchdetailList.getYnw_verified_level() != null) {
                     if (searchdetailList.getYnw_verified() == 1) {
                         if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("2")) {
@@ -190,6 +191,35 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 parent.setLayoutParams(params1);
 
 
+
+                TextView dynaText2 = new TextView(context);
+                Typeface tyface_2 = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                dynaText2.setTypeface(tyface_2);
+                dynaText2.setText("Coupon");
+                dynaText2.setTextSize(13);
+                dynaText2.setTextColor(context.getResources().getColor(R.color.title_grey));
+                dynaText2.setPadding(5, 5, 5, 5);
+                dynaText2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_coupon, 0, 0);
+                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                dynaText2.setMaxLines(1);
+
+                dynaText2.setLayoutParams(params1);
+                params1.setMargins(10, 7, 10, 7);
+                dynaText2.setGravity(Gravity.LEFT);
+                parent.addView(dynaText2);
+
+                dynaText2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
+
+
+                    }
+                });
+
+
                 TextView dynaText1 = new TextView(context);
                 Typeface tyface_5 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Regular.otf");
@@ -216,6 +246,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     }
                 });
+
+
+
                 if (searchdetailList.getBusiness_hours1() != null) {
                     TextView dynaText = new TextView(context);
                     Typeface tyface = Typeface.createFromAsset(context.getAssets(),
@@ -548,7 +581,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (searchdetailList.getFuture_checkins() != null) {
                     if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
-                        myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_Futuredate.setVisibility(View.INVISIBLE);
                         myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -603,9 +636,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     if (searchdetailList.getAvail_date() != null && searchdetailList.getOnline_checkins() != null && searchdetailList.getServices() != null) {
 
+                        Config.logV("Title-------" + searchdetailList.getTitle());
+                        Config.logV("Title---111----" + searchdetailList.getAvail_date());
 
-
-                      //  Config.logV("Title---111---222-" + formattedDate + "" + searchdetailList.getAvail_date() + "online" + searchdetailList.getOnline_checkins());
+                        Config.logV("Title---111---222-" + formattedDate + "" + searchdetailList.getAvail_date() + "online" + searchdetailList.getOnline_checkins());
 
                         if (searchdetailList.getOnline_checkins() != null) {
                             if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {
@@ -803,6 +837,25 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         context.startActivity(iCheckIn);
                     }
                 });
+
+
+
+                myViewHolder.btnappointment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent iAppointment = new Intent(v.getContext(), Appointment.class);
+                        iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
+                        iAppointment.putExtra("uniqueID", searchdetailList.getUniqueid());
+                        iAppointment.putExtra("accountID", searchdetailList.getId());
+                        iAppointment.putExtra("googlemap", searchdetailList.getLocation1());
+                        iAppointment.putExtra("from", "checkin");
+                        iAppointment.putExtra("title", searchdetailList.getTitle());
+                        iAppointment.putExtra("place", searchdetailList.getPlace1());
+                        iAppointment.putExtra("sector", searchdetailList.getSectorname());
+                        iAppointment.putExtra("subsector", searchdetailList.getSub_sector());
+                        context.startActivity(iAppointment);
+                    }
+                });
                 /////////////////////////////////////////////////////////
 
                 if (searchdetailList.getSpecialization_displayname() != null) {
@@ -826,7 +879,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         } else {
 
                             myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_spec1.setText(list_spec.get(0));
+                            myViewHolder.tv_spec1.setText(list_spec.get(0)+" , ");
                             myViewHolder.tv_spec1.setTextSize(13);
                             myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
                             myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -841,7 +894,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 myViewHolder.tv_spec1.setMaxEms(5);
                                 myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
 
-                                myViewHolder.tv_spec22.setText(list_spec.get(1));
+                                myViewHolder.tv_spec22.setText(list_spec.get(1)+" , ");
                                 myViewHolder.tv_spec22.setTextSize(13);
                                 myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
                                 myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
@@ -849,7 +902,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 // myViewHolder.tv_spec22.setWidth(dpToPx(120));
                                 myViewHolder.tv_spec22.setMaxEms(8);
 
-                                myViewHolder.tv_spec2.setText(list_spec.get(2));
+                                myViewHolder.tv_spec2.setText(list_spec.get(2)+" , ");
                                 myViewHolder.tv_spec2.setTextSize(13);
                                 myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
                                 myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
@@ -876,7 +929,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         }
 
-                     //   Config.logV("SpEc Open----------" + searchdetailList.isIs_SpecOpen() + "Prov" + searchdetailList.getTitle());
+                        Config.logV("SpEc Open----------" + searchdetailList.isIs_SpecOpen() + "Prov" + searchdetailList.getTitle());
 
 
                         myViewHolder.tv_spec3.setOnClickListener(new View.OnClickListener() {
@@ -904,9 +957,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 //  Picasso.with(context).load(searchdetailList.getLogo()).fit().into(myViewHolder.profile);
                 Picasso.with(context).load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
 
-
                 if (searchdetailList.getGallery_thumb_nails() != null) {
-                 //   Config.logV("Name PRofile "+searchdetailList.getTitle()+"gallery "+searchdetailList.getGallery_thumb_nails().size());
                     if (searchdetailList.getGallery_thumb_nails().size() > 0) {
                         myViewHolder.mImageViewText.setVisibility(View.VISIBLE);
                         myViewHolder.mImageViewText.setText("+" + searchdetailList.getGallery_thumb_nails().size());
@@ -1156,7 +1207,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView profile;
         RatingBar rating;
 
-        Button btncheckin;
+        Button btncheckin,btnappointment;
         RecyclerView mRecycleTypes;
         //TextView tv_communicate;
         LinearLayout layout_row;
@@ -1176,6 +1227,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             //tv_Date = (TextView) view.findViewById(R.id.mDate);
             btncheckin = (Button) view.findViewById(R.id.btncheckin);
+            btnappointment = (Button) view.findViewById(R.id.btnappointment);
+
             tv_Futuredate = (TextView) view.findViewById(R.id.txt_diffdate);
             //  tv_Workinghrs = (ImageView) view.findViewById(R.id.txtWorkinghrs);
             // tv_Open = (TextView) view.findViewById(R.id.txtOpen);

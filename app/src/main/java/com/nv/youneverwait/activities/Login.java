@@ -150,7 +150,7 @@ public class Login extends AppCompatActivity {
         if (!validatePwd(edtpassword_login.getText().toString()) || edtpassword_login.getText().toString().isEmpty()) {
             //txt_InputPwd.setError(getString(R.string.err_pwd_valid));
 
-            SpannableString s = new SpannableString(getString(R.string.err_pwd_valid));
+            SpannableString s = new SpannableString(getString(R.string.err_pwd_valid_login));
             Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
                     "fonts/Montserrat_Light.otf");
             s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

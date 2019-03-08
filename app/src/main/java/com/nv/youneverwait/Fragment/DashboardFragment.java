@@ -103,7 +103,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DashboardFragment extends RootFragment implements GoogleApiClient.ConnectionCallbacks,
+public class    DashboardFragment extends RootFragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener, ActiveAdapterOnCallback {
 

@@ -46,6 +46,7 @@ import com.nv.youneverwait.adapter.ContactDetailAdapter;
 import com.nv.youneverwait.adapter.LocationCheckinAdapter;
 import com.nv.youneverwait.adapter.SearchLocationAdapter;
 import com.nv.youneverwait.adapter.VirtualFieldAdapter;
+import com.nv.youneverwait.callback.AdapterCallback;
 import com.nv.youneverwait.callback.ContactAdapterCallback;
 import com.nv.youneverwait.callback.LocationCheckinCallback;
 import com.nv.youneverwait.callback.SearchLocationAdpterCallback;
@@ -139,7 +140,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
-    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact;
+    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact,tv_coupon;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -157,6 +158,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_SocialMedia = (TextView) row.findViewById(R.id.txtSocialMedia);
         txtMore = (TextView) row.findViewById(R.id.txtMore);
         tv_contact = (TextView) row.findViewById(R.id.txtcontact);
+        tv_coupon = (TextView) row.findViewById(R.id.txtcoupon);
+
+
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
@@ -237,7 +241,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         //tv_contactdetails.setTypeface(tyface);
 
         ApiSearchViewDetail(uniqueID);
-
+        ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
         ApiSearchVirtualFields(uniqueID);
 
@@ -275,6 +279,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
 
+        tv_coupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onMethodCoupn(uniqueID);
+            }
+        });
+
 
         mInterface = (SearchLocationAdpterCallback) this;
 
@@ -299,7 +310,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
-                        if (edt_message.getText().toString().length() > 1 && !edt_message.getText().toString().trim().isEmpty()) {
+                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
@@ -1798,6 +1809,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     }
 
+
+    public void onMethodCoupn(String uniqueID) {
+        CouponFragment cfFragment = new CouponFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("uniqueID", uniqueID);
+        cfFragment.setArguments(bundle);
+
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, cfFragment).commit();
+
+    }
 
     @Override
     public void onMethodWorkingCallback(ArrayList<WorkingModel> workingModel, String value) {

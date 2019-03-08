@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/app_bg_gradient_home"
     android:orientation="vertical">
+
     <LinearLayout
         android:id="@+id/layout_toolbar"
         android:layout_width="fill_parent"
@@ -70,7 +71,7 @@
                                 android:layout_marginTop="@dimen/default_padding"
                                 android:fontFamily="@font/customfont"
                                 android:gravity="center"
-                                android:text="title"
+                                android:text="Cue Clinic"
                                 android:textColor="@color/title_grey"
                                 android:textSize="@dimen/txtsize_subtitle" />
 
@@ -82,7 +83,7 @@
                                 android:layout_marginTop="@dimen/padding5"
                                 android:drawableRight="@drawable/icon_location_blue"
                                 android:gravity="center"
-                                android:text="place"
+                                android:text="Thrissur"
                                 android:textColor="@color/title_consu"
                                 android:textSize="@dimen/txtsize_12" />
 
@@ -92,10 +93,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/default_padding"
                                 android:gravity="center"
-                                android:text="@string/selectservice"
+                                android:text="Choose the service"
                                 android:textColor="@color/sec_title_grey"
-                                android:textSize="@dimen/txtsize_hint"
-                                android:visibility="gone" />
+                                android:textSize="@dimen/txtsize_hint" />
 
                             <Spinner
                                 android:id="@+id/spinnerservice"
@@ -110,6 +110,18 @@
 
                             </Spinner>
 
+                            <Spinner
+                                android:id="@+id/spinnerservices"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_marginLeft="@dimen/default_padding"
+                                android:layout_marginTop="@dimen/default_padding"
+                                android:layout_marginRight="@dimen/default_padding"
+                                android:layout_marginBottom="@dimen/padding5"
+                                android:background="@drawable/gridview_bg">
+
+                            </Spinner>
+
                             <LinearLayout
                                 android:id="@+id/familymember"
                                 android:layout_width="match_parent"
@@ -121,6 +133,24 @@
                                     android:layout_height="1dp"
                                     android:layout_margin="@dimen/padding7"
                                     android:background="#1A000000" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/default_padding"
+                                    android:layout_marginRight="@dimen/default_padding"
+                                    android:gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/memberlabel"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Customer"
+                                        android:textColor="@color/sec_title_grey"
+                                        android:textSize="@dimen/txtsize_hint" />
+
+                                </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -158,68 +188,242 @@
                             </LinearLayout>
 
 
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/recycle_family"
+                            <LinearLayout
+                                android:id="@+id/addresslocation"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/default_padding"
-                                android:layout_marginTop="@dimen/padding7"
-                                android:layout_marginRight="@dimen/default_padding"
-                                android:nestedScrollingEnabled="false"
-                                android:visibility="gone">
-                            </android.support.v7.widget.RecyclerView>
+                                android:orientation="vertical">
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:layout_margin="@dimen/padding7"
+                                    android:background="#1A000000" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/default_padding"
+                                    android:layout_marginRight="@dimen/default_padding"
+                                    android:gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/addresheading"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Choose your address"
+                                        android:textColor="@color/sec_title_grey"
+                                        android:textSize="@dimen/txtsize_hint" />
+
+
+                                </LinearLayout>
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <Spinner
+                                        android:id="@+id/addressspinner"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="35dp"
+                                        android:layout_marginLeft="@dimen/default_padding"
+                                        android:layout_marginTop="@dimen/default_padding"
+                                        android:layout_marginRight="@dimen/default_padding"
+                                        android:layout_marginBottom="@dimen/padding5"
+                                        android:background="@drawable/gridview_bg">
+                                    </Spinner>
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+
+                                    <ImageView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent" />
+
+                                </LinearLayout>
+
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="@dimen/default_padding"
+                                    android:layout_marginRight="@dimen/default_padding"
+                                    android:orientation="horizontal"
+                                    android:weightSum="10">
+
+
+                                    <TextView
+                                        android:id="@+id/tv_currentloc"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_margin="@dimen/padding5"
+                                        android:layout_weight="5"
+                                        android:drawableLeft="@drawable/ic_current"
+                                        android:drawablePadding="@dimen/padding5"
+                                        android:gravity="left|center"
+                                        android:text="@string/currentloc"
+                                        android:textColor="@color/title_consu"
+                                        android:textSize="@dimen/txtsize_12" />
+
+
+                                    <TextView
+                                        android:id="@+id/change_address"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="5"
+                                        android:gravity="right|center"
+                                        android:text="Add address"
+                                        android:textAllCaps="false"
+                                        android:textColor="@color/title_consu"
+                                        android:textSize="@dimen/txtsize_12" />
+
+
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:layout_margin="@dimen/padding7"
+                                    android:background="#1A000000" />
+                            </LinearLayout>
+
 
                             <LinearLayout
-                                android:id="@+id/layout_party"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/default_padding"
-                                android:layout_marginTop="@dimen/padding5"
+                                android:layout_marginTop="@dimen/default_padding"
                                 android:layout_marginRight="@dimen/default_padding"
-                                android:gravity="left"
-                                android:orientation="horizontal"
-                                android:visibility="gone">
+                                android:gravity="center"
+                                android:orientation="vertical">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Enter Party size"
-                                    android:textColor="@color/title_grey"
+                                    android:layout_gravity="center"
+                                    android:text="Appointment date and time" />
 
-                                    android:textSize="@dimen/txtsize_12" />
-
-                                <EditText
-                                    android:id="@+id/editpartysize"
-                                    android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/padding7"
-                                    android:background="@drawable/input_border_gray_bg"
-                                    android:gravity="center"
-                                    android:inputType="number"
-                                    android:minWidth="50dp"
-                                    android:text="1"
-                                    android:textColor="@color/title_grey"
-                                    android:textSize="@dimen/txtsize_12" />
+                                    android:layout_marginTop="10dp"
+                                    android:orientation="horizontal"
+                                    android:weightSum="1">
+
+
+                                    <RadioGroup
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="8dp"
+                                        android:layout_marginTop="8dp"
+                                        android:layout_marginEnd="8dp"
+                                        android:layout_weight="0.7">
+
+
+                                        <RadioButton
+                                            android:id="@+id/coupons"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:checked="true"
+                                            android:onClick="asap"
+                                            android:text="Earliest available ( ASAP )" />
+
+                                        <RadioButton
+                                            android:id="@+id/deals"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:onClick="timeWindow"
+                                            android:text="Choose date" />
+
+                                    </RadioGroup>
+
+                                    <TextView
+                                        android:id="@+id/txtaddnote"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="0.3"
+                                        android:drawableTop="@drawable/icon_addnote"
+                                        android:gravity="center"
+                                        android:text="@string/addnote"
+                                        android:textColor="@color/title_grey"
+                                        android:textSize="@dimen/txtsize_12" />
+                                </LinearLayout>
 
                             </LinearLayout>
 
 
-                            <TextView
-                                android:id="@+id/txt_queue"
+                            <LinearLayout
+                                android:id="@+id/queuelayouts"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/padding7"
-                                android:gravity="center"
-                                android:text="Choose the time window"
-                                android:textColor="@color/sec_title_grey"
-                                android:textSize="@dimen/txtsize_hint"
-                                android:visibility="gone" />
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/default_padding"
+                                android:paddingRight="@dimen/default_padding"
+                                android:paddingBottom="@dimen/padding15"
+                                android:visibility="gone">
 
-                            <!-- <android.support.v7.widget.RecyclerView
-                                   android:id="@+id/recycleQueueList"
-                                   android:layout_width="match_parent"
-                                   android:layout_height="wrap_content"
-                                   android:layout_marginTop="@dimen/padding5"></android.support.v7.widget.RecyclerView>-->
+                                <ImageView
+                                    android:id="@+id/ic_lefts"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.2"
+                                    android:src="@drawable/icon_left_angle_disabled" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1.5"
+                                    android:background="@drawable/rounded_green_bg"
+                                    android:orientation="vertical"
+                                    android:paddingBottom="@dimen/padding5">
+
+                                    <TextView
+                                        android:id="@+id/txt_queuenames"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/customfont"
+                                        android:gravity="center"
+                                        android:padding="3dp"
+                                        android:textColor="@color/title_grey"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/txt_queuetimes"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:gravity="center"
+                                        android:textColor="@color/title_grey" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:id="@+id/ic_rights"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.2"
+                                    android:src="@drawable/icon_right_angle_active" />
+                            </LinearLayout>
+
+
                             <LinearLayout
                                 android:id="@+id/queuelayout"
                                 android:layout_width="match_parent"
@@ -275,6 +479,39 @@
                                     android:src="@drawable/icon_right_angle_active" />
                             </LinearLayout>
 
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_margin="@dimen/padding7"
+                                android:background="#1A000000" />
+
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/recycle_family"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/default_padding"
+                                android:layout_marginTop="@dimen/padding7"
+                                android:layout_marginRight="@dimen/default_padding"
+                                android:nestedScrollingEnabled="false"
+                                android:visibility="gone">
+
+                            </android.support.v7.widget.RecyclerView>
+
+
+                            <TextView
+                                android:id="@+id/txt_queue"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/padding7"
+                                android:gravity="center"
+                                android:text="Choose the time window"
+                                android:textColor="@color/sec_title_grey"
+                                android:textSize="@dimen/txtsize_hint"
+                                android:visibility="gone" />
+
+
                             <LinearLayout
                                 android:id="@+id/checkinDatepicker"
                                 android:layout_width="match_parent"
@@ -291,7 +528,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:text="Select Date for the service"
+                                    android:text="Select Appointment date and time"
                                     android:textColor="@color/sec_title_grey"
                                     android:textSize="@dimen/txtsize_hint" />
 
@@ -347,36 +584,37 @@
                                 </LinearLayout>
                             </LinearLayout>
 
+
                             <LinearLayout
                                 android:id="@+id/LservicePrepay"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/default_padding"
-                                android:layout_marginRight="@dimen/default_padding"
                                 android:layout_marginTop="@dimen/padding7"
+                                android:layout_marginRight="@dimen/default_padding"
                                 android:background="@drawable/input_border_gray_bg"
                                 android:orientation="vertical"
-                                android:visibility="gone"
-                                android:padding="@dimen/default_padding">
+                                android:padding="@dimen/default_padding"
+                                android:visibility="gone">
 
                                 <TextView
                                     android:id="@+id/txtprepay"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
-                                    android:textSize="@dimen/txtsize_12"
+                                    android:text="@string/serve_prepay"
                                     android:textColor="@color/title_grey"
-                                    android:text="@string/serve_prepay" />
+                                    android:textSize="@dimen/txtsize_12" />
 
                                 <TextView
                                     android:id="@+id/txtprepayamount"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center"
                                     android:layout_marginTop="@dimen/padding5"
-                                    android:textSize="@dimen/txtsize_12"
+                                    android:gravity="center"
+                                    android:text="Prepayment Amount: Rs 50"
                                     android:textColor="@color/title_grey"
-                                    android:text="Prepayment Amount:" />
+                                    android:textSize="@dimen/txtsize_12" />
                             </LinearLayout>
 
                             <TextView
@@ -415,7 +653,9 @@
                                             android:layout_marginTop="@dimen/padding5"
                                             android:layout_marginRight="@dimen/default_padding"
                                             android:textColor="@color/title_grey"
-                                            android:textSize="@dimen/txtsize_hint" />
+                                            android:textSize="@dimen/txtsize_hint"
+                                            android:visibility="gone" />
+
                                         <TextView
                                             android:id="@+id/txt_personahead"
                                             android:layout_width="match_parent"
@@ -424,8 +664,8 @@
                                             android:layout_marginTop="@dimen/padding5"
                                             android:layout_marginRight="@dimen/default_padding"
                                             android:textColor="@color/title_grey"
-                                            android:visibility="gone"
-                                            android:textSize="@dimen/txtsize_hint" />
+                                            android:textSize="@dimen/txtsize_hint"
+                                            android:visibility="gone" />
 
                                         <TextView
                                             android:id="@+id/txt_waittime"
@@ -435,11 +675,12 @@
                                             android:layout_marginTop="@dimen/padding5"
                                             android:layout_marginRight="@dimen/default_padding"
                                             android:textColor="@color/title_grey"
-                                            android:textSize="@dimen/txtsize_hint" />
+                                            android:textSize="@dimen/txtsize_hint"
+                                            android:visibility="gone" />
                                     </LinearLayout>
 
                                     <TextView
-                                        android:id="@+id/txtaddnote"
+                                        android:id="@+id/txtaddnotes"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_alignParentRight="true"
@@ -448,7 +689,8 @@
                                         android:paddingRight="@dimen/padding5"
                                         android:text="@string/addnote"
                                         android:textColor="@color/title_grey"
-                                        android:textSize="@dimen/txtsize_12" />
+                                        android:textSize="@dimen/txtsize_12"
+                                        android:visibility="gone" />
 
                                 </RelativeLayout>
 
@@ -461,55 +703,54 @@
 
 
                                     <LinearLayout
-                                        android:background="@drawable/cutom_edittext"
-                                        android:padding="7dp"
                                         android:id="@+id/couponCheckin"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:layout_margin="10dp"
+                                        android:background="@drawable/cutom_edittext"
                                         android:orientation="horizontal"
+                                        android:padding="7dp"
                                         android:weightSum="10">
 
                                         <EditText
-                                            android:fontFamily="@font/customfont"
                                             android:id="@+id/coupon_edit"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
                                             android:layout_weight="3"
                                             android:background="@drawable/editbox"
+                                            android:fontFamily="@font/customfont"
+
                                             android:hint="Enter coupon code"
-                                            android:textSize="@dimen/txtsize_hint"
-                                       />
+                                            android:textSize="@dimen/txtsize_hint" />
 
                                         <Button
-                                            android:fontFamily="@font/customfont"
-                                            android:textSize="@dimen/txtsize_subtitle"
-                                            android:background="@drawable/button"
                                             android:id="@+id/applybtn"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
                                             android:layout_weight="7"
+                                            android:background="@drawable/button"
+                                            android:fontFamily="@font/customfont"
                                             android:text="ADD"
                                             android:textColor="#ffffff"
+                                            android:textSize="@dimen/txtsize_subtitle"
                                             android:textStyle="bold" />
 
                                     </LinearLayout>
 
 
                                     <RelativeLayout
-                                        android:visibility="gone"
-                                        android:orientation="vertical"
-                                        android:layout_margin="10dp"
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="10dp"
+                                        android:orientation="vertical"
+                                        android:visibility="gone">
 
                                         <LinearLayout
-                                            android:orientation="vertical"
                                             android:layout_width="match_parent"
-                                            android:layout_height="wrap_content">
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
 
                                             <LinearLayout
-                                                android:visibility="gone"
                                                 android:layout_width="match_parent"
                                                 android:layout_height="wrap_content"
                                                 android:orientation="horizontal">
@@ -549,7 +790,6 @@
                                         </LinearLayout>
 
 
-
                                         <TextView
                                             android:id="@+id/txtDele"
                                             android:layout_width="wrap_content"
@@ -561,19 +801,16 @@
                                             android:textSize="@dimen/txtsize_12" />
 
 
-
                                     </RelativeLayout>
 
                                     <android.support.v7.widget.RecyclerView
-                                        android:layout_margin="10dp"
                                         android:id="@+id/list"
-                                        android:visibility="gone"
                                         android:layout_width="match_parent"
-                                        android:layout_height="wrap_content" />
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="10dp"
+                                        android:visibility="gone" />
 
                                 </LinearLayout>
-
-
 
 
                                 <Button
@@ -587,7 +824,7 @@
                                     android:background="@drawable/button_gradient_checkin"
                                     android:fontFamily="@font/customfont"
                                     android:gravity="center"
-                                    android:text="Check-in"
+                                    android:text="Request Appointment"
                                     android:textAllCaps="true"
                                     android:textColor="@color/app_background"
                                     android:textSize="@dimen/txtsize_subtitle"

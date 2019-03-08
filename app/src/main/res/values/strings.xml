@@ -122,6 +122,11 @@
     <string name="db_table_fav">tb_favour</string>
     <string name="serve_prepay">The service needs prepayment for Check-in</string>
     <string name="terms"><![CDATA[T & C]]></string>
+    <string name="err_pwd_valid_login">Invalid password</string>
+    <string name="tab6">Appointment</string>
+    <string name="gold_loan_branch"><u>Vehicle Loan @doorstep</u></string>
+    <string name="gold_loan_doorstep"><u>Gold loan @doorstep</u></string>
+    <string name="gold_loan_doorsteps"><u>Corporate Fin...</u></string>
 
 
 </resources>

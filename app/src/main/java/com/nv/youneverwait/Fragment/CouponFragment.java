@@ -2,14 +2,17 @@ package com.nv.youneverwait.Fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.adapter.CouponAdapter;
@@ -50,8 +53,19 @@ public class CouponFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View row = inflater.inflate(R.layout.couponlist, container, false);
-        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+
         coupon_listview = (ListView) row.findViewById(R.id.coupon_inner_list);
+
+        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                getFragmentManager().popBackStack();
+            }
+        });
+
+
 
         mContext = getActivity();
         Bundle bundle = this.getArguments();
@@ -62,13 +76,14 @@ public class CouponFragment extends Fragment  {
 
         }
 
-        iBackPress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
-                getFragmentManager().popBackStack();
-            }
-        });
+
+
+
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+        tv_title.setText("Coupons");
 
         return row;
     }

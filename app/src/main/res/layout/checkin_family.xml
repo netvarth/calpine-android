@@ -32,21 +32,22 @@
             android:minHeight="?attr/actionBarSize"
             android:paddingLeft="@dimen/padding20"
             android:text="Members"
-            android:textColor="@color/app_background"
+            android:textColor="@color/white"
             android:textSize="@dimen/txtsize_subtitle"
             android:textStyle="bold" />
 
         <TextView
+            android:textStyle="bold"
             android:id="@+id/btn_addmember"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:drawableLeft="@drawable/icon_addmember"
             android:gravity="right"
-           android:padding="@dimen/padding5"
+            android:padding="@dimen/padding5"
             android:text="Add member"
-            android:textColor="@color/app_background"
-            android:textSize="@dimen/txtsize_subtitle" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/txtsize_12" />
     </LinearLayout>
 
     <FrameLayout

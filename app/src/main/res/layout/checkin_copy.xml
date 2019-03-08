@@ -100,7 +100,8 @@
                                 android:layout_marginLeft="@dimen/default_padding"
                                 android:layout_marginRight="@dimen/default_padding"
                                 android:layout_marginTop="@dimen/default_padding"
-                                android:background="@drawable/gridview_bg"></Spinner>
+                                android:background="@drawable/gridview_bg">
+                            </Spinner>
 
                             <View
                                 android:layout_width="match_parent"

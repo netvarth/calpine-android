@@ -85,6 +85,9 @@
             android:name="com.nv.youneverwait.activities.CheckIn"
             android:screenOrientation="portrait"></activity>
 
+        <activity android:name="com.nv.youneverwait.activities.Appointment"
+            android:screenOrientation="portrait"></activity>
+
         <activity
             android:name="com.nv.youneverwait.activities.CheckInCopy"
             android:screenOrientation="portrait"></activity>

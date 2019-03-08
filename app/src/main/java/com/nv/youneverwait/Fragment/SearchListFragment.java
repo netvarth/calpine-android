@@ -1899,7 +1899,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-                if (edt_message.getText().toString().length() > 1 && !edt_message.getText().toString().trim().isEmpty()) {
+                if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
                     btn_send.setEnabled(true);
                     btn_send.setClickable(true);
                     btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
@@ -1940,29 +1940,17 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
     }
-//
-//    @Override
-//    public void onMethodCoupn(String uniqueID) {
-//
-//      //  ApiJaldeeCoupan(uniqueID);
-//
-//    }
 
     @Override
     public void onMethodCoupn(String uniqueID) {
         CouponFragment cfFragment = new CouponFragment();
-
-//        ApiJaldeeCoupan(uniqueID);
-
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putString("uniqueID", uniqueID);
         cfFragment.setArguments(bundle);
-
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, cfFragment).commit();
-
     }
 
 
