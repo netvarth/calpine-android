@@ -68,6 +68,7 @@ import com.nv.youneverwait.response.SearchTerminology;
 import com.nv.youneverwait.response.SearchViewDetail;
 import com.nv.youneverwait.response.SearchVirtualFields;
 import com.nv.youneverwait.utils.SharedPreference;
+import com.nv.youneverwait.widgets.CustomDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -99,7 +100,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback {
 
-     Context mContext;
+    Context mContext;
 
     SearchViewDetail mBusinessDataList;
     ArrayList<SearchViewDetail> mSearchGallery;
@@ -412,107 +413,102 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             if (mGallery.size() > 0) {
 
 
+                mImgeProfile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                    mImgeProfile.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
 
-                            Config.logV("Gallery------------------------------" + mGallery.size());
-                            ArrayList<String> mGalleryList = new ArrayList<>();
-
-                            if (mBusinessDataList.getLogo() != null) {
-                                mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                            }
-
-                            for (int i = 0; i < mGallery.size(); i++) {
-
-                                mGalleryList.add(mGallery.get(i).getUrl());
-                            }
-
-
-                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                            if (mValue) {
-
-                                Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                intent.putExtra("pos",0);
-                                startActivity(intent);
-                            }
-
-
+                        if (mBusinessDataList.getLogo() != null) {
+                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
                         }
-                    });
+
+                        for (int i = 0; i < mGallery.size(); i++) {
+
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
 
 
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+
+                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 0);
+                            startActivity(intent);
+                        }
 
 
-                        mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                Config.logV("Gallery------------------------------" + mGallery.size());
-                                ArrayList<String> mGalleryList = new ArrayList<>();
+                    }
+                });
 
 
-                                if (mBusinessDataList.getLogo() != null) {
+                mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                                }
-                                for (int i = 0; i < mGallery.size(); i++) {
-                                    mGalleryList.add(mGallery.get(i).getUrl());
-                                }
-
-
-                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                                if (mValue) {
-
-                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                    intent.putExtra("pos",1);
-                                    startActivity(intent);
-                                }
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
 
 
-                            }
-                        });
+                        if (mBusinessDataList.getLogo() != null) {
+
+                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                        }
+                        for (int i = 0; i < mGallery.size(); i++) {
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
 
 
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+
+                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 1);
+                            startActivity(intent);
+                        }
 
 
-                        mImgthumbProfile1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                Config.logV("Gallery------------------------------" + mGallery.size());
-                                ArrayList<String> mGalleryList = new ArrayList<>();
+                    }
+                });
 
 
-                                if (mBusinessDataList.getLogo() != null) {
+                mImgthumbProfile1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                                }
-                                for (int i = 0; i < mGallery.size(); i++) {
-
-                                    mGalleryList.add(mGallery.get(i).getUrl());
-                                }
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
 
 
-                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                                if (mValue) {
+                        if (mBusinessDataList.getLogo() != null) {
 
-                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                    intent.putExtra("pos",2);
-                                    startActivity(intent);
-                                }
+                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                        }
+                        for (int i = 0; i < mGallery.size(); i++) {
+
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
 
 
-                            }
-                        });
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+
+                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 2);
+                            startActivity(intent);
+                        }
+
+
+                    }
+                });
 
 
             } /*else {
                 tv_Gallery.setVisibility(View.GONE);
             }*/
 
-            Config.logV("Bussiness logo @@@@@@@@@@"+mBusinessDataList.getLogo());
+            Config.logV("Bussiness logo @@@@@@@@@@" + mBusinessDataList.getLogo());
             if (mBusinessDataList.getLogo() != null) {
                 Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
 
@@ -584,7 +580,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 if (mValue) {
 
                                     Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                    intent.putExtra("pos",3);
+                                    intent.putExtra("pos", 3);
                                     startActivity(intent);
                                 }
 
@@ -632,7 +628,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 }
 
 
-
                                 for (int i = 0; i < mGallery.size(); i++) {
                         /*SearchViewDetail data = new SearchViewDetail();
                         data.setUrl(mGallery.get(i).getUrl());*/
@@ -644,7 +639,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 if (mValue) {
 
                                     Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                    intent.putExtra("pos",3);
+                                    intent.putExtra("pos", 3);
                                     startActivity(intent);
                                 }
 
@@ -674,7 +669,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     boolean isContact = false;
 
     ArrayList<SocialMediaModel> socialMedia = new ArrayList<>();
-
 
 
     //  boolean expand =false;
@@ -724,7 +718,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     dynaText.setText(getBussinessData.getSpecialization().get(i).toString());
 
 
-                                    dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+                                    dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                                     dynaText.setTextColor(mContext.getResources().getColor(R.color.title_grey));
                                     //  dynaText.setPadding(5, 5, 5, 5);
                                     dynaText.setMaxLines(1);
@@ -742,7 +736,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 dynaText.setTypeface(tyface);
                                 dynaText.setText("See Less");
 
-                                dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+                                dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                                 dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
                                 // dynaText.setPadding(5, 5, 5, 5);
                                 dynaText.setMaxLines(1);
@@ -1009,6 +1003,23 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 ic_jaldeeverifiedIcon.setVisibility(View.GONE);
             }
 
+            ic_jaldeeverifiedIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String ynw_verified = null;
+                    if (getBussinessData.getVerifyLevel().equalsIgnoreCase("BASIC"))
+                        ynw_verified = "2";
+                    else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("BASIC_PLUS"))
+                        ynw_verified = "3";
+                    else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM"))
+                        ynw_verified = "4";
+
+                    CustomDialog cdd = new CustomDialog(mContext, ynw_verified,getBussinessData.getBusinessName());
+                    cdd.setCanceledOnTouchOutside(true);
+                    cdd.show();
+                }
+            });
+
         } else {
             ic_jaldeeverifiedIcon.setVisibility(View.GONE);
         }
@@ -1149,7 +1160,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         UpdateGallery(mSearchGallery);
 
-                    }else{
+                    } else {
                         if (mBusinessDataList.getLogo() != null) {
                             Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
 

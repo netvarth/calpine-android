@@ -178,6 +178,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
+                myViewHolder.ic_jaldeeverifiedIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapterCallback.onMethodJaldeeLogo(searchdetailList.getYnw_verified_level(),searchdetailList.getTitle());
+                    }
+                });
 ////////////////////////////7 types////////////////////////////////////////////
                /* ArrayList<ParkingModel> listType = new ArrayList<>();
                 listType.clear();*/

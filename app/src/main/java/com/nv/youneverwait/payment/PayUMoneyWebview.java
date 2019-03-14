@@ -107,7 +107,8 @@ public class PayUMoneyWebview extends Activity {
 
 		StringBuilder url_s = new StringBuilder();
 
-		url_s.append("https://test.payu.in/_payment");
+		//url_s.append("https://test.payu.in/_payment");
+		url_s.append("https://secure.payu.in/_payment");
 
 		Log.e(TAG, "call url " + url_s);
 
