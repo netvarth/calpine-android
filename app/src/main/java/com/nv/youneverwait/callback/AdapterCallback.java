@@ -19,4 +19,6 @@ public interface AdapterCallback {
     void onMethodMessage(String provider,String accountID,String from);
 
     void onMethodCoupn(String uniqueID);
+
+    void onMethodJaldeeLogo(String ynw_verified,String provider);
 }
