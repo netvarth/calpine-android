@@ -16,6 +16,7 @@ import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.model.TestModel;
 import com.nv.youneverwait.response.CheckSumModel;
 import com.nv.youneverwait.response.PaytmChecksum;
+import com.nv.youneverwait.utils.SharedPreference;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPGService;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
@@ -189,10 +190,10 @@ public class PaytmPayment {
                             map.put("TXN_AMOUNT", response_data.getTXN_AMOUNT());
                             map.put("WEBSITE", response_data.getWEBSITE());
 
+                          /* String mobno= SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+                            map.put("MOBILE_NO",mobno);*/
 
-                          /*  map.put("MOBILE_NO",response_data.getMOBILE_NO());
-
-                            map.put("EMAIL",response_data.getEMAIL());*/
+                          //  map.put("EMAIL",response_data.getEMAIL());
 
                             Config.logV("Response--Sucess----PAytm-CALLBACK_URL--------------------" + response_data.getCALLBACK_URL());
                             map.put("CALLBACK_URL", response_data.getCALLBACK_URL());
@@ -236,7 +237,9 @@ public class PaytmPayment {
 
     public void PaytmPay(Map<String, String> paramMap, final String from) {
         PaytmPGService Service = null;
-        Service = PaytmPGService.getStagingService();
+       // Service = PaytmPGService.getStagingService();
+
+        Service = PaytmPGService.getProductionService();
         PaytmOrder Order = new PaytmOrder((HashMap<String, String>) paramMap);
         Service.initialize(Order, null);
         Service.startPaymentTransaction(context, true, true, new PaytmPaymentTransactionCallback() {
@@ -250,9 +253,9 @@ public class PaytmPayment {
             @Override
             public void onTransactionResponse(Bundle inResponse) {
                 Log.d("LOG", "Payment Transaction : " + inResponse);
-                //  Toast.makeText(context, "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
+                  Toast.makeText(context, "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
 
-                Toast.makeText(context, "Payment Success", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "Payment Success", Toast.LENGTH_LONG).show();
                 ((Activity) context).finish();
                 /*if(!from.equalsIgnoreCase("home")) {
                     ((Activity) context).finish();
