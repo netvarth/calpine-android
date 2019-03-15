@@ -23,6 +23,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="@dimen/txtsize_subtitle"
+
+        android:paddingLeft="20dp"
         android:textColor="@color/white"
         android:minHeight="?attr/actionBarSize"
         android:text="Title" />

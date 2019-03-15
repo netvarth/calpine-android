@@ -58,6 +58,7 @@ import com.nv.youneverwait.response.SearchTerminology;
 import com.nv.youneverwait.utils.EmptySubmitSearchView;
 import com.nv.youneverwait.utils.PaginationScrollListener;
 import com.nv.youneverwait.utils.SharedPreference;
+import com.nv.youneverwait.widgets.CustomDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1951,6 +1952,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, cfFragment).commit();
+    }
+
+    @Override
+    public void onMethodJaldeeLogo(String ynw_verified,String providername) {
+        CustomDialog cdd=new CustomDialog(mContext,ynw_verified,providername);
+        cdd.setCanceledOnTouchOutside(true);
+        cdd.show();
+
     }
 
 
