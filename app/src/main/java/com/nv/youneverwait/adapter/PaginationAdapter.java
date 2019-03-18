@@ -143,6 +143,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }*/
 
 
+
               //  Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
                 if (searchdetailList.getYnw_verified_level() != null) {
                     if (searchdetailList.getYnw_verified() == 1) {
