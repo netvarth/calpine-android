@@ -1646,7 +1646,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        transaction.add(R.id.mainlayout, pfFragment).commit();
 
     }
 
@@ -1665,7 +1665,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
     @Override
@@ -1683,7 +1683,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
     @Override

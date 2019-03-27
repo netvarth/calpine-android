@@ -150,18 +150,23 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         btn_edtSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!txtdob.getText().toString().equalsIgnoreCase("")) {
-                    String dateSelected = txtdob.getText().toString().replaceAll("-", "/");
-                    Matcher matcher = Pattern.compile(DATE_PATTERN).matcher(dateSelected);
-                    if (matcher.matches()) {
 
-                        ApiEditProfileDetail();
+                if(!txtfirstname.getText().toString().equalsIgnoreCase("")&&!txtlastname.getText().toString().equalsIgnoreCase("")) {
+                    if (!txtdob.getText().toString().equalsIgnoreCase("")) {
+                        String dateSelected = txtdob.getText().toString().replaceAll("-", "/");
+                        Matcher matcher = Pattern.compile(DATE_PATTERN).matcher(dateSelected);
+                        if (matcher.matches()) {
+
+                            ApiEditProfileDetail();
+                        } else {
+                            Toast.makeText(mContext, "Invalid Date!", Toast.LENGTH_LONG).show();
+
+                        }
                     } else {
-                        Toast.makeText(mContext, "Invalid Date!", Toast.LENGTH_LONG).show();
-
+                        ApiEditProfileDetail();
                     }
                 }else{
-                    ApiEditProfileDetail();
+                    Toast.makeText(mContext, "Please enter your name", Toast.LENGTH_LONG).show();
                 }
 
 

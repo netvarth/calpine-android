@@ -114,6 +114,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         tv_title.setText("My Check-ins");
         tv_title.setTypeface(tyface);
 
+        Config.logV("MY CHECK INS@@@@@@@@@@@@@@@@@");
 
       /*  tv_nofuturecheckin = (TextView) row.findViewById(R.id.txtnocheckfuture);
         tv_notodaychekcin = (TextView) row.findViewById(R.id.txtnocheckintoday);
@@ -121,7 +122,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         ApiFavList();
 
         ApiTodayChekInList();
-
+        mFutureFlag=false;mTodayFlag=false;mOldFlag=false;
 
 
         return row;
@@ -382,7 +383,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID) {
+    public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID, boolean todayFlag, boolean futFlag, boolean oldFlag) {
+
+        mOldFlag = oldFlag;
+        mFutureFlag = futFlag;
+        mTodayFlag = todayFlag;
+
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
         dialog.setContentView(R.layout.cancelcheckin);
         dialog.show();
@@ -426,19 +432,27 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodAddFavourite(int value) {
+    public void onMethodAddFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
+        mOldFlag = oldFlag;
+        mFutureFlag = futFlag;
+        mTodayFlag = todayFlag;
         ApiAddFavo(value);
     }
 
     @Override
-    public void onMethodDeleteFavourite(int value) {
+    public void onMethodDeleteFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
+        mOldFlag = oldFlag;
+        mFutureFlag = futFlag;
+        mTodayFlag = todayFlag;
         ApiRemoveFavo(value);
 
     }
 
     @Override
-    public void onMethodRating(String accountID, String UUID) {
-
+    public void onMethodRating(String accountID, String UUID, boolean todayFlag, boolean futFlag, boolean oldFlag) {
+        mOldFlag = oldFlag;
+        mFutureFlag = futFlag;
+        mTodayFlag = todayFlag;
 
         ApiRating(accountID, UUID);
     }
@@ -954,6 +968,8 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
     ExpandableListAdapter adapter;
 
+    boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
+
     void setItems() {
 
         // Array list for header
@@ -968,9 +984,10 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         header.add("Future");
         header.add("Old");
         // Adding child data
-        Config.logV("Today---#####----" + mCheckTodayList.size());
-        Config.logV("Futrue-------" + mCheckFutureList.size());
-        Config.logV("Old-------" + mCheckOldList.size());
+        Config.logV("Today---#####----" + mCheckTodayList.size()+""+mTodayFlag);
+        Config.logV("Futrue-------" + mCheckFutureList.size()+""+mFutureFlag);
+        Config.logV("Old-------" + mCheckOldList.size()+""+mOldFlag);
+
 
 
         // Adding header and childs to hash map
@@ -978,22 +995,19 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         hashMap.put(header.get(1), mCheckFutureList);
         hashMap.put(header.get(2), mCheckOldList);
 
-        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap);
+        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag);
         // Setting adpater over expandablelistview
         expandlist.setAdapter(adapter);
         expandlist.setVerticalScrollBarEnabled(false);
 
 
-        if (mCheckTodayList.size() > 0)
+        if (mCheckTodayList.size() > 0 || mTodayFlag)
             expandlist.expandGroup(0);
-        if (mCheckFutureList.size() > 0)
+        if (mCheckFutureList.size() > 0 || mFutureFlag)
             expandlist.expandGroup(1);
-        if (mCheckTodayList.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) {
+        if ((mCheckTodayList.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) || mOldFlag) {
             expandlist.expandGroup(2);
         }
-
-
-
 
 
     }

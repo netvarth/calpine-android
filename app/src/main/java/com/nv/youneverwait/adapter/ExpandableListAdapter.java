@@ -49,8 +49,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     HistoryAdapterCallback callback;
 String header;
     ArrayList<FavouriteModel> FavList;
+    boolean mTodayFlag=false,mOldFlag=false,mFutureFlag=false;
 
-    public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback,List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData) {
+    public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback,List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData,boolean mTodayFlag,boolean mFutureFlag,boolean mOldFlag) {
         this.mContext = mContext;
         this.headerData = listDataHeader;
         this.child = listChildData;
@@ -58,6 +59,9 @@ String header;
         this.callback = callback;
 
         this.FavList = mFavList;
+        this.mFutureFlag=mFutureFlag;
+        this.mTodayFlag=mTodayFlag;
+        this.mOldFlag=mOldFlag;
     }
 
     @Override
@@ -142,28 +146,52 @@ String header;
         // icon
         if (isExpanded) {
             //header_text.setTypeface(null, Typeface.BOLD);
+            Config.logV("Open@@@@"+groupPosition);
+            if (groupPosition == 0) {
+                mTodayFlag=true;
+            }
+            if (groupPosition == 1) {
+                mFutureFlag=true;
+            }
+            if (groupPosition == 2) {
+                mOldFlag=true;
+            }
             header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
             header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
         } else {
             // If group is not expanded then change the text back into normal
             // and change the icon
             if (getChildrenCount(groupPosition) == 0) {
+                Config.logV("Open@@@@ FFFF"+groupPosition);
                 if (groupPosition == 0) {
                     header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
                     header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
+                    mTodayFlag=true;
                 }
                 if (groupPosition == 1) {
                     header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
                     header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
+                    mFutureFlag=true;
                 }
                 if (groupPosition == 2) {
                     header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
                     header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
+                    mOldFlag=true;
                 }
             }else {
                 //header_text.setTypeface(null, Typeface.NORMAL);
                 header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
                 header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_background_opaque_round));
+              Config.logV("Close@@@@"+groupPosition);
+                if (groupPosition == 0) {
+                    mTodayFlag=false;
+                }
+                if (groupPosition == 1) {
+                    mFutureFlag=false;
+                }
+                if (groupPosition == 2) {
+                    mOldFlag=false;
+                }
             }
         }
 
@@ -218,7 +246,7 @@ String header;
         icon_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getProvider().getId());
+                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getProvider().getId(),mTodayFlag,mFutureFlag,mOldFlag);
             }
         });
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -279,7 +307,7 @@ String header;
                 if (activelist.isFavFlag()) {
 
                     Config.logV("Fav" + activelist.getProvider().getId());
-                    callback.onMethodDeleteFavourite(activelist.getProvider().getId());
+                    callback.onMethodDeleteFavourite(activelist.getProvider().getId(),mTodayFlag,mFutureFlag,mOldFlag);
 
                    /* AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
                             //set message, title, and icon
@@ -312,7 +340,7 @@ String header;
 
                 } else {
                     Config.logV("Fav Addd" + activelist.getProvider().getId());
-                    callback.onMethodAddFavourite(activelist.getProvider().getId());
+                    callback.onMethodAddFavourite(activelist.getProvider().getId(),mTodayFlag,mFutureFlag,mOldFlag);
                 }
             }
         });
@@ -1009,7 +1037,7 @@ String header;
             @Override
             public void onClick(View v) {
 
-                callback.onMethodRating(String.valueOf(activelist.getProvider().getId()), activelist.getYnwUuid());
+                callback.onMethodRating(String.valueOf(activelist.getProvider().getId()), activelist.getYnwUuid(),mTodayFlag,mFutureFlag,mOldFlag);
             }
         });
 

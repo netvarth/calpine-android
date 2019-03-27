@@ -93,7 +93,7 @@ public class ResponseInteceptor implements Interceptor {
 
 
 
-            return response;
+
         }
 
         if(response.code()==301){
