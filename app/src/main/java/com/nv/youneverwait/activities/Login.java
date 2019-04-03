@@ -17,6 +17,7 @@ import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,8 +93,10 @@ public class Login extends AppCompatActivity {
                 "fonts/Montserrat_Bold.otf");
         tv_account.setTypeface(tyface_confm);
 
-        edtpassword_login.setTransformationMethod(new PasswordTransformationMethod());
 
+
+        edtpassword_login.setInputType(EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS );
+        edtpassword_login.setTransformationMethod(new PasswordTransformationMethod());
 
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Medium.otf");

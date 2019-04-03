@@ -66,4 +66,14 @@ public class CheckSumModel implements Serializable {
     public String getMerchantKey() {
         return merchantKey;
     }
+
+    public String getPaymentEnv() {
+        return paymentEnv;
+    }
+
+    public void setPaymentEnv(String paymentEnv) {
+        this.paymentEnv = paymentEnv;
+    }
+
+    String paymentEnv;
 }

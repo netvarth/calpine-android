@@ -399,7 +399,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
                 finalDate = timeFormat.format(myDate);
             }
 
-
+Config.logV("FINAL DATE @@@@@@@@@@@@@@"+finalDate);
             jsonObj.put("dob", finalDate);
 
         } catch (JSONException e) {

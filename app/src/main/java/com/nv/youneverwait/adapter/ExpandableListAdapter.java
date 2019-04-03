@@ -156,7 +156,12 @@ String header;
             if (groupPosition == 2) {
                 mOldFlag=true;
             }
-            header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+
+            if (getChildrenCount(groupPosition) > 0) {
+                header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+            }else{
+                header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
             header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
         } else {
             // If group is not expanded then change the text back into normal
@@ -164,17 +169,17 @@ String header;
             if (getChildrenCount(groupPosition) == 0) {
                 Config.logV("Open@@@@ FFFF"+groupPosition);
                 if (groupPosition == 0) {
-                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0,0, 0);
                     header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
                     mTodayFlag=true;
                 }
                 if (groupPosition == 1) {
-                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
                     mFutureFlag=true;
                 }
                 if (groupPosition == 2) {
-                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
                     mOldFlag=true;
                 }
