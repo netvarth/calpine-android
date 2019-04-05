@@ -70,10 +70,10 @@
 
     <TextView
         android:id="@+id/txtForgotPwd"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/default_padding"
-        android:gravity="right"
+        android:layout_gravity="right"
         android:onClick="ForgotPwd"
         android:textSize="@dimen/txtsize_title_term_small"
         android:text="Forgot password ?"

@@ -2524,7 +2524,7 @@ Config.logV("Error String-----------"+errorString);
                             tokens.put("Customer", Config.toTitleCase(mSearchTerminology.getCustomer()));
                             tokens.put("provider", mSearchTerminology.getProvider());
                             tokens.put("arrived", mSearchTerminology.getArrived());
-                            tokens.put("waitlist", mSearchTerminology.getWaitlist());
+                            tokens.put("waitlisted", mSearchTerminology.getWaitlist());
 
                             tokens.put("start", mSearchTerminology.getStart());
                             tokens.put("cancelled", mSearchTerminology.getCancelled());

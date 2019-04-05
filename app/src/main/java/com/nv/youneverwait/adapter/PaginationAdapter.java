@@ -648,7 +648,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     if (searchdetailList.getShow_waiting_time() != null) {
 
-                        if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) {
+
+                        if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")&&searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {
                             if (searchdetailList.getAvail_date() != null) {
                                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
 
@@ -772,6 +773,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                 }
                             }
+
                         } else {
                             myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
                         }
@@ -789,8 +791,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 } else {
                     myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
+
+                    myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
                     myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                 }
+
 
 
                 myViewHolder.btncheckin.setOnClickListener(new View.OnClickListener() {
