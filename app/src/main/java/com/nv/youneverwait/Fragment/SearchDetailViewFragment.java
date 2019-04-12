@@ -1616,9 +1616,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mRecyLocDetail.setLayoutManager(mLayoutManager);
-                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList);
+                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList,mSearchSettings.getCalculationMode());
                         mRecyLocDetail.setAdapter(mSearchLocAdapter);
                         mSearchLocAdapter.notifyDataSetChanged();
+
+
+
+
+
                     }
 
 

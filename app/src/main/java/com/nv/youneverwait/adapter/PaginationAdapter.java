@@ -13,6 +13,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.Gravity;
@@ -35,6 +37,7 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CircleTransform;
+import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.model.SearchListModel;
 import com.nv.youneverwait.model.WorkingModel;
 import com.nv.youneverwait.response.SearchService;
@@ -134,6 +137,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (getItemViewType(position)) {
             case ITEM:
                 final MyViewHolder myViewHolder = (MyViewHolder) holder;
+
 
 
                // Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
@@ -548,7 +552,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (searchdetailList.getPlace1() != null) {
                     myViewHolder.tv_location.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_location.setText(searchdetailList.getPlace1());
+                   // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
+                    Config.logV("Place @@@@@@@@@@@@@@"+searchdetailList.getDistance());
+                    Double distance=Double.valueOf(searchdetailList.getDistance() )*1.6;
+                    if(distance>=1){
+                        myViewHolder.tv_location.setText(searchdetailList.getPlace1()+" ( "+String.format("%.2f", distance)+" km )");
+                    }else{
+                        myViewHolder.tv_location.setText(searchdetailList.getPlace1()+" (<1 km) ");
+                    }
                 } else {
                     myViewHolder.tv_location.setVisibility(View.GONE);
                 }
@@ -635,6 +646,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 }
 
                             } else {
+
                                 myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
                             }
                         }
@@ -642,15 +654,19 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         /*if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())&&searchdetailList.getServices()!=null) {
                             myViewHolder.btncheckin.setVisibility(View.VISIBLE);
                         } else {*/
+
+                        Config.logV("WAITTIME INVISIBLE ####%%%%%%@@@@@@@@@@@@@@@@@@@@@");
                         myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
                         //}
                     }
 
-                    if (searchdetailList.getShow_waiting_time() != null) {
+                    if (searchdetailList.getShow_waiting_time() != null&& searchdetailList.getServices() != null) {
 
 
                         if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")&&searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {
                             if (searchdetailList.getAvail_date() != null) {
+
+                                Config.logV("WAITTIME INVISIBLE ####@@@@@@@@@@@@@@@@@@@@@");
                                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
 
 
@@ -789,7 +805,40 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }*/
 
 
+                    if(searchdetailList.getCalculationMode()!=null) {
+                        if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+
+                            myViewHolder.btncheckin.setText("GET TOKEN");
+                            myViewHolder.tv_Futuredate.setText("Get Token for different Date?");
+                            if (searchdetailList.getPersonAhead() != -1) {
+                                Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####"+searchdetailList.getPersonAhead());
+                                if (searchdetailList.getPersonAhead() == 0) {
+                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                                    myViewHolder.tv_WaitTime.setText(" Be the first in line");
+                                } else {
+                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                                   // myViewHolder.tv_WaitTime.setText(searchdetailList.getPersonAhead() + " People waiting in line");
+
+                                    String firstWord=String.valueOf(searchdetailList.getPersonAhead());
+                                    String secondWord=" People waiting in line";
+                                    Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
+                                            "fonts/Montserrat_Bold.otf");
+                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                                    myViewHolder.tv_WaitTime.setText(spannable);
+                                }
+                            }
+
+                        } else {
+                            myViewHolder.btncheckin.setText("CHECK-IN");
+                            myViewHolder.tv_Futuredate.setText("Check-in for different Date?");
+                        }
+                    }
+
+
                 } else {
+                    Config.logV("WAITTIME INVISIBLE @@@@@@@@@@@@@@@@@@@@@");
                     myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
 
                     myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);

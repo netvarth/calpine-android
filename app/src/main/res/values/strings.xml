@@ -34,6 +34,7 @@
     <string name="tab4">Inbox</string>
     <string name="tab5">Profile</string>
     <string name="phonenumber">Phone Number</string>
+    <string name="new_phonenumber">Enter new Mobile#</string>
     <string name="email">Email</string>
     <string name="gender">Gender</string>
     <string name="dob">Date of Birth</string>

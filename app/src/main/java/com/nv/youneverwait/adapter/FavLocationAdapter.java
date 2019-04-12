@@ -176,6 +176,11 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                             myViewHolder.btn_checkin.setEnabled(false);
 
                         }
+
+
+
+
+
                     } else {
 
                         myViewHolder.btn_checkin.setVisibility(View.GONE);
@@ -298,6 +303,36 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         } else {
             myViewHolder.tv_waittime.setVisibility(View.GONE);
         }
+
+
+        if (queueList.getNextAvailableQueue().getAvailableDate() != null) {
+            if (queueList.getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                myViewHolder.btn_checkin.setText("GET TOKEN");
+                myViewHolder.tv_date.setText("Get Token for different Date?");
+                if (queueList.getNextAvailableQueue().getPersonAhead() != -1) {
+                    Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + queueList.getNextAvailableQueue().getPersonAhead());
+                    if (queueList.getNextAvailableQueue().getPersonAhead() == 0) {
+                        myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_waittime.setText(" Be the first in line");
+                    } else {
+                        myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                        String firstWord=String.valueOf(queueList.getNextAvailableQueue().getPersonAhead());
+                        String secondWord=" People waiting in line";
+                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                        Spannable spannable = new SpannableString(firstWord + secondWord);
+                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        myViewHolder.tv_waittime.setText(spannable);
+                    }
+                }
+
+            } else {
+                myViewHolder.btn_checkin.setText("CHECK-IN");
+                myViewHolder.tv_date.setText("Check-in for different Date?");
+            }
+        }
+
 
 
     }

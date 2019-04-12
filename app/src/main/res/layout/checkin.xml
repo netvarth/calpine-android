@@ -593,6 +593,7 @@
                                     android:textStyle="bold" />
                             </LinearLayout>
 
+                       <!--     android:text="Check-in"-->
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
                 </FrameLayout>

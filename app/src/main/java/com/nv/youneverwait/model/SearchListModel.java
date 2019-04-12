@@ -91,6 +91,16 @@ public class SearchListModel implements Serializable{
 
     int ynw_verified;
 
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    String distance;
+
     public void setYnw_verified_level(String ynw_verified_level) {
         this.ynw_verified_level = ynw_verified_level;
     }
@@ -209,6 +219,27 @@ public class SearchListModel implements Serializable{
     String show_waiting_time;
     int queueWaitingTime;
     private String serviceTime;
+
+    public int getPersonAhead() {
+        return personAhead;
+    }
+
+
+    public String getCalculationMode() {
+        return calculationMode;
+    }
+
+    public void setCalculationMode(String calculationMode) {
+        this.calculationMode = calculationMode;
+    }
+
+    String calculationMode;
+
+    public void setPersonAhead(int personAhead) {
+        this.personAhead = personAhead;
+    }
+
+    int personAhead;
 
     public ArrayList getServices() {
         return services;

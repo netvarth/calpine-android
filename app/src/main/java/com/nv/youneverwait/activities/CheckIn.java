@@ -166,6 +166,7 @@ public class CheckIn extends AppCompatActivity {
     TextView tv_addnote,txtprepayamount;
     static TextView txtnocheckin;
 
+    TextView tv_title;
     String txt_message = "";
     String googlemap;
     String sector, subsector;
@@ -179,6 +180,7 @@ public class CheckIn extends AppCompatActivity {
     private CouponlistAdapter mAdapter;
 
 
+    static String Word_Change="";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -375,7 +377,7 @@ public class CheckIn extends AppCompatActivity {
                 finish();
             }
         });
-        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
+         tv_title = (TextView) findViewById(R.id.toolbartitle);
         tv_title.setText("Check-in");
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -492,8 +494,10 @@ public class CheckIn extends AppCompatActivity {
         });
 
         mSpinnerService = (Spinner) findViewById(R.id.spinnerservice);
-        ApiSearchViewServiceID(serviceId);
+
         ApiSearchViewSetting(uniqueID);
+
+
         ApiSearchViewTerminology(uniqueID);
         mFirstName = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         mLastName = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
@@ -525,7 +529,8 @@ public class CheckIn extends AppCompatActivity {
 
                 serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
-                String firstWord = "Check-in for ";
+               // String firstWord = "Check-in for ";
+                String firstWord = Word_Change;
                 String secondWord = ((SearchService) mSpinnerService.getSelectedItem()).getName();
 
                 Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -876,6 +881,24 @@ public class CheckIn extends AppCompatActivity {
                     if (response.code() == 200) {
 
 
+
+                        if(response.body().getCalculationMode().equalsIgnoreCase("NoCalc")){
+                            tv_title.setText("Get Token");
+                            Word_Change="Token for ";
+                            btn_checkin.setText("CONFIRM");
+
+
+                        }else{
+                            tv_title.setText("Check-in");
+                            Word_Change="Check-in for ";
+                            btn_checkin.setText("Check-in");
+
+                        }
+
+
+
+
+                        ApiSearchViewServiceID(serviceId);
                     }
 
 
@@ -1327,8 +1350,33 @@ public class CheckIn extends AppCompatActivity {
 
 
                             if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                                tv_waittime.setVisibility(View.INVISIBLE);
+                                tv_waittime.setVisibility(View.VISIBLE);
                                 Config.logV("TV WAITTIME-------------INVISIBLE-------");
+                                Date c = Calendar.getInstance().getTime();
+                                System.out.println("Current time => " + c);
+                                String formattedDate;
+                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+
+                                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyy");
+                                    formattedDate = "Today, "+df.format(c);
+                                } else {
+                                   // formattedDate = selectedDateFormat;
+                                    String dtStart = selectedDateFormat;
+                                    Date dateParse = null;
+                                    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                                    try {
+                                        dateParse = format1.parse(dtStart);
+                                        System.out.println(dateParse);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    SimpleDateFormat df = new SimpleDateFormat("EE,dd-MM-yyy");
+                                    formattedDate = df.format(dateParse);
+                                }
+
+                                tv_waittime.setText(formattedDate);
+
 
                             } else {
                                 tv_waittime.setVisibility(View.VISIBLE);
@@ -1523,8 +1571,35 @@ public class CheckIn extends AppCompatActivity {
                             tv_waittime.setText(spannable);
 
                             if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                                tv_waittime.setVisibility(View.INVISIBLE);
+
+                                tv_waittime.setVisibility(View.VISIBLE);
                                 Config.logV("TV WAITTIME-------------INVISIBLE-------");
+                                Date c = Calendar.getInstance().getTime();
+                                System.out.println("Current time => " + c);
+                                String formattedDate;
+                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+
+                                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyy");
+                                    formattedDate = "Today, "+df.format(c);
+                                } else {
+                                    /*SimpleDateFormat df = new SimpleDateFormat("EE,dd-MM-yyy");
+                                    formattedDate = df.format(selectedDateFormat);*/
+                                    String dtStart = selectedDateFormat;
+                                    Date dateParse = null;
+                                    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                                    try {
+                                        dateParse = format1.parse(dtStart);
+                                        System.out.println(dateParse);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    SimpleDateFormat df = new SimpleDateFormat("EE,dd-MM-yyy");
+                                    formattedDate = df.format(dateParse);
+
+                                  //  formattedDate = selectedDateFormat;
+                                }
+                                tv_waittime.setText(formattedDate);
 
                             } else {
                                 tv_waittime.setVisibility(View.VISIBLE);
@@ -1543,7 +1618,8 @@ public class CheckIn extends AppCompatActivity {
                             Lbottomlayout.setVisibility(View.GONE);
 
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText("Check-In for this service is not accepted ");
+                           // txtnocheckin.setText("Check-In for this service is not accepted ");
+                            txtnocheckin.setText(Word_Change+"this service is not accepted ");
                         }
 
 
@@ -1760,7 +1836,36 @@ public class CheckIn extends AppCompatActivity {
                                     tv_waittime.setText(spannable);
 
                                     if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                                        tv_waittime.setVisibility(View.INVISIBLE);
+                                     //   tv_waittime.setVisibility(View.INVISIBLE);
+
+                                        tv_waittime.setVisibility(View.VISIBLE);
+                                        Config.logV("TV WAITTIME-------------INVISIBLE-------");
+                                        Date c = Calendar.getInstance().getTime();
+                                        System.out.println("Current time => " + c);
+                                        String formattedDate;
+                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+
+                                            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyy");
+                                            formattedDate = "Today,"+df.format(c);
+                                        } else {
+                                            String dtStart = selectedDateFormat;
+                                            Date dateParse = null;
+                                            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                                            try {
+                                                dateParse = format1.parse(dtStart);
+                                                System.out.println(dateParse);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            SimpleDateFormat df = new SimpleDateFormat("EE,dd-MM-yyy");
+                                            formattedDate = df.format(dateParse);
+                                        }
+
+                                           // formattedDate = selectedDateFormat;
+
+                                        tv_waittime.setText(formattedDate);
+
                                     } else {
                                         tv_waittime.setVisibility(View.VISIBLE);
                                     }
@@ -1986,7 +2091,32 @@ public class CheckIn extends AppCompatActivity {
                                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                     tv_waittime.setText(spannable);
                                     if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                                        tv_waittime.setVisibility(View.INVISIBLE);
+                                       // tv_waittime.setVisibility(View.INVISIBLE);
+                                        tv_waittime.setVisibility(View.VISIBLE);
+                                        Config.logV("TV WAITTIME-------------INVISIBLE-------");
+                                        Date c = Calendar.getInstance().getTime();
+                                        System.out.println("Current time => " + c);
+                                        String formattedDate;
+                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+
+                                            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyy");
+                                            formattedDate = "Today, "+df.format(c);
+                                        } else {
+                                          //  formattedDate = selectedDateFormat;
+                                            String dtStart = selectedDateFormat;
+                                            Date dateParse = null;
+                                            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+                                            try {
+                                                dateParse = format1.parse(dtStart);
+                                                System.out.println(dateParse);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            SimpleDateFormat df = new SimpleDateFormat("EE,dd-MM-yyy");
+                                            formattedDate = df.format(dateParse);
+                                        }
+                                        tv_waittime.setText(formattedDate);
                                     } else {
                                         tv_waittime.setVisibility(View.VISIBLE);
                                     }
@@ -2097,7 +2227,8 @@ public class CheckIn extends AppCompatActivity {
                             txt_chooseservice.setVisibility(View.GONE);
 
                             if (LServicesList.size() == 1) {
-                                String firstWord = "Check-in for ";
+                               // String firstWord = "Check-in for ";
+                                String firstWord = Word_Change;
                                 String secondWord = LServicesList.get(0).getName();
 
                                 Spannable spannable = new SpannableString(firstWord + secondWord);

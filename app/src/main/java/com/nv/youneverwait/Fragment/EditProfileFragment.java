@@ -283,7 +283,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
                         // } /*else {
                         //  db.updateUserInfo(response.body().getUserprofile());
 
-
+                        SharedPreference.getInstance(mContext).setValue("mobile", response.body().getUserprofile().getPrimaryMobileNo());
                         ProfileModel getProfile = db.getProfileDetail(consumerId);
                         showProfileDetail(getProfile);
                         SharedPreference.getInstance(mContext).setValue("userDb", "success");

@@ -101,4 +101,25 @@ public class QueueList {
     }
 
     int queueSize;
+
+
+    public String getCalculationMode() {
+        return calculationMode;
+    }
+
+    public void setCalculationMode(String calculationMode) {
+        this.calculationMode = calculationMode;
+    }
+
+    String calculationMode;
+
+    public int getPersonAhead() {
+        return personAhead;
+    }
+
+    public void setPersonAhead(int personAhead) {
+        this.personAhead = personAhead;
+    }
+
+    int personAhead;
 }

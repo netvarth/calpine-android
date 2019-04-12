@@ -793,6 +793,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         params.put("sort", "ynw_verified_level desc, distance asc");
 
         params.put("expr.distance", mPass);
+        params.put("return","_all_fields,distance");
 
 
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
@@ -853,6 +854,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (response.body().getHits().getHit().get(i).getFields().getQualification() != null) {
                                     search.setQualification(response.body().getHits().getHit().get(i).getFields().getQualification());
 
+                                }
+
+                                if(response.body().getHits().getHit().get(i).getExprs()!=null){
+                                    search.setDistance(response.body().getHits().getHit().get(i).getExprs().getDistance());
                                 }
 
 
@@ -1009,6 +1014,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         params.put("q.parser", "structured");
         params.put("sort", "ynw_verified_level desc, distance asc");
         params.put("expr.distance", mPass);
+        params.put("return","_all_fields,distance");
 
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
 
@@ -1080,6 +1086,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 }
 
+
+                                if(response.body().getHits().getHit().get(i).getExprs()!=null){
+                                 //   Config.logV("Distance @@@@@@@@@@@"+response.body().getHits().getHit().get(i).getExprs().getDistance());
+                                    search.setDistance(response.body().getHits().getHit().get(i).getExprs().getDistance());
+                                }
 
                                 if (response.body().getHits().getHit().get(i).getFields().getQualification() != null) {
                                     search.setQualification(response.body().getHits().getHit().get(i).getFields().getQualification());
@@ -1259,6 +1270,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     que.setServiceTime(response.body().get(i).getNextAvailableQueue().getServiceTime());
                                 }
 
+                                Config.logV("Calc Mode @@@@@@@@@@@RRRR"+response.body().get(i).getNextAvailableQueue().getCalculationMode());
+                                que.setCalculationMode(response.body().get(i).getNextAvailableQueue().getCalculationMode());
+                                que.setPersonAhead(response.body().get(i).getNextAvailableQueue().getPersonAhead());
+
+                                Config.logV("personAheadtttt @@@@@@@@@@@ ####"+response.body().get(i).getNextAvailableQueue().getPersonAhead());
+
                                 que.setQueueWaitingTime(response.body().get(i).getNextAvailableQueue().getQueueWaitingTime());
 
 
@@ -1320,6 +1337,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (mSearchRespPass.get(i).getYnw_verified() != null) {
                                     searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
 
+                                }
+
+                                if (mSearchRespPass.get(i).getDistance() != null) {
+                                    Config.logV("Distance @@@@@@@@@@@"+mSearchRespPass.get(i).getDistance());
+                                    searchList.setDistance(mSearchRespPass.get(i).getDistance());
                                 }
 
                                 if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
@@ -1413,6 +1435,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             //searchList.setQId(mQueueList.get(j).getId());
                                             searchList.setQId(mID);
                                             searchList.setIsopen(mQueueList.get(i).isOpenNow());
+                                            searchList.setPersonAhead(mQueueList.get(i).getPersonAhead());
+                                            searchList.setCalculationMode(mQueueList.get(i).getCalculationMode());
+
+                                            Config.logV("personAhead @@@@@@@@@@@ 33####"+mQueueList.get(i).getPersonAhead());
                                             searchList.setQueueWaitingTime(mQueueList.get(i).getQueueWaitingTime());
                                             if (mQueueList.get(i).getServiceTime() != null) {
                                                 searchList.setServiceTime(mQueueList.get(i).getServiceTime());
@@ -1479,6 +1505,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (mSearchRespPass.get(i).getYnw_verified() != null) {
                                     searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
 
+                                }
+
+                                if (mSearchRespPass.get(i).getDistance() != null) {
+                                    Config.logV("Distance @@@@@@@@@@@44444"+mSearchRespPass.get(i).getDistance());
+                                    searchList.setDistance(mSearchRespPass.get(i).getDistance());
                                 }
 
                                 if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
@@ -1567,7 +1598,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             }
                                             searchList.setQId(mID);
                                             searchList.setIsopen(mQueueList.get(i).isOpenNow());
+                                            searchList.setPersonAhead(mQueueList.get(i).getPersonAhead());
+                                            searchList.setCalculationMode(mQueueList.get(i).getCalculationMode());
                                             searchList.setQueueWaitingTime(mQueueList.get(i).getQueueWaitingTime());
+                                            Config.logV("personAhead @@@@@@@@@@@ ####"+mQueueList.get(i).getPersonAhead());
+
                                             if (mQueueList.get(i).getServiceTime() != null) {
                                                 searchList.setServiceTime(mQueueList.get(i).getServiceTime());
                                             }

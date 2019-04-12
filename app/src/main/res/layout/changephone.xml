@@ -45,6 +45,15 @@
                 android:layout_margin="@dimen/padding7"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/textmobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding7"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint"
+                    />
+
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/text_input_phone"
                     android:layout_width="match_parent"
@@ -57,8 +66,8 @@
                         android:id="@+id/edtPhone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding7"
-                        android:hint="@string/phonenumber"
+                        android:layout_marginTop="@dimen/padding5"
+                        android:hint="@string/new_phonenumber"
                         android:inputType="number"
                         android:maxLength="10"
                         android:textAppearance="@style/GreyTextInputLayoutHintPwd"
