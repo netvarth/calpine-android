@@ -410,7 +410,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 String firstWord = "Checked in for ";
-                // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+                // String strDate = outputDateStr + ", " + activelist.getServiceTime();1
 
                 String dtStart = outputDateStr;
                 Date dateParse = null;
