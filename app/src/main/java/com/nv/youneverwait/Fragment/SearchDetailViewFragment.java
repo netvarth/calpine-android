@@ -1382,6 +1382,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 dialog.show();
                                 TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);
 
+                                TextView tv_token = (TextView) dialog.findViewById(R.id.tv_token);
+
+                                if(mSearchSettings.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                                    tv_token.setVisibility(View.VISIBLE);
+                                }else{
+                                    tv_token.setVisibility(View.GONE);
+                                }
                                 String firstWord = "Your Check-In at ";
                                 String secondWord = loc;
                                 location = loc;
@@ -1833,7 +1840,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         pfFragment.setArguments(bundle);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
     @Override
@@ -1848,7 +1855,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         pfFragment.setArguments(bundle);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
     @Override

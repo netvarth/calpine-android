@@ -88,7 +88,12 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
 
         myViewHolder.name.setText(checklist.getWaitlistingFor().get(0).getFirstName());
         myViewHolder.txtservice.setText(checklist.getService().getName());
-        myViewHolder.txttoken.setText(checklist.getToken());
+        if (checklist.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+            myViewHolder.txttoken.setVisibility(View.VISIBLE);
+            myViewHolder.txttoken.setText(checklist.getToken());
+        }else{
+            myViewHolder.txttoken.setVisibility(View.GONE);
+        }
 
         myViewHolder.ic_delete.setOnClickListener(new View.OnClickListener() {
             @Override

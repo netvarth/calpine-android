@@ -85,6 +85,15 @@ public class SearchCheckInMessage {
         return firstName;
     }
 
+    public String getCalculationMode() {
+        return calculationMode;
+    }
+
+    public void setCalculationMode(String calculationMode) {
+        this.calculationMode = calculationMode;
+    }
+
+    String calculationMode;
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
