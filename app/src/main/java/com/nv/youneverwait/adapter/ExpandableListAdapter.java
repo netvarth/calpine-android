@@ -62,6 +62,7 @@ String header;
         this.mFutureFlag=mFutureFlag;
         this.mTodayFlag=mTodayFlag;
         this.mOldFlag=mOldFlag;
+
     }
 
     @Override
@@ -73,6 +74,7 @@ String header;
     @Override
     public int getChildrenCount(int groupPosition) {
         // return children count
+
         return this.child.get(this.headerData.get(groupPosition)).size();
     }
 

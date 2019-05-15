@@ -33,20 +33,21 @@
 
                     <TextView
                         android:id="@+id/txtLoc"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/customfont"
                         android:padding="2dp"
                         android:text="location"
+                        android:layout_weight="0.8"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_hint"
                         android:textStyle="bold" />
 
                     <LinearLayout
                         android:id="@+id/Ldirectionlayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/padding3"
+                        android:layout_weight="0.5"
                         android:gravity="right|center"
                         android:orientation="horizontal">
 
@@ -59,10 +60,10 @@
                             android:id="@+id/txtdirection"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="-4dp"
                             android:text="Get Direction"
                             android:textColor="@color/title_consu"
-                            android:textSize="@dimen/txtsize_12" />
+                            android:layout_marginLeft="-4dp"
+                            android:textSize="@dimen/txtsize_title_small" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -175,6 +176,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="@dimen/default_padding"
+                android:padding="5dp"
                 android:src="@drawable/icon_angle_down" />
         </RelativeLayout>
         <!--<TextView
