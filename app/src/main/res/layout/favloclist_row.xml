@@ -5,30 +5,32 @@
     android:orientation="vertical"
     android:padding="@dimen/padding7">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_padding"
+        android:layout_marginTop="@dimen/padding7"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/txt_loc"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_weight="0.8"
             android:drawableLeft="@drawable/icon_location_lightgray"
             android:drawablePadding="@dimen/padding5"
-            android:text="Fort Kochi"
+            android:layout_gravity="center"
+            android:padding="3dp"
+            android:text="Fort Kochi "
             android:textColor="@color/sec_title_grey"
             android:textSize="@dimen/txtsize_hint" />
 
         <TextView
             android:id="@+id/txtOpen"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_weight="0.3"
             android:background="@color/bg_opennow"
-            android:gravity="right"
+            android:gravity="center"
             android:paddingBottom="@dimen/padding3"
             android:paddingLeft="@dimen/padding5"
             android:paddingRight="@dimen/padding5"
@@ -37,7 +39,7 @@
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone" />
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <TextView

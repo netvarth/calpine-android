@@ -114,6 +114,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="top"
                                 android:src="@drawable/icon_location_blue" />
 
                             <TextView
@@ -122,7 +123,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="-2dp"
                                 android:gravity="left"
-                                android:text="Kakkanad"
+                                android:text="Kakkanad "
                                 android:textColor="@color/title_consu"
                                 android:textSize="@dimen/txtsize_12" />
                         </LinearLayout>
