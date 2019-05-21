@@ -34,6 +34,9 @@ import org.json.JSONObject;
 import java.util.Map;
 import java.util.Random;
 
+import static android.app.Notification.DEFAULT_SOUND;
+import static android.app.Notification.DEFAULT_VIBRATE;
+
 
 public class FirebaseService extends FirebaseMessagingService {
 
@@ -109,26 +112,7 @@ public class FirebaseService extends FirebaseMessagingService {
         }
     }
 
-    private void handleNotification(String message) {
-        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
-            // app is in foreground, broadcast the push message
-            Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-            pushNotification.putExtra("message", message);
-          //  Intent pushNotification = new Intent(this,Home.class);
 
-            pushNotification.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            PendingIntent contentIntent = PendingIntent.getActivity(this, (int) (Math.random() * 100), pushNotification, 0);
-
-            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
-
-            // play notification sound
-            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-            notificationUtils.playNotificationSound();
-        }else{
-            // If the app is in background, firebase itself handles the notification
-            Config.logV("App Back GRound");
-        }
-    }
 
     private void handleDataMessage(JSONObject json) {
         Log.e(TAG, "push json: " + json.toString());
@@ -222,6 +206,8 @@ public class FirebaseService extends FirebaseMessagingService {
         }
         notificationBuilder.setContentTitle(TextUtils.isEmpty(title) ? getString(R.string.app_name) : title)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
+                .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE) //Important for heads-up notification
+                .setPriority(Notification.PRIORITY_MAX) //Important for heads-up notification
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
@@ -236,6 +222,7 @@ public class FirebaseService extends FirebaseMessagingService {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Config.logV("OREO @@@@@@@@@@@@@@###############");
                 final NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH);
+
                 notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                 notificationManager.createNotificationChannel(notificationChannel);
             }

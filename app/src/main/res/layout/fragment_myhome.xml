@@ -204,6 +204,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="More"
+
                         android:textColor="@color/title_consu"
                         android:textSize="@dimen/txtsize_title_term_small" />
 
