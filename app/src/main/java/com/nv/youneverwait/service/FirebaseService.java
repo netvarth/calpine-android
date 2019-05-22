@@ -16,6 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -204,12 +205,20 @@ public class FirebaseService extends FirebaseMessagingService {
             notificationBuilder.setSmallIcon(R.drawable.ic_silhouette);
             notificationBuilder.setColor(Color.parseColor("#F0B41C"));
         }
+
+        RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notif_custom_view);
+        remoteViews.setTextViewText(R.id.txttitle,title);
+        remoteViews.setTextViewText(R.id.txtnotify,messageBody);
+
+
+
         notificationBuilder.setContentTitle(TextUtils.isEmpty(title) ? getString(R.string.app_name) : title)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
                 .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE) //Important for heads-up notification
                 .setPriority(Notification.PRIORITY_MAX) //Important for heads-up notification
                 .setContentText(messageBody)
                 .setAutoCancel(true)
+                .setCustomHeadsUpContentView(remoteViews)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
