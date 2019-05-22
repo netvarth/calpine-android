@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/icon_location_lightgray"
+            android:drawableLeft="@drawable/loc_new"
             android:drawablePadding="@dimen/padding5"
             android:text="Fort Kochi"
             android:textColor="@color/sec_title_grey"

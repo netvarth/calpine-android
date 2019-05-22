@@ -718,9 +718,7 @@ public class CheckInCopy extends AppCompatActivity {
             }
         });
 
-
     }
-
 
     private static void ApiQueueTimeSlot(String serviceId, String subSeriveID, String accountID, String mDate) {
 
@@ -817,8 +815,12 @@ public class CheckInCopy extends AppCompatActivity {
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             tv_waittime.setText(spannable);
 
+
                             if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                 tv_waittime.setVisibility(View.INVISIBLE);
+
+
+
                             } else {
                                 tv_waittime.setVisibility(View.VISIBLE);
                             }

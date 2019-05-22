@@ -39,6 +39,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 import okhttp3.Headers;
@@ -160,17 +161,23 @@ public class Config {
 
 
                         // get header value
-                        String cookie = response.headers().get("Set-Cookie");
 
-                        Config.logV("Response--Cookie-------------------------" + cookie);
-                        if (!cookie.isEmpty()) {
+
+                        List<String> cookiess = response.headers().values("Set-Cookie");
+                        StringBuffer Cookie_header = new StringBuffer();
+
+                        for(String key : cookiess){
+                            String Cookiee = key.substring(0, key.indexOf(";"));
+                            Cookie_header.append(Cookiee +';');
+                        }
+
+                        Config.logV("Response--Cookie config-------------------------" + cookiess);
+                        if (!cookiess.isEmpty()) {
 
                             SharedPreference.getInstance(context).getStringValue("PREF_COOKIES", "");
-                            String header = response.headers().get("Set-Cookie");
-                            String Cookie_header = header.substring(0, header.indexOf(";"));
 
-                            SharedPreference.getInstance(context).setValue("PREF_COOKIES", Cookie_header);
-                            Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+                            SharedPreference.getInstance(context).setValue("PREF_COOKIES", String.valueOf(Cookie_header));
+                            Config.logV("Set Cookie sharedpref_config------------" + Cookie_header);
 
                             LogUtil.writeLogTest("****Login Cookie****"+Cookie_header);
 

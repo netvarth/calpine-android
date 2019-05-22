@@ -1,6 +1,8 @@
 package com.nv.youneverwait.adapter;
 
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,18 +13,25 @@ import android.widget.TextView;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.response.CoupnResponse;
+
+import java.util.Date;
 import java.util.List;
 
 public class CouponAdapter  extends ArrayAdapter<CoupnResponse> {
 
     List<CoupnResponse> couponList;
     Context mContext;
+    String startDate;
+    String endDate;
+    SimpleDateFormat dateformats = null;
     public CouponAdapter(@NonNull Context context, int resource, List<CoupnResponse> coupanList) {
         super(context, resource, coupanList);
 
             this.mContext = context;
             this.couponList = coupanList;
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            dateformats = new SimpleDateFormat("MMM dd yyyy");
+        }
         for(int i=0;i<coupanList.size();i++){
 
             Config.logV("Coupan List------------------------" + couponList.get(i).getJaldeeCouponCode());
@@ -30,6 +39,18 @@ public class CouponAdapter  extends ArrayAdapter<CoupnResponse> {
             Config.logV("CouponTerms",couponList.get(i).getConsumerTermsAndconditions());
             Config.logV("CouponDiscount",couponList.get(i).getDiscountValue());
             Config.logV("CouponName",couponList.get(i).getCouponName());
+            Config.logV("CouponStartdate",String.valueOf(coupanList.get(i).getStartdate()));
+            Config.logV("CouponStartdate",String.valueOf(coupanList.get(i).getEnddate()));
+
+            Date startdate = new Date(coupanList.get(i).getStartdate());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                startDate=dateformats.format(startdate);
+            }
+
+            Date enddate = new Date(coupanList.get(i).getEnddate());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                endDate=dateformats.format(enddate);
+            }
 
         }
 
@@ -61,6 +82,14 @@ public class CouponAdapter  extends ArrayAdapter<CoupnResponse> {
 
          TextView mcouponName = (TextView) listItem.findViewById(R.id.couponName);
         mcouponName.setText(coupnResponse.getCouponName());
+
+
+        TextView mvalidity = (TextView) listItem.findViewById(R.id.validityvaluetext);
+        mvalidity.setText(startDate+"-"+endDate);
+
+
+
+
 
 
         return listItem;

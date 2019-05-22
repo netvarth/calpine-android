@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +48,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private HashMap<String, ArrayList<ActiveCheckIn>> child;
     Activity activity;
     HistoryAdapterCallback callback;
-String header;
+    String header;
     ArrayList<FavouriteModel> FavList;
 
-    public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback,List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData) {
+    boolean mTodayFlag=false,mOldFlag=false,mFutureFlag=false;
+
+
+    public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback,List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData,boolean mTodayFlag,boolean mFutureFlag,boolean mOldFlag) {
         this.mContext = mContext;
         this.headerData = listDataHeader;
         this.child = listChildData;
@@ -58,6 +62,9 @@ String header;
         this.callback = callback;
 
         this.FavList = mFavList;
+        this.mFutureFlag=mFutureFlag;
+        this.mTodayFlag=mTodayFlag;
+        this.mOldFlag=mOldFlag;
     }
 
     @Override
@@ -105,7 +112,7 @@ String header;
 
         // Getting header title
         String headerTitle = (String) getGroup(groupPosition);
-       // header = headerTitle.toLowerCase();
+        // header = headerTitle.toLowerCase();
 
 
         // Inflating header layout and setting text
@@ -141,29 +148,57 @@ String header;
         // If group is expanded then change the text into bold and change the
         // icon
         if (isExpanded) {
+            Config.logV("Open@@@@"+groupPosition);
+            if (groupPosition == 0) {
+                mTodayFlag=true;
+            }
+            if (groupPosition == 1) {
+                mFutureFlag=true;
+            }
+            if (groupPosition == 2) {
+                mOldFlag=true;
+            }
             //header_text.setTypeface(null, Typeface.BOLD);
-            header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+            if (getChildrenCount(groupPosition) > 0) {
+                header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+            }else{
+                header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            }
             header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
         } else {
             // If group is not expanded then change the text back into normal
             // and change the icon
             if (getChildrenCount(groupPosition) == 0) {
+                Config.logV("Open@@@@ FFFF"+groupPosition);
                 if (groupPosition == 0) {
-                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0,0, 0);
                     header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
+                    mTodayFlag=true;
                 }
                 if (groupPosition == 1) {
-                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
+                    mFutureFlag=true;
                 }
                 if (groupPosition == 2) {
-                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                    header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0,0, 0);
                     header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_border_top));
+                    mOldFlag=true;
                 }
             }else {
                 //header_text.setTypeface(null, Typeface.NORMAL);
                 header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
                 header_text.setBackground(mContext.getResources().getDrawable(R.drawable.input_background_opaque_round));
+                Config.logV("Close@@@@"+groupPosition);
+                if (groupPosition == 0) {
+                    mTodayFlag=false;
+                }
+                if (groupPosition == 1) {
+                    mFutureFlag=false;
+                }
+                if (groupPosition == 2) {
+                    mOldFlag=false;
+                }
             }
         }
 
@@ -199,6 +234,7 @@ String header;
         TextView tv_place = (TextView) view.findViewById(R.id.txt_location);
         TextView tv_personahead = (TextView) view.findViewById(R.id.txt_personahead);
         TextView tv_token = (TextView) view.findViewById(R.id.txt_token);
+        TextView tv_time_queue = (TextView) view.findViewById(R.id.time_queue);
         //  tv_waitsatus=(TextView)view.findViewById(R.id.txt_waitsatus);
         TextView icon_fav = (TextView) view.findViewById(R.id.icon_fav);
         TextView icon_message = (TextView) view.findViewById(R.id.icon_message);
@@ -218,7 +254,7 @@ String header;
         icon_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getProvider().getId());
+                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getProvider().getId(),mTodayFlag,mFutureFlag,mOldFlag);
             }
         });
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -269,7 +305,7 @@ String header;
                 icon_fav.setVisibility(View.VISIBLE);
                 icon_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
                 activelist.setFavFlag(true);
-                icon_fav.setText("Remove Fav");
+                icon_fav.setText("Favourite");
             }
         }
 
@@ -278,8 +314,9 @@ String header;
             public void onClick(View v) {
                 if (activelist.isFavFlag()) {
 
-                    Config.logV("Fav" + activelist.getProvider().getId());
-                    callback.onMethodDeleteFavourite(activelist.getProvider().getId());
+                    callback.onMethodDeleteFavourite(activelist.getProvider().getId(),mTodayFlag,mFutureFlag,mOldFlag);
+
+
 
                    /* AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
                             //set message, title, and icon
@@ -312,7 +349,7 @@ String header;
 
                 } else {
                     Config.logV("Fav Addd" + activelist.getProvider().getId());
-                    callback.onMethodAddFavourite(activelist.getProvider().getId());
+                    callback.onMethodAddFavourite(activelist.getProvider().getId(),mTodayFlag,mFutureFlag,mOldFlag);
                 }
             }
         });
@@ -379,7 +416,7 @@ String header;
         Config.logV("Date------------" + activelist.getDate());
 
 
-      //  tv_estTime.setVisibility(View.VISIBLE);
+        //  tv_estTime.setVisibility(View.VISIBLE);
 
         if (activelist.getServiceTime() != null)
 
@@ -400,7 +437,7 @@ String header;
                 }*/
                 firstWord = "Checked in for ";
 
-                String secondWord = "Today," + activelist.getServiceTime();
+                String secondWord = "Today, " + activelist.getServiceTime();
                 Spannable spannable = new SpannableString(firstWord + secondWord);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -506,7 +543,7 @@ String header;
                 Config.logV("getAppxWaitingTime------------" + activelist.getAppxWaitingTime());
                 if (activelist.getAppxWaitingTime() == 0) {
                     // myViewHolder.tv_estTime.setText("Estimated Time Now");
-                   /* tv_estTime.setVisibility(View.VISIBLE);*/
+                    /* tv_estTime.setVisibility(View.VISIBLE);*/
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
                     String firstWord = "Est Time ";
@@ -583,6 +620,7 @@ String header;
                 Config.logV("response.body().get(i).getQueue().getQueueStartTime()" + activelist.getQueue().getQueueStartTime());
                 //Calulate appxtime+questime
                 Config.logV("Quueue Time----------------" + activelist.getQueue().getQueueStartTime());
+                Config.logV("Quueue End Time----------------" + activelist.getQueue().getQueueEndTime());
                 Config.logV("App Time----------------" + activelist.getAppxWaitingTime());
                 long appwaittime;
                 if (activelist.getAppxWaitingTime() != -1) {
@@ -805,11 +843,16 @@ String header;
                     "fonts/Montserrat_Bold.otf");
             if(activelist.getToken()!=-1&&activelist.getToken()>=0) {
                 tv_token.setVisibility(View.VISIBLE);
+                tv_time_queue.setVisibility(View.VISIBLE);
                 layout_token.setVisibility(View.VISIBLE);
                 String firstWord = "Token # ";
 
+
                 Config.logV("Token------------" + activelist.getToken());
                 String secondWord = String.valueOf(activelist.getToken());
+                String queStart = String.valueOf(activelist.getQueue().getQueueStartTime());
+                String queEnd = String.valueOf(activelist.getQueue().getQueueEndTime());
+                String queueWindow = String.valueOf(activelist.getQueue().getName());
                 Spannable spannable = new SpannableString(firstWord + secondWord);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                         0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -819,8 +862,10 @@ String header;
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_token.setText(spannable);
+                tv_time_queue.setText(queueWindow+" "+"["+" "+queStart+" "+"-"+" "+queEnd+" "+"]");
             }else{
                 tv_token.setVisibility(View.GONE);
+                tv_time_queue.setVisibility(View.GONE);
             }
 
 
@@ -865,16 +910,53 @@ String header;
             tv_personahead.setVisibility(View.VISIBLE);
             String firstWord1 = "People ahead of you ";
             String secondWord1 = String.valueOf(activelist.getPersonsAhead());
-            Spannable spannable1 = new SpannableString(firstWord1 + secondWord1);
-            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
-                    0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            String nobody_ahead = "You are first in line ";
+            String one_person_ahead = "1 person ahead of you ";
 
-            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                    firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            tv_personahead.setText(spannable1);
+            if(activelist.getPersonsAhead() == 0){
+
+                Spannable spannable1 = new SpannableString(nobody_ahead);
+                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                        0, nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+//                        "fonts/Montserrat_Bold.otf");
+//                spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), nobody_ahead.length(), nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+//                        nobody_ahead.length(), nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv_personahead.setText(spannable1);
+
+            }
+            else if(activelist.getPersonsAhead() == 1){
+
+                Spannable spannable1 = new SpannableString(one_person_ahead);
+                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                        0, one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+//                        "fonts/Montserrat_Bold.otf");
+//                spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), one_person_ahead.length(), one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+//                        one_person_ahead.length(), one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv_personahead.setText(spannable1);
+            }
+
+            else {
+
+                Spannable spannable1 = new SpannableString(secondWord1 +" "+ firstWord1);
+                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                        0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+//                        "fonts/Montserrat_Bold.otf");
+//                spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+//                        firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv_personahead.setText(spannable1);
+
+            }
+
+
         } else
 
         {
@@ -1009,7 +1091,7 @@ String header;
             @Override
             public void onClick(View v) {
 
-                callback.onMethodRating(String.valueOf(activelist.getProvider().getId()), activelist.getYnwUuid());
+                callback.onMethodRating(String.valueOf(activelist.getProvider().getId()), activelist.getYnwUuid(),mTodayFlag,mFutureFlag,mOldFlag);
             }
         });
 

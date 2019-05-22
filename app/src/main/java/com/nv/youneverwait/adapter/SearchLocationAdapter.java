@@ -122,8 +122,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     String mUniqueID, accountID;
     List<SearchCheckInMessage> mCheckInMessage;
     String sector, subsector;
+    String calcMode;
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage,String mCalcMode) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchServiceList = SearchServiceList;
@@ -137,6 +138,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         this.sector = sector;
         this.subsector = subsector;
         Config.logV("Search Service-----1111-----------" + mSearchServiceList.size());
+        this.calcMode=mCalcMode;
 
 
     }
@@ -370,8 +372,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         });
 
 
-        Config.logV("Place-------------" + searchLoclist.getPlace());
-        myViewHolder.tv_place.setText(searchLoclist.getPlace());
+        if(searchLoclist.getAddress().contains(searchLoclist.getPlace())){
+            myViewHolder.tv_place.setText(searchLoclist.getAddress());
+            Config.logV("Place-------------" + searchLoclist.getAddress());
+        }
+        else{
+            myViewHolder.tv_place.setText(searchLoclist.getPlace()+" "+","+" "+searchLoclist.getAddress());
+            Config.logV("Place-------------" + searchLoclist.getPlace()+" "+","+" "+searchLoclist.getAddress());
+        }
+
         Config.logV("---Place 3333----11---" + searchLoclist.getbSchedule().getTimespec().size());
         if (searchLoclist.getbSchedule() != null) {
             if (searchLoclist.getbSchedule().getTimespec().size() > 0) {
@@ -1206,6 +1215,46 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
                 }
+                if(calcMode.equalsIgnoreCase("NoCalc")){
+
+                    myViewHolder.btn_checkin.setText("GET TOKEN");
+                    myViewHolder.btn_checkin_expand.setText("GET TOKEN");
+                    myViewHolder.txt_diffdate.setText("Get Token for different Date?");
+                    myViewHolder.txt_diffdate_expand.setText("Get Token for different Date?");
+
+                    if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != -1) {
+                        Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####"+mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                        if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() == 0) {
+                            myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_waittime.setText(" Be the first in line");
+                            myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+                            myViewHolder.txtwaittime_expand.setText("Be the first in line");
+                        } else {
+                            myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                            //  myViewHolder.tv_waittime.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " People waiting in line");
+                            myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+                            //  myViewHolder.txtwaittime_expand.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " People waiting in line");
+
+
+                            String firstWord=String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                            String secondWord=" People waiting in line";
+                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                            myViewHolder.tv_waittime.setText(spannable);
+                            myViewHolder.txtwaittime_expand.setText(spannable);
+                        }
+                    }
+
+                }else{
+                    myViewHolder.btn_checkin_expand.setText("CHECK-IN");
+                    myViewHolder.btn_checkin.setText("CHECK-IN");
+                    myViewHolder.txt_diffdate.setText("Check-in for different Date?");
+                    myViewHolder.txt_diffdate_expand.setText("Check-in for different Date?");
+                }
+
             } else {
 
             }

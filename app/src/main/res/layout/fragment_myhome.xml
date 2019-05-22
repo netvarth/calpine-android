@@ -8,6 +8,10 @@
     android:clickable="true"
     android:orientation="vertical">
 
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:scrollbars="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +30,6 @@
             android:layout_height="match_parent"
             android:focusableInTouchMode="true"
             android:orientation="vertical">
-            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,6 +63,14 @@
                     android:orientation="horizontal">
 
 
+                    <ImageView
+                        android:paddingBottom="-2dp"
+                        android:gravity="right|center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/icon_location_blue" />
+
                     <TextView
                         android:id="@+id/currentloc"
                         android:layout_width="wrap_content"
@@ -67,17 +78,11 @@
                         android:layout_gravity="center_vertical"
                         android:gravity="right|center"
                         android:paddingRight="@dimen/padding3"
-
-                        android:textColor="#ffffff"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/txtsize_12" />
                     <!--     android:text="Locating..."-->
 
-                   <!-- <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginBottom="-3dp"
-                        android:src="@drawable/icon_down_arrow_blue" />-->
+
                 </LinearLayout>
 
 
@@ -88,9 +93,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginRight="@dimen/padding5"
                 android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginRight="@dimen/padding5"
                 android:background="@drawable/rounded_white_bg_rect"
+                android:elevation="8dp"
                 android:orientation="horizontal">
 
                 <Spinner
@@ -129,34 +135,30 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginRight="@dimen/padding5"
                 android:id="@+id/LpopularSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_padding"
                 android:background="@drawable/gradient_home"
                 android:orientation="vertical"
-                android:paddingBottom="@dimen/default_padding"
-                android:visibility="gone">
+                android:paddingBottom="@dimen/default_padding">
 
                 <TextView
-                    android:background="#ffffff"
-                    android:id="@+id/txt_popular"
+                        android:id="@+id/txt_popular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#F2F2F2"
                     android:padding="@dimen/padding5"
                     android:text="Popular Searches"
-                    android:textColor="@color/title_grey" />
+                    android:textColor="@color/dark_blue" />
 
                 <HorizontalScrollView
 
 
-
-                android:padding="@dimen/padding5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fillViewport="true"
+                    android:padding="@dimen/padding5"
                     android:scrollbars="none">
 
 
@@ -170,8 +172,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding5"
-
-                            android:orientation="vertical"></LinearLayout>
+                            android:orientation="vertical">
+                        </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/LinearMorePopularSearch"
@@ -179,7 +181,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/padding5"
                             android:orientation="vertical"
-
                             android:visibility="gone">
 
                         </LinearLayout>
@@ -192,15 +193,15 @@
                     android:id="@+id/LMore"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/padding5"
                     android:layout_gravity="center"
-                    android:orientation="horizontal">
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/padding7">
 
                     <TextView
                         android:id="@+id/txtMore"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:text="More"
@@ -212,9 +213,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:scaleType="center"
-                        android:padding="@dimen/padding3"
                         android:layout_marginBottom="-2dp"
+                        android:padding="@dimen/padding3"
+                        android:scaleType="center"
                         android:src="@drawable/icon_down_arrow_blue" />
 
                 </LinearLayout>
@@ -228,31 +229,30 @@
                  android:overScrollMode="never">-->
 
             <LinearLayout
-                android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginRight="@dimen/padding5"
                 android:id="@+id/LActiveCheckin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_padding"
-                android:background="@drawable/gradient_home"
+                android:background="@drawable/gradient_home_active"
+                android:elevation="4dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
                 <TextView
-                    android:background="#ffffff"
                     android:id="@+id/txt_activechkin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#F2F2F2"
                     android:padding="@dimen/padding5"
                     android:text="Active Check-in"
-                    android:textColor="@color/title_grey" />
+                    android:textColor="#1E4079" />
 
                 <TextView
                     android:id="@+id/txt_sorry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/padding5"
-                    android:text=" No Active-Check-in "
+                    android:text=" No Active Check-in "
                     android:textColor="@color/title_grey"
                     android:visibility="gone" />
 
@@ -267,5 +267,5 @@
         </LinearLayout>
         <!--   </android.support.v4.widget.NestedScrollView>-->
     </LinearLayout>
-
+    </ScrollView>
 </FrameLayout>

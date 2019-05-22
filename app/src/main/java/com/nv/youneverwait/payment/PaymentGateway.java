@@ -99,6 +99,8 @@ public class PaymentGateway {
                             CheckSumModel response_data = response.body();
                             Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
+                            Config.logV("Response--Sucess----------@@@@---------------" + response.body().getPaymentEnv());
+
                             //CheckIn.launchPaymentFlow(amount, response_data);
 
                             Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);

@@ -196,6 +196,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "place TEXT,"
                 + "googleMapUrl TEXT,"
                 + "queueStartTime TEXT,"
+                + "queueEndTime TEXT,"
                 + "firstName TEXT,"
                 + "lastName TEXT,"
                 + "ynwUuid TEXT,"
@@ -232,6 +233,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("place", activeCheckIn.getQueue().getLocation().getPlace());
                 values.put("googleMapUrl", activeCheckIn.getQueue().getLocation().getGoogleMapUrl());
                 values.put("queueStartTime", activeCheckIn.getQueue().getQueueStartTime());
+                values.put("queueEndTime", activeCheckIn.getQueue().getQueueEndTime());
                 values.put("firstName", activeCheckIn.getWaitlistingFor().get(0).getFirstName());
                 values.put("lastName", activeCheckIn.getWaitlistingFor().get(0).getLastName());
 
@@ -266,7 +268,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_checkin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime"};
 
         db.beginTransaction();
 
@@ -300,6 +302,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setPersonsAhead(cursor.getInt(19));
 
                 activeModel.setServiceTime(cursor.getString(20));
+                activeModel.setQueueEndTime(cursor.getString(21));
 
 
 

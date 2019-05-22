@@ -5,11 +5,13 @@ package com.nv.youneverwait.connection.rest;
  */
 
 import android.content.Context;
+import android.util.Log;
 
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.utils.SharedPreference;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.Response;
@@ -41,11 +43,21 @@ public class ReceivedCookiesInterceptor implements Interceptor {
             Config.logV("Set Cookie sharedpref------------"+cookies);*/
 
             SharedPreference.getInstance(context).getStringValue("PREF_COOKIES","");
-            String header = originalResponse.headers().get("Set-Cookie");
-            String Cookie_header = header.substring(0, header.indexOf(";"));
+//            String header = originalResponse.headers().get("Set-Cookie");
 
-           SharedPreference.getInstance(context).setValue("PREF_COOKIES",Cookie_header);
-            Config.logV("Set Cookie sharedpref------------"+Cookie_header);
+
+            List<String> cookiess = originalResponse.headers().values("Set-Cookie");
+            StringBuffer Cookie_header = new StringBuffer();
+
+            for(String key : cookiess){
+                String Cookiee = key.substring(0, key.indexOf(";"));
+                Cookie_header.append(Cookiee +';');
+            }
+
+
+
+           SharedPreference.getInstance(context).setValue("PREF_COOKIES",Cookie_header.toString());
+            Config.logV("Set Cookie sharedpref received------------"+Cookie_header);
 
         }
 

@@ -26,6 +26,17 @@ public class SearchAWsResponse {
         this.parking_location1 = parking_location1;
     }
 
+    int coupon_enabled;
+
+    public int getCoupon_enabled() {
+        return coupon_enabled;
+    }
+
+    public void setCoupon_enabled(int coupon_enabled) {
+        this.coupon_enabled = coupon_enabled;
+    }
+
+
     String parking_location1;
 
     public String getSub_sector() {
@@ -86,6 +97,26 @@ public class SearchAWsResponse {
     }
 
     String location1;
+
+    public SearchAWsResponse getExprs() {
+        return exprs;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    String distance;
+
+    public void setExprs(SearchAWsResponse exprs) {
+        this.exprs = exprs;
+    }
+
+    SearchAWsResponse exprs;
 
 
     public String getParking_type_location1() {
@@ -159,7 +190,6 @@ public class SearchAWsResponse {
     public void setFields(SearchAWsResponse fields) {
         this.fields = fields;
     }
-
 
 
     public ArrayList getQualification() {
@@ -308,6 +338,18 @@ public class SearchAWsResponse {
     }
 
     String place1;
+
+
+    String claimable;
+
+    public String getClaimable() {
+        return claimable;
+    }
+
+    public void setClaimable(String claimable) {
+        this.claimable = claimable;
+    }
+
 
     public String getRating() {
         return rating;

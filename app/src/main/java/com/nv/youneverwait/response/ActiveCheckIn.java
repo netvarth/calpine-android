@@ -306,6 +306,7 @@ public class ActiveCheckIn {
     @SerializedName("queue")
     private ActiveCheckIn Queue;
 
+
     public String getQueueStartTime() {
         return queueStartTime;
     }
@@ -315,6 +316,17 @@ public class ActiveCheckIn {
     }
 
     String queueStartTime;
+
+
+    public String getQueueEndTime() {
+        return queueEndTime;
+    }
+
+    public void setQueueEndTime(String queueEndTime) {
+        this.queueEndTime = queueEndTime;
+    }
+
+    String queueEndTime;
 
     public String getWaitlistStatus() {
         return waitlistStatus;

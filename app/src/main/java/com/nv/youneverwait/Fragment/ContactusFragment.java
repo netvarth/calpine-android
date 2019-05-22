@@ -89,7 +89,7 @@ public class ContactusFragment extends RootFragment {
             @Override
             public void onClick(View v) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","support@netvarth.com", null));
+                        "mailto","support@jaldee.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "");
                 try {

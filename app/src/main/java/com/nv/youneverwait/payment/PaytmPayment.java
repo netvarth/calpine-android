@@ -117,14 +117,13 @@ public class PaytmPayment {
         });
     }
 
-    private static String bodyToString(final RequestBody request){
+    private static String bodyToString(final RequestBody request) {
         try {
             final RequestBody copy = request;
             final Buffer buffer = new Buffer();
             copy.writeTo(buffer);
             return buffer.readUtf8();
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             return "did not work";
         }
     }
@@ -156,7 +155,7 @@ public class PaytmPayment {
         Call<PaytmChecksum> call = apiService.generateHashPaytm(body);
 
         Config.logV("Request--body------Payment---Amount----------------" + amount);
-        Config.logV("Request--body------Payment-------------------" +bodyToString(body));
+        Config.logV("Request--body------Payment-------------------" + bodyToString(body));
         call.enqueue(new Callback<PaytmChecksum>() {
             @Override
             public void onResponse(Call<PaytmChecksum> call, Response<PaytmChecksum> response) {
@@ -200,7 +199,7 @@ public class PaytmPayment {
                             // map.put("EMAIL", jsonObj.getString("EMAIL"));
                             // map.put("MOBILE_NO", jsonObj.getString("MOBILE_NO"));
                             map.put("CHECKSUMHASH", response_data.getChecksum());
-                            PaytmPay(map,from);
+                            PaytmPay(map, from, response_data.getPaymentEnv());
 
 
                         } catch (Exception e) {
@@ -211,7 +210,7 @@ public class PaytmPayment {
                         String responseerror = response.errorBody().string();
                         Config.logV("Response--error-------------------------" + responseerror);
                         if (response.code() == 422) {
-                        Toast.makeText(mContext,responseerror,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, responseerror, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -235,11 +234,14 @@ public class PaytmPayment {
 
     }
 
-    public void PaytmPay(Map<String, String> paramMap, final String from) {
+    public void PaytmPay(Map<String, String> paramMap, final String from, String paymentEnv) {
         PaytmPGService Service = null;
-       // Service = PaytmPGService.getStagingService();
-
-        Service = PaytmPGService.getProductionService();
+        // Service = PaytmPGService.getStagingService();
+        if (paymentEnv.equalsIgnoreCase("production")) {
+            Service = PaytmPGService.getProductionService();
+        } else {
+            Service = PaytmPGService.getStagingService();
+        }
         PaytmOrder Order = new PaytmOrder((HashMap<String, String>) paramMap);
         Service.initialize(Order, null);
         Service.startPaymentTransaction(context, true, true, new PaytmPaymentTransactionCallback() {
@@ -253,7 +255,8 @@ public class PaytmPayment {
             @Override
             public void onTransactionResponse(Bundle inResponse) {
                 Log.d("LOG", "Payment Transaction : " + inResponse);
-                  Toast.makeText(context, "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
+
 
                 //Toast.makeText(context, "Payment Success", Toast.LENGTH_LONG).show();
                 ((Activity) context).finish();

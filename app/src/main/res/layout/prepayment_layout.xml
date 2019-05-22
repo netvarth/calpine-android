@@ -87,7 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_padding"
             android:layout_weight="0.5"
-            android:background="@drawable/roundedrect_grey"
+            android:background="@drawable/roundedrect_blue"
             android:text="PayUMoney"
             android:textAllCaps="false"
             android:textColor="@color/app_background"

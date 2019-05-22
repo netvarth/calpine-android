@@ -9,10 +9,10 @@ public interface HistoryAdapterCallback {
     void onMethodMessageCallback(String ynwuuid,String accountID,String provider);
     void onMethodBillIconCallback(String payStatus,String value,String provider,String accountID);
 
-    void onMethodDelecteCheckinCallback(String ynwuuid,int accountID);
+    void onMethodDelecteCheckinCallback(String ynwuuid,int accountID,boolean todayflag,boolean futflag,boolean oldflag);
     void onMethodActiveCallback(String value);
-    void onMethodAddFavourite(int value);
-    void onMethodDeleteFavourite(int value);
-    void onMethodRating(String accountID,String UUID);
+    void onMethodAddFavourite(int value,boolean todayflag,boolean futflag,boolean oldflag);
+    void onMethodDeleteFavourite(int value,boolean todayflag,boolean futflag,boolean oldflag);
+    void onMethodRating(String accountID,String UUID,boolean todayflag,boolean futflag,boolean oldflag);
 
 }

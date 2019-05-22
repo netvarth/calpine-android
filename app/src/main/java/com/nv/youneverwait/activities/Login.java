@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
+import android.view.inputmethod.EditorInfo;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -33,9 +35,11 @@ import com.nv.youneverwait.utils.TypefaceFont;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Cookie;
 import okhttp3.Headers;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -92,6 +96,7 @@ public class Login extends AppCompatActivity {
                 "fonts/Montserrat_Bold.otf");
         tv_account.setTypeface(tyface_confm);
 
+        edtpassword_login.setInputType(EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS );
         edtpassword_login.setTransformationMethod(new PasswordTransformationMethod());
 
 
@@ -204,51 +209,42 @@ public class Login extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         Config.logV("Response--code-------------------------" + response.body().getFirstName());
-                        /*Headers headers = response.headers();
-                        // get header value
-                        String cookie = response.headers().get("Set-Cookie");
 
-                        Config.logV("Response--Cookie-------------------------" + cookie);
-                        try {
-
-                            String Cookie_header = cookie.substring(0, cookie.indexOf(";"));
-                            Config.logV("Response--Cookie--Header-----------------------" + Cookie_header);
-
-                            SharedPreference.getInstance(mContext).setValue("cookie",Cookie_header);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }*/
 
                         String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
 
                         Config.logV("Cookie Stored"+cookieStored);
                         if(cookieStored.equalsIgnoreCase("")) {
-                            // get header value
-                            String cookie = response.headers().get("Set-Cookie");
 
-                            Config.logV("Response--Cookie-------------------------" + cookie);
-                            if (!cookie.isEmpty()) {
+
+
+                            String cookie ="" ;
+                            List<String> cookiess = response.headers().values("Set-Cookie");
+                            StringBuffer Cookie_header = new StringBuffer();
+
+                            for(String key : cookiess){
+                                String Cookiee = key.substring(0, key.indexOf(";"));
+                                Cookie_header.append(Cookiee +';');
+                            }
+
+                            Log.i("asdasd",Cookie_header.toString());
+
+                            Config.logV("Response--Cookie login-------------------------" + Cookie_header);
+                            if (!cookiess.isEmpty()) {
 
                                 SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
-                                String header = response.headers().get("Set-Cookie");
-                                String Cookie_header = header.substring(0, header.indexOf(";"));
 
-                                SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
-                                Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+                                SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header.toString());
+                                Config.logV("Set Cookie sharedpref login------------" + Cookie_header);
 
                                 LogUtil.writeLogTest("****Login Cookie****" + Cookie_header);
-
                             }
                         }
-
 
                         Headers headerList = response.headers();
                         String version = headerList.get("Version");
                         Config.logV("Header----------" + version);
 
-                      //  SharedPreference.getInstance(mContext).setValue("Version", version);
-
-                        // Config.logV("Email------------------"+response.body().get);
                         SharedPreference.getInstance(mContext).setValue("consumerId", response.body().getId());
                         SharedPreference.getInstance(mContext).setValue("register", "success");
                         SharedPreference.getInstance(mContext).setValue("firstname", response.body().getFirstName());
@@ -327,23 +323,22 @@ public class Login extends AppCompatActivity {
                         startActivity(iReg);
 
 
-                       /* String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                        List<String> cookiess = response.headers().values("Set-Cookie");
+                        StringBuffer Cookie_header = new StringBuffer();
 
-                        Config.logV("Cookie Stored"+cookieStored);
-                        if(cookieStored.equalsIgnoreCase("")) {*/
-                            String cookie = response.headers().get("Set-Cookie");
+                        for(String key : cookiess){
+                            String Cookiee = key.substring(0, key.indexOf(";"));
+                            Cookie_header.append(Cookiee +';');
+                        }
 
-                            Config.logV("Response--Cookie-------------------------" + cookie);
-                            if (!cookie.isEmpty()) {
+                            Config.logV("Response--Cookie login2-------------------------" + Cookie_header);
+                            if (!cookiess.isEmpty()) {
 
-                                String header = response.headers().get("Set-Cookie");
-                                String Cookie_header = header.substring(0, header.indexOf(";"));
-
-                                SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
-                                Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+                                SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", String.valueOf(Cookie_header));
+                                Config.logV("Set Cookie sharedpref login2------------" + Cookie_header);
 
                             }
-                       // }
+
                     }
 
 

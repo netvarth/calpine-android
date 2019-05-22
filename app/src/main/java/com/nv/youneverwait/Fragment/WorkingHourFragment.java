@@ -85,9 +85,6 @@ public class WorkingHourFragment extends RootFragment {
         tv_Sunday.setTypeface(tyface);
 
 
-
-
-
         tv_subtitle.setText(title);
 
         tv_subtitle.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +101,7 @@ public class WorkingHourFragment extends RootFragment {
                 //transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_out_right, R.anim.slide_in_left);
                 // Store the Fragment in stack
                 transaction.addToBackStack(null);
-                transaction.replace(R.id.mainlayout, pfFragment).commit();
+                transaction.add(R.id.mainlayout, pfFragment).commit();
             }
         });
 

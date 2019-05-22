@@ -27,6 +27,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -207,13 +208,14 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                         dynaText.setTypeface(tyface);
                         dynaText.setText(mPopularSearchList.get(k).getDisplayname());
                         dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
+
                         dynaText.setTextSize(12);
-                        dynaText.setTextColor(getResources().getColor(R.color.black));
+                        dynaText.setTextColor(getResources().getColor(R.color.dark_blue));
                         dynaText.setPadding(15, 10, 15, 10);
                         //dynaText.setEllipsize(TextUtils.TruncateAt.END);
                         dynaText.setMaxLines(1);
                         // dynaText.setMaxEms(8);
-                        dynaText.setWidth(dpToPx(130));
+                        dynaText.setWidth(dpToPx(120));
                         dynaText.setGravity(Gravity.CENTER);
 
                         params.setMargins(12, 10, 12, 0);
@@ -524,18 +526,21 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                                             Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                                                     "fonts/Montserrat_Regular.otf");
                                             dynaText.setTypeface(tyface);
+
                                             dynaText.setText(mPopularSearchList.get(k).getDisplayname());
+
+
                                             dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
                                             dynaText.setTextSize(12);
-                                            dynaText.setTextColor(getResources().getColor(R.color.black));
+                                            dynaText.setTextColor(getResources().getColor(R.color.dark_blue));
                                             dynaText.setPadding(15, 10, 15, 10);
                                             // dynaText.setEllipsize(TextUtils.TruncateAt.END);
                                             dynaText.setMaxLines(1);
                                             //dynaText.setMaxEms(8);
                                             dynaText.setGravity(Gravity.CENTER);
-                                            dynaText.setWidth(dpToPx(130));
+                                            dynaText.setWidth(dpToPx(120));
 
-                                            params.setMargins(12, 10, 12, 0);
+                                            params.setMargins(15, 10, 15, 0);
                                             dynaText.setLayoutParams(params);
 
                                             //   dynaText.setTag("" + i);
@@ -601,6 +606,13 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
                     listadapter = new SearchListAdpter("search", getActivity(), items, latitude, longitude, getParentFragment(), mSearchView);
                     searchSrcTextView.setAdapter(listadapter);
+
+                    mSearchView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(mContext, "Searchbox clicked", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
                     mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override
@@ -1239,7 +1251,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
     public LanLong getLocationNearBy(double lant, double longt) {
 
-        double distance = 30;/*;DISTANCE_AREA: 5, // in Km*/
+        double distance = 60;/*;DISTANCE_AREA: 5, // in Km*/
 
         double distInDegree = distance / 111;
         double upperLeftLat = lant - distInDegree;

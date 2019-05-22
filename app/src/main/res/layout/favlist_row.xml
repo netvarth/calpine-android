@@ -59,7 +59,7 @@
                 android:layout_weight="0.2"
                 android:drawableTop="@drawable/icon_favourite_fill"
                 android:gravity="center"
-                android:text="Remove Fav"
+                android:text="Favourite"
                 android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_12" />
 

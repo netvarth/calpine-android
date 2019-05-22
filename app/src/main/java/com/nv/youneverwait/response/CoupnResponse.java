@@ -38,4 +38,18 @@ public class CoupnResponse {
 
     String couponName;
 
+
+    public long getStartdate() {
+        return startDate;
+    }
+
+    long startDate;
+
+
+    public long getEnddate() {
+        return endDate;
+    }
+
+    long endDate;
+
 }

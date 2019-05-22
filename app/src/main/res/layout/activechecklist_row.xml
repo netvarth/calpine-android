@@ -40,7 +40,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Sony Latest"
-                        android:inputType="textCapWords"
                         android:textColor="@color/title_consu"
                         android:textSize="@dimen/txtsize_hint" />
 
@@ -106,8 +105,26 @@
                 android:textSize="@dimen/txtsize_12" />
         </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/layout_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding7"
+        android:background="@color/app_background"
+        android:orientation="vertical"
+        android:padding="@dimen/padding5">
+
+        <TextView
+            android:id="@+id/time_queue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:textColor="@color/title_grey"
+            android:textSize="@dimen/txtsize_12" />
+
+
         <LinearLayout
-            android:id="@+id/layout_token"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding7"
@@ -122,6 +139,7 @@
                 android:layout_weight="0.5"
                 android:textColor="@color/cyan"
                 android:textSize="@dimen/txtsize_12" />-->
+
 
             <TextView
                 android:id="@+id/txt_token"
@@ -138,7 +156,10 @@
                 android:layout_weight="0.7"
                 android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_12" />
+
+
         </LinearLayout>
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

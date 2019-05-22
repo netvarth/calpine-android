@@ -41,7 +41,7 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
     private List<SearchCheckInMessage> checkList;
     Context mContext;
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, tv_waittime,txtservice;
+        public TextView name, tv_waittime,txtservice,txttoken;
 
         ImageView ic_delete;
         LinearLayout lfamily;
@@ -54,6 +54,7 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
             txtservice= (TextView) view.findViewById(R.id.txtservice);
             ic_delete = (ImageView) view.findViewById(R.id.delete);
             lfamily = (LinearLayout) view.findViewById(R.id.lfamily);
+            txttoken= (TextView) view.findViewById(R.id.txttoken);
           //  tv_nocheckin=(TextView) view.findViewById(R.id.tv_nocheckin);
 
         }
@@ -87,6 +88,12 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
 
         myViewHolder.name.setText(checklist.getWaitlistingFor().get(0).getFirstName());
         myViewHolder.txtservice.setText(checklist.getService().getName());
+        if (checklist.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+            myViewHolder.txttoken.setVisibility(View.VISIBLE);
+            myViewHolder.txttoken.setText(checklist.getToken());
+        }else{
+            myViewHolder.txttoken.setVisibility(View.GONE);
+        }
 
         myViewHolder.ic_delete.setOnClickListener(new View.OnClickListener() {
             @Override

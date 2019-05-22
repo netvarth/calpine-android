@@ -234,7 +234,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         finish();
 
@@ -298,7 +298,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         finish();
 

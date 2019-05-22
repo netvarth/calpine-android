@@ -64,7 +64,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        tv_title.setText("My Profile");
+        tv_title.setText("My Account");
         tv_title.setTypeface(tyface);
 
 
@@ -84,7 +84,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
             @Override
             public void onClick(View v) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","support@netvarth.com", null));
+                        "mailto","support@jaldee.com", null));
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Jaldee Feedback");
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "");
                 try {

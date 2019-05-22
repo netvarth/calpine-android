@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import com.google.gson.Gson;
+import com.nv.youneverwait.custom.CustomTypefaceSpan;
+import com.nv.youneverwait.response.ProfileModel;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -43,6 +48,7 @@ public class ChangePhoneFragment extends RootFragment {
     TextInputEditText edtPhone;
     Button mDone;
     TextInputLayout text_input_phone;
+    TextView txtmobile;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,8 +58,9 @@ public class ChangePhoneFragment extends RootFragment {
 
         mContext = getActivity();
 
-
+        ApiGetProfileDetail();
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        txtmobile=(TextView) row.findViewById(R.id.textmobile);
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface1);
@@ -78,8 +85,7 @@ public class ChangePhoneFragment extends RootFragment {
         edtPhone.addTextChangedListener(new MyTextWatcher(edtPhone));
         mDone=(Button)row.findViewById(R.id.btnsubmit) ;
 
-        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
-        edtPhone.setText(mobile);
+
 
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +125,70 @@ public class ChangePhoneFragment extends RootFragment {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
+
+    private void ApiGetProfileDetail() {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+        final int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
+
+        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
+
+        call.enqueue(new Callback<ProfileModel>() {
+            @Override
+            public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+
+                        Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
+
+                        SharedPreference.getInstance(mContext).setValue("mobile", response.body().getUserprofile().getPrimaryMobileNo());
+
+                        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+
+                        String firstWord ="Your Current Mobile # ";
+                        String secondWord = mobile;
+                        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                        Spannable spannable = new SpannableString(firstWord + secondWord);
+                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() , firstWord.length() + secondWord.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        txtmobile.setText(spannable);
+
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ProfileModel> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
 
     private class MyTextWatcher implements TextWatcher {
 
@@ -178,7 +248,7 @@ public class ChangePhoneFragment extends RootFragment {
                             transaction.addToBackStack(null);
                             transaction.replace(R.id.mainlayout, emailFragment).commit();
 
-
+                        edtPhone.setText("");
                             //}
 
 

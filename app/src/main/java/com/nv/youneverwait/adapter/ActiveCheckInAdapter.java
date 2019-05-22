@@ -3,6 +3,7 @@ package com.nv.youneverwait.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.design.widget.BottomSheetDialog;
@@ -172,16 +173,48 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
            // myViewHolder.tv_peopleahead.setText("People ahead of you : "+activelist.getPersonsAhead());
             String firstWord1 = "People ahead of you ";
             String secondWord1 = String.valueOf(activelist.getPersonsAhead());
-            Spannable spannable1 = new SpannableString(firstWord1 + secondWord1);
-            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
-                    0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                    firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            myViewHolder.tv_peopleahead.setText(spannable1);
+            if(secondWord1.equals("0")){
+                String nobody_ahead = "You are first in line ";
+                Spannable spannable1 = new SpannableString(nobody_ahead);
+                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                        0, nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+//                        "fonts/Montserrat_Bold.otf");
+//                spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), nobody_ahead.length(), nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+//                        nobody_ahead.length(), nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                myViewHolder.tv_peopleahead.setText(spannable1);
+
+            }
+            else if(secondWord1.equals("1")){
+                String one_ahead = "1 person ahead of you  ";
+                Spannable spannable1 = new SpannableString(one_ahead);
+                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                        0, one_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+//                        "fonts/Montserrat_Bold.otf");
+//                spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), one_ahead.length(), one_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+//                        one_ahead.length(), one_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                myViewHolder.tv_peopleahead.setText(spannable1);
+            }
+            else {
+
+                Spannable spannable1 = new SpannableString(secondWord1 +" "+ firstWord1);
+                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                        0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+//                        "fonts/Montserrat_Bold.otf");
+//                spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+//                        firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                myViewHolder.tv_peopleahead.setText(spannable1);
+            }
+
 
         }else{
             myViewHolder.tv_peopleahead.setVisibility(View.GONE);
@@ -372,7 +405,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 */
                 String firstWord = "Checked in for ";
-                String secondWord = "Today," + activelist.getServiceTime();
+                String secondWord = "Today, " + activelist.getServiceTime();
                 Spannable spannable = new SpannableString(firstWord + secondWord);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),

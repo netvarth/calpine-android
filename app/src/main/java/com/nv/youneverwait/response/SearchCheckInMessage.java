@@ -85,6 +85,16 @@ public class SearchCheckInMessage {
         return firstName;
     }
 
+    public String getCalculationMode() {
+        return calculationMode;
+    }
+
+    public void setCalculationMode(String calculationMode) {
+        this.calculationMode = calculationMode;
+    }
+
+    String calculationMode;
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -113,6 +123,17 @@ public class SearchCheckInMessage {
     public void setmAllSearch_checkIn(ArrayList<SearchCheckInMessage> mAllSearch_checkIn) {
         this.mAllSearch_checkIn = mAllSearch_checkIn;
     }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    String token;
+
 
 
 }

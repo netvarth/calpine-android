@@ -60,6 +60,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/mContactAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,9 +87,10 @@
                     android:src="@drawable/mail" />-->
 
                 <TextView
+                    android:layout_marginTop="@dimen/default_padding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email: support@netvarth.com"
+                    android:text="Email : support@jaldee.com"
                     android:textColor="@color/sec_title_grey"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -115,7 +117,7 @@
                     android:id="@+id/txtphone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phone: 0487-2325650"
+                    android:text="Phone : 0487-2325650"
                     android:textColor="@color/sec_title_grey"
                     android:textSize="@dimen/txtsize_hint" />
             </LinearLayout>

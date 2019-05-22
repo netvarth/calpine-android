@@ -105,7 +105,7 @@ public class SearchListAdpter extends BaseAdapter implements Filterable {
 
     public LanLong getLocationNearBy(double lant, double longt) {
 
-        double distance = 30;/*;DISTANCE_AREA: 5, // in Km*/
+        double distance = 60;/*;DISTANCE_AREA: 5, // in Km*/
 
         double distInDegree = distance / 111;
         double upperLeftLat = lant - distInDegree;

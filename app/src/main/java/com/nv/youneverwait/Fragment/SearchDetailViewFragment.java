@@ -129,7 +129,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<String> ids;
     String uniqueID;
 
-    TextView tv_ImageViewText, tv_Moredetails, tv_specializtion, tv_SocialMedia, tv_Gallery;
+    TextView tv_ImageViewText, tv_Moredetails, tv_specializtion, tv_SocialMedia, tv_Gallery,tv_mImageViewTextnew;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
     ContactAdapterCallback mInterfaceContact;
@@ -207,6 +207,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mImgthumbProfile = (ImageView) row.findViewById(R.id.iThumb_profile);
         mImgthumbProfile2 = (ImageView) row.findViewById(R.id.iThumb_profile2);
         tv_ImageViewText = (TextView) row.findViewById(R.id.mImageViewText);
+        tv_mImageViewTextnew = (TextView) row.findViewById(R.id.mImageViewTextnew);
         mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
         tv_fav = (TextView) row.findViewById(R.id.txtfav);
         tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
@@ -235,6 +236,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 "fonts/Montserrat_Bold.otf");
         tv_busName.setTypeface(tyface);
         tv_ImageViewText.setTypeface(tyface);
+        tv_mImageViewTextnew.setTypeface(tyface);
         tv_SocialMedia.setTypeface(tyface);
         tv_Gallery.setTypeface(tyface);
         tv_specializtion.setTypeface(tyface);
@@ -390,7 +392,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         mBottomDialog.dismiss();
 
                     }
@@ -530,8 +532,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
             if (mBusinessDataList.getLogo() != null && mGallery.size() > 0 || mGallery.size() > 1) {
-                tv_Gallery.setVisibility(View.VISIBLE);
-                mImgthumbProfile.setVisibility(View.VISIBLE);
+                tv_Gallery.setVisibility(View.GONE);
+                mImgthumbProfile.setVisibility(View.GONE);
 
                 if (mBusinessDataList.getLogo() != null) {
 
@@ -540,7 +542,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                     if (mGallery.size() == 2) {
-                        mImgthumbProfile1.setVisibility(View.VISIBLE);
+                        mImgthumbProfile1.setVisibility(View.GONE);
                         Config.logV("Gallery--------");
                         Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
                     } else {
@@ -549,24 +551,26 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                     if (mGallery.size() == 3) {
 
-                        mImgthumbProfile1.setVisibility(View.VISIBLE);
+                        mImgthumbProfile1.setVisibility(View.GONE);
                         Config.logV("Gallery----333----");
                         Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-                        mImgthumbProfile2.setVisibility(View.VISIBLE);
+                        mImgthumbProfile2.setVisibility(View.GONE);
                         Config.logV("Gallery----3333----");
                         Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
                     }
 
                     if (mGallery.size() > 3) {
 
-                        mImgthumbProfile1.setVisibility(View.VISIBLE);
+                        mImgthumbProfile1.setVisibility(View.GONE);
                         Config.logV("Gallery----4444----");
                         Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
 
-                        mImgthumbProfile2.setVisibility(View.VISIBLE);
+                        mImgthumbProfile2.setVisibility(View.GONE);
                         Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
                         tv_ImageViewText.setVisibility(View.VISIBLE);
+                        tv_mImageViewTextnew.setVisibility(View.VISIBLE);
                         tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
+                        tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
                         Config.logV("Gallery-------------444----------" + mGallery.size());
                         mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -601,6 +605,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     } else {
                         //mImgthumbProfile2.setVisibility(View.GONE);
                         tv_ImageViewText.setVisibility(View.GONE);
+                        tv_mImageViewTextnew.setVisibility(View.GONE);
                         // mImgthumbProfile1.setVisibility(View.GONE);
                     }
 
@@ -611,7 +616,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                     if (mGallery.size() == 3) {
-                        mImgthumbProfile1.setVisibility(View.VISIBLE);
+                        mImgthumbProfile1.setVisibility(View.GONE);
                         Config.logV("Gallery--------");
                         Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
                     } else {
@@ -620,12 +625,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                     if (mGallery.size() > 3) {
 
-                        mImgthumbProfile1.setVisibility(View.VISIBLE);
+                        mImgthumbProfile1.setVisibility(View.GONE);
                         Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-                        mImgthumbProfile2.setVisibility(View.VISIBLE);
+                        mImgthumbProfile2.setVisibility(View.GONE);
                         Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
                         tv_ImageViewText.setVisibility(View.VISIBLE);
+                        tv_mImageViewTextnew.setVisibility(View.VISIBLE);
                         tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
+                        tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
                         Config.logV("Galeery--------------11111-----------" + mGallery.size());
                         mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -660,6 +667,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     } else {
                         mImgthumbProfile2.setVisibility(View.GONE);
                         tv_ImageViewText.setVisibility(View.GONE);
+                        tv_mImageViewTextnew.setVisibility(View.GONE);
                         // mImgthumbProfile1.setVisibility(View.GONE);
                     }
 
@@ -1393,6 +1401,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 dialog.show();
                                 TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);
 
+                                TextView tv_token = (TextView) dialog.findViewById(R.id.tv_token);
+
+                                if(mSearchSettings.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                                    tv_token.setVisibility(View.VISIBLE);
+                                }else{
+                                    tv_token.setVisibility(View.GONE);
+                                }
+
                                 String firstWord = "Your Check-In at ";
                                 String secondWord = loc;
                                 location = loc;
@@ -1627,7 +1643,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mRecyLocDetail.setLayoutManager(mLayoutManager);
-                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList);
+                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList,mSearchSettings.getCalculationMode());
                         mRecyLocDetail.setAdapter(mSearchLocAdapter);
                         mSearchLocAdapter.notifyDataSetChanged();
                     }
@@ -1833,10 +1849,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         Bundle bundle = new Bundle();
         bundle.putString("uniqueID", uniqueID);
         cfFragment.setArguments(bundle);
-
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, cfFragment).commit();
+        transaction.add(R.id.mainlayout, cfFragment).commit();
 
     }
 
@@ -1852,7 +1867,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         pfFragment.setArguments(bundle);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
     @Override
@@ -1867,7 +1882,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         pfFragment.setArguments(bundle);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
     @Override
@@ -1980,7 +1995,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 try {
 
                     tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourite_line, 0, 0);
-                    tv_fav.setText("Add to Fav");
+                    tv_fav.setText("Favourite");
                     Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
@@ -1996,7 +2011,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                 favFlag = true;
                                 tv_fav.setVisibility(View.VISIBLE);
-                                tv_fav.setText("Remove from Fav");
+                                tv_fav.setText("Favourite");
                                 tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
 
                             }

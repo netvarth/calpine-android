@@ -21,12 +21,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    public static final String BASE_URL ="https://test.jaldee.com/v1/rest/";
+    public static final String BASE_URL ="https://www.jaldee.com/v1/rest/";
+//    "https://test.jaldee.com/v1/rest/"
 //    "https://test.jaldee.com/v1/rest/"
             //"http://54.215.5.201:8181/v1/rest/";
             //"http://35.154.241.175/v1/rest/";
-    //
-    //""; /*"https://www.youneverwait.com/v1/rest/"; */
+
 
 
     private static Retrofit retrofit = null;

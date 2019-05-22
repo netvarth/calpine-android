@@ -18,6 +18,7 @@ public class SearchLocation {
     //Location
     private int id;
     private String place;
+    private String address;
     private String parkingType;
     private boolean open24hours;
     private boolean baseLocation;
@@ -113,6 +114,14 @@ public class SearchLocation {
 
     public void setPlace(String place) {
         this.place = place;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getParkingType() {

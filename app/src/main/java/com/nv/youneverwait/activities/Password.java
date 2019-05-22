@@ -36,6 +36,7 @@ import com.nv.youneverwait.utils.TypefaceFont;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -465,47 +466,29 @@ public class Password extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         Config.logV("Response--code-------------------------" + response.body().getFirstName());
-                       /* Headers headers = response.headers();
-                        // get header value
-                        String cookie = response.headers().get("Set-Cookie");
-
-                        Config.logV("Response--Cookie-------------------------" + cookie);
-                        try {
-
-                            String Cookie_header = cookie.substring(0, cookie.indexOf(";"));
-                            Config.logV("Response--Cookie--Header-----------------------" + Cookie_header);
-
-                            SharedPreference.getInstance(mContext).setValue("cookie",Cookie_header);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }*/
-
 
                      String cookiestored=   SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
 
                       if(cookiestored.equalsIgnoreCase("")) {
                           // get header value
-                          String cookie = response.headers().get("Set-Cookie");
 
-                          Config.logV("Response--Cookie-------------------------" + cookie);
-                          if (!cookie.isEmpty()) {
+                              List<String> cookiess = response.headers().values("Set-Cookie");
+                              StringBuffer Cookie_header = new StringBuffer();
 
+                              for(String key : cookiess){
+                                  String Cookiee = key.substring(0, key.indexOf(";"));
+                                  Cookie_header.append(Cookiee +';');
+                              }
 
-                              String header = response.headers().get("Set-Cookie");
-                              String Cookie_header = header.substring(0, header.indexOf(";"));
-
-                              SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
-                              Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+                              SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header.toString());
+                              Config.logV("Set Cookie sharedpref password------------" + Cookie_header);
                               LogUtil.writeLogTest("*******Signup Cookie*****" + Cookie_header);
-                          }
-                      }
 
+                      }
 
                         Headers headerList = response.headers();
                         String version=headerList.get("Version");
                         Config.logV("Header----------"+version);
-
-                      //  SharedPreference.getInstance(mContext).setValue("Version",version);
 
 
                         SharedPreference.getInstance(mContext).setValue("firstname",response.body().getFirstName());

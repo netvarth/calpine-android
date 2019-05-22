@@ -122,6 +122,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
         ApiTodayChekInList();
 
+        mFutureFlag=false;mTodayFlag=false;mOldFlag=false;
 
 
         return row;
@@ -382,7 +383,13 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID) {
+        public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID, boolean todayFlag, boolean futFlag, boolean oldFlag) {
+
+        mOldFlag = oldFlag;
+        mFutureFlag = futFlag;
+        mTodayFlag = todayFlag;
+
+
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
         dialog.setContentView(R.layout.cancelcheckin);
         dialog.show();
@@ -426,19 +433,28 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodAddFavourite(int value) {
+        public void onMethodAddFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
+        mOldFlag = oldFlag;
+        mFutureFlag = futFlag;
+        mTodayFlag = todayFlag;
         ApiAddFavo(value);
     }
 
     @Override
-    public void onMethodDeleteFavourite(int value) {
+    public void onMethodDeleteFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
+        mOldFlag = oldFlag;
+        mFutureFlag = futFlag;
+        mTodayFlag = todayFlag;
         ApiRemoveFavo(value);
 
     }
 
     @Override
-    public void onMethodRating(String accountID, String UUID) {
+    public void onMethodRating(String accountID, String UUID, boolean todayFlag, boolean futFlag, boolean oldFlag) {
 
+        mOldFlag = oldFlag;
+        mFutureFlag = futFlag;
+        mTodayFlag = todayFlag;
 
         ApiRating(accountID, UUID);
     }
@@ -696,7 +712,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         dialog.dismiss();
 
 
@@ -953,6 +969,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     ExpandableListAdapter adapter;
+    boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
 
     void setItems() {
 
@@ -978,23 +995,21 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         hashMap.put(header.get(1), mCheckFutureList);
         hashMap.put(header.get(2), mCheckOldList);
 
-        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap);
+        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag);
+
         // Setting adpater over expandablelistview
         expandlist.setAdapter(adapter);
         expandlist.setVerticalScrollBarEnabled(false);
 
 
-        if (mCheckTodayList.size() > 0)
+        if (mCheckTodayList.size() > 0 || mTodayFlag)
             expandlist.expandGroup(0);
-        if (mCheckFutureList.size() > 0)
+        if (mCheckFutureList.size() > 0 || mFutureFlag)
             expandlist.expandGroup(1);
-        if (mCheckTodayList.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) {
+        if ((mCheckTodayList.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) || mOldFlag) {
+
             expandlist.expandGroup(2);
         }
-
-
-
-
 
     }
 

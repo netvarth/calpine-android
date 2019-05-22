@@ -29,6 +29,8 @@ import com.nv.youneverwait.utils.TypefaceFont;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -202,16 +204,26 @@ public class Signup extends AppCompatActivity {
                             finish();
 
 
-                                String cookie = response.headers().get("Set-Cookie");
 
-                                Config.logV("Response--Cookie-------------------------" + cookie);
-                                if (!cookie.isEmpty()) {
 
-                                    String header = response.headers().get("Set-Cookie");
-                                    String Cookie_header = header.substring(0, header.indexOf(";"));
+                            String cookie ="" ;
+                            List<String> cookies = response.headers().values("Set-Cookie");
 
-                                    SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header);
-                                    Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+
+                                Config.logV("Response--Cookie-signup------------------------" + cookie);
+                                if (!cookies.isEmpty()) {
+
+
+                                    StringBuffer Cookie_header = new StringBuffer();
+
+                                    for(String key : cookies){
+                                        String Cookiee = key.substring(0, key.indexOf(";"));
+                                        Cookie_header.append(Cookiee +';');
+
+                                    }
+
+                                    SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header.toString());
+                                    Config.logV("Set Cookie sharedpref signup------------" + Cookie_header);
 
                                 }
 

@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Jaldee</string>
+    <string name="app_name">Jaldee Soft Pvt Ltd</string>
 
-    <string name="url">https://test.jaldee.com/v1/rest/</string>
-    <string name="url_terms">https://test.jaldee.com/jaldee/#/terms</string>
-    <string name="url_privacy">https://test.jaldee.com/jaldee/#/privacy</string>
+    <string name="url">https://www.jaldee.com/v1/rest/</string>
+    <string name="url_terms">https://www.jaldee.com/#/terms</string>
+    <string name="url_privacy">https://www.jaldee.com/#/privacy</string>
 
     <string name="layout_button_ok">Ok</string>
     <string name="submit">Submit</string>
@@ -15,6 +15,7 @@
     <string name="hint_conf_pwd">Confirm Password</string>
     <string name="verify">Verify</string>
     <string name="hint_otp">Enter Otp Received</string>
+    <string name="working_hours">Working \n hours</string>
 <!--Error dialog-->
     <string name="dialog_no_network_text">Please check your internet connection</string>
     <string name="dialog_time_out_text">Sorry,failed to establish a connection to the server</string>
@@ -32,17 +33,18 @@
     <string name="tab2">Checkins</string>
     <string name="tab3">Favourites</string>
     <string name="tab4">Inbox</string>
-    <string name="tab5">Profile</string>
+    <string name="tab5">Account</string>
     <string name="phonenumber">Phone Number</string>
+    <string name="new_phonenumber">Enter new Mobile#</string>
     <string name="email">Email</string>
     <string name="gender">Gender</string>
     <string name="dob">Date of Birth</string>
     <string name="updateprofile">Update Profile</string>
-    <string name="member">Member</string>
+    <string name="member">Friends and Family</string>
     <string name="changepwd">Change Password</string>
     <string name="changeEmail">Change Email</string>
     <string name="changePh">Change Phone Number</string>
-    <string name="contactus">Contact us</string>
+    <string name="contactus">Contact Us</string>
     <string name="sendappfeed">Send app Feedback</string>
     <string name="shareynw">Share Jaldee</string>
     <string name="privacypolicy">Privacy Policy</string>
@@ -59,7 +61,7 @@
     <string name="mobile">Phone Number</string>
     <string name="updatepf">Update Profile</string>
     <string name="search_hint">Search...</string>
-    <string name="diff_date">Check-in for different Date?</string>
+    <string name="diff_date">Check-in for different date?</string>
     <string name="welcome">Welcome to</string>
     <string name="ynw">Jaldee</string>
     <string name="consumer">Consumer App</string>
@@ -109,8 +111,8 @@
     <string name="amt_pay">Amount Paid</string>
     <string name="cancelcheckin" >Cancel Check-In</string>
     <string name="pay">PAY</string>
-    <string name="aboutus">About Us</string>
-    <string name="address" >Netvarth Technologies Pvt Ltd \nMuseum cross lane \nChembukavu , \nThrissur-680020 \nKerala, India</string>
+    <string name="aboutus">About</string>
+    <string name="address" >Jaldee Soft</string>
     <string name="rate">RATE</string>
     <string name="save">Save</string>
     <string name="clickhere">Click here to view More Details</string>
@@ -127,6 +129,8 @@
     <string name="gold_loan_branch"><u>Vehicle Loan @doorstep</u></string>
     <string name="gold_loan_doorstep"><u>Gold loan @doorstep</u></string>
     <string name="gold_loan_doorsteps"><u>Corporate Fin...</u></string>
+    <string name="couponss">Coupons</string>
+    <string name="distance"><![CDATA[( <1 km  )]]></string>
 
 
 </resources>

@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -58,7 +59,7 @@ public class ResponseInteceptor implements Interceptor {
         Request original = chain.request();
 
         Request request = original.newBuilder()
-              //  .header("Authorization", token_type + " " + access_token)
+                //  .header("Authorization", token_type + " " + access_token)
                 .method(original.method(), original.body())
                 .url(original.url())
                 .build();
@@ -67,7 +68,7 @@ public class ResponseInteceptor implements Interceptor {
         Response response =  chain.proceed(request);
 
         Headers headerList = response.headers();
-      //  String versionheader = headerList.get("Version");
+        //  String versionheader = headerList.get("Version");
         Config.logV("Header-----Response-----" + headerList.toString());
        /* if(versionheader.equalsIgnoreCase("api-1.1.0,config-1.1.0")){
             String version="v2";
@@ -93,7 +94,6 @@ public class ResponseInteceptor implements Interceptor {
 
 
 
-            return response;
         }
 
         if(response.code()==301){
@@ -162,17 +162,27 @@ public class ResponseInteceptor implements Interceptor {
 
 
                         // get header value
-                        String cookie = response.headers().get("Set-Cookie");
 
-                        Config.logV("Response--Cookie-------------------------" + cookie);
-                        if (!cookie.isEmpty()) {
+
+                        String cookie ="" ;
+                        List<String> cookiess = response.headers().values("Set-Cookie");
+                        StringBuffer Cookie_header = new StringBuffer();
+
+                        for(String key : cookiess){
+                            String Cookiee = key.substring(0, key.indexOf(";"));
+                            Cookie_header.append(Cookiee +';');
+                        }
+
+                        Config.logV("Response--Cookie response-------------------------" + Cookie_header);
+
+                        if (!cookiess.isEmpty()) {
 
                             SharedPreference.getInstance(context).getStringValue("PREF_COOKIES", "");
-                            String header = response.headers().get("Set-Cookie");
-                            String Cookie_header = header.substring(0, header.indexOf(";"));
+//                            String header = response.headers().get("Set-Cookie");
 
-                            SharedPreference.getInstance(context).setValue("PREF_COOKIES", Cookie_header);
-                            Config.logV("Set Cookie sharedpref------------" + Cookie_header);
+
+                            SharedPreference.getInstance(context).setValue("PREF_COOKIES", Cookie_header.toString());
+                            Config.logV("Set Cookie sharedpref response------------" + Cookie_header);
 
                             LogUtil.writeLogTest("****Login Cookie****"+Cookie_header);
 

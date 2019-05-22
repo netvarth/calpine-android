@@ -36,7 +36,14 @@ import com.nv.youneverwait.utils.TypefaceFont;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -62,6 +69,8 @@ public class FamilyMemberFragment extends RootFragment {
     String mPassfname = "", mPassLastname = "", mPassgender = "", mPassDob = "", mPassPh = "", mUser;
     TextInputLayout text_input_lastname, text_input_firstname;
     TextInputLayout txt_InputMob;
+    private static final String DATE_PATTERN =
+            "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -164,7 +173,22 @@ public class FamilyMemberFragment extends RootFragment {
                             if(validatePhone()){
                                 ApiAddFamilyMember();
                             }
-                        }else{
+                        }else if(!dob.getText().toString().equalsIgnoreCase("")) {
+
+                            String dateSelected = dob.getText().toString().replaceAll("-", "/");
+                            Config.logV("date Selected @@@@@@@@@@@@@@"+dateSelected);
+
+                            Matcher matcher = Pattern.compile(DATE_PATTERN).matcher(dateSelected);
+                            if (matcher.matches()) {
+
+                                ApiAddFamilyMember();
+                            } else {
+                                Toast.makeText(mContext, "Invalid Date!", Toast.LENGTH_LONG).show();
+
+                            }
+                        }
+                        else
+                        {
                             ApiAddFamilyMember();
                         }
 
@@ -203,7 +227,32 @@ public class FamilyMemberFragment extends RootFragment {
             }
 
             if (!mPassDob.equalsIgnoreCase("")) {
-                dob.setText(mPassDob);
+                Config.logV("Date GEt @@@@@@@@@@"+mPassDob);
+                /*SimpleDateFormat timeFormat = new SimpleDateFormat(
+                        "dd-MM-yyyy");
+                String finalDate = timeFormat.format(mPassDob);
+                dob.setText(finalDate);*/
+
+                String selectedDate = mPassDob;
+                if (selectedDate != null) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                    Date myDate = null;
+                    try {
+                        myDate = dateFormat.parse(selectedDate);
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    SimpleDateFormat timeFormat = new SimpleDateFormat(
+                            "dd-MM-yyyy");
+                    String finalDate = timeFormat.format(myDate);
+
+
+                    dob.setText(finalDate);
+                }
+
             }
             if (!mPassPh.equalsIgnoreCase("")) {
                 edtmobileno.setText(mPassPh);
@@ -273,7 +322,7 @@ public class FamilyMemberFragment extends RootFragment {
             if (!radiogender.equalsIgnoreCase("") && radiogender != null) {
                 jsonObj.put("gender", radiogender);
             }
-            if (!mDate.equalsIgnoreCase("") && mDate != null) {
+            if (!mDate.equalsIgnoreCase("") && mDate != null&&!dob.getText().toString().equalsIgnoreCase("")) {
                 jsonObj.put("dob", mDate);
             }
 
@@ -365,7 +414,7 @@ public class FamilyMemberFragment extends RootFragment {
             if (!radiogender.equalsIgnoreCase("") && radiogender != null) {
                 jsonObj.put("gender", radiogender);
             }
-            if (!mDate.equalsIgnoreCase("") && mDate != null) {
+            if (!mDate.equalsIgnoreCase("") && mDate != null&&!dob.getText().toString().equalsIgnoreCase("")) {
                 jsonObj.put("dob", mDate);
             }
 
@@ -463,33 +512,13 @@ public class FamilyMemberFragment extends RootFragment {
                                 "-" + (view.getMonth() + 1) +
                                 "-" + view.getDayOfMonth();
 
-                        dob.setText(mDate);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                        Calendar calendar = new GregorianCalendar(year, month, day);
+
+                        dob.setText(simpleDateFormat.format(calendar.getTime()));
                     }
                 };
     }
 
-    /*public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
-    public void setupUI(View view) {
 
-        // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof TextInputEditText)) {
-            view.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
-                    hideSoftKeyboard(getActivity());
-                    return false;
-                }
-            });
-        }
-
-        //If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                View innerView = ((ViewGroup) view).getChildAt(i);
-                setupUI(innerView);
-            }
-        }
-    }*/
 }

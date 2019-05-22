@@ -4,16 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.adapter.CouponAdapter;
 import com.nv.youneverwait.common.Config;
@@ -33,10 +31,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CouponFragment extends Fragment  {
+public class CouponFragment extends RootFragment  {
 
 
-    ArrayList<CoupnResponse> couponModel;
     List<CoupnResponse> coupanList;
     ListView coupon_listview;
     String uniqueid;
@@ -50,23 +47,11 @@ public class CouponFragment extends Fragment  {
     Context mContext;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View row = inflater.inflate(R.layout.couponlist, container, false);
 
-        coupon_listview = (ListView) row.findViewById(R.id.coupon_inner_list);
-
-        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
-        iBackPress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
-                getFragmentManager().popBackStack();
-            }
-        });
-
-
-
+        coupon_listview = row.findViewById(R.id.coupon_inner_list);
         mContext = getActivity();
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -76,14 +61,21 @@ public class CouponFragment extends Fragment  {
 
         }
 
+        ImageView iBackPress= row.findViewById(R.id.backpress);
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                getFragmentManager().popBackStack();
+            }
+        });
 
 
-
-        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        TextView tv_title = row.findViewById(R.id.toolbartitle);
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface1);
-        tv_title.setText("Coupons");
+        tv_title.setText(R.string.couponss);
 
         return row;
     }
@@ -110,7 +102,7 @@ public class CouponFragment extends Fragment  {
 
 
             @Override
-            public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+            public void onResponse(@NonNull Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
                 coupanList = new ArrayList<>();
                 try {
 
@@ -133,7 +125,7 @@ public class CouponFragment extends Fragment  {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<CoupnResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<CoupnResponse>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())

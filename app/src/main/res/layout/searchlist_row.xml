@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/padding3"
-    android:layout_marginRight="@dimen/padding3"
     android:layout_marginTop="@dimen/padding7"
+    android:layout_marginRight="@dimen/padding3"
     card_view:cardCornerRadius="10dp"
     card_view:cardUseCompatPadding="true">
 
@@ -29,8 +29,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginRight="@dimen/padding5"
                 android:layout_marginTop="@dimen/padding5"
+                android:layout_marginRight="@dimen/padding5"
                 android:layout_weight="0.27"
                 android:orientation="vertical">
 
@@ -106,29 +106,42 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="-5dp"
                             android:layout_marginTop="@dimen/padding5"
                             android:gravity="right|center"
                             android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/location"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="left"
-                                android:text="Kakkanad"
-                                android:textColor="@color/title_consu"
-                                android:textSize="@dimen/txtsize_12" />
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/icon_location_blue" />
 
-                        </LinearLayout>
+                            <TextView
+                                android:id="@+id/location"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="-2dp"
+                                android:gravity="left"
+                                android:text="Kakkanad"
+                                android:textColor="@color/title_consu"
+                                android:textSize="@dimen/txtsize_12" />
 
+
+                            <TextView
+                                android:id="@+id/distance"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:padding="1dp"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/txtsize_12" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -152,12 +165,6 @@
                             android:src="@drawable/jaldee_adv" />
 
 
-                        <!-- <ImageView
-                             android:id="@+id/txtcommunicate"
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             android:src="@drawable/icon_message_blue" />-->
-                        <!--android:layout_marginTop="@dimen/padding20"-->
                     </LinearLayout>
 
                 </LinearLayout>
@@ -167,133 +174,142 @@
         </LinearLayout>
 
 
-
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding7"
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/Lspec"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding7"
-                android:orientation="vertical">
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginTop="@dimen/padding5"
+                android:layout_marginRight="@dimen/padding5"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-                <LinearLayout
-                    android:id="@+id/Lspec"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/txtspec1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding5"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="Spec1"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txtspec2"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/padding2"
+                    android:text="SPEC2"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txtspec22"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/padding2"
+                    android:text="SPEC2"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+
+                    />
+
+                <TextView
+                    android:id="@+id/txtspec3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding5"
-                    android:layout_marginRight="@dimen/padding5"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:gravity="center"
+                    android:text="..."
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:visibility="gone"
 
-                    <TextView
-                        android:textStyle="bold"
-                        android:id="@+id/txtspec1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:text="Spec1"
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12"
-                        android:visibility="gone"
+                    />
+            </LinearLayout>
 
-                        />
-
-                    <TextView
-                        android:textStyle="bold"
-
-                        android:id="@+id/txtspec2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:paddingLeft="@dimen/padding2"
-                        android:text="SPEC2"
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12"
-                        android:visibility="gone"
-
-                        />
-                    <TextView
-                        android:textStyle="bold"
-
-                        android:id="@+id/txtspec22"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:paddingLeft="@dimen/padding2"
-                        android:text="SPEC2"
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12"
-                        android:visibility="gone"
-
-                        />
-                    <TextView
-
-                        android:id="@+id/txtspec3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="..."
-                        android:layout_marginLeft="@dimen/padding5"
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12"
-                        android:textStyle="bold"
-                        android:visibility="gone"
-
-                        />
-                </LinearLayout>
-
-                <!--<android.support.v7.widget.RecyclerView
-                    android:id="@+id/mRecycleTypes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/input_border_cyan_bg"
-                    android:visibility="visible"></android.support.v7.widget.RecyclerView>-->
+            <!--<android.support.v7.widget.RecyclerView
+                android:id="@+id/mRecycleTypes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_border_cyan_bg"
+                android:visibility="visible"></android.support.v7.widget.RecyclerView>-->
 
 
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fillViewport="true"
-                    android:scrollbars="none">
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:scrollbars="none">
 
-
-                    <LinearLayout
-                        android:id="@+id/layout_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/input_border_cyan_bg"
-                        android:gravity="left"
-                        android:layout_marginTop="@dimen/default_padding"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/padding5"></LinearLayout>
-
-
-                </HorizontalScrollView>
 
                 <LinearLayout
-                    android:id="@+id/service"
-                    android:layout_width="match_parent"
+                    android:id="@+id/layout_type"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/default_padding"
-                    android:layout_marginLeft="@dimen/padding5"
-                    android:layout_marginRight="@dimen/padding5"
+                    android:background="@drawable/input_border_cyan_bg"
                     android:gravity="left"
                     android:orientation="horizontal"
-                    android:textColor="@color/title_consu"
-                    android:textSize="@dimen/txtsize_12"
-                    android:visibility="gone">
-                </LinearLayout>
+                    android:padding="@dimen/padding5"></LinearLayout>
 
+
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:id="@+id/service"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginRight="@dimen/padding5"
+                android:gravity="left"
+                android:orientation="horizontal"
+                android:textColor="@color/title_consu"
+                android:textSize="@dimen/txtsize_12"
+                android:visibility="gone"></LinearLayout>
 
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/claimable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding2"
+            android:layout_marginBottom="@dimen/padding2"
+            android:gravity="center"
+            android:paddingRight="@dimen/padding5"
+            android:text="Claim my Business !"
+            android:textColor="@color/title_consu"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone" />
 
         <LinearLayout
+            android:id="@+id/checkinlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -338,72 +354,68 @@
             android:id="@+id/txt_diffdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding2"
             android:layout_marginTop="@dimen/padding2"
+            android:layout_marginBottom="@dimen/padding2"
             android:gravity="center"
             android:paddingRight="@dimen/padding5"
             android:text="@string/diff_date"
             android:textColor="@color/title_consu"
             android:textSize="@dimen/txtsize_12"
-            />
+            android:visibility="gone" />
 
 
         <View
-            android:visibility="gone"
-
-            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
+
             android:layout_height="1dp"
-            android:background="@color/view_border" />
+            android:layout_marginTop="5dp"
+            android:background="@color/view_border"
+            android:visibility="gone" />
 
         <LinearLayout
-            android:visibility="gone"
-            android:layout_weight="1"
             android:id="@+id/serviceappointment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="@dimen/padding5"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="@dimen/padding5"
+            android:layout_weight="1"
             android:gravity="left"
             android:orientation="horizontal"
             android:textColor="@color/title_consu"
-            android:textSize="@dimen/txtsize_12">
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone">
 
             <TextView
-                android:textSize="13dp"
-                android:textColor="@color/title_consu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:text="@string/gold_loan_doorstep"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:textColor="@color/title_consu"
+                android:textSize="13dp" />
 
             <TextView
-                android:textSize="13dp"
-                android:textColor="@color/title_consu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:text="@string/gold_loan_branch"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-
+                android:textColor="@color/title_consu"
+                android:textSize="13dp" />
 
 
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
-
             android:layout_width="match_parent"
+
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/default_padding"
-            android:orientation="horizontal">
-
+            android:orientation="horizontal"
+            android:visibility="gone">
 
 
             <Button
-                android:fontFamily="@font/montserrat_bold"
                 android:id="@+id/btnappointment"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
@@ -411,6 +423,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="#EE9334"
+                android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
                 android:paddingLeft="@dimen/padding3"
                 android:paddingRight="@dimen/padding3"
@@ -428,8 +441,8 @@
             android:id="@+id/txt_diffdates"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding2"
             android:layout_marginTop="@dimen/padding2"
+            android:layout_marginBottom="@dimen/padding2"
             android:gravity="center"
             android:paddingRight="@dimen/padding5"
             android:text="@string/diff_date"
@@ -439,4 +452,7 @@
 
 
     </LinearLayout>
+
+
 </android.support.v7.widget.CardView>
+

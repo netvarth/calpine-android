@@ -35,6 +35,8 @@
 
 
             <android.support.v7.widget.SearchView
+                android:elevation="8dp"
+
                 android:id="@+id/search_loc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

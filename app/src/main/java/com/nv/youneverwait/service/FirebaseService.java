@@ -16,6 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -34,6 +35,9 @@ import org.json.JSONObject;
 import java.util.Map;
 import java.util.Random;
 
+import static android.app.Notification.DEFAULT_SOUND;
+import static android.app.Notification.DEFAULT_VIBRATE;
+
 
 public class FirebaseService extends FirebaseMessagingService {
 
@@ -43,7 +47,6 @@ public class FirebaseService extends FirebaseMessagingService {
 
     /*@Override
     protected Intent zzD(Intent intent) {
-
         Config.logV("ON PUSH BACKGROUND___________________");
         intent =new Intent(this,Home.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -95,7 +98,7 @@ public class FirebaseService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
             sendNotification(remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
-           // handleNotification(remoteMessage.getNotification().getBody());
+            // handleNotification(remoteMessage.getNotification().getBody());
         }
 
         // Check if message contains a data payload.
@@ -105,30 +108,11 @@ public class FirebaseService extends FirebaseMessagingService {
           /* Map<String, String> params = remoteMessage.getData();
             JSONObject object = new JSONObject(params);
             Log.e("JSON_OBJECT", object.toString());*/
-        //    sendNotification(remoteMessage.getData().get("title").toString(),remoteMessage.getData().get("message").toString());
+            //    sendNotification(remoteMessage.getData().get("title").toString(),remoteMessage.getData().get("message").toString());
         }
     }
 
-    private void handleNotification(String message) {
-        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
-            // app is in foreground, broadcast the push message
-            Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-            pushNotification.putExtra("message", message);
-          //  Intent pushNotification = new Intent(this,Home.class);
 
-            pushNotification.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            PendingIntent contentIntent = PendingIntent.getActivity(this, (int) (Math.random() * 100), pushNotification, 0);
-
-            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
-
-            // play notification sound
-            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-            notificationUtils.playNotificationSound();
-        }else{
-            // If the app is in background, firebase itself handles the notification
-            Config.logV("App Back GRound");
-        }
-    }
 
     private void handleDataMessage(JSONObject json) {
         Log.e(TAG, "push json: " + json.toString());
@@ -202,7 +186,7 @@ public class FirebaseService extends FirebaseMessagingService {
 
     private void sendNotification(String title, String messageBody) {
 
-            Config.logV("Notification ONCLICK@@@@@@@@@@@@@@@@@@@@@@@");
+        Config.logV("Notification ONCLICK@@@@@@@@@@@@@@@@@@@@@@@");
         final Intent intent = new Intent(this, Home.class);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -220,10 +204,20 @@ public class FirebaseService extends FirebaseMessagingService {
             notificationBuilder.setSmallIcon(R.drawable.ic_silhouette);
             notificationBuilder.setColor(Color.parseColor("#F0B41C"));
         }
+
+        RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notif_custom_view);
+        remoteViews.setTextViewText(R.id.txttitle,title);
+        remoteViews.setTextViewText(R.id.txtnotify,messageBody);
+
+
+
         notificationBuilder.setContentTitle(TextUtils.isEmpty(title) ? getString(R.string.app_name) : title)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody))
+                .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE) //Important for heads-up notification
+                .setPriority(Notification.PRIORITY_MAX) //Important for heads-up notification
                 .setContentText(messageBody)
                 .setAutoCancel(true)
+                .setCustomHeadsUpContentView(remoteViews)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -236,6 +230,7 @@ public class FirebaseService extends FirebaseMessagingService {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Config.logV("OREO @@@@@@@@@@@@@@###############");
                 final NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH);
+
                 notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
                 notificationManager.createNotificationChannel(notificationChannel);
             }

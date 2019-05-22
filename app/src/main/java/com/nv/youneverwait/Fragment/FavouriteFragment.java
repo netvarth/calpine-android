@@ -442,7 +442,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                     mBottomDialog.dismiss();
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
 
 
                     }

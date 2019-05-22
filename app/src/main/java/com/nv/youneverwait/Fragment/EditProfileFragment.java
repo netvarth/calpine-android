@@ -150,22 +150,24 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         btn_edtSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!txtdob.getText().toString().equalsIgnoreCase("")) {
-                    String dateSelected = txtdob.getText().toString().replaceAll("-", "/");
-                    Matcher matcher = Pattern.compile(DATE_PATTERN).matcher(dateSelected);
-                    if (matcher.matches()) {
+                if(!txtfirstname.getText().toString().equalsIgnoreCase("")&&!txtlastname.getText().toString().equalsIgnoreCase("")) {
+                    if (!txtdob.getText().toString().equalsIgnoreCase("")) {
+                        String dateSelected = txtdob.getText().toString().replaceAll("-", "/");
+                        Matcher matcher = Pattern.compile(DATE_PATTERN).matcher(dateSelected);
+                        if (matcher.matches()) {
 
-                        ApiEditProfileDetail();
+                            ApiEditProfileDetail();
+                        } else {
+                            Toast.makeText(mContext, "Invalid Date!", Toast.LENGTH_LONG).show();
+
+                        }
                     } else {
-                        Toast.makeText(mContext, "Invalid Date!", Toast.LENGTH_LONG).show();
+                        ApiEditProfileDetail();
 
                     }
                 }else{
-                    ApiEditProfileDetail();
+                    Toast.makeText(mContext, "Please enter your name", Toast.LENGTH_LONG).show();
                 }
-
-
-
             }
         });
         //setupUI(row.findViewById(R.id.Llayout));
@@ -278,7 +280,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
                         // } /*else {
                         //  db.updateUserInfo(response.body().getUserprofile());
 
-
+                        SharedPreference.getInstance(mContext).setValue("mobile", response.body().getUserprofile().getPrimaryMobileNo());
                         ProfileModel getProfile = db.getProfileDetail(consumerId);
                         showProfileDetail(getProfile);
                         SharedPreference.getInstance(mContext).setValue("userDb", "success");
@@ -393,7 +395,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
                 SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
                 finalDate = timeFormat.format(myDate);
             }
-
+            Config.logV("FINAL DATE @@@@@@@@@@@@@@"+finalDate);
 
             jsonObj.put("dob", finalDate);
 

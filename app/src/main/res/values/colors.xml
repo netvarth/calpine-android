@@ -10,10 +10,12 @@
     <color name="input_border">#dddddd</color>
     <color name="app_theme">#e1f5fd</color>
 
-    <color name="action_header">#084c61</color>
-    <color name="hometopbar">#1E5C6F
+    <color name="action_header">#00183A</color>
+    <color name="hometopbar">#00183A
     </color>
-    <color name="home_background">#CFD8DC</color>
+    <color name="home_background">#ffffff</color>
+    <color name="dark_blue">#1E4079</color>
+    <color name="dark_yellow">#FFC107</color>
 
     <!--    Tab-->
     <color name="tab_disable">#979797</color>
@@ -43,7 +45,7 @@
     <color name="title_grey_light">#993E4A59</color>
     <color name="view_border">#1A3E4A59</color>
     <color name="bg_opennow">#333BCCA5</color>
-    <color name="violet">#6065FF</color>
+    <color name="violet">#00AEF2</color>
     <color name="txtcoloractive_in">#99FFFFFF</color>
     <color name="yellow">#FFF1A8</color>
 

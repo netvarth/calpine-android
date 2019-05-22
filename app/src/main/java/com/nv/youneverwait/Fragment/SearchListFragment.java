@@ -374,7 +374,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     Config.logV("mGLobalSearch" + mGLobalSearch.size());
 
-                               /* ArrayList<ListCell>*/
+                    /* ArrayList<ListCell>*/
                     items = new ArrayList<ListCell>();
                     for (int i = 0; i < mGLobalSearch.size(); i++) {
 
@@ -387,7 +387,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                         items.add(new ListCell(mSpecializationDomain.get(i).getName(), "Specializations", mSpecializationDomain.get(i).getSector(), mSpecializationDomain.get(i).getDisplayname()));
                     }
 
-                           /*     *******************************************************************/
+                    /*     *******************************************************************/
 
                     listadapter = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), DashboardFragment.getHomeFragment(), mSearchView);
                     searchSrcTextView.setAdapter(listadapter);
@@ -432,7 +432,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
 
-                               /* searchSrcTextView.setAdapter(listadapter);*/
+                                /* searchSrcTextView.setAdapter(listadapter);*/
                                 listadapter.notifyDataSetChanged();
                                 listadapter.getFilter().filter(query);
                             }
@@ -715,7 +715,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 mRecySearchDetail.setAdapter(pageadapter);*/
 
 
-              /*  mRecySearchDetail.smoothScrollToPosition(0);*/
+                /*  mRecySearchDetail.smoothScrollToPosition(0);*/
 
 
                 Config.logV("Query-----------" + querycreate);
@@ -744,7 +744,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     public LanLong getLocationNearBy(double lant, double longt) {
 
-        double distance = 30;/*;DISTANCE_AREA: 5, // in Km*/
+        double distance = 60;/*;DISTANCE_AREA: 5, // in Km*/
 
         double distInDegree = distance / 111;
         double upperLeftLat = lant - distInDegree;
@@ -793,6 +793,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         params.put("sort", "ynw_verified_level desc, distance asc");
 
         params.put("expr.distance", mPass);
+        params.put("return","_all_fields,distance");
 
 
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
@@ -832,6 +833,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setRating(response.body().getHits().getHit().get(i).getFields().getRating());
                                 search.setPlace1(response.body().getHits().getHit().get(i).getFields().getPlace1());
                                 search.setUnique_id(response.body().getHits().getHit().get(i).getFields().getUnique_id());
+                                search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
+                                search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
+
+
 
                                 search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
 
@@ -855,6 +860,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 }
 
+                                if(response.body().getHits().getHit().get(i).getExprs()!=null){
+                                    search.setDistance(response.body().getHits().getHit().get(i).getExprs().getDistance());
+                                }
 
                                 if (response.body().getHits().getHit().get(i).getFields().getSpecialization_displayname() != null) {
                                     search.setSpecialization_displayname(response.body().getHits().getHit().get(i).getFields().getSpecialization_displayname());
@@ -966,7 +974,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
-   /* */
+    /* */
 
     /**
      * Performs a Retrofit call to the top rated movies API.
@@ -1009,6 +1017,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         params.put("q.parser", "structured");
         params.put("sort", "ynw_verified_level desc, distance asc");
         params.put("expr.distance", mPass);
+        params.put("return","_all_fields,distance");
 
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
 
@@ -1070,6 +1079,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
                                 search.setSector(response.body().getHits().getHit().get(i).getFields().getSector());
                                 search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
+                                search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
+                                search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
 
                                 if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
                                     search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
@@ -1080,6 +1091,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 }
 
+                                if(response.body().getHits().getHit().get(i).getExprs()!=null){
+                                    //   Config.logV("Distance @@@@@@@@@@@"+response.body().getHits().getHit().get(i).getExprs().getDistance());
+                                    search.setDistance(response.body().getHits().getHit().get(i).getExprs().getDistance());
+                                }
 
                                 if (response.body().getHits().getHit().get(i).getFields().getQualification() != null) {
                                     search.setQualification(response.body().getHits().getHit().get(i).getFields().getQualification());
@@ -1259,11 +1274,15 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     que.setServiceTime(response.body().get(i).getNextAvailableQueue().getServiceTime());
                                 }
 
+                                Config.logV("Calc Mode @@@@@@@@@@@RRRR"+response.body().get(i).getNextAvailableQueue().getCalculationMode());
+                                que.setCalculationMode(response.body().get(i).getNextAvailableQueue().getCalculationMode());
+                                que.setPersonAhead(response.body().get(i).getNextAvailableQueue().getPersonAhead());
+
+                                Config.logV("personAheadtttt @@@@@@@@@@@ ####"+response.body().get(i).getNextAvailableQueue().getPersonAhead());
+
                                 que.setQueueWaitingTime(response.body().get(i).getNextAvailableQueue().getQueueWaitingTime());
 
-
                             }
-
 
                             mQueueList.add(que);
                         }
@@ -1276,7 +1295,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             pageadapter.removeLoadingFooter();
                             isLoading = false;
 
-
+    
                             mSearchListModel.clear();
                             for (int i = 0; i < mSearchRespPass.size(); i++) {
                                 SearchListModel searchList = new SearchListModel();
@@ -1287,6 +1306,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setTitle(mSearchRespPass.get(i).getTitle());
                                 searchList.setRating(mSearchRespPass.get(i).getRating());
                                 searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
+                                searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
+                                searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
 
 
                                 searchList.setSectorname(mSearchRespPass.get(i).getSector());
@@ -1322,6 +1343,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 }
 
+                                if (mSearchRespPass.get(i).getDistance() != null) {
+                                    Config.logV("Distance @@@@@@@@@@@"+mSearchRespPass.get(i).getDistance());
+                                    searchList.setDistance(mSearchRespPass.get(i).getDistance());
+                                }
+
                                 if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
                                     searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
 
@@ -1350,7 +1376,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
-                                 //   Config.logV("Gallery-@@@@---111-------5555---------" + mSearchRespPass.get(i).getGallery_thumb_nails());
+                                    //   Config.logV("Gallery-@@@@---111-------5555---------" + mSearchRespPass.get(i).getGallery_thumb_nails());
                                     searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
                                 }
 
@@ -1413,6 +1439,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             //searchList.setQId(mQueueList.get(j).getId());
                                             searchList.setQId(mID);
                                             searchList.setIsopen(mQueueList.get(i).isOpenNow());
+                                            searchList.setPersonAhead(mQueueList.get(i).getPersonAhead());
+                                            searchList.setCalculationMode(mQueueList.get(i).getCalculationMode());
+
+                                            Config.logV("personAhead @@@@@@@@@@@ 33####"+mQueueList.get(i).getPersonAhead());
                                             searchList.setQueueWaitingTime(mQueueList.get(i).getQueueWaitingTime());
                                             if (mQueueList.get(i).getServiceTime() != null) {
                                                 searchList.setServiceTime(mQueueList.get(i).getServiceTime());
@@ -1453,6 +1483,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 searchList.setSectorname(mSearchRespPass.get(i).getSector());
                                 searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
+                                searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
+                                searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
 
                                 String spec = "";
                                 if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
@@ -1479,6 +1511,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (mSearchRespPass.get(i).getYnw_verified() != null) {
                                     searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
 
+                                }
+
+                                if (mSearchRespPass.get(i).getDistance() != null) {
+                                    Config.logV("Distance @@@@@@@@@@@44444"+mSearchRespPass.get(i).getDistance());
+                                    searchList.setDistance(mSearchRespPass.get(i).getDistance());
                                 }
 
                                 if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
@@ -1509,7 +1546,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
-                               // Config.logV("Gallery ###########"+mSearchRespPass.get(i).getGallery_thumb_nails());
+                                    // Config.logV("Gallery ###########"+mSearchRespPass.get(i).getGallery_thumb_nails());
                                     searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
                                 }
 
@@ -1567,7 +1604,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             }
                                             searchList.setQId(mID);
                                             searchList.setIsopen(mQueueList.get(i).isOpenNow());
+                                            searchList.setPersonAhead(mQueueList.get(i).getPersonAhead());
+                                            searchList.setCalculationMode(mQueueList.get(i).getCalculationMode());
                                             searchList.setQueueWaitingTime(mQueueList.get(i).getQueueWaitingTime());
+                                            Config.logV("personAhead @@@@@@@@@@@ ####"+mQueueList.get(i).getPersonAhead());
                                             if (mQueueList.get(i).getServiceTime() != null) {
                                                 searchList.setServiceTime(mQueueList.get(i).getServiceTime());
                                             }
@@ -1646,7 +1686,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        transaction.add(R.id.mainlayout, pfFragment).commit();
 
     }
 
@@ -1665,7 +1705,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
     @Override
@@ -1683,7 +1723,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
+        transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
     @Override
@@ -1709,29 +1749,32 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         String querycreate = null;
 
-        if (!mDomainSpinner.equalsIgnoreCase("All")) {
+        if(!querypass.equalsIgnoreCase("")) {
 
-            for (int i = 0; i < mSubDomain.size(); i++) {
-                if (mSubDomain.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())) {
+            if (!mDomainSpinner.equalsIgnoreCase("All")) {
 
-                    Config.logV("Query------------" + mSubDomain.get(i).getQuery());
-                    String requiredString = mSubDomain.get(i).getQuery().substring(mSubDomain.get(i).getQuery().indexOf("]") + 1, mSubDomain.get(i).getQuery().indexOf(")"));
-                    Config.logV("Second----@@@@@@-----" + requiredString);
-                    querycreate = requiredString;
+                for (int i = 0; i < mSubDomain.size(); i++) {
+                    if (mSubDomain.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())) {
 
+                        Config.logV("Query------------" + mSubDomain.get(i).getQuery());
+                        String requiredString = mSubDomain.get(i).getQuery().substring(mSubDomain.get(i).getQuery().indexOf("]") + 1, mSubDomain.get(i).getQuery().indexOf(")"));
+                        Config.logV("Second----@@@@@@-----" + requiredString);
+                        querycreate = requiredString;
+
+                    }
                 }
-            }
-            Config.logV("Query @@@@@@@@@@-----------" + querycreate);
-        } else {
-            for (int i = 0; i < mGLobalSearch.size(); i++) {
-                if (mGLobalSearch.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())) {
-                    Config.logV("Query-ALL-----------" + mGLobalSearch.get(i).getQuery());
-                    String requiredString = mGLobalSearch.get(i).getQuery().substring(mGLobalSearch.get(i).getQuery().indexOf("]") + 1, mGLobalSearch.get(i).getQuery().indexOf(")"));
-                    Config.logV("Second---All-@@@@@@-----" + requiredString);
-                    querycreate = requiredString;
+                Config.logV("Query @@@@@@@@@@-----------" + querycreate);
+            } else {
+                for (int i = 0; i < mGLobalSearch.size(); i++) {
+                    if (mGLobalSearch.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())) {
+                        Config.logV("Query-ALL-----------" + mGLobalSearch.get(i).getQuery());
+                        String requiredString = mGLobalSearch.get(i).getQuery().substring(mGLobalSearch.get(i).getQuery().indexOf("]") + 1, mGLobalSearch.get(i).getQuery().indexOf(")"));
+                        Config.logV("Second---All-@@@@@@-----" + requiredString);
+                        querycreate = requiredString;
+                    }
                 }
+                Config.logV("Query  ALL @@@@@@@@@@-----------" + querycreate);
             }
-            Config.logV("Query  ALL @@@@@@@@@@-----------" + querycreate);
         }
 
 
@@ -1945,6 +1988,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     @Override
     public void onMethodCoupn(String uniqueID) {
         CouponFragment cfFragment = new CouponFragment();
+        refreshQuery();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putString("uniqueID", uniqueID);
@@ -2058,7 +2102,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext, "Message send successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         mBottomDialog.dismiss();
 
                     }
