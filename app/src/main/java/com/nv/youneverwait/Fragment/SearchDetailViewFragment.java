@@ -141,7 +141,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
-    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact,tv_coupon;
+    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact,tv_coupon,tv_count_details;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -160,6 +160,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         txtMore = (TextView) row.findViewById(R.id.txtMore);
         tv_contact = (TextView) row.findViewById(R.id.txtcontact);
         tv_coupon = (TextView) row.findViewById(R.id.txtcoupon);
+        tv_count_details = (TextView) row.findViewById(R.id.count_details);
 
 
         count = 0;
@@ -289,6 +290,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
 
+        tv_count_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onMethodNewSearch(uniqueID);
+            }
+        });
 
         mInterface = (SearchLocationAdpterCallback) this;
 
@@ -1839,9 +1846,20 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
 
-
     }
 
+
+    public void onMethodNewSearch(String uniqueID) {
+        NewSearchFragment nsfFragment = new NewSearchFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("uniqueID", uniqueID);
+        nsfFragment.setArguments(bundle);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.addToBackStack(null);
+        transaction.add(R.id.mainlayout, nsfFragment).commit();
+
+    }
 
     public void onMethodCoupn(String uniqueID) {
         CouponFragment cfFragment = new CouponFragment();

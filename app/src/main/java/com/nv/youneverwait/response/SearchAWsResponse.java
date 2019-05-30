@@ -72,6 +72,29 @@ public class SearchAWsResponse {
 
     String ynw_verified_level;
 
+
+    public String getAccountType() {
+        return account_type;
+    }
+
+    public void setAccountType(String account_type) {
+        this.account_type = account_type;
+    }
+
+    String account_type;
+
+
+    public String getBranch_name() {
+        return branch_name;
+    }
+
+    public void setBranch_name(String branch_name) {
+        this.branch_name = branch_name;
+    }
+
+    String branch_name;
+
+
     public void setYnw_verified(String ynw_verified) {
         this.ynw_verified = ynw_verified;
     }

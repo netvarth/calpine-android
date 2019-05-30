@@ -835,6 +835,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setUnique_id(response.body().getHits().getHit().get(i).getFields().getUnique_id());
                                 search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
+                                search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
+                                search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
 
 
 
@@ -1081,6 +1083,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
                                 search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
+                                search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
+                                search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
 
                                 if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
                                     search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
@@ -1308,6 +1312,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
                                 searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
                                 searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
+                                searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
+                                searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
 
 
                                 searchList.setSectorname(mSearchRespPass.get(i).getSector());
@@ -1484,6 +1490,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setSectorname(mSearchRespPass.get(i).getSector());
                                 searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
                                 searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
+                                searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
+                                searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
                                 searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
 
                                 String spec = "";

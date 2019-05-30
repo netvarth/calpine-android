@@ -75,6 +75,27 @@ public class SearchListModel implements Serializable {
         this.claimable = claimable;
     }
 
+    public String getAccountType() {
+        return account_type;
+    }
+
+    public void setAccountType(String account_type) {
+        this.account_type = account_type;
+    }
+
+    String account_type;
+
+    public String getBranch_name() {
+        return branch_name;
+    }
+
+    public void setBranch_name(String branch_name) {
+        this.branch_name = branch_name;
+    }
+
+    String branch_name;
+
+
     public int getCoupon_enabled() {
         return coupon_enabled;
     }
