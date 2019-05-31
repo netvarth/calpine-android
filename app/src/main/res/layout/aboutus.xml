@@ -118,12 +118,9 @@
             android:padding="@dimen/default_padding"
             android:visibility="gone"></com.nv.youneverwait.widgets.TouchWebView>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/view_border" />
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/Lprivacy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

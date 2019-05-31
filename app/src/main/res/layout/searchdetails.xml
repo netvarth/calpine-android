@@ -243,7 +243,7 @@
                                         android:layout_marginLeft="@dimen/padding5"
                                         android:drawableTop="@drawable/icon_message_gray"
                                         android:drawablePadding="@dimen/padding2"
-                                        android:text="Messsage"
+                                        android:text="Enquiry"
                                         android:textColor="@color/title_grey"
                                         android:textSize="@dimen/txtsize_12" />
 

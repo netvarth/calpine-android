@@ -271,6 +271,22 @@ public class SearchListModel implements Serializable {
         return personAhead;
     }
 
+    public void setPersonAhead(int personAhead) {
+        this.personAhead = personAhead;
+    }
+
+    int personAhead;
+
+    public int getBranchCount() {
+        return branchSpCount;
+    }
+
+    public void setBranchSpCount(int branchSpCount) {
+        this.branchSpCount = branchSpCount;
+    }
+
+    int branchSpCount;
+
 
     public String getCalculationMode() {
         return calculationMode;
@@ -282,11 +298,7 @@ public class SearchListModel implements Serializable {
 
     String calculationMode;
 
-    public void setPersonAhead(int personAhead) {
-        this.personAhead = personAhead;
-    }
 
-    int personAhead;
 
     public ArrayList getServices() {
         return services;

@@ -122,4 +122,16 @@ public class QueueList {
     }
 
     int personAhead;
+
+
+    public int getBranchCount() {
+        return branchSpCount;
+    }
+
+    public void setBranchSpCount(int branchSpCount) {
+        this.branchSpCount = branchSpCount;
+    }
+
+    int branchSpCount;
+
 }

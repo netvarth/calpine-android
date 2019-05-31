@@ -145,7 +145,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case ITEM:
                 final MyViewHolder myViewHolder = (MyViewHolder) holder;
 
-
                 Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
                 /*if (searchdetailList.getYnw_verified() == 1) {
                     myViewHolder.tv_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_verified, 0);
@@ -244,7 +243,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Typeface tyface_5 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Regular.otf");
                 dynaText1.setTypeface(tyface_5);
-                dynaText1.setText("Message");
+                dynaText1.setText("Enquiry");
                 dynaText1.setTextSize(13);
                 dynaText1.setTextColor(context.getResources().getColor(R.color.title_grey));
                 dynaText1.setPadding(5, 5, 5, 5);
@@ -393,6 +392,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     });
                 }
+
+
 
 
                 if (searchdetailList.getParking_type_location1() != null) {
@@ -596,6 +597,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
+
+
                 myViewHolder.layout_type.addView(parent);
 
                 //////////////////////////////////////////////////////////////
@@ -644,6 +647,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (searchdetailList.getAccountType().equals("1")) {
                         myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
                         myViewHolder.tv_branch_name.setText(searchdetailList.getBranch_name());
+                        Log.i("Claaaaims", String.valueOf(searchdetailList.getBranchCount()));
                     }
                 }else {
                     myViewHolder.tv_branch_name.setVisibility(View.GONE);
