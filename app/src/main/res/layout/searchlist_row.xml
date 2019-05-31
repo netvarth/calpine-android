@@ -93,12 +93,13 @@
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
                         <TextView
+                            android:visibility="gone"
                             android:layout_marginTop="@dimen/padding3"
                             android:id="@+id/branch_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="left"
-                            android:text="Name"
+                            android:text="Names"
                             android:textColor="@color/black"
                             android:textSize="@dimen/txtsize_10" />
 
@@ -360,6 +361,7 @@
         </LinearLayout>
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/count_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

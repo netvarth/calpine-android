@@ -394,8 +394,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
-
-
                 if (searchdetailList.getParking_type_location1() != null) {
                     if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
                         TextView dynaText = new TextView(context);
@@ -597,8 +595,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
-
-
                 myViewHolder.layout_type.addView(parent);
 
                 //////////////////////////////////////////////////////////////
@@ -643,13 +639,17 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.tv_Futuredate.setTypeface(tyface_date);*/
 
 
-                if (searchdetailList.getAccountType()!=null) {
+                if (searchdetailList.getAccountType() != null) {
                     if (searchdetailList.getAccountType().equals("1")) {
-                        myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
                         myViewHolder.tv_branch_name.setText(searchdetailList.getBranch_name());
-                        Log.i("Claaaaims", String.valueOf(searchdetailList.getBranchCount()));
+                        myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
+                        Log.i("qazqaz", String.valueOf(searchdetailList.getBranchCount()));
                     }
-                }else {
+                    else if ((searchdetailList.getAccountType().equals("0"))) {
+                        myViewHolder.tv_count.setVisibility(View.VISIBLE);
+                        Log.i("qaz", String.valueOf(searchdetailList.getBranchCount()));
+                    }
+                } else {
                     myViewHolder.tv_branch_name.setVisibility(View.GONE);
                 }
 

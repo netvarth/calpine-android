@@ -45,18 +45,6 @@ public class NewSearchFragment extends RootFragment {
             s_LocName = bundle.getString("locName", "");
         }
 
-
-
-        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
-        double upperLeftLat = Lanlong.getUpperLeftLat();
-        double upperLeftLon = Lanlong.getUpperLeftLon();
-        double lowerRightLat = Lanlong.getLowerRightLat();
-        double lowerRightLon = Lanlong.getLowerRightLon();
-        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
-
-        Config.logV("Response-- locationRange-------------------------" + locationRange);
-
-
         ApiSEARCHAWSLoadFirstDatas("(and location1:['11.06818254054054,75.67389445945945%27,'9.98710145945946,76.75497554054054%27] account_type:1 branch_id:4)", "haversin(10.527642,76.214435,location1.latitude,location1.longitude)");
         return row;
     }
@@ -135,31 +123,6 @@ public class NewSearchFragment extends RootFragment {
             }
         });
 
-
-    }
-
-
-
-    public LanLong getLocationNearBy(double lant, double longt) {
-
-        double distance = 60;/*;DISTANCE_AREA: 5, // in Km*/
-
-        double distInDegree = distance / 111;
-        double upperLeftLat = lant - distInDegree;
-        double upperLeftLon = longt + distInDegree;
-        double lowerRightLat = lant + distInDegree;
-        double lowerRightLon = longt - distInDegree;
-        /*double locationRange = '[\'' + lowerRightLat + ',' + lowerRightLon + '\',\'' + upperLeftLat + ',' + upperLeftLon + '\']';
-        double retarr = {'locationRange':locationRange, 'upperLeftLat':upperLeftLat, 'upperLeftLon':
-        upperLeftLon, 'lowerRightLat':lowerRightLat, 'lowerRightLon':lowerRightLon};*/
-
-        LanLong lan = new LanLong();
-        lan.setUpperLeftLat(upperLeftLat);
-        lan.setUpperLeftLon(upperLeftLon);
-        lan.setLowerRightLat(lowerRightLat);
-        lan.setLowerRightLon(lowerRightLon);
-
-        return lan;
 
     }
 
