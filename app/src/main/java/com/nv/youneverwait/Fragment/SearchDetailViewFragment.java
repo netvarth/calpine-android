@@ -62,6 +62,7 @@ import com.nv.youneverwait.model.WorkingModel;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchCheckInMessage;
+import com.nv.youneverwait.response.SearchDepartment;
 import com.nv.youneverwait.response.SearchLocation;
 import com.nv.youneverwait.response.SearchService;
 import com.nv.youneverwait.response.SearchSetting;
@@ -81,6 +82,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -142,6 +144,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
     TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact,tv_coupon,tv_count_details;
+    List<SearchDepartment> departmentList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -150,6 +153,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mContext = getActivity();
         mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
         mRecycle_virtualfield = (RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
+
 
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
         // tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
@@ -1126,6 +1130,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ApiSearchGallery(uniqueID);
                         ApiFavList();
                         ApiSearchViewLocation(uniqueID);
+                        ApiDepartment(mProvoderId);
 
                     }
 
@@ -1541,6 +1546,59 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             @Override
             public void onFailure(Call<ArrayList<SearchService>> call, Throwable t) {
                 // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+    }
+
+    private void ApiDepartment(final int id) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<SearchDepartment> call = apiService.getDeartment(id);
+
+        call.enqueue(new Callback<SearchDepartment>() {
+            @Override
+            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code----------Service---------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+                        String responses= new Gson().toJson(response.body());
+                        Config.logV("Deapartnamesss---------------" + responses);
+                        Config.logV("Deapartnameasdasd---------------" + response.body().getDepartmentName());
+                        Config.logV("departmentNamesArray---------------" + departmentList);
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SearchDepartment> call, Throwable t) {
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);

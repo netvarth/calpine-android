@@ -24,6 +24,7 @@ import com.nv.youneverwait.response.RatingResponse;
 import com.nv.youneverwait.response.RefinedFilters;
 import com.nv.youneverwait.response.SearchAWsResponse;
 import com.nv.youneverwait.response.SearchCheckInMessage;
+import com.nv.youneverwait.response.SearchDepartment;
 import com.nv.youneverwait.response.SearchLocation;
 import com.nv.youneverwait.response.SearchService;
 import com.nv.youneverwait.response.SearchSetting;
@@ -164,6 +165,8 @@ public interface ApiInterface {
     @GET("consumer/waitlist/services/{id}")
     Call<ArrayList<SearchService>> getSearchService(@Path("id") int id);
 
+    @GET("consumer/waitlist/services/department")
+    Call<SearchDepartment> getDeartment(@Query("account") int id);
 
     @GET("consumer/waitlist")
     Call<ArrayList<SearchCheckInMessage>> getSearchCheckInMessage(@QueryMap(encoded = true) Map<String, String> query);
