@@ -47,7 +47,6 @@
                     android:layout_marginLeft="@dimen/padding7"
                     android:layout_marginRight="@dimen/padding7"
                     android:layout_marginTop="@dimen/default_padding"
-
                     android:orientation="vertical">
 
                     <TextView

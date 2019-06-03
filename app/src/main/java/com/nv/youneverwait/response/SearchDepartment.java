@@ -7,19 +7,33 @@ import java.util.ArrayList;
 
 public class SearchDepartment implements Serializable {
 
-    ArrayList departmentName;
+    String departmentName;
 
 
-    public ArrayList getDepartmentName() {
+    public String getDepartmentName() {
         return departmentName;
     }
 
-    public void setDepartmentName(ArrayList departmentName) {
+    public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
     }
 
-    @SerializedName("departments")
-    ArrayList departments;
+    String departmentCode;
 
+
+    public String getDepartmentCode() {
+        return departmentCode;
+    }
+
+    public void setDepartmentCode(String departmentCode) {
+        this.departmentCode = departmentCode;
+    }
+
+    public ArrayList<SearchDepartment> getDepartments() {
+        return departments;
+    }
+
+    @SerializedName("departments")
+    ArrayList<SearchDepartment> departments;
 
 }

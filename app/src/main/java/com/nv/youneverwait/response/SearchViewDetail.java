@@ -38,6 +38,7 @@ public class SearchViewDetail {
     String businessName;
     String displayName;
     String domain;
+    String branchId;
     String businessDesc;
     String experience;
 
@@ -180,6 +181,8 @@ public class SearchViewDetail {
         this.displayName = displayName;
     }
 
+
+
     public String getDomain() {
         return domain;
     }
@@ -187,6 +190,18 @@ public class SearchViewDetail {
     public void setDomain(String domain) {
         this.domain = domain;
     }
+
+
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
+    }
+
+
+
 
     public String getBusinessDesc() {
         return businessDesc;

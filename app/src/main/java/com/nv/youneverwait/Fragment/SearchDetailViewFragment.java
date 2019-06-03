@@ -22,15 +22,18 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +46,7 @@ import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.activities.SwipeGalleryImage;
 import com.nv.youneverwait.adapter.ContactDetailAdapter;
+import com.nv.youneverwait.adapter.DepartmentAdapter;
 import com.nv.youneverwait.adapter.LocationCheckinAdapter;
 import com.nv.youneverwait.adapter.SearchLocationAdapter;
 import com.nv.youneverwait.adapter.VirtualFieldAdapter;
@@ -104,10 +108,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback {
 
     Context mContext;
-
+     ListView deptListview;
     SearchViewDetail mBusinessDataList;
     ArrayList<SearchViewDetail> mSearchGallery;
     ArrayList<SearchLocation> mSearchLocList;
+    ArrayList<SearchDepartment> mSearchDepartments;
+    String mbranchId;
+
 
     SearchSetting mSearchSettings;
     SearchTerminology mSearchTerminology;
@@ -120,11 +127,15 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     ArrayList<SearchCheckInMessage> mSearchmCheckListShow = new ArrayList<>();
 
+    ArrayList<String> departmentNameList = new ArrayList();
+    ArrayList<String> departmentCodeList = new ArrayList();
+
 
     TextView tv_busName, tv_domain, tv_desc, tv_msg, txtMore;
 
-    RecyclerView mRecyLocDetail, mRecycle_virtualfield;
+    RecyclerView mRecyLocDetail, mRecycle_virtualfield,mRecycleDepartment;
     SearchLocationAdapter mSearchLocAdapter;
+    DepartmentAdapter mDepartmentAdapter;
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
 
     int mProvoderId;
@@ -152,6 +163,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         mContext = getActivity();
         mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
+        mRecycleDepartment = (RecyclerView) row.findViewById(R.id.mDepartmentView);
+
         mRecycle_virtualfield = (RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
 
 
@@ -171,6 +184,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
         mSearchLocList = new ArrayList<>();
+        mSearchDepartments = new ArrayList<>();
         mSearchSettings = new SearchSetting();
         mSearchTerminology = new SearchTerminology();
         mSearchQueueList = new ArrayList<>();
@@ -291,6 +305,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             @Override
             public void onClick(View view) {
                 onMethodCoupn(uniqueID);
+                Log.i("iopiop",mBusinessDataList.getBranchId());
             }
         });
 
@@ -1556,6 +1571,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     private void ApiDepartment(final int id) {
 
+        mbranchId = mBusinessDataList.getBranchId();
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1584,8 +1600,29 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         String responses= new Gson().toJson(response.body());
                         Config.logV("Deapartnamesss---------------" + responses);
-                        Config.logV("Deapartnameasdasd---------------" + response.body().getDepartmentName());
-                        Config.logV("departmentNamesArray---------------" + departmentList);
+
+                        for(int i=0;i<response.body().getDepartments().size();i++)
+                        {
+                            departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
+                            departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
+
+
+
+                        }
+
+                        mSearchDepartments.addAll(response.body().getDepartments());
+
+                        Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
+                        Config.logV("DepartmEntqweName --------------" + departmentNameList);
+
+
+
+
+                        RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
+                        mRecycleDepartment.setLayoutManager(mDepartmentLayout);
+                        mDepartmentAdapter = new DepartmentAdapter(mSearchDepartments,mbranchId);
+                        mRecycleDepartment.setAdapter(mDepartmentAdapter);
+                        mDepartmentAdapter.notifyDataSetChanged();
 
 
                     }
@@ -1645,29 +1682,22 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mSearchQueueList = response.body();
                         ApiSearchViewSetting(uniqueID);
 
-
                     }
-
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
 
-
     }
-
 
     private void ApiSearchViewSetting(String muniqueID) {
 
