@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.util.Map;
 import java.util.Random;
 
+
 import static android.app.Notification.DEFAULT_SOUND;
 import static android.app.Notification.DEFAULT_VIBRATE;
 
@@ -185,6 +186,7 @@ public class FirebaseService extends FirebaseMessagingService {
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
 
 
+
     private void sendNotification(String title, String messageBody) {
 
             Config.logV("Notification ONCLICK@@@@@@@@@@@@@@@@@@@@@@@");
@@ -206,9 +208,9 @@ public class FirebaseService extends FirebaseMessagingService {
             notificationBuilder.setColor(Color.parseColor("#F0B41C"));
         }
 
-        RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notif_custom_view);
+        /*RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notif_custom_view);
         remoteViews.setTextViewText(R.id.txttitle,title);
-        remoteViews.setTextViewText(R.id.txtnotify,messageBody);
+        remoteViews.setTextViewText(R.id.txtnotify,messageBody);*/
 
 
 
@@ -218,7 +220,7 @@ public class FirebaseService extends FirebaseMessagingService {
                 .setPriority(Notification.PRIORITY_MAX) //Important for heads-up notification
                 .setContentText(messageBody)
                 .setAutoCancel(true)
-                .setCustomHeadsUpContentView(remoteViews)
+                //.setCustomHeadsUpContentView(remoteViews)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
