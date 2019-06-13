@@ -1166,9 +1166,9 @@ public class CheckIn extends AppCompatActivity {
                                 String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize());
 
                                 Spannable spannable = new SpannableString(secondWord + " " + firstWord);
-                                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                        "fonts/Montserrat_Bold.otf");
-                                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+//                                        "fonts/Montserrat_Bold.otf");
+//                                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 tv_personahead.setText(spannable);
 
                             } else {
@@ -2280,11 +2280,18 @@ public class CheckIn extends AppCompatActivity {
                                             Config.logV("mServicesList" + LServicesList.size());
                                             ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
                                             mSpinnerService.setAdapter(adapter);
-
                                             mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
-                                        } else {
+                                        } else if (LServicesList.size() <= 1 && depResponse.isFilterByDept()){
+                                            mSpinnerService.setVisibility(View.VISIBLE);
+                                            txt_chooseservice.setVisibility(View.VISIBLE);
+                                            Config.logV("mServicesList" + LServicesList.size());
+                                            ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                            mSpinnerService.setAdapter(adapter);
+                                            mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                                        }
+                                        else {
 
                                             mSpinnerService.setVisibility(View.GONE);
                                             txt_chooseservice.setVisibility(View.GONE);
