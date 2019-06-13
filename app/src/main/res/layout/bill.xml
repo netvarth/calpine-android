@@ -53,7 +53,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding3"
                         android:gravity="center"
-
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_title" />
 
@@ -163,12 +162,14 @@
                         android:layout_marginTop="@dimen/padding7"
                         android:background="@color/view_border" />
 
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycle_item"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding7"
-                        android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
+                        android:nestedScrollingEnabled="false">
+                    </android.support.v7.widget.RecyclerView>
 
 
                     <LinearLayout
@@ -202,6 +203,14 @@
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/coupon_added"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding7"
+                        android:nestedScrollingEnabled="false">
+                    </android.support.v7.widget.RecyclerView>
 
 
                     <android.support.v7.widget.RecyclerView
@@ -260,6 +269,7 @@
                             android:gravity="left"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
+
                         <TextView
                             android:id="@+id/txtnetRate"
                             android:layout_width="0dp"
@@ -404,6 +414,44 @@
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
 
+
+                    <LinearLayout
+                        android:layout_marginTop="@dimen/default_padding"
+                        android:background="@drawable/cutom_edittext"
+                        android:padding="7dp"
+                        android:id="@+id/couponCheckin"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+
+                        <EditText
+                            android:fontFamily="@font/customfont"
+                            android:id="@+id/bill_coupon_edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:background="@drawable/editbox"
+                            android:hint="Enter coupon code"
+                            android:textSize="@dimen/txtsize_hint"
+                            />
+
+                        <Button
+                            android:fontFamily="@font/customfont"
+                            android:textSize="@dimen/txtsize_subtitle"
+                            android:background="@drawable/button"
+                            android:id="@+id/bill_applybtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:text="ADD"
+                            android:textColor="#ffffff"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -412,18 +460,7 @@
                         android:layout_marginTop="@dimen/default_padding"
                         android:orientation="horizontal">
 
-                       <!-- <Button
-                            android:id="@+id/btn_cancel"
-                            style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
 
-                            android:layout_weight="0.3"
-                            android:background="@drawable/roundedrect_grey"
-                            android:text="@string/cancel"
-                            android:textAllCaps="false"
-                            android:textColor="@color/app_background"
-                            android:textSize="@dimen/txtsize_hint" />-->
 
                         <Button
                             android:id="@+id/btn_pay"
@@ -434,7 +471,6 @@
                             android:background="@drawable/roundedrect_blue"
                             android:text="Make Payment"
                             android:textAllCaps="false"
-
                             android:textColor="@color/app_background"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>

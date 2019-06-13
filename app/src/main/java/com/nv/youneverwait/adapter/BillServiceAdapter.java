@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,8 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
     BIllDiscountAdapter billDiscountAdapter;
     @Override
     public void onBindViewHolder(final BillServiceAdapter.BillAdapterViewHolder holder, int position) {
+
+
 
 
         if (billServiceData.get(position).getServiceName() != null) {

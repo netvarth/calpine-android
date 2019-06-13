@@ -92,7 +92,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txt_diffdate = (TextView) view.findViewById(R.id.txt_diffdate);
             layout_exapnd = (RelativeLayout) view.findViewById(R.id.layout_exapnd);
             txtdirection = (TextView) view.findViewById(R.id.txtdirection);
-
             txtwaittime_expand = (TextView) view.findViewById(R.id.txtwaittime_expand);
             txt_diffdate_expand = (TextView) view.findViewById(R.id.txt_diffdate_expand);
             btn_checkin_expand = (Button) view.findViewById(R.id.btn_checkin_expand);

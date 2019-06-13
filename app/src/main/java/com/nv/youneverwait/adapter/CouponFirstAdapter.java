@@ -18,7 +18,7 @@ import com.nv.youneverwait.response.CoupnResponse;
 import java.util.Date;
 import java.util.List;
 
-public class CouponAdapter  extends ArrayAdapter<CoupnResponse> {
+public class CouponFirstAdapter  extends ArrayAdapter<CoupnResponse> {
 
     List<CoupnResponse> couponList;
     Context mContext;
@@ -26,23 +26,35 @@ public class CouponAdapter  extends ArrayAdapter<CoupnResponse> {
     String endDate;
     SimpleDateFormat dateformats = null;
     CardView cardView;
-    public CouponAdapter(@NonNull Context context, int resource, List<CoupnResponse> coupanList) {
+    public CouponFirstAdapter(@NonNull Context context, int resource, List<CoupnResponse> coupanList) {
         super(context, resource, coupanList);
 
-            this.mContext = context;
-            this.couponList = coupanList;
+        this.mContext = context;
+        this.couponList = coupanList;
+
+
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             dateformats = new SimpleDateFormat("MMM dd yyyy");
         }
+
+
+
         for(int i=0;i<coupanList.size();i++){
 
-            Config.logV("Coupan List------------------------" + couponList.get(i).getJaldeeCouponCode());
-            Config.logV("CouponDesp",couponList.get(i).getCouponDescription());
-            Config.logV("CouponTerms",couponList.get(i).getConsumerTermsAndconditions());
-            Config.logV("CouponDiscount",couponList.get(i).getDiscountValue());
-            Config.logV("CouponName",couponList.get(i).getCouponName());
-            Config.logV("CouponStartdate",String.valueOf(coupanList.get(i).getStartdate()));
-            Config.logV("CouponEndDate",String.valueOf(coupanList.get(i).getEnddate()));
+            if(coupanList.get(i).isFirstCheckinOnly()){
+
+                Config.logV("Coupan List------------------------" + couponList.get(i).getJaldeeCouponCode());
+                Config.logV("CouponDesp",couponList.get(i).getCouponDescription());
+                Config.logV("CouponTerms",couponList.get(i).getConsumerTermsAndconditions());
+                Config.logV("CouponDiscount",couponList.get(i).getDiscountValue());
+                Config.logV("CouponName",couponList.get(i).getCouponName());
+                Config.logV("CouponStartdate",String.valueOf(coupanList.get(i).getStartdate()));
+                Config.logV("CouponEndDate",String.valueOf(coupanList.get(i).getEnddate()));
+                Config.logV("CouponEndDate",String.valueOf(coupanList.get(i).getEnddate()));
+            }
+
 
             Date startdate = new Date(coupanList.get(i).getStartdate());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -68,8 +80,8 @@ public class CouponAdapter  extends ArrayAdapter<CoupnResponse> {
 
 
         CoupnResponse coupnResponse = couponList.get(position);
-
         CardView mCardview =(CardView) listItem.findViewById(R.id.card);
+
 
         Date startdate = new Date(couponList.get(position).getStartdate());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -81,27 +93,30 @@ public class CouponAdapter  extends ArrayAdapter<CoupnResponse> {
             endDate=dateformats.format(enddate);
         }
 
-        if(couponList.get(position).isFirstCheckinOnly()){mCardview.setVisibility(View.GONE);}
+        if(!couponList.get(position).isFirstCheckinOnly()){mCardview.setVisibility(View.GONE);}
 
-        TextView mcouponCode = (TextView) listItem.findViewById(R.id.couponCode);
-        mcouponCode.setText(couponList.get(position).getJaldeeCouponCode());
-
-
-        TextView mcouponDesc = (TextView) listItem.findViewById(R.id.couponDesc);
-        mcouponDesc.setText(coupnResponse.getCouponDescription());
-
-        TextView mcouponTerms = (TextView) listItem.findViewById(R.id.couponTerms);
-        mcouponTerms.setText(coupnResponse.getConsumerTermsAndconditions());
-
-        TextView mcouponDisc = (TextView) listItem.findViewById(R.id.couponDisc);
-        mcouponDisc.setText(coupnResponse.getDiscountValue());
-
-         TextView mcouponName = (TextView) listItem.findViewById(R.id.couponName);
-        mcouponName.setText(coupnResponse.getCouponName());
+            TextView mcouponCode = (TextView) listItem.findViewById(R.id.couponCode);
+            mcouponCode.setText(couponList.get(position).getJaldeeCouponCode());
 
 
-        TextView mvalidity = (TextView) listItem.findViewById(R.id.validityvaluetext);
-        mvalidity.setText(startDate+"-"+endDate);
+            TextView mcouponDesc = (TextView) listItem.findViewById(R.id.couponDesc);
+            mcouponDesc.setText(coupnResponse.getCouponDescription());
+
+            TextView mcouponTerms = (TextView) listItem.findViewById(R.id.couponTerms);
+            mcouponTerms.setText(coupnResponse.getConsumerTermsAndconditions());
+
+            TextView mcouponDisc = (TextView) listItem.findViewById(R.id.couponDisc);
+            mcouponDisc.setText(coupnResponse.getDiscountValue());
+
+            TextView mcouponName = (TextView) listItem.findViewById(R.id.couponName);
+            mcouponName.setText(coupnResponse.getCouponName());
+
+
+            TextView mvalidity = (TextView) listItem.findViewById(R.id.validityvaluetext);
+            mvalidity.setText(startDate+"-"+endDate);
+
+
+
 
 
 

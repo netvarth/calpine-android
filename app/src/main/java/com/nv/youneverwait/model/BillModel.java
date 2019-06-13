@@ -1,8 +1,10 @@
 package com.nv.youneverwait.model;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by sharmila on 1/10/18.
@@ -167,5 +169,19 @@ public class BillModel {
     }
 
     String createdDate;
+
+
+
+
+    @SerializedName("jCoupon")
+    private Map<String, JsonObject> jCoupon;
+
+    public Map<String, JsonObject> getJCoupon() {
+        return jCoupon;
+    }
+
+
+
+
 
 }

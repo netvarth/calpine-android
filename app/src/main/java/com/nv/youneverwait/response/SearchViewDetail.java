@@ -3,6 +3,7 @@ package com.nv.youneverwait.response;
 import android.widget.SearchView;
 
 import com.google.gson.annotations.SerializedName;
+import com.nv.youneverwait.model.LocationModel;
 import com.nv.youneverwait.model.SocialMediaModel;
 
 import java.util.ArrayList;
@@ -47,6 +48,16 @@ public class SearchViewDetail {
     String awardName;
     String awardIssuedBy;
     String awardMonth;
+
+    public void setBaseLocation(LocationModel baseLocation) {
+        this.baseLocation = baseLocation;
+    }
+
+    public LocationModel getBaseLocation() {
+        return baseLocation;
+    }
+
+    LocationModel baseLocation;
 
     public ArrayList<SocialMediaModel> getSocialMedia() {
         return socialMedia;
@@ -103,6 +114,28 @@ public class SearchViewDetail {
     public void setLogo(SearchViewDetail logo) {
         this.logo = logo;
     }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    String longitude;
+
+
+    public String getLattitude() {
+        return lattitude;
+    }
+
+    public void setLattitude(String lattitude) {
+        this.lattitude = lattitude;
+    }
+
+    String lattitude;
+
 
 
     public SearchViewDetail logo;

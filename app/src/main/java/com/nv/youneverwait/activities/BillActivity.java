@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,13 +24,12 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.adapter.BIllDiscountAdapter;
+import com.nv.youneverwait.adapter.BillCouponAdapter;
 import com.nv.youneverwait.adapter.BillServiceAdapter;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.model.BillModel;
-import com.nv.youneverwait.model.CheckSumModelTest;
-import com.nv.youneverwait.payment.PayUMoneyWebview;
 import com.nv.youneverwait.payment.PaymentGateway;
 import com.nv.youneverwait.payment.PaytmPayment;
 import com.nv.youneverwait.response.CheckSumModel;
@@ -44,7 +44,6 @@ import com.payumoney.sdkui.ui.utils.ResultModel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import retrofit2.Call;
@@ -62,10 +61,12 @@ public class BillActivity extends AppCompatActivity {
 
     String ynwUUID, mprovider;
     TextView tv_provider, tv_customer, tv_date, tv_gstn, tv_bill;
+    EditText mbill_coupon_edit;
     BillModel mBillData;
     TextView tv_paid, tv_totalamt;
-    RecyclerView recycle_item, recycle_discount_total;
+    RecyclerView recycle_item, recycle_discount_total, coupon_added;
     BillServiceAdapter billServiceAdapter;
+    BillCouponAdapter billCouponAdapter;
     ArrayList<BillModel> serviceArrayList = new ArrayList<>();
     ArrayList<BillModel> itemArrayList = new ArrayList<>();
     ArrayList<BillModel> serviceItemArrayList = new ArrayList<>();
@@ -74,12 +75,14 @@ public class BillActivity extends AppCompatActivity {
     ArrayList<BillModel> discountArrayList = new ArrayList<>();
     ArrayList<BillModel> coupanArrayList = new ArrayList<>();
 
-    Button  btn_pay;
-    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross,txtaxval,txttax;
-    LinearLayout paidlayout, amountlayout,taxlayout;
+    Button btn_pay, mbill_applybtn;
+    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax;
+    LinearLayout paidlayout, amountlayout, taxlayout;
     String sAmountPay;
     String accountID;
-String payStatus;
+    String payStatus;
+    String coupon_entered;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +90,9 @@ String payStatus;
         mCOntext = this;
         mActivity = this;
 
+
+        mbill_applybtn = (Button) findViewById(R.id.bill_applybtn);
+        mbill_coupon_edit = (EditText) findViewById(R.id.bill_coupon_edit);
         // discountlayout = (LinearLayout) findViewById(R.id.discountlayout);
         paidlayout = (LinearLayout) findViewById(R.id.paidlayout);
         // coupanlayout = (LinearLayout) findViewById(R.id.coupanlayout);
@@ -112,10 +118,11 @@ String payStatus;
         tv_amount = (TextView) findViewById(R.id.txtamt);
         tv_paid = (TextView) findViewById(R.id.amtpaid);
         tv_totalamt = (TextView) findViewById(R.id.totalamt);
-       // btn_cancel = (Button) findViewById(R.id.btn_cancel);
+        // btn_cancel = (Button) findViewById(R.id.btn_cancel);
         btn_pay = (Button) findViewById(R.id.btn_pay);
 
         recycle_item = (RecyclerView) findViewById(R.id.recycle_item);
+        coupon_added = (RecyclerView) findViewById(R.id.coupon_added);
         recycle_discount_total = (RecyclerView) findViewById(R.id.recycle_discount_total);
 
         TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
@@ -147,10 +154,11 @@ String payStatus;
             ynwUUID = extras.getString("ynwUUID");
             mprovider = extras.getString("provider");
             accountID = extras.getString("accountID");
-            payStatus= extras.getString("payStatus");
+            payStatus = extras.getString("payStatus");
         }
 
-        if(payStatus!=null) {
+
+        if (payStatus != null) {
 
             if (payStatus.equalsIgnoreCase("FullyPaid")) {
                 tv_title.setText("Receipt");
@@ -161,6 +169,7 @@ String payStatus;
             }
         }
         ApiBill(ynwUUID);
+
 
         Typeface tyface1 = Typeface.createFromAsset(this.getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -174,6 +183,14 @@ String payStatus;
             }
         });*/
         APIPayment(accountID);
+
+        mbill_applybtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                coupon_entered = mbill_coupon_edit.getText().toString();
+                ApigetBill(coupon_entered, ynwUUID, accountID);
+            }
+        });
 
         btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,7 +253,7 @@ String payStatus;
 
                                 PaytmPayment payment = new PaytmPayment(mCOntext);
                                 // payment.generateCheckSum(sAmountPay);
-                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, mCOntext, mActivity,"");
+                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, mCOntext, mActivity, "");
                                 //  payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
                                 dialog.dismiss();
                             }
@@ -468,21 +485,24 @@ String payStatus;
 
                     if (response.code() == 200) {
 
+
                         Config.logV("Response--Array size--Active-----------------------" + response.body().toString());
                         mBillData = response.body();
 
-                       // if (mBillData.getCustomer().getUserProfile() != null) {
-                            String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
-                            String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
-                            tv_customer.setText(Config.toTitleCase(firstName)+" "+Config.toTitleCase(lastNme));
-                           // tv_date.setText(mBillData.getCreatedDate());
+                        Log.i("jcouponnn", mBillData.getJCoupon().toString());
+
+                        // if (mBillData.getCustomer().getUserProfile() != null) {
+                        String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
+                        String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
+                        tv_customer.setText(Config.toTitleCase(firstName) + " " + Config.toTitleCase(lastNme));
+                        // tv_date.setText(mBillData.getCreatedDate());
                         DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
                         DateFormat targetFormat = new SimpleDateFormat(("dd-MM-yyyy hh:mm a"));
                         Date date = originalFormat.parse(mBillData.getCreatedDate());
                         String formattedDate = targetFormat.format(date);
                         tv_date.setText(formattedDate);
 
-                       // }
+                        // }
 
                         Typeface tyface = Typeface.createFromAsset(getAssets(),
                                 "fonts/Montserrat_Bold.otf");
@@ -527,11 +547,11 @@ String payStatus;
 
                         double total = mBillData.getNetRate() - mBillData.getTotalAmountPaid();
 
-                        if (total != 0&&total>0) {
+                        if (total != 0 && total > 0) {
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setVisibility(View.VISIBLE);
                             tv_totalamt.setText("₹ " + String.valueOf(total));
-                        }else{
+                        } else {
                             tv_totalamt.setVisibility(View.GONE);
                             txttotal.setVisibility(View.GONE);
                         }
@@ -546,14 +566,23 @@ String payStatus;
                             btn_pay.setVisibility(View.INVISIBLE);
                         }
 
-                        if(mBillData.getTaxPercentage()!=0){
+                        if (mBillData.getTaxPercentage() != 0) {
                             taxlayout.setVisibility(View.VISIBLE);
-                           // holder.txttax.setText("Tax(CGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %" + ", SGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %)");
-                            txttax.setText("Tax "+String.valueOf(mBillData.getTaxPercentage())+"% of "+"₹ "+String.valueOf(mBillData.getTaxableTotal())+"\n"+"(CGST: "+String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
+                            // holder.txttax.setText("Tax(CGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %" + ", SGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %)");
+                            txttax.setText("Tax " + String.valueOf(mBillData.getTaxPercentage()) + "% of " + "₹ " + String.valueOf(mBillData.getTaxableTotal()) + "\n" + "(CGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
 
-                            txtaxval.setText("(+)₹ "+String.valueOf(mBillData.getTotalTaxAmount()));
-                        }else{
+                            txtaxval.setText("(+)₹ " + String.valueOf(mBillData.getTotalTaxAmount()));
+                        } else {
                             taxlayout.setVisibility(View.GONE);
+                        }
+
+
+                        if (mBillData.getJCoupon() != null) {
+                            RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(mCOntext);
+                            coupon_added.setLayoutManager(cLayoutManager);
+                            billCouponAdapter = new BillCouponAdapter(mBillData.getJCoupon());
+                            coupon_added.setAdapter(billCouponAdapter);
+                            billCouponAdapter.notifyDataSetChanged();
                         }
 
 
@@ -582,7 +611,7 @@ String payStatus;
                             if (discountArrayList.size() > 0) {
 
                                 recycle_discount_total.setVisibility(View.VISIBLE);
-                                billDiscountAdapter = new BIllDiscountAdapter("totalbill",discountArrayList, mCOntext);
+                                billDiscountAdapter = new BIllDiscountAdapter("totalbill", discountArrayList, mCOntext);
                             }
                             recycle_discount_total.setAdapter(billDiscountAdapter);
                             billDiscountAdapter.notifyDataSetChanged();
@@ -610,6 +639,62 @@ String payStatus;
             }
         });
 
+    }
+
+    private void ApigetBill(String couponss, String ynwuuid, String acccount) {
+
+
+        final ApiInterface apiService =
+                ApiClient.getClient(this).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Call<BillModel> call = apiService.getBillCoupon(couponss, ynwuuid, acccount);
+
+        Config.logV("Request--ynwuuidssasasa-------------------------" + ynwuuid);
+
+        call.enqueue(new Callback<BillModel>() {
+            @Override
+            public void onResponse(Call<BillModel> call, Response<BillModel> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(mActivity, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    Config.logV("zxczqw" + new Gson().toJson(response.body()));
+
+                    if (response.code() == 200) {
+
+
+                        finish();
+                        startActivity(getIntent());
+
+                        Config.logV("Response--Array size--Activessssssssss-----------------------" + response.body().toString());
+                        Config.logV("zxczxczxzc" + new Gson().toJson(response.body()));
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BillModel> call, Throwable t) {
+
+
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(mActivity, mDialog);
+            }
+        });
+
 
     }
+
+
 }

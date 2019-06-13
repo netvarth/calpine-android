@@ -1867,6 +1867,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
 
         bundle.putString("uniqueID", value);
+
         pfFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();

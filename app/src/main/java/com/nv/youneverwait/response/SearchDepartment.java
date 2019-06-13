@@ -9,6 +9,17 @@ public class SearchDepartment implements Serializable {
 
     String departmentName;
 
+    public boolean isFilterByDept() {
+        return filterByDept;
+    }
+
+    public void setFilterByDept(boolean filterByDept) {
+        this.filterByDept = filterByDept;
+    }
+    @SerializedName("filterByDept")
+    private boolean filterByDept;
+
+
 
     public String getDepartmentName() {
         return departmentName;
@@ -35,5 +46,30 @@ public class SearchDepartment implements Serializable {
 
     @SerializedName("departments")
     ArrayList<SearchDepartment> departments;
+
+    public ArrayList<Integer> getServiceIds() {
+        return serviceIds;
+    }
+
+    public void setServiceIds(ArrayList<Integer> serviceIds) {
+        this.serviceIds = serviceIds;
+    }
+
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    int departmentId;
+
+    ArrayList<Integer> serviceIds;
+
+    @Override
+    public String toString() {
+        return this.departmentName; // Value to be displayed in the Spinner
+    }
 
 }

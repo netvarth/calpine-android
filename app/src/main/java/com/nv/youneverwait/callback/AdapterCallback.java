@@ -21,4 +21,6 @@ public interface AdapterCallback {
     void onMethodCoupn(String uniqueID);
 
     void onMethodJaldeeLogo(String ynw_verified,String provider);
+
+    void onMethodFirstCoupn(String uniqueid);
 }

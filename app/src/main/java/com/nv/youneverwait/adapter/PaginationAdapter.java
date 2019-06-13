@@ -206,6 +206,36 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 parent.setLayoutParams(params1);
 
 
+                TextView firstCoupon = new TextView(context);
+                Typeface tyface_3 = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                firstCoupon.setTypeface(tyface_3);
+                firstCoupon.setText("SignUp Coupon");
+                firstCoupon.setText(context.getResources().getString(R.string.first_coupon));
+                firstCoupon.setTextSize(13);
+                firstCoupon.setTextColor(context.getResources().getColor(R.color.title_grey));
+                firstCoupon.setPadding(5, 5, 5, 5);
+                firstCoupon.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
+                firstCoupon.setVisibility(View.GONE);
+                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                firstCoupon.setMaxLines(2);
+                firstCoupon.setLayoutParams(params1);
+                params1.setMargins(10, 7, 10, 7);
+                firstCoupon.setGravity(Gravity.CENTER);
+                parent.addView(firstCoupon);
+
+
+                if (searchdetailList.getFirst_checkin_coupon_count() != null && searchdetailList.getFirst_checkin_coupon_count().equals("1")) {
+                    firstCoupon.setVisibility(View.VISIBLE);
+                }
+
+                firstCoupon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mAdapterCallback.onMethodFirstCoupn(searchdetailList.getUniqueid());
+                    }
+                });
+
                 TextView dynaText2 = new TextView(context);
                 Typeface tyface_2 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Regular.otf");
@@ -218,7 +248,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 dynaText2.setVisibility(View.GONE);
                 //dynaText.setEllipsize(TextUtils.TruncateAt.END);
                 dynaText2.setMaxLines(1);
-
                 dynaText2.setLayoutParams(params1);
                 params1.setMargins(10, 7, 10, 7);
                 dynaText2.setGravity(Gravity.LEFT);
@@ -367,33 +396,22 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                                     }
 
                                                     workingModelArrayList.add(work);
-
                                                 }
-
-
                                             }
-
-
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-
-
                                 }
 
                                 mAdapterCallback.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getTitle(), searchdetailList.getUniqueid());
-
-
                                 //   Config.logV("Working-----------" + workingModelArrayList.size() + "tt" + searchdetailList.getTitle());
                             }
                         }
                     });
                 }
-
-
                 if (searchdetailList.getParking_type_location1() != null) {
                     if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
                         TextView dynaText = new TextView(context);
@@ -410,7 +428,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         dynaText.setGravity(Gravity.LEFT);
                         dynaText.setLayoutParams(params1);
                         parent.addView(dynaText);
-
                         dynaText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -418,9 +435,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
                         });
                     }
-
                 }
-
                 if (searchdetailList.getAlways_open_location1() != null) {
                     if (searchdetailList.getAlways_open_location1().equalsIgnoreCase("1")) {
                         TextView dynaText = new TextView(context);
@@ -445,10 +460,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
                         });
                     }
-
                 }
-
-
                 if (searchdetailList.getDentistemergencyservices_location1() != null) {
                     if (searchdetailList.getDentistemergencyservices_location1().equalsIgnoreCase("1")) {
 
@@ -476,8 +488,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
                     }
                 }
-
-
                 if (searchdetailList.getDocambulance_location1() != null) {
                     if (searchdetailList.getDocambulance_location1().equalsIgnoreCase("1")) {
 
@@ -506,8 +516,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
                     }
                 }
-
-
                 if (searchdetailList.getFirstaid_location1() != null) {
                     if (searchdetailList.getFirstaid_location1().equalsIgnoreCase("1")) {
                         TextView dynaText = new TextView(context);
@@ -534,8 +542,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
                     }
                 }
-
-
                 if (searchdetailList.getPhysiciansemergencyservices_location1() != null) {
                     if (searchdetailList.getPhysiciansemergencyservices_location1().equalsIgnoreCase("1")) {
                         TextView dynaText = new TextView(context);
@@ -562,8 +568,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         });
                     }
                 }
-
-
                 if (searchdetailList.getTraumacentre_location1() != null) {
                     if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
 
@@ -593,12 +597,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     }
                 }
-
-
                 myViewHolder.layout_type.addView(parent);
-
                 //////////////////////////////////////////////////////////////
-
                 Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 myViewHolder.tv_name.setTypeface(tyface_confm);
@@ -611,8 +611,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         mAdapterCallback.onMethodOpenMap(searchdetailList.getLocation1());
                     }
                 });
-
-
                 myViewHolder.layout_row.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -623,75 +621,50 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         mSearchView.setQuery("", false);
 
                         mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
-
                     }
                 });
-
-                /*myViewHolder.tv_domain.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                       // mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
-                    }
-                });*/
-
-               /* Typeface tyface_date = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Light.otf");
-                myViewHolder.tv_Futuredate.setTypeface(tyface_date);*/
-
 
                 if (searchdetailList.getAccountType() != null) {
                     if (searchdetailList.getAccountType().equals("1")) {
                         myViewHolder.tv_branch_name.setText(searchdetailList.getBranch_name());
                         myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
                         Log.i("qazqaz", String.valueOf(searchdetailList.getBranchCount()));
-                    }
-                    else if ((searchdetailList.getAccountType().equals("0"))) {
+                    } else if ((searchdetailList.getAccountType().equals("0"))) {
                         myViewHolder.tv_count.setVisibility(View.VISIBLE);
                         Log.i("qaz", String.valueOf(searchdetailList.getBranchCount()));
                     }
                 } else {
                     myViewHolder.tv_branch_name.setVisibility(View.GONE);
                 }
-
                 Log.i("Claaaaim", String.valueOf(searchdetailList.getClaimable()));
-
 
                 if (searchdetailList.getClaimable().equals("1")) {
                     myViewHolder.tv_claimable.setVisibility(View.VISIBLE);
                     myViewHolder.L_layout_type.setVisibility(View.GONE);
                     myViewHolder.L_checkin.setVisibility(View.GONE);
 
-
                 } else {
-
                     myViewHolder.tv_claimable.setVisibility(View.INVISIBLE);
                     myViewHolder.L_layout_type.setVisibility(View.VISIBLE);
                     myViewHolder.L_checkin.setVisibility(View.VISIBLE);
                 }
-
                 myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(activity, "Use Desktop browser to claim your business", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
                 if (searchdetailList.getQualification() != null) {
                     myViewHolder.tv_name.setText(searchdetailList.getTitle() + " " + searchdetailList.getQualification());
                 } else {
                     myViewHolder.tv_name.setText(searchdetailList.getTitle());
                 }
-
-
                 if (searchdetailList.getSector() != null) {
                     myViewHolder.tv_domain.setVisibility(View.VISIBLE);
                     myViewHolder.tv_domain.setText(searchdetailList.getSector());
                 } else {
                     myViewHolder.tv_domain.setVisibility(View.GONE);
                 }
-
-
                 if (searchdetailList.getPlace1() != null) {
                     myViewHolder.tv_location.setVisibility(View.VISIBLE);
                     // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
@@ -705,8 +678,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     myViewHolder.tv_location.setVisibility(View.GONE);
                 }
-
-
                 if (searchdetailList.getFuture_checkins() != null) {
                     if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
                         myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
@@ -735,11 +706,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                 }
-
 //////////////////////////////////////////////////////////////////////////////////////////
-
-                //  Config.logV("ID1111" + searchdetailList.getId() + "QID----" + searchdetailList.getQId());
-
                 if (searchdetailList.getId().equalsIgnoreCase(searchdetailList.getQId())) {
 
                    /* if (searchdetailList.getAvail_date() != null) {
@@ -751,7 +718,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     System.out.println("Current time => " + formattedDate);
                     Config.logV("print" + searchdetailList.getAvail_date() + "" + searchdetailList.getOnline_checkins());
 
-
                     Date date1 = null, date2 = null;
                     try {
                         date1 = df.parse(formattedDate);
@@ -760,7 +726,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-
 
                     if (searchdetailList.getAvail_date() != null && searchdetailList.getOnline_checkins() != null && searchdetailList.getServices() != null) {
 
@@ -802,9 +767,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
                         //}
                     }
-
                     if (searchdetailList.getShow_waiting_time() != null && searchdetailList.getServices() != null) {
-                        if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1") && searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {
+                        if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1") && searchdetailList.getOnline_checkins() != null && searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {
                             if (searchdetailList.getAvail_date() != null) {
                                 Config.logV("WAITTIME INVISIBLE ####@@@@@@@@@@@@@@@@@@@@@");
                                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
@@ -818,28 +782,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
-                                        // String firstWord = "Est Service Time ";
                                         String firstWord = "Next Available Time ";
-                                        /*String firstWord = null;
-                                        Date dt = new Date();
-                                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
-                                        String currentTime = sdf.format(dt);
-                                        Date datenow=parseDate(currentTime);
-
-                                        dateCompareOne = parseDate(searchdetailList.getServiceTime());
-                                        if ( datenow.after( dateCompareOne ) ) {
-                                            firstWord = "Est Service Time ";
-                                        }else {
-                                            firstWord = "Est Wait Time ";
-
-                                        }*/
-
                                         String secondWord = "\nToday, " + searchdetailList.getServiceTime();
-                                       /* Spannable spannable = new SpannableString(firstWord + secondWord);
-                                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
-                                                firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
-
                                         myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
 
                                     } else {
@@ -862,71 +806,35 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                                 firstWord = "Est Wait Time ";
 
                                             }
-                                            /*String firstWord = null;
-                                            Date dt = new Date();
-                                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
-                                            String currentTime = sdf.format(dt);
-                                            Date datenow=parseDate(currentTime);
-
-                                            dateCompareOne = parseDate(mtime);
-                                            if ( datenow.after( dateCompareOne ) ) {
-                                                firstWord = "Est Service Time ";
-                                            }else {
-                                                firstWord = "Est Wait Time ";
-
-                                            }*/
-
                                             String secondWord = "\n" + mtime;
-                                            /*Spannable spannable = new SpannableString(firstWord + secondWord);
-                                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                            spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
-                                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
-
                                             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
 
 
                                         } else {
-                                            //myViewHolder.tv_WaitTime.setText("Est Wait Time " + searchdetailList.getQueueWaitingTime() + " Minutes");
-
-
                                             Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                     "fonts/Montserrat_Bold.otf");
                                             String firstWord = "Est Wait Time ";
                                             String secondWord = "\n" + searchdetailList.getQueueWaitingTime() + " Mins";
-                                            /*Spannable spannable = new SpannableString(firstWord + secondWord);
-                                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                            spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
-                                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
-
                                             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
                                         }
                                     }
                                 }
                                 if (date1.compareTo(date2) < 0) {
                                     try {
-                                        // String mMonthName=getMonth(searchdetailList.getAvail_date());
                                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                                         Date date = format.parse(searchdetailList.getAvail_date());
                                         String day = (String) DateFormat.format("dd", date);
                                         String monthString = (String) DateFormat.format("MMM", date);
-                                        //  myViewHolder.tv_WaitTime.setText("Next Wait Time" + monthString+" "+day+ ", " + searchdetailList.getServiceTime());
 
                                         Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                                 "fonts/Montserrat_Bold.otf");
                                         String firstWord = "Next Available Time ";
                                         String secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
-                                       /* Spannable spannable = new SpannableString(firstWord + secondWord);
-                                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                        spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.violet)),
-                                                firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
-
                                         myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
 
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
-
-
                                 }
                             }
                         } else {
@@ -935,15 +843,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } else {
                         myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
                     }
-                    //Open Tag
-
-                    /*if (searchdetailList.isIsopen()) {
-                        myViewHolder.tv_Open.setVisibility(View.VISIBLE);
-                    } else {
-                        myViewHolder.tv_Open.setVisibility(View.GONE);
-                    }*/
-
-
                     if (searchdetailList.getCalculationMode() != null) {
                         if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) {
 
@@ -981,8 +880,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
                     myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                 }
-
-
                 myViewHolder.btncheckin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1001,8 +898,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         context.startActivity(iCheckIn);
                     }
                 });
-
-
                 myViewHolder.btnappointment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1020,16 +915,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
                 /////////////////////////////////////////////////////////
-
                 if (searchdetailList.getSpecialization_displayname() != null) {
-
-                    // myViewHolder.tv_specialization.setText(searchdetailList.getSpecialization_displayname());
                     final List<String> list_spec = new ArrayList<String>(Arrays.asList(searchdetailList.getSpecialization_displayname().split(",")));
-
 
                     if (list_spec.size() > 0) {
                         if (list_spec.size() == 1) {
-
 
                             myViewHolder.L_specialization.setVisibility(View.VISIBLE);
                             myViewHolder.tv_spec1.setText(list_spec.get(0));
@@ -1048,9 +938,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                             // myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
                             myViewHolder.tv_spec1.setMaxLines(1);
-
-                            //   myViewHolder.tv_spec1.setMaxEms(8);
-
 
                             if (list_spec.size() > 2) {
 
@@ -1099,23 +986,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             @Override
                             public void onClick(View v) {
                                 mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
-
-
                             }
                         });
-
-
                     }
-
-
                 } else {
                     myViewHolder.tv_spec1.setVisibility(View.GONE);
                     myViewHolder.tv_spec2.setVisibility(View.GONE);
                     myViewHolder.tv_spec3.setVisibility(View.GONE);
                     myViewHolder.tv_spec22.setVisibility(View.GONE);
                     myViewHolder.L_specialization.setVisibility(View.GONE);
-
-
                 }
                 //  Picasso.with(context).load(searchdetailList.getLogo()).fit().into(myViewHolder.profile);
                 Config.logV("LOGO @@@@" + searchdetailList.getLogo() + searchdetailList.getTitle());
@@ -1227,44 +1106,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                 if (searchdetailList.getRating() != null) {
-
-                      /* String[] separated = searchdetailList.getRating().split(".");
-                       String rating=separated[0]; // this will contain "Fruit"
-                       String step=separated[1];*/
-
-
                     myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
-                    // myViewHolder.rating.setStepSize(Float.valueOf("0."+step));
                 }
-
-
-//
-//                myViewHolder.layout_row.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        Config.logV("UNIUE ID----------------" + searchdetailList.getUniqueid());
-//
-//                        Config.logV("Popular Text__________@@@Dele");
-//                        mSearchView.setQuery("", false);
-//
-//                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
-//
-//                    }
-//                });
-
-
                 break;
-
-
             case LOADING:
 //                Do nothing
                 final LoadingVH LHHolder = (LoadingVH) holder;
-
-
                 break;
         }
-
     }
 
     public int dpToPx(int dp) {
@@ -1283,12 +1132,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public int getItemViewType(int position) {
         return (position == searchResults.size() - 1 && isLoadingAdded) ? LOADING : ITEM;
     }
-
-
-    /*
-   Helpers
-   _________________________________________________________________________________________________
-    */
 
     public void add(SearchListModel r) {
         searchResults.add(r);
@@ -1361,7 +1204,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Date, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_count;
+        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_count;
         LinearLayout L_specialization, L_services, L_layout_type, L_checkin;
 
         ImageView ic_jaldeeverifiedIcon;
@@ -1370,66 +1213,53 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView tv_claimable, tv_distance, tv_branch_name;
 
         Button btncheckin, btnappointment;
-        RecyclerView mRecycleTypes;
-        //TextView tv_communicate;
         LinearLayout layout_row;
         TextView mImageViewText;
         LinearLayout layout_type;
 
         public MyViewHolder(View view) {
             super(view);
-            L_checkin = (LinearLayout) view.findViewById(R.id.checkinlayout);
-            // tv_ynw_verified = (TextView) view.findViewById(R.id.ynw_verified);
-            ic_jaldeeverifiedIcon = (ImageView) view.findViewById(R.id.ic_jaldeeverifiedIcon);
-            tv_name = (TextView) view.findViewById(R.id.name);
-            tv_count = (TextView) view.findViewById(R.id.count_search);
-            tv_claimable = (TextView) view.findViewById(R.id.claimable);
-            tv_branch_name = (TextView) view.findViewById(R.id.branch_name);
-            tv_location = (TextView) view.findViewById(R.id.location);
-            tv_domain = (TextView) view.findViewById(R.id.domain);
-            profile = (ImageView) view.findViewById(R.id.profile);
-            rating = (RatingBar) view.findViewById(R.id.mRatingBar);
-            L_services = (LinearLayout) view.findViewById(R.id.service);
-            tv_distance = (TextView) view.findViewById(R.id.distance);
-
-            //tv_Date = (TextView) view.findViewById(R.id.mDate);
-            btncheckin = (Button) view.findViewById(R.id.btncheckin);
-            btnappointment = (Button) view.findViewById(R.id.btnappointment);
-
-            tv_Futuredate = (TextView) view.findViewById(R.id.txt_diffdate);
-            //  tv_Workinghrs = (ImageView) view.findViewById(R.id.txtWorkinghrs);
-            // tv_Open = (TextView) view.findViewById(R.id.txtOpen);
-            tv_WaitTime = (TextView) view.findViewById(R.id.txtWaitTime);
-            L_specialization = (LinearLayout) view.findViewById(R.id.Lspec);
-            L_layout_type = (LinearLayout) view.findViewById(R.id.layout_type);
-            //  tv_communicate = (TextView) view.findViewById(R.id.txtcommunicate);
-            // mRecycleTypes = (RecyclerView) view.findViewById(R.id.mRecycleTypes);
-            layout_row = (LinearLayout) view.findViewById(R.id.layout_row);
-            tv_spec1 = (TextView) view.findViewById(R.id.txtspec1);
-            tv_spec2 = (TextView) view.findViewById(R.id.txtspec2);
-            tv_spec3 = (TextView) view.findViewById(R.id.txtspec3);
-            tv_spec22 = (TextView) view.findViewById(R.id.txtspec22);
-            mImageViewText = (TextView) view.findViewById(R.id.mImageViewText);
-            layout_type = (LinearLayout) view.findViewById(R.id.layout_type);
+            L_checkin =  view.findViewById(R.id.checkinlayout);
+            ic_jaldeeverifiedIcon = view.findViewById(R.id.ic_jaldeeverifiedIcon);
+            tv_name =  view.findViewById(R.id.name);
+            tv_count =  view.findViewById(R.id.count_search);
+            tv_claimable =  view.findViewById(R.id.claimable);
+            tv_branch_name =  view.findViewById(R.id.branch_name);
+            tv_location =  view.findViewById(R.id.location);
+            tv_domain =  view.findViewById(R.id.domain);
+            profile =  view.findViewById(R.id.profile);
+            rating =  view.findViewById(R.id.mRatingBar);
+            L_services =  view.findViewById(R.id.service);
+            tv_distance =  view.findViewById(R.id.distance);
+            btncheckin =  view.findViewById(R.id.btncheckin);
+            btnappointment =  view.findViewById(R.id.btnappointment);
+            tv_Futuredate =  view.findViewById(R.id.txt_diffdate);
+            tv_WaitTime =  view.findViewById(R.id.txtWaitTime);
+            L_specialization =  view.findViewById(R.id.Lspec);
+            L_layout_type =  view.findViewById(R.id.layout_type);
+            layout_row =  view.findViewById(R.id.layout_row);
+            tv_spec1 =  view.findViewById(R.id.txtspec1);
+            tv_spec2 =  view.findViewById(R.id.txtspec2);
+            tv_spec3 =  view.findViewById(R.id.txtspec3);
+            tv_spec22 =  view.findViewById(R.id.txtspec22);
+            mImageViewText =  view.findViewById(R.id.mImageViewText);
+            layout_type =  view.findViewById(R.id.layout_type);
         }
     }
-
 
     protected class LoadingVH extends RecyclerView.ViewHolder {
         ProgressBar loadmore_progress;
 
         public LoadingVH(View itemView) {
             super(itemView);
-            loadmore_progress = (ProgressBar) itemView.findViewById(R.id.loadmore_progress);
+            loadmore_progress =  itemView.findViewById(R.id.loadmore_progress);
         }
     }
 
     private void ApiService(String uniqueID, final String serviceName, final String title) {
 
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(context).create(ApiInterface.class);
-
 
         final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -1439,7 +1269,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
 
         Call<ArrayList<SearchService>> call = apiService.getService(Integer.parseInt(uniqueID), sdf.format(currentTime));
 
@@ -1475,18 +1304,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iService.putExtra("isPrePayment", service.get(i).isPrePayment());
                                 iService.putExtra("MinPrePaymentAmount", service.get(i).getMinPrePaymentAmount());
                                 context.startActivity(iService);
-
                             }
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1495,11 +1318,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(activity, mDialog);
-
             }
         });
-
-
     }
-
 }

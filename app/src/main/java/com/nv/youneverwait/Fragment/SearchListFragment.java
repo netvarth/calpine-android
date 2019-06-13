@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -246,12 +247,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
         pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this);
-
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecySearchDetail.setLayoutManager(linearLayoutManager);
-
         mRecySearchDetail.setItemAnimator(new DefaultItemAnimator());
-
         mRecySearchDetail.setAdapter(pageadapter);
 
 
@@ -834,6 +832,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setPlace1(response.body().getHits().getHit().get(i).getFields().getPlace1());
                                 search.setUnique_id(response.body().getHits().getHit().get(i).getFields().getUnique_id());
                                 search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
+                                search.setFirst_checkin_coupon_count(response.body().getHits().getHit().get(i).getFields().getFirst_checkin_coupon_count());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
@@ -936,23 +935,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                             }
 
-
-
-
-                           /* Config.logV("TOTAL PAGES_--------------" + TOTAL_PAGES);
-                            Config.logV("CURRENT PAGE**22222**555***********" + TOTAL_PAGES);
-                            Config.logV("CURRENT PAGE**333*****5555********" + currentPage);
-                            pageadapter.removeLoadingFooter();
-                            isLoading = false;
-
-                            List<SearchAWsResponse> results = mSearchResp;
-                            pageadapter.addAll(results);
-
-                            if (currentPage / 10 != TOTAL_PAGES) {
-                                pageadapter.addLoadingFooter();
-                            } else {
-                                isLastPage = true;
-                            }*/
 
                             ApiQueueList(ids, mSearchResp, "next");
                         }
@@ -1082,6 +1064,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setSector(response.body().getHits().getHit().get(i).getFields().getSector());
                                 search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
                                 search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
+                                search.setFirst_checkin_coupon_count(response.body().getHits().getHit().get(i).getFields().getFirst_checkin_coupon_count());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
@@ -1311,6 +1294,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setRating(mSearchRespPass.get(i).getRating());
                                 searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
                                 searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
+                                searchList.setFirst_checkin_coupon_count(mSearchRespPass.get(i).getFirst_checkin_coupon_count());
                                 searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
                                 searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
                                 searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
@@ -1490,6 +1474,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setSectorname(mSearchRespPass.get(i).getSector());
                                 searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
                                 searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
+                                searchList.setFirst_checkin_coupon_count(mSearchRespPass.get(i).getFirst_checkin_coupon_count());
                                 searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
                                 searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
                                 searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
@@ -2011,6 +1996,21 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         CustomDialog cdd=new CustomDialog(mContext,ynw_verified,providername);
         cdd.setCanceledOnTouchOutside(true);
         cdd.show();
+
+    }
+
+    @Override
+    public void onMethodFirstCoupn(String uniqueid) {
+
+        CouponFirstFragment cffFragment = new CouponFirstFragment();
+        refreshQuery();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("uniqueID", uniqueid);
+        cffFragment.setArguments(bundle);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, cffFragment).commit();
 
     }
 

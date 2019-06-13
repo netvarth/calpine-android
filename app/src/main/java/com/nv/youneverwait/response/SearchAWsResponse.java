@@ -18,6 +18,16 @@ public class SearchAWsResponse {
     String physiciansemergencyservices_location1;
     String dentistemergencyservices_location1;
 
+    public String getDepartment_code() {
+        return department_code;
+    }
+
+    public void setDepartment_code(String department_code) {
+        this.department_code = department_code;
+    }
+
+    String department_code;
+
     public String getParking_location1() {
         return parking_location1;
     }
@@ -423,6 +433,16 @@ public class SearchAWsResponse {
     }
 
     String show_waiting_time;
+
+    public String getFirst_checkin_coupon_count() {
+        return first_checkin_coupon_count;
+    }
+
+    public void setFirst_checkin_coupon_count(String first_checkin_coupon_count) {
+        this.first_checkin_coupon_count = first_checkin_coupon_count;
+    }
+
+    private String first_checkin_coupon_count;
 
 }
 

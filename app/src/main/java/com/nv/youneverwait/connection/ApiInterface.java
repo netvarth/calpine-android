@@ -165,8 +165,8 @@ public interface ApiInterface {
     @GET("consumer/waitlist/services/{id}")
     Call<ArrayList<SearchService>> getSearchService(@Path("id") int id);
 
-    @GET("consumer/waitlist/services/department")
-    Call<SearchDepartment> getDeartment(@Query("account") int id);
+    @GET("consumer/waitlist/department/services")
+    Call<SearchDepartment> getDepartment(@Query("account") int id);
 
     @GET("consumer/waitlist")
     Call<ArrayList<SearchCheckInMessage>> getSearchCheckInMessage(@QueryMap(encoded = true) Map<String, String> query);
@@ -228,6 +228,11 @@ public interface ApiInterface {
 
     @GET("consumer/bill/{ynwuuid}")
     Call<BillModel> getBill(@Path("ynwuuid") String uuid);
+
+
+    @POST("consumer/jaldee/coupons/{coupon}/{ynwuuid}")
+    Call<BillModel> getBillCoupon(@Path("coupon") String coupon,@Path("ynwuuid") String uuid, @Query("account") String account);
+
 
     @DELETE("consumer/waitlist/{ynwuuid}")
     Call<ResponseBody> deleteActiveCheckIn(@Path("ynwuuid") String uuid, @Query("account") String account);

@@ -52,4 +52,14 @@ public class CoupnResponse {
 
     long endDate;
 
+    public boolean isFirstCheckinOnly() {
+        return firstCheckinOnly;
+    }
+
+    public void setFirstCheckinOnly(boolean firstCheckinOnly) {
+        this.firstCheckinOnly = firstCheckinOnly;
+    }
+
+    boolean firstCheckinOnly;
+
 }

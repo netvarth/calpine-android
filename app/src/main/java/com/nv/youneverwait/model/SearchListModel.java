@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class SearchListModel implements Serializable {
 
+
+
     public boolean isIs_SpecOpen() {
         return is_SpecOpen;
     }
@@ -35,6 +37,7 @@ public class SearchListModel implements Serializable {
     private String always_open_location1;
     private String claimable;
     private int coupon_enabled;
+    private String department_code;
 
     public String getParking_location1() {
         return parking_location1;
@@ -326,6 +329,16 @@ public class SearchListModel implements Serializable {
         this.online_checkins = online_checkins;
     }
 
+
+    public String getFirst_checkin_coupon_count() {
+        return first_checkin_coupon_count;
+    }
+
+    public void setFirst_checkin_coupon_count(String first_checkin_coupon_count) {
+        this.first_checkin_coupon_count = first_checkin_coupon_count;
+    }
+
+    private String first_checkin_coupon_count;
     private String future_checkins;
     private String online_checkins;
 
@@ -431,6 +444,13 @@ public class SearchListModel implements Serializable {
     boolean isopen;
 
 
+    public String getDepartment_code() {
+        return department_code;
+    }
+
+    public void setDepartment_code(String department_code) {
+        this.department_code = department_code;
+    }
 }
 
 
