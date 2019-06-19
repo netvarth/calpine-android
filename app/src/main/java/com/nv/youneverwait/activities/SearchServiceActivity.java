@@ -32,7 +32,7 @@ public class SearchServiceActivity extends AppCompatActivity {
     TextView tv_toolbartitle,tv_descVal;
     ImageView i_backpress;
     boolean isTaxable,isPrepayment;
-    LinearLayout Lprepayment;
+    LinearLayout Lprepayment,Lprice;
     TextView txtpreVal;
 String MinPrePaymentAmount;
     @Override
@@ -49,6 +49,7 @@ String MinPrePaymentAmount;
         i_backpress= (ImageView) findViewById(R.id.backpress);
         Lprepayment=(LinearLayout) findViewById(R.id.Lprepayment);
         txtpreVal=(TextView) findViewById(R.id.txtpreVal);
+        Lprice=(LinearLayout) findViewById(R.id.Lprice);
 
 
         i_backpress.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +105,8 @@ String MinPrePaymentAmount;
         } else {
             tv_price.setVisibility(View.GONE);
         }
+
+
         if (duration != null) {
             tv_duration.setVisibility(View.VISIBLE);
             tv_duration.setText(duration +" Mins");

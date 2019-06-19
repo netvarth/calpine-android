@@ -79,7 +79,7 @@ public class BillActivity extends AppCompatActivity {
     LinearLayout paidlayout, amountlayout,taxlayout;
     String sAmountPay;
     String accountID;
-String payStatus;
+    String payStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +112,7 @@ String payStatus;
         tv_amount = (TextView) findViewById(R.id.txtamt);
         tv_paid = (TextView) findViewById(R.id.amtpaid);
         tv_totalamt = (TextView) findViewById(R.id.totalamt);
-       // btn_cancel = (Button) findViewById(R.id.btn_cancel);
+        // btn_cancel = (Button) findViewById(R.id.btn_cancel);
         btn_pay = (Button) findViewById(R.id.btn_pay);
 
         recycle_item = (RecyclerView) findViewById(R.id.recycle_item);
@@ -471,18 +471,18 @@ String payStatus;
                         Config.logV("Response--Array size--Active-----------------------" + response.body().toString());
                         mBillData = response.body();
 
-                       // if (mBillData.getCustomer().getUserProfile() != null) {
-                            String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
-                            String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
-                            tv_customer.setText(Config.toTitleCase(firstName)+" "+Config.toTitleCase(lastNme));
-                           // tv_date.setText(mBillData.getCreatedDate());
+                        // if (mBillData.getCustomer().getUserProfile() != null) {
+                        String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
+                        String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
+                        tv_customer.setText(Config.toTitleCase(firstName)+" "+Config.toTitleCase(lastNme));
+                        // tv_date.setText(mBillData.getCreatedDate());
                         DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
                         DateFormat targetFormat = new SimpleDateFormat(("dd-MM-yyyy hh:mm a"));
                         Date date = originalFormat.parse(mBillData.getCreatedDate());
                         String formattedDate = targetFormat.format(date);
                         tv_date.setText(formattedDate);
 
-                       // }
+                        // }
 
                         Typeface tyface = Typeface.createFromAsset(getAssets(),
                                 "fonts/Montserrat_Bold.otf");
@@ -548,7 +548,7 @@ String payStatus;
 
                         if(mBillData.getTaxPercentage()!=0){
                             taxlayout.setVisibility(View.VISIBLE);
-                           // holder.txttax.setText("Tax(CGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %" + ", SGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %)");
+                            // holder.txttax.setText("Tax(CGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %" + ", SGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %)");
                             txttax.setText("Tax "+String.valueOf(mBillData.getTaxPercentage())+"% of "+"₹ "+String.valueOf(mBillData.getTaxableTotal())+"\n"+"(CGST: "+String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
 
                             txtaxval.setText("(+)₹ "+String.valueOf(mBillData.getTotalTaxAmount()));

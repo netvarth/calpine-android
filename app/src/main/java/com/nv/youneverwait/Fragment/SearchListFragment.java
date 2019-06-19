@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetDialog;
@@ -21,16 +22,23 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -39,6 +47,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.SearchLocationActivity;
+import com.nv.youneverwait.adapter.FilterAdapter;
+import com.nv.youneverwait.adapter.MoreFilterAdapter;
 import com.nv.youneverwait.adapter.PaginationAdapter;
 import com.nv.youneverwait.adapter.SearchListAdpter;
 import com.nv.youneverwait.callback.AdapterCallback;
@@ -46,6 +56,7 @@ import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
+import com.nv.youneverwait.model.CommonFilterEnum;
 import com.nv.youneverwait.model.Domain_Spinner;
 import com.nv.youneverwait.model.LanLong;
 import com.nv.youneverwait.model.ListCell;
@@ -53,6 +64,7 @@ import com.nv.youneverwait.model.SearchListModel;
 import com.nv.youneverwait.model.SearchModel;
 import com.nv.youneverwait.model.WorkingModel;
 import com.nv.youneverwait.response.QueueList;
+import com.nv.youneverwait.response.RefinedFilters;
 import com.nv.youneverwait.response.SearchAWsResponse;
 import com.nv.youneverwait.response.SearchTerminology;
 import com.nv.youneverwait.utils.EmptySubmitSearchView;
@@ -63,6 +75,8 @@ import com.nv.youneverwait.widgets.CustomDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,6 +85,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -87,6 +103,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     static Context mContext;
     String query, url;
     RecyclerView mRecySearchDetail;
+    MoreFilterAdapter mMoreAdapter;
     // SearchDetailAdapter adapter;
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
     List<QueueList> mQueueList = new ArrayList<>();
@@ -150,6 +167,24 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
+    String passformula = "";
+    TextView txtrefinedsearch;
+
+    ArrayList<RefinedFilters> commonFilterList = new ArrayList<>();
+
+    ArrayList<RefinedFilters> commonFilterSortList = new ArrayList<>();
+
+    ArrayList<RefinedFilters> commonRefinedFilterList = new ArrayList<>();
+
+    ArrayList<RefinedFilters> commonRefinedFilterSortList = new ArrayList<>();
+
+    ArrayList<RefinedFilters> commonsubDomainFilterList = new ArrayList<>();
+
+    ArrayList<RefinedFilters> commonsubDomainFilterSortList = new ArrayList<>();
+
+    ArrayList<RefinedFilters> otherFilterSortedFinalList = new ArrayList<>();
+
+    String filter="";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -171,6 +206,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             longitude = bundle.getString("longitude", "");
 
             s_LocName = bundle.getString("locName", "");
+            passformula = bundle.getString("passformula", "");
+            filter= bundle.getString("filter", "");
         }
         userIsInteracting = false;
 
@@ -187,7 +224,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
 
-
+        txtrefinedsearch = (TextView) row.findViewById(R.id.txtrefinedsearch);
         ibackpress = (ImageView) row.findViewById(R.id.backpress);
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
         txt_toolbarlocation = (TextView) row.findViewById(R.id.txt_toolbarlocation);
@@ -230,8 +267,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             @Override
             public void onClick(View v) {
                 // perform whatever you want on back arrow click
-                Config.logV("BackPress-----------");
-                getFragmentManager().popBackStack();
+
+
+                if (!filter.equalsIgnoreCase("")) {
+                    Config.logV("BackPress------$$$$$$$$$$$$$$###-----");
+                    getActivity().finish();
+                } else {
+                    getFragmentManager().popBackStack();
+                }
             }
         });
 
@@ -302,6 +345,45 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         APiSearchList();
         //SearchView******************************************************************
+
+
+        txtrefinedsearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+
+
+                LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View customView = layoutInflater.inflate(R.layout.popup_filter, null);
+
+
+                RecyclerView recycle_morefilter = (RecyclerView) customView.findViewById(R.id.recycle_morefilter);
+
+                if (mDomainSpinner.equalsIgnoreCase("All")) {
+                    ApiFilters(recycle_morefilter, "Select");
+                } else {
+                    ApiMoreRefinedFilters(recycle_morefilter, mDomainSpinner, "No", "");
+                }
+                int[] location = new int[2];
+                txtrefinedsearch.getLocationOnScreen(location);
+                //Rect loc=locateView(ic_refinedFilter);
+                //instantiate popup window
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int width = displayMetrics.widthPixels;
+                final PopupWindow popupWindow = new PopupWindow(customView, width - width / 3, LinearLayout.LayoutParams.MATCH_PARENT);
+
+                popupWindow.setAnimationStyle(R.style.MyAlertDialogStyle);
+                //display the popup window
+                popupWindow.showAtLocation(txtrefinedsearch, Gravity.NO_GRAVITY, location[0] + 80, location[1] + 80);
+                dimBehind(popupWindow);
+
+
+
+            }
+        });
 
 
         mSpinnerDomain = (Spinner) row.findViewById(R.id.spinnerdomain);
@@ -765,6 +847,29 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     }
 
+    private void dimBehind(PopupWindow popupWindow) {
+        View container;
+        if (popupWindow.getBackground() == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                container = (View) popupWindow.getContentView().getParent();
+            } else {
+                container = popupWindow.getContentView();
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                container = (View) popupWindow.getContentView().getParent().getParent();
+            } else {
+                container = (View) popupWindow.getContentView().getParent();
+            }
+        }
+        Context context = popupWindow.getContentView().getContext();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager.LayoutParams p = (WindowManager.LayoutParams) container.getLayoutParams();
+        p.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        p.dimAmount = 0.5f;
+        wm.updateViewLayout(container, p);
+    }
+
     private void loadNextPage(String mQueryPass, String mPass) {
         Log.d("", "loadNextPage: " + currentPage);
 
@@ -780,9 +885,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         query.put("q", mQueryPass);
         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
         if (mobile.startsWith("55")) {
-            query.put("fq", "(and  test_account:1 )");
+            query.put("fq", "(and  test_account:1 " + passformula + ")");
         } else {
-            query.put("fq", "(and  (not test_account:1) )");
+            query.put("fq", "(and  (not test_account:1 " + passformula + ") )");
         }
 
 
@@ -793,7 +898,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         params.put("sort", "ynw_verified_level desc, distance asc");
 
         params.put("expr.distance", mPass);
-        params.put("return","_all_fields,distance");
+        params.put("return", "_all_fields,distance");
 
 
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
@@ -856,7 +961,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 }
 
-                                if(response.body().getHits().getHit().get(i).getExprs()!=null){
+                                if (response.body().getHits().getHit().get(i).getExprs() != null) {
                                     search.setDistance(response.body().getHits().getHit().get(i).getExprs().getDistance());
                                 }
 
@@ -1002,9 +1107,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
         if (mobile.startsWith("55")) {
-            query.put("fq", "(and  test_account:1 )");
+            query.put("fq", "(and  test_account:1 " + passformula + ")");
         } else {
-            query.put("fq", "(and  (not test_account:1) )");
+            query.put("fq", "(and  (not test_account:1 " + passformula + ") )");
         }
 
 
@@ -1014,7 +1119,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         params.put("q.parser", "structured");
         params.put("sort", "ynw_verified_level desc, distance asc");
         params.put("expr.distance", mPass);
-        params.put("return","_all_fields,distance");
+        params.put("return", "_all_fields,distance");
 
         Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
 
@@ -1087,8 +1192,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 }
 
 
-                                if(response.body().getHits().getHit().get(i).getExprs()!=null){
-                                 //   Config.logV("Distance @@@@@@@@@@@"+response.body().getHits().getHit().get(i).getExprs().getDistance());
+                                if (response.body().getHits().getHit().get(i).getExprs() != null) {
+                                    //   Config.logV("Distance @@@@@@@@@@@"+response.body().getHits().getHit().get(i).getExprs().getDistance());
                                     search.setDistance(response.body().getHits().getHit().get(i).getExprs().getDistance());
                                 }
 
@@ -1270,11 +1375,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     que.setServiceTime(response.body().get(i).getNextAvailableQueue().getServiceTime());
                                 }
 
-                                Config.logV("Calc Mode @@@@@@@@@@@RRRR"+response.body().get(i).getNextAvailableQueue().getCalculationMode());
+                                Config.logV("Calc Mode @@@@@@@@@@@RRRR" + response.body().get(i).getNextAvailableQueue().getCalculationMode());
                                 que.setCalculationMode(response.body().get(i).getNextAvailableQueue().getCalculationMode());
                                 que.setPersonAhead(response.body().get(i).getNextAvailableQueue().getPersonAhead());
 
-                                Config.logV("personAheadtttt @@@@@@@@@@@ ####"+response.body().get(i).getNextAvailableQueue().getPersonAhead());
+                                Config.logV("personAheadtttt @@@@@@@@@@@ ####" + response.body().get(i).getNextAvailableQueue().getPersonAhead());
 
                                 que.setQueueWaitingTime(response.body().get(i).getNextAvailableQueue().getQueueWaitingTime());
 
@@ -1340,7 +1445,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 }
 
                                 if (mSearchRespPass.get(i).getDistance() != null) {
-                                    Config.logV("Distance @@@@@@@@@@@"+mSearchRespPass.get(i).getDistance());
+                                    Config.logV("Distance @@@@@@@@@@@" + mSearchRespPass.get(i).getDistance());
                                     searchList.setDistance(mSearchRespPass.get(i).getDistance());
                                 }
 
@@ -1372,7 +1477,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
-                                 //   Config.logV("Gallery-@@@@---111-------5555---------" + mSearchRespPass.get(i).getGallery_thumb_nails());
+                                    //   Config.logV("Gallery-@@@@---111-------5555---------" + mSearchRespPass.get(i).getGallery_thumb_nails());
                                     searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
                                 }
 
@@ -1438,7 +1543,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             searchList.setPersonAhead(mQueueList.get(i).getPersonAhead());
                                             searchList.setCalculationMode(mQueueList.get(i).getCalculationMode());
 
-                                            Config.logV("personAhead @@@@@@@@@@@ 33####"+mQueueList.get(i).getPersonAhead());
+                                            Config.logV("personAhead @@@@@@@@@@@ 33####" + mQueueList.get(i).getPersonAhead());
                                             searchList.setQueueWaitingTime(mQueueList.get(i).getQueueWaitingTime());
                                             if (mQueueList.get(i).getServiceTime() != null) {
                                                 searchList.setServiceTime(mQueueList.get(i).getServiceTime());
@@ -1508,7 +1613,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 }
 
                                 if (mSearchRespPass.get(i).getDistance() != null) {
-                                    Config.logV("Distance @@@@@@@@@@@44444"+mSearchRespPass.get(i).getDistance());
+                                    Config.logV("Distance @@@@@@@@@@@44444" + mSearchRespPass.get(i).getDistance());
                                     searchList.setDistance(mSearchRespPass.get(i).getDistance());
                                 }
 
@@ -1540,7 +1645,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
-                               // Config.logV("Gallery ###########"+mSearchRespPass.get(i).getGallery_thumb_nails());
+                                    // Config.logV("Gallery ###########"+mSearchRespPass.get(i).getGallery_thumb_nails());
                                     searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
                                 }
 
@@ -1601,7 +1706,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             searchList.setPersonAhead(mQueueList.get(i).getPersonAhead());
                                             searchList.setCalculationMode(mQueueList.get(i).getCalculationMode());
                                             searchList.setQueueWaitingTime(mQueueList.get(i).getQueueWaitingTime());
-                                            Config.logV("personAhead @@@@@@@@@@@ ####"+mQueueList.get(i).getPersonAhead());
+                                            Config.logV("personAhead @@@@@@@@@@@ ####" + mQueueList.get(i).getPersonAhead());
 
                                             if (mQueueList.get(i).getServiceTime() != null) {
                                                 searchList.setServiceTime(mQueueList.get(i).getServiceTime());
@@ -1744,7 +1849,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         String querycreate = null;
 
-        if(!querypass.equalsIgnoreCase("")) {
+        if (!querypass.equalsIgnoreCase("")) {
 
             if (!mDomainSpinner.equalsIgnoreCase("All")) {
 
@@ -1770,14 +1875,18 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 }
                 Config.logV("Query  ALL @@@@@@@@@@-----------" + querycreate);
             }
-       }
+        }
 
 
         if (querycreate == null) {
             if (!mDomainSpinner.equalsIgnoreCase("All")) {
                 querycreate = "(phrase " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
             } else {
+
+                Config.logV("Query @@@@@@@@@@@@@@" + querypass);
                 querycreate = "(phrase " + "'" + querypass + "')";
+
+
             }
         }
 
@@ -2005,10 +2114,91 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
     @Override
-    public void onMethodJaldeeLogo(String ynw_verified,String providername) {
-        CustomDialog cdd=new CustomDialog(mContext,ynw_verified,providername);
+    public void onMethodJaldeeLogo(String ynw_verified, String providername) {
+        CustomDialog cdd = new CustomDialog(mContext, ynw_verified, providername);
         cdd.setCanceledOnTouchOutside(true);
         cdd.show();
+
+    }
+
+    String spinnerDomainSelectedFilter = "";
+
+    @Override
+    public void onMethodFilterRefined(String passformula, RecyclerView recylcepopup, String domain) {
+        Config.logV("Pass foRmula @@@@@@@@@@@@@" + passformula);
+        spinnerDomainSelectedFilter = domain;
+        //MoreItemClick(passformula);
+        ApiMoreRefinedFilters(recylcepopup, domain, "yes", passformula);
+    }
+
+    @Override
+    public void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup, String subdomainame) {
+        Config.logV("SUbDomain Selector@@@@@@@@@@@@@@@@@@@" + passformula);
+      //  MoreItemClick("sector:'" + spinnerDomainSelectedFilter + "'" + "sub_sector:'" + subdomainame + "'");
+        ApiSubDomainRefinedFilters(recyclepopup, subdomainame, spinnerDomainSelectedFilter, passformula);
+    }
+
+    @Override
+    public void onMethodQuery(ArrayList<String> sFormula, ArrayList<String> keyFormula) {
+
+        for(String str : sFormula) {
+
+          Config.logV("PRINT $$$$$@ ####@@@@@@@@@@@@@@"+str);
+        }
+        for(String str : keyFormula) {
+
+            Config.logV("PRINT Key@ ####@@@@@@@@@@@@@@"+str);
+        }
+
+        String queryFormula = "";
+        int count = 0;
+        boolean match = false;
+        for (int i = 0; i < keyFormula.size(); i++) {
+
+
+            for (int j = 0; j < sFormula.size(); j++) {
+
+
+                String splitsFormula[]=sFormula.get(j).toString().split(":");
+                //Config.logV("PRINT Key ##"+splitsFormula[0]);
+                if (splitsFormula[0].equalsIgnoreCase(keyFormula.get(i).toString())) {
+
+                   // Config.logV("PRINT Key TRUE @@@@@@@@@@@ ##"+splitsFormula[0]);
+                    match = true;
+                    count++;
+                    if (count == 1)
+                        queryFormula += "(" + sFormula.get(j).toString();
+                    else
+                        queryFormula += sFormula.get(j).toString();
+
+                }
+
+
+            }
+
+
+            if (match) {
+                if (count > 1) {
+                    queryFormula += ")";
+                    match = false;
+                }
+            }
+            Config.logV("SortString@@@@@@@@@@" + queryFormula + "Count @@@@@" + count);
+
+            if (count > 1) {
+                queryFormula = queryFormula.replace("(" + keyFormula.get(i), "( or " + keyFormula.get(i));
+                Config.logV("SortString ^^^^^^^^^^^^^^^@@@@@@@@@@" + queryFormula);
+            } else {
+                queryFormula = queryFormula.replace("(" + keyFormula.get(i), keyFormula.get(i));
+
+            }
+
+            count = 0;
+        }
+
+
+        MoreItemClick(queryFormula);
+        Config.logV("PRINT VAL FORMULA@@" + queryFormula);
 
     }
 
@@ -2319,4 +2509,553 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }
     }
 
+
+    private void ApiFilters(final RecyclerView recycle_filter, final String domainSelect) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<RefinedFilters> call = apiService.getFilters();
+
+
+        call.enqueue(new Callback<RefinedFilters>() {
+            @Override
+            public void onResponse(Call<RefinedFilters> call, Response<RefinedFilters> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Filters-------------------" + response.code());
+                    if (response.code() == 200) {
+                        Config.logV("Response----------------");
+
+                        commonFilterList.clear();
+                        commonFilterList = response.body().getCommonFilters();
+                        Config.logV("Common Filters----------------" + commonFilterList.size());
+
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                        recycle_filter.setLayoutManager(mLayoutManager);
+
+                        int listsize = commonFilterList.size();
+
+                        boolean otherFlag = false;
+                        commonFilterSortList.clear();
+                        ArrayList booleanVariables = new ArrayList();
+                        ArrayList booleanVariablesValue = new ArrayList();
+                        ArrayList booleanVariablesName = new ArrayList();
+                        booleanVariables.clear();
+                        booleanVariablesValue.clear();
+                        booleanVariablesName.clear();
+
+
+                        ArrayList<Domain_Spinner> domainNewlist = new ArrayList<>();
+                        domainNewlist.addAll(domainList);
+                        for (int i = 0; i < domainNewlist.size(); i++) {
+                            if (domainNewlist.get(i).getDomain().equalsIgnoreCase("All")) {
+                                domainNewlist.remove(i);
+                            }
+                        }
+                        Domain_Spinner domain = new Domain_Spinner("Select", "Select");
+                        domainNewlist.add(0, domain);
+
+                        RefinedFilters refined1 = new RefinedFilters();
+                        refined1.setDisplayName("Select Service Domain");
+                        refined1.setDataType("Spinner");
+                        refined1.setExpand(false);
+                        refined1.setName("domain");
+                        refined1.setEnumeratedConstants(domainNewlist);
+                        refined1.setCloudSearchIndex("domain");
+                        commonFilterSortList.add(refined1);
+
+                        for (int i = 0; i < commonFilterList.size(); i++) {
+
+
+                            if (commonFilterList.get(i).getDataType().equalsIgnoreCase("Boolean")) {
+
+                                booleanVariables.add(commonFilterList.get(i).getDisplayName());
+                                booleanVariablesValue.add(commonFilterList.get(i).getCloudSearchIndex());
+                                booleanVariablesName.add(commonFilterList.get(i).getName());
+                                if (!otherFlag) {
+                                    RefinedFilters refined = new RefinedFilters();
+                                    refined.setDisplayName("Other Filter");
+                                    refined.setDataType(commonFilterList.get(i).getDataType());
+                                    otherFlag = true;
+                                    refined.setItemName(booleanVariables);
+                                    refined.setExpand(false);
+                                    refined.setPassName(booleanVariablesName);
+                                    refined.setCloudIndexvalue(booleanVariablesValue);
+                                    commonFilterSortList.add(refined);
+                                }
+
+
+                            } else {
+                                RefinedFilters refined = new RefinedFilters();
+                                refined.setDisplayName(commonFilterList.get(i).getDisplayName());
+                                refined.setDataType(commonFilterList.get(i).getDataType());
+                                refined.setExpand(false);
+                                refined.setName(commonFilterList.get(i).getName());
+                                refined.setEnumeratedConstants(commonFilterList.get(i).getEnumeratedConstants());
+                                refined.setCloudSearchIndex(commonFilterList.get(i).getCloudSearchIndex());
+                                commonFilterSortList.add(refined);
+                            }
+
+
+                        }
+
+
+                        Config.logV("Comon Filter size @@@@@@@@@" + commonFilterSortList.size());
+                        mMoreAdapter = new MoreFilterAdapter(commonFilterSortList, mContext, getActivity(), mInterface, recycle_filter, "", domainSelect, "Select");
+                        recycle_filter.setAdapter(mMoreAdapter);
+                        mMoreAdapter.notifyDataSetChanged();
+
+
+                    } else {
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<RefinedFilters> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+    }
+
+    ArrayList<RefinedFilters> commonMFilterList = new ArrayList<RefinedFilters>();
+
+    private void ApiMoreRefinedFilters(final RecyclerView recycle_filter, final String subdomain, final String showdomain, final String passformula) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<RefinedFilters> call = apiService.getMoreFilters(subdomain);
+
+
+        call.enqueue(new Callback<RefinedFilters>() {
+            @Override
+            public void onResponse(Call<RefinedFilters> call, Response<RefinedFilters> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Filters-------------------" + response.code());
+                    if (response.code() == 200) {
+                        Config.logV("Response----------------");
+
+                        commonRefinedFilterList.clear();
+                        commonRefinedFilterSortList.clear();
+                        commonRefinedFilterList = new ArrayList<>();
+                        commonRefinedFilterList = response.body().getRefinedFilters();
+                        Config.logV("commonRefinedFilterList Filters----------------" + commonRefinedFilterList.size());
+
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                        recycle_filter.setLayoutManager(mLayoutManager);
+
+
+                        commonMFilterList.clear();
+                        commonMFilterList = response.body().getCommonFilters();
+                        Config.logV("Common Filters----------------" + commonMFilterList.size());
+
+
+                        boolean otherFlag = false;
+                        ArrayList booleanVariables = new ArrayList();
+                        ArrayList booleanVariablesValue = new ArrayList();
+                        ArrayList booleanVariablesName = new ArrayList();
+                        booleanVariables.clear();
+                        booleanVariablesValue.clear();
+                        booleanVariablesName.clear();
+
+
+                        if (showdomain.equalsIgnoreCase("yes")) {
+                            ArrayList<Domain_Spinner> domainNewlist = new ArrayList<>();
+                            domainNewlist.addAll(domainList);
+                            for (int i = 0; i < domainNewlist.size(); i++) {
+                                if (domainNewlist.get(i).getDomain().equalsIgnoreCase("All")) {
+                                    domainNewlist.remove(i);
+                                }
+                            }
+                            Domain_Spinner domain = new Domain_Spinner("Select", "Select");
+                            domainNewlist.add(0, domain);
+
+                            RefinedFilters refined1 = new RefinedFilters();
+                            refined1.setDisplayName("Select Service Domain");
+                            refined1.setDataType("Spinner");
+                            refined1.setExpand(false);
+                            refined1.setName("domain");
+                            refined1.setEnumeratedConstants(domainNewlist);
+                            refined1.setCloudSearchIndex("domain");
+                            commonRefinedFilterSortList.add(0, refined1);
+                        }
+
+
+                        ArrayList<SearchModel> subdomainList = new ArrayList<>();
+                        subdomainList.clear();
+                        SearchModel search1 = new SearchModel();
+                        search1.setDisplayname("Select");
+                        search1.setSector("Select");
+                        search1.setName("Select");
+                        search1.setQuery("");
+                        subdomainList.add(search1);
+
+                        for (int i = 0; i < mSubDomain.size(); i++) {
+                            if (mSubDomain.get(i).getSector().equalsIgnoreCase(subdomain)) {
+                                SearchModel search = new SearchModel();
+                                search.setDisplayname(mSubDomain.get(i).getDisplayname());
+                                search.setSector(mSubDomain.get(i).getSector());
+                                search.setName(mSubDomain.get(i).getName());
+                                search.setQuery(mSubDomain.get(i).getQuery());
+                                subdomainList.add(search);
+                            }
+                        }
+                        RefinedFilters refined2 = new RefinedFilters();
+                        refined2.setDisplayName("Select Service specialization or Occupation");
+                        refined2.setDataType("Spinner_subdomain");
+                        refined2.setExpand(false);
+                        refined2.setName("subdomain");
+                        refined2.setEnumeratedConstants(subdomainList);
+                        refined2.setCloudSearchIndex("subdomain");
+                        if (showdomain.equalsIgnoreCase("yes")) {
+                            commonRefinedFilterSortList.add(1, refined2);
+                        } else {
+                            commonRefinedFilterSortList.add(0, refined2);
+                        }
+
+
+                        for (int i = 0; i < commonRefinedFilterList.size(); i++) {
+
+                            RefinedFilters refined = new RefinedFilters();
+                            refined.setDisplayName(commonRefinedFilterList.get(i).getDisplayName());
+                            refined.setDataType(commonRefinedFilterList.get(i).getDataType());
+                            refined.setExpand(false);
+                            refined.setName(commonRefinedFilterList.get(i).getName());
+                            refined.setEnumeratedConstants(commonRefinedFilterList.get(i).getEnumeratedConstants());
+                            refined.setCloudSearchIndex(commonRefinedFilterList.get(i).getCloudSearchIndex());
+                            commonRefinedFilterSortList.add(refined);
+                        }
+
+                        for (int i = 0; i < commonMFilterList.size(); i++) {
+
+
+                           /* if (commonMFilterList.get(i).getDataType().equalsIgnoreCase("Boolean")) {
+
+                                booleanVariables.add(commonMFilterList.get(i).getDisplayName());
+                                booleanVariablesValue.add(commonMFilterList.get(i).getCloudSearchIndex());
+                                booleanVariablesName.add(commonMFilterList.get(i).getName());
+                                if (!otherFlag) {
+                                    RefinedFilters refined = new RefinedFilters();
+                                    refined.setDisplayName("Other Filter");
+                                    refined.setDataType(commonMFilterList.get(i).getDataType());
+                                    otherFlag = true;
+                                    refined.setItemName(booleanVariables);
+                                    refined.setExpand(false);
+                                    refined.setPassName(booleanVariablesName);
+                                    refined.setCloudIndexvalue(booleanVariablesValue);
+                                    commonRefinedFilterSortList.add(refined);
+                                }
+
+
+                            } else {*/
+                            RefinedFilters refined = new RefinedFilters();
+                            refined.setDisplayName(commonMFilterList.get(i).getDisplayName());
+                            refined.setDataType(commonMFilterList.get(i).getDataType());
+                            refined.setExpand(false);
+                            refined.setName(commonMFilterList.get(i).getName());
+                            refined.setEnumeratedConstants(commonMFilterList.get(i).getEnumeratedConstants());
+                            refined.setCloudSearchIndex(commonMFilterList.get(i).getCloudSearchIndex());
+                            commonRefinedFilterSortList.add(refined);
+                            // }
+
+
+                        }
+
+
+                        otherFilterSortedFinalList.clear();
+                        for (int i = 0; i < commonRefinedFilterSortList.size(); i++) {
+
+                            if (commonRefinedFilterSortList.get(i).getDataType().equalsIgnoreCase("Boolean")) {
+
+                                booleanVariables.add(commonRefinedFilterSortList.get(i).getDisplayName());
+                                booleanVariablesValue.add(commonRefinedFilterSortList.get(i).getCloudSearchIndex());
+                                booleanVariablesName.add(commonRefinedFilterSortList.get(i).getName());
+                                if (!otherFlag) {
+                                    RefinedFilters refined = new RefinedFilters();
+                                    refined.setDisplayName("Other Filter");
+                                    refined.setDataType(commonRefinedFilterSortList.get(i).getDataType());
+                                    otherFlag = true;
+                                    refined.setItemName(booleanVariables);
+                                    refined.setExpand(false);
+                                    refined.setPassName(booleanVariablesName);
+                                    refined.setCloudIndexvalue(booleanVariablesValue);
+                                    otherFilterSortedFinalList.add(refined);
+                                }
+
+
+                            } else {
+                                RefinedFilters refined = new RefinedFilters();
+                                refined.setDisplayName(commonRefinedFilterSortList.get(i).getDisplayName());
+                                refined.setDataType(commonRefinedFilterSortList.get(i).getDataType());
+                                refined.setExpand(false);
+                                refined.setName(commonRefinedFilterSortList.get(i).getName());
+                                refined.setEnumeratedConstants(commonRefinedFilterSortList.get(i).getEnumeratedConstants());
+                                refined.setCloudSearchIndex(commonRefinedFilterSortList.get(i).getCloudSearchIndex());
+                                otherFilterSortedFinalList.add(refined);
+                            }
+
+                        }
+
+
+                        Config.logV("Comon Filter size @@@@@@@@@" + otherFilterSortedFinalList.size());
+                        mMoreAdapter = new MoreFilterAdapter(otherFilterSortedFinalList, mContext, getActivity(), mInterface, recycle_filter, passformula, subdomain, "Select");
+                        recycle_filter.setAdapter(mMoreAdapter);
+                        mMoreAdapter.notifyDataSetChanged();
+
+
+                        Config.logV("commonRefinedFilterList Filter size @@@@@@@@@" + otherFilterSortedFinalList.size());
+
+
+                       /* commonFilterSortList.addAll(1,commonRefinedFilterSortList);
+                        recycle_filter.setAdapter(mMoreAdapter);
+                        mMoreAdapter.notifyDataSetChanged();*/
+
+
+                    } else {
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<RefinedFilters> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+    }
+
+
+    private void ApiSubDomainRefinedFilters(final RecyclerView recycle_filter, final String subdomain, final String domain, final String passformula) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, this.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<RefinedFilters> call = apiService.getSubDomainMoreFilters(subdomain, domain);
+
+
+        call.enqueue(new Callback<RefinedFilters>() {
+            @Override
+            public void onResponse(Call<RefinedFilters> call, Response<RefinedFilters> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Filters-------------------" + response.code());
+                    if (response.code() == 200) {
+                        Config.logV("Response----------------");
+
+                        commonsubDomainFilterList.clear();
+                        commonsubDomainFilterSortList.clear();
+                        commonsubDomainFilterList = new ArrayList<>();
+                        commonsubDomainFilterList = response.body().getRefinedFilters();
+
+
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                        recycle_filter.setLayoutManager(mLayoutManager);
+
+
+                        for (int i = 0; i < commonsubDomainFilterList.size(); i++) {
+
+                            RefinedFilters refined = new RefinedFilters();
+                            refined.setDisplayName(commonsubDomainFilterList.get(i).getDisplayName());
+                            refined.setDataType(commonsubDomainFilterList.get(i).getDataType());
+                            refined.setExpand(false);
+                            refined.setName(commonsubDomainFilterList.get(i).getName());
+                            refined.setEnumeratedConstants(commonsubDomainFilterList.get(i).getEnumeratedConstants());
+                            refined.setCloudSearchIndex(commonsubDomainFilterList.get(i).getCloudSearchIndex());
+                            commonsubDomainFilterSortList.add(refined);
+                        }
+
+
+
+
+
+
+
+/*
+                        Config.logV("YYYYComon Filter size @@@@@@@@@" + commonRefinedFilterSortList.size());
+
+                        commonRefinedFilterSortList.addAll(commonsubDomainFilterSortList);
+
+                        Config.logV("YYYYComon Filter sizeEEE @@@@@@@@@" + commonRefinedFilterSortList.size());
+
+
+
+                        recycle_filter.setAdapter(mMoreAdapter);
+                        mMoreAdapter.notifyDataSetChanged();*/
+
+                        ArrayList<RefinedFilters> mergedList = new ArrayList<>();
+                        mergedList.clear();
+                        mergedList.addAll(commonRefinedFilterSortList);
+                        mergedList.addAll(commonsubDomainFilterSortList);
+
+
+                        boolean otherFlag = false;
+                        ArrayList booleanVariables = new ArrayList();
+                        ArrayList booleanVariablesValue = new ArrayList();
+                        ArrayList booleanVariablesName = new ArrayList();
+                        booleanVariables.clear();
+                        booleanVariablesValue.clear();
+                        booleanVariablesName.clear();
+
+
+                        ArrayList<RefinedFilters> mergedOtherFilterList = new ArrayList<>();
+
+                        mergedOtherFilterList.clear();
+                        for (int i = 0; i < mergedList.size(); i++) {
+
+                            if (mergedList.get(i).getDataType().equalsIgnoreCase("Boolean")) {
+
+                                booleanVariables.add(mergedList.get(i).getDisplayName());
+                                booleanVariablesValue.add(mergedList.get(i).getCloudSearchIndex());
+                                booleanVariablesName.add(mergedList.get(i).getName());
+                                if (!otherFlag) {
+                                    RefinedFilters refined = new RefinedFilters();
+                                    refined.setDisplayName("Other Filter");
+                                    refined.setDataType(mergedList.get(i).getDataType());
+                                    otherFlag = true;
+                                    refined.setItemName(booleanVariables);
+                                    refined.setExpand(false);
+                                    refined.setPassName(booleanVariablesName);
+                                    refined.setCloudIndexvalue(booleanVariablesValue);
+                                    mergedOtherFilterList.add(refined);
+                                }
+
+
+                            } else {
+                                RefinedFilters refined = new RefinedFilters();
+                                refined.setDisplayName(mergedList.get(i).getDisplayName());
+                                refined.setDataType(mergedList.get(i).getDataType());
+                                refined.setExpand(false);
+                                refined.setName(mergedList.get(i).getName());
+                                refined.setEnumeratedConstants(mergedList.get(i).getEnumeratedConstants());
+                                refined.setCloudSearchIndex(mergedList.get(i).getCloudSearchIndex());
+                                mergedOtherFilterList.add(refined);
+                            }
+
+                        }
+
+
+                        Config.logV("YYYYmergedList@@@@@@@@@" + mergedOtherFilterList.size());
+                        mMoreAdapter = new MoreFilterAdapter(mergedOtherFilterList, mContext, getActivity(), mInterface, recycle_filter, passformula, domain, subdomain);
+                        recycle_filter.setAdapter(mMoreAdapter);
+                        mMoreAdapter.notifyDataSetChanged();
+
+
+                    } else {
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<RefinedFilters> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+    }
+
+    public void MoreItemClick(String pass_formula) {
+
+        //  mSearchView.setQuery("", false);
+        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        double upperLeftLat = Lanlong.getUpperLeftLat();
+        double upperLeftLon = Lanlong.getUpperLeftLon();
+        double lowerRightLat = Lanlong.getLowerRightLat();
+        double lowerRightLon = Lanlong.getLowerRightLon();
+        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+
+
+        isLastPage = false;
+        isLoading = false;
+        PAGE_START = 0;
+        total_foundcount = 0;
+        TOTAL_PAGES = 0;
+        currentPage = PAGE_START;
+        pageadapter.clear();
+
+
+        passformula = pass_formula;
+
+     /*   final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
+
+        final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";*/
+
+
+        final String query1 = "(and location1:" + locationRange + ")";
+
+        final String pass1 = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+
+        query = query1;
+        url = pass1;
+
+        Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
+        Config.logV("SearchList URL ITEM CLICK SPINNER 222@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+        ApiSEARCHAWSLoadFirstData(query, url);
+
+
+    }
 }

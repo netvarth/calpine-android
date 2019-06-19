@@ -994,7 +994,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 if (getBussinessData.getVerifyLevel().equalsIgnoreCase("BASIC")) {
                     ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
                 }
-                if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM")) {
+                if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM")||getBussinessData.getVerifyLevel().equalsIgnoreCase("ADVANCED")) {
                     ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_adv);
                 }
 
@@ -1011,9 +1011,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ynw_verified = "2";
                     else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("BASIC_PLUS"))
                         ynw_verified = "3";
-                    else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM"))
+                    else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM")||getBussinessData.getVerifyLevel().equalsIgnoreCase("ADVANCED"))
                         ynw_verified = "4";
 
+                    Config.logV("YNW VERIFIED@@@@@@@@@@@@"+ynw_verified);
                     CustomDialog cdd = new CustomDialog(mContext, ynw_verified,getBussinessData.getBusinessName());
                     cdd.setCanceledOnTouchOutside(true);
                     cdd.show();

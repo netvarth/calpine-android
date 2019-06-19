@@ -72,7 +72,9 @@
             android:name="com.nv.youneverwait.activities.SwipeGalleryImage"
             android:screenOrientation="portrait"></activity>
 
-
+        <activity
+            android:name="com.nv.youneverwait.activities.FilterActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.nv.youneverwait.activities.SearchServiceActivity"
             android:screenOrientation="portrait"></activity>

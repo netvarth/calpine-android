@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -20,6 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +41,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,8 +57,10 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
+
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
+import com.nv.youneverwait.activities.FilterActivity;
 import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.activities.PaymentActivity;
 import com.nv.youneverwait.database.DatabaseHandler;
@@ -86,6 +91,9 @@ import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -99,6 +107,7 @@ import retrofit2.Response;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static com.nv.youneverwait.response.RefinedFilters.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -282,9 +291,32 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         ic_refinedFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Config.isOnline(getActivity())) {
-                    ApiFilters();
-                }
+
+                mSearchView.setQuery("", false);
+                Intent ifilter=new Intent(mContext, FilterActivity.class);
+                ifilter.putExtra("lat",String.valueOf(latitude));
+                ifilter.putExtra("longt",String.valueOf(longitude));
+                ifilter.putExtra("locName", mCurrentLoc.getText().toString());
+                ifilter.putExtra("spinnervalue", spinnerTxtPass);
+                ifilter.putExtra("sector",mDomainSpinner);
+                startActivity(ifilter);
+               /* Bundle bundle = new Bundle();
+
+                FilterActivity pfFragment = new FilterActivity();
+
+                bundle.putString("locName", mCurrentLoc.getText().toString());
+                bundle.putString("lat", String.valueOf(latitude));
+                bundle.putString("longt", String.valueOf(longitude));
+                bundle.putString("spinnervalue", spinnerTxtPass);
+                bundle.putString("sector",mDomainSpinner);
+                pfFragment.setArguments(bundle);
+
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+                // Store the Fragment in stack
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, pfFragment).commit();*/
             }
         });
 
@@ -1691,6 +1723,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
         } else {
             querycreate = "(phrase " + "'" + query + "')";
+
+
+
+
         }
 
         //  Config.logV("Query-----------" + querycreate);
@@ -1942,62 +1978,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }*/
 
-    ArrayList<RefinedFilters> commonFilterList = new ArrayList<>();
 
-    private void ApiFilters() {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(getActivity()).create(ApiInterface.class);
-
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
-
-        Call<RefinedFilters> call = apiService.getFilters();
-
-
-        call.enqueue(new Callback<RefinedFilters>() {
-            @Override
-            public void onResponse(Call<RefinedFilters> call, Response<RefinedFilters> response) {
-
-                try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code------Filters-------------------" + response.code());
-                    if (response.code() == 200) {
-                        Config.logV("Response----------------");
-
-                        commonFilterList.clear();
-                        commonFilterList = response.body().getCommonFilters();
-                        Config.logV("Common Filters----------------" + commonFilterList.size());
-
-
-                    } else {
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<RefinedFilters> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-
-            }
-        });
-
-    }
 
 
     /*public static void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {

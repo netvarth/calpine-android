@@ -285,4 +285,10 @@ public interface ApiInterface {
 
     @PUT("consumer/updatePushToken")
     Call<ResponseBody> updatePushToken(@Body RequestBody jsonObj);
+
+    @GET("ynwConf/refinedFilters/{subdomain}")
+    Call<RefinedFilters> getMoreFilters(@Path("subdomain") String subdomain);
+
+    @GET("ynwConf/refinedFilters/{domain}/{subdomain}")
+    Call<RefinedFilters> getSubDomainMoreFilters(@Path("subdomain") String subdomain,@Path("domain") String domain);
 }

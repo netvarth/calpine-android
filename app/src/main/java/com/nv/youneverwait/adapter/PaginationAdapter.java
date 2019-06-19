@@ -660,7 +660,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         //}
                     }
 
-                    if (searchdetailList.getShow_waiting_time() != null&& searchdetailList.getServices() != null) {
+                    if (searchdetailList.getShow_waiting_time() != null&& searchdetailList.getServices() != null&&searchdetailList.getOnline_checkins()!=null) {
 
 
                         if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")&&searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {

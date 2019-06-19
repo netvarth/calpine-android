@@ -83,6 +83,7 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:id="@+id/mRSearchView"
                 android:layout_width="match_parent"
@@ -124,7 +125,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.1"
                     android:src="@drawable/icon_filter"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </LinearLayout>
 
