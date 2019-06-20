@@ -7,6 +7,16 @@ import java.util.List;
 public class SearchDepartmentResult {
     private String departmentName;
 
+    public String getDepartmentStatus() {
+        return departmentStatus;
+    }
+
+    public void setDepartmentStatus(String departmentStatus) {
+        this.departmentStatus = departmentStatus;
+    }
+
+    private String departmentStatus;
+
     public int getDepartmentCount() {
         return departmentCount;
     }

@@ -31,6 +31,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 
 
+import com.google.gson.Gson;
 import com.nv.youneverwait.activities.Appointment;
 import com.nv.youneverwait.activities.SearchServiceActivity;
 import com.nv.youneverwait.callback.AdapterCallback;
@@ -146,12 +147,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 final MyViewHolder myViewHolder = (MyViewHolder) holder;
 
                 Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
-                /*if (searchdetailList.getYnw_verified() == 1) {
-                    myViewHolder.tv_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_verified, 0);
-                } else {
-                    myViewHolder.tv_name.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                }*/
-
 
                 Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
                 if (searchdetailList.getYnw_verified_level() != null) {
@@ -160,22 +155,16 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                             myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
                             myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
-                            //myViewHolder.tv_ynw_verified.setText("Basic");
                         }
 
 
                         if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("3")) {
-                          /*  myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_ynw_verified.setText("Basic Plus");*/
                             myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
                             myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basicplus);
                         }
 
 
                         if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("4")) {
-
-                           /* myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_ynw_verified.setText("Premium");*/
                             myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
                             myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_adv);
                         }
@@ -240,7 +229,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Typeface tyface_2 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Regular.otf");
                 dynaText2.setTypeface(tyface_2);
-                dynaText2.setText("Coupon");
+                dynaText2.setText("Coupons");
                 dynaText2.setTextSize(13);
                 dynaText2.setTextColor(context.getResources().getColor(R.color.title_grey));
                 dynaText2.setPadding(5, 5, 5, 5);
@@ -594,7 +583,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 Toast.makeText(activity, "Trauma care available", Toast.LENGTH_SHORT).show();
                             }
                         });
-
                     }
                 }
                 myViewHolder.layout_type.addView(parent);
@@ -624,14 +612,25 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
 
+                Log.i("branchSpcount", String.valueOf(searchdetailList.getBranchSpCount()));
+                Log.i("branchSpcount123",  new Gson().toJson(searchdetailList) );
+
+
+                if(searchdetailList.getBranchSpCount() > 0){
+                    myViewHolder.tv_count.setText("Count :"+" "+ +searchdetailList.getBranchSpCount());
+                }
+
+
                 if (searchdetailList.getAccountType() != null) {
                     if (searchdetailList.getAccountType().equals("1")) {
                         myViewHolder.tv_branch_name.setText(searchdetailList.getBranch_name());
                         myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
-                        Log.i("qazqaz", String.valueOf(searchdetailList.getBranchCount()));
+                        Log.i("qazqaz", String.valueOf(searchdetailList.getBranchSpCount()));
                     } else if ((searchdetailList.getAccountType().equals("0"))) {
                         myViewHolder.tv_count.setVisibility(View.VISIBLE);
-                        Log.i("qaz", String.valueOf(searchdetailList.getBranchCount()));
+                        Log.i("qaz", String.valueOf(searchdetailList.getBranchSpCount()));
+                    }else {
+                        myViewHolder.tv_branch_name.setVisibility(View.GONE);
                     }
                 } else {
                     myViewHolder.tv_branch_name.setVisibility(View.GONE);
@@ -716,7 +715,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     String formattedDate = df.format(c);
                     System.out.println("Current time => " + formattedDate);
-                    Config.logV("print" + searchdetailList.getAvail_date() + "" + searchdetailList.getOnline_checkins());
+
 
                     Date date1 = null, date2 = null;
                     try {
@@ -726,18 +725,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
+                    if(searchdetailList.getMessage() != null){
+                        myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
+                    }else {
+                        myViewHolder.tv_qmessage.setVisibility(View.GONE);
+                    }
 
-                    if (searchdetailList.getAvail_date() != null && searchdetailList.getOnline_checkins() != null && searchdetailList.getServices() != null) {
+                    if (searchdetailList.getAvail_date() != null && searchdetailList.isOnlineCheckIn() != false && searchdetailList.isAvailableToday() && searchdetailList.getServices() != null) {
 
-                        Config.logV("Title-------" + searchdetailList.getTitle());
-                        Config.logV("Title---111----" + searchdetailList.getAvail_date());
+                            if (searchdetailList.isOnlineCheckIn() && searchdetailList.isAvailableToday()) {
 
-                        Config.logV("Title---111---222-" + formattedDate + "" + searchdetailList.getAvail_date() + "online" + searchdetailList.getOnline_checkins());
-
-                        if (searchdetailList.getOnline_checkins() != null) {
-                            if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {
-
-                                if ((formattedDate.trim().equalsIgnoreCase(searchdetailList.getAvail_date().trim()) && (searchdetailList.getOnline_checkins().equalsIgnoreCase("1")))) {
+                                if ((formattedDate.trim().equalsIgnoreCase(searchdetailList.getAvail_date().trim()) && (searchdetailList.isOnlineCheckIn()) && (searchdetailList.isAvailableToday()))) {
                                     Config.logV("Title------333-" + searchdetailList.getTitle());
                                     myViewHolder.btncheckin.setVisibility(View.VISIBLE);
                                     //  myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.button_gradient_checkin));
@@ -745,7 +744,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#28a745"));
 
 
-                                } else if (searchdetailList.getOnline_checkins().equalsIgnoreCase("1") && date1.compareTo(date2) < 0) {
+                                } else if (searchdetailList.isOnlineCheckIn() && searchdetailList.isAvailableToday() && date1.compareTo(date2) < 0) {
                                     myViewHolder.btncheckin.setVisibility(View.VISIBLE);
                                     myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
                                     // myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
@@ -755,20 +754,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 }
 
                             } else {
-                                myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
+                                myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+                                myViewHolder.btncheckin.setEnabled(false);
                                 myViewHolder.tv_Futuredate.setVisibility(View.INVISIBLE);
                             }
-                        }
+
                     } else {
-                        /*if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())&&searchdetailList.getServices()!=null) {
-                            myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-                        } else {*/
-                        Config.logV("WAITTIME INVISIBLE ####%%%%%%@@@@@@@@@@@@@@@@@@@@@");
                         myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
-                        //}
                     }
+
+
                     if (searchdetailList.getShow_waiting_time() != null && searchdetailList.getServices() != null) {
-                        if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1") && searchdetailList.getOnline_checkins() != null && searchdetailList.getOnline_checkins().equalsIgnoreCase("1")) {
+                        if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1") && searchdetailList.isOnlineCheckIn() != false && searchdetailList.isAvailableToday()) {
                             if (searchdetailList.getAvail_date() != null) {
                                 Config.logV("WAITTIME INVISIBLE ####@@@@@@@@@@@@@@@@@@@@@");
                                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
@@ -876,6 +873,16 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                 } else {
+
+                    if(searchdetailList.getMessage() != null){
+                        myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
+                        myViewHolder.btncheckin.setVisibility(View.GONE);
+                    }else {
+                        myViewHolder.tv_qmessage.setVisibility(View.GONE);
+                    }
+
+                    Log.i("qwe","qweqwe");
                     myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
                     myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
                     myViewHolder.tv_Futuredate.setVisibility(View.GONE);
@@ -1204,7 +1211,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_count;
+        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_count,tv_qmessage;
         LinearLayout L_specialization, L_services, L_layout_type, L_checkin;
 
         ImageView ic_jaldeeverifiedIcon;
@@ -1219,31 +1226,32 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public MyViewHolder(View view) {
             super(view);
-            L_checkin =  view.findViewById(R.id.checkinlayout);
+            L_checkin = view.findViewById(R.id.checkinlayout);
             ic_jaldeeverifiedIcon = view.findViewById(R.id.ic_jaldeeverifiedIcon);
-            tv_name =  view.findViewById(R.id.name);
-            tv_count =  view.findViewById(R.id.count_search);
-            tv_claimable =  view.findViewById(R.id.claimable);
-            tv_branch_name =  view.findViewById(R.id.branch_name);
-            tv_location =  view.findViewById(R.id.location);
-            tv_domain =  view.findViewById(R.id.domain);
-            profile =  view.findViewById(R.id.profile);
-            rating =  view.findViewById(R.id.mRatingBar);
-            L_services =  view.findViewById(R.id.service);
-            tv_distance =  view.findViewById(R.id.distance);
-            btncheckin =  view.findViewById(R.id.btncheckin);
-            btnappointment =  view.findViewById(R.id.btnappointment);
-            tv_Futuredate =  view.findViewById(R.id.txt_diffdate);
-            tv_WaitTime =  view.findViewById(R.id.txtWaitTime);
-            L_specialization =  view.findViewById(R.id.Lspec);
-            L_layout_type =  view.findViewById(R.id.layout_type);
-            layout_row =  view.findViewById(R.id.layout_row);
-            tv_spec1 =  view.findViewById(R.id.txtspec1);
-            tv_spec2 =  view.findViewById(R.id.txtspec2);
-            tv_spec3 =  view.findViewById(R.id.txtspec3);
-            tv_spec22 =  view.findViewById(R.id.txtspec22);
-            mImageViewText =  view.findViewById(R.id.mImageViewText);
-            layout_type =  view.findViewById(R.id.layout_type);
+            tv_name = view.findViewById(R.id.name);
+            tv_count = view.findViewById(R.id.count_search);
+            tv_qmessage = view.findViewById(R.id.qmessage);
+            tv_claimable = view.findViewById(R.id.claimable);
+            tv_branch_name = view.findViewById(R.id.branch_name);
+            tv_location = view.findViewById(R.id.location);
+            tv_domain = view.findViewById(R.id.domain);
+            profile = view.findViewById(R.id.profile);
+            rating = view.findViewById(R.id.mRatingBar);
+            L_services = view.findViewById(R.id.service);
+            tv_distance = view.findViewById(R.id.distance);
+            btncheckin = view.findViewById(R.id.btncheckin);
+            btnappointment = view.findViewById(R.id.btnappointment);
+            tv_Futuredate = view.findViewById(R.id.txt_diffdate);
+            tv_WaitTime = view.findViewById(R.id.txtWaitTime);
+            L_specialization = view.findViewById(R.id.Lspec);
+            L_layout_type = view.findViewById(R.id.layout_type);
+            layout_row = view.findViewById(R.id.layout_row);
+            tv_spec1 = view.findViewById(R.id.txtspec1);
+            tv_spec2 = view.findViewById(R.id.txtspec2);
+            tv_spec3 = view.findViewById(R.id.txtspec3);
+            tv_spec22 = view.findViewById(R.id.txtspec22);
+            mImageViewText = view.findViewById(R.id.mImageViewText);
+            layout_type = view.findViewById(R.id.layout_type);
         }
     }
 
@@ -1252,7 +1260,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public LoadingVH(View itemView) {
             super(itemView);
-            loadmore_progress =  itemView.findViewById(R.id.loadmore_progress);
+            loadmore_progress = itemView.findViewById(R.id.loadmore_progress);
         }
     }
 

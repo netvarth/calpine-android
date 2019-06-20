@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class SearchListModel implements Serializable {
 
 
-
     public boolean isIs_SpecOpen() {
         return is_SpecOpen;
     }
@@ -108,7 +107,6 @@ public class SearchListModel implements Serializable {
     }
 
 
-
     public String getSub_sector() {
         return sub_sector;
     }
@@ -159,7 +157,6 @@ public class SearchListModel implements Serializable {
     public String getYnw_verified_level() {
         return ynw_verified_level;
     }
-
 
 
     public String getParking_type_location1() {
@@ -258,6 +255,7 @@ public class SearchListModel implements Serializable {
         this.queueWaitingTime = queueWaitingTime;
     }
 
+
     public String getServiceTime() {
         return serviceTime;
     }
@@ -268,6 +266,59 @@ public class SearchListModel implements Serializable {
 
     String show_waiting_time;
     int queueWaitingTime;
+
+    public int getBranchSpCount() {
+        return branchSpCount;
+    }
+
+    public void setBranchSpCount(int branchSpCount) {
+        this.branchSpCount = branchSpCount;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    private String message;
+
+
+    public boolean isOnlineCheckIn() {
+        return onlineCheckIn;
+    }
+
+    public void setOnlineCheckIn(boolean onlineCheckIn) {
+        this.onlineCheckIn = onlineCheckIn;
+    }
+
+    public boolean isFutureWaitlist() {
+        return futureWaitlist;
+    }
+
+    public void setFutureWaitlist(boolean futureWaitlist) {
+        this.futureWaitlist = futureWaitlist;
+    }
+
+    public boolean isAvailableToday() {
+        return isAvailableToday;
+    }
+
+    public void setAvailableToday(boolean availableToday) {
+        isAvailableToday = availableToday;
+    }
+
+
+    boolean onlineCheckIn;
+    boolean futureWaitlist;
+    boolean isAvailableToday;
+
+
+
+
+    int branchSpCount;
     private String serviceTime;
 
     public int getPersonAhead() {
@@ -280,16 +331,6 @@ public class SearchListModel implements Serializable {
 
     int personAhead;
 
-    public int getBranchCount() {
-        return branchSpCount;
-    }
-
-    public void setBranchSpCount(int branchSpCount) {
-        this.branchSpCount = branchSpCount;
-    }
-
-    int branchSpCount;
-
 
     public String getCalculationMode() {
         return calculationMode;
@@ -300,7 +341,6 @@ public class SearchListModel implements Serializable {
     }
 
     String calculationMode;
-
 
 
     public ArrayList getServices() {
@@ -421,7 +461,6 @@ public class SearchListModel implements Serializable {
     public void setAvail_date(String avail_date) {
         this.avail_date = avail_date;
     }
-
 
     public ArrayList getBusiness_hours1() {
         return business_hours1;

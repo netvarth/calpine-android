@@ -120,8 +120,8 @@ public class ChangePasswordFragment extends RootFragment {
             public void onClick(View v) {
                 if(Config.isOnline(mContext)){
                     if(validatePassword()&&validateConfirmPassword()/*&&validateOldPassword()*/) {
-                        if (edtNewpwd.getText().toString().equalsIgnoreCase(edtconfirmpwd.getText().toString())) {
-                            ApiChangePwd(edtOldpwd.getText().toString(), edtNewpwd.getText().toString());
+                        if (edtNewpwd.getText().toString().trim().equalsIgnoreCase(edtconfirmpwd.getText().toString().trim())) {
+                            ApiChangePwd(edtOldpwd.getText().toString(), edtNewpwd.getText().toString().trim());
                         }else{
                             Toast.makeText(getActivity(),"Password and Confirm Password do not match",Toast.LENGTH_LONG).show();
                         }

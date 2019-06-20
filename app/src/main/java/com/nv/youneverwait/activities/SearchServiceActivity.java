@@ -32,7 +32,7 @@ public class SearchServiceActivity extends AppCompatActivity {
     TextView tv_toolbartitle,tv_descVal;
     ImageView i_backpress;
     boolean isTaxable,isPrepayment;
-    LinearLayout Lprepayment;
+    LinearLayout Lprepayment,LserviceLayout;
     TextView txtpreVal;
 String MinPrePaymentAmount;
     @Override
@@ -48,6 +48,7 @@ String MinPrePaymentAmount;
         i_servicegallery = (ImageView) findViewById(R.id.img_service);
         i_backpress= (ImageView) findViewById(R.id.backpress);
         Lprepayment=(LinearLayout) findViewById(R.id.Lprepayment);
+        LserviceLayout =(LinearLayout) findViewById(R.id.service_layout);
         txtpreVal=(TextView) findViewById(R.id.txtpreVal);
 
 
@@ -93,17 +94,28 @@ String MinPrePaymentAmount;
             tv_service.setVisibility(View.GONE);
         }
 
-        if (price != null) {
-            tv_price.setVisibility(View.VISIBLE);
-            if(isTaxable) {
 
-                tv_price.setText("₹"+price+ " (Tax Applicable)");
-            }else {
-                tv_price.setText("₹"+price);
+        if (price != null) {
+            if(!price.equals("0.0")){
+                tv_price.setVisibility(View.VISIBLE);
+                LserviceLayout.setVisibility(View.VISIBLE);
+                if(isTaxable) {
+                    tv_price.setText("₹"+price+ " (Tax Applicable)");
+                }else {
+                    tv_price.setText("₹"+price);
+                }
+            }
+            else{
+                tv_price.setVisibility(View.GONE);
+                LserviceLayout.setVisibility(View.GONE);
             }
         } else {
             tv_price.setVisibility(View.GONE);
+            LserviceLayout.setVisibility(View.GONE);
         }
+
+
+
         if (duration != null) {
             tv_duration.setVisibility(View.VISIBLE);
             tv_duration.setText(duration +" Mins");

@@ -217,7 +217,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         firstCoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchDetailViewFragment.onMethodFirstCoupn(searchdetailList.getUniqueid());
+                searchDetailViewFragment.
+                        onMethodFirstCoupn(searchdetailList.getUniqueid());
             }
         });
 
@@ -613,10 +614,10 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             if (searchdetailList.getAccountType().equals("1")) {
                 myViewHolder.tv_branch_name.setText(searchdetailList.getBranch_name());
                 myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
-                Log.i("qazqaz", String.valueOf(searchdetailList.getBranchCount()));
+                Log.i("qazqaz", String.valueOf(searchdetailList.getBranchSpCount()));
             } else if ((searchdetailList.getAccountType().equals("0"))) {
                 myViewHolder.tv_count.setVisibility(View.VISIBLE);
-                Log.i("qaz", String.valueOf(searchdetailList.getBranchCount()));
+                Log.i("qaz", String.valueOf(searchdetailList.getBranchSpCount()));
             }
         } else {
             myViewHolder.tv_branch_name.setVisibility(View.GONE);

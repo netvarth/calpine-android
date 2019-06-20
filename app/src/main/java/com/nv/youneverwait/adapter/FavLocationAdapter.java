@@ -105,7 +105,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             @Override
             public void onClick(View v) {
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                iCheckIn.putExtra("serviceId", Integer.parseInt(queueList.getNextAvailableQueue().getLocation().getId()));
+                iCheckIn.putExtra("serviceId", (queueList.getNextAvailableQueue().getLocation().getId()));
                 iCheckIn.putExtra("uniqueID", uniqueId);
                 iCheckIn.putExtra("accountID",queueList.getProvider().getId());
                 iCheckIn.putExtra("from", "favourites");
@@ -120,7 +120,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             @Override
             public void onClick(View v) {
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                iCheckIn.putExtra("serviceId", Integer.parseInt(queueList.getNextAvailableQueue().getLocation().getId()));
+                iCheckIn.putExtra("serviceId", (queueList.getNextAvailableQueue().getLocation().getId()));
                 iCheckIn.putExtra("uniqueID", uniqueId);
                 iCheckIn.putExtra("accountID",queueList.getProvider().getId());
                 iCheckIn.putExtra("from", "favourites_date");
@@ -153,7 +153,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
                 if(mFavList.get(i).getLocations()!=null) {
                     for(int j=0;j<mFavList.get(i).getLocations().size();j++) {
-                        if (mFavList.get(i).getLocations().get(j).getId() == Integer.parseInt(queueList.getNextAvailableQueue().getLocation().getId())) {
+                        if (mFavList.get(i).getLocations().get(j).getId() == (queueList.getNextAvailableQueue().getLocation().getId())) {
                             Config.logV("Location--##################------------" + mFavList.get(i).getLocations().get(j).getPlace());
                             myViewHolder.tv_loc.setText(mFavList.get(i).getLocations().get(j).getPlace());
                         }
@@ -204,7 +204,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             myViewHolder.tv_Open.setVisibility(View.VISIBLE);
             Config.logV("Open Now----------------");
         }else{
-            Config.logV("Open Now-------3333---------"+queueList.isOpenNow());
+            Config.logV("Open Now-------3333---------"+queueList.getNextAvailableQueue().isOpenNow());
             myViewHolder.tv_Open.setVisibility(View.GONE);
         }
 
@@ -225,7 +225,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
 
                 if ((formattedDate.trim().equalsIgnoreCase(queueList.getNextAvailableQueue().getAvailableDate()))) {
-                    if (queueList.getNextAvailableQueue().getServiceTime() != null) {
+                    if (queueList.getServiceTime() != null) {
 
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
@@ -246,7 +246,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         }*/
 
 
-                        String secondWord="Today, "+queueList.getNextAvailableQueue().getServiceTime();
+                        String secondWord="Today, "+queueList.getServiceTime();
                         Spannable spannable = new SpannableString(firstWord+secondWord);
                         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -279,7 +279,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                                 "fonts/Montserrat_Bold.otf");
                         //String firstWord="Next Wait Time ";
                         String firstWord="Next Available Time ";
-                        String secondWord=  monthString + " " + day + ", " +queueList.getNextAvailableQueue().getServiceTime();
+                        String secondWord=  monthString + " " + day + ", " +queueList.getServiceTime();
                         Spannable spannable = new SpannableString(firstWord+secondWord);
                         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),

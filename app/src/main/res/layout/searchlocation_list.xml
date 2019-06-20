@@ -426,6 +426,7 @@
                     android:visibility="invisible" />
 
                 <Button
+                    android:visibility="invisible"
                     android:id="@+id/btn_checkin"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"

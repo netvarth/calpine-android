@@ -92,6 +92,16 @@ public class QueueTimeSlotModel {
         return queueWaitingTime;
     }
 
+    public int getBranchSpCount() {
+        return branchSpCount;
+    }
+
+    public void setBranchSpCount(int branchSpCount) {
+        this.branchSpCount = branchSpCount;
+    }
+
+    int branchSpCount;
+
     public void setQueueWaitingTime(int queueWaitingTime) {
         this.queueWaitingTime = queueWaitingTime;
     }

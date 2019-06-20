@@ -171,8 +171,6 @@ public class BillModel {
     String createdDate;
 
 
-
-
     @SerializedName("jCoupon")
     private Map<String, JsonObject> jCoupon;
 

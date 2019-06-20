@@ -9,6 +9,16 @@ public class SearchDepartment implements Serializable {
 
     String departmentName;
 
+    public String getDepartmentStatus() {
+        return departmentStatus;
+    }
+
+    public void setDepartmentStatus(String departmentStatus) {
+        this.departmentStatus = departmentStatus;
+    }
+
+    String departmentStatus;
+
     public boolean isFilterByDept() {
         return filterByDept;
     }

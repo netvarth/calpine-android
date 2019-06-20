@@ -1,23 +1,13 @@
 package com.nv.youneverwait.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.nv.youneverwait.model.NextAvailableQModel;
 
 /**
  * Created by sharmila on 25/7/18.
  */
 
 public class QueueList {
-
-
-    int queueWaitingTime;
-
-    public int getQueueWaitingTime() {
-        return queueWaitingTime;
-    }
-
-    public void setQueueWaitingTime(int queueWaitingTime) {
-        this.queueWaitingTime = queueWaitingTime;
-    }
 
     public String getServiceTime() {
         return serviceTime;
@@ -28,6 +18,16 @@ public class QueueList {
     }
 
     String serviceTime;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    String message;
 
 
     public QueueList getProvider() {
@@ -52,79 +52,18 @@ public class QueueList {
     String id;
 
 
-    public QueueList getNextAvailableQueue() {
+    public NextAvailableQModel getNextAvailableQueue() {
         return nextAvailableQueue;
     }
 
-    public void setNextAvailableQueue(QueueList nextAvailableQueue) {
+    public void setNextAvailableQueue(NextAvailableQModel nextAvailableQueue) {
         this.nextAvailableQueue = nextAvailableQueue;
     }
-
-    private QueueList nextAvailableQueue;
-
-    public QueueList getLocation() {
-        return location;
-    }
-
-    public void setLocation(QueueList location) {
-        this.location = location;
-    }
-
-    private QueueList location;
-
-    public String getAvailableDate() {
-        return availableDate;
-    }
-
-    public void setAvailableDate(String availableDate) {
-        this.availableDate = availableDate;
-    }
-
-    String availableDate;
-
-    public boolean isOpenNow() {
-        return openNow;
-    }
-
-    public void setOpenNow(boolean openNow) {
-        this.openNow = openNow;
-    }
-
-    boolean openNow;
-
-    public int getQueueSize() {
-        return queueSize;
-    }
-
-    public void setQueueSize(int queueSize) {
-        this.queueSize = queueSize;
-    }
-
-    int queueSize;
+    @SerializedName("nextAvailableQueue")
+    private NextAvailableQModel nextAvailableQueue;
 
 
-    public String getCalculationMode() {
-        return calculationMode;
-    }
-
-    public void setCalculationMode(String calculationMode) {
-        this.calculationMode = calculationMode;
-    }
-
-    String calculationMode;
-
-    public int getPersonAhead() {
-        return personAhead;
-    }
-
-    public void setPersonAhead(int personAhead) {
-        this.personAhead = personAhead;
-    }
-
-    int personAhead;
-
-
-    public int getBranchCount() {
+    public int getBranchSpCount() {
         return branchSpCount;
     }
 
@@ -133,5 +72,7 @@ public class QueueList {
     }
 
     int branchSpCount;
+
+
 
 }

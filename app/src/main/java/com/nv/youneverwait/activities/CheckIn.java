@@ -700,7 +700,7 @@ public class CheckIn extends AppCompatActivity {
                     couponArraylist.add(couponEntered);
 
                     couponEdit.setText("");
-                    Toast.makeText(CheckIn.this, couponEntered + "Added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckIn.this, couponEntered +" "+ "Added", Toast.LENGTH_SHORT).show();
 
 
                 } else {

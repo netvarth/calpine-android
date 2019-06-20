@@ -145,7 +145,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
-    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon, tv_count_details;
+    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon;
     List<SearchDepartment> departmentList;
     private String departmentCode;
 
@@ -186,9 +186,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         txtMore = (TextView) row.findViewById(R.id.txtMore);
         tv_contact = (TextView) row.findViewById(R.id.txtcontact);
         tv_coupon = (TextView) row.findViewById(R.id.txtcoupon);
-        tv_count_details = (TextView) row.findViewById(R.id.count_details);
-
-
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
@@ -204,8 +201,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mInterfaceContact = (ContactAdapterCallback) this;
         //isContact = false;
         Config.logV("Refresh @@@@@@@@@@@@@@@@@@");
-
-
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         tv_title.setVisibility(View.INVISIBLE);
 
@@ -217,7 +212,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 getFragmentManager().popBackStack();
             }
         });
-
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -240,15 +234,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
         tv_fav = (TextView) row.findViewById(R.id.txtfav);
         tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
-
-
         LsocialMedia = (LinearLayout) row.findViewById(R.id.LsocialMedia);
         LSpecialization_2 = (LinearLayout) row.findViewById(R.id.LSpecialization_2);
         tv_spec1 = (TextView) row.findViewById(R.id.txtspec1);
         tv_spec2 = (TextView) row.findViewById(R.id.txtspec2);
         tv_seeAll = (TextView) row.findViewById(R.id.txtSeeAll);
-
-
         ic_fac = (ImageView) row.findViewById(R.id.ic_fac);
         ic_gplus = (ImageView) row.findViewById(R.id.ic_gplus);
         ic_pin = (ImageView) row.findViewById(R.id.ic_pin);
@@ -256,7 +246,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ic_twitt = (ImageView) row.findViewById(R.id.ic_twitt);
         ic_yout = (ImageView) row.findViewById(R.id.ic_yout);
         ic_jaldeeverifiedIcon = (ImageView) row.findViewById(R.id.ic_jaldeeverifiedIcon);
-
 
         //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
         tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
@@ -271,12 +260,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_specializtion.setTypeface(tyface);
         txtMore.setTypeface(tyface);
         //tv_contactdetails.setTypeface(tyface);
-
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
         ApiSearchVirtualFields(uniqueID);
-
 
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,7 +283,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 } else {
                     flag_more = false;
                     tv_Moredetails.setText("See All");
-
                     int size = domainVirtual.size();
                     if (size == 1) {
                         size = 1;
@@ -318,16 +304,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 onMethodCoupn(uniqueID);
             }
         });
-
-        tv_count_details.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onMethodNewSearch(uniqueID);
-            }
-        });
-
         mInterface = (SearchLocationAdpterCallback) this;
-
         tv_msg.setEnabled(false);
         tv_msg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -374,9 +351,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         String modifyAccountID = String.valueOf(mProvoderId);
                         ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
-                        // ApiSearchViewTerminology(modifyAccountID);
-                        //dialog.dismiss();
-
                     }
                 });
 
@@ -566,152 +540,182 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
 
 
-            if (mBusinessDataList.getLogo() != null && mGallery.size() > 0 || mGallery.size() > 1) {
-                tv_Gallery.setVisibility(View.GONE);
-                mImgthumbProfile.setVisibility(View.GONE);
-
-                if (mBusinessDataList.getLogo() != null) {
 
 
-                    Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
-
-
-                    if (mGallery.size() == 2) {
-                        mImgthumbProfile1.setVisibility(View.GONE);
-                        Config.logV("Gallery--------");
-                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-                    } else {
-                        mImgthumbProfile1.setVisibility(View.GONE);
-                    }
-
-                    if (mGallery.size() == 3) {
-
-                        mImgthumbProfile1.setVisibility(View.GONE);
-                        Config.logV("Gallery----333----");
-                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-                        mImgthumbProfile2.setVisibility(View.GONE);
-                        Config.logV("Gallery----3333----");
-                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
-                    }
-
-                    if (mGallery.size() > 3) {
-
-                        mImgthumbProfile1.setVisibility(View.GONE);
-                        Config.logV("Gallery----4444----");
-                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-
-                        mImgthumbProfile2.setVisibility(View.GONE);
-                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
-                        tv_ImageViewText.setVisibility(View.VISIBLE);
-                        tv_mImageViewTextnew.setVisibility(View.VISIBLE);
-                        tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
-                        tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
-                        Config.logV("Gallery-------------444----------" + mGallery.size());
-                        mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                Config.logV("Gallery------------------------------" + mGallery.size());
-                                ArrayList<String> mGalleryList = new ArrayList<>();
-
-
-                                if (mBusinessDataList.getLogo() != null) {
-
-                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                                }
-
-                                for (int i = 0; i < mGallery.size(); i++) {
-
-                                    mGalleryList.add(mGallery.get(i).getUrl());
-                                }
-
-
-                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                                if (mValue) {
-
-                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                    intent.putExtra("pos", 3);
-                                    startActivity(intent);
-                                }
-
-
-                            }
-                        });
-                    } else {
-                        //mImgthumbProfile2.setVisibility(View.GONE);
-                        tv_ImageViewText.setVisibility(View.GONE);
-                        tv_mImageViewTextnew.setVisibility(View.GONE);
-                        // mImgthumbProfile1.setVisibility(View.GONE);
-                    }
-
-                } else {
-
-
-                    Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
-
-
-                    if (mGallery.size() == 3) {
-                        mImgthumbProfile1.setVisibility(View.GONE);
-                        Config.logV("Gallery--------");
-                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-                    } else {
-                        mImgthumbProfile1.setVisibility(View.GONE);
-                    }
-
-                    if (mGallery.size() > 3) {
-
-                        mImgthumbProfile1.setVisibility(View.GONE);
-                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-                        mImgthumbProfile2.setVisibility(View.GONE);
-                        Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
-                        tv_ImageViewText.setVisibility(View.VISIBLE);
-                        tv_mImageViewTextnew.setVisibility(View.VISIBLE);
-                        tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
-                        tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
-                        Config.logV("Galeery--------------11111-----------" + mGallery.size());
-                        mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                Config.logV("Gallery------------------------------" + mGallery.size());
-                                ArrayList<String> mGalleryList = new ArrayList<>();
-                                if (mBusinessDataList.getLogo() != null) {
-
-                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                                }
-
-
-                                for (int i = 0; i < mGallery.size(); i++) {
-                        /*SearchViewDetail data = new SearchViewDetail();
-                        data.setUrl(mGallery.get(i).getUrl());*/
-                                    mGalleryList.add(mGallery.get(i).getUrl());
-                                }
-
-
-                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                                if (mValue) {
-
-                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                    intent.putExtra("pos", 3);
-                                    startActivity(intent);
-                                }
-
-
-                            }
-                        });
-                    } else {
-                        mImgthumbProfile2.setVisibility(View.GONE);
-                        tv_ImageViewText.setVisibility(View.GONE);
-                        tv_mImageViewTextnew.setVisibility(View.GONE);
-                        // mImgthumbProfile1.setVisibility(View.GONE);
-                    }
-
-
+            if(mBusinessDataList.getLogo() != null){
+                if(mGallery.size()>0){
+                    tv_mImageViewTextnew.setVisibility(View.VISIBLE);
+                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
                 }
-            } else {
-                mImgthumbProfile.setVisibility(View.GONE);
-                tv_Gallery.setVisibility(View.GONE);
+
+            }else if(mBusinessDataList.getLogo()==null){
+                if(mGallery.size()>0){
+                    tv_mImageViewTextnew.setVisibility(View.VISIBLE);
+                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size() - 1));
+                }else{tv_mImageViewTextnew.setVisibility(View.GONE);}
             }
+
+
+
+
+//            if (mBusinessDataList.getLogo() != null && mGallery.size() > 0 || mGallery.size() > 1){
+//                if (mBusinessDataList.getLogo() != null){
+//                    tv_mImageViewTextnew.setVisibility(View.VISIBLE);
+//                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
+//                }else{}
+//
+//
+//            }else {
+//                tv_mImageViewTextnew.setVisibility(View.GONE);
+//            }
+//
+//
+//            if (mBusinessDataList.getLogo() != null && mGallery.size() > 0 || mGallery.size() > 1) {
+//                tv_Gallery.setVisibility(View.GONE);
+//                mImgthumbProfile.setVisibility(View.GONE);
+//
+//                if (mBusinessDataList.getLogo() != null) {
+//
+//
+//                    Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
+//
+//
+//                    if (mGallery.size() == 2) {
+//                        mImgthumbProfile1.setVisibility(View.GONE);
+//                        Config.logV("Gallery--------");
+//                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+//                    } else {
+//                        mImgthumbProfile1.setVisibility(View.GONE);
+//                    }
+//
+//                    if (mGallery.size() == 3) {
+//
+//                        mImgthumbProfile1.setVisibility(View.GONE);
+//                        Config.logV("Gallery----333----");
+//                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+//                        mImgthumbProfile2.setVisibility(View.GONE);
+//                        Config.logV("Gallery----3333----");
+//                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
+//                    }
+//
+//                    if (mGallery.size() > 3) {
+//
+//                        mImgthumbProfile1.setVisibility(View.GONE);
+//                        Config.logV("Gallery----4444----");
+//                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+//
+//                        mImgthumbProfile2.setVisibility(View.GONE);
+//                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
+//                        tv_ImageViewText.setVisibility(View.VISIBLE);
+//                        tv_mImageViewTextnew.setVisibility(View.VISIBLE);
+//                        tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
+//                        tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
+//                        Config.logV("Gallery-------------444----------" + mGallery.size());
+//                        mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//
+//                                Config.logV("Gallery------------------------------" + mGallery.size());
+//                                ArrayList<String> mGalleryList = new ArrayList<>();
+//
+//
+//                                if (mBusinessDataList.getLogo() != null) {
+//
+//                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+//                                }
+//
+//                                for (int i = 0; i < mGallery.size(); i++) {
+//
+//                                    mGalleryList.add(mGallery.get(i).getUrl());
+//                                }
+//
+//
+//                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+//                                if (mValue) {
+//
+//                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+//                                    intent.putExtra("pos", 3);
+//                                    startActivity(intent);
+//                                }
+//
+//
+//                            }
+//                        });
+//                    } else {
+//                        //mImgthumbProfile2.setVisibility(View.GONE);
+//                        tv_ImageViewText.setVisibility(View.GONE);
+//                        tv_mImageViewTextnew.setVisibility(View.GONE);
+//                        // mImgthumbProfile1.setVisibility(View.GONE);
+//                    }
+//
+//                } else {
+//
+//
+//                    Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
+//
+//
+//                    if (mGallery.size() == 3) {
+//                        mImgthumbProfile1.setVisibility(View.GONE);
+//                        Config.logV("Gallery--------");
+//                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+//                    } else {
+//                        mImgthumbProfile1.setVisibility(View.GONE);
+//                    }
+//
+//                    if (mGallery.size() > 3) {
+//
+//                        mImgthumbProfile1.setVisibility(View.GONE);
+//                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
+//                        mImgthumbProfile2.setVisibility(View.GONE);
+//                        Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
+//                        tv_ImageViewText.setVisibility(View.VISIBLE);
+//                        tv_mImageViewTextnew.setVisibility(View.VISIBLE);
+//                        tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
+//                        tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
+//                        Config.logV("Galeery--------------11111-----------" + mGallery.size());
+//                        mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//
+//                                Config.logV("Gallery------------------------------" + mGallery.size());
+//                                ArrayList<String> mGalleryList = new ArrayList<>();
+//                                if (mBusinessDataList.getLogo() != null) {
+//
+//                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+//                                }
+//
+//
+//                                for (int i = 0; i < mGallery.size(); i++) {
+//                        /*SearchViewDetail data = new SearchViewDetail();
+//                        data.setUrl(mGallery.get(i).getUrl());*/
+//                                    mGalleryList.add(mGallery.get(i).getUrl());
+//                                }
+//
+//
+//                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+//                                if (mValue) {
+//
+//                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+//                                    intent.putExtra("pos", 3);
+//                                    startActivity(intent);
+//                                }
+//
+//
+//                            }
+//                        });
+//                    } else {
+//                        mImgthumbProfile2.setVisibility(View.GONE);
+//                        tv_ImageViewText.setVisibility(View.GONE);
+//                        tv_mImageViewTextnew.setVisibility(View.GONE);
+//                        // mImgthumbProfile1.setVisibility(View.GONE);
+//                    }
+//
+//
+//                }
+//            } else {
+//                mImgthumbProfile.setVisibility(View.GONE);
+//                tv_Gallery.setVisibility(View.GONE);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1673,7 +1677,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             idPass += mProviderid + "-" + ids.get(i) + ",";
         }
 
-        Config.logV("IDS_--------------------" + idPass);
+        Config.logV("IDS123_--------------------" + idPass);
         Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
 
         call.enqueue(new Callback<ArrayList<QueueList>>() {
@@ -1687,6 +1691,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                     Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----SearchViewID--------------------" + response.code());
+                    Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
 
                     if (response.code() == 200) {
 
@@ -1973,14 +1978,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     public void onMethodDepartment(SearchDepartment departmentCode, List<SearchListModel> searchList) {
 
-//        CouponFragment cfFragment = new CouponFragment();
-//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//        Bundle bundle = new Bundle();
-//        bundle.putString("uniqueID", uniqueID);
-//        cfFragment.setArguments(bundle);
-//        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-//        transaction.addToBackStack(null);
-//        transaction.add(R.id.mainlayout, cfFragment).commit();
         Log.i("qweqweq","qweqweqwe");
         DeptFragment deptFragment = new DeptFragment(departmentCode,searchList,this);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -2631,31 +2628,31 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             Config.logV("code---------------" + response.code());
                             mQueueList.clear();
                             if (response.code() == 200) {
-                                Config.logV("Sucess ----------" + response.body());
+                                Config.logV("Sucess123 ----------" + response.body());
 
 
                                 for (int i = 0; i < response.body().size(); i++) {
-                                    QueueList que = new QueueList();
-                                    que.setId(response.body().get(i).getProvider().getId());
+//                                    QueueList que = new QueueList();
+//                                    que.setId(response.body().get(i).getProvider().getId());
+//
+//                                    if (response.body().get(i).getNextAvailableQueue() != null) {
+//                                        que.setLocation(response.body().get(i).getNextAvailableQueue().getLocation());
+//                                        //  Config.logV("Available Time----1111---"+response.body().get(i).getNextAvailableQueue().getAvailableDate());
+//                                        que.setAvailableDate(response.body().get(i).getNextAvailableQueue().getAvailableDate());
+//                                        que.setOpenNow(response.body().get(i).getNextAvailableQueue().isOpenNow());
+//                                        if (response.body().get(i).getNextAvailableQueue().getServiceTime() != null) {
+//                                            que.setServiceTime(response.body().get(i).getNextAvailableQueue().getServiceTime());
+//                                        }
+//
+//                                        Config.logV("Calc Mode @@@@@@@@@@@RRRR" + response.body().get(i).getNextAvailableQueue().getCalculationMode());
+//                                        que.setCalculationMode(response.body().get(i).getNextAvailableQueue().getCalculationMode());
+//                                        que.setPersonAhead(response.body().get(i).getNextAvailableQueue().getPersonAhead());
+//                                        Config.logV("personAheadtttt @@@@@@@@@@@ ####" + response.body().get(i).getNextAvailableQueue().getPersonAhead());
+//                                        que.setQueueWaitingTime(response.body().get(i).getNextAvailableQueue().getQueueWaitingTime());
+//
+//                                    }
 
-                                    if (response.body().get(i).getNextAvailableQueue() != null) {
-                                        que.setLocation(response.body().get(i).getNextAvailableQueue().getLocation());
-                                        //  Config.logV("Available Time----1111---"+response.body().get(i).getNextAvailableQueue().getAvailableDate());
-                                        que.setAvailableDate(response.body().get(i).getNextAvailableQueue().getAvailableDate());
-                                        que.setOpenNow(response.body().get(i).getNextAvailableQueue().isOpenNow());
-                                        if (response.body().get(i).getNextAvailableQueue().getServiceTime() != null) {
-                                            que.setServiceTime(response.body().get(i).getNextAvailableQueue().getServiceTime());
-                                        }
-
-                                        Config.logV("Calc Mode @@@@@@@@@@@RRRR" + response.body().get(i).getNextAvailableQueue().getCalculationMode());
-                                        que.setCalculationMode(response.body().get(i).getNextAvailableQueue().getCalculationMode());
-                                        que.setPersonAhead(response.body().get(i).getNextAvailableQueue().getPersonAhead());
-                                        Config.logV("personAheadtttt @@@@@@@@@@@ ####" + response.body().get(i).getNextAvailableQueue().getPersonAhead());
-                                        que.setQueueWaitingTime(response.body().get(i).getNextAvailableQueue().getQueueWaitingTime());
-
-                                    }
-
-                                    mQueueList.add(que);
+                                    mQueueList.add(response.body().get(i));
                                 }
 
                                 if (mCheck.equalsIgnoreCase("next")) {
@@ -2786,42 +2783,66 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                             searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
                                         }
 
+                                        searchList.setQId(mSearchRespPass.get(i).getId());
+                                        if(mQueueList.get(i).getMessage()!=null){
+                                            searchList.setMessage(mQueueList.get(i).getMessage());
+                                        }
 
-                                        for (int j = 0; j < mQueueList.size(); j++) {
-                                            Config.logV("mQueueList.get(j).getLocation().getId()" + mQueueList.get(j).getLocation());
-                                            if (mQueueList.get(j).getLocation() != null) {
-
-                                                String json = new Gson().toJson(mQueueList.get(j).getLocation());
-                                                JSONObject json1 = new JSONObject(json);
-
-                                                String QID = json1.getString("id");
-
-
-                                                String mID = mQueueList.get(j).getId() + "-" + mQueueList.get(j).getLocation().getId();
-                                                Config.logV("QID----mmm-------------------" + mID + "compare-------" + mSearchRespPass.get(i).getId());
-                                                if (mID.equalsIgnoreCase(mSearchRespPass.get(i).getId())) {
-                                                    if (mQueueList.get(j).getAvailableDate() != null) {
-
-                                                        searchList.setAvail_date(mQueueList.get(j).getAvailableDate());
-                                                    }
-                                                    if (mQueueList.get(j).getLocation() != null) {
-                                                        searchList.setmLoc(QID);
-                                                    }
-                                                    //searchList.setQId(mQueueList.get(j).getId());
-                                                    searchList.setQId(mID);
-                                                    searchList.setIsopen(mQueueList.get(i).isOpenNow());
-                                                    searchList.setPersonAhead(mQueueList.get(i).getPersonAhead());
-                                                    searchList.setCalculationMode(mQueueList.get(i).getCalculationMode());
-
-                                                    Config.logV("personAhead @@@@@@@@@@@ 33####" + mQueueList.get(i).getPersonAhead());
-                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getQueueWaitingTime());
-                                                    if (mQueueList.get(i).getServiceTime() != null) {
-                                                        searchList.setServiceTime(mQueueList.get(i).getServiceTime());
-                                                    }
-
+                                        if (mQueueList.get(i).getNextAvailableQueue() != null) {
+                                            if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
+                                                if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
+                                                    searchList.setAvail_date(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
+                                                }
+                                                if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
+                                                    searchList.setmLoc(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getLocation().getId()));
+                                                }
+                                                searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
+                                                searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                                                searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
+                                                searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
+                                                searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
+                                                searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
+                                                searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
+                                                if (mQueueList.get(i).getServiceTime() != null) {
+                                                    searchList.setServiceTime(mQueueList.get(i).getServiceTime());
                                                 }
                                             }
                                         }
+//                                        for (int j = 0; j < mQueueList.size(); j++) {
+//                                            Config.logV("mQueueList.get(j).getLocation().getId()" + mQueueList.get(j).getNextAvailableQueue().getLocation());
+//                                            if (mQueueList.get(j).getNextAvailableQueue().getLocation() != null) {
+//
+//                                                String json = new Gson().toJson(mQueueList.get(j).getNextAvailableQueue().getLocation());
+//                                                JSONObject json1 = new JSONObject(json);
+//
+//                                                String QID = json1.getString("id");
+//
+//
+//                                                String mID = mQueueList.get(j).getNextAvailableQueue().getId() + "-" + mQueueList.get(j).getNextAvailableQueue().getLocation().getId();
+//                                                Config.logV("QID----mmm-------------------" + mID + "compare-------" + mSearchRespPass.get(i).getId());
+//                                                if (mID.equalsIgnoreCase(mSearchRespPass.get(i).getId())) {
+//                                                    if (mQueueList.get(j).getNextAvailableQueue().getAvailableDate() != null) {
+//
+//                                                        searchList.setAvail_date(mQueueList.get(j).getNextAvailableQueue().getAvailableDate());
+//                                                    }
+//                                                    if (mQueueList.get(j).getNextAvailableQueue().getLocation() != null) {
+//                                                        searchList.setmLoc(QID);
+//                                                    }
+//                                                    //searchList.setQId(mQueueList.get(j).getId());
+//                                                    searchList.setQId(mID);
+//                                                    searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
+//                                                    searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+//                                                    searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
+//
+//                                                    Config.logV("personAhead @@@@@@@@@@@ 33####" + mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+//                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
+//                                                    if (mQueueList.get(i).getServiceTime() != null) {
+//                                                        searchList.setServiceTime(mQueueList.get(i).getServiceTime());
+//                                                    }
+//
+//                                                }
+//                                            }
+//                                        }
 
 
                                         mSearchListModel.add(searchList);
@@ -2961,38 +2982,67 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         }
 
 
-                                        for (int j = 0; j < mQueueList.size(); j++) {
-                                            //Config.logV("mQueueList.get(j).getLocation().getId()"+mQueueList.get(j).getLocation());
-                                            if (mQueueList.get(j).getLocation() != null) {
-
-                                                String json = new Gson().toJson(mQueueList.get(j).getLocation());
-                                                JSONObject json1 = new JSONObject(json);
-
-                                                String QID = json1.getString("id");
+                                        searchList.setQId(mSearchRespPass.get(i).getId());
+                                        if(mQueueList.get(i).getMessage()!=null){
+                                            searchList.setMessage(mQueueList.get(i).getMessage());
+                                        }
 
 
-                                                String mID = mQueueList.get(j).getId() + "-" + mQueueList.get(j).getLocation().getId();
-                                                //Config.logV("QID----mmm-------------------"+mID+"compare-------"+mSearchRespPass.get(i).getId());
-                                                if (mID.equalsIgnoreCase(mSearchRespPass.get(i).getId())) {
-                                                    if (mQueueList.get(j).getAvailableDate() != null) {
+                                        if (mQueueList.get(i).getNextAvailableQueue() != null) {
+                                            if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
+                                                if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
+                                                    searchList.setAvail_date(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
+                                                }
+                                                if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
+                                                    searchList.setmLoc(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getLocation().getId()));
+                                                }
+                                                searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
+                                                searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                                                searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
+                                                searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
+                                                searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
 
-                                                        searchList.setAvail_date(mQueueList.get(j).getAvailableDate());
-                                                    }
-                                                    if (mQueueList.get(j).getLocation() != null) {
-                                                        searchList.setmLoc(QID);
-                                                    }
-                                                    searchList.setQId(mID);
-                                                    searchList.setIsopen(mQueueList.get(i).isOpenNow());
-                                                    searchList.setPersonAhead(mQueueList.get(i).getPersonAhead());
-                                                    searchList.setCalculationMode(mQueueList.get(i).getCalculationMode());
-                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getQueueWaitingTime());
-                                                    Config.logV("personAhead @@@@@@@@@@@ ####" + mQueueList.get(i).getPersonAhead());
-                                                    if (mQueueList.get(i).getServiceTime() != null) {
-                                                        searchList.setServiceTime(mQueueList.get(i).getServiceTime());
-                                                    }
+                                                searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
+                                                searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
+                                                if (mQueueList.get(i).getServiceTime() != null) {
+                                                    searchList.setServiceTime(mQueueList.get(i).getServiceTime());
                                                 }
                                             }
                                         }
+
+
+//                                        for (int j = 0; j < mQueueList.size(); j++) {
+//                                            //Config.logV("mQueueList.get(j).getLocation().getId()"+mQueueList.get(j).getLocation());
+//                                            if (mQueueList.get(j).getNextAvailableQueue().getLocation() != null) {
+//
+//                                                String json = new Gson().toJson(mQueueList.get(j).getNextAvailableQueue().getLocation());
+//                                                JSONObject json1 = new JSONObject(json);
+//
+//                                                String QID = json1.getString("id");
+//
+//
+//                                                String mID = mQueueList.get(j).getId() + "-" + mQueueList.get(j).getNextAvailableQueue().getLocation().getId();
+//                                                //Config.logV("QID----mmm-------------------"+mID+"compare-------"+mSearchRespPass.get(i).getId());
+//                                                if (mID.equalsIgnoreCase(mSearchRespPass.get(i).getId())) {
+//                                                    if (mQueueList.get(j).getNextAvailableQueue().getAvailableDate() != null) {
+//
+//                                                        searchList.setAvail_date(mQueueList.get(j).getNextAvailableQueue().getAvailableDate());
+//                                                    }
+//                                                    if (mQueueList.get(j).getNextAvailableQueue().getLocation() != null) {
+//                                                        searchList.setmLoc(QID);
+//                                                    }
+//                                                    searchList.setQId(mID);
+//                                                    searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
+//                                                    searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+//                                                    searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
+//                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
+//                                                    Config.logV("personAhead @@@@@@@@@@@ ####" + mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+//                                                    if (mQueueList.get(i).getServiceTime() != null) {
+//                                                        searchList.setServiceTime(mQueueList.get(i).getServiceTime());
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
 
 
                                         mSearchListModel.add(searchList);

@@ -521,18 +521,6 @@
                             </LinearLayout>
                         </LinearLayout>
 
-
-                        <TextView
-                            android:id="@+id/count_details"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/padding7"
-                            android:text="Click here to View more doctors"
-                            android:textColor="@color/title_consu"
-                            android:textSize="@dimen/txtsize_hint"
-                            android:layout_marginLeft="@dimen/default_padding" />
-
-
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/mSearchLoc"
                             android:layout_width="match_parent"

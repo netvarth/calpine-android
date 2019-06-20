@@ -1061,7 +1061,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
             if (mQueueList.get(i).getNextAvailableQueue() != null) {
                 Config.logV("1--" + searchLoclist.getId() + "  2--" + mQueueList.get(i).getNextAvailableQueue().getLocation().getId());
-                if (searchLoclist.getId() == Integer.parseInt(mQueueList.get(i).getNextAvailableQueue().getLocation().getId())) {
+                if (searchLoclist.getId() == mQueueList.get(i).getNextAvailableQueue().getLocation().getId()) {
 
                     //open Now
 
@@ -1085,8 +1085,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         e.printStackTrace();
                     }
 
+                    if(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn() && mQueueList.get(i).getNextAvailableQueue().isAvailableToday()){
 
-                    if (mSearchSetting.isOnlineCheckIns()) {
                         if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
 
                             if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) {
@@ -1119,6 +1119,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             myViewHolder.btn_checkin_expand.setVisibility(View.GONE);
 
                         }
+
                     } else {
                         myViewHolder.btn_checkin.setVisibility(View.GONE);
                         myViewHolder.btn_checkin_expand.setVisibility(View.GONE);
@@ -1134,32 +1135,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
                             if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) {
-                                if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                                if (mQueueList.get(i).getServiceTime() != null) {
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
 
-                                    /*String firstWord = null;
-                                    Date dt = new Date();
-                                    SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
-                                    String currentTime = sdf.format(dt);
-                                    Date datenow=parseDate(currentTime);
-
-                                    dateCompareOne = parseDate(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
-                                    if ( datenow.after( dateCompareOne ) ) {
-                                        firstWord = "Est Service Time \n";
-                                    }else {
-                                        firstWord = "Est Wait Time \n";
-
-                                    }*/
-
                                     String firstWord = "Next Available Time \n";
-                                    //String firstWord = "Est Service Time \n";
-                                    String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                                    String secondWord = "Today, " + mQueueList.get(i).getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
-                                    // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    /*spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                            firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
 
                                     myViewHolder.tv_waittime.setText(spannable);
                                     myViewHolder.txtwaittime_expand.setText(spannable);
@@ -1170,10 +1153,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     String firstWord = "Est Wait Time \n";
                                     String secondWord = mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime() + " Minutes";
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
-                                    //  spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                   /* spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                            firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-*/
                                     myViewHolder.tv_waittime.setText(spannable);
                                     myViewHolder.txtwaittime_expand.setText(spannable);
                                 }
@@ -1189,19 +1168,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     String firstWord = "Next Available Time \n";
-                                    String secondWord = monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                                    String secondWord = monthString + " " + day + ", " + mQueueList.get(i).getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
-                                    // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    /*spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-                                            firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
-
                                     myViewHolder.tv_waittime.setText(spannable);
                                     myViewHolder.txtwaittime_expand.setText(spannable);
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-
-
                             }
                         } else {
                             myViewHolder.tv_waittime.setVisibility(View.INVISIBLE);
@@ -1211,8 +1184,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.tv_waittime.setVisibility(View.INVISIBLE);
                         myViewHolder.txtwaittime_expand.setVisibility(View.INVISIBLE);
                     }
-
-
                 }
                 if(calcMode.equalsIgnoreCase("NoCalc")){
 

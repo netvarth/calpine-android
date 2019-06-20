@@ -363,6 +363,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
         if(activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid")){
             myViewHolder.icon_bill.setText("Receipt");
+
         }else{
             myViewHolder.icon_bill.setText("Bill");
         }

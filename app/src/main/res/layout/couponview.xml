@@ -104,17 +104,32 @@
                         </LinearLayout>
 
 
+                    <LinearLayout
+                        android:id="@+id/termlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/couponTerms"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="T &amp; C : "
+                            android:textSize="@dimen/txtsize_hint" />
+
                         <TextView
                             android:id="@+id/couponTerms"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/couponCodeLinear"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginRight="20dp"
-                            android:layout_marginBottom="5dp"
                             android:text="Terms"
                             android:textSize="@dimen/txtsize_hint" />
+
+                    </LinearLayout>
 
 
                         <LinearLayout

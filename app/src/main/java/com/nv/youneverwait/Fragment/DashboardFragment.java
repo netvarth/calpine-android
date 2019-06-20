@@ -1233,7 +1233,6 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1242,11 +1241,8 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
     public LanLong getLocationNearBy(double lant, double longt) {

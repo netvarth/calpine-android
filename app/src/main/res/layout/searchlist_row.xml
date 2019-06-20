@@ -103,6 +103,18 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/txtsize_10" />
 
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_marginTop="@dimen/padding3"
+                            android:id="@+id/count_search"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:text="Names"
+                            android:textColor="@color/title_consu"
+                            android:textSize="@dimen/txtsize_10" />
+
+
 
                         <TextView
                             android:id="@+id/domain"
@@ -318,6 +330,19 @@
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone" />
 
+        <TextView
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:id="@+id/qmessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding2"
+            android:layout_marginBottom="@dimen/padding2"
+            android:gravity="left"
+            android:text="Message"
+            android:textColor="@color/title_consu"
+            android:textSize="@dimen/txtsize_12"
+         />
+
         <LinearLayout
             android:id="@+id/checkinlayout"
             android:layout_width="match_parent"
@@ -360,20 +385,6 @@
             <!--  android:textSize="@dimen/txtsize_subtitle" />-->
         </LinearLayout>
 
-        <TextView
-            android:visibility="gone"
-            android:id="@+id/count_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding2"
-            android:layout_marginBottom="@dimen/padding2"
-            android:layout_marginLeft="@dimen/padding2"
-            android:gravity="left"
-            android:paddingRight="@dimen/padding5"
-            android:text="Count : "
-            android:textColor="@color/title_consu"
-            android:textSize="@dimen/txtsize_12"
-          />
 
         <TextView
             android:id="@+id/txt_diffdate"
