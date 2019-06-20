@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -29,6 +30,7 @@ import com.nv.youneverwait.Fragment.SearchListFragment;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.adapter.FavouriteAdapter;
 import com.nv.youneverwait.adapter.FilterAdapter;
+import com.nv.youneverwait.callback.AdapterCallback;
 import com.nv.youneverwait.callback.FilterAdapterCallback;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
@@ -60,8 +62,15 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
     Context mContext;
     Button btn_apply;
     FilterAdapterCallback mCallback;
-    String latitude, longitude, locName, spinnerTxtPass, mDomainSpinner;
+    String latitude, longitude, locName, spinnerTxtPass, mDomainSpinner, from;
     String passformula = "";
+
+    static SearchListFragment mFragmentInstance;
+
+    public static void setFragmentInstance(SearchListFragment fragmentInstance) {
+        mFragmentInstance = fragmentInstance;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +98,7 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
             locName = extras.getString("locName", "");
             spinnerTxtPass = extras.getString("spinnervalue", "");
             mDomainSpinner = extras.getString("sector", "");
+            from = extras.getString("from", "");
 
         }
 
@@ -107,71 +117,171 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
             @Override
             public void onClick(View v) {
 
-                for (int i = 0; i < sFormula.size(); i++) {
-                    Config.logV("@@pass Value @@@@@@@@@@@@@@@@" + sFormula.get(i).toString());
 
-                }
+                if (from != null) {
+                    if (from.equalsIgnoreCase("searchlist")) {
 
-                for (int i = 0; i < keyFormula.size(); i++) {
-                    Config.logV("@@pass KEyValue @@@@@@@@@@@@@@@@" + keyFormula.get(i).toString());
-
-                }
-
-
-                String queryFormula = "";
-                int count = 0;
-                boolean match=false;
-                for (int i = 0; i < keyFormula.size(); i++) {
+                        String queryFormula = "";
+                        int count = 0;
+                        boolean match = false;
+                        for (int i = 0; i < keyFormula.size(); i++) {
 
 
-                    for (int j = 0; j < sFormula.size(); j++) {
+                            for (int j = 0; j < sFormula.size(); j++) {
 
 
-                        if (sFormula.get(j).toString().contains(keyFormula.get(i).toString())) {
+                                if (sFormula.get(j).toString().contains(keyFormula.get(i).toString())) {
 
 
-                            match=true;
-                            count++;
-                            if (count == 1)
-                                queryFormula += "(" + sFormula.get(j).toString();
-                            else
-                                queryFormula += sFormula.get(j).toString();
+                                    match = true;
+                                    count++;
+                                    if (count == 1)
+                                        queryFormula += "(" + sFormula.get(j).toString();
+                                    else
+                                        queryFormula += sFormula.get(j).toString();
 
+                                }
+
+
+                            }
+
+
+                            if (match) {
+                                if (count > 1) {
+                                    queryFormula += ")";
+                                    match = false;
+                                }
+                            }
+                            Config.logV("SortString@@@@@@@@@@" + queryFormula + "Count @@@@@" + count);
+
+                            if (count > 1) {
+                                queryFormula = queryFormula.replace("(" + keyFormula.get(i), "( or " + keyFormula.get(i));
+                                Config.logV("SortString ^^^^^^^^^^^^^^^@@@@@@@@@@" + queryFormula);
+                            } else {
+                                queryFormula = queryFormula.replace("(" + keyFormula.get(i), keyFormula.get(i));
+                            }
+
+                            count = 0;
                         }
 
 
+                        Config.logV("SortString FInal @@@@@@@@@@" + queryFormula);
 
+                       /*
+
+                        SearchListFragment frg = new SearchListFragment();
+
+
+                        LanLong Lanlong = getLocationNearBy(Double.valueOf(latitude), Double.valueOf(longitude));
+                        double upperLeftLat = Lanlong.getUpperLeftLat();
+                        double upperLeftLon = Lanlong.getUpperLeftLon();
+                        double lowerRightLat = Lanlong.getLowerRightLat();
+                        double lowerRightLon = Lanlong.getLowerRightLon();
+                        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+
+                        String querycreate = "";
+                        if (!mDomainSpinner.equalsIgnoreCase("All"))
+                            querycreate = "sector :'" + mDomainSpinner + "'";
+
+
+                        String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+
+                        Bundle bundle = new Bundle();
+
+
+                        //VALID QUERY PASS
+                        bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+                        bundle.putString("url", pass);
+
+
+                        bundle.putString("locName", locName);
+                        bundle.putString("latitude", String.valueOf(latitude));
+                        bundle.putString("longitude", String.valueOf(longitude));
+                        bundle.putString("spinnervalue", spinnerTxtPass);
+                        bundle.putString("passformula", queryFormula);
+                        bundle.putString("filter", "filter");
+                        bundle.putStringArrayList("passFormulaArray", sFormula);
+
+                        Config.logV("PassFormula @@@@@@@@@@@@@@" + queryFormula);
+
+                        Config.logV("PassFormula @$$$$$$@@@@@@@@@@@@@@" + pass);
+
+                        frg.setArguments(bundle);
+                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.detach(frg);
+                        ft.attach(frg);
+                        ft.commit();*/
+
+                       finish();
+                        mFragmentInstance.MoreItemClick(queryFormula);
+                        mFragmentInstance.SetPassFormula(sFormula);
+
+
+                    } else {
+                        callSearchList();
                     }
+                } else {
+
+                    callSearchList();
 
 
-                    if(match) {
-                        if(count>1) {
-                            queryFormula += ")";
-                            match = false;
-                        }
-                    }
-                    Config.logV("SortString@@@@@@@@@@" + queryFormula+"Count @@@@@"+count);
-
-                        if(count>1) {
-                            queryFormula = queryFormula.replace("("+keyFormula.get(i), "( or "+keyFormula.get(i));
-                            Config.logV("SortString ^^^^^^^^^^^^^^^@@@@@@@@@@" + queryFormula);
-                        }else{
-                            queryFormula = queryFormula.replace("("+keyFormula.get(i), keyFormula.get(i));
-                        }
-
-                    count = 0;
                 }
-
-
-                Config.logV("SortString FInal @@@@@@@@@@" + queryFormula);
-
-
-                QuerySubmitCLick(queryFormula);
 
 
             }
         });
 
+    }
+
+    public void callSearchList() {
+        String queryFormula = "";
+        int count = 0;
+        boolean match = false;
+        for (int i = 0; i < keyFormula.size(); i++) {
+
+
+            for (int j = 0; j < sFormula.size(); j++) {
+
+
+                if (sFormula.get(j).toString().contains(keyFormula.get(i).toString())) {
+
+
+                    match = true;
+                    count++;
+                    if (count == 1)
+                        queryFormula += "(" + sFormula.get(j).toString();
+                    else
+                        queryFormula += sFormula.get(j).toString();
+
+                }
+
+
+            }
+
+
+            if (match) {
+                if (count > 1) {
+                    queryFormula += ")";
+                    match = false;
+                }
+            }
+            Config.logV("SortString@@@@@@@@@@" + queryFormula + "Count @@@@@" + count);
+
+            if (count > 1) {
+                queryFormula = queryFormula.replace("(" + keyFormula.get(i), "( or " + keyFormula.get(i));
+                Config.logV("SortString ^^^^^^^^^^^^^^^@@@@@@@@@@" + queryFormula);
+            } else {
+                queryFormula = queryFormula.replace("(" + keyFormula.get(i), keyFormula.get(i));
+            }
+
+            count = 0;
+        }
+
+
+        Config.logV("SortString FInal @@@@@@@@@@" + queryFormula);
+
+
+        QuerySubmitCLick(queryFormula, sFormula);
     }
 
 
@@ -326,7 +436,7 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
 
     }
 
-    public void QuerySubmitCLick(String passformula) {
+    public void QuerySubmitCLick(String passformula, ArrayList<String> sFormula) {
 
        /* String passFormula = "";
         for (String s : passformula) {
@@ -363,6 +473,7 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
         bundle.putString("spinnervalue", spinnerTxtPass);
         bundle.putString("passformula", passformula);
         bundle.putString("filter", "filter");
+        bundle.putStringArrayList("passFormulaArray", sFormula);
 
         Config.logV("PassFormula @@@@@@@@@@@@@@" + passformula);
        /* if(!query.equalsIgnoreCase("")) {
@@ -370,17 +481,19 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
         }else{
             bundle.putString("searchtxt", "");
         }*/
+
         pfFragment.setArguments(bundle);
-
-
 
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+
         // Store the Fragment in stack
-       // transaction.addToBackStack(null);
+        // transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
         //searchSrcTextView.clearFocus();
         //mSearchView.clearFocus();
     }
+
+
 }

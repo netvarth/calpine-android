@@ -145,7 +145,6 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                                     final String name = jsonObj.getString("name");
                                     for (int j = 0; j < passFormula.size(); j++) {
                                         String splitsFormula[]=passFormula.get(j).toString().split(":");
-                                        Config.logV("PRINT SUBSPINNERKK ##@@DD ##"+splitsFormula[0]);
                                         if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {
                                             if (passFormula.get(j).toString().contains(name)) {
 

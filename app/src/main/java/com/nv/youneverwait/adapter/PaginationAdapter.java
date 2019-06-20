@@ -1158,6 +1158,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void addAll(List<SearchListModel> moveResults) {
+        Config.logV("NEW DATA ADDED @@@@@@@@@@@@@@@@@@@");
         for (SearchListModel result : moveResults) {
             add(result);
         }

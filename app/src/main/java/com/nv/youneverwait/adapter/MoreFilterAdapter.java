@@ -78,7 +78,8 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
     ArrayList<String> passFormula = new ArrayList<>();
 
-    public MoreFilterAdapter(List<RefinedFilters> mFilterList, Context mContext, Activity mActivity, AdapterCallback filterAdapterCallback, RecyclerView recyclepop, String passFormula1, String domainSelected, String subDomain) {
+    ArrayList<String> passedFormulaArray=new ArrayList<>();
+    public MoreFilterAdapter(List<RefinedFilters> mFilterList, Context mContext, Activity mActivity, AdapterCallback filterAdapterCallback, RecyclerView recyclepop, String passFormula1, String domainSelected, String subDomain,ArrayList<String> passedFormulaArray) {
         this.mContext = mContext;
         this.mFilterList = mFilterList;
         this.activity = mActivity;
@@ -87,6 +88,11 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
         this.passFormulaApi = passFormula1;
         this.domainSelect = domainSelected;
         this.subDomianSelect = subDomain;
+        this.passedFormulaArray=passedFormulaArray;
+
+        for(int i=0;i<passedFormulaArray.size();i++){
+            passFormula.add(passedFormulaArray.get(i));
+        }
         Config.logV("Domain SELECTED" + domainSelected);
         if (!domainSelected.equalsIgnoreCase("Select")) {
             String query = "sector:'" + domainSelected + "'";
@@ -101,6 +107,8 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
             Config.logV("PRINT SUB ADDDED "+query);
 
         }
+
+
 
         keyFormula.add("sector");
         keyFormula.add("sub_sector");
@@ -169,7 +177,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                             boolean fAvailable=false;
                             for(int i=0;i<keyFormula.size();i++){
-                                if(keyFormula.get(i).toString().equalsIgnoreCase(filterList.getCloudSearchIndex())){
+                                if(keyFormula.get(i).toString().equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))){
                                     //No neeed to add
                                     fAvailable=true;
                                     break;
@@ -188,6 +196,16 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                     final CheckBox cb = new CheckBox(v.getContext());
                                     cb.setText(jsonObj.getString("displayName"));
                                     final String name = jsonObj.getString("name");
+                                    for (int j = 0; j < passFormula.size(); j++) {
+                                        String splitsFormula[]=passFormula.get(j).toString().split(":");
+
+                                        if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {
+                                            if (passFormula.get(j).toString().contains(name)) {
+
+                                                cb.setChecked(true);
+                                            }
+                                        }
+                                    }
                                     cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                         @Override
                                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -251,6 +269,16 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                         ratingBar.setScaleX((float) .75);
                         ratingBar.setScaleY((float) .75);
 
+                        for (int j = 0; j < passFormula.size(); j++) {
+                            String splitsFormula[]=passFormula.get(j).toString().split(":");
+                            Config.logV("PRINT SUBSPINNERKK ##@@DD ##"+splitsFormula[0]+splitsFormula[1]);
+                            if (splitsFormula[0].equalsIgnoreCase("rating")) {
+
+                                float val=Float.parseFloat(splitsFormula[1].toString().replace("'",""));
+                                ratingBar.setRating(val);
+                            }
+                        }
+
 
 
                         if (myViewHolder.LexpandView != null) {
@@ -307,6 +335,16 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                             if(!fAvailable){
                                 keyFormula.add(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"));
                             }
+
+
+                            for (int j = 0; j < passFormula.size(); j++) {
+                                if (passFormula.get(j).toString().contains(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"))) {
+
+                                    sw.setChecked(true);
+                                }
+                            }
+
+
                             // Add Switch to LinearLayout
                             if (myViewHolder.LexpandView != null) {
                                 myViewHolder.LexpandView.addView(sw);
@@ -393,27 +431,33 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                     Config.logV("Spinner Data@@@@@@@@@@" + spinnerSelect.getDomain());
                                     String query = "sector:'" + spinnerSelect.getDomain() + "'";
 
-                                    for (int i = 0; i < passFormula.size(); i++) {
+                                   /* for (int i = 0; i < passFormula.size(); i++) {
                                         //if (passFormula.get(i).contains("sector")) {
 
                                             passFormula.remove(i);
                                        // }
                                     }
 
-                                    passFormula.add(query);
+                                    passFormula.add(query);*/
 
                                     filterAdapterCallback.onMethodFilterRefined(query, recyclview_popup, spinnerSelect.getDomain());
 
-                                    for (int i = 0; i < passFormula.size(); i++) {
+                                   /* for (int i = 0; i < passFormula.size(); i++) {
 
                                         if(passFormula.get(i).toString().contains("sub_sector")){
 
                                             passFormula.remove(i);
                                         }
-                                    }
+                                    }*/
+
+                                   passFormula=new ArrayList<>();
+                                   passFormula.add(query);
+
+
+
                                     filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
 
-                                    // Config.logV("PRINT VAL FORMULA@@WWWWWWWW" + query);
+
 
                                 }
                             }

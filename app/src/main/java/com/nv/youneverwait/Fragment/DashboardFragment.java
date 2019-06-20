@@ -300,23 +300,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 ifilter.putExtra("spinnervalue", spinnerTxtPass);
                 ifilter.putExtra("sector",mDomainSpinner);
                 startActivity(ifilter);
-               /* Bundle bundle = new Bundle();
 
-                FilterActivity pfFragment = new FilterActivity();
-
-                bundle.putString("locName", mCurrentLoc.getText().toString());
-                bundle.putString("lat", String.valueOf(latitude));
-                bundle.putString("longt", String.valueOf(longitude));
-                bundle.putString("spinnervalue", spinnerTxtPass);
-                bundle.putString("sector",mDomainSpinner);
-                pfFragment.setArguments(bundle);
-
-
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
-                // Store the Fragment in stack
-                transaction.addToBackStack(null);
-                transaction.replace(R.id.mainlayout, pfFragment).commit();*/
             }
         });
 

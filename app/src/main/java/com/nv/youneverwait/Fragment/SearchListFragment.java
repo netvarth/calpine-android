@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.activities.FilterActivity;
 import com.nv.youneverwait.activities.SearchLocationActivity;
 import com.nv.youneverwait.adapter.FilterAdapter;
 import com.nv.youneverwait.adapter.MoreFilterAdapter;
@@ -137,13 +138,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     String searchTxt, spinnerTxt;
     String getQuery_previous = "";
 
+
     public void refreshQuery() {
         getQuery_previous = "true";
     }
 
     static TextView txt_toolbarlocation;
     ImageView ibackpress;
-    String s_LocName;
+    String s_LocName = "";
     TextView tv_nosearchresult, tv_searchresult;
     LinearLayout Lnosearchresult;
     boolean userIsInteracting;
@@ -184,16 +186,23 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     ArrayList<RefinedFilters> otherFilterSortedFinalList = new ArrayList<>();
 
-    String filter="";
+    String filter = "";
+    ArrayList<String> passedFormulaArray = new ArrayList<>();
+    View row;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View row = inflater.inflate(R.layout.fragment_searchdetail, container, false);
+        row = inflater.inflate(R.layout.fragment_searchdetail, container, false);
+
 
         Config.logV(" Search List &&&&&&&&&&&&&&&&");
         mContext = getActivity();
         mInterface = (AdapterCallback) this;
+
+
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             if (!getQuery_previous.equalsIgnoreCase("true")) {
@@ -207,7 +216,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
             s_LocName = bundle.getString("locName", "");
             passformula = bundle.getString("passformula", "");
-            filter= bundle.getString("filter", "");
+            filter = bundle.getString("filter", "");
+            if (filter != null) {
+                if (filter.equalsIgnoreCase("filter")) {
+                    passedFormulaArray = bundle.getStringArrayList("passFormulaArray");
+                    Config.logV("PASSED FORMULA ARRAY WWWW @@" + passedFormulaArray.size());
+                }
+            }
         }
         userIsInteracting = false;
 
@@ -221,6 +236,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         currentPage = PAGE_START;
 
 
+        Config.logV("QUERY @@@@@@@@@@@@@@" + query);
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
 
@@ -243,7 +259,32 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             }
         });
 
+        ImageView ic_refinedFilter = (ImageView) row.findViewById(R.id.ic_refinedFilter);
 
+        ic_refinedFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchListFragment currentFragment = ((SearchListFragment) getFragmentManager().findFragmentById(R.id.mainlayout));
+                Config.logV("Current Fragment @RRR@@@@@@@@@@@@@@@" + currentFragment);
+                if (currentFragment instanceof SearchListFragment) {
+                    Config.logV("Current Fragment @@@@@@@@@@@@@@@@");
+                }
+
+                FilterActivity.setFragmentInstance(currentFragment);
+
+                mSearchView.setQuery("", false);
+
+                Intent ifilter = new Intent(mContext, FilterActivity.class);
+                ifilter.putExtra("lat", String.valueOf(latitude));
+                ifilter.putExtra("longt", String.valueOf(longitude));
+                ifilter.putExtra("locName", s_LocName);
+                ifilter.putExtra("spinnervalue", spinnerTxt);
+                ifilter.putExtra("sector", mDomainSpinner);
+                ifilter.putExtra("from", "searchlist");
+                startActivity(ifilter);
+
+            }
+        });
         try {
 
             Config.logV("LATITUDE------------@@@@--------------------" + latitude + ", " + longitude);
@@ -338,8 +379,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         //init service and load data
 
-        Config.logV("SearchList URL ONCREATEVIEW@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
+        Config.logV("SearchList URL ONCREATEVIEW@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + query + "URL" + url);
         ApiSEARCHAWSLoadFirstData(query, url);
 
 
@@ -352,19 +393,18 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             public void onClick(View v) {
 
 
-
-
-
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View customView = layoutInflater.inflate(R.layout.popup_filter, null);
 
 
-                RecyclerView recycle_morefilter = (RecyclerView) customView.findViewById(R.id.recycle_morefilter);
+                final RecyclerView recycle_morefilter = (RecyclerView) customView.findViewById(R.id.recycle_morefilter);
+                TextView txtclear = (TextView) customView.findViewById(R.id.txtclear);
 
+                Config.logV("PASSED FORMULA ARRAY@@@@@@@@@@@@" + passedFormulaArray.size());
                 if (mDomainSpinner.equalsIgnoreCase("All")) {
-                    ApiFilters(recycle_morefilter, "Select");
+                    ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
                 } else {
-                    ApiMoreRefinedFilters(recycle_morefilter, mDomainSpinner, "No", "");
+                    ApiMoreRefinedFilters(recycle_morefilter, mDomainSpinner, "No", "", passedFormulaArray);
                 }
                 int[] location = new int[2];
                 txtrefinedsearch.getLocationOnScreen(location);
@@ -377,9 +417,23 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 popupWindow.setAnimationStyle(R.style.MyAlertDialogStyle);
                 //display the popup window
-                popupWindow.showAtLocation(txtrefinedsearch, Gravity.NO_GRAVITY, location[0] + 80, location[1] + 80);
+                popupWindow.showAtLocation(txtrefinedsearch, Gravity.NO_GRAVITY, location[0] + width - width / 3, location[1] + 50);
                 dimBehind(popupWindow);
 
+                txtclear.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        passformula = "";
+                        passedFormulaArray.clear();
+                        txtrefinedsearch.setText("Refine Search");
+                        MoreItemClick(passformula);
+                        if (mDomainSpinner.equalsIgnoreCase("All")) {
+                            ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
+                        } else {
+                            ApiMoreRefinedFilters(recycle_morefilter, mDomainSpinner, "No", "", passedFormulaArray);
+                        }
+                    }
+                });
 
 
             }
@@ -815,6 +869,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 Config.logV("SearchList URLSPINNER ITEMCLICK@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
+
+                Config.logV("PASSED FORMULA ARRAY 11111111");
+                passformula = "";
+                passedFormulaArray.clear();
+                txtrefinedsearch.setText("Refine Search");
+
                 ApiSEARCHAWSLoadFirstData(query, url);
 
 
@@ -1094,6 +1154,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     public void ApiSEARCHAWSLoadFirstData(String mQueryPass, String mPass) {
 
 
+        Config.logV("PASS FORMULA @@@@@@@@@@@@@@@@@@@@" + passformula);
         final ApiInterface apiService =
                 ApiClient.getClientAWS(mContext).create(ApiInterface.class);
 
@@ -1334,6 +1395,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
+        Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@");
        /* final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
         mDialog.show();*/
         StringBuilder csvBuilder = new StringBuilder();
@@ -1559,6 +1621,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                             List<SearchListModel> results = mSearchListModel;
+
+                            Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@ RESUlt" + results.size());
+
+
                             pageadapter.addAll(results);
                             pageadapter.notifyDataSetChanged();
 
@@ -1725,6 +1791,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             pageadapter.addAll(results);
                             pageadapter.notifyDataSetChanged();
 
+
+                            Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@ RESUlt" + results.size());
 
                             Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
                             Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
@@ -1917,6 +1985,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
         Config.logV("SearchList URL QUERYSUBMIT@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
+        passformula = "";
+
+        Config.logV("PASSED FORMULA ARRAY 1144444411");
+        passedFormulaArray.clear();
+        txtrefinedsearch.setText("Refine Search");
+
         ApiSEARCHAWSLoadFirstData(query, url);
 
 
@@ -2003,6 +2077,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
         Config.logV("SearchList URL ITEM CLICK SPINNER 222@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+
+        Config.logV("PASSED FORMULA ARRAY 15555511");
+        passformula = "";
+        passedFormulaArray.clear();
+        txtrefinedsearch.setText("Refine Search");
 
         ApiSEARCHAWSLoadFirstData(query, url);
 
@@ -2128,28 +2208,34 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Config.logV("Pass foRmula @@@@@@@@@@@@@" + passformula);
         spinnerDomainSelectedFilter = domain;
         //MoreItemClick(passformula);
-        ApiMoreRefinedFilters(recylcepopup, domain, "yes", passformula);
+        ArrayList<String> emptyList = new ArrayList<>();
+        ApiMoreRefinedFilters(recylcepopup, domain, "yes", passformula, emptyList);
     }
 
     @Override
     public void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup, String subdomainame) {
         Config.logV("SUbDomain Selector@@@@@@@@@@@@@@@@@@@" + passformula);
-      //  MoreItemClick("sector:'" + spinnerDomainSelectedFilter + "'" + "sub_sector:'" + subdomainame + "'");
+        //  MoreItemClick("sector:'" + spinnerDomainSelectedFilter + "'" + "sub_sector:'" + subdomainame + "'");
         ApiSubDomainRefinedFilters(recyclepopup, subdomainame, spinnerDomainSelectedFilter, passformula);
     }
 
     @Override
     public void onMethodQuery(ArrayList<String> sFormula, ArrayList<String> keyFormula) {
 
-        for(String str : sFormula) {
+        for (String str : sFormula) {
 
-          Config.logV("PRINT $$$$$@ ####@@@@@@@@@@@@@@"+str);
+            Config.logV("PRINT $$$$$@ ####@@@@@@@@@@@@@@" + str);
         }
-        for(String str : keyFormula) {
+        for (String str : keyFormula) {
 
-            Config.logV("PRINT Key@ ####@@@@@@@@@@@@@@"+str);
+            Config.logV("PRINT Key@ ####@@@@@@@@@@@@@@" + str);
         }
 
+        if (sFormula.size() > 0) {
+            txtrefinedsearch.setText("Refine Search (" + sFormula.size() + ") ");
+        } else {
+            txtrefinedsearch.setText("Refine Search ");
+        }
         String queryFormula = "";
         int count = 0;
         boolean match = false;
@@ -2159,11 +2245,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             for (int j = 0; j < sFormula.size(); j++) {
 
 
-                String splitsFormula[]=sFormula.get(j).toString().split(":");
+                String splitsFormula[] = sFormula.get(j).toString().split(":");
                 //Config.logV("PRINT Key ##"+splitsFormula[0]);
                 if (splitsFormula[0].equalsIgnoreCase(keyFormula.get(i).toString())) {
 
-                   // Config.logV("PRINT Key TRUE @@@@@@@@@@@ ##"+splitsFormula[0]);
+                    // Config.logV("PRINT Key TRUE @@@@@@@@@@@ ##"+splitsFormula[0]);
                     match = true;
                     count++;
                     if (count == 1)
@@ -2212,7 +2298,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
 
 
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(getActivity(), this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         Date currentTime = new Date();
@@ -2269,7 +2355,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
 
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(getActivity(), this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
 
@@ -2324,6 +2410,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
     private void APiSearchList() {
         {
 
@@ -2331,7 +2423,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             final ApiInterface apiService =
                     ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-            final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+            final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
             mDialog.show();
 
             Call<SearchModel> call = apiService.getAllSearch();
@@ -2510,13 +2602,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
-    private void ApiFilters(final RecyclerView recycle_filter, final String domainSelect) {
+    private void ApiFilters(final RecyclerView recycle_filter, final String domainSelect, final ArrayList<String> passedFormulaArray) {
 
 
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(mContext, this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(getActivity(), this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
 
@@ -2612,7 +2704,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                         Config.logV("Comon Filter size @@@@@@@@@" + commonFilterSortList.size());
-                        mMoreAdapter = new MoreFilterAdapter(commonFilterSortList, mContext, getActivity(), mInterface, recycle_filter, "", domainSelect, "Select");
+                        mMoreAdapter = new MoreFilterAdapter(commonFilterSortList, mContext, getActivity(), mInterface, recycle_filter, "", domainSelect, "Select", passedFormulaArray);
                         recycle_filter.setAdapter(mMoreAdapter);
                         mMoreAdapter.notifyDataSetChanged();
 
@@ -2642,13 +2734,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     ArrayList<RefinedFilters> commonMFilterList = new ArrayList<RefinedFilters>();
 
-    private void ApiMoreRefinedFilters(final RecyclerView recycle_filter, final String subdomain, final String showdomain, final String passformula) {
+    private void ApiMoreRefinedFilters(final RecyclerView recycle_filter, final String subdomain, final String showdomain, final String passformula, final ArrayList<String> passedFormulaArray) {
 
 
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(mContext, this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(getActivity(), this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
 
@@ -2832,7 +2924,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                         Config.logV("Comon Filter size @@@@@@@@@" + otherFilterSortedFinalList.size());
-                        mMoreAdapter = new MoreFilterAdapter(otherFilterSortedFinalList, mContext, getActivity(), mInterface, recycle_filter, passformula, subdomain, "Select");
+                        mMoreAdapter = new MoreFilterAdapter(otherFilterSortedFinalList, mContext, getActivity(), mInterface, recycle_filter, passformula, subdomain, "Select", passedFormulaArray);
                         recycle_filter.setAdapter(mMoreAdapter);
                         mMoreAdapter.notifyDataSetChanged();
 
@@ -2875,7 +2967,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(mContext, this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(getActivity(), this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
 
@@ -2989,7 +3081,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                         Config.logV("YYYYmergedList@@@@@@@@@" + mergedOtherFilterList.size());
-                        mMoreAdapter = new MoreFilterAdapter(mergedOtherFilterList, mContext, getActivity(), mInterface, recycle_filter, passformula, domain, subdomain);
+                        ArrayList<String> emptyList = new ArrayList<>();
+                        mMoreAdapter = new MoreFilterAdapter(mergedOtherFilterList, mContext, getActivity(), mInterface, recycle_filter, passformula, domain, subdomain, emptyList);
                         recycle_filter.setAdapter(mMoreAdapter);
                         mMoreAdapter.notifyDataSetChanged();
 
@@ -3058,4 +3151,15 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
     }
+
+    public void SetPassFormula(ArrayList<String> mPassFormula) {
+        passedFormulaArray = mPassFormula;
+        if (mPassFormula.size() > 0) {
+            txtrefinedsearch.setText("Refine Search (" + mPassFormula.size() + ") ");
+        } else {
+            txtrefinedsearch.setText("Refine Search ");
+        }
+    }
+
+
 }

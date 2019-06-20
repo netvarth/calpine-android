@@ -29,4 +29,6 @@ public interface AdapterCallback {
     void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup,String subdomainame);
 
     void onMethodQuery(ArrayList<String> formula,ArrayList<String> key);
+
+
 }
