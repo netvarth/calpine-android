@@ -841,11 +841,19 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
 
+                    String name= cell.getName();
+                    if(name.contains("'")){
+                        Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
+                        name = cell.getName().replace("'","%5C%27");
+
+                    }
+                    Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + name);
+
 
                     if (mSector.equalsIgnoreCase("All")) {
-                        querycreate = "title:" + "'" + cell.getName() + "'";
+                        querycreate = "title:" + "'" + name + "'";
                     } else {
-                        sub = "title:" + "'" + cell.getName() + "'";
+                        sub = "title:" + "'" + name + "'";
                         querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
                     }
                 }
@@ -1973,6 +1981,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
         if (querycreate == null) {
+
+            if(querypass.contains("'")){
+                Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + querypass);
+                querypass = querypass.replace("'","%5C%27");
+            }
+            Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + querypass);
+
             if (!mDomainSpinner.equalsIgnoreCase("All")) {
                 querycreate = "(phrase " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
             } else {

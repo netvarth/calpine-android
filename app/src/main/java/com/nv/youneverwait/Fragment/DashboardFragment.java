@@ -866,10 +866,18 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
 
 
+                    String name= cell.getName();
+                    if(name.contains("'")){
+                        Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
+                        name = cell.getName().replace("'","%5C%27");
+                    }
+                    Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + name);
+
+
                     if (mSector.equalsIgnoreCase("All")) {
-                        querycreate = "title:" + "'" + cell.getName() + "'";
+                        querycreate = "title:" + "'" + name + "'";
                     } else {
-                        sub = "title:" + "'" + cell.getName() + "'";
+                        sub = "title:" + "'" + name + "'";
                         querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
                     }
                 }
@@ -1702,6 +1710,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
 
+
+        if(query.contains("'")){
+            Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
+            query = query.replace("'","%5C%27");
+        }
+        Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + query);
+
         String querycreate = "";
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
             querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
@@ -1712,8 +1727,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
         }
+      //  query = query.replace("'","\\'");
 
-        //  Config.logV("Query-----------" + querycreate);
+
+
 
 
         // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";

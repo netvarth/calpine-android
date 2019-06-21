@@ -112,7 +112,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                         } else {
                             Config.logV("Array " + new Gson().toJson(filterList.getEnumeratedConstants()));
                             final String resp = new Gson().toJson(filterList.getEnumeratedConstants());
-                          //  keyFormula.add(filterList.getCloudSearchIndex().replace("*", "1"));
+                            //  keyFormula.add(filterList.getCloudSearchIndex().replace("*", "1"));
 
                             boolean fAvailable=false;
                             for(int i=0;i<keyFormula.size();i++){
@@ -128,7 +128,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                             }
 
                             try {
-                                 JSONArray jsonArray = new JSONArray(resp);
+                                JSONArray jsonArray = new JSONArray(resp);
                                 //int checksize = 0;
                                /* if (jsonArray.length() >= 5) {
                                     checksize = 5;
@@ -235,7 +235,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
 
                     } else if (filterList.getDataType().equalsIgnoreCase("Rating")) {
                         myViewHolder.LexpandView.setVisibility(View.VISIBLE);
-                       // keyFormula.add(filterList.getCloudSearchIndex());
+                        // keyFormula.add(filterList.getCloudSearchIndex());
                         boolean fAvailable=false;
                         for(int i=0;i<keyFormula.size();i++){
                             if(keyFormula.get(i).toString().equalsIgnoreCase(filterList.getCloudSearchIndex())){
@@ -287,7 +287,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
 
                                 Config.logV("Rating FFFF@@@@@@@@@@@@@@" + filterList.getCloudSearchIndex());
 
-                               for (int j = 0; j < passFormula.size(); j++) {
+                                for (int j = 0; j < passFormula.size(); j++) {
                                     String splitsFormula[]=passFormula.get(j).toString().split(":");
                                     Config.logV("passF RemoNERKK ##@@DD ##"+splitsFormula[0]);
                                     if (splitsFormula[0].equalsIgnoreCase("rating")) {
@@ -317,7 +317,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                             sw.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
                             sw.setText(filterList.getItemName().get(i).toString());
                             // keyFormula.add(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"));
-                           // keyFormula.add(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"));
+                            // keyFormula.add(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"));
                             boolean fAvailable=false;
                             for(int j=0;j<keyFormula.size();j++){
                                 if(keyFormula.get(j).toString().equalsIgnoreCase(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"))){
