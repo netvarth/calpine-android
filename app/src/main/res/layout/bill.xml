@@ -409,7 +409,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.3"
                             android:gravity="right"
-
                             android:textColor="@color/colorAccent"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>

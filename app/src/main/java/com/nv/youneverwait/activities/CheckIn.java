@@ -527,7 +527,7 @@ public class CheckIn extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
-                Log.i("dfgdfg",String.valueOf(mSpinnertext));
+                Log.i("vbnvbnvbn",String.valueOf(mSpinnertext));
 
                 serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();

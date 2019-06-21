@@ -861,7 +861,12 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
                 if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
 
-
+                    String name= cell.getName();
+                    if(name.contains("'")){
+                        Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
+                        name = cell.getName().replace("'","%5C%27");
+                    }
+                    Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + name);
                     if (mSector.equalsIgnoreCase("All")) {
                         querycreate = "title:" + "'" + cell.getName() + "'";
                     } else {
@@ -1685,6 +1690,11 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
     public void QuerySubmitCLick(String query) {
 
+        if(query.contains("'")){
+            Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
+            query = query.replace("'","%5C%27");
+        }
+
         mSearchView.setQuery("", false);
 
         LanLong Lanlong = getLocationNearBy(latitude, longitude);
@@ -1874,12 +1884,13 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID,String consumer) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
         iBill.putExtra("accountID", accountID);
         iBill.putExtra("payStatus", payStatus);
+        iBill.putExtra("consumer",consumer);
         startActivity(iBill);
 
     }

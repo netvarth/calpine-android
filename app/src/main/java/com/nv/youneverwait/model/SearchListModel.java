@@ -315,9 +315,6 @@ public class SearchListModel implements Serializable {
     boolean futureWaitlist;
     boolean isAvailableToday;
 
-
-
-
     int branchSpCount;
     private String serviceTime;
 

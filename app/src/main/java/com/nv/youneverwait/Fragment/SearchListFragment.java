@@ -677,6 +677,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
 
+                    String name= cell.getName();
+                    if(name.contains("'")){
+                        Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
+                        name = cell.getName().replace("'","%5C%27");
+                    }
+                    Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + name);
+
 
                     if (mSector.equalsIgnoreCase("All")) {
                         querycreate = "title:" + "'" + cell.getName() + "'";
@@ -1726,6 +1733,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     public void QuerySubmitCLick(String querypass) {
 
+        if(query.contains("'")){
+            Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
+            query = query.replace("'","%5C%27");
+        }
         //  mSearchView.setQuery("", false);
         LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
         double upperLeftLat = Lanlong.getUpperLeftLat();

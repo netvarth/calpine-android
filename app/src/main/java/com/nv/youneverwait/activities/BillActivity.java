@@ -80,7 +80,7 @@ public class BillActivity extends AppCompatActivity {
     LinearLayout paidlayout, amountlayout, taxlayout,couponCheckin;
     String sAmountPay;
     String accountID;
-    String payStatus;
+    String payStatus,consumer;
     String coupon_entered;
 
     @Override
@@ -156,6 +156,7 @@ public class BillActivity extends AppCompatActivity {
             mprovider = extras.getString("provider");
             accountID = extras.getString("accountID");
             payStatus = extras.getString("payStatus");
+            consumer= extras.getString("consumer");
         }
 
 
@@ -494,7 +495,7 @@ public class BillActivity extends AppCompatActivity {
 
                         String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
                         String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
-                        tv_customer.setText(Config.toTitleCase(firstName) + " " + Config.toTitleCase(lastNme));
+                        tv_customer.setText(consumer);
                         // tv_date.setText(mBillData.getCreatedDate());
                         DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
                         DateFormat targetFormat = new SimpleDateFormat(("dd-MM-yyyy hh:mm a"));
@@ -549,16 +550,21 @@ public class BillActivity extends AppCompatActivity {
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setVisibility(View.VISIBLE);
                             tv_totalamt.setText("₹ " + String.valueOf(total));
+                            txttotal.setText("Amount Due");
                         } else {
-                            tv_totalamt.setVisibility(View.GONE);
-                            txttotal.setVisibility(View.GONE);
+                            tv_totalamt.setVisibility(View.VISIBLE);
+                            txttotal.setVisibility(View.VISIBLE);
+                            tv_totalamt.setText("₹ " + Math.abs(total));
+                            txttotal.setText("Amount to refund");
+                            btn_pay.setVisibility(View.INVISIBLE);
+                            couponCheckin.setVisibility(View.INVISIBLE);
                         }
 
 
                         sAmountPay = String.valueOf(total);
                         Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@" + sAmountPay);
 
-                        if (total != 0.0) {
+                        if (total != 0.0 && total>0) {
                             btn_pay.setVisibility(View.VISIBLE);
                         } else {
                             btn_pay.setVisibility(View.INVISIBLE);

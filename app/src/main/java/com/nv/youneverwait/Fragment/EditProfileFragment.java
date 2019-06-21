@@ -419,6 +419,8 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
                             //   Config.logV("PopBack---------------"+getFragmentManager().getBackStackEntryCount());
+                            SharedPreference.getInstance(mContext).setValue("firstname", txtfirstname.getText().toString());
+                            SharedPreference.getInstance(mContext).setValue("lastname", txtlastname.getText().toString());
                             Toast.makeText(mContext, "Profile has been updated successfully ", Toast.LENGTH_LONG).show();
                             getFragmentManager().popBackStackImmediate();
                            /* ProfileFragment pfFragment = new ProfileFragment();
