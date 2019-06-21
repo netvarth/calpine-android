@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -88,6 +89,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -197,7 +199,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         // Inflate the layout for this fragment
         row = inflater.inflate(R.layout.fragment_searchdetail, container, false);
 
-
+        txtrefinedsearch = (TextView) row.findViewById(R.id.txtrefinedsearch);
         Config.logV(" Search List &&&&&&&&&&&&&&&&");
         mContext = getActivity();
         mInterface = (AdapterCallback) this;
@@ -221,6 +223,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 if (filter.equalsIgnoreCase("filter")) {
                     passedFormulaArray = bundle.getStringArrayList("passFormulaArray");
                     Config.logV("PASSED FORMULA ARRAY WWWW @@" + passedFormulaArray.size());
+                    if (passedFormulaArray.size() > 0) {
+                        txtrefinedsearch.setText("Refine Search (" + passedFormulaArray.size() + ") ");
+                    } else {
+                        txtrefinedsearch.setText("Refine Search ");
+                    }
                 }
             }
         }
@@ -240,7 +247,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
 
-        txtrefinedsearch = (TextView) row.findViewById(R.id.txtrefinedsearch);
+
         ibackpress = (ImageView) row.findViewById(R.id.backpress);
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
         txt_toolbarlocation = (TextView) row.findViewById(R.id.txt_toolbarlocation);
@@ -393,12 +400,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             public void onClick(View v) {
 
 
+
                 LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View customView = layoutInflater.inflate(R.layout.popup_filter, null);
 
 
                 final RecyclerView recycle_morefilter = (RecyclerView) customView.findViewById(R.id.recycle_morefilter);
                 TextView txtclear = (TextView) customView.findViewById(R.id.txtclear);
+
 
                 Config.logV("PASSED FORMULA ARRAY@@@@@@@@@@@@" + passedFormulaArray.size());
                 if (mDomainSpinner.equalsIgnoreCase("All")) {
@@ -413,12 +422,29 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                 int width = displayMetrics.widthPixels;
-                final PopupWindow popupWindow = new PopupWindow(customView, width - width / 3, LinearLayout.LayoutParams.MATCH_PARENT);
+                int height=displayMetrics.heightPixels;
+
+                customView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+                int x = location[0] - (int) ((customView.getMeasuredWidth() - v.getWidth()) / 2 );
+
+                final PopupWindow popupWindow = new PopupWindow(customView, width - width / 3, height-(location[1] + 50));
 
                 popupWindow.setAnimationStyle(R.style.MyAlertDialogStyle);
                 //display the popup window
-                popupWindow.showAtLocation(txtrefinedsearch, Gravity.NO_GRAVITY, location[0] + width - width / 3, location[1] + 50);
+
+             //   Rect location1 = locateView(txtrefinedsearch);
+               //  popupWindow.showAtLocation(txtrefinedsearch, Gravity.NO_GRAVITY, location[0] + width - width / 3, location[1] + 50);
+
+                popupWindow.showAtLocation(txtrefinedsearch, Gravity.NO_GRAVITY, x, location[1] + 50);
+
+
                 dimBehind(popupWindow);
+
+
+
+
 
                 txtclear.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -3161,5 +3187,23 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }
     }
 
-
+    public static Rect locateView(View v)
+    {
+        int[] loc_int = new int[2];
+        if (v == null) return null;
+        try
+        {
+            v.getLocationOnScreen(loc_int);
+        } catch (NullPointerException npe)
+        {
+            //Happens when the view doesn't exist on screen anymore.
+            return null;
+        }
+        Rect location = new Rect();
+        location.left = loc_int[0];
+        location.top = loc_int[1];
+        location.right = location.left + v.getWidth();
+        location.bottom = location.top + v.getHeight();
+        return location;
+    }
 }

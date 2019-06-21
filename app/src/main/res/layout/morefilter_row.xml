@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:paddingLeft="@dimen/padding5"
-        android:layout_marginLeft="@dimen/default_padding"
+        android:layout_marginLeft="@dimen/padding7"
         android:layout_marginTop="@dimen/padding3"
         android:layout_marginBottom="@dimen/padding3"
         android:orientation="vertical"></LinearLayout>

@@ -14,9 +14,11 @@ import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -282,6 +284,11 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
 
                         if (myViewHolder.LexpandView != null) {
+                            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)myViewHolder.LexpandView.getLayoutParams();
+                            params.setMargins(0, 5, 0, 5);
+
+                            myViewHolder.LexpandView.setLayoutParams(params);
+                            myViewHolder.LexpandView.setPadding(0,0,0,0);
                             myViewHolder.LexpandView.addView(ratingBar);
                         }
 
@@ -580,16 +587,47 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                         }
 
                         if(!fAvailable){
-                            keyFormula.add(filterList.getCloudSearchIndex().replace("*", "1"));
+                            keyFormula.add(filterList.getCloudSearchIndex());
                         }
 
 
                         myViewHolder.LexpandView.setVisibility(View.VISIBLE);
 
-                        EditText editText = new EditText(mContext);
+                        final EditText editText = new EditText(mContext);
                         editText.setTextSize(15);
                         editText.setHint(filterList.getDisplayName());
                         myViewHolder.LexpandView.addView(editText);
+                        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+                        editText.setSingleLine();
+                        editText.setMaxLines(1);
+
+                        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                            @Override
+                            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                                    // do your stuff here
+
+                                    for (int i = 0; i < passFormula.size(); i++) {
+
+                                        String splitsFormula[]=passFormula.get(i).toString().split(":");
+                                        Config.logV("PRINT REMOVEWWWW @@@@@@@@@@@"+splitsFormula[0]);
+                                        if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex())) {
+
+                                            Config.logV("PRINT REMOVE @@@@@@@@@@@"+filterList.getCloudSearchIndex());
+                                            passFormula.remove(i);
+
+
+                                        }
+                                    }
+
+
+                                    passFormula.add(filterList.getCloudSearchIndex() +  ": '" + editText.getText().toString() + "' ");
+
+                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                }
+                                return false;
+                            }
+                        });
                     }
                 } else {
                     myViewHolder.LexpandView.setVisibility(View.GONE);
