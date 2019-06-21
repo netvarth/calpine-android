@@ -242,7 +242,7 @@
                 android:layout_marginLeft="@dimen/default_padding"
                 android:drawableTop="@drawable/icon_message_gray"
                 android:gravity="center"
-                android:text="Enquiry"
+                android:text="Message"
                 android:textSize="@dimen/txtsize_12" />
 
             <TextView

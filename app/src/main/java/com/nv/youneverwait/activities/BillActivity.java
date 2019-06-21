@@ -555,7 +555,7 @@ public class BillActivity extends AppCompatActivity {
                             tv_totalamt.setVisibility(View.VISIBLE);
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setText("₹ " + Math.abs(total));
-                            txttotal.setText("Amount to refund");
+                            txttotal.setText("Refundable amount");
                             btn_pay.setVisibility(View.INVISIBLE);
                             couponCheckin.setVisibility(View.INVISIBLE);
                         }

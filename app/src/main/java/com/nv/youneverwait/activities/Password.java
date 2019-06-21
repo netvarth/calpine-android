@@ -290,7 +290,7 @@ public class Password extends AppCompatActivity {
         if(from.equalsIgnoreCase("login")){
 
             if(validatePassword()&&validateConfirmPassword()) {
-                if (mEdtpwd.getText().toString().equalsIgnoreCase(mEdtconfirmPwd.getText().toString())) {
+                if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
                     ApiReSetPassword(otp, mEdtconfirmPwd.getText().toString());
                 }else{
                     Toast.makeText(mContext," Password mismatch",Toast.LENGTH_LONG).show();
@@ -299,7 +299,7 @@ public class Password extends AppCompatActivity {
         }else {
 
             if(validatePassword()&&validateConfirmPassword()) {
-                if (mEdtpwd.getText().toString().equalsIgnoreCase(mEdtconfirmPwd.getText().toString())) {
+                if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
                     ApiSetPassword(otp, mEdtconfirmPwd.getText().toString());
                 }else{
                     Toast.makeText(mContext,"Password mismatch",Toast.LENGTH_LONG).show();

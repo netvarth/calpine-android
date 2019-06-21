@@ -65,18 +65,19 @@ public interface ApiInterface {
     @GET("consumer/{mobile}/check")
     Call<ResponseBody> chkNewUser(@Path("mobile") String mobile);
 
-    @Headers("Accept: application/json")
+    @Headers({"Accept: application/json","User-Agent: android"})
     @POST("consumer")
     Call<ResponseBody> getSignUpResponse(@Body RequestBody jsonObj);
 
     @POST("consumer/{otp}/verify")
+    @Headers("User-Agent: android")
     Call<ResponseBody> OtpVerify(@Path("otp") String otp);
 
-    @Headers("Accept: application/json")
+    @Headers({"Accept: application/json","User-Agent: android"})
     @PUT("consumer/{otp}/activate")
     Call<ResponseBody> SetPassword(@Path("otp") String otp, @Body RequestBody jsonObj);
 
-    @Headers("Accept: application/json")
+    @Headers({"Accept: application/json","User-Agent: android"})
     @POST("consumer/login")
     Call<LoginResponse> LoginResponse(@Body RequestBody jsonObj);
 

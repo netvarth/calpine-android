@@ -70,7 +70,7 @@
                 android:layout_weight="0.2"
                 android:drawableTop="@drawable/icon_message_gray"
                 android:gravity="center"
-                android:text="Enquiry"
+                android:text="Message"
                 android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_12" />
 
