@@ -32,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -69,7 +70,11 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
         this.activity = mActivity;
         this.filterAdapterCallback = filterAdapterCallback;
 
-
+        for(int i=0;i<mFilterList.size();i++){
+            if(mFilterList.get(i).getDisplayName().equalsIgnoreCase("Other Filter")) {
+                Collections.swap(mFilterList, i, mFilterList.size()-1);
+            }
+        }
     }
 
     @Override

@@ -13,6 +13,8 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -42,6 +44,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -115,15 +118,12 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
         keyFormula.add("sector");
         keyFormula.add("sub_sector");
-        /*for(int i=0;i<mFilterList.size();i++){
-            Config.logV("PRINT @@DATTYPE"+mFilterList.get(i).getDataType());
-            keyFormula.add(mFilterList.get(i).getCloudSearchIndex());
-            if(mFilterList.get(i).getDataType().equalsIgnoreCase("Boolean")){
-                for(int j=0;j<mFilterList.get(i).getCloudIndexvalue().size();j++) {
-                    keyFormula.add(mFilterList.get(i).getCloudIndexvalue().get(j).toString());
-                }
+
+        for(int i=0;i<mFilterList.size();i++){
+            if(mFilterList.get(i).getDisplayName().equalsIgnoreCase("Other Filter")) {
+                Collections.swap(mFilterList, i, mFilterList.size()-1);
             }
-        }*/
+        }
 
 
     }
@@ -554,6 +554,10 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                         }
 
 
+
+
+
+
                         myViewHolder.LexpandView.setVisibility(View.VISIBLE);
 
                         final EditText editText = new EditText(mContext);
@@ -563,6 +567,16 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
                         editText.setSingleLine();
                         editText.setMaxLines(1);
+
+                        for (int j = 0; j < passFormula.size(); j++) {
+                            String splitsFormula[]=passFormula.get(j).toString().split(":");
+
+                            if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex())) {
+
+
+                                editText.setText(splitsFormula[1].toString().replace("'",""));
+                            }
+                        }
 
                         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                             @Override
@@ -589,6 +603,38 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                     filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
                                 }
                                 return false;
+                            }
+                        });
+
+                        editText.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                for (int i = 0; i < passFormula.size(); i++) {
+
+                                    String splitsFormula[]=passFormula.get(i).toString().split(":");
+                                    Config.logV("PRINT REMOVEWWWW @@@@@@@@@@@"+splitsFormula[0]);
+                                    if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex())) {
+
+                                        Config.logV("PRINT REMOVE @@@@@@@@@@@"+filterList.getCloudSearchIndex());
+                                        passFormula.remove(i);
+
+
+                                    }
+                                }
+
+                                if(editText.getText().toString().length()>0)
+                                passFormula.add(filterList.getCloudSearchIndex() +  ": '" + editText.getText().toString() + "' ");
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+
                             }
                         });
                     }
