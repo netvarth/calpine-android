@@ -1902,12 +1902,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID,String consumer) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
         iBill.putExtra("accountID", accountID);
         iBill.putExtra("payStatus", payStatus);
+        iBill.putExtra("consumer",consumer);
         startActivity(iBill);
 
     }

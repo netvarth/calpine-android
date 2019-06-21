@@ -148,7 +148,7 @@
         android:gravity="right|center"
         android:textColor="@color/title_grey"
         android:textSize="@dimen/txtsize_12"
-        android:drawableRight="@drawable/icon_filter"
+        android:drawableRight="@drawable/icon_newfilter"
       />
 </LinearLayout>
 

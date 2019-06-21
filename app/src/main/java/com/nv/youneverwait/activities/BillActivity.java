@@ -79,7 +79,7 @@ public class BillActivity extends AppCompatActivity {
     LinearLayout paidlayout, amountlayout,taxlayout;
     String sAmountPay;
     String accountID;
-    String payStatus;
+    String payStatus,consumer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,6 +148,7 @@ public class BillActivity extends AppCompatActivity {
             mprovider = extras.getString("provider");
             accountID = extras.getString("accountID");
             payStatus= extras.getString("payStatus");
+            consumer= extras.getString("consumer");
         }
 
         if(payStatus!=null) {
@@ -474,7 +475,7 @@ public class BillActivity extends AppCompatActivity {
                         // if (mBillData.getCustomer().getUserProfile() != null) {
                         String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
                         String lastNme = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
-                        tv_customer.setText(Config.toTitleCase(firstName)+" "+Config.toTitleCase(lastNme));
+                        tv_customer.setText(consumer);
                         // tv_date.setText(mBillData.getCreatedDate());
                         DateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
                         DateFormat targetFormat = new SimpleDateFormat(("dd-MM-yyyy hh:mm a"));

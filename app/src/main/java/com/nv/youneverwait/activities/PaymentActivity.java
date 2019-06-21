@@ -84,6 +84,7 @@ public class PaymentActivity extends AppCompatActivity {
             ynwUUID = extras.getString("ynwUUID");
             accountID = extras.getString("accountID");
             amountDue = extras.getDouble("amountDue");
+
         }
 
         APIPayment(accountID, ynwUUID, amountDue);

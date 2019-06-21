@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -191,54 +192,16 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                             }
                             try {
                                 JSONArray jsonArray = new JSONArray(resp);
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    String valueJson = jsonArray.getString(i);
-                                    Log.e("json", i + "=" + valueJson);
-                                    final JSONObject jsonObj = new JSONObject(valueJson);
-                                    final CheckBox cb = new CheckBox(v.getContext());
-                                    cb.setText(jsonObj.getString("displayName"));
-                                    final String name = jsonObj.getString("name");
-                                    for (int j = 0; j < passFormula.size(); j++) {
-                                        String splitsFormula[]=passFormula.get(j).toString().split(":");
 
-                                        if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {
-                                            if (passFormula.get(j).toString().contains(name)) {
-
-                                                cb.setChecked(true);
-                                            }
-                                        }
-                                    }
-                                    cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                        @Override
-                                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                            if (isChecked) {
-
-
-
-                                                for(String str : passFormula) {
-
-                                                    Config.logV("PRINT  SCHECKNBOX@ ####@@@@@@@@@@@@@@"+str);
-                                                }
-
-                                                passFormula.add(filterList.getCloudSearchIndex().replace("*", "1") + ": '" + name + "' ");
-                                                filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
-
-
-                                            } else {
-                                                for (int i = 0; i < passFormula.size(); i++) {
-                                                    if (passFormula.get(i).toString().contains(name)) {
-                                                        Config.logV("Remove @@@@@@@@@@@@@@@@@@@" + passFormula.get(i).toString());
-                                                        passFormula.remove(i);
-                                                        filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    });
-                                    myViewHolder.LexpandView.addView(cb);
-
-
+                                if(jsonArray.length()>5){
+                                    funCheckBoxMore(jsonArray,mContext,myViewHolder.LexpandView,filterList,5);
+                                }else{
+                                    funCheckBoxMore(jsonArray,mContext,myViewHolder.LexpandView,filterList,jsonArray.length());
                                 }
+
+
+
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -671,5 +634,143 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
         return mFilterList.size();
     }
 
+
+    public void funCheckBoxMore(final JSONArray jsonArray, Context context, final LinearLayout lLayout, final RefinedFilters filterList, final int checksize){
+        try {
+            lLayout.removeAllViews();
+            for (int i = 0; i < checksize; i++) {
+                String valueJson = jsonArray.getString(i);
+                Log.e("json", i + "=" + valueJson);
+                final JSONObject jsonObj = new JSONObject(valueJson);
+                final CheckBox cb = new CheckBox(context);
+                cb.setText(jsonObj.getString("displayName"));
+                final String name = jsonObj.getString("name");
+                for (int j = 0; j < passFormula.size(); j++) {
+                    String splitsFormula[] = passFormula.get(j).toString().split(":");
+
+                    if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {
+                        if (passFormula.get(j).toString().contains(name)) {
+
+                            cb.setChecked(true);
+                        }
+                    }
+                }
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+
+
+                            for (String str : passFormula) {
+
+                                Config.logV("PRINT  SCHECKNBOX@ ####@@@@@@@@@@@@@@" + str);
+                            }
+
+                            passFormula.add(filterList.getCloudSearchIndex().replace("*", "1") + ": '" + name + "' ");
+                            filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+
+
+                        } else {
+                            for (int i = 0; i < passFormula.size(); i++) {
+                                if (passFormula.get(i).toString().contains(name)) {
+                                    Config.logV("Remove @@@@@@@@@@@@@@@@@@@" + passFormula.get(i).toString());
+                                    passFormula.remove(i);
+                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                }
+                            }
+                        }
+                    }
+                });
+                lLayout.addView(cb);
+            }
+
+            if(jsonArray.length()>5) {
+                TextView txtMore = new TextView(mContext);
+                Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                txtMore.setTypeface(tyface);
+                txtMore.setText("Show More");
+                txtMore.setTextColor(mContext.getResources().getColor(R.color.title_consu));
+                lLayout.addView(txtMore);
+                txtMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int checksize = jsonArray.length();
+                         funCheckBoxLess(jsonArray,mContext,lLayout,filterList,checksize)  ;
+                    }
+                });
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void funCheckBoxLess(final JSONArray jsonArray, Context context, final LinearLayout lLayout, final RefinedFilters filterList, final int checksize){
+        try {
+            lLayout.removeAllViews();
+            for (int i = 0; i < checksize; i++) {
+                String valueJson = jsonArray.getString(i);
+                Log.e("json", i + "=" + valueJson);
+                final JSONObject jsonObj = new JSONObject(valueJson);
+                final CheckBox cb = new CheckBox(context);
+                cb.setText(jsonObj.getString("displayName"));
+                final String name = jsonObj.getString("name");
+                for (int j = 0; j < passFormula.size(); j++) {
+                    String splitsFormula[] = passFormula.get(j).toString().split(":");
+
+                    if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {
+                        if (passFormula.get(j).toString().contains(name)) {
+
+                            cb.setChecked(true);
+                        }
+                    }
+                }
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+
+
+                            for (String str : passFormula) {
+
+                                Config.logV("PRINT  SCHECKNBOX@ ####@@@@@@@@@@@@@@" + str);
+                            }
+
+                            passFormula.add(filterList.getCloudSearchIndex().replace("*", "1") + ": '" + name + "' ");
+                            filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+
+
+                        } else {
+                            for (int i = 0; i < passFormula.size(); i++) {
+                                if (passFormula.get(i).toString().contains(name)) {
+                                    Config.logV("Remove @@@@@@@@@@@@@@@@@@@" + passFormula.get(i).toString());
+                                    passFormula.remove(i);
+                                    filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
+                                }
+                            }
+                        }
+                    }
+                });
+                lLayout.addView(cb);
+            }
+
+            TextView txtless = new TextView(mContext);
+            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            txtless.setTypeface(tyface);
+            txtless.setText("Show Less");
+            txtless.setTextColor(mContext.getResources().getColor(R.color.title_consu));
+            lLayout.addView(txtless);
+            txtless.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    funCheckBoxMore(jsonArray,mContext,lLayout,filterList,5);  ;
+                }
+            });
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

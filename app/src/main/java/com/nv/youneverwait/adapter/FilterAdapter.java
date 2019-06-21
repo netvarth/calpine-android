@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -129,103 +130,58 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
 
                             try {
                                 JSONArray jsonArray = new JSONArray(resp);
-                                //int checksize = 0;
-                               /* if (jsonArray.length() >= 5) {
-                                    checksize = 5;
-                                } else {
-                                    checksize = jsonArray.length();
-                                }*/
-
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    String valueJson = jsonArray.getString(i);
-                                    Log.e("json", i + "=" + valueJson);
-                                    final JSONObject jsonObj = new JSONObject(valueJson);
-                                    final CheckBox cb = new CheckBox(v.getContext());
-                                    cb.setText(jsonObj.getString("displayName"));
-                                    final String name = jsonObj.getString("name");
-                                    for (int j = 0; j < passFormula.size(); j++) {
-                                        String splitsFormula[]=passFormula.get(j).toString().split(":");
-                                        if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {
-                                            if (passFormula.get(j).toString().contains(name)) {
-
-                                                cb.setChecked(true);
-                                            }
-                                        }
-                                    }
-                                    cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                        @Override
-                                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                            if (isChecked) {
 
 
-                                                passFormula.add(filterList.getCloudSearchIndex().replace("*", "1") + ": '" + name + "' ");
-                                                filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
+                                if(jsonArray.length()>5){
+                                    funCheckBoxMore(jsonArray,mContext,myViewHolder.LexpandView,filterList,5);
+                                }else{
+                                    try {
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            String valueJson = jsonArray.getString(i);
+                                            Log.e("json", i + "=" + valueJson);
+                                            final JSONObject jsonObj = new JSONObject(valueJson);
+                                            final CheckBox cb = new CheckBox(v.getContext());
+                                            cb.setText(jsonObj.getString("displayName"));
+                                            final String name = jsonObj.getString("name");
+                                            for (int j = 0; j < passFormula.size(); j++) {
+                                                String splitsFormula[] = passFormula.get(j).toString().split(":");
+                                                if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {
+                                                    if (passFormula.get(j).toString().contains(name)) {
 
-                                            } else {
-                                                for (int i = 0; i < passFormula.size(); i++) {
-                                                    if (passFormula.get(i).toString().contains(name)) {
-                                                        Config.logV("Remove @@@@@@@@@@@@@@@@@@@" + passFormula.get(i).toString());
-                                                        passFormula.remove(i);
-                                                        filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
+                                                        cb.setChecked(true);
                                                     }
                                                 }
                                             }
-                                        }
-                                    });
-                                    myViewHolder.LexpandView.addView(cb);
+                                            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                                @Override
+                                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                    if (isChecked) {
 
 
-                                }
+                                                        passFormula.add(filterList.getCloudSearchIndex().replace("*", "1") + ": '" + name + "' ");
+                                                        filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
 
-                                /*if (checksize >= 5) {
-                                    TextView txtMore = new TextView(mContext);
-                                    txtMore.setText("Show More");
-                                    txtMore.setTextColor(mContext.getResources().getColor(R.color.title_consu));
-                                    myViewHolder.LexpandView.addView(txtMore);
-                                    txtMore.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-
-                                            myViewHolder.LexpandView.removeAllViews();
-                                            try {
-                                                for (int i = 0; i < jsonArray.length(); i++) {
-                                                    String valueJson = jsonArray.getString(i);
-                                                    Log.e("json", i + "=" + valueJson);
-                                                    final JSONObject jsonObj = new JSONObject(valueJson);
-                                                    final CheckBox cb = new CheckBox(v.getContext());
-                                                    cb.setText(jsonObj.getString("displayName"));
-                                                    final String name = jsonObj.getString("name");
-                                                    cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                                        @Override
-                                                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                            if (isChecked) {
-
-
-                                                                passFormula.add(filterList.getCloudSearchIndex().replace("*", "1") + ": '" + name + "' ");
+                                                    } else {
+                                                        for (int i = 0; i < passFormula.size(); i++) {
+                                                            if (passFormula.get(i).toString().contains(name)) {
+                                                                Config.logV("Remove @@@@@@@@@@@@@@@@@@@" + passFormula.get(i).toString());
+                                                                passFormula.remove(i);
                                                                 filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
-
-                                                            } else {
-                                                                for (int i = 0; i < passFormula.size(); i++) {
-                                                                    if (passFormula.get(i).toString().contains(name)) {
-                                                                        Config.logV("Remove @@@@@@@@@@@@@@@@@@@" + passFormula.get(i).toString());
-                                                                        passFormula.remove(i);
-                                                                        filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
-                                                                    }
-                                                                }
                                                             }
                                                         }
-                                                    });
-                                                    myViewHolder.LexpandView.addView(cb);
-
-
+                                                    }
                                                 }
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
+                                            });
+                                            myViewHolder.LexpandView.addView(cb);
 
-                                }*/
+
+                                        }
+                                    }catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -396,5 +352,130 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public void funCheckBoxMore(final JSONArray jsonArray, Context context, final LinearLayout lLayout, final RefinedFilters filterList, final int checksize){
+        try {
+            lLayout.removeAllViews();
+            for (int i = 0; i < checksize; i++) {
+                String valueJson = jsonArray.getString(i);
+                Log.e("json", i + "=" + valueJson);
+                final JSONObject jsonObj = new JSONObject(valueJson);
+                final CheckBox cb = new CheckBox(context);
+                cb.setText(jsonObj.getString("displayName"));
+                final String name = jsonObj.getString("name");
+                for (int j = 0; j < passFormula.size(); j++) {
+                    String splitsFormula[] = passFormula.get(j).toString().split(":");
+                    if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {
+                        if (passFormula.get(j).toString().contains(name)) {
+
+                            cb.setChecked(true);
+                        }
+                    }
+                }
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+
+
+                            passFormula.add(filterList.getCloudSearchIndex().replace("*", "1") + ": '" + name + "' ");
+                            filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
+
+                        } else {
+                            for (int i = 0; i < passFormula.size(); i++) {
+                                if (passFormula.get(i).toString().contains(name)) {
+                                    Config.logV("Remove @@@@@@@@@@@@@@@@@@@" + passFormula.get(i).toString());
+                                    passFormula.remove(i);
+                                    filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
+                                }
+                            }
+                        }
+                    }
+                });
+                lLayout.addView(cb);
+
+
+            }
+
+            TextView txtMore = new TextView(mContext);
+            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            txtMore.setTypeface(tyface);
+            txtMore.setText("Show More");
+            txtMore.setTextColor(mContext.getResources().getColor(R.color.title_consu));
+            lLayout.addView(txtMore);
+            txtMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int checksize=jsonArray.length();
+                    funCheckBoxLess(jsonArray,mContext,lLayout,filterList,checksize)  ;
+                }
+            });
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void funCheckBoxLess(final JSONArray jsonArray, Context context, final LinearLayout lLayout, final RefinedFilters filterList, final int checksize){
+        try {
+            lLayout.removeAllViews();
+            for (int i = 0; i < checksize; i++) {
+                String valueJson = jsonArray.getString(i);
+                Log.e("json", i + "=" + valueJson);
+                final JSONObject jsonObj = new JSONObject(valueJson);
+                final CheckBox cb = new CheckBox(context);
+                cb.setText(jsonObj.getString("displayName"));
+                final String name = jsonObj.getString("name");
+                for (int j = 0; j < passFormula.size(); j++) {
+                    String splitsFormula[] = passFormula.get(j).toString().split(":");
+                    if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {
+                        if (passFormula.get(j).toString().contains(name)) {
+
+                            cb.setChecked(true);
+                        }
+                    }
+                }
+                cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+
+
+                            passFormula.add(filterList.getCloudSearchIndex().replace("*", "1") + ": '" + name + "' ");
+                            filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
+
+                        } else {
+                            for (int i = 0; i < passFormula.size(); i++) {
+                                if (passFormula.get(i).toString().contains(name)) {
+                                    Config.logV("Remove @@@@@@@@@@@@@@@@@@@" + passFormula.get(i).toString());
+                                    passFormula.remove(i);
+                                    filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
+                                }
+                            }
+                        }
+                    }
+                });
+                lLayout.addView(cb);
+
+
+            }
+            TextView txtless = new TextView(mContext);
+            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            txtless.setTypeface(tyface);
+            txtless.setText("Show Less");
+            txtless.setTextColor(mContext.getResources().getColor(R.color.title_consu));
+            lLayout.addView(txtless);
+            txtless.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    funCheckBoxMore(jsonArray,mContext,lLayout,filterList,5);  ;
+                }
+            });
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
