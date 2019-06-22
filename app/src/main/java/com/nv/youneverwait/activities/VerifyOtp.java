@@ -56,50 +56,34 @@ public class VerifyOtp extends AppCompatActivity {
     TextInputLayout txt_input_layout_otp;
     TextView txt_ynw;
     Button btn_verify;
-    TextView txt_enterotp,txtproceed;
+    TextView txt_enterotp, txtproceed;
     private static final int SMS_PERMISSION_CODE = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.verifyotp);
 
-        btn_verify=(Button)findViewById(R.id.btn_verify) ;
-        txt_enterotp=(TextView) findViewById(R.id.txt_enterotp);
-        txtproceed=(TextView) findViewById(R.id.txtproceed);
-   /*     TextView tv_title = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        tv_title.setGravity(Gravity.CENTER);
-        tv_title.setText("YouNeverWait");*/
-
-
+        btn_verify = findViewById(R.id.btn_verify);
+        txt_enterotp = findViewById(R.id.txt_enterotp);
+        txtproceed = findViewById(R.id.txtproceed);
         if (!hasReadSmsPermission()) {
             showRequestPermissionsInfoAlertDialog();
         }
-
-        txt_ynw= (TextView) findViewById(R.id.txt_ynw);
+        txt_ynw = findViewById(R.id.txt_ynw);
         txt_ynw.setVisibility(View.VISIBLE);
-
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         txt_ynw.setTypeface(tyface);
-
-
-
         Typeface tyface_p = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         txtproceed.setTypeface(tyface_p);
-
         mContext = this;
-
-        editotp = (TextInputEditText) findViewById(R.id.editotp);
-        txtResendOtp = (TextView) findViewById(R.id.resendOtp);
-        txtResendEmail = (TextView) findViewById(R.id.txtResendOtpEmail);
-        txt_input_layout_otp=(TextInputLayout)findViewById(R.id.text_input_layout_pwd);
-
-        edtEmail = (EditText) findViewById(R.id.edtEmail);
-      /*  btnSend = (Button) findViewById(R.id.btnEmailsend);*/
-
-
-
+        editotp = findViewById(R.id.editotp);
+        txtResendOtp = findViewById(R.id.resendOtp);
+        txtResendEmail = findViewById(R.id.txtResendOtpEmail);
+        txt_input_layout_otp = findViewById(R.id.text_input_layout_pwd);
+        edtEmail = findViewById(R.id.edtEmail);
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         editotp.setTypeface(tyface_edittext);
@@ -107,8 +91,6 @@ public class VerifyOtp extends AppCompatActivity {
         Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         txt_input_layout_otp.setTypeface(tyface_edittext_hint);
-
-
 
         txtResendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,49 +104,31 @@ public class VerifyOtp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new CustomPopUpWindow().showpopupWindowEmail(mContext,getParent());
+                new CustomPopUpWindow().showpopupWindowEmail(mContext, getParent());
             }
         });
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Medium.otf");
         btn_verify.setTypeface(tyface_btn);
-
-
-       /* btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String firstName = SharedPreference.getInstance(mContext).getStringValue("firstName", "");
-                String lastNme = SharedPreference.getInstance(mContext).getStringValue("LastName", "");
-                if (!edtEmail.getText().toString().equalsIgnoreCase("")) {
-                    ApiResendOTp(firstName, lastNme, edtEmail.getText().toString(), "email");
-                }
-            }
-        });*/
-
-
         String firstWord = "Please enter ";
         String secondWord = "OTP";
-
-
-        Spannable spannable = new SpannableString(firstWord+secondWord);
+        Spannable spannable = new SpannableString(firstWord + secondWord);
 
         Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
 
-        spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
-        txt_enterotp.setText( spannable );
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        txt_enterotp.setText(spannable);
 
         SmsBroadcastReceiver.bindListener(new SmsListener() {
             @Override
             public void messageReceived(String otp) {
 
                 editotp.setText(otp);
-                if(otp.length()>0){
+                if (otp.length() > 0) {
                     if (editotp.getText().toString() != null && !editotp.getText().toString().equalsIgnoreCase("")) {
                         ApiVerifyOtp(editotp.getText().toString());
                     }
@@ -172,8 +136,6 @@ public class VerifyOtp extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     /**
@@ -211,6 +173,7 @@ public class VerifyOtp extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS},
                 SMS_PERMISSION_CODE);
     }
+
     public void ApiResendOTp(final String firstname, final String lastname, String email, String check) {
 
         ApiInterface apiService =
@@ -251,9 +214,9 @@ public class VerifyOtp extends AppCompatActivity {
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
 
-                          //  Toast.makeText(mContext, "OTP resend", Toast.LENGTH_LONG).show();
+                            //  Toast.makeText(mContext, "OTP resend", Toast.LENGTH_LONG).show();
 
-                            Toast.makeText(mContext,"Otp has been resend to  "+mobno,Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Otp has been resend to  " + mobno, Toast.LENGTH_LONG).show();
                         }
 
                     }
@@ -305,13 +268,13 @@ public class VerifyOtp extends AppCompatActivity {
                             iPass.putExtra("from", "signup");
                             startActivity(iPass);
                             finish();
-                        }else{
-                            Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
 
 
-                    }else{
-                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -336,8 +299,8 @@ public class VerifyOtp extends AppCompatActivity {
     public void BtnOtpVerify(View view) {
         if (editotp.getText().toString() != null && !editotp.getText().toString().equalsIgnoreCase("")) {
             ApiVerifyOtp(editotp.getText().toString());
-        }else{
-            Toast.makeText(mContext,"Please enter a valid otp",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(mContext, "Please enter a valid otp", Toast.LENGTH_SHORT).show();
         }
     }
 

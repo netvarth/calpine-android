@@ -24,33 +24,33 @@ import java.util.ArrayList;
 public class SearchServiceActivity extends AppCompatActivity {
     TextView tv_price, tv_duration, tv_service, tv_desc;
 
-    String name, duration, price, desc="";
+    String name, duration, price, desc = "";
     Toolbar toolbar;
     ArrayList<SearchService> mGallery;
     ImageView i_servicegallery;
     String title;
-    TextView tv_toolbartitle,tv_descVal;
+    TextView tv_toolbartitle, tv_descVal;
     ImageView i_backpress;
-    boolean isTaxable,isPrepayment;
-    LinearLayout Lprepayment,LserviceLayout;
+    boolean isTaxable, isPrepayment;
+    LinearLayout Lprepayment, LserviceLayout;
     TextView txtpreVal;
-String MinPrePaymentAmount;
+    String MinPrePaymentAmount;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.service);
-        tv_duration = (TextView) findViewById(R.id.txtduration);
-        tv_price = (TextView) findViewById(R.id.txtprice);
-        tv_service = (TextView) findViewById(R.id.txtservice);
-        tv_desc = (TextView) findViewById(R.id.txtdesc);
-        tv_descVal=(TextView) findViewById(R.id.txtdescVal);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        i_servicegallery = (ImageView) findViewById(R.id.img_service);
-        i_backpress= (ImageView) findViewById(R.id.backpress);
-        Lprepayment=(LinearLayout) findViewById(R.id.Lprepayment);
-        LserviceLayout =(LinearLayout) findViewById(R.id.service_layout);
-        txtpreVal=(TextView) findViewById(R.id.txtpreVal);
-
+        tv_duration = findViewById(R.id.txtduration);
+        tv_price = findViewById(R.id.txtprice);
+        tv_service = findViewById(R.id.txtservice);
+        tv_desc = findViewById(R.id.txtdesc);
+        tv_descVal = findViewById(R.id.txtdescVal);
+        toolbar = findViewById(R.id.toolbar);
+        i_servicegallery = findViewById(R.id.img_service);
+        i_backpress = findViewById(R.id.backpress);
+        Lprepayment = findViewById(R.id.Lprepayment);
+        LserviceLayout = findViewById(R.id.service_layout);
+        txtpreVal = findViewById(R.id.txtpreVal);
 
         i_backpress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,25 +58,21 @@ String MinPrePaymentAmount;
                 onBackPressed();
             }
         });
-      //  i_servicethumb=(ImageView) findViewById(R.id.img_servicesmall);
-
-
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             name = extras.getString("name");
             duration = extras.getString("duration");
             price = extras.getString("price");
             desc = extras.getString("desc");
-            title=extras.getString("title");
-            isTaxable=extras.getBoolean("taxable");
-            isPrepayment=extras.getBoolean("isPrePayment");
+            title = extras.getString("title");
+            isTaxable = extras.getBoolean("taxable");
+            isPrepayment = extras.getBoolean("isPrePayment");
 
-            MinPrePaymentAmount=extras.getString("MinPrePaymentAmount");
+            MinPrePaymentAmount = extras.getString("MinPrePaymentAmount");
             mGallery = (ArrayList<SearchService>) getIntent().getSerializableExtra("servicegallery");
         }
 
-        tv_toolbartitle=(TextView)findViewById(R.id.txt_toolbartitle);
+        tv_toolbartitle = (TextView) findViewById(R.id.txt_toolbartitle);
         tv_toolbartitle.setText(title);
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -96,16 +92,15 @@ String MinPrePaymentAmount;
 
 
         if (price != null) {
-            if(!price.equals("0.0")){
+            if (!price.equals("0.0")) {
                 tv_price.setVisibility(View.VISIBLE);
                 LserviceLayout.setVisibility(View.VISIBLE);
-                if(isTaxable) {
-                    tv_price.setText("₹"+price+ " (Tax Applicable)");
-                }else {
-                    tv_price.setText("₹"+price);
+                if (isTaxable) {
+                    tv_price.setText("₹" + price + " (Tax Applicable)");
+                } else {
+                    tv_price.setText("₹" + price);
                 }
-            }
-            else{
+            } else {
                 tv_price.setVisibility(View.GONE);
                 LserviceLayout.setVisibility(View.GONE);
             }
@@ -115,21 +110,20 @@ String MinPrePaymentAmount;
         }
 
 
-
         if (duration != null) {
             tv_duration.setVisibility(View.VISIBLE);
-            tv_duration.setText(duration +" Mins");
+            tv_duration.setText(duration + " Mins");
         } else {
             tv_duration.setVisibility(View.GONE);
 
         }
-        if(isPrepayment){
+        if (isPrepayment) {
             Lprepayment.setVisibility(View.VISIBLE);
-            txtpreVal.setText("₹"+MinPrePaymentAmount);
-        }else{
+            txtpreVal.setText("₹" + MinPrePaymentAmount);
+        } else {
             Lprepayment.setVisibility(View.GONE);
         }
-        if (desc != null&&desc.length()>0&&!desc.equalsIgnoreCase("")) {
+        if (desc != null && desc.length() > 0 && !desc.equalsIgnoreCase("")) {
             tv_desc.setVisibility(View.VISIBLE);
             tv_descVal.setVisibility(View.VISIBLE);
             Typeface tyfacedesc = Typeface.createFromAsset(getAssets(),
@@ -141,27 +135,19 @@ String MinPrePaymentAmount;
             tv_descVal.setVisibility(View.GONE);
         }
 
-        if(mGallery!=null){
+        if (mGallery != null) {
 
-            if(mGallery.size()>0) {
+            if (mGallery.size() > 0) {
 
-                Config.logV("SERVICE GALLERY"+mGallery.get(0).getUrl());
+                Config.logV("SERVICE GALLERY" + mGallery.get(0).getUrl());
                 i_servicegallery.setVisibility(View.VISIBLE);
                 try {
                     Picasso.with(this).setLoggingEnabled(true);
-                    Picasso.with(this). load(mGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                    Picasso.with(this).load(mGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            /*if(mGallery.size()>1) {
-                if (mGallery.get(1).getUrl() != null) {
-
-                    Picasso.with(this).load(mGallery.get(1).getUrl()).fit().into(i_servicethumb);
-                }
-            }*/
-
-
             i_servicegallery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -179,9 +165,8 @@ String MinPrePaymentAmount;
                     }
                 }
             });
-        }else{
+        } else {
             i_servicegallery.setVisibility(View.GONE);
-           // i_servicethumb.setVisibility(View.GONE);
         }
     }
 }

@@ -12,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -77,10 +76,10 @@ public class BillActivity extends AppCompatActivity {
 
     Button btn_pay, mbill_applybtn;
     TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax;
-    LinearLayout paidlayout, amountlayout, taxlayout,couponCheckin;
+    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin;
     String sAmountPay;
     String accountID;
-    String payStatus,consumer;
+    String payStatus, consumer;
     String coupon_entered;
 
     @Override
@@ -90,58 +89,41 @@ public class BillActivity extends AppCompatActivity {
         mCOntext = this;
         mActivity = this;
 
-
-        mbill_applybtn = (Button) findViewById(R.id.bill_applybtn);
-        mbill_coupon_edit = (EditText) findViewById(R.id.bill_coupon_edit);
-        // discountlayout = (LinearLayout) findViewById(R.id.discountlayout);
-        paidlayout = (LinearLayout) findViewById(R.id.paidlayout);
-        couponCheckin = (LinearLayout) findViewById(R.id.couponCheckin);
-        // coupanlayout = (LinearLayout) findViewById(R.id.coupanlayout);
-        amountlayout = (LinearLayout) findViewById(R.id.amountlayout);
-        tv_grosstotal = (TextView) findViewById(R.id.grosstotal);
-
-        tv_provider = (TextView) findViewById(R.id.provider);
-        tv_customer = (TextView) findViewById(R.id.txtcustomer);
-        tv_date = (TextView) findViewById(R.id.txtdate);
-        tv_bill = (TextView) findViewById(R.id.txtbill);
-        tv_gstn = (TextView) findViewById(R.id.txtgstn);
-        tv_gross = (TextView) findViewById(R.id.tv_gross);
-        txttax = (TextView) findViewById(R.id.tv_tax);
-        txtaxval = (TextView) findViewById(R.id.txtaxval);
-        taxlayout = (LinearLayout) findViewById(R.id.taxlayout);
-
-      /*  tv_coupan = (TextView) findViewById(R.id.txtcoupan);
-        tv_discount = (TextView) findViewById(R.id.txtdiscount);
-        tv_discounthead=(TextView) findViewById(R.id.txtdiscount_head);
-
-        tv_coupanhead=(TextView) findViewById(R.id.txtcoupan_head);
-*/
-        tv_amount = (TextView) findViewById(R.id.txtamt);
-        tv_paid = (TextView) findViewById(R.id.amtpaid);
-        tv_totalamt = (TextView) findViewById(R.id.totalamt);
-        // btn_cancel = (Button) findViewById(R.id.btn_cancel);
-        btn_pay = (Button) findViewById(R.id.btn_pay);
-
-        recycle_item = (RecyclerView) findViewById(R.id.recycle_item);
-        coupon_added = (RecyclerView) findViewById(R.id.coupon_added);
-        recycle_discount_total = (RecyclerView) findViewById(R.id.recycle_discount_total);
-
-        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
-
-
+        mbill_applybtn = findViewById(R.id.bill_applybtn);
+        mbill_coupon_edit = findViewById(R.id.bill_coupon_edit);
+        paidlayout = findViewById(R.id.paidlayout);
+        couponCheckin = findViewById(R.id.couponCheckin);
+        amountlayout = findViewById(R.id.amountlayout);
+        tv_grosstotal = findViewById(R.id.grosstotal);
+        tv_provider = findViewById(R.id.provider);
+        tv_customer = findViewById(R.id.txtcustomer);
+        tv_date = findViewById(R.id.txtdate);
+        tv_bill = findViewById(R.id.txtbill);
+        tv_gstn = findViewById(R.id.txtgstn);
+        tv_gross = findViewById(R.id.tv_gross);
+        txttax = findViewById(R.id.tv_tax);
+        txtaxval = findViewById(R.id.txtaxval);
+        taxlayout = findViewById(R.id.taxlayout);
+        tv_amount = findViewById(R.id.txtamt);
+        tv_paid = findViewById(R.id.amtpaid);
+        tv_totalamt = findViewById(R.id.totalamt);
+        btn_pay = findViewById(R.id.btn_pay);
+        recycle_item = findViewById(R.id.recycle_item);
+        coupon_added = findViewById(R.id.coupon_added);
+        recycle_discount_total = findViewById(R.id.recycle_discount_total);
+        TextView tv_title = findViewById(R.id.toolbartitle);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
-
-        txtnetRate = (TextView) findViewById(R.id.txtnetRate);
-        txttotal = (TextView) findViewById(R.id.txttotal);
+        txtnetRate = findViewById(R.id.txtnetRate);
+        txttotal = findViewById(R.id.txttotal);
 
         tv_totalamt.setTypeface(tyface);
         txttotal.setTypeface(tyface);
         txtnetRate.setTypeface(tyface);
 
 
-        ImageView iBackPress = (ImageView) findViewById(R.id.backpress);
+        ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,7 +138,7 @@ public class BillActivity extends AppCompatActivity {
             mprovider = extras.getString("provider");
             accountID = extras.getString("accountID");
             payStatus = extras.getString("payStatus");
-            consumer= extras.getString("consumer");
+            consumer = extras.getString("consumer");
         }
 
 
@@ -202,8 +184,6 @@ public class BillActivity extends AppCompatActivity {
 
                 if (!showPaytmWallet && !showPayU) {
 
-
-                    // Toast.makeText(mCOntext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
                 } else {
                     try {
                         btn_pay.setVisibility(View.VISIBLE);
@@ -211,8 +191,8 @@ public class BillActivity extends AppCompatActivity {
                         dialog.setContentView(R.layout.prepayment);
                         dialog.show();
 
-                        Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-                        Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                        Button btn_paytm = dialog.findViewById(R.id.btn_paytm);
+                        Button btn_payu = dialog.findViewById(R.id.btn_payu);
                         if (showPaytmWallet) {
                             btn_paytm.setVisibility(View.VISIBLE);
                         } else {
@@ -236,18 +216,7 @@ public class BillActivity extends AppCompatActivity {
 
                                 new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, "bill");
 
-
-
-                               /* Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
-                                iPayu.putExtra("ynwUUID",ynwUUID);
-                                iPayu.putExtra("amount",sAmountPay);
-                                iPayu.putExtra("accountID",accountID);
-                                startActivity(iPayu);*/
                                 dialog.dismiss();
-                                // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
-                       /*
-                        dialog.dismiss();*/
-
                             }
                         });
 
@@ -256,9 +225,7 @@ public class BillActivity extends AppCompatActivity {
                             public void onClick(View v) {
 
                                 PaytmPayment payment = new PaytmPayment(mCOntext);
-                                // payment.generateCheckSum(sAmountPay);
                                 payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, mCOntext, mActivity, "");
-                                //  payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
                                 dialog.dismiss();
                             }
                         });
@@ -298,10 +265,8 @@ public class BillActivity extends AppCompatActivity {
 
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
 
                         mPaymentData = response.body();
@@ -319,26 +284,15 @@ public class BillActivity extends AppCompatActivity {
                         if (!showPaytmWallet && !showPayU) {
                             btn_pay.setVisibility(View.INVISIBLE);
                         }
-                        /*if (mPaymentData.size() > 0) {
-                            Lpayment.setVisibility(View.VISIBLE);
-                            mPayAdpater = new PaymentAdapter(mPaymentData, mActivity);
-                            LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-                            mRecyclePayList.setLayoutManager(horizontalLayoutManager);
-                            mRecyclePayList.setAdapter(mPayAdpater);
-                            tv_amount.setText("Amount to Pay ₹" + sAmountPay);
-                        }*/
-
                     } else {
                         btn_pay.setVisibility(View.INVISIBLE);
                         if (response.code() != 419)
                             Toast.makeText(mCOntext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }
 
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -347,11 +301,8 @@ public class BillActivity extends AppCompatActivity {
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
-
             }
         });
-
-
     }
 
     // Dialog mDialog1 = null;
@@ -359,7 +310,6 @@ public class BillActivity extends AppCompatActivity {
     public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
-        // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
         payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
         String firstname = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");
         String lastname = SharedPreference.getInstance(mCOntext).getStringValue("lastname", "");
@@ -371,8 +321,6 @@ public class BillActivity extends AppCompatActivity {
         builder.setAmount(convertStringToDouble(amount))
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
-                // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                //.setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
                 .setProductName(new Gson().toJson(checksumModel.getProductinfo()))
                 .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
@@ -395,20 +343,13 @@ public class BillActivity extends AppCompatActivity {
         try {
             PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
             if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
-                //  Toast.makeText(mCOntext, "Could not generate hash", Toast.LENGTH_SHORT).show();
             } else {
-
-
                 mPaymentParams.setMerchantHash(checksumModel.getChecksum());
-                Config.logV("Checksum id---22222222222222--------" + mPaymentParams);
-
                 PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.PayUMoney, true);
             }
         } catch (Exception e) {
             Config.logV("e.getMessage()------" + e.getMessage());
             Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_LONG).show();
-
-            // mTxvBuy.setEnabled(true);
         }
     }
 
@@ -417,7 +358,6 @@ public class BillActivity extends AppCompatActivity {
         //   mTxvBuy.setEnabled(true);
 
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-
 
             TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
             ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
@@ -436,7 +376,6 @@ public class BillActivity extends AppCompatActivity {
             } else if (resultModel != null && resultModel.getError() != null) {
                 Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
             } else {
-                // Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
             showAlert("Payment Cancelled");
@@ -564,7 +503,7 @@ public class BillActivity extends AppCompatActivity {
                         sAmountPay = String.valueOf(total);
                         Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@" + sAmountPay);
 
-                        if (total != 0.0 && total>0) {
+                        if (total != 0.0 && total > 0) {
                             btn_pay.setVisibility(View.VISIBLE);
                         } else {
                             btn_pay.setVisibility(View.INVISIBLE);
@@ -572,7 +511,6 @@ public class BillActivity extends AppCompatActivity {
 
                         if (mBillData.getTaxableTotal() > 0) {
                             taxlayout.setVisibility(View.VISIBLE);
-                            // holder.txttax.setText("Tax(CGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %" + ", SGST: " + String.valueOf(billServiceData.get(position).getGSTpercentage() / 2) + " %)");
                             txttax.setText("Tax " + String.valueOf(mBillData.getTaxPercentage()) + "% of " + "₹ " + String.valueOf(mBillData.getTaxableTotal()) + "\n" + "(CGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
 
                             txtaxval.setText("(+)₹ " + String.valueOf(mBillData.getTotalTaxAmount()));

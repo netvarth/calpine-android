@@ -55,46 +55,45 @@ public class Password extends AppCompatActivity {
 
 
     Context mContext;
-    TextInputEditText mEdtpwd,mEdtconfirmPwd;
-    String otp,from;
+    TextInputEditText mEdtpwd, mEdtconfirmPwd;
+    String otp, from;
 
     //private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" ;
-    private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$" ;
+    private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$";
     private Pattern pattern;
     private Matcher matcher;
-    TextInputLayout txt_InputPwd,txt_Confirm_InputPwd;
-    TextView txt_ynw,tv_password_title;
+    TextInputLayout txt_InputPwd, txt_Confirm_InputPwd;
+    TextView txt_ynw, tv_password_title;
     Button btn_pwd_submit;
     ImageView img_indicator;
+
     @Override
-    public void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.password);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             otp = extras.getString("otp");
-            from=extras.getString("from");
+            from = extras.getString("from");
         }
 
 
-        txt_ynw=(TextView)findViewById(R.id.txt_ynw);
-        tv_password_title=(TextView)findViewById(R.id.txt_password_title);
-        btn_pwd_submit=(Button)findViewById(R.id.pwd_submit);
-        img_indicator=(ImageView) findViewById(R.id.img_indicator);
+        txt_ynw = (TextView) findViewById(R.id.txt_ynw);
+        tv_password_title = (TextView) findViewById(R.id.txt_password_title);
+        btn_pwd_submit = (Button) findViewById(R.id.pwd_submit);
+        img_indicator = (ImageView) findViewById(R.id.img_indicator);
 
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Medium.otf");
         btn_pwd_submit.setTypeface(tyface_btn);
 
 
-
-        if(from.equalsIgnoreCase("login")) {
+        if (from.equalsIgnoreCase("login")) {
             img_indicator.setVisibility(View.GONE);
 
 
-
-            ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+            ImageView iBackPress = (ImageView) findViewById(R.id.backpress);
             iBackPress.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -102,7 +101,7 @@ public class Password extends AppCompatActivity {
                     finish();
                 }
             });
-            TextView tv_title = (TextView)findViewById(R.id.title);
+            TextView tv_title = (TextView) findViewById(R.id.title);
             tv_title.setText("Forgot password");
 
             Typeface tyface = Typeface.createFromAsset(getAssets(),
@@ -130,8 +129,8 @@ public class Password extends AppCompatActivity {
             tv_password_title.setText( spannable );*/
             tv_password_title.setVisibility(View.INVISIBLE);
 
-        }else{
-            LinearLayout layout_toolbar=(LinearLayout)findViewById(R.id.layout_toolbar) ;
+        } else {
+            LinearLayout layout_toolbar = (LinearLayout) findViewById(R.id.layout_toolbar);
             layout_toolbar.setVisibility(View.GONE);
             txt_ynw.setVisibility(View.VISIBLE);
 
@@ -146,25 +145,25 @@ public class Password extends AppCompatActivity {
             String secondWord = "Password";
 
 
-            Spannable spannable = new SpannableString(firstWord+secondWord);
+            Spannable spannable = new SpannableString(firstWord + secondWord);
 
             Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
                     "fonts/Montserrat_Light.otf");
             Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
                     "fonts/Montserrat_Bold.otf");
 
-            spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             tv_password_title.setVisibility(View.VISIBLE);
-            tv_password_title.setText( spannable );
+            tv_password_title.setText(spannable);
 
         }
         mContext = this;
-        mEdtpwd=(TextInputEditText)findViewById(R.id.editpassword) ;
-        mEdtconfirmPwd=(TextInputEditText)findViewById(R.id.editconfirm_password) ;
-        txt_InputPwd=(TextInputLayout) findViewById(R.id.text_input_layout_pwd) ;
-        txt_Confirm_InputPwd=(TextInputLayout) findViewById(R.id.text_input_layout_pwd_confirm) ;
+        mEdtpwd = (TextInputEditText) findViewById(R.id.editpassword);
+        mEdtconfirmPwd = (TextInputEditText) findViewById(R.id.editconfirm_password);
+        txt_InputPwd = (TextInputLayout) findViewById(R.id.text_input_layout_pwd);
+        txt_Confirm_InputPwd = (TextInputLayout) findViewById(R.id.text_input_layout_pwd_confirm);
 
         mEdtpwd.addTextChangedListener(new MyTextWatcher(mEdtpwd));
         mEdtconfirmPwd.addTextChangedListener(new MyTextWatcher(mEdtconfirmPwd));
@@ -191,23 +190,22 @@ public class Password extends AppCompatActivity {
         });
 
 
-
-
     }
-
 
 
     /**
      * Validate password with regular expression
+     *
      * @param password password for validation
      * @return true valid password, false invalid password
      */
-    public boolean validatePwd(final String password){
+    public boolean validatePwd(final String password) {
 
         matcher = pattern.matcher(password);
         return matcher.matches();
 
     }
+
     private class MyTextWatcher implements TextWatcher {
 
         private View view;
@@ -225,7 +223,7 @@ public class Password extends AppCompatActivity {
 
         public void afterTextChanged(Editable editable) {
             Config.logV("Text Change---- After111");
-            if(editable.length()>0) {
+            if (editable.length() > 0) {
                 switch (view.getId()) {
                     case R.id.editpassword:
                         Config.logV("Text Change---- After");
@@ -245,6 +243,7 @@ public class Password extends AppCompatActivity {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
+
     private boolean validateConfirmPassword() {
         if (mEdtconfirmPwd.getText().toString().trim().isEmpty()) {
             //txt_Confirm_InputPwd.setError(getString(R.string.err_msg_password));
@@ -260,14 +259,14 @@ public class Password extends AppCompatActivity {
             return false;
         } else {
             txt_Confirm_InputPwd.setError(null);
-            txt_Confirm_InputPwd. setErrorEnabled(false);
+            txt_Confirm_InputPwd.setErrorEnabled(false);
         }
 
         return true;
     }
+
     private boolean validatePassword() {
         if (!validatePwd(mEdtpwd.getText().toString())) {
-            //txt_InputPwd.setError(getString(R.string.err_pwd_valid));
 
             SpannableString s = new SpannableString(getString(R.string.err_pwd_valid));
             Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
@@ -279,30 +278,29 @@ public class Password extends AppCompatActivity {
             return false;
         } else {
             txt_InputPwd.setError(null);
-            txt_InputPwd. setErrorEnabled(false);
+            txt_InputPwd.setErrorEnabled(false);
         }
-
         return true;
     }
 
     public void Btn_Pwdsubmit(View view) {
 
-        if(from.equalsIgnoreCase("login")){
+        if (from.equalsIgnoreCase("login")) {
 
-            if(validatePassword()&&validateConfirmPassword()) {
+            if (validatePassword() && validateConfirmPassword()) {
                 if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
                     ApiReSetPassword(otp, mEdtconfirmPwd.getText().toString());
-                }else{
-                    Toast.makeText(mContext," Password mismatch",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(mContext, " Password mismatch", Toast.LENGTH_LONG).show();
                 }
             }
-        }else {
+        } else {
 
-            if(validatePassword()&&validateConfirmPassword()) {
+            if (validatePassword() && validateConfirmPassword()) {
                 if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
                     ApiSetPassword(otp, mEdtconfirmPwd.getText().toString());
-                }else{
-                    Toast.makeText(mContext,"Password mismatch",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(mContext, "Password mismatch", Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -313,7 +311,7 @@ public class Password extends AppCompatActivity {
 
             ApiInterface apiService =
                     ApiClient.getClient(this).create(ApiInterface.class);
-            final String loginId=SharedPreference.getInstance(mContext).getStringValue("mobno","");
+            final String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
             JSONObject jsonObj = new JSONObject();
             try {
                 jsonObj.put("loginId", loginId);
@@ -321,10 +319,10 @@ public class Password extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),jsonObj.toString());
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
             final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
             mDialog.show();
-            Call<String> call = apiService.SetResetPassword(otp,body);
+            Call<String> call = apiService.SetResetPassword(otp, body);
 
             call.enqueue(new Callback<String>() {
                 @Override
@@ -338,23 +336,15 @@ public class Password extends AppCompatActivity {
                         Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                         Config.logV("code---------------" + response.code());
                         if (response.code() == 200) {
-                            Config.logV("Sucess password----------"+response.body());
+                            Config.logV("Sucess password----------" + response.body());
 
-                            if(response.body().equalsIgnoreCase("true")) {
-                               // SharedPreference.getInstance(mContext).setValue("register","success");
-                                ApiLogin(loginId,pwd);
-                               /* Intent iReg = new Intent(mContext, Login.class);
-                                startActivity(iReg);
-                                finish();*/
-
+                            if (response.body().equalsIgnoreCase("true")) {
+                                ApiLogin(loginId, pwd);
                             }
                         }
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
 
                 @Override
@@ -380,10 +370,10 @@ public class Password extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),jsonObj.toString());
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.SetPassword(otp,body);
+        Call<ResponseBody> call = apiService.SetPassword(otp, body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -399,14 +389,12 @@ public class Password extends AppCompatActivity {
                     if (response.code() == 200) {
                         Config.logV("Sucess password----------");
 
-                        if(response.body().string().equalsIgnoreCase("true")) {
-                            String loginId=SharedPreference.getInstance(mContext).getStringValue("mobno","");
-                          ApiLogin(loginId,pwd);
+                        if (response.body().string().equalsIgnoreCase("true")) {
+                            String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
+                            ApiLogin(loginId, pwd);
 
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -425,18 +413,15 @@ public class Password extends AppCompatActivity {
 
     }
 
-    public void ApiLogin(String loginId,String password) {
+    public void ApiLogin(String loginId, String password) {
 
         ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
-       /* String androidId = Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID);*/
-
         SharedPreference.getInstance(mContext).setValue("password", password);
 
         SharedPreferences pref = mContext.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
-        Config.logV("REGISTARION ID_________________"+regId);
+        Config.logV("REGISTARION ID_________________" + regId);
 
         JSONObject jsonObj = new JSONObject();
         try {
@@ -447,8 +432,8 @@ public class Password extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),jsonObj.toString());
-        Config.logV("JSON--------------"+jsonObj);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Config.logV("JSON--------------" + jsonObj);
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<LoginResponse> call = apiService.LoginResponse(body);
@@ -467,35 +452,35 @@ public class Password extends AppCompatActivity {
                     if (response.code() == 200) {
                         Config.logV("Response--code-------------------------" + response.body().getFirstName());
 
-                     String cookiestored=   SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                        String cookiestored = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
 
-                      if(cookiestored.equalsIgnoreCase("")) {
-                          // get header value
+                        if (cookiestored.equalsIgnoreCase("")) {
+                            // get header value
 
-                              List<String> cookiess = response.headers().values("Set-Cookie");
-                              StringBuffer Cookie_header = new StringBuffer();
+                            List<String> cookiess = response.headers().values("Set-Cookie");
+                            StringBuffer Cookie_header = new StringBuffer();
 
-                              for(String key : cookiess){
-                                  String Cookiee = key.substring(0, key.indexOf(";"));
-                                  Cookie_header.append(Cookiee +';');
-                              }
+                            for (String key : cookiess) {
+                                String Cookiee = key.substring(0, key.indexOf(";"));
+                                Cookie_header.append(Cookiee + ';');
+                            }
 
-                              SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header.toString());
-                              Config.logV("Set Cookie sharedpref password------------" + Cookie_header);
-                              LogUtil.writeLogTest("*******Signup Cookie*****" + Cookie_header);
+                            SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header.toString());
+                            Config.logV("Set Cookie sharedpref password------------" + Cookie_header);
+                            LogUtil.writeLogTest("*******Signup Cookie*****" + Cookie_header);
 
-                      }
+                        }
 
                         Headers headerList = response.headers();
-                        String version=headerList.get("Version");
-                        Config.logV("Header----------"+version);
+                        String version = headerList.get("Version");
+                        Config.logV("Header----------" + version);
 
 
-                        SharedPreference.getInstance(mContext).setValue("firstname",response.body().getFirstName());
-                        SharedPreference.getInstance(mContext).setValue("lastname",response.body().getLastName());
-                        SharedPreference.getInstance(mContext).setValue("consumerId",response.body().getId());
-                        SharedPreference.getInstance(mContext).setValue("register","success");
-                        SharedPreference.getInstance(mContext).setValue("mobile",response.body().getPrimaryPhoneNumber());
+                        SharedPreference.getInstance(mContext).setValue("firstname", response.body().getFirstName());
+                        SharedPreference.getInstance(mContext).setValue("lastname", response.body().getLastName());
+                        SharedPreference.getInstance(mContext).setValue("consumerId", response.body().getId());
+                        SharedPreference.getInstance(mContext).setValue("register", "success");
+                        SharedPreference.getInstance(mContext).setValue("mobile", response.body().getPrimaryPhoneNumber());
                         SharedPreference.getInstance(mContext).setValue("s3Url", response.body().getS3Url());
 
                         Intent iReg = new Intent(mContext, Home.class);
@@ -504,15 +489,14 @@ public class Password extends AppCompatActivity {
                         finish();
 
 
-                    }else{
-                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                     }
 
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override

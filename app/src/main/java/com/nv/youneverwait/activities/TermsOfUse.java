@@ -32,12 +32,12 @@ public class TermsOfUse extends AppCompatActivity {
         setContentView(R.layout.termsofuse);
         mContext = this;
 
-        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
+        TextView tv_title = findViewById(R.id.toolbartitle);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
         tv_title.setText("Terms & Conditions");
-        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,12 +46,7 @@ public class TermsOfUse extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-
-
-        webview = (WebView) findViewById(R.id.mWebview_about);
-
-
+        webview = findViewById(R.id.mWebview_about);
         //WebView loading start
         WebSettings settings = webview.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -62,7 +57,6 @@ public class TermsOfUse extends AppCompatActivity {
 
         progressBar = Config.getProgressDialog(this, "");
         progressBar.show();
-
         webview.loadUrl(mContext.getResources().getString(R.string.url_terms));
         webview.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -79,9 +73,6 @@ public class TermsOfUse extends AppCompatActivity {
             }
         });
         //Webview loading end
-
-
-
     }
 
     @Override
@@ -100,8 +91,4 @@ public class TermsOfUse extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-
-
-
 }

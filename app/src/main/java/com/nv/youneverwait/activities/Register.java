@@ -61,86 +61,26 @@ public class Register extends AppCompatActivity {
     TextInputLayout txt_InputMob;
     Button btn_reg_submit;
     TextView tv_terms, tv_provider, tv_download;
-    /*public static final int RequestPermissionCode = 7;
-    private void RequestMultiplePermission() {
-
-        // Creating String Array with Permissions.
-        ActivityCompat.requestPermissions(this, new String[]
-                {
-                        WRITE_EXTERNAL_STORAGE,
-                        READ_EXTERNAL_STORAGE
-
-                }, RequestPermissionCode);
-
-    }*/
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-
-            case RequestPermissionCode:
-
-                if (grantResults.length > 0) {
-
-                    boolean WritePermission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean ReadPermission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-
-                    if (WritePermission && ReadPermission) {
-                        Log.v("","Permission Granted-------------");
-                    }
-                    else {
-                        Toast.makeText(this,"Permission Denied",Toast.LENGTH_LONG).show();
-
-                    }
-                }
-
-                break;
-        }
-    }
-    // Checking permission is enabled or not using function starts from here.
-    public boolean CheckingPermissionIsEnabledOrNot() {
-
-        int FirstPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-        int SecondPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
-
-
-        return FirstPermissionResult == PackageManager.PERMISSION_GRANTED &&
-                SecondPermissionResult == PackageManager.PERMISSION_GRANTED ;
-
-    }*/
-   /* private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private void displayFirebaseRegId() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
-        String regId = pref.getString("regId", null);
-
-        Log.e("", "Firebase reg id: " + regId);
-
-
-    }*/
     String sforceupdate = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-        mEdtMobno = (TextInputEditText) findViewById(R.id.editmobno);
-        txt_InputMob = (TextInputLayout) findViewById(R.id.text_input_layout);
-        TextView tv_welcome = (TextView) findViewById(R.id.txtwelcome);
-        tv_terms = (TextView) findViewById(R.id.txt_terms);
-
-        tv_provider = (TextView) findViewById(R.id.txtProvider);
-        tv_download = (TextView) findViewById(R.id.txt_download);
-
-        btn_reg_submit = (Button) findViewById(R.id.reg_submit);
+        mEdtMobno = findViewById(R.id.editmobno);
+        txt_InputMob = findViewById(R.id.text_input_layout);
+        TextView tv_welcome = findViewById(R.id.txtwelcome);
+        tv_terms = findViewById(R.id.txt_terms);
+        tv_provider = findViewById(R.id.txtProvider);
+        tv_download = findViewById(R.id.txt_download);
+        btn_reg_submit = findViewById(R.id.reg_submit);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         tv_welcome.setTypeface(tyface);
-
-        TextView tv_ynw = (TextView) findViewById(R.id.txtynw);
+        TextView tv_ynw = findViewById(R.id.txtynw);
         Typeface tyface_ynw = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_ynw.setTypeface(tyface_ynw);
-
 
         mContext = this;
         SharedPreference.getInstance(mContext).removeKey("PREF_COOKIES");
@@ -156,55 +96,9 @@ public class Register extends AppCompatActivity {
             }
         }
 
-
-        /*//GCM REGISTRATION
-
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                // checking for type intent filter
-                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
-                    // gcm successfully registered
-                    // now subscribe to `global` topic to receive app wide notifications
-                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-
-                    displayFirebaseRegId();
-
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
-                    // new push notification is received
-
-                    String message = intent.getStringExtra("message");
-
-                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
-
-
-                }
-            }
-        };
-
-        displayFirebaseRegId();*/
-
-
-       /* if(CheckingPermissionIsEnabledOrNot())
-        {
-
-        }
-
-        // If, If permission is not enabled then else condition will execute.
-        else {
-
-            //Calling method to enable permission.
-            RequestMultiplePermission();
-
-        }*/
-        LogUtil.writeLogTest("**********************Jaldee***************************");
-       // mEdtMobno.addTextChangedListener(new MyTextWatcher(mEdtMobno));
-
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         mEdtMobno.setTypeface(tyface_edittext);
-
         Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         txt_InputMob.setTypeface(tyface_edittext_hint);
@@ -212,8 +106,6 @@ public class Register extends AppCompatActivity {
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Medium.otf");
         btn_reg_submit.setTypeface(tyface_btn);
-
-
         tv_terms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,11 +113,8 @@ public class Register extends AppCompatActivity {
                 mContext.startActivity(iterm);
             }
         });
-
         String firstWord = "Jaldee ";
         String secondWord = "Terms and Conditions";
-        //  <font color='#00AEF2'><b>Terms and Conditions
-
         Spannable spannable = new SpannableString(firstWord + secondWord);
 
         Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
@@ -234,36 +123,24 @@ public class Register extends AppCompatActivity {
                 "fonts/Montserrat_Bold.otf");
 
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         tv_terms.setText(spannable);
-
-
         String text1 = "Are you a ";
         String text2 = "Provider? ";
-        //  <font color='#00AEF2'><b>Terms and Conditions
-
         Spannable spannable_txt = new SpannableString(text1 + text2);
-
         spannable_txt.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, text1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable_txt.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), text1.length(), text1.length() + text2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_provider.setText(spannable_txt);
-
-
         String text_1 = "Download ";
         String text_2 = "Jaldee Provider App ";
         //  <font color='#00AEF2'><b>Terms and Conditions
-
         Spannable spannable_txt1 = new SpannableString(text_1 + text_2);
         spannable_txt1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)), text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable_txt1.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, text_1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable_txt1.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_download.setText(spannable_txt1);
-
-
     }
 
     private boolean validatePhone() {
@@ -338,10 +215,6 @@ public class Register extends AppCompatActivity {
                     Config.logV("Response---------------------------" + response.code());
                     if (response.code() == 200) {
                         Config.logV("Response123---------------------------");
-
-
-
-
                         if (response.body().string().equalsIgnoreCase("false")) {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Signup.class);
@@ -353,10 +226,7 @@ public class Register extends AppCompatActivity {
                             Intent iReg = new Intent(mContext, Login.class);
                             startActivity(iReg);
                             // finish();
-
                         }
-
-
                     }
 
 
@@ -387,28 +257,6 @@ public class Register extends AppCompatActivity {
         }
 
     }
-
-    /*@Override
-    protected void onResume() {
-        super.onResume();
-        // register GCM registration complete receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(Config.REGISTRATION_COMPLETE));
-
-        // register new push message receiver
-        // by doing this, the activity will be notified each time a new message arrives
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(Config.PUSH_NOTIFICATION));
-
-        // clear the notification area when the app is opened
-        NotificationUtils.clearNotifications(getApplicationContext());
-    }
-
-    @Override
-    protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
-        super.onPause();
-    }*/
 
     public void showForceUpdateDialog() {
 

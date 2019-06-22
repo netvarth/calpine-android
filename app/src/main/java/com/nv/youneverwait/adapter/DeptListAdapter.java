@@ -249,12 +249,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
 
                 searchDetailViewFragment.onMethodCoupn(searchdetailList.getUniqueid());
-
-
             }
         });
-
-
         TextView dynaText1 = new TextView(context);
         Typeface tyface_5 = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Regular.otf");

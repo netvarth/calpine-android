@@ -33,7 +33,7 @@ int position;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_show_downloadswipe_image);
         mActivity = this;
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,49 +45,37 @@ int position;
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setCustomView(R.layout.custom_title);
-
-        final TextView title = (TextView) findViewById(android.R.id.text1);
+        final TextView title =  findViewById(android.R.id.text1);
         title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-
-         mViewPager = (ViewPager) findViewById(R.id.pager);
-
+         mViewPager =  findViewById(R.id.pager);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             position = extras.getInt("pos", 0);
         }
-
-
             CustomPageAdapter mCustomPagerAdapter = new CustomPageAdapter(this, mGalleryList);
             mViewPager.setAdapter(mCustomPagerAdapter);
             mViewPager.setCurrentItem(position);
 
 
-        //title.setText(myGalleryNameList.get(intValue));
-
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                // title.setText(myDocNameList.get(position));
             }
 
             @Override
             public void onPageSelected(int position) {
 
-
-                // title.setText(myGalleryNameList.get(position));
-
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
 
             }
         });
@@ -99,6 +87,4 @@ int position;
         return true;
 
     }
-
-
 }

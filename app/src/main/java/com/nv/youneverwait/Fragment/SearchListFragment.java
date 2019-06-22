@@ -347,22 +347,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     }
                 } else {
 
-                  /*  Config.logV("Selected NOT FIRST RUN-----------------------" + searchTxt);
-                    isLastPage = false;
-                    isLoading = false;
-                    PAGE_START = 0;
-                    total_foundcount = 0;
-                    TOTAL_PAGES = 0;
-                    currentPage = PAGE_START;
-                    searchSrcTextView.setText("");
-                    pageadapter.clear();
-                    Lnosearchresult.setVisibility(View.VISIBLE);
-                    tv_nosearchresult.setVisibility(View.VISIBLE);
-                    tv_searchresult.setVisibility(View.GONE);
-                    mRecySearchDetail.setVisibility(View.GONE);
-                    tv_nosearchresult.setText("No search result found for this location");
-                    progressBar.setVisibility(View.GONE);*/
-
                 }
 
 

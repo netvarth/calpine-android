@@ -11,17 +11,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
 import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.response.SearchTerminology;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -39,16 +43,17 @@ public class MessageActivity extends AppCompatActivity {
     TextView tv_sendmsg;
     Context mContext;
     Activity mActivity;
-    String accountID, provider,modifyAccountID,from;
+    String accountID, provider, modifyAccountID, from;
     SearchTerminology mSearchTerminology = new SearchTerminology();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message);
-        edt_Message = (EditText) findViewById(R.id.edt_message);
-        tv_sendmsg = (TextView) findViewById(R.id.txtsendmsg);
-        btn_send = (Button) findViewById(R.id.btn_send);
-        btn_cancel = (Button) findViewById(R.id.btn_cancel);
+        edt_Message = findViewById(R.id.edt_message);
+        tv_sendmsg = findViewById(R.id.txtsendmsg);
+        btn_send = findViewById(R.id.btn_send);
+        btn_cancel = findViewById(R.id.btn_cancel);
         mContext = this;
         mActivity = this;
         Bundle extras = getIntent().getExtras();
@@ -56,22 +61,22 @@ public class MessageActivity extends AppCompatActivity {
             provider = extras.getString("provider");
             accountID = extras.getString("accountID");
             from = extras.getString("from");
-            if(from.equalsIgnoreCase("detail")){
+            if (from.equalsIgnoreCase("detail")) {
                 modifyAccountID = extras.getString("accountID");
-            }else {
+            } else {
                 modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
             }
 
-            Config.logV("Account ID----------------"+modifyAccountID);
+            Config.logV("Account ID----------------" + modifyAccountID);
         }
 
 
-        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
+        TextView tv_title = findViewById(R.id.toolbartitle);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
         tv_title.setText("Send Message");
-        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        ImageView iBackPress = (ImageView) findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,10 +84,6 @@ public class MessageActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
-
 
         tv_sendmsg.setText("Message to " + provider);
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -95,18 +96,16 @@ public class MessageActivity extends AppCompatActivity {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiCommunicate(modifyAccountID,edt_Message.getText().toString());
+                ApiCommunicate(modifyAccountID, edt_Message.getText().toString());
             }
         });
         ApiSearchViewTerminology(modifyAccountID);
-
     }
-    private void ApiSearchViewTerminology(String accountID) {
 
+    private void ApiSearchViewTerminology(String accountID) {
 
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -116,7 +115,6 @@ public class MessageActivity extends AppCompatActivity {
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
 
         Call<SearchTerminology> call = apiService.getSearchViewTerminology(Integer.parseInt(accountID), sdf.format(currentTime));
 
@@ -134,7 +132,7 @@ public class MessageActivity extends AppCompatActivity {
 
                     if (response.code() == 200) {
 
-                        mSearchTerminology=response.body();
+                        mSearchTerminology = response.body();
                     }
 
 
@@ -153,15 +151,11 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
-    private void ApiCommunicate(String accountID,String message) {
 
-
+    private void ApiCommunicate(String accountID, String message) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -171,13 +165,11 @@ public class MessageActivity extends AppCompatActivity {
         try {
             jsonObj.put("communicationMessage", message);
 
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.PostMessage(accountID,body);
+        Call<ResponseBody> call = apiService.PostMessage(accountID, body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -196,7 +188,6 @@ public class MessageActivity extends AppCompatActivity {
                         finish();
 
                     }
-
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -55,38 +55,26 @@ public class Signup extends AppCompatActivity {
         setContentView(R.layout.signup);
 
         mContext = this;
-        tv_terms = (TextView) findViewById(R.id.txt_terms);
-        firstName = (TextInputEditText) findViewById(R.id.firstname);
-
+        tv_terms = findViewById(R.id.txt_terms);
+        firstName = findViewById(R.id.firstname);
         firstName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-
-        Lastname = (TextInputEditText) findViewById(R.id.lastname);
-
+        Lastname = findViewById(R.id.lastname);
         Lastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        mInputFirst = (TextInputLayout) findViewById(R.id.text_input_layout_first);
-        mInputLast = (TextInputLayout) findViewById(R.id.text_input_layout_last);
-
-        tv_createaccc = (TextView) findViewById(R.id.txtcreate_acc);
-        tv_ynw = (TextView) findViewById(R.id.txt_ynw);
-        tv_needynw = (TextView) findViewById(R.id.txt_needynw);
-
-        btn_signup = (Button) findViewById(R.id.btn_signup);
-
+        mInputFirst = findViewById(R.id.text_input_layout_first);
+        mInputLast = findViewById(R.id.text_input_layout_last);
+        tv_createaccc = findViewById(R.id.txtcreate_acc);
+        tv_ynw = findViewById(R.id.txt_ynw);
+        tv_needynw = findViewById(R.id.txt_needynw);
+        btn_signup = findViewById(R.id.btn_signup);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_ynw.setTypeface(tyface);
-
-
         Typeface tyface_need = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         tv_needynw.setTypeface(tyface_need);
-
-
         Typeface tyface_confm = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_createaccc.setTypeface(tyface_confm);
-
-
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         firstName.setTypeface(tyface_edittext);
@@ -108,25 +96,25 @@ public class Signup extends AppCompatActivity {
         String secondWord = "Terms and Conditions";
         //  <font color='#00AEF2'><b>Terms and Conditions
 
-        Spannable spannable = new SpannableString(firstWord+secondWord);
+        Spannable spannable = new SpannableString(firstWord + secondWord);
 
         Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Regular.otf");
         Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
 
-        spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_grey)),0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)),firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        tv_terms.setText( spannable );
+        tv_terms.setText(spannable);
 
         tv_terms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iterm=new Intent(v.getContext(),TermsOfUse.class);
+                Intent iterm = new Intent(v.getContext(), TermsOfUse.class);
                 mContext.startActivity(iterm);
             }
         });
@@ -196,40 +184,33 @@ public class Signup extends AppCompatActivity {
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
 
-                            Toast.makeText(mContext,"Otp has been send to  "+mobno,Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Otp has been send to  " + mobno, Toast.LENGTH_LONG).show();
                             SharedPreference.getInstance(mContext).setValue("firstName", firstname);
                             SharedPreference.getInstance(mContext).setValue("LastName", lastname);
                             Intent iReg = new Intent(mContext, VerifyOtp.class);
                             startActivity(iReg);
                             finish();
 
-
-
-
-                            String cookie ="" ;
+                            String cookie = "";
                             List<String> cookies = response.headers().values("Set-Cookie");
 
 
-                                Config.logV("Response--Cookie-signup------------------------" + cookie);
-                                if (!cookies.isEmpty()) {
+                            Config.logV("Response--Cookie-signup------------------------" + cookie);
+                            if (!cookies.isEmpty()) {
 
 
-                                    StringBuffer Cookie_header = new StringBuffer();
+                                StringBuffer Cookie_header = new StringBuffer();
 
-                                    for(String key : cookies){
-                                        String Cookiee = key.substring(0, key.indexOf(";"));
-                                        Cookie_header.append(Cookiee +';');
-
-                                    }
-
-                                    SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header.toString());
-                                    Config.logV("Set Cookie sharedpref signup------------" + Cookie_header);
+                                for (String key : cookies) {
+                                    String Cookiee = key.substring(0, key.indexOf(";"));
+                                    Cookie_header.append(Cookiee + ';');
 
                                 }
 
+                                SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", Cookie_header.toString());
+                                Config.logV("Set Cookie sharedpref signup------------" + Cookie_header);
 
-
-
+                            }
                         }
 
                     }

@@ -60,11 +60,10 @@ public class CheckinFamilyMember extends AppCompatActivity {
         setContentView(R.layout.checkin_family);
         mContext = this;
         mActivity = this;
-        mRecycleFamily = (RecyclerView) findViewById(R.id.recycle_familyMember);
-
-        btn_changemem = (Button) findViewById(R.id.btn_changemem);
-        txt_toolbartitle = (TextView) findViewById(R.id.txt_toolbartitle);
-        imgBackpress = (ImageView) findViewById(R.id.backpress);
+        mRecycleFamily = findViewById(R.id.recycle_familyMember);
+        btn_changemem = findViewById(R.id.btn_changemem);
+        txt_toolbartitle = findViewById(R.id.txt_toolbartitle);
+        imgBackpress = findViewById(R.id.backpress);
         imgBackpress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,8 +129,6 @@ public class CheckinFamilyMember extends AppCompatActivity {
                         }
 
                     }
-
-
                 } else {
                     CheckIn.refreshName(s_changename, memberid);
                     finish();
@@ -180,27 +177,25 @@ public class CheckinFamilyMember extends AppCompatActivity {
                         Config.logV("Response--Array ----Family List---------------------" + new Gson().toJson(response.body()));
 
 
+                        LuserProfileList.clear();
+                        LCheckList.clear();
+                        FamilyArrayModel family = new FamilyArrayModel();
+                        family.setFirstName(firstname);
+                        family.setLastName(lastname);
+                        family.setId(consumerID);
+                        LuserProfileList.add(family);
+                        if (LuserProfileList.size() > 0) {
 
-
-                            LuserProfileList.clear();
-                            LCheckList.clear();
-                            FamilyArrayModel family = new FamilyArrayModel();
-                            family.setFirstName(firstname);
-                            family.setLastName(lastname);
-                            family.setId(consumerID);
-                            LuserProfileList.add(family);
-                            if (LuserProfileList.size()>0){
-
-                        if (response.body().size() > 0) {
-                            //  LuserProfileList.addAll(response.body());
-                            for (int i = 0; i < response.body().size(); i++) {
-                                FamilyArrayModel family1 = new FamilyArrayModel();
-                                family1.setFirstName(response.body().get(i).getUserProfile().getFirstName());
-                                family1.setLastName(response.body().get(i).getUserProfile().getLastName());
-                                family1.setId(response.body().get(i).getUserProfile().getId());
-                                LuserProfileList.add(family1);
+                            if (response.body().size() > 0) {
+                                //  LuserProfileList.addAll(response.body());
+                                for (int i = 0; i < response.body().size(); i++) {
+                                    FamilyArrayModel family1 = new FamilyArrayModel();
+                                    family1.setFirstName(response.body().get(i).getUserProfile().getFirstName());
+                                    family1.setLastName(response.body().get(i).getUserProfile().getLastName());
+                                    family1.setId(response.body().get(i).getUserProfile().getId());
+                                    LuserProfileList.add(family1);
+                                }
                             }
-                        }
 
 
                             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
@@ -208,7 +203,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
                             Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@1111" + checkedfamilyList.size());
                             Config.logV("CheckList@@@@@@@@@@@@@@@@@@@@ LuserProfileList" + LuserProfileList.size());
-                            if (update == 1 ||multiple) {
+                            if (update == 1 || multiple) {
 
                                 for (int j = 0; j < LuserProfileList.size(); j++) {
                                     FamilyArrayModel family1 = new FamilyArrayModel();
@@ -226,20 +221,20 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
                                 }
 
-                                Config.logV("Family @@@@"+LCheckList.size());
+                                Config.logV("Family @@@@" + LCheckList.size());
 
-                                if(checkedfamilyList.size()>0){
+                                if (checkedfamilyList.size() > 0) {
                                     btn_changemem.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
                                     btn_changemem.setTextColor(mContext.getResources().getColor(R.color.app_background));
                                     btn_changemem.setEnabled(true);
-                                }else{
+                                } else {
                                     btn_changemem.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                                     btn_changemem.setTextColor(mContext.getResources().getColor(R.color.button_grey));
                                     btn_changemem.setEnabled(false);
                                 }
 
 
-                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(btn_changemem,LCheckList, multiple, LCheckList, mContext, mActivity);
+                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(btn_changemem, LCheckList, multiple, LCheckList, mContext, mActivity);
                             } else {
                                 if (memID == 0) {
                                     memID = consumerID;
@@ -247,7 +242,7 @@ public class CheckinFamilyMember extends AppCompatActivity {
 
 
                                 Config.logV("memID @@@@@" + memID);
-                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(btn_changemem,update,memID, multiple, LuserProfileList, mContext, mActivity);
+                                mFamilyAdpater = new CheckIn_FamilyMemberListAdapter(btn_changemem, update, memID, multiple, LuserProfileList, mContext, mActivity);
                             }
 
                             mRecycleFamily.setAdapter(mFamilyAdpater);
@@ -258,17 +253,15 @@ public class CheckinFamilyMember extends AppCompatActivity {
                     }
 
 
-                } catch(
-                        Exception e)
-
-                {
+                } catch (
+                        Exception e) {
                     e.printStackTrace();
                 }
 
             }
 
             @Override
-            public void onFailure (Call < ArrayList < FamilyArrayModel >> call, Throwable t){
+            public void onFailure(Call<ArrayList<FamilyArrayModel>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -286,30 +279,31 @@ public class CheckinFamilyMember extends AppCompatActivity {
     public static void changeMemberName(String name, int familyMemID) {
         s_changename = name;
         memberid = familyMemID;
-        if(!name.equalsIgnoreCase("")){
+        if (!name.equalsIgnoreCase("")) {
             btn_changemem.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
             btn_changemem.setTextColor(mContext.getResources().getColor(R.color.app_background));
             btn_changemem.setEnabled(true);
-        }else{
+        } else {
             btn_changemem.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
             btn_changemem.setTextColor(mContext.getResources().getColor(R.color.button_grey));
             btn_changemem.setEnabled(false);
         }
 
     }
-    static List<FamilyArrayModel> checkedfamilyList=new ArrayList<>();
+
+    static List<FamilyArrayModel> checkedfamilyList = new ArrayList<>();
 
     @Override
     protected void onResume() {
         super.onResume();
-        Config.logV("Check Family List-------------------"+checkedfamilyList);
+        Config.logV("Check Family List-------------------" + checkedfamilyList);
 
         ApiListFamilyMember();
     }
 
 
-    public static void CheckedFamilyList(List<FamilyArrayModel> familyList){
-        checkedfamilyList=familyList;
+    public static void CheckedFamilyList(List<FamilyArrayModel> familyList) {
+        checkedfamilyList = familyList;
     }
 
 

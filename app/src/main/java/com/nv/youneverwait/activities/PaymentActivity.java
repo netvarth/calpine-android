@@ -63,13 +63,13 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.prepayment_layout);
         mContext = this;
         mActivity = this;
-        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
+        TextView tv_title = findViewById(R.id.toolbartitle);
         tv_title.setText("Payment");
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
-        ImageView iBackPress = (ImageView) findViewById(R.id.backpress);
+        ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,8 +77,8 @@ public class PaymentActivity extends AppCompatActivity {
                 finish();
             }
         });
-        btn_paytm = (Button) findViewById(R.id.btn_paytm);
-        btn_payu = (Button) findViewById(R.id.btn_payu);
+        btn_paytm = findViewById(R.id.btn_paytm);
+        btn_payu = findViewById(R.id.btn_payu);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             ynwUUID = extras.getString("ynwUUID");
@@ -87,16 +87,12 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
         APIPayment(accountID, ynwUUID, amountDue);
-
-
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
 
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-
-
             TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
             ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
 
@@ -182,14 +178,6 @@ public class PaymentActivity extends AppCompatActivity {
                         } else {
                             PaymentFunc(ynwUUID, accountID, amountDue);
                         }
-                        /*if (mPaymentData.size() > 0) {
-                            Lpayment.setVisibility(View.VISIBLE);
-                            mPayAdpater = new PaymentAdapter(mPaymentData, mActivity);
-                            LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-                            mRecyclePayList.setLayoutManager(horizontalLayoutManager);
-                            mRecyclePayList.setAdapter(mPayAdpater);
-                            tv_amount.setText("Amount to Pay ₹" + sAmountPay);
-                        }*/
 
                     } else {
 
@@ -242,17 +230,6 @@ public class PaymentActivity extends AppCompatActivity {
 
                 new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
 
-
-               /* Intent iPayu=new Intent(mContext, PayUMoneyWebview.class);
-                iPayu.putExtra("ynwUUID",ynwUUID);
-                iPayu.putExtra("amount",String.valueOf(amountDue));
-                iPayu.putExtra("accountID",accountID);
-                startActivity(iPayu);*/
-
-                // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
-                       /*
-                        dialog.dismiss();*/
-
             }
         });
 
@@ -261,10 +238,7 @@ public class PaymentActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 PaytmPayment payment = new PaytmPayment(mContext);
-                // payment.generateCheckSum(sAmountPay);
                 payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, mContext, mActivity, "home");
-                //  payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
-
             }
         });
 
@@ -273,22 +247,14 @@ public class PaymentActivity extends AppCompatActivity {
     public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
-        // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
         payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
-
-
         String firstname = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         String lastname = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
-
         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
-
-
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
         builder.setAmount(convertStringToDouble(amount))
                 .setTxnId(checksumModel.getTxnid())
                 .setPhone(mobile)
-                // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                //.setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
                 .setProductName(new Gson().toJson(checksumModel.getProductinfo()))
                 .setFirstName(firstname)
                 .setEmail(checksumModel.getEmail())
@@ -310,7 +276,6 @@ public class PaymentActivity extends AppCompatActivity {
         try {
             PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
             if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
-                //  Toast.makeText(mCOntext, "Could not generate hash", Toast.LENGTH_SHORT).show();
             } else {
 
 

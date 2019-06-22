@@ -59,16 +59,14 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailinbox);
-        recylce_inbox_detail = (RecyclerView) findViewById(R.id.recylce_inbox_detail);
-
+        recylce_inbox_detail = findViewById(R.id.recylce_inbox_detail);
         mContext = this;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             provider = extras.getString("provider");
 
         }
-
-        ImageView iBackPress = (ImageView) findViewById(R.id.backpress);
+        ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,23 +74,16 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 finish();
             }
         });
-        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
+        TextView tv_title = findViewById(R.id.toolbartitle);
         tv_title.setText(Config.toTitleCase(provider));
-
-
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
-
-
-        //tv_title.setGravity(Gravity.CENTER);
         txtprovider = (TextView) findViewById(R.id.txtprovider);
 
         tv_title.setTypeface(tyface);
         txtprovider.setTypeface(tyface);
         txtprovider.setText(provider);
-
-
         mInterface = (DetailInboxAdapterCallback) this;
         Config.logV("mDetailInboxList SIZE #############" + mDetailInboxList.size());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -104,8 +95,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
             }
         });
-
-
         mDetailAdapter = new DetailInboxAdapter(mDetailInboxList, mContext, mInterface);
         recylce_inbox_detail.setAdapter(mDetailAdapter);
         mDetailAdapter.notifyDataSetChanged();
@@ -115,7 +104,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         mDetailInboxList = data;
         Config.logV("mDetailInboxList SIZE" + mDetailInboxList.size());
         return true;
-
     }
 
     @Override
@@ -124,10 +112,10 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         dialog.setContentView(R.layout.reply);
         dialog.show();
 
-        final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
-        Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-        TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+        final Button btn_send = dialog.findViewById(R.id.btn_send);
+        Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+        final EditText edt_message = dialog.findViewById(R.id.edt_message);
+        TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
 
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
@@ -163,9 +151,9 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
                     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                     String currentformattedDate = df.format(new Date());
-                    Date currentdate=null;
+                    Date currentdate = null;
                     try {
-                         currentdate = df.parse(currentformattedDate);
+                        currentdate = df.parse(currentformattedDate);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }

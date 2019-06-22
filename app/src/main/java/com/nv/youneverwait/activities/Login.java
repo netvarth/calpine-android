@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.support.design.widget.TextInputEditText;
@@ -39,7 +38,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.Cookie;
 import okhttp3.Headers;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -56,7 +54,6 @@ public class Login extends AppCompatActivity {
 
     TextInputEditText edtpassword_login;
     Context mContext;
-    // private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$" ;
     private static final String PASSWORD_PATTERN = "^(?=.*?[A-Z])(?=.*?[0-9]).{8,}$";
     private Pattern pattern;
     private Matcher matcher;
@@ -70,45 +67,31 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login);
 
         mContext = this;
-        txt_InputPwd = (TextInputLayout) findViewById(R.id.text_input_layout_pwd);
-        edtpassword_login = (TextInputEditText) findViewById(R.id.edtpassword_login);
-
+        txt_InputPwd = findViewById(R.id.text_input_layout_pwd);
+        edtpassword_login = findViewById(R.id.edtpassword_login);
         edtpassword_login.addTextChangedListener(new MyTextWatcher(edtpassword_login));
         pattern = Pattern.compile(PASSWORD_PATTERN);
-
-        tv_account = (TextView) findViewById(R.id.txt_account);
-        btn_login = (Button) findViewById(R.id.btn_login);
-
-
-        TextView tv_ynw = (TextView) findViewById(R.id.txtynw);
+        tv_account = findViewById(R.id.txt_account);
+        btn_login = findViewById(R.id.btn_login);
+        TextView tv_ynw = findViewById(R.id.txtynw);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_ynw.setTypeface(tyface);
-
-
-        TextView txtpwd_login = (TextView) findViewById(R.id.txtpwd_login);
+        TextView txtpwd_login = findViewById(R.id.txtpwd_login);
         Typeface tyface1 = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         txtpwd_login.setTypeface(tyface1);
-
-
         Typeface tyface_confm = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_account.setTypeface(tyface_confm);
-
-        edtpassword_login.setInputType(EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS );
+        edtpassword_login.setInputType(EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         edtpassword_login.setTransformationMethod(new PasswordTransformationMethod());
-
-
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Medium.otf");
         btn_login.setTypeface(tyface_btn);
-
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         edtpassword_login.setTypeface(tyface_edittext);
-
-
     }
 
     public boolean validatePwd(String password) {
@@ -138,8 +121,6 @@ public class Login extends AppCompatActivity {
                 case R.id.editpassword:
                     validatePassword();
                     break;
-
-
             }
         }
     }
@@ -174,13 +155,10 @@ public class Login extends AppCompatActivity {
 
         ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
-      /*  String androidId = Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID);*/
-
         SharedPreference.getInstance(mContext).setValue("password", password);
         SharedPreferences pref = mContext.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
-        Config.logV("REGISTARION ID______________@@@@@@@___"+regId);
+        Config.logV("REGISTARION ID______________@@@@@@@___" + regId);
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("loginId", loginId);
@@ -211,23 +189,21 @@ public class Login extends AppCompatActivity {
                         Config.logV("Response--code-------------------------" + response.body().getFirstName());
 
 
-                        String cookieStored=SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES","");
+                        String cookieStored = SharedPreference.getInstance(mContext).getStringValue("PREF_COOKIES", "");
 
-                        Config.logV("Cookie Stored"+cookieStored);
-                        if(cookieStored.equalsIgnoreCase("")) {
+                        Config.logV("Cookie Stored" + cookieStored);
+                        if (cookieStored.equalsIgnoreCase("")) {
 
-
-
-                            String cookie ="" ;
+                            String cookie = "";
                             List<String> cookiess = response.headers().values("Set-Cookie");
                             StringBuffer Cookie_header = new StringBuffer();
 
-                            for(String key : cookiess){
+                            for (String key : cookiess) {
                                 String Cookiee = key.substring(0, key.indexOf(";"));
-                                Cookie_header.append(Cookiee +';');
+                                Cookie_header.append(Cookiee + ';');
                             }
 
-                            Log.i("asdasd",Cookie_header.toString());
+                            Log.i("asdasd", Cookie_header.toString());
 
                             Config.logV("Response--Cookie login-------------------------" + Cookie_header);
                             if (!cookiess.isEmpty()) {
@@ -259,9 +235,9 @@ public class Login extends AppCompatActivity {
                         finish();
 
 
-                    }else{
-                        if(response.code()!=419)
-                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                    } else {
+                        if (response.code() != 419)
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }
 
 
@@ -318,7 +294,7 @@ public class Login extends AppCompatActivity {
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        Toast.makeText(mContext,"Otp has been send to "+loginId,Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Otp has been send to " + loginId, Toast.LENGTH_LONG).show();
                         Intent iReg = new Intent(mContext, ResetOtp.class);
                         startActivity(iReg);
 
@@ -326,18 +302,18 @@ public class Login extends AppCompatActivity {
                         List<String> cookiess = response.headers().values("Set-Cookie");
                         StringBuffer Cookie_header = new StringBuffer();
 
-                        for(String key : cookiess){
+                        for (String key : cookiess) {
                             String Cookiee = key.substring(0, key.indexOf(";"));
-                            Cookie_header.append(Cookiee +';');
+                            Cookie_header.append(Cookiee + ';');
                         }
 
-                            Config.logV("Response--Cookie login2-------------------------" + Cookie_header);
-                            if (!cookiess.isEmpty()) {
+                        Config.logV("Response--Cookie login2-------------------------" + Cookie_header);
+                        if (!cookiess.isEmpty()) {
 
-                                SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", String.valueOf(Cookie_header));
-                                Config.logV("Set Cookie sharedpref login2------------" + Cookie_header);
+                            SharedPreference.getInstance(mContext).setValue("PREF_COOKIES", String.valueOf(Cookie_header));
+                            Config.logV("Set Cookie sharedpref login2------------" + Cookie_header);
 
-                            }
+                        }
 
                     }
 
