@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.adapter.FavLocationAdapter;
@@ -150,6 +152,8 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
                         mFavList = response.body();
                         mFavModelList.addAll(response.body());
+//                        Log.i("nidesh",new Gson().toJson(mFavModelList));
+//                        Log.i("nidesh1",new Gson().toJson(mFavList));
                         if (mFavList.size() > 0) {
 
                             db = new DatabaseHandler(mContext);
@@ -161,6 +165,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                                 fav.setId(mFavList.get(i).getId());
                                 fav.setUniqueId(mFavList.get(i).getUniqueId());
                                 fav.setBusinessName(mFavList.get(i).getBusinessName());
+//                                fav.setPlace(mFavList.get(i).getLocations().get(i).getPlace());
                                 Config.logV("Revel Phone--@@@------------"+mFavList.get(i).isRevealPhoneNumber()+"Title"+mFavList.get(i).getBusinessName());
                                 String locid = "";
                                 String place = "";
@@ -178,6 +183,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                                     }
                                 }
                                 Config.logV("Loc ID @@@@@@@@@@@" + locid);
+                                Config.logV("Loc ID @@@@@@@@@@@" + place);
                                 fav.setLocationId(locid);
                                 fav.setPlace(place);
                                 db.insertFavInfo(fav);
@@ -396,7 +402,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
             @Override
             public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
                 // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
+                Config.logV("Fail1234---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(mActivity, mDialog);
 
@@ -405,6 +411,69 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
 
     }
+//
+//    private void ApiSearchViewID(int mProviderid, ArrayList<String> ids, final RecyclerView rfavlocRecycleview) {
+//
+//
+//        ApiInterface apiService =
+//                ApiClient.getClient(mContext).create(ApiInterface.class);
+//
+//
+//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+//
+//        Config.logV("IDS SIZE @@@@@@@@@@@@@@@@@@@@"+ids.size());
+//        List<String> idList = Arrays.asList(ids.get(0).split(","));
+//
+//
+//        String idPass = "";
+//        for (int i = 0; i < idList.size(); i++) {
+//
+//            idPass += mProviderid + "-" + idList.get(i) + ",";
+//        }
+//
+//        Config.logV("IDS_--------------------" + idPass);
+//        Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
+//
+//        call.enqueue(new Callback<ArrayList<QueueList>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<QueueList>> call, Response<ArrayList<QueueList>> response) {
+//
+//                try {
+//
+//                    if (mDialog.isShowing())
+//                        Config.closeDialog(mActivity, mDialog);
+//
+//                    Config.logV("URL-------SEARCH--------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//
+//                    if (response.code() == 200) {
+//
+//                        mSearchQueueList = response.body();
+//                        ApiSearchViewSetting(rfavlocRecycleview);
+//
+//                    }
+//
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
+//                // Log error here since request failed
+//                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(mActivity, mDialog);
+//
+//            }
+//        });
+//
+//
+//    }
+
 
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
 

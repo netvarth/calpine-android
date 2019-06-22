@@ -1262,6 +1262,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setSectorname(mSearchRespPass.get(i).getSector());
                                 searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
                                 searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+
                                 String spec = "";
                                 if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
                                     for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
@@ -1350,6 +1351,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setMessage(mQueueList.get(i).getMessage());
                                 }
 
+
                                 if (mQueueList.get(i).getNextAvailableQueue() != null) {
                                     if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
                                         if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
@@ -1365,8 +1367,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                         searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
                                         searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
                                         searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
-                                        if (mQueueList.get(i).getServiceTime() != null) {
-                                            searchList.setServiceTime(mQueueList.get(i).getServiceTime());
+                                        if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                                            searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
                                         }
                                     }
                                 }
@@ -1537,6 +1539,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 }
 
 
+
+
                                 if (mQueueList.get(i).getNextAvailableQueue() != null) {
                                     if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
                                         if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
@@ -1553,8 +1557,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                         searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
                                         searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
-                                        if (mQueueList.get(i).getServiceTime() != null) {
-                                            searchList.setServiceTime(mQueueList.get(i).getServiceTime());
+                                        if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                                            searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
                                         }
                                     }
                                 }

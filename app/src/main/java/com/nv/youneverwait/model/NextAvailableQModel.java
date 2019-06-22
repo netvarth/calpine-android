@@ -20,6 +20,7 @@ public class NextAvailableQModel {
     private int personAhead;
     private int turnAroundTime;
     private String availableDate;
+    private String serviceTime;
 
 
 
@@ -133,6 +134,14 @@ public class NextAvailableQModel {
 
     public void setAvailableToday(boolean availableToday) {
         isAvailableToday = availableToday;
+    }
+
+    public String getServiceTime() {
+        return serviceTime;
+    }
+
+    public void setServiceTime(String serviceTime) {
+        this.serviceTime = serviceTime;
     }
 
     public boolean isShowToken() {

@@ -141,8 +141,11 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         Date date1 = null, date2 = null;
         try {
             date1 = df.parse(formattedDate);
-            if (queueList.getNextAvailableQueue().getAvailableDate() != null)
+
+            if (queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().getAvailableDate() != null){
                 date2 = df.parse(queueList.getNextAvailableQueue().getAvailableDate());
+            }
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -153,13 +156,19 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
                 if(mFavList.get(i).getLocations()!=null) {
                     for(int j=0;j<mFavList.get(i).getLocations().size();j++) {
-                        if (mFavList.get(i).getLocations().get(j).getId() == (queueList.getNextAvailableQueue().getLocation().getId())) {
-                            Config.logV("Location--##################------------" + mFavList.get(i).getLocations().get(j).getPlace());
+                        if(queueList.getNextAvailableQueue()!=null) {
+                            if (mFavList.get(i).getLocations().get(j).getId() == (queueList.getNextAvailableQueue().getLocation().getId())) {
+                                Config.logV("Location--##################------------" + mFavList.get(i).getLocations().get(j).getPlace());
+                                myViewHolder.tv_loc.setText(mFavList.get(i).getLocations().get(j).getPlace());
+                            }
+                        }
+                        else{
+                            Config.logV("ELSE Location--##################------------" + mFavList.get(i).getLocations().get(j).getPlace());
                             myViewHolder.tv_loc.setText(mFavList.get(i).getLocations().get(j).getPlace());
                         }
                     }
                 }
-                if(mFavList.get(i).isOnlineCheckin()){
+                if(queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().isAvailableToday() && queueList.getNextAvailableQueue().isAvailableToday()){
                     myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
                     if (queueList.getNextAvailableQueue().getAvailableDate() != null) {
 
@@ -200,11 +209,11 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_Open.setTypeface(tyface);
-        if(queueList.getNextAvailableQueue().isOpenNow()){
+        if(queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().isOpenNow()){
             myViewHolder.tv_Open.setVisibility(View.VISIBLE);
             Config.logV("Open Now----------------");
         }else{
-            Config.logV("Open Now-------3333---------"+queueList.getNextAvailableQueue().isOpenNow());
+           // Config.logV("Open Now-------3333---------"+queueList.getNextAvailableQueue().isOpenNow());
             myViewHolder.tv_Open.setVisibility(View.GONE);
         }
 
@@ -220,12 +229,12 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         //Estimate WaitTime
         if (mShowWaitTime) {
 
-            if (queueList.getNextAvailableQueue().getAvailableDate() != null) {
+            if (queueList.getNextAvailableQueue()!=null &&queueList.getNextAvailableQueue().getAvailableDate() != null) {
                 myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
 
 
                 if ((formattedDate.trim().equalsIgnoreCase(queueList.getNextAvailableQueue().getAvailableDate()))) {
-                    if (queueList.getServiceTime() != null) {
+                    if (queueList.getNextAvailableQueue().getServiceTime() != null) {
 
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
@@ -246,7 +255,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         }*/
 
 
-                        String secondWord="Today, "+queueList.getServiceTime();
+                        String secondWord="Today, "+queueList.getNextAvailableQueue().getServiceTime();
                         Spannable spannable = new SpannableString(firstWord+secondWord);
                         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -279,7 +288,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                                 "fonts/Montserrat_Bold.otf");
                         //String firstWord="Next Wait Time ";
                         String firstWord="Next Available Time ";
-                        String secondWord=  monthString + " " + day + ", " +queueList.getServiceTime();
+                        String secondWord=  monthString + " " + day + ", " +queueList.getNextAvailableQueue().getServiceTime();
                         Spannable spannable = new SpannableString(firstWord+secondWord);
                         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -299,7 +308,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             myViewHolder.tv_waittime.setVisibility(View.GONE);
             myViewHolder.btn_checkin.setText("GET TOKEN");
         }
-        if (queueList.getNextAvailableQueue().getAvailableDate() != null) {
+        if (queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().getAvailableDate() != null) {
             if (queueList.getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) {
                 myViewHolder.btn_checkin.setText("GET TOKEN");
                 myViewHolder.tv_date.setText("Get Token for different Date?");

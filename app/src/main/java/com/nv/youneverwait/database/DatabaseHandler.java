@@ -100,7 +100,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "businessname TEXT,"
                 + "locid TEXT,"
                 + "uniqueid INTEGER,"
-                + "isRevelPhoneno boolean)";
+                + "isRevelPhoneno boolean,"
+                + "place TEXT)";
+
+
 
 
         //create table
@@ -121,6 +124,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("uniqueId", favorite.getUniqueId());
                 values.put("locid", favorite.getLocationId());
                 values.put("isRevelPhoneno", favorite.isRevealPhoneNumber());
+                values.put("place", favorite.getPlace());
 
 
                 db.insert(mContext.getString(R.string.db_table_fav), null, values);
@@ -143,7 +147,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<FavouriteModel> favData = new ArrayList<FavouriteModel>();
         String table = mContext.getString(R.string.db_table_fav);
        /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
-        String[] columns = {"id","businessname","locid","uniqueid","isRevelPhoneno"};
+        String[] columns = {"id","businessname","locid","uniqueid","isRevelPhoneno","place"};
 
 
 
@@ -163,6 +167,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 fav.setUniqueId(cursor.getInt(3));
                 boolean phone=cursor.getInt(4)>0;
                 fav.setRevealPhoneNumber(phone);
+                fav.setPlace(cursor.getString(5));
 
 
 

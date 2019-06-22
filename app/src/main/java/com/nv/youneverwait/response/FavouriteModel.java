@@ -128,6 +128,8 @@ public class FavouriteModel {
 
     String locationId;
 
+
+
     public int getLocId() {
         return id;
     }

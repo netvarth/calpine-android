@@ -192,9 +192,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
             }
             for (int i = 0; i < rowsize; i++) {
                 LinearLayout parent1 = new LinearLayout(mContext);
-
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 parent1.setOrientation(LinearLayout.HORIZONTAL);
                 parent1.setLayoutParams(params);
 
@@ -237,7 +235,6 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                         parent1.addView(dynaText);
                         k++;
                     }
-
                 }
                 LinearPopularSearch.addView(parent1);
             }
@@ -636,8 +633,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                                 Config.logV("SEARCH TXT--------------88252-" + mSearchtxt);
                             }
 
-
-                            ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+                            ImageView searchIcon =  mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
                             searchIcon.setImageDrawable(null);
                             searchIcon.setVisibility(View.GONE);
                             if (query.length() > 1) {
@@ -648,7 +644,6 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                                         items.remove(items.get(i));
                                     }
                                 }
-
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
 
                                /* searchSrcTextView.setAdapter(listadapter);*/
@@ -662,8 +657,6 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
 
                 } else {
-
-
 
                     items = new ArrayList<ListCell>();
                     //HEADER+SUBDOMAIN

@@ -47,11 +47,6 @@ public class EmptySubmitSearchView extends SearchView {
                 return true;
             }
         });
-        /*mSearchSrcTextView.setOnEditorActionListener((textView, i, keyEvent) -> {
-            if (listener != null) {
-                listener.onQueryTextSubmit(getQuery().toString());
-            }
-            return true;
-        });*/
+
     }
 }

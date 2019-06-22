@@ -1135,13 +1135,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
                             if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) {
-                                if (mQueueList.get(i).getServiceTime() != null) {
+                                if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
 
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
 
                                     String firstWord = "Next Available Time \n";
-                                    String secondWord = "Today, " + mQueueList.get(i).getServiceTime();
+                                    String secondWord = "Today, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
 
                                     myViewHolder.tv_waittime.setText(spannable);
@@ -1168,7 +1168,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     String firstWord = "Next Available Time \n";
-                                    String secondWord = monthString + " " + day + ", " + mQueueList.get(i).getServiceTime();
+                                    String secondWord = monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     myViewHolder.tv_waittime.setText(spannable);
                                     myViewHolder.txtwaittime_expand.setText(spannable);

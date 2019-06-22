@@ -1,6 +1,7 @@
 package com.nv.youneverwait.adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -12,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +24,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.nv.youneverwait.Fragment.SearchDetailViewFragment;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.callback.FavAdapterOnCallback;
 import com.nv.youneverwait.common.Config;
+import com.nv.youneverwait.connection.ApiClient;
+import com.nv.youneverwait.connection.ApiInterface;
 import com.nv.youneverwait.response.FavouriteModel;
+import com.nv.youneverwait.response.SearchLocation;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -42,12 +56,15 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     private List<FavouriteModel> mFavList;
     Context mContext;
 
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_provider, tv_removefav, tv_privacy, tv_message, tv_view;
         LinearLayout Lfavlisiting,Layout_fav;
         RecyclerView mrRecylce_fav;
         ImageView imgarrow;
+        ArrayList<SearchLocation> mSearchLocList;
+
 
         public MyViewHolder(View view) {
             super(view);
@@ -60,6 +77,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
             Lfavlisiting = (LinearLayout) view.findViewById(R.id.favlisiting);
             imgarrow=(ImageView) view.findViewById(R.id.imgarrow);
             Layout_fav=(LinearLayout) view.findViewById(R.id.layout_fav);
+            mSearchLocList = new ArrayList<>();
+
 
 
         }
@@ -68,6 +87,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     Activity activity;
     FavAdapterOnCallback callback;
     ArrayList<String> ids = new ArrayList<>();
+    ArrayList<String> places = new ArrayList<>();
 
 
     public FavouriteAdapter(List<FavouriteModel> mFAVList, Context mContext, Activity mActivity, FavAdapterOnCallback callback) {
@@ -92,6 +112,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     public void onBindViewHolder(final FavouriteAdapter.MyViewHolder myViewHolder, final int position) {
         final FavouriteModel favList = mFavList.get(position);
 
+        Log.i("popopopo",new Gson().toJson(mFavList.get(position)));
+
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_provider.setTypeface(tyface);
@@ -101,7 +123,6 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         myViewHolder.imgarrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(Config.isOnline(mContext)) {
                     if (!favList.isExpandFlag()) {
                         favList.setExpandFlag(true);
@@ -111,6 +132,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                         ids.add(favList.getLocations().get(i).getLocId());
                     }*/
                         ids = new ArrayList<String>(Arrays.asList(favList.getLocationId().split(" , ")));
+                        places = new ArrayList<String>(Arrays.asList(favList.getPlace().split(" , ")));
 
                         Config.logV("Ids------------" + ids.size());
                         for (int i = 0; i < ids.size(); i++) {
@@ -245,7 +267,6 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         });
 
 
-
         myViewHolder.tv_privacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -284,7 +305,11 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
             }
         });
 
+
+
+
     }
+
 
 
 

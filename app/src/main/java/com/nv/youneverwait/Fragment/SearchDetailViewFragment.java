@@ -1295,19 +1295,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         for (int i = 0; i < response.body().size(); i++) {
                             ids.add(String.valueOf(response.body().get(i).getId()));
                         }
-                        /*for(int i=0;i<response.body().size();i++) {
-                            SearchLocation searchloc = new SearchLocation();
-                            searchloc.setId(response.body().get(i).getId());
-                            searchloc.setPlace(response.body().get(i).getPlace());
-                            searchloc.setParkingType(response.body().get(i).getParkingType());
-                            searchloc.setBaseLocation(response.body().get(i).isBaseLocation());
-                            searchloc.setOpen24hours(response.body().get(i).isOpen24hours());
-                            searchloc.setTraumacentre(response.body().get(i).getLocationVirtualFields().getTraumacentre());
-                            searchloc.setPhysiciansemergencyservices(response.body().get(i).getLocationVirtualFields().getPhysiciansemergencyservices());
-                            searchloc.setTimespec(response.body().get(i).getbSchedule().getTimespec());
-                            mSearchLocList.add(searchloc);
-                            ids.add(String.valueOf(response.body().get(i).getId()));
-                        }*/
 
 
                         for (int k = 0; k < mSearchLocList.size(); k++) {
@@ -1325,8 +1312,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             ApiSearchViewServiceID(mSearchLocList.get(k).getId());
 
                         }
-
-
                     }
 
 
@@ -2788,6 +2773,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                             searchList.setMessage(mQueueList.get(i).getMessage());
                                         }
 
+
                                         if (mQueueList.get(i).getNextAvailableQueue() != null) {
                                             if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
                                                 if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
@@ -2803,8 +2789,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                                 searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
                                                 searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
                                                 searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
-                                                if (mQueueList.get(i).getServiceTime() != null) {
-                                                    searchList.setServiceTime(mQueueList.get(i).getServiceTime());
+                                                if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                                                    searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
                                                 }
                                             }
                                         }
@@ -2988,6 +2974,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         }
 
 
+
+
                                         if (mQueueList.get(i).getNextAvailableQueue() != null) {
                                             if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
                                                 if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
@@ -3004,8 +2992,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                                 searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
                                                 searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
-                                                if (mQueueList.get(i).getServiceTime() != null) {
-                                                    searchList.setServiceTime(mQueueList.get(i).getServiceTime());
+                                                if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                                                    searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
                                                 }
                                             }
                                         }

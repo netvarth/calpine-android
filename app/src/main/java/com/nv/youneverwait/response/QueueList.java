@@ -9,16 +9,6 @@ import com.nv.youneverwait.model.NextAvailableQModel;
 
 public class QueueList {
 
-    public String getServiceTime() {
-        return serviceTime;
-    }
-
-    public void setServiceTime(String serviceTime) {
-        this.serviceTime = serviceTime;
-    }
-
-    String serviceTime;
-
     public String getMessage() {
         return message;
     }
