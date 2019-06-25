@@ -8,12 +8,10 @@
         android:id="@+id/Ldisplay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginLeft="@dimen/padding7"
         android:layout_marginRight="@dimen/padding7"
-        android:padding="@dimen/padding7"
-        >
-
+        android:orientation="horizontal"
+        android:padding="@dimen/padding7">
 
 
         <TextView
@@ -30,23 +28,25 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.1"
             android:layout_gravity="center"
+            android:layout_weight="0.1"
             android:paddingRight="@dimen/padding2"
             android:src="@drawable/icon_down_arrow_blue" />
 
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/LexpandView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:paddingLeft="@dimen/padding5"
+        android:layout_marginBottom="@dimen/padding3"
         android:layout_marginLeft="@dimen/padding7"
         android:layout_marginTop="@dimen/padding3"
-        android:layout_marginBottom="@dimen/padding3"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical"
+        android:visibility="gone">
+
+    </LinearLayout>
 
     <View
         android:id="@+id/mView"

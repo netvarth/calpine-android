@@ -173,7 +173,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     static String mlocName;
     ImageView img_arrow;
 
-
+    String subdomainquery,subdomainName;
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
@@ -854,6 +854,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                     sub = "sub_sector:" + "'" + cell.getName() + "'";
                     querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
+                     subdomainquery = "sub_sector:'" + cell.getName() + "'";
+                     subdomainName= cell.getName();
                 }
 
                 if (cell.getCategory().equalsIgnoreCase("Suggested Search")) {
@@ -897,11 +899,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
                 //VALID QUERY PASS
+                bundle.putString("subdomainquery",subdomainquery);
+                bundle.putString("subdomainName",subdomainName);
+
                 bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
                 bundle.putString("url", pass);
                 SearchListFragment pfFragment = new SearchListFragment();
 
-
+                bundle.putString("subdomain_select", "true");
                 bundle.putString("locName", mCurrentLoc.getText().toString());
 
                 bundle.putString("latitude", String.valueOf(latitude));
@@ -1305,6 +1310,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
             sub = "sub_sector:" + "'" + name + "'";
             querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
+
+            subdomainquery = "sub_sector:'" + name + "'";
+            subdomainName= name;
         }
 
         if (category.equalsIgnoreCase("Suggested Search")) {
@@ -1312,6 +1320,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf(")"));
             Config.logV("Second---------" + requiredString);
             querycreate = requiredString;
+
+            subdomainquery = "sub_sector:'" + name + "'";
+            subdomainName= name;
         }
 
         if (category.equalsIgnoreCase("Business Name as")) {
@@ -1352,12 +1363,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         bundle.putString("longitude", String.valueOf(longitude));
         bundle.putString("spinnervalue", spinnerTxtPass);
 
+        bundle.putString("subdomain_select", "true");
+        bundle.putString("subdomainquery",subdomainquery);
+        bundle.putString("subdomainName",subdomainName);
         Config.logV("Popular Text_______$$$$_______" + mPopularSearchtxt);
         bundle.putString("searchtxt", mPopularSearchtxt);
         pfFragment.setArguments(bundle);
+        Config.logV("APi SUBDOMAIN DASHHHHHHH@@@@@@@@@@@@@@@@@" + subdomainName);
 
-
-        FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
+                FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
@@ -1761,7 +1775,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
         pfFragment.setArguments(bundle);
 
-
+        bundle.putString("subdomain_select", "false");
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
         // Store the Fragment in stack
@@ -1815,6 +1829,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         bundle.putString("spinnervalue", spinnerTxtPass);
         Config.logV("SEARCH TXT 99999" + mSearchtxt);
         bundle.putString("searchtxt", mSearchtxt);
+        bundle.putString("subdomain_select", "false");
         pfFragment.setArguments(bundle);
 
 

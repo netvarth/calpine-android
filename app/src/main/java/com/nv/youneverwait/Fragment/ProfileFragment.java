@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.nv.youneverwait.BuildConfig;
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.common.Config;
@@ -104,7 +105,8 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
                     i.setType("text/plain");
                     i.putExtra(Intent.EXTRA_SUBJECT, mContext.getResources().getString(R.string.app_name));
                     String sAux = "\nLet me recommend you this application\n";
-                    sAux = sAux + "https://play.google.com/store/";
+                  //  sAux = sAux + "https://play.google.com/store/";
+                    sAux = sAux +  "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID +"\n\n";
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "choose one"));
                 } catch(Exception e) {

@@ -9,11 +9,15 @@ import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -214,7 +218,15 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                     stars.getDrawable(2).setColorFilter(ContextCompat.getColor(mContext, R.color.active_yellow), PorterDuff.Mode.SRC_ATOP);
                     myViewHolder.LexpandView.addView(rating);*/
 
-                        RatingBar ratingBar = new RatingBar(mContext);
+                        LinearLayout parent = new LinearLayout(mContext);
+
+                        parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        parent.setOrientation(LinearLayout.HORIZONTAL);
+
+
+                        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(mContext, R.style.ImageRatingBar);
+                        final RatingBar ratingBar = new RatingBar(contextThemeWrapper, null, 0);
+                        //final RatingBar ratingBar = new RatingBar(mContext);
 
                         // linearLayout.addView(ratingBar);
                         ratingBar.setNumStars(5);
@@ -235,10 +247,48 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                                 ratingBar.setRating(val);
                             }
                         }
+                        final ImageView img=new ImageView(mContext);
+                        if (parent!= null) {
 
-                        if (myViewHolder.LexpandView != null) {
-                            myViewHolder.LexpandView.addView(ratingBar);
+
+                            img.setImageDrawable(mContext.getResources().getDrawable(R.drawable.close));
+
+                           // img.setImageResource(R.drawable.close);
+                            LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            layoutParams.gravity=Gravity.CENTER;
+                            layoutParams.setMargins(0,-15,0,0);
+                            img.setLayoutParams(layoutParams);
+
+                            parent.addView(ratingBar);
+                            parent.addView(img);
+                            img.setVisibility(View.GONE);
+
+                            img.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ratingBar.setRating(0);
+                                    for (int j = 0; j < passFormula.size(); j++) {
+                                        String splitsFormula[]=passFormula.get(j).toString().split(":");
+                                        Config.logV("passF RemoNERKK ##@@DD ##"+splitsFormula[0]);
+                                        if (splitsFormula[0].equalsIgnoreCase("rating")) {
+                                            Config.logV("passF Remove"+passFormula.get(j));
+                                            passFormula.remove(j);
+
+                                        }
+                                    }
+
+
+                                    filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
+                                    img.setVisibility(View.GONE);
+                                }
+                            });
                         }
+
+
+                        if (myViewHolder.LexpandView!= null) {
+                            myViewHolder.LexpandView.addView(parent);
+                        }
+
 
                         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                             @Override
@@ -248,6 +298,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
 
                                 Config.logV("Rating FFFF@@@@@@@@@@@@@@" + filterList.getCloudSearchIndex());
 
+                                img.setVisibility(View.VISIBLE);
                                 for (int j = 0; j < passFormula.size(); j++) {
                                     String splitsFormula[]=passFormula.get(j).toString().split(":");
                                     Config.logV("passF RemoNERKK ##@@DD ##"+splitsFormula[0]);
@@ -263,6 +314,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                                 filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
                             }
                         });
+
 
 
                     } else if (filterList.getDataType().equalsIgnoreCase("Boolean")) {
