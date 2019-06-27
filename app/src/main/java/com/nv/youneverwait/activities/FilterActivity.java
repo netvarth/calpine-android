@@ -167,10 +167,9 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
 
                         Config.logV("SortString FInal @@@@@@@@@@" + queryFormula);
 
-//                       viveksComment
                         finish();
-//                        mFragmentInstance.MoreItemClick(queryFormula);
-//                        mFragmentInstance.SetPassFormula(sFormula);
+                        mFragmentInstance.MoreItemClick(queryFormula);
+                        mFragmentInstance.SetPassFormula(sFormula);
 
 
                     } else {
@@ -292,35 +291,35 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
                         for (int i = 0; i < commonFilterList.size(); i++) {
 
 
-//                            viveksComment
-//                            if (commonFilterList.get(i).getDataType().equalsIgnoreCase("Boolean")) {
-//
-//                                booleanVariables.add(commonFilterList.get(i).getDisplayName());
-//                                booleanVariablesValue.add(commonFilterList.get(i).getCloudSearchIndex());
-//                                booleanVariablesName.add(commonFilterList.get(i).getName());
-//                                if (!otherFlag) {
-//                                    RefinedFilters refined = new RefinedFilters();
-//                                    refined.setDisplayName("Other Filter");
-//                                    refined.setDataType(commonFilterList.get(i).getDataType());
-//                                    otherFlag = true;
-//                                    refined.setItemName(booleanVariables);
-//                                    refined.setExpand(false);
-//                                    refined.setPassName(booleanVariablesName);
-//                                    refined.setCloudIndexvalue(booleanVariablesValue);
-//                                    commonFilterSortList.add(refined);
-//                                }
-//
-//
-//                            } else {
-//                                RefinedFilters refined = new RefinedFilters();
-//                                refined.setDisplayName(commonFilterList.get(i).getDisplayName());
-//                                refined.setDataType(commonFilterList.get(i).getDataType());
-//                                refined.setExpand(false);
-//                                refined.setName(commonFilterList.get(i).getName());
-//                                refined.setEnumeratedConstants(commonFilterList.get(i).getEnumeratedConstants());
-//                                refined.setCloudSearchIndex(commonFilterList.get(i).getCloudSearchIndex());
-//                                commonFilterSortList.add(refined);
-//                            }
+
+                            if (commonFilterList.get(i).getDataType().equalsIgnoreCase("Boolean")) {
+
+                                booleanVariables.add(commonFilterList.get(i).getDisplayName());
+                                booleanVariablesValue.add(commonFilterList.get(i).getCloudSearchIndex());
+                                booleanVariablesName.add(commonFilterList.get(i).getName());
+                                if (!otherFlag) {
+                                    RefinedFilters refined = new RefinedFilters();
+                                    refined.setDisplayName("Other Filter");
+                                    refined.setDataType(commonFilterList.get(i).getDataType());
+                                    otherFlag = true;
+                                    refined.setItemName(booleanVariables);
+                                    refined.setExpand(false);
+                                    refined.setPassName(booleanVariablesName);
+                                    refined.setCloudIndexvalue(booleanVariablesValue);
+                                    commonFilterSortList.add(refined);
+                                }
+
+
+                            } else {
+                                RefinedFilters refined = new RefinedFilters();
+                                refined.setDisplayName(commonFilterList.get(i).getDisplayName());
+                                refined.setDataType(commonFilterList.get(i).getDataType());
+                                refined.setExpand(false);
+                                refined.setName(commonFilterList.get(i).getName());
+                                refined.setEnumeratedConstants(commonFilterList.get(i).getEnumeratedConstants());
+                                refined.setCloudSearchIndex(commonFilterList.get(i).getCloudSearchIndex());
+                                commonFilterSortList.add(refined);
+                            }
 
 
                         }
