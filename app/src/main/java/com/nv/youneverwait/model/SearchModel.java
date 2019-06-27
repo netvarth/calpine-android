@@ -22,7 +22,10 @@ public class SearchModel {
     @SerializedName("globalSearchLabels")
     ArrayList<SearchModel> globalSearchLabels;
 
-
+    @Override
+    public String toString(){
+        return displayname;
+    }
     public ArrayList<SearchModel> getSectorLevelLabels() {
         return sectorLevelLabels;
     }

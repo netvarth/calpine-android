@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -20,6 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +42,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,8 +58,10 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
+
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.BillActivity;
+import com.nv.youneverwait.activities.FilterActivity;
 import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.activities.PaymentActivity;
 import com.nv.youneverwait.database.DatabaseHandler;
@@ -87,6 +92,9 @@ import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -100,6 +108,7 @@ import retrofit2.Response;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static com.nv.youneverwait.response.RefinedFilters.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -165,7 +174,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
     static String mlocName;
     ImageView img_arrow;
 
-
+    String subdomainquery,subdomainName;
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
@@ -192,7 +201,9 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
             }
             for (int i = 0; i < rowsize; i++) {
                 LinearLayout parent1 = new LinearLayout(mContext);
+
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                //params.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 parent1.setOrientation(LinearLayout.HORIZONTAL);
                 parent1.setLayoutParams(params);
 
@@ -235,6 +246,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                         parent1.addView(dynaText);
                         k++;
                     }
+
                 }
                 LinearPopularSearch.addView(parent1);
             }
@@ -281,9 +293,16 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
         ic_refinedFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Config.isOnline(getActivity())) {
-                    ApiFilters();
-                }
+
+                mSearchView.setQuery("", false);
+                Intent ifilter=new Intent(mContext, FilterActivity.class);
+                ifilter.putExtra("lat",String.valueOf(latitude));
+                ifilter.putExtra("longt",String.valueOf(longitude));
+                ifilter.putExtra("locName", mCurrentLoc.getText().toString());
+                ifilter.putExtra("spinnervalue", spinnerTxtPass);
+                ifilter.putExtra("sector",mDomainSpinner);
+                startActivity(ifilter);
+
             }
         });
 
@@ -406,7 +425,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-       // mSpinnerDomain.setAdapter(adapter);
+        // mSpinnerDomain.setAdapter(adapter);
 
         mSpinnerDomain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -447,13 +466,13 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                         if (mSubDomain.get(i).getSector().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
 
 
-                                SearchModel search = new SearchModel();
-                                 search.setName(mSubDomain.get(i).getName());
-                                search.setQuery(mSubDomain.get(i).getQuery());
-                                search.setSector(mSubDomain.get(i).getSector());
-                                search.setDisplayname(mSubDomain.get(i).getDisplayname());
+                            SearchModel search = new SearchModel();
+                            search.setName(mSubDomain.get(i).getName());
+                            search.setQuery(mSubDomain.get(i).getQuery());
+                            search.setSector(mSubDomain.get(i).getSector());
+                            search.setDisplayname(mSubDomain.get(i).getDisplayname());
 
-                                mPopular_SubSearchList.add(search);
+                            mPopular_SubSearchList.add(search);
 
                         }
 
@@ -577,7 +596,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
                     Config.logV("mGLobalSearch" + mGLobalSearch.size());
 
-                               /* ArrayList<ListCell>*/
+                    /* ArrayList<ListCell>*/
                     items = new ArrayList<ListCell>();
                     for (int i = 0; i < mGLobalSearch.size(); i++) {
 
@@ -589,7 +608,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
                     //HEADER+SPECIALIZATION
 
-                   // mSpecializationDomainSearch.clear();
+                    // mSpecializationDomainSearch.clear();
 
 
 
@@ -599,7 +618,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                     }
 
 
-                           /*     *******************************************************************/
+                    /*     *******************************************************************/
 
                     listadapter = new SearchListAdpter("search", getActivity(), items, latitude, longitude, getParentFragment(), mSearchView);
                     searchSrcTextView.setAdapter(listadapter);
@@ -633,7 +652,8 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                                 Config.logV("SEARCH TXT--------------88252-" + mSearchtxt);
                             }
 
-                            ImageView searchIcon =  mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+
+                            ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
                             searchIcon.setImageDrawable(null);
                             searchIcon.setVisibility(View.GONE);
                             if (query.length() > 1) {
@@ -644,9 +664,10 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                                         items.remove(items.get(i));
                                     }
                                 }
+
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
 
-                               /* searchSrcTextView.setAdapter(listadapter);*/
+                                /* searchSrcTextView.setAdapter(listadapter);*/
                                 listadapter.notifyDataSetChanged();
                                 listadapter.getFilter().filter(query);
                             }
@@ -657,6 +678,8 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
 
                 } else {
+
+
 
                     items = new ArrayList<ListCell>();
                     //HEADER+SUBDOMAIN
@@ -686,12 +709,12 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                         if (mSpecializationDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
 
 
-                                SearchModel domain = new SearchModel();
-                                domain.setName(mSpecializationDomain.get(i).getName());
-                                domain.setSector(mSpecializationDomain.get(i).getSector());
-                                domain.setDisplayname(mSpecializationDomain.get(i).getDisplayname());
+                            SearchModel domain = new SearchModel();
+                            domain.setName(mSpecializationDomain.get(i).getName());
+                            domain.setSector(mSpecializationDomain.get(i).getSector());
+                            domain.setDisplayname(mSpecializationDomain.get(i).getDisplayname());
 
-                                mSpecializationDomainSearch.add(domain);
+                            mSpecializationDomainSearch.add(domain);
 
                         }
 
@@ -843,6 +866,8 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
                     sub = "sub_sector:" + "'" + cell.getName() + "'";
                     querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
+                    subdomainquery = "sub_sector:'" + cell.getName() + "'";
+                    subdomainName= cell.getName();
                 }
 
                 if (cell.getCategory().equalsIgnoreCase("Suggested Search")) {
@@ -854,16 +879,19 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
                 if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
 
+
                     String name= cell.getName();
                     if(name.contains("'")){
                         Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
                         name = cell.getName().replace("'","%5C%27");
                     }
                     Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + name);
+
+
                     if (mSector.equalsIgnoreCase("All")) {
-                        querycreate = "title:" + "'" + cell.getName() + "'";
+                        querycreate = "title:" + "'" + name + "'";
                     } else {
-                        sub = "title:" + "'" + cell.getName() + "'";
+                        sub = "title:" + "'" + name + "'";
                         querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
                     }
                 }
@@ -883,11 +911,14 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
 
                 //VALID QUERY PASS
+                bundle.putString("subdomainquery",subdomainquery);
+                bundle.putString("subdomainName",subdomainName);
+
                 bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
                 bundle.putString("url", pass);
                 SearchListFragment pfFragment = new SearchListFragment();
 
-
+                bundle.putString("subdomain_select", "true");
                 bundle.putString("locName", mCurrentLoc.getText().toString());
 
                 bundle.putString("latitude", String.valueOf(latitude));
@@ -956,7 +987,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                                     search.setDisplayname(response.body().getGlobalSearchLabels().get(k).getDisplayname());
                                     search.setQuery(response.body().getGlobalSearchLabels().get(k).getQuery());
                                     mGLobalSearch.add(search);
-                                   // Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
+                                    // Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
                                 }
                             }
 
@@ -1004,7 +1035,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                             mSpinnerDomain.setAdapter(adapter);*/
 
 
-                           APiGetDomain();
+                            APiGetDomain();
                             Config.logV("GLobal Search Size-------------" + mGLobalSearch.size());
                             Config.logV("SUBDOAMIN Search Size-------------" + mSubDomain.size());
                             Config.logV("SPECIALIZATION Search Size-------------" + mSpecializationDomain.size());
@@ -1231,6 +1262,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
 
             @Override
@@ -1239,13 +1271,16 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
+
             }
         });
+
+
     }
 
     public LanLong getLocationNearBy(double lant, double longt) {
 
-        double distance = 60;/*;DISTANCE_AREA: 5, // in Km*/
+        double distance = 40;/*;DISTANCE_AREA: 5, // in Km*/
 
         double distInDegree = distance / 111;
         double upperLeftLat = lant - distInDegree;
@@ -1287,6 +1322,9 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
             sub = "sub_sector:" + "'" + name + "'";
             querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
+
+            subdomainquery = "sub_sector:'" + name + "'";
+            subdomainName= name;
         }
 
         if (category.equalsIgnoreCase("Suggested Search")) {
@@ -1294,6 +1332,9 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
             String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf(")"));
             Config.logV("Second---------" + requiredString);
             querycreate = requiredString;
+
+            subdomainquery = "sub_sector:'" + name + "'";
+            subdomainName= name;
         }
 
         if (category.equalsIgnoreCase("Business Name as")) {
@@ -1334,10 +1375,13 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
         bundle.putString("longitude", String.valueOf(longitude));
         bundle.putString("spinnervalue", spinnerTxtPass);
 
+        bundle.putString("subdomain_select", "true");
+        bundle.putString("subdomainquery",subdomainquery);
+        bundle.putString("subdomainName",subdomainName);
         Config.logV("Popular Text_______$$$$_______" + mPopularSearchtxt);
         bundle.putString("searchtxt", mPopularSearchtxt);
         pfFragment.setArguments(bundle);
-
+        Config.logV("APi SUBDOMAIN DASHHHHHHH@@@@@@@@@@@@@@@@@" + subdomainName);
 
         FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
@@ -1697,14 +1741,27 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
 
+
+        if(query.contains("'")){
+            Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
+            query = query.replace("'","%5C%27");
+        }
+        Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + query);
+
         String querycreate = "";
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
             querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
         } else {
             querycreate = "(phrase " + "'" + query + "')";
-        }
 
-        //  Config.logV("Query-----------" + querycreate);
+
+
+
+        }
+        //  query = query.replace("'","\\'");
+
+
+
 
 
         // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
@@ -1735,7 +1792,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
         }
         pfFragment.setArguments(bundle);
 
-
+        bundle.putString("subdomain_select", "false");
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
         // Store the Fragment in stack
@@ -1789,6 +1846,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
         bundle.putString("spinnervalue", spinnerTxtPass);
         Config.logV("SEARCH TXT 99999" + mSearchtxt);
         bundle.putString("searchtxt", mSearchtxt);
+        bundle.putString("subdomain_select", "false");
         pfFragment.setArguments(bundle);
 
 
@@ -1893,7 +1951,7 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 
     @Override
     public void onMethodActivePayIconCallback(String payStatus, final String ynwUUID, String provider, final String accountID, final double amountDue) {
-       // APIPayment(accountID, ynwUUID, amountDue);
+        // APIPayment(accountID, ynwUUID, amountDue);
         Intent i=new Intent(mContext, PaymentActivity.class);
         i.putExtra("ynwUUID",ynwUUID);
         i.putExtra("accountID",accountID);

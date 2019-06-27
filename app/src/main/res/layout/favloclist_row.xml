@@ -18,7 +18,9 @@
             android:layout_centerVertical="true"
             android:drawableLeft="@drawable/loc_new"
             android:drawablePadding="@dimen/padding5"
-            android:text="Fort Kochi"
+            android:layout_gravity="center"
+            android:padding="3dp"
+            android:text="Fort Kochi "
             android:textColor="@color/sec_title_grey"
             android:textSize="@dimen/txtsize_hint" />
 

@@ -84,7 +84,7 @@ public class AddMemberChekin extends AppCompatActivity {
         ApiInterface apiService =
                 ApiClient.getClient(mActivity).create(ApiInterface.class);
 
-
+        final int consumerId = SharedPreference.getInstance(mActivity).getIntValue("consumerId", 0);
         final Dialog mDialog = Config.getProgressDialog(mActivity, mActivity.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject userProfile = new JSONObject();

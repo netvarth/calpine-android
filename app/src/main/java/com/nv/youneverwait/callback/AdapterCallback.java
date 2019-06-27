@@ -1,5 +1,7 @@
 package com.nv.youneverwait.callback;
 
+import android.support.v7.widget.RecyclerView;
+
 import com.nv.youneverwait.model.WorkingModel;
 
 import java.util.ArrayList;
@@ -22,5 +24,12 @@ public interface AdapterCallback {
 
     void onMethodJaldeeLogo(String ynw_verified,String provider);
 
+    void onMethodFilterRefined(String passformula, RecyclerView recyclepopup, String domainame);
+
+    void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup,String subdomainame,String domainName);
+
+    void onMethodQuery(ArrayList<String> formula,ArrayList<String> key);
     void onMethodFirstCoupn(String uniqueid);
+
+
 }

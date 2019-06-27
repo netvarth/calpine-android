@@ -37,7 +37,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
 import com.nv.youneverwait.R;
+import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.activities.SwipeGalleryImage;
 import com.nv.youneverwait.adapter.ContactDetailAdapter;
 import com.nv.youneverwait.adapter.DepartmentAdapter;
@@ -72,8 +76,10 @@ import com.nv.youneverwait.utils.SharedPreference;
 import com.nv.youneverwait.widgets.CustomDialog;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.ls.LSException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -89,6 +95,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -152,7 +160,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     private int TOTAL_PAGES = 0;
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
     List<QueueList> mQueueList = new ArrayList<>();
-//    PaginationAdapter pageadapter;
+    //    PaginationAdapter pageadapter;
     List<SearchListModel> mSearchListModel = new ArrayList<>();
     private boolean isLoading = false;
     private int PAGE_START = 0;
@@ -1052,7 +1060,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 if (getBussinessData.getVerifyLevel().equalsIgnoreCase("BASIC")) {
                     ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
                 }
-                if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM")) {
+                if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM")||getBussinessData.getVerifyLevel().equalsIgnoreCase("ADVANCED")) {
                     ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_adv);
                 }
 
@@ -1069,10 +1077,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ynw_verified = "2";
                     else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("BASIC_PLUS"))
                         ynw_verified = "3";
-                    else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM"))
+                    else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM")||getBussinessData.getVerifyLevel().equalsIgnoreCase("ADVANCED"))
                         ynw_verified = "4";
 
-                    CustomDialog cdd = new CustomDialog(mContext, ynw_verified, getBussinessData.getBusinessName());
+                    Config.logV("YNW VERIFIED@@@@@@@@@@@@"+ynw_verified);
+                    CustomDialog cdd = new CustomDialog(mContext, ynw_verified,getBussinessData.getBusinessName());
                     cdd.setCanceledOnTouchOutside(true);
                     cdd.show();
                 }
@@ -1662,7 +1671,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             idPass += mProviderid + "-" + ids.get(i) + ",";
         }
 
-        Config.logV("IDS123_--------------------" + idPass);
+        Config.logV("IDS_--------------------" + idPass);
         Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
 
         call.enqueue(new Callback<ArrayList<QueueList>>() {

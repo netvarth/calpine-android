@@ -209,6 +209,8 @@ public class CheckIn extends AppCompatActivity {
         tv_queuetime = findViewById(R.id.txt_queuetime);
         tv_queuename = findViewById(R.id.txt_queuename);
         tv_addnote = findViewById(R.id.txtaddnote);
+        mSpinnerService = findViewById(R.id.spinnerservice);
+        mSpinnerDepartment = findViewById(R.id.spinnerdepartment);
 
         tv_addnote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -437,8 +439,7 @@ public class CheckIn extends AppCompatActivity {
             }
         });
 
-        mSpinnerService = findViewById(R.id.spinnerservice);
-        mSpinnerDepartment = findViewById(R.id.spinnerdepartment);
+
         ApiSearchViewSetting(uniqueID);
         ApiSearchViewTerminology(uniqueID);
         mFirstName = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
