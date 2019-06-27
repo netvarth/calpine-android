@@ -564,8 +564,9 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                                     passFormula.add(query);
 
+                                    Config.logV("DOMAIN NAME @@@@@@@@@@@@@@@@@@"+domainNAme+"Domain Select"+domainSelect);
 
-                                    filterAdapterCallback.onMethodSubDomainFilter(query, recyclview_popup, spinnerSelect.getName(),domainNAme);
+                                    filterAdapterCallback.onMethodSubDomainFilter(query, recyclview_popup, spinnerSelect.getName(),domainSelect);
                                     filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
 
                                     // Config.logV("PRINT VAL FORMULA@@WWWWWWWW" + query);

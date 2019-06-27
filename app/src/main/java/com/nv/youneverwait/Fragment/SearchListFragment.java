@@ -2278,6 +2278,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     public void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup, String subdomainame, String DomainName) {
         Config.logV("SUBDOMAIN Selector@@@@@@@@@@@@@@@@@@@" + passformula);
         //  MoreItemClick("sector:'" + spinnerDomainSelectedFilter + "'" + "sub_sector:'" + subdomainame + "'");
+
+
         if(DomainName.equalsIgnoreCase("")) {
             ApiSubDomainRefinedFilters(recyclepopup, subdomainame, mDomainSpinner, passformula);
         }else{
@@ -2873,7 +2875,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             commonRefinedFilterSortList.add(0, refined1);
                         }
 
-                        if (!show_subdomain) {
+                        if (!show_subdomain||mDomainSpinner.equalsIgnoreCase("All")) {
 
                             ArrayList<SearchModel> subdomainList = new ArrayList<>();
                             subdomainList.clear();
