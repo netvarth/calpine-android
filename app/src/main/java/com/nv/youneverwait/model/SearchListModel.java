@@ -469,6 +469,17 @@ public class SearchListModel implements Serializable {
 
     private ArrayList business_hours1;
 
+
+    public ArrayList getTerminologies() {
+        return terminologies;
+    }
+
+    public void setTerminologies(ArrayList terminologies) {
+        this.terminologies = terminologies;
+    }
+
+    ArrayList terminologies;
+
     public boolean isIsopen() {
         return isopen;
     }

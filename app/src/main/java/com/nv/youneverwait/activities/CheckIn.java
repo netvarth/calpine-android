@@ -122,7 +122,7 @@ public class CheckIn extends AppCompatActivity {
     ImageView img_calender_checkin;
     LinearLayout LcheckinDatepicker;
     static String mFrom;
-    String title, place;
+    String title, place,terminology;
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
     static TextView tv_queuetime;
@@ -365,8 +365,10 @@ public class CheckIn extends AppCompatActivity {
                 modifyAccountID = accountID;
                 title = extras.getString("title", "");
                 place = extras.getString("place", "");
+                terminology = extras.getString("terminology", "");
                 ApiSearchViewDetail(uniqueID);
             } else {
+
                 serviceId = extras.getInt("serviceId");
                 uniqueID = extras.getString("uniqueID");
                 accountID = extras.getString("accountID");
@@ -381,6 +383,7 @@ public class CheckIn extends AppCompatActivity {
                 place = extras.getString("place", "");
                 sector = extras.getString("sector", "");
                 subsector = extras.getString("subsector", "");
+                terminology = extras.getString("terminology","");
             }
         }
         if (sector != null && subsector != null) {
@@ -594,6 +597,8 @@ public class CheckIn extends AppCompatActivity {
             uniqueID = extras.getString("uniqueID");
             ApiJaldeegetS3Coupons(uniqueID);
         }
+
+
         applycouponbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -628,7 +633,13 @@ public class CheckIn extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(CheckIn.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
+                    if(couponEntered.equals("")){
+                        Toast.makeText(CheckIn.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(CheckIn.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
+                    }
+
 
                 }
                 Config.logV("couponArraylist--code-------------------------" + couponArraylist);
@@ -825,9 +836,20 @@ public class CheckIn extends AppCompatActivity {
 
 
                         } else {
-                            tv_title.setText("Check-in");
-                            Word_Change = "Check-in for ";
-                            btn_checkin.setText("Check-in");
+
+                            if(terminology.equals("order")){
+
+                                tv_title.setText("Order");
+                                Word_Change = "Order for ";
+                                btn_checkin.setText("CONFIRM");
+
+                            }else{
+                                tv_title.setText("Check-in");
+                                Word_Change = "Check-in for ";
+                                btn_checkin.setText("CONFIRM");
+                            }
+
+
 
                         }
                         ApiSearchViewServiceID(serviceId);
@@ -1924,7 +1946,7 @@ public class CheckIn extends AppCompatActivity {
                                         Config.logV("URL123---------------" + response.raw().request().url().toString().trim());
 
                                         depResponse = response.body();
-                                        if (depResponse.isFilterByDept()) {
+                                        if (depResponse.isFilterByDept() && depResponse.getDepartments().size()>0) {
                                             mSpinnerDepartment.setVisibility(View.VISIBLE);
                                             txt_choosedepartment.setVisibility(View.VISIBLE);
                                             ArrayAdapter<SearchDepartment> adapter = new ArrayAdapter<SearchDepartment>(mActivity, android.R.layout.simple_spinner_dropdown_item, depResponse.getDepartments());

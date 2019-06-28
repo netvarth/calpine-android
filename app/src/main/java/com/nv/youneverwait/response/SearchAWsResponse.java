@@ -383,7 +383,6 @@ public class SearchAWsResponse {
         this.claimable = claimable;
     }
 
-
     public String getRating() {
         return rating;
     }
@@ -394,6 +393,15 @@ public class SearchAWsResponse {
 
     String rating;
 
+    public ArrayList getTerminologies() {
+        return terminologies;
+    }
+
+    public void setTerminologies(ArrayList terminologies) {
+        this.terminologies = terminologies;
+    }
+
+    ArrayList terminologies;
 
     public ArrayList getBusiness_hours1() {
         return business_hours1;

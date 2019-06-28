@@ -8,7 +8,6 @@ import com.nv.youneverwait.model.SearchModel;
 import com.nv.youneverwait.response.RefinedFilters;
 
 import java.util.ArrayList;
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -31,23 +30,16 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TableRow;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.nv.youneverwait.R;
-import com.nv.youneverwait.callback.FilterAdapterCallback;
 import com.nv.youneverwait.common.Config;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Collections;
 import java.util.List;
 

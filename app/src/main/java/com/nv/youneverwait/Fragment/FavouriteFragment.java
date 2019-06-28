@@ -34,6 +34,7 @@ import com.nv.youneverwait.database.DatabaseHandler;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchSetting;
+import com.nv.youneverwait.response.SearchTerminology;
 import com.nv.youneverwait.utils.LogUtil;
 import com.nv.youneverwait.utils.SharedPreference;
 
@@ -76,6 +77,8 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
     ArrayList<FavouriteModel> mFavModelList = new ArrayList<>();
     TextView tv_nofav;
     DatabaseHandler db;
+    SearchTerminology mSearchTerminology;
+    String terminology;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -237,7 +240,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
         uniQueID = uniqueID;
         mTitle = title;
-
+        ApiSearchViewTerminology(String.valueOf(uniQueID));
         ApiSearchViewID(mProviderid, ids, rfavlocRecycleview);
 
     }
@@ -318,13 +321,13 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
 
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,terminology);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
                     } else {
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,terminology);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
 
@@ -347,6 +350,63 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
             }
         });
 
+
+    }
+
+    private void ApiSearchViewTerminology(String muniqueID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+
+
+        Call<SearchTerminology> call = apiService.getSearchViewTerminology(uniQueID,sdf.format(currentTime));
+
+        call.enqueue(new Callback<SearchTerminology>() {
+            @Override
+            public void onResponse(Call<SearchTerminology> call, Response<SearchTerminology> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL-------9999--------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----Terminl--------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        mSearchTerminology = response.body();
+                        terminology = mSearchTerminology.getWaitlist();
+                        Log.i("termterm",terminology);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SearchTerminology> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
 
     }
 
@@ -389,7 +449,6 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
                         mSearchQueueList = response.body();
                         ApiSearchViewSetting(rfavlocRecycleview);
-
                     }
 
 

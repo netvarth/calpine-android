@@ -81,6 +81,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean isLoadingAdded = false;
     Fragment mFragment;
     String workingHrs = "";
+    String termilogy;
     SearchView mSearchView;
     private AdapterCallback mAdapterCallback;
     Activity activity;
@@ -283,6 +284,26 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
 
+                if (searchdetailList.getTerminologies() != null) {
+                    try {
+                        String array_json = searchdetailList.getTerminologies().toString();
+                        Log.i("terminos", array_json);
+                        try {
+                            //Get the instance of JSONArray that contains JSONObjects
+
+                            JSONObject term = new JSONObject(searchdetailList.getTerminologies().get(0).toString());
+                            termilogy = term.get("waitlist").toString();
+                            Log.i("waitlistAlternate", term.get("waitlist").toString());
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
 
                 if (searchdetailList.getBusiness_hours1() != null) {
                     TextView dynaText = new TextView(context);
@@ -311,18 +332,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 if (searchdetailList.getBusiness_hours1() != null) {
                                     try {
                                         String array_json = searchdetailList.getBusiness_hours1().toString();
-
-
+                                        Log.i("terminos", array_json);
                                         try {
-
-
                                             //Get the instance of JSONArray that contains JSONObjects
                                             JSONArray jsonArray = new JSONArray(array_json);
                                             String jsonarry = jsonArray.getString(0);
                                             JSONArray jsonArray1 = new JSONArray(jsonarry);
-
                                             //Iterate the jsonArray and print the info of JSONObjects
-
                                             workingModelArrayList.clear();
 
                                             for (int i = 0; i < jsonArray1.length(); i++) {
@@ -613,11 +629,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
 
                 Log.i("branchSpcount", String.valueOf(searchdetailList.getBranchSpCount()));
-                Log.i("branchSpcount123",  new Gson().toJson(searchdetailList) );
+                Log.i("branchSpcount123", new Gson().toJson(searchdetailList));
 
 
-                if(searchdetailList.getBranchSpCount() > 0){
-                    myViewHolder.tv_count.setText("Count :"+" "+ +searchdetailList.getBranchSpCount());
+                if (searchdetailList.getBranchSpCount() > 0) {
+                    myViewHolder.tv_count.setText("Count :" + " " + +searchdetailList.getBranchSpCount());
                 }
 
 
@@ -629,7 +645,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } else if ((searchdetailList.getAccountType().equals("0"))) {
                         myViewHolder.tv_count.setVisibility(View.VISIBLE);
                         Log.i("qaz", String.valueOf(searchdetailList.getBranchSpCount()));
-                    }else {
+                    } else {
                         myViewHolder.tv_branch_name.setVisibility(View.GONE);
                     }
                 } else {
@@ -696,6 +712,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 Config.logV("sector%%%%%%-------------" + searchdetailList.getSectorname());
                                 iCheckIn.putExtra("sector", searchdetailList.getSectorname());
                                 iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
+                                iCheckIn.putExtra("terminology",termilogy);
                                 context.startActivity(iCheckIn);
                             }
                         });
@@ -725,39 +742,39 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    if(searchdetailList.getMessage() != null){
+                    if (searchdetailList.getMessage() != null) {
                         myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                         myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
-                    }else {
+                    } else {
                         myViewHolder.tv_qmessage.setVisibility(View.GONE);
                     }
 
                     if (searchdetailList.getAvail_date() != null && searchdetailList.isOnlineCheckIn() != false && searchdetailList.isAvailableToday() && searchdetailList.getServices() != null) {
 
-                            if (searchdetailList.isOnlineCheckIn() && searchdetailList.isAvailableToday()) {
+                        if (searchdetailList.isOnlineCheckIn() && searchdetailList.isAvailableToday()) {
 
-                                if ((formattedDate.trim().equalsIgnoreCase(searchdetailList.getAvail_date().trim()) && (searchdetailList.isOnlineCheckIn()) && (searchdetailList.isAvailableToday()))) {
-                                    Config.logV("Title------333-" + searchdetailList.getTitle());
-                                    myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-                                    //  myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.button_gradient_checkin));
-                                    myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.app_background));
-                                    myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#28a745"));
+                            if ((formattedDate.trim().equalsIgnoreCase(searchdetailList.getAvail_date().trim()) && (searchdetailList.isOnlineCheckIn()) && (searchdetailList.isAvailableToday()))) {
+                                Config.logV("Title------333-" + searchdetailList.getTitle());
+                                myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                                //  myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.button_gradient_checkin));
+                                myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.app_background));
+                                myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#28a745"));
 
 
-                                } else if (searchdetailList.isOnlineCheckIn() && searchdetailList.isAvailableToday() && date1.compareTo(date2) < 0) {
-                                    myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-                                    myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                                    // myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                                    myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-                                    myViewHolder.btncheckin.setEnabled(false);
-                                    Config.logV("Title------444-" + searchdetailList.getTitle());
-                                }
-
-                            } else {
+                            } else if (searchdetailList.isOnlineCheckIn() && searchdetailList.isAvailableToday() && date1.compareTo(date2) < 0) {
+                                myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                                myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+                                // myViewHolder.btncheckin.setBackground(context.getResources().getDrawable(R.drawable.btn_checkin_grey));
                                 myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
                                 myViewHolder.btncheckin.setEnabled(false);
-                                myViewHolder.tv_Futuredate.setVisibility(View.INVISIBLE);
+                                Config.logV("Title------444-" + searchdetailList.getTitle());
                             }
+
+                        } else {
+                            myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+                            myViewHolder.btncheckin.setEnabled(false);
+                            myViewHolder.tv_Futuredate.setVisibility(View.INVISIBLE);
+                        }
 
                     } else {
                         myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
@@ -866,23 +883,30 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
 
                         } else {
-                            myViewHolder.btncheckin.setText("CHECK-IN");
-                            myViewHolder.tv_Futuredate.setText("Check-in for different Date?");
+                            if(termilogy.equals("order")){
+                                myViewHolder.btncheckin.setText("ORDER");
+                                myViewHolder.tv_Futuredate.setText("Do you want to Order for different date?");
+                            }else{
+                                myViewHolder.btncheckin.setText("CHECK-IN");
+                                myViewHolder.tv_Futuredate.setText("Check-in for different Date?");
+                            }
+
+
                         }
                     }
 
 
                 } else {
 
-                    if(searchdetailList.getMessage() != null){
+                    if (searchdetailList.getMessage() != null) {
                         myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                         myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                         myViewHolder.btncheckin.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         myViewHolder.tv_qmessage.setVisibility(View.GONE);
                     }
 
-                    Log.i("qwe","qweqwe");
+                    Log.i("qwe", "qweqwe");
                     myViewHolder.btncheckin.setVisibility(View.INVISIBLE);
                     myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
                     myViewHolder.tv_Futuredate.setVisibility(View.GONE);
@@ -902,6 +926,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         Config.logV("sector%%%%%%-------------" + searchdetailList.getSectorname());
                         iCheckIn.putExtra("sector", searchdetailList.getSectorname());
                         iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
+                        iCheckIn.putExtra("terminology", termilogy);
                         context.startActivity(iCheckIn);
                     }
                 });
@@ -1211,7 +1236,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_count,tv_qmessage;
+        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_count, tv_qmessage;
         LinearLayout L_specialization, L_services, L_layout_type, L_checkin;
 
         ImageView ic_jaldeeverifiedIcon;

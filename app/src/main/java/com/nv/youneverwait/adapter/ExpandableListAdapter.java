@@ -126,7 +126,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         Config.logV("No Child" + getChildrenCount(groupPosition));
         if (getChildrenCount(groupPosition) == 0) {
             if (groupPosition == 0) {
-                txtnocheckold.setText("No Today Check-ins");
+                txtnocheckold.setText("No Check-ins for today");
             }
             if (groupPosition == 1) {
                 txtnocheckold.setText("No Future Check-ins");

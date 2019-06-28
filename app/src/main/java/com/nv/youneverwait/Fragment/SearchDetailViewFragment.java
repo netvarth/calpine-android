@@ -2535,6 +2535,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     search.setBusiness_hours1(response.body().getHits().getHit().get(i).getFields().getBusiness_hours1());
                                 }
 
+
+                                if (response.body().getHits().getHit().get(i).getFields().getTerminologies() != null) {
+                                    search.setTerminologies(response.body().getHits().getHit().get(i).getFields().getTerminologies());
+                                }
+
+
                                 if (response.body().getHits().getHit().get(i).getFields().getOnline_checkins() != null) {
                                     search.setOnline_checkins(response.body().getHits().getHit().get(i).getFields().getOnline_checkins());
                                 }
@@ -2722,6 +2728,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                         if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
                                             searchList.setBusiness_hours1(mSearchRespPass.get(i).getBusiness_hours1());
+                                        }
+
+                                        if (mSearchRespPass.get(i).getTerminologies() != null) {
+                                            searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
                                         }
 
                                         if (mSearchRespPass.get(i).getOnline_checkins() != null) {
@@ -2925,6 +2935,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                         if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
                                             searchList.setBusiness_hours1(mSearchRespPass.get(i).getBusiness_hours1());
+                                        }
+
+                                        if (mSearchRespPass.get(i).getTerminologies() != null) {
+                                            searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
                                         }
 
                                         if (mSearchRespPass.get(i).getOnline_checkins() != null) {

@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,14 +63,15 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     Activity activity;
     boolean mShowWaitTime = false;
     SearchSetting searchSetting;
-    String uniqueId,title;
-    public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting,String uniqueID,String title) {
+    String uniqueId,title,terminology;
+    public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting,String uniqueID,String title,String terminology) {
         this.mContext = mContext;
         this.mQueueList = mQueueList;
         this.mFavList=mFavList;
         this.searchSetting=mSearchSetting;
         this.uniqueId=uniqueID;
         this.title=title;
+        this.terminology=terminology;
 
     }
 
@@ -105,11 +107,12 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             @Override
             public void onClick(View v) {
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                iCheckIn.putExtra("serviceId", (queueList.getNextAvailableQueue().getLocation().getId()));
+                iCheckIn.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
                 iCheckIn.putExtra("uniqueID", uniqueId);
                 iCheckIn.putExtra("accountID",queueList.getProvider().getId());
                 iCheckIn.putExtra("from", "favourites");
                 iCheckIn.putExtra("title", title);
+                iCheckIn.putExtra("terminology",terminology);
                 iCheckIn.putExtra("place", myViewHolder.tv_loc.getText().toString());
                 //iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
 
@@ -120,11 +123,12 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             @Override
             public void onClick(View v) {
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                iCheckIn.putExtra("serviceId", (queueList.getNextAvailableQueue().getLocation().getId()));
+                iCheckIn.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
                 iCheckIn.putExtra("uniqueID", uniqueId);
                 iCheckIn.putExtra("accountID",queueList.getProvider().getId());
                 iCheckIn.putExtra("from", "favourites_date");
                 iCheckIn.putExtra("title", title);
+                iCheckIn.putExtra("terminology",terminology);
                 iCheckIn.putExtra("place", myViewHolder.tv_loc.getText().toString());
                 //iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
 
@@ -331,8 +335,15 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 }
 
             } else {
-                myViewHolder.btn_checkin.setText("CHECK-IN");
-                myViewHolder.tv_date.setText("Check-in for different Date?");
+                if(terminology.equals("order")){
+                    myViewHolder.btn_checkin.setText("ORDER");
+                    myViewHolder.tv_date.setText("Do you want to Order for different date?");
+                }else{
+                    myViewHolder.btn_checkin.setText("CHECK-IN");
+                    myViewHolder.tv_date.setText("Check-in for different Date?");
+                }
+
+
             }
         }
 

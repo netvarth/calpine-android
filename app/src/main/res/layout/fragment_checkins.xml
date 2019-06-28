@@ -75,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/input_border_bottom"
                         android:padding="@dimen/padding5"
-                        android:text="No Today Check-ins"
+                        android:text="No Check-ins for today"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_hint"
                         android:visibility="gone" />
