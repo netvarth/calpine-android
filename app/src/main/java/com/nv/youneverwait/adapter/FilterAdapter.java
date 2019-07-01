@@ -96,9 +96,11 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
     public void onBindViewHolder(final FilterAdapter.MyViewHolder myViewHolder, final int position) {
         final RefinedFilters filterList = mFilterList.get(position);
 
-
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_name.setText(filterList.getDisplayName());
 
+        myViewHolder.tv_name.setTypeface(tyface);
 
         if (position == mFilterList.size() - 1) {
             myViewHolder.mView.setVisibility(View.GONE);
@@ -152,6 +154,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                                             final CheckBox cb = new CheckBox(v.getContext());
                                             cb.setText(jsonObj.getString("displayName"));
                                             final String name = jsonObj.getString("name");
+
                                             for (int j = 0; j < passFormula.size(); j++) {
                                                 String splitsFormula[] = passFormula.get(j).toString().split(":");
                                                 if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {

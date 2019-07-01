@@ -425,6 +425,16 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 Config.logV("PASSED FORMULA ARRAY@@@@@@@@@@@@" + passedFormulaArray.size());
                 if (mDomainSpinner.equalsIgnoreCase("All")) {
                     ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
+                    /*for ( HashMap<String, ArrayList<Domain_Spinner>> hashMap : domain_subdomainArray) {
+                        System.out.println("KEY"+hashMap.keySet());
+                        for (String key : hashMap.keySet()) {
+                            System.out.println("KEY VALUE "+hashMap.get(key).get(0)+""+searchTxt);
+
+                            if(hashMap.get(key).equals(searchTxt)){
+                                System.out.println("KEY SELECTED "+hashMap.keySet());
+                            }
+                        }
+                    }*/
                 } else {
 
                     Config.logV("ApiMoreRefinedFilters1111 @@@@@@@@@@@@@" + passformula);
@@ -460,6 +470,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                 dimBehind(popupWindow);
+                Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                txtclear.setTypeface(tyface);
 
 
                 txtclear.setOnClickListener(new View.OnClickListener() {
@@ -1002,7 +1015,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         if (mobile.startsWith("55")) {
             query.put("fq", "(and  test_account:1 " + passformula + ")");
         } else {
-            query.put("fq", "(and  (not test_account:1 " + passformula + ") )");
+            query.put("fq", "(and  "+passformula + "(not test_account:1 ) )");
         }
 
 
@@ -1225,7 +1238,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         if (mobile.startsWith("55")) {
             query.put("fq", "(and  test_account:1 " + passformula + ")");
         } else {
-            query.put("fq", "(and  (not test_account:1 " + passformula + ") )");
+            query.put("fq", "(and  "+ passformula +" (not test_account:1  ) )");
         }
 
 
@@ -2633,6 +2646,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 }
 
+
+                               /* domain_subdomainArray.clear();
+                                hashdomain_subdomainArray.clear();
+                                for (int i = 0; i < response.body().size(); i++) {
+                                    hashdomain_subdomainArray.put(response.body().get(i).getDisplayName(),response.body().get(i).getSubDomains() );
+                                }
+
+                                domain_subdomainArray.add(hashdomain_subdomainArray);*/
 
                                 ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

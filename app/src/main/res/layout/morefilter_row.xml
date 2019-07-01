@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:gravity="left"
             android:padding="@dimen/padding2"
-            android:textColor="@color/title_consu"
+            android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
 
         <ImageView
@@ -31,7 +31,7 @@
             android:layout_gravity="center"
             android:layout_weight="0.1"
             android:paddingRight="@dimen/padding2"
-            android:src="@drawable/icon_down_arrow_blue" />
+            android:src="@drawable/icon_arrow_down_gray" />
 
 
     </LinearLayout>

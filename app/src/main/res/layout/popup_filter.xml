@@ -41,7 +41,7 @@
                 android:gravity="right"
                 android:padding="@dimen/padding7"
                 android:text="Clear All"
-                android:textColor="@color/title_consu"
+                android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_hint" />
 
             <View

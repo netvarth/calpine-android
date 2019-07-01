@@ -152,6 +152,10 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
         final RefinedFilters filterList = mFilterList.get(position);
 
 
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        myViewHolder.tv_name.setTypeface(tyface);
+
         myViewHolder.tv_name.setText(filterList.getDisplayName());
 
         if (position == mFilterList.size() - 1) {

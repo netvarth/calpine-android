@@ -477,7 +477,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     @Override
                     public void onClick(View v) {
 
-                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        Config.logV("Gallery-------33333-----------------------" + mGallery.size());
                         ArrayList<String> mGalleryList = new ArrayList<>();
 
 
@@ -496,6 +496,38 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                             Intent intent = new Intent(mContext, SwipeGalleryImage.class);
                             intent.putExtra("pos", 2);
+                            startActivity(intent);
+                        }
+
+
+                    }
+                });
+
+
+                mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        if (mBusinessDataList.getLogo() != null) {
+
+                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                        }
+
+
+                        for (int i = 0; i < mGallery.size(); i++) {
+                        /*SearchViewDetail data = new SearchViewDetail();
+                        data.setUrl(mGallery.get(i).getUrl());*/
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+
+
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+
+                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 3);
                             startActivity(intent);
                         }
 
@@ -616,36 +648,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         tv_ImageViewText.setVisibility(View.VISIBLE);
                         tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
                         Config.logV("Galeery--------------11111-----------" + mGallery.size());
-                        mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
 
-                                Config.logV("Gallery------------------------------" + mGallery.size());
-                                ArrayList<String> mGalleryList = new ArrayList<>();
-                                if (mBusinessDataList.getLogo() != null) {
-
-                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                                }
-
-
-                                for (int i = 0; i < mGallery.size(); i++) {
-                        /*SearchViewDetail data = new SearchViewDetail();
-                        data.setUrl(mGallery.get(i).getUrl());*/
-                                    mGalleryList.add(mGallery.get(i).getUrl());
-                                }
-
-
-                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                                if (mValue) {
-
-                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                                    intent.putExtra("pos", 3);
-                                    startActivity(intent);
-                                }
-
-
-                            }
-                        });
                     } else {
                         mImgthumbProfile2.setVisibility(View.GONE);
                         tv_ImageViewText.setVisibility(View.GONE);
