@@ -176,8 +176,13 @@ public class BillActivity extends AppCompatActivity {
         mbill_applybtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                coupon_entered = mbill_coupon_edit.getText().toString();
-                ApigetBill(coupon_entered, ynwUUID, accountID);
+                if(mbill_coupon_edit.getText().toString().equals("")){
+                    Toast.makeText(BillActivity.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
+                }else {
+                    coupon_entered = mbill_coupon_edit.getText().toString();
+                    ApigetBill(coupon_entered, ynwUUID, accountID);
+                }
+
             }
         });
 
@@ -586,7 +591,7 @@ public class BillActivity extends AppCompatActivity {
 
     }
 
-    private void ApigetBill(String couponss, String ynwuuid, String acccount) {
+    private void ApigetBill(final String couponss, String ynwuuid, String acccount) {
 
 
         final ApiInterface apiService =
@@ -618,8 +623,16 @@ public class BillActivity extends AppCompatActivity {
                         finish();
                         startActivity(getIntent());
 
+                        Toast.makeText(BillActivity.this, couponss+" "+"Coupon Added", Toast.LENGTH_SHORT).show();
+
                         Config.logV("Response--Array size--Activessssssssss-----------------------" + response.body().toString());
                         Config.logV("zxczxczxzc" + new Gson().toJson(response.body()));
+                    }
+
+                    if(response.code() == 422){
+                        String errorString = response.errorBody().string();
+                        Toast.makeText(BillActivity.this, errorString, Toast.LENGTH_SHORT).show();
+
                     }
 
                 } catch (Exception e) {
