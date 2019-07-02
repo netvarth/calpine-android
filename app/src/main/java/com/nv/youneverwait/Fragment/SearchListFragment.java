@@ -1003,7 +1003,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         if (mobile.startsWith("55")) {
             query.put("fq", "(and  test_account:1 " + passformula + ")");
         } else {
-            query.put("fq", "(and  (not test_account:1 " + passformula + ") )");
+            query.put("fq", "(and  "+passformula + "(not test_account:1 ) )");
         }
 
 
@@ -1235,7 +1235,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         if (mobile.startsWith("55")) {
             query.put("fq", "(and  test_account:1 " + passformula + ")");
         } else {
-            query.put("fq", "(and  (not test_account:1 " + passformula + ") )");
+            query.put("fq", "(and  "+ passformula +" (not test_account:1  ) )");
         }
 
 

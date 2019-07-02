@@ -142,9 +142,6 @@ public class ApiClient {
 
         OkHttpClient okHttpClient = new OkHttpClient();
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
-       // builder.addInterceptor(new AddCookiesInterceptor(context)); // VERY VERY IMPORTANT
-        //  builder.addInterceptor(new ReceivedCookiesInterceptor(context));
         builder.addInterceptor(new ConnectivityInterceptor(context));
         builder.readTimeout(60, TimeUnit.SECONDS);
         builder.connectTimeout(60, TimeUnit.SECONDS);

@@ -43,16 +43,16 @@ public class AddMemberChekin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addmember_checkin);
         mActivity=this;
-        tv_firstName =  findViewById(R.id.txt_firstname);
-        tv_Lastname = findViewById(R.id.txt_lastname);
-        btn_savemember =  findViewById(R.id.btn_savemember);
+        tv_firstName = (EditText) findViewById(R.id.txt_firstname);
+        tv_Lastname = (EditText) findViewById(R.id.txt_lastname);
+        btn_savemember = (Button) findViewById(R.id.btn_savemember);
 
-        TextView tv_title =  findViewById(R.id.toolbartitle);
+        TextView tv_title = (TextView) findViewById(R.id.toolbartitle);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
         tv_title.setText("Add Member");
-        ImageView iBackPress=findViewById(R.id.backpress) ;
+        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +85,7 @@ public class AddMemberChekin extends AppCompatActivity {
                 ApiClient.getClient(mActivity).create(ApiInterface.class);
 
         final int consumerId = SharedPreference.getInstance(mActivity).getIntValue("consumerId", 0);
+
         final Dialog mDialog = Config.getProgressDialog(mActivity, mActivity.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject userProfile = new JSONObject();

@@ -97,8 +97,13 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
     public void onBindViewHolder(final FilterAdapter.MyViewHolder myViewHolder, final int position) {
         final RefinedFilters filterList = mFilterList.get(position);
 
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+
 
         myViewHolder.tv_name.setText(filterList.getDisplayName());
+
+        myViewHolder.tv_name.setTypeface(tyface);
 
 
         if (position == mFilterList.size() - 1) {
