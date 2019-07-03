@@ -29,6 +29,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -153,7 +154,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     TextView tv_nosearchresult, tv_searchresult;
     LinearLayout Lnosearchresult;
     boolean userIsInteracting;
+    String sort = "";
 
+    String selected="";
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -196,6 +199,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     String subdomain_select;
     String spinnerDomainSelectedFilter = "";
 
+    ImageView ic_sort;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -208,6 +214,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         mInterface = (AdapterCallback) this;
 
 
+       sort= SharedPreference.getInstance(mContext).getStringValue("selected_sort_value","");
+       if(sort.equalsIgnoreCase("")){
+           sort="ynw_verified_level desc, distance asc";
+           SharedPreference.getInstance(mContext).setValue("selected_sort_value",sort);
+           sort= SharedPreference.getInstance(mContext).getStringValue("selected_sort_value","");
+       }
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             if (!getQuery_previous.equalsIgnoreCase("true")) {
@@ -258,11 +270,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
 
-
         ibackpress = (ImageView) row.findViewById(R.id.backpress);
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
         txt_toolbarlocation = (TextView) row.findViewById(R.id.txt_toolbarlocation);
         tv_searchresult = (TextView) row.findViewById(R.id.searchresult);
+
+        ic_sort = (ImageView) row.findViewById(R.id.ic_sort);
 
         Lnosearchresult = (LinearLayout) row.findViewById(R.id.Lnosearchresult);
         tv_nosearchresult = (TextView) row.findViewById(R.id.txtnosearchresult);
@@ -290,7 +303,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 FilterActivity.setFragmentInstance(currentFragment);
 
-                mSearchView.setQuery("", false);
+                // mSearchView.setQuery("", false);
 
                 Intent ifilter = new Intent(mContext, FilterActivity.class);
                 ifilter.putExtra("lat", String.valueOf(latitude));
@@ -299,6 +312,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 ifilter.putExtra("spinnervalue", spinnerTxt);
                 ifilter.putExtra("sector", mDomainSpinner);
                 ifilter.putExtra("from", "searchlist");
+                ifilter.putExtra("query", query);
                 startActivity(ifilter);
 
             }
@@ -399,11 +413,91 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
         Config.logV("SearchList URL ONCREATEVIEW@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + query + "URL" + url);
-        ApiSEARCHAWSLoadFirstData(query, url);
+        ApiSEARCHAWSLoadFirstData(query, url, sort);
 
 
         APiSearchList();
         //SearchView******************************************************************
+
+
+        ic_sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View customView = layoutInflater.inflate(R.layout.custom_alert, null);
+
+                final TextView txtjaldeeVerified = (TextView) customView.findViewById(R.id.txtjaldeeVerified);
+                final TextView txtDistance = (TextView) customView.findViewById(R.id.txtDistance);
+                LinearLayout LcustomLayout = (LinearLayout) customView.findViewById(R.id.LcustomLayout);
+
+
+
+                String selected=SharedPreference.getInstance(mContext).getStringValue("selected_sort","");
+                if(selected.equalsIgnoreCase("jaldeeVerified")){
+                    txtjaldeeVerified.setBackgroundColor(mContext.getResources().getColor(R.color.view_border));
+                    txtDistance.setBackgroundColor(mContext.getResources().getColor(R.color.app_background));
+                }
+                if(selected.equalsIgnoreCase("distance")){
+                    txtDistance.setBackgroundColor(mContext.getResources().getColor(R.color.view_border));
+                    txtjaldeeVerified.setBackgroundColor(mContext.getResources().getColor(R.color.app_background));
+                }
+
+
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int width = displayMetrics.widthPixels;
+
+                LcustomLayout.setMinimumWidth(width / 2);
+
+
+                int[] location = new int[2];
+                ic_sort.getLocationOnScreen(location);
+
+                int height = displayMetrics.heightPixels;
+
+                customView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+                int x = location[0] - (int) ((customView.getMeasuredWidth() - v.getWidth()) / 2);
+
+                final PopupWindow popupWindow = new PopupWindow(customView, width - width / 3, height / 3);
+
+                //  popupWindow.setAnimationStyle(R.style.MyAlertDialogStyle);
+                //display the popup window
+
+                popupWindow.showAtLocation(ic_sort, Gravity.NO_GRAVITY, x, location[1] + 50);
+                txtjaldeeVerified.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        txtjaldeeVerified.setBackgroundColor(mContext.getResources().getColor(R.color.view_border));
+                        txtDistance.setBackgroundColor(mContext.getResources().getColor(R.color.app_background));
+                        sort="ynw_verified_level desc, distance asc";
+                        SharedPreference.getInstance(mContext).setValue("selected_sort","jaldeeVerified");
+                        SharedPreference.getInstance(mContext).setValue("selected_sort_value",sort);
+                        SortBy(sort);
+                    }
+                });
+
+                txtDistance.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        txtDistance.setBackgroundColor(mContext.getResources().getColor(R.color.view_border));
+                        txtjaldeeVerified.setBackgroundColor(mContext.getResources().getColor(R.color.app_background));
+                        sort="distance asc, ynw_verified_level desc";
+                        SharedPreference.getInstance(mContext).setValue("selected_sort","distance");
+                        SharedPreference.getInstance(mContext).setValue("selected_sort_value",sort);
+                        SortBy(sort);
+                    }
+                });
+
+                dimBehind(popupWindow);
+
+
+
+
+            }
+        });
 
 
         txtrefinedsearch.setOnClickListener(new View.OnClickListener() {
@@ -481,7 +575,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                         passformula = "";
                         passedFormulaArray.clear();
                         txtrefinedsearch.setText("Refine Search");
-                        MoreItemClick(passformula);
+                        MoreItemClick(passformula, query);
                         if (mDomainSpinner.equalsIgnoreCase("All")) {
                             ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
                         } else {
@@ -943,7 +1037,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 passedFormulaArray.clear();
                 txtrefinedsearch.setText("Refine Search");
 
-                ApiSEARCHAWSLoadFirstData(query, url);
+                ApiSEARCHAWSLoadFirstData(query, url, sort);
 
 
             }
@@ -996,6 +1090,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         p.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         p.dimAmount = 0.5f;
         wm.updateViewLayout(container, p);
+
     }
 
     private void loadNextPage(String mQueryPass, String mPass) {
@@ -1015,7 +1110,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         if (mobile.startsWith("55")) {
             query.put("fq", "(and  test_account:1 " + passformula + ")");
         } else {
-            query.put("fq", "(and  "+passformula + "(not test_account:1 ) )");
+            query.put("fq", "(and  " + passformula + "(not test_account:1 ) )");
         }
 
 
@@ -1219,8 +1314,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 currentPage
         );
     }*/
-    public void ApiSEARCHAWSLoadFirstData(String mQueryPass, String mPass) {
+    public void ApiSEARCHAWSLoadFirstData(String mQueryPass, String mPass, String sort) {
 
+        Config.logV("zeo WWWW"+sort);
 
         Config.logV("PASS FORMULA @@@@@@@@@@@@@@@@@@@@" + passformula);
         final ApiInterface apiService =
@@ -1238,7 +1334,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         if (mobile.startsWith("55")) {
             query.put("fq", "(and  test_account:1 " + passformula + ")");
         } else {
-            query.put("fq", "(and  "+ passformula +" (not test_account:1  ) )");
+            query.put("fq", "(and  " + passformula + " (not test_account:1  ) )");
         }
 
 
@@ -1246,7 +1342,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         params.put("size", "10");
         params.put("q.parser", "structured");
-        params.put("sort", "ynw_verified_level desc, distance asc");
+        params.put("sort", sort);
         params.put("expr.distance", mPass);
         params.put("return", "_all_fields,distance");
 
@@ -2066,7 +2162,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         passedFormulaArray.clear();
         txtrefinedsearch.setText("Refine Search");
 
-        ApiSEARCHAWSLoadFirstData(query, url);
+        ApiSEARCHAWSLoadFirstData(query, url, sort);
 
 
     }
@@ -2160,7 +2256,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         passedFormulaArray.clear();
         txtrefinedsearch.setText("Refine Search");
 
-        ApiSEARCHAWSLoadFirstData(query, url);
+        ApiSEARCHAWSLoadFirstData(query, url, sort);
 
 
     }
@@ -2293,9 +2389,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         //  MoreItemClick("sector:'" + spinnerDomainSelectedFilter + "'" + "sub_sector:'" + subdomainame + "'");
 
 
-        if(DomainName.equalsIgnoreCase("")) {
+        if (DomainName.equalsIgnoreCase("")) {
             ApiSubDomainRefinedFilters(recyclepopup, subdomainame, mDomainSpinner, passformula);
-        }else{
+        } else {
             ApiSubDomainRefinedFilters(recyclepopup, subdomainame, DomainName, passformula);
         }
     }
@@ -2328,6 +2424,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 String splitsFormula[] = sFormula.get(j).toString().split(":");
                 //Config.logV("PRINT Key ##"+splitsFormula[0]);
+                splitsFormula[0] = splitsFormula[0].replace("not", "").trim();
+                Config.logV("PRINT EEEE" + splitsFormula[0]);
+                Config.logV("PRINT EEEE DDDD" + keyFormula.get(i).toString());
                 if (splitsFormula[0].equalsIgnoreCase(keyFormula.get(i).toString())) {
 
                     // Config.logV("PRINT Key TRUE @@@@@@@@@@@ ##"+splitsFormula[0]);
@@ -2364,7 +2463,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }
 
 
-        MoreItemClick(queryFormula);
+        MoreItemClick(queryFormula, query);
         Config.logV("PRINT VAL FORMULA@@" + queryFormula);
 
     }
@@ -2896,7 +2995,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             commonRefinedFilterSortList.add(0, refined1);
                         }
 
-                        if (!show_subdomain||mDomainSpinner.equalsIgnoreCase("All")) {
+                        if (!show_subdomain || mDomainSpinner.equalsIgnoreCase("All")) {
 
                             ArrayList<SearchModel> subdomainList = new ArrayList<>();
                             subdomainList.clear();
@@ -3204,7 +3303,48 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     }
 
-    public void MoreItemClick(String pass_formula) {
+
+    public void SortBy(String sort) {
+        Config.logV("zeo"+sort);
+        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        double upperLeftLat = Lanlong.getUpperLeftLat();
+        double upperLeftLon = Lanlong.getUpperLeftLon();
+        double lowerRightLat = Lanlong.getLowerRightLat();
+        double lowerRightLon = Lanlong.getLowerRightLon();
+        String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
+
+
+        isLastPage = false;
+        isLoading = false;
+        PAGE_START = 0;
+        total_foundcount = 0;
+        TOTAL_PAGES = 0;
+        currentPage = PAGE_START;
+        pageadapter.clear();
+
+
+       // final String query1 = "(and location1:" + locationRange + ")";
+        final String query1;
+        if (query.equalsIgnoreCase("")) {
+            query1 = "(and location1:" + locationRange + ")";
+        } else {
+            query1 = query;
+        }
+
+        final String pass1 = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
+
+        query = query1;
+        url = pass1;
+
+        Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
+        Config.logV("SearchList URL ITEM CLICK SPINNER 222@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+        ApiSEARCHAWSLoadFirstData(query, url, sort);
+
+
+    }
+
+    public void MoreItemClick(String pass_formula, String query) {
 
         //  mSearchView.setQuery("", false);
         LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
@@ -3231,8 +3371,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";*/
 
 
-        final String query1 = "(and location1:" + locationRange + ")";
-
+        // final String query1 = "(and location1:" + locationRange + ")";
+        final String query1;
+        if (query.equalsIgnoreCase("")) {
+            query1 = "(and location1:" + locationRange + ")";
+        } else {
+            query1 = query;
+        }
         final String pass1 = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 
         query = query1;
@@ -3241,7 +3386,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Config.logV("MAin PAge&&&&&&&&&&&&Item CLICK &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7" + query);
         Config.logV("SearchList URL ITEM CLICK SPINNER 222@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-        ApiSEARCHAWSLoadFirstData(query, url);
+        ApiSEARCHAWSLoadFirstData(query, url, sort);
 
 
     }

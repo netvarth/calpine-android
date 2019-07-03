@@ -393,7 +393,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                     if (isChecked) {
 
 
-                                        passFormula.add(filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1") + ":  '1'");
+                                        passFormula.add("not "+filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1") + ":  '0')");
 
                                         filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
                                     } else {

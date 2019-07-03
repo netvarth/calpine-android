@@ -63,7 +63,7 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
     Button btn_apply;
     FilterAdapterCallback mCallback;
     String latitude, longitude, locName, spinnerTxtPass, mDomainSpinner, from;
-    String passformula = "";
+    String passformula = "",query="";
 
     static SearchListFragment mFragmentInstance;
 
@@ -99,6 +99,7 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
             spinnerTxtPass = extras.getString("spinnervalue", "");
             mDomainSpinner = extras.getString("sector", "");
             from = extras.getString("from", "");
+            query= extras.getString("query", "");
 
         }
 
@@ -213,7 +214,7 @@ public class FilterActivity extends AppCompatActivity implements FilterAdapterCa
                         ft.commit();*/
 
                        finish();
-                        mFragmentInstance.MoreItemClick(queryFormula);
+                        mFragmentInstance.MoreItemClick(queryFormula,query);
                         mFragmentInstance.SetPassFormula(sFormula);
 
 

@@ -366,8 +366,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                                 @Override
                                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                     if (isChecked) {
-                                        passFormula.add(filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1") + ":  '1'");
-
+                                     //   passFormula.add(filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1") + ":  '1'");
+                                        passFormula.add("not "+filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1") + ":  '0')");
                                         filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
                                     } else {
 
