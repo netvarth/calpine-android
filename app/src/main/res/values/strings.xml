@@ -136,6 +136,7 @@
     <string name="firstcouponss">Sign Up Coupons</string>
     <string name="department_name">Departments</string>
     <string name="distance"><![CDATA[( <1 km  )]]></string>
+    <string name="signup_coupon">Sign Up Coupon</string>
 
 
 </resources>

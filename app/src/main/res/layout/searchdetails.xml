@@ -210,6 +210,20 @@
 
 
                                     <TextView
+                                        android:visibility="gone"
+                                        android:id="@+id/txtFirstCoupon"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_marginLeft="@dimen/padding5"
+                                        android:drawableTop="@drawable/icc_coupon"
+                                        android:drawablePadding="@dimen/padding2"
+                                        android:gravity="center"
+                                        android:text="@string/signup_coupon"
+                                        android:textColor="@color/title_grey"
+                                        android:textSize="@dimen/txtsize_12" />
+                                    <TextView
+                                        android:visibility="gone"
                                         android:id="@+id/txtcoupon"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"

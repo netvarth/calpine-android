@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -44,6 +45,7 @@ import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.MessageActivity;
 import com.nv.youneverwait.activities.SwipeGalleryImage;
 import com.nv.youneverwait.adapter.ContactDetailAdapter;
+import com.nv.youneverwait.adapter.CouponAdapter;
 import com.nv.youneverwait.adapter.DepartmentAdapter;
 import com.nv.youneverwait.adapter.LocationCheckinAdapter;
 import com.nv.youneverwait.adapter.SearchLocationAdapter;
@@ -61,6 +63,7 @@ import com.nv.youneverwait.model.ContactModel;
 import com.nv.youneverwait.model.SearchListModel;
 import com.nv.youneverwait.model.SocialMediaModel;
 import com.nv.youneverwait.model.WorkingModel;
+import com.nv.youneverwait.response.CoupnResponse;
 import com.nv.youneverwait.response.FavouriteModel;
 import com.nv.youneverwait.response.QueueList;
 import com.nv.youneverwait.response.SearchAWsResponse;
@@ -109,10 +112,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     Context mContext;
     ListView deptListview;
     SearchViewDetail mBusinessDataList;
+    ArrayList<CoupnResponse> couponResponse = new ArrayList<>();
     ArrayList<SearchViewDetail> mSearchGallery;
     ArrayList<SearchLocation> mSearchLocList;
     ArrayList<SearchDepartment> mSearchDepartments;
     String mbranchId, latitude, longitude, lat_long;
+    Boolean firstCouponAvailable,couponAvailable;
 
 
     SearchSetting mSearchSettings;
@@ -153,7 +158,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
-    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon;
+    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon,tv_first_ccoupon;
     List<SearchDepartment> departmentList;
     private String departmentCode;
 
@@ -167,6 +172,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     private int currentPage = PAGE_START;
     private boolean isLastPage = false;
     int total_foundcount = 0;
+
 
     HashMap<String, List<SearchListModel>> departmentMap;
 
@@ -184,7 +190,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         mRecycle_virtualfield = (RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
 
-
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
         // tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
         tv_specializtion = (TextView) row.findViewById(R.id.txt_specializtion);
@@ -194,8 +199,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         txtMore = (TextView) row.findViewById(R.id.txtMore);
         tv_contact = (TextView) row.findViewById(R.id.txtcontact);
         tv_coupon = (TextView) row.findViewById(R.id.txtcoupon);
+        tv_first_ccoupon = (TextView) row.findViewById(R.id.txtFirstCoupon);
         count = 0;
         mBusinessDataList = new SearchViewDetail();
+        List<CoupnResponse> couponResponse;
+
         mSearchGallery = new ArrayList<>();
         mSearchLocList = new ArrayList<>();
         mSearchDepartments = new ArrayList<>();
@@ -268,10 +276,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_specializtion.setTypeface(tyface);
         txtMore.setTypeface(tyface);
         //tv_contactdetails.setTypeface(tyface);
+        ApiJaldeeCoupan(uniqueID);
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
         ApiSearchVirtualFields(uniqueID);
+
+
 
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -310,6 +321,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             @Override
             public void onClick(View view) {
                 onMethodCoupn(uniqueID);
+            }
+        });
+
+
+        tv_first_ccoupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onMethodFirstCoupn(uniqueID);
             }
         });
         mInterface = (SearchLocationAdpterCallback) this;
@@ -548,182 +567,21 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
 
 
-
-
-            if(mBusinessDataList.getLogo() != null){
-                if(mGallery.size()>0){
+            if (mBusinessDataList.getLogo() != null) {
+                if (mGallery.size() > 0) {
                     tv_mImageViewTextnew.setVisibility(View.VISIBLE);
                     tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
                 }
 
-            }else if(mBusinessDataList.getLogo()==null){
-                if(mGallery.size()>0){
+            } else if (mBusinessDataList.getLogo() == null) {
+                if (mGallery.size() > 0) {
                     tv_mImageViewTextnew.setVisibility(View.VISIBLE);
                     tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size() - 1));
-                }else{tv_mImageViewTextnew.setVisibility(View.GONE);}
+                } else {
+                    tv_mImageViewTextnew.setVisibility(View.GONE);
+                }
             }
 
-
-
-
-//            if (mBusinessDataList.getLogo() != null && mGallery.size() > 0 || mGallery.size() > 1){
-//                if (mBusinessDataList.getLogo() != null){
-//                    tv_mImageViewTextnew.setVisibility(View.VISIBLE);
-//                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
-//                }else{}
-//
-//
-//            }else {
-//                tv_mImageViewTextnew.setVisibility(View.GONE);
-//            }
-//
-//
-//            if (mBusinessDataList.getLogo() != null && mGallery.size() > 0 || mGallery.size() > 1) {
-//                tv_Gallery.setVisibility(View.GONE);
-//                mImgthumbProfile.setVisibility(View.GONE);
-//
-//                if (mBusinessDataList.getLogo() != null) {
-//
-//
-//                    Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
-//
-//
-//                    if (mGallery.size() == 2) {
-//                        mImgthumbProfile1.setVisibility(View.GONE);
-//                        Config.logV("Gallery--------");
-//                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-//                    } else {
-//                        mImgthumbProfile1.setVisibility(View.GONE);
-//                    }
-//
-//                    if (mGallery.size() == 3) {
-//
-//                        mImgthumbProfile1.setVisibility(View.GONE);
-//                        Config.logV("Gallery----333----");
-//                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-//                        mImgthumbProfile2.setVisibility(View.GONE);
-//                        Config.logV("Gallery----3333----");
-//                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
-//                    }
-//
-//                    if (mGallery.size() > 3) {
-//
-//                        mImgthumbProfile1.setVisibility(View.GONE);
-//                        Config.logV("Gallery----4444----");
-//                        Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-//
-//                        mImgthumbProfile2.setVisibility(View.GONE);
-//                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
-//                        tv_ImageViewText.setVisibility(View.VISIBLE);
-//                        tv_mImageViewTextnew.setVisibility(View.VISIBLE);
-//                        tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
-//                        tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
-//                        Config.logV("Gallery-------------444----------" + mGallery.size());
-//                        mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//
-//                                Config.logV("Gallery------------------------------" + mGallery.size());
-//                                ArrayList<String> mGalleryList = new ArrayList<>();
-//
-//
-//                                if (mBusinessDataList.getLogo() != null) {
-//
-//                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-//                                }
-//
-//                                for (int i = 0; i < mGallery.size(); i++) {
-//
-//                                    mGalleryList.add(mGallery.get(i).getUrl());
-//                                }
-//
-//
-//                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-//                                if (mValue) {
-//
-//                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-//                                    intent.putExtra("pos", 3);
-//                                    startActivity(intent);
-//                                }
-//
-//
-//                            }
-//                        });
-//                    } else {
-//                        //mImgthumbProfile2.setVisibility(View.GONE);
-//                        tv_ImageViewText.setVisibility(View.GONE);
-//                        tv_mImageViewTextnew.setVisibility(View.GONE);
-//                        // mImgthumbProfile1.setVisibility(View.GONE);
-//                    }
-//
-//                } else {
-//
-//
-//                    Picasso.with(mContext).load(mGallery.get(1).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile);
-//
-//
-//                    if (mGallery.size() == 3) {
-//                        mImgthumbProfile1.setVisibility(View.GONE);
-//                        Config.logV("Gallery--------");
-//                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-//                    } else {
-//                        mImgthumbProfile1.setVisibility(View.GONE);
-//                    }
-//
-//                    if (mGallery.size() > 3) {
-//
-//                        mImgthumbProfile1.setVisibility(View.GONE);
-//                        Picasso.with(mContext).load(mGallery.get(2).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile1);
-//                        mImgthumbProfile2.setVisibility(View.GONE);
-//                        Picasso.with(mContext).load(mGallery.get(3).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgthumbProfile2);
-//                        tv_ImageViewText.setVisibility(View.VISIBLE);
-//                        tv_mImageViewTextnew.setVisibility(View.VISIBLE);
-//                        tv_ImageViewText.setText(" +" + String.valueOf(mGallery.size() - 3));
-//                        tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
-//                        Config.logV("Galeery--------------11111-----------" + mGallery.size());
-//                        mImgthumbProfile2.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//
-//                                Config.logV("Gallery------------------------------" + mGallery.size());
-//                                ArrayList<String> mGalleryList = new ArrayList<>();
-//                                if (mBusinessDataList.getLogo() != null) {
-//
-//                                    mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-//                                }
-//
-//
-//                                for (int i = 0; i < mGallery.size(); i++) {
-//                        /*SearchViewDetail data = new SearchViewDetail();
-//                        data.setUrl(mGallery.get(i).getUrl());*/
-//                                    mGalleryList.add(mGallery.get(i).getUrl());
-//                                }
-//
-//
-//                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-//                                if (mValue) {
-//
-//                                    Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-//                                    intent.putExtra("pos", 3);
-//                                    startActivity(intent);
-//                                }
-//
-//
-//                            }
-//                        });
-//                    } else {
-//                        mImgthumbProfile2.setVisibility(View.GONE);
-//                        tv_ImageViewText.setVisibility(View.GONE);
-//                        tv_mImageViewTextnew.setVisibility(View.GONE);
-//                        // mImgthumbProfile1.setVisibility(View.GONE);
-//                    }
-//
-//
-//                }
-//            } else {
-//                mImgthumbProfile.setVisibility(View.GONE);
-//                tv_Gallery.setVisibility(View.GONE);
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1060,7 +918,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 if (getBussinessData.getVerifyLevel().equalsIgnoreCase("BASIC")) {
                     ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
                 }
-                if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM")||getBussinessData.getVerifyLevel().equalsIgnoreCase("ADVANCED")) {
+                if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM") || getBussinessData.getVerifyLevel().equalsIgnoreCase("ADVANCED")) {
                     ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_adv);
                 }
 
@@ -1077,11 +935,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ynw_verified = "2";
                     else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("BASIC_PLUS"))
                         ynw_verified = "3";
-                    else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM")||getBussinessData.getVerifyLevel().equalsIgnoreCase("ADVANCED"))
+                    else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM") || getBussinessData.getVerifyLevel().equalsIgnoreCase("ADVANCED"))
                         ynw_verified = "4";
 
-                    Config.logV("YNW VERIFIED@@@@@@@@@@@@"+ynw_verified);
-                    CustomDialog cdd = new CustomDialog(mContext, ynw_verified,getBussinessData.getBusinessName());
+                    Config.logV("YNW VERIFIED@@@@@@@@@@@@" + ynw_verified);
+                    CustomDialog cdd = new CustomDialog(mContext, ynw_verified, getBussinessData.getBusinessName());
                     cdd.setCanceledOnTouchOutside(true);
                     cdd.show();
                 }
@@ -1171,8 +1029,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ApiFavList();
                         ApiSearchViewLocation(uniqueID);
                         listDoctorsByDepartment();
-
-
 
 
                     }
@@ -1585,7 +1441,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     private void ApiDepartment(final int id) {
 
 
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
@@ -1629,7 +1484,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
                         mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-                        mDepartmentAdapter.setFields(mSearchDepartments,departmentMap);
+                        mDepartmentAdapter.setFields(mSearchDepartments, departmentMap);
                         mRecycleDepartment.setAdapter(mDepartmentAdapter);
                         mDepartmentAdapter.notifyDataSetChanged();
 
@@ -1824,7 +1679,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                     if (response.code() == 200) {
 
-
                         resultData = response.body();
                         if (resultData != null) {
 
@@ -1970,10 +1824,86 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.add(R.id.mainlayout, cfFragment).commit();
     }
 
+
+    public void onMethodFirstCoupn(String uniqueid) {
+
+        CouponFirstFragment cffFragment = new CouponFirstFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("uniqueID", uniqueid);
+        cffFragment.setArguments(bundle);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, cffFragment).commit();
+
+    }
+
+
+
+    private void ApiJaldeeCoupan(String uniqueID) {
+
+        couponAvailable =false;
+        firstCouponAvailable =false;
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+                try {
+                    if (response.code() == 200) {
+                        couponResponse = response.body();
+                        Log.i("couponRR", couponResponse.toString());
+                        Log.i("couponRR", new Gson().toJson(couponResponse));
+
+                        if (couponResponse.size() > 0) {
+
+                            for (int i = 0; i < couponResponse.size(); i++) {
+
+                                if (couponResponse.get(i).isFirstCheckinOnly()) {
+                                    firstCouponAvailable = true;
+                                }else {
+                                    couponAvailable = true;
+                                }
+
+                                if(firstCouponAvailable && couponAvailable){
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(firstCouponAvailable){
+                            tv_first_ccoupon.setVisibility(View.VISIBLE);
+                        }
+
+                        if(couponAvailable){
+                            tv_coupon.setVisibility(View.VISIBLE);
+                        }
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ArrayList<CoupnResponse>> call, Throwable t) {
+            }
+        });
+    }
+
     public void onMethodDepartment(SearchDepartment departmentCode, List<SearchListModel> searchList) {
 
-        Log.i("qweqweq","qweqweqwe");
-        DeptFragment deptFragment = new DeptFragment(departmentCode,searchList,this);
+        Log.i("qweqweq", "qweqweqwe");
+        DeptFragment deptFragment = new DeptFragment(departmentCode, searchList, this);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
@@ -1982,8 +1912,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
 
-    public void onMethodJaldeeLogo(String ynw_verified,String providername) {
-        CustomDialog cdd=new CustomDialog(mContext,ynw_verified,providername);
+    public void onMethodJaldeeLogo(String ynw_verified, String providername) {
+        CustomDialog cdd = new CustomDialog(mContext, ynw_verified, providername);
         cdd.setCanceledOnTouchOutside(true);
         cdd.show();
 
@@ -1998,18 +1928,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
 
-    public void onMethodFirstCoupn(String uniqueid) {
-
-        CouponFirstFragment cffFragment = new CouponFirstFragment();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        Bundle bundle = new Bundle();
-        bundle.putString("uniqueID", uniqueid);
-        cffFragment.setArguments(bundle);
-        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, cffFragment).commit();
-
-    }
 
     public void onMethodMessage(String provider, final String accountID, String from) {
 
@@ -2788,7 +2706,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         }
 
                                         searchList.setQId(mSearchRespPass.get(i).getId());
-                                        if(mQueueList.get(i).getMessage()!=null){
+                                        if (mQueueList.get(i).getMessage() != null) {
                                             searchList.setMessage(mQueueList.get(i).getMessage());
                                         }
 
@@ -2852,7 +2770,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                         mSearchListModel.add(searchList);
 
-                                        Log.i("iopiop",new Gson().toJson(mSearchListModel));
+                                        Log.i("iopiop", new Gson().toJson(mSearchListModel));
 
                                     }
 
@@ -2992,11 +2910,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                                         searchList.setQId(mSearchRespPass.get(i).getId());
-                                        if(mQueueList.get(i).getMessage()!=null){
+                                        if (mQueueList.get(i).getMessage() != null) {
                                             searchList.setMessage(mQueueList.get(i).getMessage());
                                         }
-
-
 
 
                                         if (mQueueList.get(i).getNextAvailableQueue() != null) {
@@ -3124,9 +3040,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 departmentMap.put(deptCode, emptyList);
             }
         }
-        Log.i("Groupby",new Gson().toJson(departmentMap));
+        Log.i("Groupby", new Gson().toJson(departmentMap));
     }
-
 
 
     @Override
@@ -3146,6 +3061,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     @Override
     public void departmentClicked(SearchDepartment searchDepartment, List<SearchListModel> searchListModels) {
-        onMethodDepartment(searchDepartment,searchListModels);
+        onMethodDepartment(searchDepartment, searchListModels);
     }
 }
