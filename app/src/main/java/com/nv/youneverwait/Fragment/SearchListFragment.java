@@ -3373,7 +3373,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         // final String query1 = "(and location1:" + locationRange + ")";
         final String query1;
-        if (query.equalsIgnoreCase("")) {
+        if (query.equalsIgnoreCase("")||passformula.contains("sector")||passformula.contains("sub_sector")) {
             query1 = "(and location1:" + locationRange + ")";
         } else {
             query1 = query;

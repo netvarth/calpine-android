@@ -326,14 +326,19 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
 
 
                         for (int i = 0; i < filterList.getItemName().size(); i++) {
+
+                            LinearLayout parent = new LinearLayout(mContext);
+
+                            parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            parent.setOrientation(LinearLayout.HORIZONTAL);
+
                             final Switch sw = new Switch(mContext);
                             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             layoutParams.setMargins(15, 15, 15, 15);
                             sw.setLayoutParams(layoutParams);
-                            sw.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                            sw.setText(filterList.getItemName().get(i).toString());
-                            // keyFormula.add(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"));
-                            // keyFormula.add(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"));
+                           // sw.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                           // sw.setText(filterList.getItemName().get(i).toString());
+
                             boolean fAvailable=false;
                             for(int j=0;j<keyFormula.size();j++){
                                 if(keyFormula.get(j).toString().equalsIgnoreCase(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"))){
@@ -356,9 +361,24 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                                 }
                             }
 
+                            TextView txt=new TextView(mContext);
+                            txt.setText(filterList.getItemName().get(i).toString());
+                            LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            layoutParams1.setMargins(15, 15, 15, 15);
+                            txt.setLayoutParams(layoutParams1);
+                            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Regular.otf");
+                            txt.setTypeface(tyface);
+                            txt.setTextColor(mContext.getResources().getColor(R.color.title_grey));
+
+                            if(parent!=null){
+                                parent.addView(sw);
+                                parent.addView(txt);
+                            }
+
                             // Add Switch to LinearLayout
                             if (myViewHolder.LexpandView != null) {
-                                myViewHolder.LexpandView.addView(sw);
+                                myViewHolder.LexpandView.addView(parent);
                             }
 
                             final int finalI = i;
