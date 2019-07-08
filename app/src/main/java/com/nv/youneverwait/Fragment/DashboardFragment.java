@@ -1749,15 +1749,20 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
         Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + query);
 
         String querycreate = "";
+//        if (!mDomainSpinner.equalsIgnoreCase("All")) {
+//            querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
+//        } else {
+//            querycreate = "(phrase " + "'" + query + "')";
+//        }
+//        querycreate = "(sub_sector_displayname " + "'" + query + "' sub_sector " + "'" + query + "' specialization " + "'" + query + "' specialization_displayname " + "'" + query + "' title " + "'" + query + "' services " + "'" + query + "' qualification " + "'" + query + "' adwords " + "'" + query + "') sector :'" + mDomainSpinner + "'";
+
+
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
-            querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
+            querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query + "') sector :'" + mDomainSpinner + "'";
         } else {
-            querycreate = "(phrase " + "'" + query + "')";
-
-
-
-
+            querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query + "')";
         }
+
         //  query = query.replace("'","\\'");
 
 

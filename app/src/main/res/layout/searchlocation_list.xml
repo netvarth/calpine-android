@@ -97,7 +97,7 @@
                         android:textColor="@color/colorAccent"
                         android:textSize="@dimen/txtsize_12"
                         android:textStyle="bold"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
                     <!-- android:paddingLeft="@dimen/padding7"-->
                 </LinearLayout>
 
@@ -130,6 +130,7 @@
 
 
                         <Button
+                            android:visibility="gone"
                             android:id="@+id/btn_checkin_expand"
                             style="?android:attr/borderlessButtonStyle"
                             android:layout_width="wrap_content"
@@ -423,10 +424,10 @@
                     android:text="Est WaitTime"
                     android:textColor="@color/white"
                     android:textSize="@dimen/txtsize_12"
-                    android:visibility="invisible" />
+                    android:visibility="gone" />
 
                 <Button
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     android:id="@+id/btn_checkin"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"

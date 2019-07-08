@@ -128,6 +128,7 @@ public class CheckIn extends AppCompatActivity {
     static TextView tv_queuetime;
     static TextView tv_queuename;
     static LinearLayout queuelayout;
+    String toastMessage;
     TextView txt_chooseservice, txt_choosedepartment;
     static int i = 0;
     static ImageView ic_cal_minus;
@@ -833,8 +834,7 @@ public class CheckIn extends AppCompatActivity {
                             tv_title.setText("Get Token");
                             Word_Change = "Token for ";
                             btn_checkin.setText("CONFIRM");
-
-
+                            toastMessage = "Token has been generated successfully";
                         } else {
 
                             if(terminology.equals("order")){
@@ -842,11 +842,13 @@ public class CheckIn extends AppCompatActivity {
                                 tv_title.setText("Order");
                                 Word_Change = "Order for ";
                                 btn_checkin.setText("CONFIRM");
+                                toastMessage = "You have ordered successfully";
 
                             }else{
                                 tv_title.setText("Check-in");
                                 Word_Change = "Check-in for ";
                                 btn_checkin.setText("CONFIRM");
+                                toastMessage = "Check-in saved successfully ";
                             }
 
 
@@ -2402,7 +2404,7 @@ public class CheckIn extends AppCompatActivity {
 
 
                         } else {
-                            Toast.makeText(mContext, " Check-in saved successfully ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
                             finish();
                         }
                     } else {

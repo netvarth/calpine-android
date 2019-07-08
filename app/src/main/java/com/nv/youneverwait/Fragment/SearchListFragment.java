@@ -2045,11 +2045,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + querypass);
 
             if (!mDomainSpinner.equalsIgnoreCase("All")) {
-                querycreate = "(phrase " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
+                querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "' title: " + "'" + querypass + "' services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
             } else {
 
                 Config.logV("Query @@@@@@@@@@@@@@" + querypass);
-                querycreate = "(phrase " + "'" + querypass + "')";
+                querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "' title: " + "'" + querypass + "' services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "')";
 
 
             }

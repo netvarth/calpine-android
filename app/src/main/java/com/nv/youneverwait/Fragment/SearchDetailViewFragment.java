@@ -172,6 +172,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     private int currentPage = PAGE_START;
     private boolean isLastPage = false;
     int total_foundcount = 0;
+    String terminology;
 
 
     HashMap<String, List<SearchListModel>> departmentMap;
@@ -277,9 +278,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         txtMore.setTypeface(tyface);
         //tv_contactdetails.setTypeface(tyface);
         ApiJaldeeCoupan(uniqueID);
+        ApiSearchViewTerminology(uniqueID);
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
-        ApiSearchViewTerminology(uniqueID);
         ApiSearchVirtualFields(uniqueID);
 
 
@@ -1604,7 +1605,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mRecyLocDetail.setLayoutManager(mLayoutManager);
-                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode());
+                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(),terminology);
                         mRecyLocDetail.setAdapter(mSearchLocAdapter);
                         mSearchLocAdapter.notifyDataSetChanged();
                     }
@@ -1779,6 +1780,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
 
                         mSearchTerminology = response.body();
+                        terminology = mSearchTerminology.getWaitlist();
                     }
 
 

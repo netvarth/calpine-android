@@ -65,17 +65,17 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         RelativeLayout layout_exapnd;
         TextView txtdirection, tv_checkin;
         Button btn_checkin_expand;
-        TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices,txtdayofweek;
+        TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices, txtdayofweek;
         TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
 
-        ArrayList<WorkingModel> workingModelArrayList=new ArrayList<>();
-        String txtdataMon ="";
-        String txtdataTue ="";
-        String txtdataWed ="";
-        String txtdataThu ="";
-        String txtdataFri ="";
-        String txtdataSat ="";
-        String txtdataSun ="";
+        ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
+        String txtdataMon = "";
+        String txtdataTue = "";
+        String txtdataWed = "";
+        String txtdataThu = "";
+        String txtdataFri = "";
+        String txtdataSat = "";
+        String txtdataSun = "";
 
         public MyViewHolder(View view) {
             super(view);
@@ -104,7 +104,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txtservice1 = (TextView) view.findViewById(R.id.txtservice1);
             txtservice2 = (TextView) view.findViewById(R.id.txtservice2);
             txtSeeAll = (TextView) view.findViewById(R.id.txtSeeAll);
-            txtdayofweek= (TextView) view.findViewById(R.id.txtdayofweek);
+            txtdayofweek = (TextView) view.findViewById(R.id.txtdayofweek);
             txtwork1 = (TextView) view.findViewById(R.id.txtwork1);
             //   txtwork2 = (TextView) view.findViewById(R.id.txtwork2);
             txtworkSeeAll = (TextView) view.findViewById(R.id.txtworkSeeAll);
@@ -122,8 +122,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     List<SearchCheckInMessage> mCheckInMessage;
     String sector, subsector;
     String calcMode;
+    String terminology;
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage,String mCalcMode) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchServiceList = SearchServiceList;
@@ -137,7 +138,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         this.sector = sector;
         this.subsector = subsector;
         Config.logV("Search Service-----1111-----------" + mSearchServiceList.size());
-        this.calcMode=mCalcMode;
+        this.calcMode = mCalcMode;
+        this.terminology = terminology;
 
 
     }
@@ -240,7 +242,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 ParkingModel mType = new ParkingModel();
                 mType.setId("1");
                 // mType.setTypeicon(R.drawable.icon_24hours);
-                mType.setTypename(Config.toTitleCase(searchLoclist.getParkingType())+" Parking "  );
+                mType.setTypename(Config.toTitleCase(searchLoclist.getParkingType()) + " Parking ");
                 listType.add(mType);
             }
         }
@@ -371,13 +373,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         });
 
 
-        if(searchLoclist.getAddress().contains(searchLoclist.getPlace())){
+        if (searchLoclist.getAddress() != null && searchLoclist.getAddress().contains(searchLoclist.getPlace())) {
             myViewHolder.tv_place.setText(searchLoclist.getAddress());
             Config.logV("Place-------------" + searchLoclist.getAddress());
-        }
-        else{
-            myViewHolder.tv_place.setText(searchLoclist.getPlace()+" "+","+" "+searchLoclist.getAddress());
-            Config.logV("Place-------------" + searchLoclist.getPlace()+" "+","+" "+searchLoclist.getAddress());
+        } else {
+            myViewHolder.tv_place.setText(searchLoclist.getPlace() + " " + "," + " " + searchLoclist.getAddress());
+            Config.logV("Place-------------" + searchLoclist.getPlace() + " " + "," + " " + searchLoclist.getAddress());
         }
 
         Config.logV("---Place 3333----11---" + searchLoclist.getbSchedule().getTimespec().size());
@@ -402,15 +403,26 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             myViewHolder.LexpandCheckin.setVisibility(View.VISIBLE);
 
         }
+        for (int i = 0; i < mQueueList.size(); i++) {
+
+            if (mQueueList.get(i).getNextAvailableQueue()!=null && mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null && mSearchSetting.isFutureDateWaitlist()) {
+                myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+
+            } else {
+                myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
+            }
 
 
-        if (mSearchSetting.isFutureDateWaitlist()) {
-            myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
-            myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
-        } else {
-            myViewHolder.txt_diffdate.setVisibility(View.GONE);
-            myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
         }
+//        if (mSearchSetting.isFutureDateWaitlist()) {
+//            myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+//            myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+//        } else {
+//            myViewHolder.txt_diffdate.setVisibility(View.GONE);
+//            myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
+//        }
 
 
         myViewHolder.txt_diffdate_expand.setOnClickListener(new View.OnClickListener() {
@@ -426,9 +438,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("title", mTitle);
                 iCheckIn.putExtra("place", searchLoclist.getPlace());
                 iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
-
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
+                iCheckIn.putExtra("terminology", terminology);
+
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -447,9 +460,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("title", mTitle);
                 iCheckIn.putExtra("place", searchLoclist.getPlace());
                 iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
-
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
+                iCheckIn.putExtra("terminology", terminology);
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -465,9 +478,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("title", mTitle);
                 iCheckIn.putExtra("place", searchLoclist.getPlace());
                 iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
-
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
+                iCheckIn.putExtra("terminology", terminology);
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -483,9 +496,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("title", mTitle);
                 iCheckIn.putExtra("place", searchLoclist.getPlace());
                 iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
-
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
+                iCheckIn.putExtra("terminology", terminology);
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -606,8 +619,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         }
 
                         myViewHolder.workingModelArrayList.add(work);
-                        Config.logV("workingModelPassArrayList @@@@@@@@@@" +  myViewHolder.workingModelArrayList.size());
-
+                        Config.logV("workingModelPassArrayList @@@@@@@@@@" + myViewHolder.workingModelArrayList.size());
 
 
                     }
@@ -619,76 +631,76 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     @Override
                     public void onClick(View v) {
 
-                        Config.logV("workingModelPassArrayList" +  myViewHolder.workingModelArrayList.size());
-                        adaptercallback.onMethodWorkingCallback( myViewHolder.workingModelArrayList, mTitle);
+                        Config.logV("workingModelPassArrayList" + myViewHolder.workingModelArrayList.size());
+                        adaptercallback.onMethodWorkingCallback(myViewHolder.workingModelArrayList, mTitle);
                     }
                 });
 
-                for (int i = 0; i <  myViewHolder.workingModelArrayList.size(); i++) {
-                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Monday")) {
-                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                for (int i = 0; i < myViewHolder.workingModelArrayList.size(); i++) {
+                    if (myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Monday")) {
+                        if (myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
                             if (myViewHolder.txtdataMon.equalsIgnoreCase("")) {
-                                myViewHolder. txtdataMon +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                                myViewHolder.txtdataMon += myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                myViewHolder. txtdataMon += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataMon += "\n" + myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                         }
                     }
-                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Tuesday")) {
-                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                    if (myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Tuesday")) {
+                        if (myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
 
                             if (myViewHolder.txtdataTue.equalsIgnoreCase("")) {
-                                myViewHolder.txtdataTue +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                                myViewHolder.txtdataTue += myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                myViewHolder.txtdataTue += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataTue += "\n" + myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                         }
                     }
-                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Wednesday")) {
-                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                    if (myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Wednesday")) {
+                        if (myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
                             if (myViewHolder.txtdataWed.equalsIgnoreCase("")) {
-                                myViewHolder.txtdataWed +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                                myViewHolder.txtdataWed += myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                myViewHolder.txtdataWed += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataWed += "\n" + myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                         }
                         // txtdataWed += workingModelArrayList.get(i).getTime_value() + "\n";
                     }
-                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Thursday")) {
-                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                    if (myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Thursday")) {
+                        if (myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
                             if (myViewHolder.txtdataThu.equalsIgnoreCase("")) {
-                                myViewHolder.txtdataThu += myViewHolder. workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                                myViewHolder.txtdataThu += myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                myViewHolder.txtdataThu += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataThu += "\n" + myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                         }
                         // txtdataThu += workingModelArrayList.get(i).getTime_value() + "\n";
                     }
-                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Friday")) {
-                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                    if (myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Friday")) {
+                        if (myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
                             if (myViewHolder.txtdataFri.equalsIgnoreCase("")) {
-                                myViewHolder.txtdataFri +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                                myViewHolder.txtdataFri += myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                myViewHolder.txtdataFri += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataFri += "\n" + myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                         }
                         //txtdataFri += workingModelArrayList.get(i).getTime_value() + "\n";
                     }
-                    if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Saturday")) {
-                        if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                    if (myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Saturday")) {
+                        if (myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
                             if (myViewHolder.txtdataSat.equalsIgnoreCase("")) {
-                                myViewHolder.txtdataSat +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                                myViewHolder.txtdataSat += myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                             } else {
-                                myViewHolder.txtdataSat += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
+                                myViewHolder.txtdataSat += "\n" + myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
                             // txtdataSat += workingModelArrayList.get(i).getTime_value() + "\n";
                         }
-                        if ( myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Sunday")) {
-                            if ( myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                        if (myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Sunday")) {
+                            if (myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
                                 if (myViewHolder.txtdataSun.equalsIgnoreCase("")) {
-                                    myViewHolder. txtdataSun +=  myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                                    myViewHolder.txtdataSun += myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
                                 } else {
-                                    myViewHolder.txtdataSun += "\n" +  myViewHolder.workingModelArrayList.get(i).getTime_value();
+                                    myViewHolder.txtdataSun += "\n" + myViewHolder.workingModelArrayList.get(i).getTime_value();
                                 }
                             }
                             //txtdataSun += workingModelArrayList.get(i).getTime_value() + "\n";
@@ -700,7 +712,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
                     Date d = new Date();
                     String dayOfTheWeek = sdf.format(d);
-                    Config.logV("DAY OF WEEK ##################"+dayOfTheWeek);
+                    Config.logV("DAY OF WEEK ##################" + dayOfTheWeek);
                     if (dayOfTheWeek.equalsIgnoreCase("Monday")) {
 
                         myViewHolder.txtdayofweek.setVisibility(View.VISIBLE);
@@ -811,7 +823,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 myViewHolder.LWorkinHrs.setVisibility(View.GONE);
             }
         }
-
 
 
 //Services------------
@@ -1085,7 +1096,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         e.printStackTrace();
                     }
 
-                    if(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn() && mQueueList.get(i).getNextAvailableQueue().isAvailableToday()){
+                    if (mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn() && mQueueList.get(i).getNextAvailableQueue().isAvailableToday()) {
 
                         if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
 
@@ -1117,12 +1128,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                             myViewHolder.btn_checkin.setVisibility(View.GONE);
                             myViewHolder.btn_checkin_expand.setVisibility(View.GONE);
+                            myViewHolder.tv_open.setVisibility(View.GONE);
 
                         }
 
                     } else {
                         myViewHolder.btn_checkin.setVisibility(View.GONE);
                         myViewHolder.btn_checkin_expand.setVisibility(View.GONE);
+                        myViewHolder.tv_open.setVisibility(View.GONE);
                     }
 
 
@@ -1185,7 +1198,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.txtwaittime_expand.setVisibility(View.INVISIBLE);
                     }
                 }
-                if(calcMode.equalsIgnoreCase("NoCalc")){
+                if (calcMode.equalsIgnoreCase("NoCalc")) {
 
                     myViewHolder.btn_checkin.setText("GET TOKEN");
                     myViewHolder.btn_checkin_expand.setText("GET TOKEN");
@@ -1193,7 +1206,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     myViewHolder.txt_diffdate_expand.setText("Get Token for different Date?");
 
                     if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != -1) {
-                        Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####"+mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                        Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
                         if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() == 0) {
                             myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                             myViewHolder.tv_waittime.setText(" Be the first in line");
@@ -1206,23 +1219,30 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             //  myViewHolder.txtwaittime_expand.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " People waiting in line");
 
 
-                            String firstWord=String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
-                            String secondWord=" People waiting in line";
+                            String firstWord = String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                            String secondWord = " People waiting in line";
                             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             Spannable spannable = new SpannableString(firstWord + secondWord);
-                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length() , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                             myViewHolder.tv_waittime.setText(spannable);
                             myViewHolder.txtwaittime_expand.setText(spannable);
                         }
                     }
 
-                }else{
-                    myViewHolder.btn_checkin_expand.setText("CHECK-IN");
-                    myViewHolder.btn_checkin.setText("CHECK-IN");
-                    myViewHolder.txt_diffdate.setText("Check-in for different Date?");
-                    myViewHolder.txt_diffdate_expand.setText("Check-in for different Date?");
+                } else {
+                    if (terminology != null && !terminology.equals("") && terminology.equals("order")) {
+                        myViewHolder.btn_checkin_expand.setText("ORDER");
+                        myViewHolder.btn_checkin.setText("ORDER");
+                        myViewHolder.txt_diffdate.setText("Do you want to Order for different date?");
+                        myViewHolder.txt_diffdate_expand.setText("Do you want to Order for different date?");
+                    } else {
+                        myViewHolder.btn_checkin_expand.setText("CHECK-IN");
+                        myViewHolder.btn_checkin.setText("CHECK-IN");
+                        myViewHolder.txt_diffdate.setText("Check-in for different Date?");
+                        myViewHolder.txt_diffdate_expand.setText("Check-in for different Date?");
+                    }
                 }
 
             } else {

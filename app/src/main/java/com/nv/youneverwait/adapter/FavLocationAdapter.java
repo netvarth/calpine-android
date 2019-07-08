@@ -63,7 +63,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     Activity activity;
     boolean mShowWaitTime = false;
     SearchSetting searchSetting;
-    String uniqueId,title,terminology;
+    String uniqueId,title,terminologys;
     public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting,String uniqueID,String title,String terminology) {
         this.mContext = mContext;
         this.mQueueList = mQueueList;
@@ -71,7 +71,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         this.searchSetting=mSearchSetting;
         this.uniqueId=uniqueID;
         this.title=title;
-        this.terminology=terminology;
+        this.terminologys=terminology;
 
     }
 
@@ -112,7 +112,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 iCheckIn.putExtra("accountID",queueList.getProvider().getId());
                 iCheckIn.putExtra("from", "favourites");
                 iCheckIn.putExtra("title", title);
-                iCheckIn.putExtra("terminology",terminology);
+                iCheckIn.putExtra("terminology",terminologys);
                 iCheckIn.putExtra("place", myViewHolder.tv_loc.getText().toString());
                 //iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
 
@@ -128,7 +128,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 iCheckIn.putExtra("accountID",queueList.getProvider().getId());
                 iCheckIn.putExtra("from", "favourites_date");
                 iCheckIn.putExtra("title", title);
-                iCheckIn.putExtra("terminology",terminology);
+                iCheckIn.putExtra("terminology",terminologys);
                 iCheckIn.putExtra("place", myViewHolder.tv_loc.getText().toString());
                 //iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
 
@@ -222,7 +222,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         }
 
         if(searchSetting!=null) {
-            if (!searchSetting.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+            if (!searchSetting.getCalculationMode().equalsIgnoreCase("NoCalc"))  {
                 mShowWaitTime = true;
             } else {
                 mShowWaitTime = false;
@@ -335,7 +335,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 }
 
             } else {
-                if(terminology.equals("order")){
+                if(terminologys.equals("order")){
                     myViewHolder.btn_checkin.setText("ORDER");
                     myViewHolder.tv_date.setText("Do you want to Order for different date?");
                 }else{
