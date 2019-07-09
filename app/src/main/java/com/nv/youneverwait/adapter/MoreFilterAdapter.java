@@ -93,6 +93,8 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
     ArrayList<String> passedFormulaArray = new ArrayList<>();
 
     public MoreFilterAdapter(List<RefinedFilters> mFilterList, Context mContext, Activity mActivity, AdapterCallback filterAdapterCallback, RecyclerView recyclepop, String passFormula1, String domainSelected, String subDomain, ArrayList<String> passedFormulaArray) {
+
+        Config.logV("PASSED FORMULA ARRAY WWWW GGGKKKG@@" + passFormula.size());
         this.mContext = mContext;
         this.mFilterList = mFilterList;
         this.activity = mActivity;
@@ -108,16 +110,24 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
         }
         Config.logV("Domain SELECTED" + domainSelected);
         if (!domainSelected.equalsIgnoreCase("Select")) {
-            String query = "sector:'" + domainSelected + "'";
-            passFormula.add(query);
+            for(int i=0;i<mFilterList.size();i++) {
+                if (mFilterList.get(i).getDataType().equalsIgnoreCase("Spinner")) {
+                    String query = "sector:'" + domainSelected + "'";
+                    passFormula.add(query);
+                }
+            }
 
         }
 
 
         if (!subDomianSelect.equalsIgnoreCase("Select")) {
-            String query = "sub_sector:'" + subDomianSelect + "'";
-            passFormula.add(query);
-            Config.logV("PRINT SUB ADDDED " + query);
+            for(int i=0;i<mFilterList.size();i++) {
+                if (mFilterList.get(i).getDataType().equalsIgnoreCase("Spinner_subdomain")) {
+                    String query = "sub_sector:'" + subDomianSelect + "'";
+                    passFormula.add(query);
+                    Config.logV("PRINT SUB ADDDED " + query);
+                }
+            }
 
         }
 
@@ -578,7 +588,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                     for (int i = 0; i < passFormula.size(); i++) {
                                         //   if (passFormula.get(i).contains("sub_sector")) {
                                         String splitsFormula[] = passFormula.get(i).toString().split(":");
-                                        Config.logV("PRINT SUBSPINNERKK ##@@DD ##" + splitsFormula[0] + keyFormula.get(i).toString());
+                                       // Config.logV("PRINT SUBSPINNERKK ##@@DD ##" + splitsFormula[0] + keyFormula.get(i).toString());
                                         if (splitsFormula[0].equalsIgnoreCase("sub_sector")) {
 
                                             passFormula.remove(i);

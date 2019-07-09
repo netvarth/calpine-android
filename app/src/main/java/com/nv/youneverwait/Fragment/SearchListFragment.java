@@ -2408,6 +2408,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             Config.logV("PRINT Key@ ####@@@@@@@@@@@@@@" + str);
         }
 
+        Config.logV("PASSED FORMULA ARRAY WWWW GGGG@@" + sFormula.size());
         if (sFormula.size() > 0) {
             txtrefinedsearch.setText("Refine Search (" + sFormula.size() + ") ");
         } else {
