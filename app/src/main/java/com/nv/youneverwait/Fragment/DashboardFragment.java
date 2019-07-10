@@ -1757,16 +1757,31 @@ public class    DashboardFragment extends RootFragment implements GoogleApiClien
 //        querycreate = "(sub_sector_displayname " + "'" + query + "' sub_sector " + "'" + query + "' specialization " + "'" + query + "' specialization_displayname " + "'" + query + "' title " + "'" + query + "' services " + "'" + query + "' qualification " + "'" + query + "' adwords " + "'" + query + "') sector :'" + mDomainSpinner + "'";
 
 
+//        if (!mDomainSpinner.equalsIgnoreCase("All")) {
+//            querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
+//        } else {
+//            querycreate = "(phrase " + "'" + query + "')";
+//
+//
+//
+//
+//        }
+      //  query = query.replace("'","\\'");
+
+
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
-            querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query + "') sector :'" + mDomainSpinner + "'";
+            if(query.equals("")) {
+                querycreate = "sector :'" + mDomainSpinner + "'";
+            } else {
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query + "') sector :'" + mDomainSpinner + "'";
+            }
         } else {
-            querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query + "')";
+            if(!query.equals("")) {
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query + "')";
+            } else {
+                querycreate = "";
+            }
         }
-
-        //  query = query.replace("'","\\'");
-
-
-
 
 
         // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";

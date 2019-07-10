@@ -195,6 +195,9 @@ public class EmailOtpFragment extends RootFragment {
                         }
 
 
+                    }if(response.code() == 422){
+                        String errorString = response.errorBody().string();
+                        Toast.makeText(getContext(), errorString, Toast.LENGTH_SHORT).show();
                     }
 
 

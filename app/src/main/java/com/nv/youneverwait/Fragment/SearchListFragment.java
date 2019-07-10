@@ -1995,6 +1995,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
     public void QuerySubmitCLick(String querypass) {
+        Log.i("querypass",querypass);
 
         //  mSearchView.setQuery("", false);
         LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
@@ -2045,14 +2046,31 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + querypass);
 
             if (!mDomainSpinner.equalsIgnoreCase("All")) {
-                querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "' title: " + "'" + querypass + "' services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
+                if(querypass.equals("")) {
+                    querycreate = "sector :'" + mDomainSpinner + "'";
+                } else {
+                    querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "' title: " + "'" + querypass + "' services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
+                }
             } else {
-
-                Config.logV("Query @@@@@@@@@@@@@@" + querypass);
-                querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "' title: " + "'" + querypass + "' services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "')";
-
+                if(!querypass.equals("")) {
+                    Config.logV("Query @@@@@@@@@@@@@@" + querypass);
+                    querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "' title: " + "'" + querypass + "' services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "')";
+                } else {
+                    querycreate = "";
+                }
 
             }
+
+
+//            if (!mDomainSpinner.equalsIgnoreCase("All")) {
+//                querycreate = "(phrase " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
+//            } else {
+//
+//                Config.logV("Query @@@@@@@@@@@@@@" + querypass);
+//                querycreate = "(phrase " + "'" + querypass + "')";
+//
+//
+//            }
         }
 
 
