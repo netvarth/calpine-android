@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LcustomLayout"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/padding5"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/tooltip_nav_up"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="right"
+            android:background="@drawable/nav_up" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_background"
+        android:layout_marginRight="@dimen/padding5"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtjaldeeVerified"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:textColor="@color/title_consu"
+            android:textSize="@dimen/txtsize_14"
+            android:padding="@dimen/padding5"
+            android:background="@color/view_border"
+            android:text="Jaldee Verified"/>
+        <TextView
+            android:id="@+id/txtDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/title_consu"
+            android:textSize="@dimen/txtsize_title"
+            android:padding="@dimen/padding5"
+            android:layout_marginTop="@dimen/default_padding"
+            android:layout_marginBottom="@dimen/default_padding"
+            android:text="Distance"/>
+    </LinearLayout>
+</LinearLayout>
