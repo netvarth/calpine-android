@@ -147,7 +147,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         tv_title.setTypeface(tyface);
 
 
-        btn_edtSubmit.setOnClickListener(new View.OnClickListener() {
+            btn_edtSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!txtfirstname.getText().toString().equalsIgnoreCase("")&&!txtlastname.getText().toString().equalsIgnoreCase("")) {

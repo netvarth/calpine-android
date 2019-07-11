@@ -114,6 +114,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         tv_title.setText("My Check-ins");
         tv_title.setTypeface(tyface);
 
+        Config.logV("MY CHECK INS@@@@@@@@@@@@@@@@@");
 
       /*  tv_nofuturecheckin = (TextView) row.findViewById(R.id.txtnocheckfuture);
         tv_notodaychekcin = (TextView) row.findViewById(R.id.txtnocheckintoday);
@@ -969,6 +970,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     ExpandableListAdapter adapter;
+
     boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
 
     void setItems() {

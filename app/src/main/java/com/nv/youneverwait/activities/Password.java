@@ -189,6 +189,20 @@ public class Password extends AppCompatActivity {
             }
         });
 
+        mEdtpwd.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return true;
+            }
+        });
+
+        mEdtconfirmPwd.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return true;
+            }
+        });
+
 
     }
 

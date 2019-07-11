@@ -215,6 +215,13 @@ public class Signup extends AppCompatActivity {
 
                     }
 
+                    if(response.code() == 422){
+                        if(response.code() == 422){
+                            String errorString = response.errorBody().string();
+                            Toast.makeText(Signup.this, errorString, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
