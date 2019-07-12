@@ -711,6 +711,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iCheckIn.putExtra("sector", searchdetailList.getSectorname());
                                 iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
                                 iCheckIn.putExtra("terminology",termilogy);
+                                iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
                                 context.startActivity(iCheckIn);
                             }
                         });
@@ -856,7 +857,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
                     }
                     if (searchdetailList.getCalculationMode() != null) {
-                        if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                        if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc") && searchdetailList.isShowToken()) {
 
                             myViewHolder.btncheckin.setText("GET TOKEN");
                             myViewHolder.tv_Futuredate.setText("Get Token for different Date?");
@@ -867,27 +868,40 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     myViewHolder.tv_WaitTime.setText(" Be the first in line");
                                 } else {
                                     myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                                    // myViewHolder.tv_WaitTime.setText(searchdetailList.getPersonAhead() + " People waiting in line");
-
                                     String firstWord = String.valueOf(searchdetailList.getPersonAhead());
                                     String secondWord = " People waiting in line";
                                     Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                                     myViewHolder.tv_WaitTime.setText(spannable);
                                 }
                             }
 
                         } else {
-                            if(termilogy.equals("order")){
-                                myViewHolder.btncheckin.setText("ORDER");
-                                myViewHolder.tv_Futuredate.setText("Do you want to Order for different date?");
-                            }else{
-                                myViewHolder.btncheckin.setText("CHECK-IN");
-                                myViewHolder.tv_Futuredate.setText("Check-in for different Date?");
+
+                            if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc") && !searchdetailList.isShowToken()) {
+                                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+
+                                if(termilogy.equals("order")){
+                                    myViewHolder.btncheckin.setText("ORDER");
+                                    myViewHolder.tv_Futuredate.setText("Do you want to Order for different date?");
+                                }else{
+                                    myViewHolder.btncheckin.setText("CHECK-IN");
+                                    myViewHolder.tv_Futuredate.setText("Check-in for different Date?");
+                                }
+                            }else {
+                                if(termilogy.equals("order")){
+                                    myViewHolder.btncheckin.setText("ORDER");
+                                    myViewHolder.tv_Futuredate.setText("Do you want to Order for different date?");
+                                }else{
+                                    myViewHolder.btncheckin.setText("CHECK-IN");
+                                    myViewHolder.tv_Futuredate.setText("Check-in for different Date?");
+                                }
                             }
+
+
+
 
 
                         }
@@ -925,6 +939,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         iCheckIn.putExtra("sector", searchdetailList.getSectorname());
                         iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
                         iCheckIn.putExtra("terminology", termilogy);
+                        iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
                         context.startActivity(iCheckIn);
                     }
                 });

@@ -122,7 +122,7 @@ public class CheckIn extends AppCompatActivity {
     ImageView img_calender_checkin;
     LinearLayout LcheckinDatepicker;
     static String mFrom;
-    String title, place,terminology;
+    String title, place,terminology,isShowToken;
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
     static TextView tv_queuetime;
@@ -367,6 +367,7 @@ public class CheckIn extends AppCompatActivity {
                 title = extras.getString("title", "");
                 place = extras.getString("place", "");
                 terminology = extras.getString("terminology", "");
+                isShowToken = extras.getString("isShowToken", "");
                 ApiSearchViewDetail(uniqueID);
             } else {
 
@@ -385,6 +386,7 @@ public class CheckIn extends AppCompatActivity {
                 sector = extras.getString("sector", "");
                 subsector = extras.getString("subsector", "");
                 terminology = extras.getString("terminology","");
+                isShowToken = extras.getString("isShowToken","");
             }
         }
         if (sector != null && subsector != null) {
@@ -830,7 +832,7 @@ public class CheckIn extends AppCompatActivity {
 
                     if (response.code() == 200) {
 
-                        if (response.body().getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                        if (response.body().getCalculationMode().equalsIgnoreCase("NoCalc") && isShowToken.equals(true)) {
                             tv_title.setText("Get Token");
                             Word_Change = "Token for ";
                             btn_checkin.setText("CONFIRM");

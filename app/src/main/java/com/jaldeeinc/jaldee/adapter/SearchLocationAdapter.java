@@ -120,8 +120,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     String sector, subsector;
     String calcMode;
     String terminology;
+    boolean isShowTokenId;
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology,boolean isShowTokenId) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchServiceList = SearchServiceList;
@@ -137,6 +138,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         Config.logV("Search Service-----1111-----------" + mSearchServiceList.size());
         this.calcMode = mCalcMode;
         this.terminology = terminology;
+        this.isShowTokenId=isShowTokenId;
 
 
     }
@@ -1059,11 +1061,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         if (!mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc")) {
             mShowWaitTime = true;
         } else {
-            mShowWaitTime = false;
-
+            if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
+                mShowWaitTime = true;
+            }else {
+                mShowWaitTime = false;
+            }
         }
-
-
         for (int i = 0; i < mQueueList.size(); i++) {
 
 
@@ -1195,7 +1198,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.txtwaittime_expand.setVisibility(View.INVISIBLE);
                     }
                 }
-                if (calcMode.equalsIgnoreCase("NoCalc")) {
+                if (calcMode.equalsIgnoreCase("NoCalc") && isShowTokenId) {
 
                     myViewHolder.btn_checkin.setText("GET TOKEN");
                     myViewHolder.btn_checkin_expand.setText("GET TOKEN");
@@ -1229,20 +1232,38 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     }
 
                 } else {
-                    if (terminology != null && !terminology.equals("") && terminology.equals("order")) {
-                        myViewHolder.btn_checkin_expand.setText("ORDER");
-                        myViewHolder.btn_checkin.setText("ORDER");
-                        myViewHolder.txt_diffdate.setText("Do you want to Order for different date?");
-                        myViewHolder.txt_diffdate_expand.setText("Do you want to Order for different date?");
-                    } else {
-                        myViewHolder.btn_checkin_expand.setText("CHECK-IN");
-                        myViewHolder.btn_checkin.setText("CHECK-IN");
-                        myViewHolder.txt_diffdate.setText("Check-in for different Date?");
-                        myViewHolder.txt_diffdate_expand.setText("Check-in for different Date?");
-                    }
-                }
+                    if (calcMode.equalsIgnoreCase("NoCalc") && !isShowTokenId) {
+                        myViewHolder.tv_waittime.setVisibility(View.GONE);
+                        myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
 
-            } else {
+
+                        if (terminology != null && !terminology.equals("") && terminology.equals("order")) {
+                            myViewHolder.btn_checkin_expand.setText("ORDER");
+                            myViewHolder.btn_checkin.setText("ORDER");
+                            myViewHolder.txt_diffdate.setText("Do you want to Order for different date?");
+                            myViewHolder.txt_diffdate_expand.setText("Do you want to Order for different date?");
+                        } else {
+                            myViewHolder.btn_checkin_expand.setText("CHECK-IN");
+                            myViewHolder.btn_checkin.setText("CHECK-IN");
+                            myViewHolder.txt_diffdate.setText("Check-in for different Date?");
+                            myViewHolder.txt_diffdate_expand.setText("Check-in for different Date?");
+                        }
+
+                    }else{
+                        if (terminology != null && !terminology.equals("") && terminology.equals("order")) {
+                            myViewHolder.btn_checkin_expand.setText("ORDER");
+                            myViewHolder.btn_checkin.setText("ORDER");
+                            myViewHolder.txt_diffdate.setText("Do you want to Order for different date?");
+                            myViewHolder.txt_diffdate_expand.setText("Do you want to Order for different date?");
+                        } else {
+                            myViewHolder.btn_checkin_expand.setText("CHECK-IN");
+                            myViewHolder.btn_checkin.setText("CHECK-IN");
+                            myViewHolder.txt_diffdate.setText("Check-in for different Date?");
+                            myViewHolder.txt_diffdate_expand.setText("Check-in for different Date?");
+                        }
+                    }
+
+                }
 
             }
 

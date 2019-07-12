@@ -111,7 +111,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 iCheckIn.putExtra("title", title);
                 iCheckIn.putExtra("terminology",terminologys);
                 iCheckIn.putExtra("place", myViewHolder.tv_loc.getText().toString());
-                //iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
+                iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
 
                 mContext.startActivity(iCheckIn);
             }
@@ -127,7 +127,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 iCheckIn.putExtra("title", title);
                 iCheckIn.putExtra("terminology",terminologys);
                 iCheckIn.putExtra("place", myViewHolder.tv_loc.getText().toString());
-                //iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
+                iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
 
                 mContext.startActivity(iCheckIn);
             }
@@ -219,10 +219,15 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         }
 
         if(searchSetting!=null) {
-            if (!searchSetting.getCalculationMode().equalsIgnoreCase("NoCalc"))  {
+            if (!searchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") )  {
                 mShowWaitTime = true;
             } else {
-                mShowWaitTime = false;
+                if(searchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && queueList.getNextAvailableQueue().isShowToken()){
+                    mShowWaitTime = true;
+                }else {
+                    mShowWaitTime = false;
+                }
+
 
             }
         }
@@ -310,7 +315,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             myViewHolder.btn_checkin.setText("GET TOKEN");
         }
         if (queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().getAvailableDate() != null) {
-            if (queueList.getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) {
+            if (queueList.getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc") && queueList.getNextAvailableQueue().isShowToken()) {
                 myViewHolder.btn_checkin.setText("GET TOKEN");
                 myViewHolder.tv_date.setText("Get Token for different Date?");
                 if (queueList.getNextAvailableQueue().getPersonAhead() != -1) {
@@ -332,15 +337,27 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 }
 
             } else {
-                if(terminologys.equals("order")){
-                    myViewHolder.btn_checkin.setText("ORDER");
-                    myViewHolder.tv_date.setText("Do you want to Order for different date?");
+
+                if(queueList.getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc") && !queueList.getNextAvailableQueue().isShowToken()){
+                    myViewHolder.tv_waittime.setVisibility(View.GONE);
+                    if(terminologys.equals("order")){
+                        myViewHolder.btn_checkin.setText("ORDER");
+                        myViewHolder.tv_date.setText("Do you want to Order for different date?");
+                    }else{
+                        myViewHolder.btn_checkin.setText("CHECK-IN");
+                        myViewHolder.tv_date.setText("Check-in for different Date?");
+                    }
                 }else{
-                    myViewHolder.btn_checkin.setText("CHECK-IN");
-                    myViewHolder.tv_date.setText("Check-in for different Date?");
+                    if(terminologys.equals("order")){
+                        myViewHolder.btn_checkin.setText("ORDER");
+                        myViewHolder.tv_date.setText("Do you want to Order for different date?");
+                    }else{
+                        myViewHolder.btn_checkin.setText("CHECK-IN");
+                        myViewHolder.tv_date.setText("Check-in for different Date?");
+                    }
+
+
                 }
-
-
             }
         }
 

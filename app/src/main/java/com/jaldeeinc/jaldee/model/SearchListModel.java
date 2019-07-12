@@ -38,6 +38,7 @@ public class SearchListModel implements Serializable {
     private int coupon_enabled;
     private String department_code;
 
+
     public String getParking_location1() {
         return parking_location1;
     }
@@ -311,6 +312,15 @@ public class SearchListModel implements Serializable {
     }
 
 
+    public boolean isShowToken() {
+        return showToken;
+    }
+
+    public void setShowToken(boolean showToken) {
+        this.showToken = showToken;
+    }
+
+    boolean showToken;
     boolean onlineCheckIn;
     boolean futureWaitlist;
     boolean isAvailableToday;

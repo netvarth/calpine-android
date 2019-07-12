@@ -1291,7 +1291,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                 TextView tv_token = (TextView) dialog.findViewById(R.id.tv_token);
 
-                                if (mSearchSettings.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                                if (mSearchSettings.getCalculationMode().equalsIgnoreCase("NoCalc") && mSearchSettings.isShowTokenId()) {
                                     tv_token.setVisibility(View.VISIBLE);
                                 } else {
                                     tv_token.setVisibility(View.GONE);
@@ -1592,11 +1592,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         mSearchSettings = response.body();
 
+
                         Config.logV("Location Adapter-----------------------");
 
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mRecyLocDetail.setLayoutManager(mLayoutManager);
-                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(),terminology);
+                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(),terminology,mSearchSettings.isShowTokenId());
                         mRecyLocDetail.setAdapter(mSearchLocAdapter);
                         mSearchLocAdapter.notifyDataSetChanged();
                     }
@@ -2719,6 +2720,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                                 searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
                                                 searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
                                                 searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
+                                                searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
                                                 if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                                                     searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
                                                 }
@@ -2762,7 +2764,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                                         mSearchListModel.add(searchList);
-
                                         Log.i("iopiop", new Gson().toJson(mSearchListModel));
 
                                     }
@@ -2924,6 +2925,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                                 searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
                                                 searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
+                                                searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
                                                 if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                                                     searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
                                                 }

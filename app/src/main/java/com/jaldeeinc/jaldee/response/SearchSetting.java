@@ -9,6 +9,16 @@ public class SearchSetting {
 
     boolean onlineCheckIns;
     boolean futureDateWaitlist;
+
+    public boolean isShowTokenId() {
+        return showTokenId;
+    }
+
+    public void setShowTokenId(boolean showTokenId) {
+        this.showTokenId = showTokenId;
+    }
+
+    boolean showTokenId;
     String calculationMode;
 
     public boolean isOnlineCheckIns() {

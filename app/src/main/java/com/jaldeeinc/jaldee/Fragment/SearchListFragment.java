@@ -1758,6 +1758,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                         searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
                                         searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
                                         searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
+                                        searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
                                         if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                                             searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
                                         }
@@ -1958,6 +1959,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                         searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
                                         searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
+                                        searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
                                         if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                                             searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
                                         }
