@@ -69,13 +69,13 @@
 
         </LinearLayout>
 
-        <com.nv.youneverwait.widgets.TouchWebView
+        <com.jaldeeinc.jaldee.widgets.TouchWebView
             android:id="@+id/aboutWeb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/default_padding"
             android:background="#6c757d"
-            android:visibility="gone"></com.nv.youneverwait.widgets.TouchWebView>
+            android:visibility="gone"></com.jaldeeinc.jaldee.widgets.TouchWebView>
 
         <View
             android:layout_width="match_parent"
@@ -111,12 +111,12 @@
 
         </LinearLayout>
 
-        <com.nv.youneverwait.widgets.TouchWebView
+        <com.jaldeeinc.jaldee.widgets.TouchWebView
             android:id="@+id/termsWeb"
             android:layout_width="wrap_content"
             android:layout_height="350dp"
             android:padding="@dimen/default_padding"
-            android:visibility="gone"></com.nv.youneverwait.widgets.TouchWebView>
+            android:visibility="gone"></com.jaldeeinc.jaldee.widgets.TouchWebView>
 
 
         <LinearLayout
@@ -148,12 +148,12 @@
                 android:src="@drawable/icon_down_light" />
         </LinearLayout>
 
-        <com.nv.youneverwait.widgets.TouchWebView
+        <com.jaldeeinc.jaldee.widgets.TouchWebView
             android:id="@+id/privacyWeb"
             android:layout_width="wrap_content"
             android:layout_height="350dp"
             android:padding="@dimen/default_padding"
-            android:visibility="gone"></com.nv.youneverwait.widgets.TouchWebView>
+            android:visibility="gone"></com.jaldeeinc.jaldee.widgets.TouchWebView>
 
         <View
             android:layout_width="match_parent"

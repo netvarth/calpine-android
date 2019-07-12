@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.nv.youneverwait"
+        applicationId "com.jaldeeinc.jaldee"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
