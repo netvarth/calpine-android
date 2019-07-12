@@ -668,7 +668,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
                 if (searchdetailList.getQualification() != null) {
-                    myViewHolder.tv_name.setText(searchdetailList.getTitle() + " " + searchdetailList.getQualification());
+                    myViewHolder.tv_name.setText(searchdetailList.getTitle());
                 } else {
                     myViewHolder.tv_name.setText(searchdetailList.getTitle());
                 }

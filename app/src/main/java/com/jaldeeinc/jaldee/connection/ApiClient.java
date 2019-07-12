@@ -32,7 +32,6 @@ public class ApiClient {
     private static Retrofit retrofit = null;
     private static Retrofit retrofitAWS = null;
     private static Retrofit retrofitCloud = null;
-
     private static Retrofit retrofitTest = null;
     public static Context context;
 
