@@ -1,7 +1,9 @@
 package com.nv.youneverwait.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.nv.youneverwait.model.ContactModel;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -131,6 +133,12 @@ public class FavouriteModel {
     public int getLocId() {
         return id;
     }
+
+    public ArrayList<ContactModel> getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    ArrayList<ContactModel> phoneNumbers;
 
 
 }

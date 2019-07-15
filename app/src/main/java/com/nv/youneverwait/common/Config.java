@@ -38,6 +38,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
@@ -83,6 +84,18 @@ public class Config {
                 taskCount--;
             Log.e(APP_TAG, message+"   >>  "+taskCount);
         }
+    }
+
+    public static String getTodaysDateString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        return dateFormat.format(cal.getTime());
+    }
+    public static String getYesterdayDateString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        return dateFormat.format(cal.getTime());
     }
     public static void logV(String title, String message) {
         if (is_log_enabled) {

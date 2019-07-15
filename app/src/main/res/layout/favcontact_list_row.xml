@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/contact_list_row_item"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="@dimen/padding2"
+    android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtcontact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/title_grey"
+            android:textSize="@dimen/txtsize_hint" />
+
+        <TextView
+            android:id="@+id/txtcontact_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/title_grey"
+            android:layout_marginTop="@dimen/padding5"
+            android:textSize="@dimen/txtsize_hint" />
+
+    </LinearLayout>

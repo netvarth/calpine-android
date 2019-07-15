@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.CheckIn;
+import com.nv.youneverwait.callback.ContactAdapterCallback;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.custom.CustomTypefaceSpan;
 import com.nv.youneverwait.response.FavouriteModel;
@@ -47,6 +49,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         TextView tv_loc,tv_date,tv_waittime,tv_Open;
         Button btn_checkin;
         View divider;
+        RecyclerView recycleview_contact;
         public MyViewHolder(View view) {
             super(view);
 
@@ -56,6 +59,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             tv_Open=(TextView)view.findViewById(R.id.txtOpen);
             btn_checkin=(Button) view.findViewById(R.id.btn_checkin);
             divider=(View)view.findViewById(R.id.divider);
+            recycleview_contact=(RecyclerView)view.findViewById(R.id.recycleview_contact);
         }
     }
 
@@ -63,13 +67,15 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     boolean mShowWaitTime = false;
     SearchSetting searchSetting;
     String uniqueId,title;
-    public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting,String uniqueID,String title) {
+    ContactAdapterCallback contactAdapterCallback;
+    public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting, String uniqueID, String title, ContactAdapterCallback contactAdapterCallback) {
         this.mContext = mContext;
         this.mQueueList = mQueueList;
         this.mFavList=mFavList;
         this.searchSetting=mSearchSetting;
         this.uniqueId=uniqueID;
         this.title=title;
+        this.contactAdapterCallback=contactAdapterCallback;
 
     }
 
@@ -100,6 +106,8 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         }else{
             myViewHolder.divider.setVisibility(View.VISIBLE);
         }
+
+
 
         myViewHolder.btn_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,6 +205,18 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 }
 
 
+                if(mFavList.get(i).getPhoneNumbers()!=null){
+                    if(mFavList.get(i).getPhoneNumbers().size()>0){
+                        myViewHolder.recycleview_contact.setVisibility(View.VISIBLE);
+                        Fav_ContactAdapter checkAdapter = new Fav_ContactAdapter(mFavList.get(i).getPhoneNumbers(), mContext,contactAdapterCallback);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                        myViewHolder.recycleview_contact.setLayoutManager(mLayoutManager);
+                        myViewHolder.recycleview_contact.setAdapter(checkAdapter);
+                        checkAdapter.notifyDataSetChanged();
+                    }else{
+                        myViewHolder.recycleview_contact.setVisibility(View.GONE);
+                    }
+                }
 
             }
         }

@@ -1,14 +1,20 @@
 package com.nv.youneverwait.Fragment;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +30,7 @@ import com.nv.youneverwait.R;
 import com.nv.youneverwait.activities.Home;
 import com.nv.youneverwait.adapter.FavLocationAdapter;
 import com.nv.youneverwait.adapter.FavouriteAdapter;
+import com.nv.youneverwait.callback.ContactAdapterCallback;
 import com.nv.youneverwait.callback.FavAdapterOnCallback;
 import com.nv.youneverwait.common.Config;
 import com.nv.youneverwait.connection.ApiClient;
@@ -56,7 +63,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FavouriteFragment extends RootFragment implements FavAdapterOnCallback/*,FragmentInterface*/ {
+public class FavouriteFragment extends RootFragment implements FavAdapterOnCallback,ContactAdapterCallback/*,FragmentInterface*/ {
 
 
     public FavouriteFragment() {
@@ -74,6 +81,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
     ArrayList<FavouriteModel> mFavModelList = new ArrayList<>();
     TextView tv_nofav;
     DatabaseHandler db;
+    ContactAdapterCallback contactcallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,6 +102,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
         tv_title.setText("My Favourites");
         tv_title.setTypeface(tyface);
         callback = (FavAdapterOnCallback) this;
+        contactcallback=(ContactAdapterCallback)this;
         tv_nofav = (TextView) row.findViewById(R.id.txt_nofav);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         mrRecylce_fav = (RecyclerView) row.findViewById(R.id.recylce_fav);
@@ -312,13 +321,13 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
 
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,contactcallback);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
                     } else {
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,contactcallback);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
 
@@ -574,10 +583,57 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
 
     }
+    private final int CALL_REQUEST = 100;
+    String phoneNumber;
+    public void callPhoneNumber(String phNo) {
+        try {
 
-    /*@Override
-    public void fragmentBecameVisible() {
+            phoneNumber = phNo;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
 
+                    //requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST);
 
-    }*/
+                    requestPermissions(new String[]{
+                            Manifest.permission.CALL_PHONE}, CALL_REQUEST);
+
+                    return;
+                } else {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + phNo));
+                    startActivity(callIntent);
+                }
+            } else {
+
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + phNo));
+                startActivity(callIntent);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == CALL_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Config.logV("CALL GRANTED @@@@@@@@@@@@@@");
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(callIntent);
+            } else {
+                Toast.makeText(mContext, getResources().getString(R.string.call_permission_denied_message), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onMethodContactCallback(String type, String value) {
+        if (type.equalsIgnoreCase("Phoneno")) {
+            callPhoneNumber(value);
+        }
+    }
 }

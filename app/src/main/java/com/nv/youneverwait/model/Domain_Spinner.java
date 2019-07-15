@@ -12,7 +12,9 @@ public class Domain_Spinner {
 
     String domain;
 
+    public Domain_Spinner(){
 
+    }
 
     public String getDomain() {
         return domain;

@@ -247,13 +247,13 @@ String header;
         //  ActiveCheckIn activelist = activeChekinList.get(position);
 
 
-        tv_businessname.setText(Config.toTitleCase(activelist.getProvider().getBusinessName()));
+        tv_businessname.setText(Config.toTitleCase(activelist.getBusinessName()));
 
 
         icon_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getProvider().getId(),mTodayFlag,mFutureFlag,mOldFlag);
+                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getId(),mTodayFlag,mFutureFlag,mOldFlag);
             }
         });
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -263,7 +263,7 @@ String header;
         tv_businessname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodActiveCallback(activelist.getProvider().getUniqueId());
+                callback.onMethodActiveCallback(activelist.getUniqueId());
             }
         });
 
@@ -278,15 +278,15 @@ String header;
 
 
         try {
-            if (activelist.getQueue() != null) {
-                String geoUri = activelist.getQueue().getLocation().getGoogleMapUrl();
-                if (activelist.getQueue().getLocation().getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
+          /*  if (activelist.getQueue() != null) {*/
+                String geoUri = activelist.getGoogleMapUrl();
+                if (activelist.getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
 
                     tv_place.setVisibility(View.VISIBLE);
-                    tv_place.setText(activelist.getQueue().getLocation().getPlace());
-                } else {
+                    tv_place.setText(activelist.getPlace());
+                /*} else {
                     tv_place.setVisibility(View.GONE);
-                }
+                }*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -299,8 +299,8 @@ String header;
             Config.logV("Fav List-----##&&&-----" + FavList.get(i).getId());
 
 
-            if (FavList.get(i).getId() == activelist.getProvider().getId()) {
-                Config.logV("Fav Fav List--------%%%%--" + activelist.getProvider().getId());
+            if (FavList.get(i).getId() == activelist.getId()) {
+                Config.logV("Fav Fav List--------%%%%--" + activelist.getId());
                 icon_fav.setVisibility(View.VISIBLE);
                 icon_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
                 activelist.setFavFlag(true);
@@ -313,8 +313,8 @@ String header;
             public void onClick(View v) {
                 if (activelist.isFavFlag()) {
 
-                    Config.logV("Fav" + activelist.getProvider().getId());
-                    callback.onMethodDeleteFavourite(activelist.getProvider().getId(),mTodayFlag,mFutureFlag,mOldFlag);
+                    Config.logV("Fav" + activelist.getId());
+                    callback.onMethodDeleteFavourite(activelist.getId(),mTodayFlag,mFutureFlag,mOldFlag);
 
                    /* AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
                             //set message, title, and icon
@@ -346,16 +346,16 @@ String header;
 
 
                 } else {
-                    Config.logV("Fav Addd" + activelist.getProvider().getId());
-                    callback.onMethodAddFavourite(activelist.getProvider().getId(),mTodayFlag,mFutureFlag,mOldFlag);
+                    Config.logV("Fav Addd" + activelist.getId());
+                    callback.onMethodAddFavourite(activelist.getId(),mTodayFlag,mFutureFlag,mOldFlag);
                 }
             }
         });
         tv_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("googlemap url--------" + activelist.getQueue().getLocation().getGoogleMapUrl());
-                String geoUri = activelist.getQueue().getLocation().getGoogleMapUrl();
+                Config.logV("googlemap url--------" + activelist.getGoogleMapUrl());
+                String geoUri = activelist.getGoogleMapUrl();
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
                 mContext.startActivity(intent);
             }
@@ -363,22 +363,22 @@ String header;
 
         tv_service.setVisibility(View.GONE);
 
-        if (activelist.getService() != null) {
-            if (activelist.getService().getName() != null) {
-                tv_service.setVisibility(View.VISIBLE);
 
-                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                        "fonts/Montserrat_Bold.otf");
-                String firstWord = activelist.getService().getName();
-                String secondWord = " for ";
-                String thirdWord = activelist.getWaitlistingFor().get(0).getFirstName() + " " + activelist.getWaitlistingFor().get(0).getLastName();
-                Spannable spannable = new SpannableString(firstWord + secondWord + thirdWord);
-                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() + secondWord.length(), firstWord.length() + secondWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                tv_service.setText(spannable);
-            } else {
-                tv_service.setVisibility(View.GONE);
-            }
+
+        if (activelist.getName() != null) {
+            tv_service.setVisibility(View.VISIBLE);
+
+            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            String firstWord = activelist.getName();
+            String secondWord = " for ";
+            String thirdWord = Config.toTitleCase(activelist.getFirstName() )+ " " + Config.toTitleCase(activelist.getLastName());
+            Spannable spannable = new SpannableString(firstWord + secondWord + thirdWord);
+            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() + secondWord.length(), firstWord.length() + secondWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+           tv_service.setText(spannable);
+        } else {
+           tv_service.setVisibility(View.GONE);
         }
 
         if (activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid")) {
@@ -406,7 +406,7 @@ String header;
         {
             @Override
             public void onClick(View v) {
-                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getProvider().getBusinessName(), String.valueOf(activelist.getProvider().getId()));
+                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()));
             }
         });
 
@@ -615,9 +615,9 @@ String header;
                 }
             } else {
 
-                Config.logV("response.body().get(i).getQueue().getQueueStartTime()" + activelist.getQueue().getQueueStartTime());
+                Config.logV("response.body().get(i).getQueue().getQueueStartTime()" + activelist.getQueueStartTime());
                 //Calulate appxtime+questime
-                Config.logV("Quueue Time----------------" + activelist.getQueue().getQueueStartTime());
+                Config.logV("Quueue Time----------------" + activelist.getQueueStartTime());
                 Config.logV("App Time----------------" + activelist.getAppxWaitingTime());
                 long appwaittime;
                 if (activelist.getAppxWaitingTime() != -1) {
@@ -626,14 +626,14 @@ String header;
                     appwaittime = 0;
                 }
 
-                if (activelist.getQueue().getQueueStartTime() != null) {
+                if (activelist.getQueueStartTime() != null) {
 
                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
                     Date Timeconvert = null;
                     long millis = 0;
                     try {
                         // sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        Timeconvert = sdf.parse(activelist.getQueue().getQueueStartTime());
+                        Timeconvert = sdf.parse(activelist.getQueueStartTime());
                         millis = Timeconvert.getTime();
                         Config.logV("millsss----" + millis);
                     } catch (ParseException e) {
@@ -922,7 +922,7 @@ String header;
         {
             @Override
             public void onClick(View v) {
-                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getProvider().getId()), activelist.getProvider().getBusinessName());
+                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getId()), activelist.getBusinessName());
 
             }
         });
@@ -1026,7 +1026,7 @@ String header;
 
         icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_star_line, 0, 0);
         if (activelist.getRating() != null) {
-            Config.logV("Rating " + activelist.getRating().getStars() + "Activepr" + activelist.getProvider().getBusinessName());
+            Config.logV("Rating " + activelist.getRating().getStars() + "Activepr" + activelist.getBusinessName());
             if (Integer.parseInt(activelist.getRating().getStars()) > 0) {
 
                 icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.star_full, 0, 0);
@@ -1044,7 +1044,7 @@ String header;
             @Override
             public void onClick(View v) {
 
-                callback.onMethodRating(String.valueOf(activelist.getProvider().getId()), activelist.getYnwUuid(),mTodayFlag,mFutureFlag,mOldFlag);
+                callback.onMethodRating(String.valueOf(activelist.getId()), activelist.getYnwUuid(),mTodayFlag,mFutureFlag,mOldFlag);
             }
         });
 
@@ -1064,7 +1064,7 @@ String header;
         }
 
 
-        Config.logV("Header Title" + header+"Title"+activelist.getProvider().getBusinessName()+"Group"+groupPosition);
+        Config.logV("Header Title" + header+"Title"+activelist.getBusinessName()+"Group"+groupPosition);
 
 
         return view;
