@@ -6,6 +6,16 @@ package com.jaldeeinc.jaldee.response;
 
 public class CoupnResponse {
 
+    public String getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(String discountType) {
+        this.discountType = discountType;
+    }
+
+    String discountType;
+
     public String getJaldeeCouponCode() {
         return jaldeeCouponCode;
     }

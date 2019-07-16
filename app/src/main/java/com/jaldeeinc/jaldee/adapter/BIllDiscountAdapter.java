@@ -11,6 +11,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.BillModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,23 +47,24 @@ public class BIllDiscountAdapter extends RecyclerView.Adapter<BIllDiscountAdapte
 
     @Override
     public void onBindViewHolder(final BIllDiscountAdapter.BillAdapterViewHolder holder, int position) {
-
+        DecimalFormat format = new DecimalFormat("0.00");
         holder.txtdiscountName.setText(String.valueOf(billServiceData.get(position).getName()));
         if(billServiceData.get(position).getDiscValue()!=0.0) {
             Config.logV("VALUE @@@@@@"+String.valueOf(billServiceData.get(position).getDiscValue()));
-            holder.txtdiscountVal.setText("(-)₹ " + String.valueOf(billServiceData.get(position).getDiscValue()));
+
+            holder.txtdiscountVal.setText("(-)₹ " + format.format(billServiceData.get(position).getDiscValue()));
         }
 
         if(billServiceData.get(position).getCouponValue()!=0.0) {
 
             Config.logV("VALUE @@@@@@"+String.valueOf(billServiceData.get(position).getCouponValue()));
-            holder.txtdiscountVal.setText("(-)₹ " + String.valueOf(billServiceData.get(position).getCouponValue()));
+            holder.txtdiscountVal.setText("(-)₹ " + format.format(billServiceData.get(position).getCouponValue()));
         }
 
         if(billServiceData.get(position).getDiscountValue()!=0.0) {
 
             Config.logV("VALUE @@@@@@"+String.valueOf(billServiceData.get(position).getDiscountValue()));
-            holder.txtdiscountVal.setText("(-)₹ " + String.valueOf(billServiceData.get(position).getDiscountValue()));
+            holder.txtdiscountVal.setText("(-)₹ " + format.format(billServiceData.get(position).getDiscountValue()));
         }
 
 

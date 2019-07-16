@@ -947,7 +947,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         rating.setRating(getBussinessData.getAvgRating());
 
 
-        tv_domain.setText(getBussinessData.getServiceSector().getDisplayName());
+        if(getBussinessData.getServiceSector().getDisplayName()!=null && getBussinessData.getServiceSubSector().getDisplayName()!=null){
+            tv_domain.setText(getBussinessData.getServiceSector().getDisplayName()+" "+"("+getBussinessData.getServiceSubSector().getDisplayName()+")");
+        }
+
 
 
         if (getBussinessData.getBusinessDesc() != null) {

@@ -253,7 +253,7 @@
                                 android:paddingLeft="@dimen/default_padding"
                                 android:paddingRight="@dimen/default_padding"
                                 android:paddingBottom="@dimen/padding15"
-                                android:visibility="gone">
+                                    android:visibility="gone">
 
                                 <ImageView
                                     android:id="@+id/ic_left"

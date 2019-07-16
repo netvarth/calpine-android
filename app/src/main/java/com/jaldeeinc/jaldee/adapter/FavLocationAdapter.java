@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -42,7 +43,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_loc,tv_date,tv_waittime,tv_Open;
+        TextView tv_loc,tv_date,tv_waittime,tv_Open,tv_qmessage;
         Button btn_checkin;
         View divider;
         public MyViewHolder(View view) {
@@ -54,6 +55,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             tv_Open=(TextView)view.findViewById(R.id.txtOpen);
             btn_checkin=(Button) view.findViewById(R.id.btn_checkin);
             divider=(View)view.findViewById(R.id.divider);
+            tv_qmessage = view.findViewById(R.id.qmessage);
         }
     }
 
@@ -98,6 +100,13 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             myViewHolder.divider.setVisibility(View.GONE);
         }else{
             myViewHolder.divider.setVisibility(View.VISIBLE);
+        }
+
+        if (queueList.getMessage() != null) {
+            myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+            myViewHolder.tv_qmessage.setText(queueList.getMessage());
+        } else {
+            myViewHolder.tv_qmessage.setVisibility(View.GONE);
         }
 
         myViewHolder.btn_checkin.setOnClickListener(new View.OnClickListener() {

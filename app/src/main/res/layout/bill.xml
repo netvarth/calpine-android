@@ -113,6 +113,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/billLabel"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"
@@ -122,6 +123,7 @@
                             android:textSize="@dimen/txtsize_12" />
 
                         <TextView
+                            android:id="@+id/gstLabel"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.6"
@@ -204,11 +206,46 @@
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/jcLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding7"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.2"
+                            android:gravity="left"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                        <TextView
+                            android:visibility="gone"
+                            android:id="@+id/jaldeeCouponLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Jaldee Coupon "
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:gravity="right"
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+                    </LinearLayout>
+
+
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/coupon_added"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding7"
                         android:nestedScrollingEnabled="false">
                     </android.support.v7.widget.RecyclerView>
 
@@ -218,7 +255,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding3"
-                        android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
+                        android:nestedScrollingEnabled="false">
+                    </android.support.v7.widget.RecyclerView>
 
                     <LinearLayout
                         android:id="@+id/taxlayout"

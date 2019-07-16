@@ -41,6 +41,7 @@ import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +63,7 @@ public class BillActivity extends AppCompatActivity {
     TextView tv_provider, tv_customer, tv_date, tv_gstn, tv_bill;
     EditText mbill_coupon_edit;
     BillModel mBillData;
-    TextView tv_paid, tv_totalamt;
+    TextView tv_paid, tv_totalamt,tv_jaldeeCouponLabel,gstLabel;
     RecyclerView recycle_item, recycle_discount_total, coupon_added;
     BillServiceAdapter billServiceAdapter;
     BillCouponAdapter billCouponAdapter;
@@ -75,8 +76,8 @@ public class BillActivity extends AppCompatActivity {
     ArrayList<BillModel> coupanArrayList = new ArrayList<>();
 
     Button btn_pay, mbill_applybtn;
-    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax;
-    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin;
+    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax,billLabel;
+    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin,jcLayout;
     String sAmountPay;
     String accountID;
     String payStatus, consumer;
@@ -99,7 +100,9 @@ public class BillActivity extends AppCompatActivity {
         tv_customer = findViewById(R.id.txtcustomer);
         tv_date = findViewById(R.id.txtdate);
         tv_bill = findViewById(R.id.txtbill);
+        billLabel = findViewById(R.id.billLabel);
         tv_gstn = findViewById(R.id.txtgstn);
+        gstLabel = findViewById(R.id.gstLabel);
         tv_gross = findViewById(R.id.tv_gross);
         txttax = findViewById(R.id.tv_tax);
         txtaxval = findViewById(R.id.txtaxval);
@@ -110,7 +113,9 @@ public class BillActivity extends AppCompatActivity {
         btn_pay = findViewById(R.id.btn_pay);
         recycle_item = findViewById(R.id.recycle_item);
         coupon_added = findViewById(R.id.coupon_added);
+        tv_jaldeeCouponLabel = findViewById(R.id.jaldeeCouponLabel);
         recycle_discount_total = findViewById(R.id.recycle_discount_total);
+        jcLayout = findViewById(R.id.jcLayout);
         TextView tv_title = findViewById(R.id.toolbartitle);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -456,7 +461,8 @@ public class BillActivity extends AppCompatActivity {
 
                         if (mBillData.getNetTotal() != 0.0) {
                             tv_grosstotal.setVisibility(View.VISIBLE);
-                            tv_grosstotal.setText("₹ " + String.valueOf(mBillData.getNetTotal()));
+                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_grosstotal.setText("₹ " + format.format(mBillData.getNetTotal()));
 
                         } else {
                             tv_grosstotal.setVisibility(View.GONE);
@@ -465,15 +471,25 @@ public class BillActivity extends AppCompatActivity {
 
                         if (mBillData.getGstNumber() != null) {
                             tv_gstn.setText(mBillData.getGstNumber());
+                        }else {
+                            tv_gstn.setVisibility(View.GONE);
+                            gstLabel.setVisibility(View.GONE);
                         }
 
-                        tv_bill.setText(String.valueOf(mBillData.getId()));
+                        if(String.valueOf(mBillData.getId()).equals("")){
+                            billLabel.setVisibility(View.GONE);
+                            tv_bill.setVisibility(View.GONE);
+                        }else{
+                            tv_bill.setText(String.valueOf(mBillData.getId()));
+                        }
+
 
 
                         if (mBillData.getNetRate() != 0) {
 
                             amountlayout.setVisibility(View.VISIBLE);
-                            tv_amount.setText("₹ " + String.valueOf(mBillData.getNetRate()));
+                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_amount.setText("₹ " + format.format(mBillData.getNetRate()));
                         } else {
 
                             amountlayout.setVisibility(View.GONE);
@@ -481,7 +497,8 @@ public class BillActivity extends AppCompatActivity {
 
                         if (mBillData.getTotalAmountPaid() != 0) {
                             paidlayout.setVisibility(View.VISIBLE);
-                            tv_paid.setText("₹ " + String.valueOf(mBillData.getTotalAmountPaid()));
+                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_paid.setText("₹ " + format.format(mBillData.getTotalAmountPaid()));
                         } else {
 
                             paidlayout.setVisibility(View.GONE);
@@ -493,13 +510,15 @@ public class BillActivity extends AppCompatActivity {
                         if (total != 0 && total > 0) {
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setVisibility(View.VISIBLE);
-                            tv_totalamt.setText("₹ " + String.valueOf(total));
+                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_totalamt.setText("₹ " + format.format(total));
                             txttotal.setText("Amount Due");
                         } else {
                             tv_totalamt.setVisibility(View.VISIBLE);
                             txttotal.setVisibility(View.VISIBLE);
-                            tv_totalamt.setText("₹ " + Math.abs(total));
-                            txttotal.setText("Refundable amount");
+                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_totalamt.setText("₹ " + format.format(Math.abs(total)));
+                            txttotal.setText("Amount Due");
                             btn_pay.setVisibility(View.INVISIBLE);
                             couponCheckin.setVisibility(View.INVISIBLE);
                         }
@@ -525,11 +544,23 @@ public class BillActivity extends AppCompatActivity {
 
 
                         if (mBillData.getJCoupon() != null) {
+                            if(mBillData.getJCoupon().size()>0 && mBillData.getJCoupon().size()==1){
+                                jcLayout.setVisibility(View.VISIBLE);
+                                tv_jaldeeCouponLabel.setText("Jaldee Coupon");
+                                tv_jaldeeCouponLabel.setVisibility(View.VISIBLE);
+                            }
+                            if(mBillData.getJCoupon().size()>1){
+                                jcLayout.setVisibility(View.VISIBLE);
+                                tv_jaldeeCouponLabel.setText("Jaldee Coupons");
+                                tv_jaldeeCouponLabel.setVisibility(View.VISIBLE);
+                            }
                             RecyclerView.LayoutManager cLayoutManager = new LinearLayoutManager(mCOntext);
                             coupon_added.setLayoutManager(cLayoutManager);
                             billCouponAdapter = new BillCouponAdapter(mBillData.getJCoupon());
                             coupon_added.setAdapter(billCouponAdapter);
                             billCouponAdapter.notifyDataSetChanged();
+                        }else{
+                            jcLayout.setVisibility(View.GONE);
                         }
 
 

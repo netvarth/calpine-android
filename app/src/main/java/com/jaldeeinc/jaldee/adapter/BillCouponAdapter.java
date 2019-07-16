@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -44,10 +45,13 @@ public class BillCouponAdapter extends RecyclerView.Adapter<BillCouponAdapter.Bi
 
     @Override
     public void onBindViewHolder(BillCouponAdapter.BillCouponViewHolder holder, int position) {
-        final String couponName = this.keyList.get(position);
-        final String couponValue = this.valueList.get(position);
-        holder.txt_coupon_name.setText(couponName);
-        holder.txt_coupon_value.setText("(-) ₹"+couponValue);
+         String couponName = this.keyList.get(position);
+         String couponValue = this.valueList.get(position);
+        holder.txt_coupon_name.setText("( "+couponName+" )");
+        couponValue = couponValue.replaceAll("^\"|\"$", "");
+        Float f= Float.parseFloat(couponValue);
+        DecimalFormat format = new DecimalFormat("0.00");
+        holder.txt_coupon_value.setText("(-) ₹"+format.format(f));
         Log.i("JCoupon Name", couponName);
         Log.i("JCoupon Value", couponValue);
 

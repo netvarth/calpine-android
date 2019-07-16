@@ -649,11 +649,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
             Config.logV("Place @@@@@@@@@@@@@@" + searchdetailList.getDistance());
             Double distance = Double.valueOf(searchdetailList.getDistance()) * 1.6;
-            if (distance >= 1) {
-                myViewHolder.tv_location.setText(searchdetailList.getPlace1() + " ( " + String.format("%.2f", distance) + " km )");
-            } else {
-                myViewHolder.tv_location.setText(searchdetailList.getPlace1() + " (<1 km) ");
-            }
+
+            myViewHolder.tv_location.setText(searchdetailList.getPlace1() + " ( " + String.format("%.2f", distance) + " km )");
         } else {
             myViewHolder.tv_location.setVisibility(View.GONE);
         }

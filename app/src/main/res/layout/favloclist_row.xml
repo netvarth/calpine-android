@@ -51,6 +51,18 @@
         android:textColor="@color/title_grey"
         android:textSize="@dimen/txtsize_hint" />
 
+    <TextView
+        android:layout_marginLeft="@dimen/dimen_5dp"
+        android:id="@+id/qmessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding2"
+        android:layout_marginBottom="@dimen/padding2"
+        android:gravity="left"
+        android:text="Message"
+        android:textColor="@color/title_grey"
+        android:textSize="@dimen/txtsize_12" />
+
     <Button
         android:id="@+id/btn_checkin"
         style="?android:attr/borderlessButtonStyle"

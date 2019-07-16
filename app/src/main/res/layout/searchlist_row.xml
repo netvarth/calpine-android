@@ -339,7 +339,7 @@
             android:layout_marginBottom="@dimen/padding2"
             android:gravity="left"
             android:text="Message"
-            android:textColor="@color/title_consu"
+            android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_12"
          />
 
