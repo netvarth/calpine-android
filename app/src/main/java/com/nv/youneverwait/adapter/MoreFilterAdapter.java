@@ -105,6 +105,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
         this.passedFormulaArray = passedFormulaArray;
 
         for (int i = 0; i < passedFormulaArray.size(); i++) {
+            Config.logV("PRINT VAL FORMULA@@111" + passedFormulaArray.get(i));
             passFormula.add(passedFormulaArray.get(i));
         }
         Config.logV("Domain SELECTED" + domainSelected);
@@ -175,7 +176,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
 
         if (filterList.getDataType().equalsIgnoreCase("EnumList") || filterList.getDataType().equalsIgnoreCase("Enum") || filterList.getDataType().equalsIgnoreCase("Gender")) {
-           // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
+            // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.LexpandView.removeAllViews();
 
 
@@ -217,7 +218,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
         } else if (filterList.getDataType().equalsIgnoreCase("Rating")) {
             Config.logV("RATING @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-           // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
+            // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.LexpandView.removeAllViews();
 
             boolean fAvailable = false;
@@ -340,7 +341,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
 
         } else if (filterList.getDataType().equalsIgnoreCase("Boolean")) {
-           // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
+            // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.LexpandView.removeAllViews();
             Config.logV("Rating @@@@@@@@@@@@@@");
 
@@ -434,7 +435,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
 
         } else if (filterList.getDataType().equalsIgnoreCase("Spinner")) {
-           // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
+            // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.LexpandView.removeAllViews();
             // keyFormula.add("sector");
 
@@ -471,7 +472,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
 
             final int pos = getIndex((ArrayList<Domain_Spinner>) filterList.getEnumeratedConstants(), domainSelect);
-
+            Config.logV("Sector @@@@@@@@@@@@@@@@@@@@@@@@"+domainSelect+"position"+pos);
 
             //spinner.setOnItemSelectedListener(new CustomSpinner(filterAdapterCallback, recyclview_popup,pos,passFormula,keyFormula));
             spinner.setAdapter(adapter);
@@ -485,6 +486,9 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                         String query = "sector:'" + spinnerSelect.getDomain() + "'";
 
                         domainNAme = spinnerSelect.getDomain();
+
+
+
                                    /* for (int i = 0; i < passFormula.size(); i++) {
                                         //if (passFormula.get(i).contains("sector")) {
 
@@ -519,6 +523,17 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                 }
             });
+            for (int j = 0; j < passFormula.size(); j++) {
+                String splitsFormula[] = passFormula.get(j).toString().split(":");
+
+                if (splitsFormula[0].equalsIgnoreCase("sector")) {
+
+                    filterList.setExpand(true);
+                    myViewHolder.LexpandView.setVisibility(View.VISIBLE);
+
+                }
+            }
+
             if (domainSelect.equalsIgnoreCase("Select")) {
                 spinner.setSelection(0);
             } else {
@@ -529,7 +544,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
 
         } else if (filterList.getDataType().equalsIgnoreCase("Spinner_subdomain")) {
-          //  myViewHolder.LexpandView.setVisibility(View.VISIBLE);
+            //  myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.LexpandView.removeAllViews();
 
             Spinner spinner = new Spinner(mContext, Spinner.MODE_DIALOG);
@@ -586,7 +601,11 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                         }
 
 
+
+                        passFormula = new ArrayList<>();
                         passFormula.add(query);
+                        String query_sector = "sector:'" + domainSelect + "'";
+                        passFormula.add(query_sector);
 
                         Config.logV("DOMAIN NAME @@@@@@@@@@@@@@@@@@" + domainNAme + "Domain Select" + domainSelect);
 
@@ -597,7 +616,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                         for (String str : passFormula) {
 
-                            Config.logV("PRINT  SUBSPINNERKK@ ####@@@@@@@@@@@@@@" + str);
+                            Config.logV("PRINT VAL FORMULA@@HHHH" + str);
                         }
 
                     }
@@ -608,6 +627,17 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                 }
             });
+
+            for (int j = 0; j < passFormula.size(); j++) {
+                String splitsFormula[] = passFormula.get(j).toString().split(":");
+
+                if (splitsFormula[0].equalsIgnoreCase("sub_sector")) {
+
+                    filterList.setExpand(true);
+                    myViewHolder.LexpandView.setVisibility(View.VISIBLE);
+
+                }
+            }
 
             if (subDomianSelect.equalsIgnoreCase("Select")) {
                 spinner.setSelection(0);
@@ -636,7 +666,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
             }
 
 
-           // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
+            // myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.LexpandView.removeAllViews();
 
 
@@ -653,7 +683,8 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                 if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex())) {
 
-
+                    filterList.setExpand(true);
+                    myViewHolder.LexpandView.setVisibility(View.VISIBLE);
                     editText.setText(splitsFormula[1].toString().replace("'", ""));
 
                 }
@@ -1137,8 +1168,10 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                                         }
                                     }
 
-
+                                    passFormula = new ArrayList<>();
                                     passFormula.add(query);
+                                    String query_sector = "sector:'" + domainSelect + "'";
+                                    passFormula.add(query_sector);
 
                                     Config.logV("DOMAIN NAME @@@@@@@@@@@@@@@@@@" + domainNAme + "Domain Select" + domainSelect);
 
@@ -1149,7 +1182,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                                     for (String str : passFormula) {
 
-                                        Config.logV("PRINT  SUBSPINNERKK@ ####@@@@@@@@@@@@@@" + str);
+                                        Config.logV("PRINT VAL FORMULA@@HHHHVVV" + str);
                                     }
 
                                 }
@@ -1354,7 +1387,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                         if (passFormula.get(j).toString().contains(name)) {
 
                             cb.setChecked(true);
-                           filterList.setExpand(true);
+                            filterList.setExpand(true);
                             lLayout.setVisibility(View.VISIBLE);
                         }
                     }

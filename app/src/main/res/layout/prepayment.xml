@@ -58,15 +58,15 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/padding5"
         android:background="@color/app_background"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
 
         <Button
             android:id="@+id/btn_paytm"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+
             android:background="@drawable/roundedrect_blue"
             android:text="PayTM"
             android:textAllCaps="false"
@@ -76,12 +76,12 @@
         <Button
             android:id="@+id/btn_payu"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_padding"
-            android:layout_weight="0.5"
+            android:layout_marginTop="@dimen/default_padding"
+
             android:background="@drawable/roundedrect_grey"
-            android:text="PayUMoney"
+            android:text="@string/cc_dc"
             android:textAllCaps="false"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />
