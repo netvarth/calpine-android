@@ -90,8 +90,8 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
     ArrayList<String> passFormula = new ArrayList<>();
 
     ArrayList<String> passedFormulaArray = new ArrayList<>();
-
-    public MoreFilterAdapter(List<RefinedFilters> mFilterList, Context mContext, Activity mActivity, AdapterCallback filterAdapterCallback, RecyclerView recyclepop, String passFormula1, String domainSelected, String subDomain, ArrayList<String> passedFormulaArray) {
+    String subdomainDisplayName;
+    public MoreFilterAdapter(List<RefinedFilters> mFilterList, Context mContext, Activity mActivity, AdapterCallback filterAdapterCallback, RecyclerView recyclepop, String passFormula1, String domainSelected, String subDomain, ArrayList<String> passedFormulaArray,String subdomainDisplayName) {
 
         Config.logV("PASSED FORMULA ARRAY WWWW GGGKKKG@@" + passFormula.size());
         this.mContext = mContext;
@@ -103,6 +103,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
         this.domainSelect = domainSelected;
         this.subDomianSelect = subDomain;
         this.passedFormulaArray = passedFormulaArray;
+        this.subdomainDisplayName=subdomainDisplayName;
 
         for (int i = 0; i < passedFormulaArray.size(); i++) {
             Config.logV("PRINT VAL FORMULA@@111" + passedFormulaArray.get(i));
@@ -547,7 +548,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
             //  myViewHolder.LexpandView.setVisibility(View.VISIBLE);
             myViewHolder.LexpandView.removeAllViews();
 
-            Spinner spinner = new Spinner(mContext, Spinner.MODE_DIALOG);
+            final Spinner spinner = new Spinner(mContext, Spinner.MODE_DIALOG);
             ArrayAdapter<SearchModel> adapter = new ArrayAdapter<SearchModel>(mContext, android.R.layout.simple_spinner_item, (ArrayList<SearchModel>) filterList.getEnumeratedConstants()) {
                 @Override
                 public boolean isEnabled(int position) {
@@ -577,7 +578,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            final int pos = getIndexSubDomain((ArrayList<SearchModel>) filterList.getEnumeratedConstants(), subDomianSelect);
+            final int pos = getIndexSubDomain((ArrayList<SearchModel>) filterList.getEnumeratedConstants(), subdomainDisplayName);
 
             // spinner.setOnItemSelectedListener(new CustomSubDomainSpinner(filterAdapterCallback, recyclview_popup, passFormulaApi, pos));
             spinner.setAdapter(adapter);
@@ -609,7 +610,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                         Config.logV("DOMAIN NAME @@@@@@@@@@@@@@@@@@" + domainNAme + "Domain Select" + domainSelect);
 
-                        filterAdapterCallback.onMethodSubDomainFilter(query, recyclview_popup, spinnerSelect.getName(), domainSelect);
+                        filterAdapterCallback.onMethodSubDomainFilter(query, recyclview_popup, spinnerSelect.getName(), domainSelect,spinnerSelect.getDisplayname());
                         filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
 
                         // Config.logV("PRINT VAL FORMULA@@WWWWWWWW" + query);
@@ -1145,7 +1146,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                        final int pos = getIndexSubDomain((ArrayList<SearchModel>) filterList.getEnumeratedConstants(), subDomianSelect);
+                        final int pos = getIndexSubDomain((ArrayList<SearchModel>) filterList.getEnumeratedConstants(), subdomainDisplayName);
 
                         // spinner.setOnItemSelectedListener(new CustomSubDomainSpinner(filterAdapterCallback, recyclview_popup, passFormulaApi, pos));
                         spinner.setAdapter(adapter);
@@ -1175,7 +1176,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
 
                                     Config.logV("DOMAIN NAME @@@@@@@@@@@@@@@@@@" + domainNAme + "Domain Select" + domainSelect);
 
-                                    filterAdapterCallback.onMethodSubDomainFilter(query, recyclview_popup, spinnerSelect.getName(), domainSelect);
+                                    filterAdapterCallback.onMethodSubDomainFilter(query, recyclview_popup, spinnerSelect.getName(), domainSelect,spinnerSelect.getDisplayname());
                                     filterAdapterCallback.onMethodQuery(passFormula, keyFormula);
 
                                     // Config.logV("PRINT VAL FORMULA@@WWWWWWWW" + query);
@@ -1333,7 +1334,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
         int index = 0;
 
         for (int i = 0; i < spinner.size(); i++) {
-            if (spinner.get(i).getName().equals(myString)) {
+            if (spinner.get(i).getDisplayname().equals(myString)) {
                 index = i;
             }
         }

@@ -506,7 +506,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             @Override
             public void onClick(View v) {
 
-                Config.logV("RefinedSlectedItems @@@@@@@@@@@"+refinedSelectedItems.size());
+
 
 
                     LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -522,7 +522,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     Config.logV("PASSED FORMULA ARRAY@@@@@@@@@@@@" + passedFormulaArray.size());
                     Config.logV("PASSED FORMULA mDomainSpinner@@@@@@@@@@@@" + mDomainSpinner);
-                    if(refinedSelectedItems.size()==0) {
+
+                    if(passedFormulaArray.size()==0) {
+
                         if (mDomainSpinner.equalsIgnoreCase("All")) {
                             ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
                     /*for ( HashMap<String, ArrayList<Domain_Spinner>> hashMap : domain_subdomainArray) {
@@ -542,7 +544,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             if (show_subdomain) {
                                 Config.logV("APi SUBDOMAIN @@@@@@@@@@@@@@@@@" + subdomainName + "RRRR" + mDomainSpinner);
                                 ArrayList<String> emptyList = new ArrayList<>();
-                                ApiSubDomainRefinedFilters(recycle_morefilter, subdomainName, mDomainSpinner, subdomainquery,emptyList);
+                                ApiSubDomainRefinedFilters(recycle_morefilter, subdomainName, mDomainSpinner, subdomainquery,emptyList,"");
                             }
                         }
                     }else{
@@ -584,7 +586,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 } else {
 
                                     //ApiMoreRefinedFilters(recycle_morefilter, domainSelect, "yes", passformula, passedFormulaArray, show_subdomain);
-                                    ApiSubDomainRefinedFilters(recycle_morefilter, subdomain, domainSelect, subdomainquery,passedFormulaArray);
+                                    ApiSubDomainRefinedFilters(recycle_morefilter, subdomain, domainSelect, subdomainquery,passedFormulaArray,subdomainDisplayNamePass);
                                 }
                             }
 
@@ -607,7 +609,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if(subdomain.equalsIgnoreCase("Select")){
                                     subdomain=subdomainName;
                                 }
-                                ApiSubDomainRefinedFilters(recycle_morefilter, subdomain, mDomainSpinner, subdomainquery,passedFormulaArray);
+                                ApiSubDomainRefinedFilters(recycle_morefilter, subdomain, mDomainSpinner, subdomainquery,passedFormulaArray,subdomainDisplayNamePass);
                             }
 
                         }
@@ -2458,20 +2460,22 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         ApiMoreRefinedFilters(recylcepopup, domain, "yes", passformula, emptyList, show_subdomain);
     }
 
+    String subdomainDisplayNamePass="";
     @Override
-    public void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup, String subdomainame, String DomainName) {
+    public void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup, String subdomainame, String DomainName,String subdomainDisplayName) {
         Config.logV("SUBDOMAIN Selector@@@@@@@@@@@@@@@@@@@" + passformula);
         //  MoreItemClick("sector:'" + spinnerDomainSelectedFilter + "'" + "sub_sector:'" + subdomainame + "'");
 
+        subdomainDisplayNamePass=subdomainDisplayName;
         ArrayList<String> emptyList = new ArrayList<>();
         if (DomainName.equalsIgnoreCase("")) {
-            ApiSubDomainRefinedFilters(recyclepopup, subdomainame, mDomainSpinner, passformula,emptyList);
+            ApiSubDomainRefinedFilters(recyclepopup, subdomainame, mDomainSpinner, passformula,emptyList,subdomainDisplayName);
         } else {
-            ApiSubDomainRefinedFilters(recyclepopup, subdomainame, DomainName, passformula,emptyList);
+            ApiSubDomainRefinedFilters(recyclepopup, subdomainame, DomainName, passformula,emptyList,subdomainDisplayName);
         }
     }
 
-    ArrayList<String> refinedSelectedItems=new ArrayList<>();
+    //ArrayList<String> refinedSelectedItems=new ArrayList<>();
     @Override
     public void onMethodQuery(ArrayList<String> sFormula, ArrayList<String> keyFormula) {
 
@@ -2560,8 +2564,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }*/
 
 
-        refinedSelectedItems.clear();
-        refinedSelectedItems.addAll(sFormula);
+      /*  refinedSelectedItems.clear();
+        refinedSelectedItems.addAll(sFormula);*/
         MoreItemClick(queryFormula, query);
         Config.logV("PRINT VAL FORMULA@@" + queryFormula);
 
@@ -2991,7 +2995,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                         Config.logV("Comon Filter size @@@@@@@@@" + commonFilterSortList.size());
-                        mMoreAdapter = new MoreFilterAdapter(commonFilterSortList, mContext, getActivity(), mInterface, recycle_filter, "", domainSelect, "Select", passedFormulaArray);
+                        mMoreAdapter = new MoreFilterAdapter(commonFilterSortList, mContext, getActivity(), mInterface, recycle_filter, "", domainSelect, "Select", passedFormulaArray,"");
                         recycle_filter.setAdapter(mMoreAdapter);
                         mMoreAdapter.notifyDataSetChanged();
 
@@ -3216,7 +3220,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                         Config.logV("Comon Filter size @@@@@@@@@" + otherFilterSortedFinalList.size());
-                        mMoreAdapter = new MoreFilterAdapter(otherFilterSortedFinalList, mContext, getActivity(), mInterface, recycle_filter, passformula, subdomain, "Select", passedFormulaArray);
+                        mMoreAdapter = new MoreFilterAdapter(otherFilterSortedFinalList, mContext, getActivity(), mInterface, recycle_filter, passformula, subdomain, "Select", passedFormulaArray,"");
                         recycle_filter.setAdapter(mMoreAdapter);
                         mMoreAdapter.notifyDataSetChanged();
 
@@ -3253,7 +3257,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
-    private void ApiSubDomainRefinedFilters(final RecyclerView recycle_filter, final String subdomain, final String domain, final String passformula, final ArrayList<String> passFormulaArray) {
+    private void ApiSubDomainRefinedFilters(final RecyclerView recycle_filter, final String subdomain, final String domain, final String passformula, final ArrayList<String> passFormulaArray, final String subdomainDisplayName) {
 
         Config.logV("URL----------SUBDOMAIN--@@@@@@@@@@@@@@@@@@");
         ApiInterface apiService =
@@ -3375,11 +3379,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                         Config.logV("YYYYmergedList@@@@@@@@@" + mergedOtherFilterList.size());
                         if(passFormulaArray.size()==0) {
                             ArrayList<String> emptyList = new ArrayList<>();
-                            mMoreAdapter = new MoreFilterAdapter(mergedOtherFilterList, mContext, getActivity(), mInterface, recycle_filter, passformula, domain, subdomain, emptyList);
+                            mMoreAdapter = new MoreFilterAdapter(mergedOtherFilterList, mContext, getActivity(), mInterface, recycle_filter, passformula, domain, subdomain, emptyList,subdomainDisplayName);
                             recycle_filter.setAdapter(mMoreAdapter);
                             mMoreAdapter.notifyDataSetChanged();
                         }else{
-                            mMoreAdapter = new MoreFilterAdapter(mergedOtherFilterList, mContext, getActivity(), mInterface, recycle_filter, passformula, domain, subdomain, passFormulaArray);
+                            mMoreAdapter = new MoreFilterAdapter(mergedOtherFilterList, mContext, getActivity(), mInterface, recycle_filter, passformula, domain, subdomain, passFormulaArray,subdomainDisplayName);
                             recycle_filter.setAdapter(mMoreAdapter);
                             mMoreAdapter.notifyDataSetChanged();
                         }
