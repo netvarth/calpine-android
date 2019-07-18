@@ -1,38 +1,45 @@
-package com.jaldeeinc.jaldee.service;
 
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
-import android.util.Log;
-import android.widget.RemoteViews;
-
-import com.google.firebase.messaging.FirebaseMessagingService;
-import com.google.firebase.messaging.RemoteMessage;
-import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Home;
-import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.utils.NotificationUtils;
+        package com.jaldeeinc.jaldee.service;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        import android.app.Notification;
+        import android.app.NotificationChannel;
+        import android.app.NotificationManager;
+        import android.app.PendingIntent;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.content.SharedPreferences;
+        import android.graphics.Color;
+        import android.media.RingtoneManager;
+        import android.net.Uri;
+        import android.os.Build;
+        import android.support.v4.app.NotificationCompat;
+        import android.support.v4.content.LocalBroadcastManager;
+        import android.text.TextUtils;
+        import android.util.Log;
+        import android.widget.RemoteViews;
 
-import java.util.Random;
+        import com.google.firebase.iid.FirebaseInstanceId;
+        import com.google.firebase.messaging.FirebaseMessagingService;
+        import com.google.firebase.messaging.RemoteMessage;
+        import com.jaldeeinc.jaldee.R;
+        import com.jaldeeinc.jaldee.activities.Home;
+        import com.jaldeeinc.jaldee.common.Config;
+        import com.jaldeeinc.jaldee.utils.LogUtil;
+        import com.jaldeeinc.jaldee.utils.NotificationUtils;
+        import com.jaldeeinc.jaldee.utils.SharedPreference;
 
-import static android.app.Notification.DEFAULT_SOUND;
-import static android.app.Notification.DEFAULT_VIBRATE;
+
+        import org.json.JSONException;
+        import org.json.JSONObject;
+
+        import java.util.Map;
+        import java.util.Random;
+
+
+        import static android.app.Notification.DEFAULT_SOUND;
+        import static android.app.Notification.DEFAULT_VIBRATE;
 
 
 public class FirebaseService extends FirebaseMessagingService {
@@ -180,6 +187,7 @@ public class FirebaseService extends FirebaseMessagingService {
     public static final String NOTIFICATION_CHANNEL_ID = "10001";
 
 
+
     private void sendNotification(String title, String messageBody) {
 
         Config.logV("Notification ONCLICK@@@@@@@@@@@@@@@@@@@@@@@");
@@ -201,9 +209,9 @@ public class FirebaseService extends FirebaseMessagingService {
             notificationBuilder.setColor(Color.parseColor("#F0B41C"));
         }
 
-        RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notif_custom_view);
+        /*RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notif_custom_view);
         remoteViews.setTextViewText(R.id.txttitle,title);
-        remoteViews.setTextViewText(R.id.txtnotify,messageBody);
+        remoteViews.setTextViewText(R.id.txtnotify,messageBody);*/
 
 
 
@@ -213,7 +221,7 @@ public class FirebaseService extends FirebaseMessagingService {
                 .setPriority(Notification.PRIORITY_MAX) //Important for heads-up notification
                 .setContentText(messageBody)
                 .setAutoCancel(true)
-                .setCustomHeadsUpContentView(remoteViews)
+                //.setCustomHeadsUpContentView(remoteViews)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);

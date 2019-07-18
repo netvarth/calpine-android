@@ -29,6 +29,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -513,7 +514,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 }
 
                 Config.logV("PASSED FORMULA ARRAY@@@@@@@@@@@@" + passedFormulaArray.size());
-                if (mDomainSpinner.equalsIgnoreCase("All")) {
+
+
+//                if(passedFormulaArray.size()==0) {
+
+
+                    if (mDomainSpinner.equalsIgnoreCase("All")) {
                     ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
                 } else {
 

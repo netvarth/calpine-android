@@ -1424,6 +1424,8 @@ public class CheckIn extends AppCompatActivity {
                             }
 
                             Config.logV("TV WAITTIME--------------------" + spannable);
+                            tv_queue.setVisibility(View.GONE);
+                            queuelayout.setVisibility(View.GONE);
 
                         } else {
 

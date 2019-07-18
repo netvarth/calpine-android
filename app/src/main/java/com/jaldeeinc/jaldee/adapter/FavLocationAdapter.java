@@ -113,14 +113,19 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             @Override
             public void onClick(View v) {
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                iCheckIn.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
+                if(queueList.getNextAvailableQueue()!=null){
+                    iCheckIn.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
+                }
                 iCheckIn.putExtra("uniqueID", uniqueId);
                 iCheckIn.putExtra("accountID",queueList.getProvider().getId());
                 iCheckIn.putExtra("from", "favourites");
                 iCheckIn.putExtra("title", title);
                 iCheckIn.putExtra("terminology",terminologys);
                 iCheckIn.putExtra("place", myViewHolder.tv_loc.getText().toString());
-                iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
+                if(queueList.getNextAvailableQueue()!=null){
+                    iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
+                }
+
 
                 mContext.startActivity(iCheckIn);
             }
@@ -129,14 +134,19 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             @Override
             public void onClick(View v) {
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                iCheckIn.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
+               if(queueList.getNextAvailableQueue()!=null){
+                   iCheckIn.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
+               }
                 iCheckIn.putExtra("uniqueID", uniqueId);
                 iCheckIn.putExtra("accountID",queueList.getProvider().getId());
                 iCheckIn.putExtra("from", "favourites_date");
                 iCheckIn.putExtra("title", title);
                 iCheckIn.putExtra("terminology",terminologys);
                 iCheckIn.putExtra("place", myViewHolder.tv_loc.getText().toString());
-                iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
+                if(queueList.getNextAvailableQueue()!=null){
+                    iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
+                }
+
 
                 mContext.startActivity(iCheckIn);
             }
