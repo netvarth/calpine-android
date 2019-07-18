@@ -1126,6 +1126,7 @@ public class CheckIn extends AppCompatActivity {
                     if (response.code() == 200) {
                         mQueueTimeSlotList = response.body();
 
+                        Config.logV("mQueueTimeSlotList--------mQueueTimeSlotList.size()-----------------" + mQueueTimeSlotList.size());
                         if(mQueueTimeSlotList.size()>0) {
                             i = 0;
                             if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null) {
@@ -1606,7 +1607,8 @@ public class CheckIn extends AppCompatActivity {
                             }
 
                             Config.logV("TV WAITTIME--------------------" + spannable);
-
+                            tv_queue.setVisibility(View.GONE);
+                            queuelayout.setVisibility(View.GONE);
                         } else {
 
                             Config.logV("No Checkins-------------------" + mQueueTimeSlotList.size());
