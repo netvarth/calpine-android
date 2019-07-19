@@ -684,12 +684,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 if (searchdetailList.getPlace1() != null) {
                     myViewHolder.tv_location.setVisibility(View.VISIBLE);
-                    // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
-                    Config.logV("Place @@@@@@@@@@@@@@" + searchdetailList.getDistance());
-                    Double distance = Double.valueOf(searchdetailList.getDistance()) * 1.6;
-
-                    myViewHolder.tv_location.setText(searchdetailList.getPlace1() + " ( " + String.format("%.2f", distance) + " km )");
-
+                   // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
+                    Config.logV("Place @@@@@@@@@@@@@@"+searchdetailList.getDistance());
+                    Double distance=Double.valueOf(searchdetailList.getDistance() )*1.6;
+                    if(distance>=1){
+                        myViewHolder.tv_location.setText(searchdetailList.getPlace1()+" ( "+String.format("%.2f", distance)+" km )");
+                    }else{
+                        myViewHolder.tv_location.setText(searchdetailList.getPlace1()+" (<1 km) ");
+                    }
                 } else {
                     myViewHolder.tv_location.setVisibility(View.GONE);
                 }
