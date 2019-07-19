@@ -51,8 +51,8 @@ public class AddCookiesInterceptor implements Interceptor {
       //  String version= SharedPreference.getInstance(context).getStringValue("Version","");
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            int version = pInfo.versionCode;
-           String androidVersion="api-1.0.0,config-1.0.0,android-" +"1.0.0"/*String.valueOf(version)*/;
+            String version = pInfo.versionName;
+           String androidVersion="api-1.0.0,config-1.0.0,android-" +version;
 
 
 

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckIn;
+import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
@@ -26,6 +29,7 @@ import com.jaldeeinc.jaldee.response.SearchSetting;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +50,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         TextView tv_loc,tv_date,tv_waittime,tv_Open,tv_qmessage;
         Button btn_checkin;
         View divider;
+        RecyclerView recycleview_contact;
         public MyViewHolder(View view) {
             super(view);
 
@@ -55,6 +60,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             tv_Open=(TextView)view.findViewById(R.id.txtOpen);
             btn_checkin=(Button) view.findViewById(R.id.btn_checkin);
             divider=(View)view.findViewById(R.id.divider);
+            recycleview_contact=(RecyclerView)view.findViewById(R.id.recycleview_contact);
             tv_qmessage = view.findViewById(R.id.qmessage);
         }
     }
@@ -63,7 +69,8 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     boolean mShowWaitTime = false;
     SearchSetting searchSetting;
     String uniqueId,title,terminologys;
-    public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting,String uniqueID,String title,String terminology) {
+    ContactAdapterCallback contactAdapterCallback;
+    public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting,String uniqueID,String title,String terminology, ContactAdapterCallback contactAdapterCallback) {
         this.mContext = mContext;
         this.mQueueList = mQueueList;
         this.mFavList=mFavList;
@@ -71,6 +78,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         this.uniqueId=uniqueID;
         this.title=title;
         this.terminologys=terminology;
+        this.contactAdapterCallback=contactAdapterCallback;
 
     }
 
@@ -205,6 +213,11 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                             myViewHolder.btn_checkin.setEnabled(false);
 
                         }
+
+
+
+
+
                     } else {
 
                         myViewHolder.btn_checkin.setVisibility(View.GONE);
@@ -221,6 +234,18 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 }
 
 
+                if(mFavList.get(i).getPhoneNumbers()!=null){
+                    if(mFavList.get(i).getPhoneNumbers().size()>0){
+                        myViewHolder.recycleview_contact.setVisibility(View.VISIBLE);
+                        Fav_ContactAdapter checkAdapter = new Fav_ContactAdapter(mFavList.get(i).getPhoneNumbers(), mContext,contactAdapterCallback);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                        myViewHolder.recycleview_contact.setLayoutManager(mLayoutManager);
+                        myViewHolder.recycleview_contact.setAdapter(checkAdapter);
+                        checkAdapter.notifyDataSetChanged();
+                    }else{
+                        myViewHolder.recycleview_contact.setVisibility(View.GONE);
+                    }
+                }
 
             }
         }
@@ -237,15 +262,18 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             myViewHolder.tv_Open.setVisibility(View.GONE);
         }
 
-        if(searchSetting!=null) {
+        if(searchSetting!=null && searchSetting.getCalculationMode()!=null) {
             if (!searchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") )  {
                 mShowWaitTime = true;
             } else {
-                if(searchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && queueList.getNextAvailableQueue().isShowToken()){
-                    mShowWaitTime = true;
-                }else {
-                    mShowWaitTime = false;
+                if(queueList.getNextAvailableQueue()!=null){
+                    if(searchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && queueList.getNextAvailableQueue().isShowToken()){
+                        mShowWaitTime = true;
+                    }else {
+                        mShowWaitTime = false;
+                    }
                 }
+
 
 
             }

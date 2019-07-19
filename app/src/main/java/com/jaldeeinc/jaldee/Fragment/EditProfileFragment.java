@@ -1,17 +1,22 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -28,6 +33,8 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
+import com.tsongkha.spinnerdatepicker.DatePicker;
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -139,9 +147,10 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         tv_title.setTypeface(tyface);
 
 
-            btn_edtSubmit.setOnClickListener(new View.OnClickListener() {
+        btn_edtSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(!txtfirstname.getText().toString().equalsIgnoreCase("")&&!txtlastname.getText().toString().equalsIgnoreCase("")) {
                     if (!txtdob.getText().toString().equalsIgnoreCase("")) {
                         String dateSelected = txtdob.getText().toString().replaceAll("-", "/");
@@ -155,11 +164,13 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
                         }
                     } else {
                         ApiEditProfileDetail();
-
                     }
                 }else{
                     Toast.makeText(mContext, "Please enter your name", Toast.LENGTH_LONG).show();
                 }
+
+
+
             }
         });
         //setupUI(row.findViewById(R.id.Llayout));
@@ -387,8 +398,8 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
                 SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
                 finalDate = timeFormat.format(myDate);
             }
-            Config.logV("FINAL DATE @@@@@@@@@@@@@@"+finalDate);
 
+Config.logV("FINAL DATE @@@@@@@@@@@@@@"+finalDate);
             jsonObj.put("dob", finalDate);
 
         } catch (JSONException e) {
@@ -411,8 +422,10 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
                     if (response.code() == 200) {
                         if (response.body().string().equalsIgnoreCase("true")) {
                             //   Config.logV("PopBack---------------"+getFragmentManager().getBackStackEntryCount());
+
                             SharedPreference.getInstance(mContext).setValue("firstname", txtfirstname.getText().toString());
                             SharedPreference.getInstance(mContext).setValue("lastname", txtlastname.getText().toString());
+
                             Toast.makeText(mContext, "Profile has been updated successfully ", Toast.LENGTH_LONG).show();
                             getFragmentManager().popBackStackImmediate();
                            /* ProfileFragment pfFragment = new ProfileFragment();

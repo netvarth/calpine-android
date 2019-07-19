@@ -162,7 +162,8 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
 
                     String timeFORAMT = getDate(finalcheckin, "hh:mm a");
 
-                    myViewHolder.tv_waittime.setText(timeFORAMT);
+
+                    myViewHolder.tv_waittime.setText(checklist.getDate());
 
                 }
 

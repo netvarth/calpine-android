@@ -31,6 +31,7 @@ import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
+import com.jaldeeinc.jaldee.response.CheckInModel;
 
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import java.util.Map;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;

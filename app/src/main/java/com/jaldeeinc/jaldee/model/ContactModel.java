@@ -1,5 +1,7 @@
 package com.jaldeeinc.jaldee.model;
 
+import com.jaldeeinc.jaldee.adapter.ContactDetailAdapter;
+
 /**
  * Created by sharmila on 3/12/18.
  */

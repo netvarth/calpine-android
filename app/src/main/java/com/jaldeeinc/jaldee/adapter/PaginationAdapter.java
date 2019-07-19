@@ -7,10 +7,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -696,7 +700,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             @Override
                             public void onClick(View v) {
                                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                                iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
+                                if(searchdetailList.getmLoc()!=null){
+                                    iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
+                                }
                                 iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
                                 iCheckIn.putExtra("accountID", searchdetailList.getId());
 

@@ -33,6 +33,7 @@ import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -218,7 +219,8 @@ public class PaymentActivity extends AppCompatActivity {
 
         final EditText edt_message = (EditText) findViewById(R.id.edt_message);
         TextView txtamt = (TextView) findViewById(R.id.txtamount);
-        txtamt.setText("Rs." + String.valueOf(amountDue));
+        DecimalFormat format = new DecimalFormat("0.00");
+        txtamt.setText("Rs." + format.format(amountDue));
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         txtamt.setTypeface(tyface1);

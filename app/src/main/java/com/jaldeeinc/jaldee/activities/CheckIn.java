@@ -66,6 +66,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2375,7 +2376,8 @@ public class CheckIn extends AppCompatActivity {
 
                                     txtprepayment.setText("Prepayment Amount ");
 
-                                    txtamt.setText("Rs." + sAmountPay);
+                                    DecimalFormat format = new DecimalFormat("0.00");
+                                    txtamt.setText("Rs." + format.format(sAmountPay));
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);

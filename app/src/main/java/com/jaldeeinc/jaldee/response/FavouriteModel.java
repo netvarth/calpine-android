@@ -1,7 +1,9 @@
 package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.jaldeeinc.jaldee.model.ContactModel;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -128,11 +130,15 @@ public class FavouriteModel {
 
     String locationId;
 
-
-
     public int getLocId() {
         return id;
     }
+
+    public ArrayList<ContactModel> getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    ArrayList<ContactModel> phoneNumbers;
 
 
 }

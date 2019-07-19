@@ -24,9 +24,9 @@ public interface AdapterCallback {
 
     void onMethodJaldeeLogo(String ynw_verified,String provider);
 
-    void onMethodFilterRefined(String passformula, RecyclerView recyclepopup, String domainame);
+    void onMethodFilterRefined(String passformula, RecyclerView recyclepopup,String domainame);
 
-    void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup,String subdomainame,String domainName);
+    void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup,String subdomainame,String domainName,String displayNameSubdomain);
 
     void onMethodQuery(ArrayList<String> formula,ArrayList<String> key);
     void onMethodFirstCoupn(String uniqueid);

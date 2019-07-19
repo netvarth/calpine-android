@@ -1,14 +1,20 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +40,9 @@ import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
-
+import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
+import com.jaldeeinc.jaldee.utils.LogUtil;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,7 +64,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FavouriteFragment extends RootFragment implements FavAdapterOnCallback/*,FragmentInterface*/ {
+public class FavouriteFragment extends RootFragment implements FavAdapterOnCallback,ContactAdapterCallback/*,FragmentInterface*/ {
 
 
     public FavouriteFragment() {
@@ -73,6 +82,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
     ArrayList<FavouriteModel> mFavModelList = new ArrayList<>();
     TextView tv_nofav;
     DatabaseHandler db;
+    ContactAdapterCallback contactcallback;
     SearchTerminology mSearchTerminology;
     String terminology;
 
@@ -95,6 +105,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
         tv_title.setText("My Favourites");
         tv_title.setTypeface(tyface);
         callback = (FavAdapterOnCallback) this;
+        contactcallback=(ContactAdapterCallback)this;
         tv_nofav = (TextView) row.findViewById(R.id.txt_nofav);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         mrRecylce_fav = (RecyclerView) row.findViewById(R.id.recylce_fav);
@@ -151,8 +162,6 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
                         mFavList = response.body();
                         mFavModelList.addAll(response.body());
-//                        Log.i("nidesh",new Gson().toJson(mFavModelList));
-//                        Log.i("nidesh1",new Gson().toJson(mFavList));
                         if (mFavList.size() > 0) {
 
                             db = new DatabaseHandler(mContext);
@@ -164,7 +173,6 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                                 fav.setId(mFavList.get(i).getId());
                                 fav.setUniqueId(mFavList.get(i).getUniqueId());
                                 fav.setBusinessName(mFavList.get(i).getBusinessName());
-//                                fav.setPlace(mFavList.get(i).getLocations().get(i).getPlace());
                                 Config.logV("Revel Phone--@@@------------"+mFavList.get(i).isRevealPhoneNumber()+"Title"+mFavList.get(i).getBusinessName());
                                 String locid = "";
                                 String place = "";
@@ -182,7 +190,6 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                                     }
                                 }
                                 Config.logV("Loc ID @@@@@@@@@@@" + locid);
-                                Config.logV("Loc ID @@@@@@@@@@@" + place);
                                 fav.setLocationId(locid);
                                 fav.setPlace(place);
                                 db.insertFavInfo(fav);
@@ -317,13 +324,13 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
 
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,terminology);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,terminology,contactcallback);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
                     } else {
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,terminology);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,terminology,contactcallback);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
 
@@ -445,6 +452,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
                         mSearchQueueList = response.body();
                         ApiSearchViewSetting(rfavlocRecycleview);
+
                     }
 
 
@@ -457,7 +465,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
             @Override
             public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
                 // Log error here since request failed
-                Config.logV("Fail1234---------------" + t.toString());
+                Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(mActivity, mDialog);
 
@@ -466,69 +474,6 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
 
     }
-//
-//    private void ApiSearchViewID(int mProviderid, ArrayList<String> ids, final RecyclerView rfavlocRecycleview) {
-//
-//
-//        ApiInterface apiService =
-//                ApiClient.getClient(mContext).create(ApiInterface.class);
-//
-//
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//
-//        Config.logV("IDS SIZE @@@@@@@@@@@@@@@@@@@@"+ids.size());
-//        List<String> idList = Arrays.asList(ids.get(0).split(","));
-//
-//
-//        String idPass = "";
-//        for (int i = 0; i < idList.size(); i++) {
-//
-//            idPass += mProviderid + "-" + idList.get(i) + ",";
-//        }
-//
-//        Config.logV("IDS_--------------------" + idPass);
-//        Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
-//
-//        call.enqueue(new Callback<ArrayList<QueueList>>() {
-//            @Override
-//            public void onResponse(Call<ArrayList<QueueList>> call, Response<ArrayList<QueueList>> response) {
-//
-//                try {
-//
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(mActivity, mDialog);
-//
-//                    Config.logV("URL-------SEARCH--------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//
-//                    if (response.code() == 200) {
-//
-//                        mSearchQueueList = response.body();
-//                        ApiSearchViewSetting(rfavlocRecycleview);
-//
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(mActivity, mDialog);
-//
-//            }
-//        });
-//
-//
-//    }
-
 
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
 
@@ -698,10 +643,56 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
 
     }
+    private final int CALL_REQUEST = 100;
+    String phoneNumber;
+    public void callPhoneNumber(String phNo) {
+        try {
 
-    /*@Override
-    public void fragmentBecameVisible() {
+            phoneNumber = phNo;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
 
+                    //requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST);
 
-    }*/
+                    requestPermissions(new String[]{
+                            Manifest.permission.CALL_PHONE}, CALL_REQUEST);
+
+                    return;
+                } else {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + phNo));
+                    startActivity(callIntent);
+                }
+            } else {
+
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + phNo));
+                startActivity(callIntent);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == CALL_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Config.logV("CALL GRANTED @@@@@@@@@@@@@@");
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(callIntent);
+            } else {
+                Toast.makeText(mContext, getResources().getString(R.string.call_permission_denied_message), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onMethodContactCallback(String type, String value) {
+        if (type.equalsIgnoreCase("Phoneno")) {
+            callPhoneNumber(value);
+        }
+    }
 }

@@ -22,16 +22,16 @@
         android:background="@color/app_background"
         android:layout_marginRight="@dimen/padding5"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/txtjaldeeVerified"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_padding"
-            android:textColor="@color/title_consu"
-            android:textSize="@dimen/txtsize_14"
-            android:padding="@dimen/padding5"
-            android:background="@color/view_border"
-            android:text="Jaldee Verified"/>
+    <TextView
+        android:id="@+id/txtjaldeeVerified"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_padding"
+        android:textColor="@color/title_consu"
+        android:textSize="@dimen/txtsize_14"
+        android:padding="@dimen/padding5"
+        android:background="@color/view_border"
+        android:text="Jaldee Verified"/>
         <TextView
             android:id="@+id/txtDistance"
             android:layout_width="match_parent"

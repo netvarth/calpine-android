@@ -34,6 +34,8 @@ import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
+import com.jaldeeinc.jaldee.model.CheckSumModelTest;
+import com.jaldeeinc.jaldee.payment.PayUMoneyWebview;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
@@ -44,6 +46,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import retrofit2.Call;
@@ -216,7 +219,8 @@ public class BillActivity extends AppCompatActivity {
 
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-                        txtamt.setText("Rs." + sAmountPay);
+                        DecimalFormat format = new DecimalFormat("0.00");
+                        txtamt.setText("Rs." + format.format(sAmountPay));
                         Typeface tyface1 = Typeface.createFromAsset(mCOntext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         txtamt.setTypeface(tyface1);
@@ -275,8 +279,10 @@ public class BillActivity extends AppCompatActivity {
 
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
+
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
+
                     if (response.code() == 200) {
 
                         mPaymentData = response.body();

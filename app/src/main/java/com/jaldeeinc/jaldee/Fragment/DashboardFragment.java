@@ -56,6 +56,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.gson.Gson;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
@@ -67,6 +68,8 @@ import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.adapter.ActiveCheckInAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchListAdpter;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
+import com.jaldeeinc.jaldee.payment.PaymentGateway;
+import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -74,10 +77,13 @@ import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.LanLong;
 import com.jaldeeinc.jaldee.model.ListCell;
+import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
 import com.jaldeeinc.jaldee.utils.EmptySubmitSearchView;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
+import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
@@ -167,7 +173,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     static String mlocName;
     ImageView img_arrow;
 
-    String subdomainquery,subdomainName;
+    String subdomainquery, subdomainName;
+
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
 
@@ -210,7 +217,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         dynaText.setTypeface(tyface);
                         dynaText.setText(mPopularSearchList.get(k).getDisplayname());
                         dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
-
                         dynaText.setTextSize(12);
                         dynaText.setTextColor(getResources().getColor(R.color.black));
                         dynaText.setPadding(15, 10, 15, 10);
@@ -252,16 +258,18 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     ImageView ic_refinedFilter;
     static Activity mActivity;
     DatabaseHandler db;
-    boolean userIsInteracting=false;
+    boolean userIsInteracting = false;
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // do something when visible.
-            userIsInteracting=false;
-            Config.logV("Spinner ITEM NOT CLICKED @@@@@@@@@@@@@@@@"+userIsInteracting);
+            userIsInteracting = false;
+            Config.logV("Spinner ITEM NOT CLICKED @@@@@@@@@@@@@@@@" + userIsInteracting);
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -288,12 +296,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             public void onClick(View v) {
 
                 mSearchView.setQuery("", false);
-                Intent ifilter=new Intent(mContext, FilterActivity.class);
-                ifilter.putExtra("lat",String.valueOf(latitude));
-                ifilter.putExtra("longt",String.valueOf(longitude));
+                Intent ifilter = new Intent(mContext, FilterActivity.class);
+                ifilter.putExtra("lat", String.valueOf(latitude));
+                ifilter.putExtra("longt", String.valueOf(longitude));
                 ifilter.putExtra("locName", mCurrentLoc.getText().toString());
                 ifilter.putExtra("spinnervalue", spinnerTxtPass);
-                ifilter.putExtra("sector",mDomainSpinner);
+                ifilter.putExtra("sector", mDomainSpinner);
                 startActivity(ifilter);
 
             }
@@ -366,7 +374,18 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //APiGetDomain();
-        APiSearchList();
+
+        if (Config.isOnline(getActivity())) {
+            APiSearchList();
+        }else{
+            DatabaseHandler db = new DatabaseHandler(mContext);
+
+            domainList.clear();
+            domainList=db.getDomain();
+            ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            mSpinnerDomain.setAdapter(adapter);
+        }
 
         mCurrentLoc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -418,7 +437,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
-       // mSpinnerDomain.setAdapter(adapter);
+        // mSpinnerDomain.setAdapter(adapter);
 
         mSpinnerDomain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -433,39 +452,46 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 Config.logV("Selected-----------" + spinnerTxtPass);
 
 
-                Config.logV("Spinner ITEM NOT CLICKED $$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+userIsInteracting);
-                if(userIsInteracting){
+                Config.logV("Spinner ITEM NOT CLICKED $$$$$$$$$$$$$$$$$$$$$$$$$$$$$" + userIsInteracting);
+                if (userIsInteracting) {
                     Config.logV("Spinner ITEM CLICKED $$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                     SpinnerItemCLick();
                 }
-                userIsInteracting=true;
+                userIsInteracting = true;
 
 
                 /////////test code///////////////////////////
 
-                is_MoreClick=false;
+                is_MoreClick = false;
                 img_arrow.setImageResource(R.drawable.icon_down_arrow_blue);
                 tv_More.setText("More");
                 mPopularSearchList.clear();
                 if (mDomainSpinner.equalsIgnoreCase("All")) {
-                    mPopular_AllSearchList.addAll(mGLobalSearch);
+                    db=new DatabaseHandler(mContext);
+                    mPopular_AllSearchList = db.getPopularSearch("All");
+                    // mPopular_AllSearchList.addAll(mGLobalSearch);
                     mPopularSearchList = mPopular_AllSearchList;
+                    Config.logV("getPopularSearch Search Size-------------" + mPopularSearchList.size());
                     funPopulateSearchList(mPopularSearchList);
 
                 } else {
                     mPopular_SubSearchList.clear();
-                    for (int i = 0; i < mSubDomain.size(); i++) {
+                    ArrayList<SearchModel> dbSubDomain = new ArrayList<>();
+                    dbSubDomain.clear();
+                    dbSubDomain = db.getPopularSearch(mDomainSpinner);
+                    Config.logV("getPopularSearch sssssSearch Size-------------" + dbSubDomain.size());
+                    for (int i = 0; i < dbSubDomain.size(); i++) {
 
-                        if (mSubDomain.get(i).getSector().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
+                        if (dbSubDomain.get(i).getSector().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
 
 
-                                SearchModel search = new SearchModel();
-                                 search.setName(mSubDomain.get(i).getName());
-                                search.setQuery(mSubDomain.get(i).getQuery());
-                                search.setSector(mSubDomain.get(i).getSector());
-                                search.setDisplayname(mSubDomain.get(i).getDisplayname());
+                            SearchModel search = new SearchModel();
+                            search.setName(dbSubDomain.get(i).getName());
+                            search.setQuery(dbSubDomain.get(i).getQuery());
+                            search.setSector(dbSubDomain.get(i).getSector());
+                            search.setDisplayname(dbSubDomain.get(i).getDisplayname());
 
-                                mPopular_SubSearchList.add(search);
+                            mPopular_SubSearchList.add(search);
 
                         }
 
@@ -535,10 +561,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                             Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                                                     "fonts/Montserrat_Regular.otf");
                                             dynaText.setTypeface(tyface);
-
                                             dynaText.setText(mPopularSearchList.get(k).getDisplayname());
-
-
                                             dynaText.setBackground(getResources().getDrawable(R.drawable.rounded_popularsearch));
                                             dynaText.setTextSize(12);
                                             dynaText.setTextColor(getResources().getColor(R.color.black));
@@ -601,8 +624,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                     //HEADER+SPECIALIZATION
 
-                   // mSpecializationDomainSearch.clear();
-
+                    // mSpecializationDomainSearch.clear();
 
 
                     for (int i = 0; i < mSpecializationDomain.size(); i++) {
@@ -666,7 +688,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 } else {
 
 
-
                     items = new ArrayList<ListCell>();
                     //HEADER+SUBDOMAIN
                     mSubDomainSubSearch.clear();
@@ -674,7 +695,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     for (int i = 0; i < mSubDomain.size(); i++) {
                         if (mSubDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
 
-                            SearchModel search=new SearchModel();
+                            SearchModel search = new SearchModel();
                             search.setDisplayname(mSubDomain.get(i).getDisplayname());
                             search.setSector(mSubDomain.get(i).getSector());
                             search.setName(mSubDomain.get(i).getName());
@@ -695,12 +716,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         if (mSpecializationDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
 
 
-                                SearchModel domain = new SearchModel();
-                                domain.setName(mSpecializationDomain.get(i).getName());
-                                domain.setSector(mSpecializationDomain.get(i).getSector());
-                                domain.setDisplayname(mSpecializationDomain.get(i).getDisplayname());
+                            SearchModel domain = new SearchModel();
+                            domain.setName(mSpecializationDomain.get(i).getName());
+                            domain.setSector(mSpecializationDomain.get(i).getSector());
+                            domain.setDisplayname(mSpecializationDomain.get(i).getDisplayname());
 
-                                mSpecializationDomainSearch.add(domain);
+                            mSpecializationDomainSearch.add(domain);
 
                         }
 
@@ -852,8 +873,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                     sub = "sub_sector:" + "'" + cell.getName() + "'";
                     querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
-                     subdomainquery = "sub_sector:'" + cell.getName() + "'";
-                     subdomainName= cell.getName();
+                    subdomainquery = "sub_sector:'" + cell.getName() + "'";
+                    subdomainName = cell.getName();
                 }
 
                 if (cell.getCategory().equalsIgnoreCase("Suggested Search")) {
@@ -866,10 +887,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
 
 
-                    String name= cell.getName();
-                    if(name.contains("'")){
+                    String name = cell.getName();
+                    if (name.contains("'")) {
                         Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
-                        name = cell.getName().replace("'","%5C%27");
+                        name = cell.getName().replace("'", "%5C%27");
                     }
                     Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + name);
 
@@ -897,33 +918,36 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
                 //VALID QUERY PASS
-                bundle.putString("subdomainquery",subdomainquery);
-                bundle.putString("subdomainName",subdomainName);
+                bundle.putString("subdomainquery", subdomainquery);
+                bundle.putString("subdomainName", subdomainName);
 
                 bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
                 bundle.putString("url", pass);
-                SearchListFragment pfFragment = new SearchListFragment();
 
-                bundle.putString("subdomain_select", "true");
-                bundle.putString("locName", mCurrentLoc.getText().toString());
+                if(Config.isOnline(getActivity())) {
+                    SearchListFragment pfFragment = new SearchListFragment();
 
-                bundle.putString("latitude", String.valueOf(latitude));
-                bundle.putString("longitude", String.valueOf(longitude));
-                bundle.putString("spinnervalue", spinnerTxtPass);
+                    bundle.putString("subdomain_select", "true");
+                    bundle.putString("locName", mCurrentLoc.getText().toString());
 
-                mSearchtxt = cell.getMdisplayname();
-                Config.logV("SEARCH TXT 99999" + mSearchtxt);
-                bundle.putString("searchtxt", mSearchtxt);
-                pfFragment.setArguments(bundle);
+                    bundle.putString("latitude", String.valueOf(latitude));
+                    bundle.putString("longitude", String.valueOf(longitude));
+                    bundle.putString("spinnervalue", spinnerTxtPass);
+
+                    mSearchtxt = cell.getMdisplayname();
+                    Config.logV("SEARCH TXT 99999" + mSearchtxt);
+                    bundle.putString("searchtxt", mSearchtxt);
+                    pfFragment.setArguments(bundle);
 
 
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
-                // Store the Fragment in stack
-                transaction.addToBackStack(null);
-                transaction.replace(R.id.mainlayout, pfFragment).commit();
-                searchSrcTextView.clearFocus();
-                mSearchView.clearFocus();
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+                    // Store the Fragment in stack
+                    transaction.addToBackStack(null);
+                    transaction.replace(R.id.mainlayout, pfFragment).commit();
+                    searchSrcTextView.clearFocus();
+                    mSearchView.clearFocus();
+                }
 
 
             }
@@ -972,14 +996,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                     search.setName(response.body().getGlobalSearchLabels().get(k).getName());
                                     search.setDisplayname(response.body().getGlobalSearchLabels().get(k).getDisplayname());
                                     search.setQuery(response.body().getGlobalSearchLabels().get(k).getQuery());
+                                    search.setSector("All");
                                     mGLobalSearch.add(search);
-                                   // Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
+                                    // Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
                                 }
                             }
 
                             Config.logV("Globa lSearch Size-------------" + mGLobalSearch.size());
-
-
 
 
                             mSpecializationDomain.clear();
@@ -987,8 +1010,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                             for (int i = 0; i < response.body().getSectorLevelLabels().size(); i++) {
                                 int mSectorSize = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels().size();
-
-
 
 
                                 for (int k = 0; k < mSectorSize; k++) {
@@ -1003,7 +1024,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                                     mSubDomain.add(search);
                                     //mSpecializationDomain.addAll(getSubdomainSectorLevel.get(k).getSpecializationLabels());
-                                    for(int j=0;j<getSubdomainSectorLevel.get(k).getSpecializationLabels().size();j++){
+                                    for (int j = 0; j < getSubdomainSectorLevel.get(k).getSpecializationLabels().size(); j++) {
                                         search = new SearchModel();
                                         search.setName(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getName());
                                         search.setDisplayname(getSubdomainSectorLevel.get(k).getSpecializationLabels().get(j).getDisplayname());
@@ -1013,20 +1034,22 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                     }
 
 
-
                                 }
                             }
                            /* ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             mSpinnerDomain.setAdapter(adapter);*/
 
-
-                           APiGetDomain();
+                            DatabaseHandler db = new DatabaseHandler(mContext);
+                            db.DeletePopularSearch();
+                            db.insertPopularSearchInfo(mGLobalSearch);
+                            db.insertPopularSearchInfo(mSubDomain);
+                            if (Config.isOnline(mContext)) {
+                                APiGetDomain();
+                            }
                             Config.logV("GLobal Search Size-------------" + mGLobalSearch.size());
                             Config.logV("SUBDOAMIN Search Size-------------" + mSubDomain.size());
                             Config.logV("SPECIALIZATION Search Size-------------" + mSpecializationDomain.size());
-
-
 
 
                         }
@@ -1051,6 +1074,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         }
     }
+
     private void APiGetDomain() {
         {
 
@@ -1092,6 +1116,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                                 }
                                 Config.logV("response.body()) SUBDOMAIN SIZE" + mSubDomain.size());
+
+                                DatabaseHandler db = new DatabaseHandler(mContext);
+                                db.DeleteDomain();
+                                db.insertDomainInfo(domainList);
                                 ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 mSpinnerDomain.setAdapter(adapter);
@@ -1119,14 +1147,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         }
     }
+
     public static int dpToPx(int dp) {
         float density = mContext.getResources()
                 .getDisplayMetrics()
                 .density;
         return Math.round((float) dp * density);
     }
-
-
 
 
     List<ActiveCheckIn> MActiveList = new ArrayList<>();
@@ -1310,7 +1337,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
 
             subdomainquery = "sub_sector:'" + name + "'";
-            subdomainName= name;
+            subdomainName = name;
         }
 
         if (category.equalsIgnoreCase("Suggested Search")) {
@@ -1320,7 +1347,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             querycreate = requiredString;
 
             subdomainquery = "sub_sector:'" + name + "'";
-            subdomainName= name;
+            subdomainName = name;
         }
 
         if (category.equalsIgnoreCase("Business Name as")) {
@@ -1354,28 +1381,32 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         Config.logV("Popular Text__________@@@Del111e");
         mSearchView.setQuery("", false);
-        SearchListFragment pfFragment = new SearchListFragment();
 
-        bundle.putString("locName", mCurrentLoc.getText().toString());
-        bundle.putString("latitude", String.valueOf(latitude));
-        bundle.putString("longitude", String.valueOf(longitude));
-        bundle.putString("spinnervalue", spinnerTxtPass);
+        if(Config.isOnline(getActivity())) {
 
-        bundle.putString("subdomain_select", "true");
-        bundle.putString("subdomainquery",subdomainquery);
-        bundle.putString("subdomainName",subdomainName);
-        Config.logV("Popular Text_______$$$$_______" + mPopularSearchtxt);
-        bundle.putString("searchtxt", mPopularSearchtxt);
-        pfFragment.setArguments(bundle);
-        Config.logV("APi SUBDOMAIN DASHHHHHHH@@@@@@@@@@@@@@@@@" + subdomainName);
+            SearchListFragment pfFragment = new SearchListFragment();
 
-                FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
-        // Store the Fragment in stack
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
-        searchSrcTextView.clearFocus();
-        mSearchView.clearFocus();
+            bundle.putString("locName", mCurrentLoc.getText().toString());
+            bundle.putString("latitude", String.valueOf(latitude));
+            bundle.putString("longitude", String.valueOf(longitude));
+            bundle.putString("spinnervalue", spinnerTxtPass);
+
+            bundle.putString("subdomain_select", "true");
+            bundle.putString("subdomainquery", subdomainquery);
+            bundle.putString("subdomainName", subdomainName);
+            Config.logV("Popular Text_______$$$$_______" + mPopularSearchtxt);
+            bundle.putString("searchtxt", mPopularSearchtxt);
+            pfFragment.setArguments(bundle);
+            Config.logV("APi SUBDOMAIN DASHHHHHHH@@@@@@@@@@@@@@@@@" + subdomainName);
+
+            FragmentTransaction transaction = this.getChildFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+            // Store the Fragment in stack
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.mainlayout, pfFragment).commit();
+            searchSrcTextView.clearFocus();
+            mSearchView.clearFocus();
+        }
     }
 
     @Override
@@ -1713,11 +1744,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     public void QuerySubmitCLick(String query) {
 
-        if(query.contains("'")){
-            Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
-            query = query.replace("'","%5C%27");
-        }
-
         mSearchView.setQuery("", false);
 
         LanLong Lanlong = getLocationNearBy(latitude, longitude);
@@ -1728,33 +1754,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
 
 
-        if(query.contains("'")){
+        if (query.contains("'")) {
             Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
-            query = query.replace("'","%5C%27");
+            query = query.replace("'", "%5C%27");
         }
         Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + query);
 
         String querycreate = "";
-//        if (!mDomainSpinner.equalsIgnoreCase("All")) {
-//            querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
-//        } else {
-//            querycreate = "(phrase " + "'" + query + "')";
-//        }
-//        querycreate = "(sub_sector_displayname " + "'" + query + "' sub_sector " + "'" + query + "' specialization " + "'" + query + "' specialization_displayname " + "'" + query + "' title " + "'" + query + "' services " + "'" + query + "' qualification " + "'" + query + "' adwords " + "'" + query + "') sector :'" + mDomainSpinner + "'";
-
-
-//        if (!mDomainSpinner.equalsIgnoreCase("All")) {
-//            querycreate = "(phrase " + "'" + query + "') sector :'" + mDomainSpinner + "'";
-//        } else {
-//            querycreate = "(phrase " + "'" + query + "')";
-//
-//
-//
-//
-//        }
-      //  query = query.replace("'","\\'");
-
-
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
             if(query.equals("")) {
                 querycreate = "sector :'" + mDomainSpinner + "'";
@@ -1784,28 +1790,31 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         //VALID QUERY PASS
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
-        SearchListFragment pfFragment = new SearchListFragment();
 
-        bundle.putString("locName", mCurrentLoc.getText().toString());
-        bundle.putString("latitude", String.valueOf(latitude));
-        bundle.putString("longitude", String.valueOf(longitude));
-        bundle.putString("spinnervalue", spinnerTxtPass);
-        Config.logV("SEARCH TXT 99999" + mSearchtxt);
-        if(!query.equalsIgnoreCase("")) {
-            bundle.putString("searchtxt", mSearchtxt);
-        }else{
-            bundle.putString("searchtxt", "");
+        if(Config.isOnline(getActivity())) {
+            SearchListFragment pfFragment = new SearchListFragment();
+
+            bundle.putString("locName", mCurrentLoc.getText().toString());
+            bundle.putString("latitude", String.valueOf(latitude));
+            bundle.putString("longitude", String.valueOf(longitude));
+            bundle.putString("spinnervalue", spinnerTxtPass);
+            Config.logV("SEARCH TXT 99999" + mSearchtxt);
+            if (!query.equalsIgnoreCase("")) {
+                bundle.putString("searchtxt", mSearchtxt);
+            } else {
+                bundle.putString("searchtxt", "");
+            }
+            pfFragment.setArguments(bundle);
+
+            bundle.putString("subdomain_select", "false");
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+            // Store the Fragment in stack
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.mainlayout, pfFragment).commit();
+            searchSrcTextView.clearFocus();
+            mSearchView.clearFocus();
         }
-        pfFragment.setArguments(bundle);
-
-        bundle.putString("subdomain_select", "false");
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
-        // Store the Fragment in stack
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
-        searchSrcTextView.clearFocus();
-        mSearchView.clearFocus();
     }
 
 
@@ -1844,25 +1853,28 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         //VALID QUERY PASS
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
-        SearchListFragment pfFragment = new SearchListFragment();
 
-        bundle.putString("locName", mCurrentLoc.getText().toString());
-        bundle.putString("latitude", String.valueOf(latitude));
-        bundle.putString("longitude", String.valueOf(longitude));
-        bundle.putString("spinnervalue", spinnerTxtPass);
-        Config.logV("SEARCH TXT 99999" + mSearchtxt);
-        bundle.putString("searchtxt", mSearchtxt);
-        bundle.putString("subdomain_select", "false");
-        pfFragment.setArguments(bundle);
+        if(Config.isOnline(getActivity())) {
+            SearchListFragment pfFragment = new SearchListFragment();
+
+            bundle.putString("locName", mCurrentLoc.getText().toString());
+            bundle.putString("latitude", String.valueOf(latitude));
+            bundle.putString("longitude", String.valueOf(longitude));
+            bundle.putString("spinnervalue", spinnerTxtPass);
+            Config.logV("SEARCH TXT 99999" + mSearchtxt);
+            bundle.putString("searchtxt", mSearchtxt);
+            bundle.putString("subdomain_select", "false");
+            pfFragment.setArguments(bundle);
 
 
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
-        // Store the Fragment in stack
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.mainlayout, pfFragment).commit();
-        searchSrcTextView.clearFocus();
-        mSearchView.clearFocus();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
+            // Store the Fragment in stack
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.mainlayout, pfFragment).commit();
+            searchSrcTextView.clearFocus();
+            mSearchView.clearFocus();
+        }
     }
 
 
@@ -1930,7 +1942,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
 
         bundle.putString("uniqueID", value);
-
         pfFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -1941,27 +1952,25 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID,String consumer) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
         iBill.putExtra("accountID", accountID);
         iBill.putExtra("payStatus", payStatus);
-        iBill.putExtra("consumer",consumer);
+        iBill.putExtra("consumer", consumer);
         startActivity(iBill);
 
     }
 
 
-
-
     @Override
     public void onMethodActivePayIconCallback(String payStatus, final String ynwUUID, String provider, final String accountID, final double amountDue) {
         // APIPayment(accountID, ynwUUID, amountDue);
-        Intent i=new Intent(mContext, PaymentActivity.class);
-        i.putExtra("ynwUUID",ynwUUID);
-        i.putExtra("accountID",accountID);
-        i.putExtra("amountDue",amountDue);
+        Intent i = new Intent(mContext, PaymentActivity.class);
+        i.putExtra("ynwUUID", ynwUUID);
+        i.putExtra("accountID", accountID);
+        i.putExtra("amountDue", amountDue);
         startActivity(i);
     }
 
@@ -2072,11 +2081,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             // mTxvBuy.setEnabled(true);
         }
     }*/
-
-
-
-
-
 
 
 }

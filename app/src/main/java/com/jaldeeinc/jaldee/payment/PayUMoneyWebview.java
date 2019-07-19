@@ -1,10 +1,14 @@
 package com.jaldeeinc.jaldee.payment;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.SslErrorHandler;
@@ -17,13 +21,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.BillActivity;
+import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.PaymentActivity;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PayUMoneyWebview extends Activity {
 
@@ -77,11 +98,12 @@ public class PayUMoneyWebview extends Activity {
 		loadWebView(response_data);
 
 
+
 	}
 
 	@Override
 	public void onBackPressed() {
-		//	super.onBackPressed();
+	//	super.onBackPressed();
 	}
 
 	public void loadWebView(CheckSumModel responseDATA){
@@ -96,6 +118,7 @@ public class PayUMoneyWebview extends Activity {
 		}else{
 			url_s.append("https://test.payu.in/_payment");
 		}
+
 		Log.e(TAG, "call url " + url_s);
 
 

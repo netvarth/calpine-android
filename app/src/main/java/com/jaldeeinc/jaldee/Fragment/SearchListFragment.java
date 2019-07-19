@@ -31,10 +31,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -69,6 +72,8 @@ import com.jaldeeinc.jaldee.utils.EmptySubmitSearchView;
 import com.jaldeeinc.jaldee.utils.PaginationScrollListener;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.jaldeeinc.jaldee.widgets.CustomDialog;
+import com.jaldeeinc.jaldee.adapter.FilterAdapter;
+import com.jaldeeinc.jaldee.model.CommonFilterEnum;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,9 +84,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -265,7 +272,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
 
-
         ibackpress = (ImageView) row.findViewById(R.id.backpress);
         mRecySearchDetail = (RecyclerView) row.findViewById(R.id.SearchDetail);
         txt_toolbarlocation = (TextView) row.findViewById(R.id.txt_toolbarlocation);
@@ -299,7 +305,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 FilterActivity.setFragmentInstance(currentFragment);
 
-                mSearchView.setQuery("", false);
+                // mSearchView.setQuery("", false);
 
                 Intent ifilter = new Intent(mContext, FilterActivity.class);
                 ifilter.putExtra("lat", String.valueOf(latitude));
@@ -407,7 +413,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         //init service and load data
 
-        Config.logV("SearchList URL ONCREATEVIEW@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
         Config.logV("SearchList URL ONCREATEVIEW@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + query + "URL" + url);
         ApiSEARCHAWSLoadFirstData(query, url, sort);
@@ -502,82 +507,162 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             public void onClick(View v) {
 
 
-                LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View customView = layoutInflater.inflate(R.layout.popup_filter, null);
 
 
-                final RecyclerView recycle_morefilter = (RecyclerView) customView.findViewById(R.id.recycle_morefilter);
-                TextView txtclear = (TextView) customView.findViewById(R.id.txtclear);
-
-                if (searchSrcTextView.getText().toString().length() == 0) {
-                    show_subdomain = false;
-                }
-
-                Config.logV("PASSED FORMULA ARRAY@@@@@@@@@@@@" + passedFormulaArray.size());
+                    LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View customView = layoutInflater.inflate(R.layout.popup_filter, null);
 
 
-//                if(passedFormulaArray.size()==0) {
+                    final RecyclerView recycle_morefilter = (RecyclerView) customView.findViewById(R.id.recycle_morefilter);
+                    TextView txtclear = (TextView) customView.findViewById(R.id.txtclear);
 
-
-                    if (mDomainSpinner.equalsIgnoreCase("All")) {
-                    ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
-                } else {
-
-                    Config.logV("ApiMoreRefinedFilters1111 @@@@@@@@@@@@@" + passformula);
-                    ApiMoreRefinedFilters(recycle_morefilter, mDomainSpinner, "No", "", passedFormulaArray, show_subdomain);
-                    if (show_subdomain) {
-                        Config.logV("APi SUBDOMAIN @@@@@@@@@@@@@@@@@" + subdomainName + "RRRR" + mDomainSpinner);
-                        ApiSubDomainRefinedFilters(recycle_morefilter, subdomainName, mDomainSpinner, subdomainquery);
+                    if (searchSrcTextView.getText().toString().length() == 0) {
+                        show_subdomain = false;
                     }
-                }
-                int[] location = new int[2];
-                txtrefinedsearch.getLocationOnScreen(location);
-                //Rect loc=locateView(ic_refinedFilter);
-                //instantiate popup window
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int width = displayMetrics.widthPixels;
-                int height = displayMetrics.heightPixels;
 
-                customView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                    Config.logV("PASSED FORMULA ARRAY@@@@@@@@@@@@" + passedFormulaArray.size());
+                    Config.logV("PASSED FORMULA mDomainSpinner@@@@@@@@@@@@" + mDomainSpinner);
 
-                int x = location[0] - (int) ((customView.getMeasuredWidth() - v.getWidth()) / 2);
+                    if(passedFormulaArray.size()==0) {
 
-                final PopupWindow popupWindow = new PopupWindow(customView, width - width / 3, height - (location[1] + 50));
-
-                popupWindow.setAnimationStyle(R.style.MyAlertDialogStyle);
-                //display the popup window
-
-                //   Rect location1 = locateView(txtrefinedsearch);
-                //  popupWindow.showAtLocation(txtrefinedsearch, Gravity.NO_GRAVITY, location[0] + width - width / 3, location[1] + 50);
-
-                popupWindow.showAtLocation(txtrefinedsearch, Gravity.NO_GRAVITY, x, location[1] + 50);
-
-
-                dimBehind(popupWindow);
-                Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                        "fonts/Montserrat_Bold.otf");
-                txtclear.setTypeface(tyface);
-
-
-                txtclear.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        passformula = "";
-                        passedFormulaArray.clear();
-                        txtrefinedsearch.setText("Refine Search");
-                        MoreItemClick(passformula, query);
                         if (mDomainSpinner.equalsIgnoreCase("All")) {
                             ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
+                    /*for ( HashMap<String, ArrayList<Domain_Spinner>> hashMap : domain_subdomainArray) {
+                        System.out.println("KEY"+hashMap.keySet());
+                        for (String key : hashMap.keySet()) {
+                            System.out.println("KEY VALUE "+hashMap.get(key).get(0)+""+searchTxt);
+
+                            if(hashMap.get(key).equals(searchTxt)){
+                                System.out.println("KEY SELECTED "+hashMap.keySet());
+                            }
+                        }
+                    }*/
                         } else {
+
+                            Config.logV("ApiMoreRefinedFilters1111 @@@@@@@@@@@@@" + passformula + "" + show_subdomain);
                             ApiMoreRefinedFilters(recycle_morefilter, mDomainSpinner, "No", "", passedFormulaArray, show_subdomain);
+                            if (show_subdomain) {
+                                Config.logV("APi SUBDOMAIN @@@@@@@@@@@@@@@@@" + subdomainName + "RRRR" + mDomainSpinner);
+                                ArrayList<String> emptyList = new ArrayList<>();
+                                ApiSubDomainRefinedFilters(recycle_morefilter, subdomainName, mDomainSpinner, subdomainquery,emptyList,"");
+                            }
+                        }
+                    }else{
+                        if (mDomainSpinner.equalsIgnoreCase("All")) {
+
+                            for (int i = 0; i < passedFormulaArray.size(); i++) {
+                                Config.logV("PRINT VAL FORMULA@@111HHHHH" + passedFormulaArray.get(i));
+
+                            }
+
+                            String domainSelect="Select";
+                            for(int i=0;i<passedFormulaArray.size();i++) {
+                                String splitsFormula[] = passedFormulaArray.get(i).toString().split(":");
+                                if (splitsFormula[0].equalsIgnoreCase("sector")) {
+
+                                    Config.logV("Sector @@@@@@@@@@@@@@@@@@@@@@@@"+splitsFormula[1]);
+                                    domainSelect=splitsFormula[1].replace("'","");
+                                }
+                            }
+
+                            String subdomain="Select";
+                            for(int i=0;i<passedFormulaArray.size();i++) {
+                                String splitsFormula[] = passedFormulaArray.get(i).toString().split(":");
+                                if (splitsFormula[0].equalsIgnoreCase("sub_sector")) {
+
+                                    Config.logV("subdomain @@@@@@@@@@@@@@@@@@@@@@@@"+splitsFormula[1]);
+                                    subdomain=splitsFormula[1].replace("'","");
+                                }
+                            }
+                            if(domainSelect.equalsIgnoreCase("Select")){
+                                ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
+                            }else {
+
+                                //ApiMoreRefinedFilters(recycle_morefilter, domainSelect, "No", "", passedFormulaArray, show_subdomain);
+
+                                if (subdomain.equalsIgnoreCase("Select")) {
+
+                                    ApiMoreRefinedFilters(recycle_morefilter, domainSelect, "yes", "", passedFormulaArray, show_subdomain);
+                                } else {
+
+                                    //ApiMoreRefinedFilters(recycle_morefilter, domainSelect, "yes", passformula, passedFormulaArray, show_subdomain);
+                                    ApiSubDomainRefinedFilters(recycle_morefilter, subdomain, domainSelect, subdomainquery,passedFormulaArray,subdomainDisplayNamePass);
+                                }
+                            }
+
+
+
+                        }else{
+                            String subdomain="Select";
+                            for(int i=0;i<passedFormulaArray.size();i++) {
+                                String splitsFormula[] = passedFormulaArray.get(i).toString().split(":");
+                                if (splitsFormula[0].equalsIgnoreCase("sub_sector")) {
+
+                                    Config.logV("subdomain @@@@@@@@@@@@@@@@@@@@@@@@"+splitsFormula[1]);
+                                    subdomain=splitsFormula[1].replace("'","");
+                                }
+                            }
+                            if(subdomain.equalsIgnoreCase("Select")&&subdomainName.equalsIgnoreCase("")) {
+
+                                ApiMoreRefinedFilters(recycle_morefilter, mDomainSpinner, "No", "", passedFormulaArray, show_subdomain);
+                            }else{
+                                if(subdomain.equalsIgnoreCase("Select")){
+                                    subdomain=subdomainName;
+                                }
+                                ApiSubDomainRefinedFilters(recycle_morefilter, subdomain, mDomainSpinner, subdomainquery,passedFormulaArray,subdomainDisplayNamePass);
+                            }
+
                         }
                     }
-                });
+                    int[] location = new int[2];
+                    txtrefinedsearch.getLocationOnScreen(location);
+                    //Rect loc=locateView(ic_refinedFilter);
+                    //instantiate popup window
+                    DisplayMetrics displayMetrics = new DisplayMetrics();
+                    getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                    int width = displayMetrics.widthPixels;
+                    int height = displayMetrics.heightPixels;
+
+                    customView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+                    int x = location[0] - (int) ((customView.getMeasuredWidth() - v.getWidth()) / 2);
+
+                    final PopupWindow popupWindow = new PopupWindow(customView, width - width / 3, height - (location[1] + 50));
+
+                    popupWindow.setAnimationStyle(R.style.MyAlertDialogStyle);
+                    //display the popup window
+
+                    //   Rect location1 = locateView(txtrefinedsearch);
+                    //  popupWindow.showAtLocation(txtrefinedsearch, Gravity.NO_GRAVITY, location[0] + width - width / 3, location[1] + 50);
+
+                    popupWindow.showAtLocation(txtrefinedsearch, Gravity.NO_GRAVITY, x, location[1] + 50);
 
 
-            }
+                    dimBehind(popupWindow);
+                    Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                            "fonts/Montserrat_Bold.otf");
+                    txtclear.setTypeface(tyface);
+
+
+                    txtclear.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            passformula = "";
+                            passedFormulaArray.clear();
+                            txtrefinedsearch.setText("Refine Search");
+                            MoreItemClick(passformula, query);
+                            if (mDomainSpinner.equalsIgnoreCase("All")) {
+                                ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
+                            } else {
+                                ApiMoreRefinedFilters(recycle_morefilter, mDomainSpinner, "No", "", passedFormulaArray, show_subdomain);
+                            }
+                        }
+                    });
+
+
+                }
+
         });
 
 
@@ -652,7 +737,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     Config.logV("mGLobalSearch" + mGLobalSearch.size());
 
-                    /* ArrayList<ListCell>*/
+                               /* ArrayList<ListCell>*/
                     items = new ArrayList<ListCell>();
                     for (int i = 0; i < mGLobalSearch.size(); i++) {
 
@@ -665,7 +750,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                         items.add(new ListCell(mSpecializationDomain.get(i).getName(), "Specializations", mSpecializationDomain.get(i).getSector(), mSpecializationDomain.get(i).getDisplayname()));
                     }
 
-                    /*     *******************************************************************/
+                           /*     *******************************************************************/
 
                     listadapter = new SearchListAdpter("detail", getActivity(), items, Double.valueOf(latitude), Double.valueOf(longitude), DashboardFragment.getHomeFragment(), mSearchView);
                     searchSrcTextView.setAdapter(listadapter);
@@ -710,7 +795,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
 
-                                /* searchSrcTextView.setAdapter(listadapter);*/
+                               /* searchSrcTextView.setAdapter(listadapter);*/
                                 listadapter.notifyDataSetChanged();
                                 listadapter.getFilter().filter(query);
                             }
@@ -1005,7 +1090,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 mRecySearchDetail.setAdapter(pageadapter);*/
 
 
-                /*  mRecySearchDetail.smoothScrollToPosition(0);*/
+              /*  mRecySearchDetail.smoothScrollToPosition(0);*/
 
 
                 Config.logV("Query-----------" + querycreate);
@@ -1082,6 +1167,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         p.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         p.dimAmount = 0.5f;
         wm.updateViewLayout(container, p);
+
     }
 
     private void loadNextPage(String mQueryPass, String mPass) {
@@ -1299,7 +1385,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
-    /* */
+   /* */
 
     /**
      * Performs a Retrofit call to the top rated movies API.
@@ -1601,16 +1687,22 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     Config.logV("code---------------" + response.code());
                     mQueueList.clear();
                     if (response.code() == 200) {
-                        Config.logV("Sucess345 ----------" + new Gson().toJson(response.body()));
+                        Config.logV("Sucess ----------" + response.body());
+
+
                         for (int i = 0; i < response.body().size(); i++) {
                             mQueueList.add(response.body().get(i));
                         }
+
                         if (mCheck.equalsIgnoreCase("next")) {
+
                             Config.logV("TOTAL PAGES_--------------" + TOTAL_PAGES);
                             Config.logV("CURRENT PAGE**22222**555***********" + TOTAL_PAGES);
                             Config.logV("CURRENT PAGE**333*****5555********" + currentPage);
                             pageadapter.removeLoadingFooter();
                             isLoading = false;
+
+
                             mSearchListModel.clear();
                             for (int i = 0; i < mSearchRespPass.size(); i++) {
 
@@ -2443,29 +2535,41 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         ApiMoreRefinedFilters(recylcepopup, domain, "yes", passformula, emptyList, show_subdomain);
     }
 
+    String subdomainDisplayNamePass="";
     @Override
-    public void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup, String subdomainame, String DomainName) {
+    public void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup, String subdomainame, String DomainName,String subdomainDisplayName) {
         Config.logV("SUBDOMAIN Selector@@@@@@@@@@@@@@@@@@@" + passformula);
         //  MoreItemClick("sector:'" + spinnerDomainSelectedFilter + "'" + "sub_sector:'" + subdomainame + "'");
-        if(DomainName.equalsIgnoreCase("")) {
-            ApiSubDomainRefinedFilters(recyclepopup, subdomainame, mDomainSpinner, passformula);
-        }else{
-            ApiSubDomainRefinedFilters(recyclepopup, subdomainame, DomainName, passformula);
+
+        subdomainDisplayNamePass=subdomainDisplayName;
+        ArrayList<String> emptyList = new ArrayList<>();
+        if (DomainName.equalsIgnoreCase("")) {
+            ApiSubDomainRefinedFilters(recyclepopup, subdomainame, mDomainSpinner, passformula,emptyList,subdomainDisplayName);
+        } else {
+            ApiSubDomainRefinedFilters(recyclepopup, subdomainame, DomainName, passformula,emptyList,subdomainDisplayName);
         }
     }
 
+    //ArrayList<String> refinedSelectedItems=new ArrayList<>();
     @Override
     public void onMethodQuery(ArrayList<String> sFormula, ArrayList<String> keyFormula) {
 
+
+        Set<String> set = new HashSet<>(sFormula);
+        sFormula.clear();
+        sFormula.addAll(set);
+
         for (String str : sFormula) {
 
-            Config.logV("PRINT $$$$$@ ####@@@@@@@@@@@@@@" + str);
+            Config.logV("PRINT SSSSSSFFFF@ ####@@@@@@@@@@@@@@" + str);
         }
+
         for (String str : keyFormula) {
 
             Config.logV("PRINT Key@ ####@@@@@@@@@@@@@@" + str);
         }
 
+        Config.logV("PASSED FORMULA ARRAY WWWW GGGG@@" + sFormula.size());
         if (sFormula.size() > 0) {
             txtrefinedsearch.setText("Refine Search (" + sFormula.size() + ") ");
         } else {
@@ -2482,11 +2586,15 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 String splitsFormula[] = sFormula.get(j).toString().split(":");
                 //Config.logV("PRINT Key ##"+splitsFormula[0]);
+                splitsFormula[0] = splitsFormula[0].replace("not", "").trim();
+                Config.logV("PRINT EEEE" + splitsFormula[0]);
+                Config.logV("PRINT EEEE DDDD" + keyFormula.get(i).toString());
                 if (splitsFormula[0].equalsIgnoreCase(keyFormula.get(i).toString())) {
 
                     // Config.logV("PRINT Key TRUE @@@@@@@@@@@ ##"+splitsFormula[0]);
                     match = true;
                     count++;
+
                     if (count == 1)
                         queryFormula += "(" + sFormula.get(j).toString();
                     else
@@ -2518,6 +2626,21 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }
 
 
+
+        passedFormulaArray.clear();
+        passedFormulaArray.addAll(sFormula);
+
+        /*if(!domian.equalsIgnoreCase("")){
+             mDomainSpinner=domian;
+        }
+
+        if(!subdomain.equalsIgnoreCase("")){
+            subdomainName=subdomain;
+        }*/
+
+
+      /*  refinedSelectedItems.clear();
+        refinedSelectedItems.addAll(sFormula);*/
         MoreItemClick(queryFormula, query);
         Config.logV("PRINT VAL FORMULA@@" + queryFormula);
 
@@ -2801,6 +2924,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 }
 
 
+                               /* domain_subdomainArray.clear();
+                                hashdomain_subdomainArray.clear();
+                                for (int i = 0; i < response.body().size(); i++) {
+                                    hashdomain_subdomainArray.put(response.body().get(i).getDisplayName(),response.body().get(i).getSubDomains() );
+                                }
+
+                                domain_subdomainArray.add(hashdomain_subdomainArray);*/
+
                                 ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 mSpinnerDomain.setAdapter(adapter);
@@ -2939,7 +3070,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                         Config.logV("Comon Filter size @@@@@@@@@" + commonFilterSortList.size());
-                        mMoreAdapter = new MoreFilterAdapter(commonFilterSortList, mContext, getActivity(), mInterface, recycle_filter, "", domainSelect, "Select", passedFormulaArray);
+                        mMoreAdapter = new MoreFilterAdapter(commonFilterSortList, mContext, getActivity(), mInterface, recycle_filter, "", domainSelect, "Select", passedFormulaArray,"");
                         recycle_filter.setAdapter(mMoreAdapter);
                         mMoreAdapter.notifyDataSetChanged();
 
@@ -3164,7 +3295,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                         Config.logV("Comon Filter size @@@@@@@@@" + otherFilterSortedFinalList.size());
-                        mMoreAdapter = new MoreFilterAdapter(otherFilterSortedFinalList, mContext, getActivity(), mInterface, recycle_filter, passformula, subdomain, "Select", passedFormulaArray);
+                        mMoreAdapter = new MoreFilterAdapter(otherFilterSortedFinalList, mContext, getActivity(), mInterface, recycle_filter, passformula, subdomain, "Select", passedFormulaArray,"");
                         recycle_filter.setAdapter(mMoreAdapter);
                         mMoreAdapter.notifyDataSetChanged();
 
@@ -3201,7 +3332,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
-    private void ApiSubDomainRefinedFilters(final RecyclerView recycle_filter, final String subdomain, final String domain, final String passformula) {
+    private void ApiSubDomainRefinedFilters(final RecyclerView recycle_filter, final String subdomain, final String domain, final String passformula, final ArrayList<String> passFormulaArray, final String subdomainDisplayName) {
 
         Config.logV("URL----------SUBDOMAIN--@@@@@@@@@@@@@@@@@@");
         ApiInterface apiService =
@@ -3321,10 +3452,16 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                         Config.logV("YYYYmergedList@@@@@@@@@" + mergedOtherFilterList.size());
-                        ArrayList<String> emptyList = new ArrayList<>();
-                        mMoreAdapter = new MoreFilterAdapter(mergedOtherFilterList, mContext, getActivity(), mInterface, recycle_filter, passformula, domain, subdomain, emptyList);
-                        recycle_filter.setAdapter(mMoreAdapter);
-                        mMoreAdapter.notifyDataSetChanged();
+                        if(passFormulaArray.size()==0) {
+                            ArrayList<String> emptyList = new ArrayList<>();
+                            mMoreAdapter = new MoreFilterAdapter(mergedOtherFilterList, mContext, getActivity(), mInterface, recycle_filter, passformula, domain, subdomain, emptyList,subdomainDisplayName);
+                            recycle_filter.setAdapter(mMoreAdapter);
+                            mMoreAdapter.notifyDataSetChanged();
+                        }else{
+                            mMoreAdapter = new MoreFilterAdapter(mergedOtherFilterList, mContext, getActivity(), mInterface, recycle_filter, passformula, domain, subdomain, passFormulaArray,subdomainDisplayName);
+                            recycle_filter.setAdapter(mMoreAdapter);
+                            mMoreAdapter.notifyDataSetChanged();
+                        }
 
 
                     } else {

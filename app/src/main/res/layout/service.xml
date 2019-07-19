@@ -102,7 +102,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/service_layout"
+                android:id="@+id/Lprice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"

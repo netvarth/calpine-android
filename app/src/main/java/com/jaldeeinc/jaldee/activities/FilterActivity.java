@@ -24,9 +24,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.Fragment.RootFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchListFragment;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.FavouriteAdapter;
 import com.jaldeeinc.jaldee.adapter.FilterAdapter;
+import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.callback.FilterAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;

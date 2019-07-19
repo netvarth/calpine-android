@@ -7,13 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,16 +43,26 @@ import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
+import com.jaldeeinc.jaldee.database.DatabaseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -68,7 +82,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
     }
 
-
+    String simpleFileName1 = "note1.txt";
+    String simpleFileName2 = "note2.txt";
+    String simpleFileName3 = "note3.txt";
     boolean firstTimeRating = false;
     Context mContext;
     Activity mActivity;
@@ -117,10 +133,20 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
       /*  tv_nofuturecheckin = (TextView) row.findViewById(R.id.txtnocheckfuture);
         tv_notodaychekcin = (TextView) row.findViewById(R.id.txtnocheckintoday);
         tv_nocheckold = (TextView) row.findViewById(R.id.txtnocheckold);*/
-        ApiFavList();
+      if(Config.isOnline(mContext)) {
+          ApiFavList();
+      }else{
+          DatabaseHandler db=new DatabaseHandler(mContext);
+          mFavList.clear();
+          mFavList=db.getFavouriteID();
+      }
 
-        ApiTodayChekInList();
+        if(Config.isOnline(mContext)) {
+            ApiTodayChekInList();
+        }else{
 
+            setItems();
+        }
         mFutureFlag=false;mTodayFlag=false;mOldFlag=false;
 
 
@@ -156,6 +182,8 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                     if (response.code() == 200) {
                         mCheckTodayFutureList.clear();
                         mCheckTodayList.clear();
+
+
                         mCheckTodayFutureList = response.body();
 
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
@@ -166,8 +194,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
                         }
 
-
+                        DatabaseHandler db=new DatabaseHandler(mContext);
+                        db.DeleteMyCheckin("today");
+                        db.insertMyCheckinInfo(mCheckTodayList);
                         ApiFutureChekInList();
+
+
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
@@ -193,6 +225,8 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
 
     }
+
+
 
     private void ApiOldChekInList() {
 
@@ -222,6 +256,10 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                     if (response.code() == 200) {
                         mCheckOldList.clear();
                         mCheckOldList = response.body();
+
+                        DatabaseHandler db=new DatabaseHandler(mContext);
+                        db.DeleteMyCheckin("old");
+                        db.insertMyCheckinInfo(mCheckOldList);
 
                         Config.logV("mCheckList mCheckOldList size-------------------------" + mCheckOldList.size());
 
@@ -283,6 +321,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         mCheckFutureList.clear();
                         mCheckFutureList = response.body();
 
+                        DatabaseHandler db=new DatabaseHandler(mContext);
+                        db.DeleteMyCheckin("future");
+                        db.insertMyCheckinInfo(mCheckFutureList);
 
                         ApiOldChekInList();
 
@@ -382,12 +423,11 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-        public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID, boolean todayFlag, boolean futFlag, boolean oldFlag) {
+    public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID, boolean todayFlag, boolean futFlag, boolean oldFlag) {
 
         mOldFlag = oldFlag;
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
-
 
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
         dialog.setContentView(R.layout.cancelcheckin);
@@ -432,7 +472,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-        public void onMethodAddFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
+    public void onMethodAddFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
         mOldFlag = oldFlag;
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
@@ -450,7 +490,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
     @Override
     public void onMethodRating(String accountID, String UUID, boolean todayFlag, boolean futFlag, boolean oldFlag) {
-
         mOldFlag = oldFlag;
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
@@ -888,7 +927,11 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
                     if (response.code() == 200) {
                         mFavList.clear();
-                        mFavList = response.body();
+                      //  mFavList = response.body();
+                        DatabaseHandler db=new DatabaseHandler(mContext);
+                        db.DeleteFAVID();
+                        db.insertFavIDInfo(response.body());
+                        mFavList=db.getFavouriteID();
                         ApiTodayChekInList();
 
 
@@ -973,6 +1016,10 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
     void setItems() {
 
+        mCheckTodayList.clear();
+        mCheckOldList.clear();
+        mCheckFutureList.clear();
+
         // Array list for header
         ArrayList<String> header = new ArrayList<String>();
 
@@ -985,10 +1032,18 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         header.add("Future");
         header.add("Old");
         // Adding child data
-        Config.logV("Today---#####----" + mCheckTodayList.size());
-        Config.logV("Futrue-------" + mCheckFutureList.size());
-        Config.logV("Old-------" + mCheckOldList.size());
 
+
+        DatabaseHandler db=new DatabaseHandler(mContext);
+
+        mCheckTodayList=db.getMyCheckinList("today");
+        mCheckOldList=db.getMyCheckinList("old");
+        mCheckFutureList=db.getMyCheckinList("future");
+
+
+        Config.logV("Today---#####----" + mCheckTodayList.size()+""+mTodayFlag);
+        Config.logV("Futrue-------" + mCheckFutureList.size()+""+mFutureFlag);
+        Config.logV("Old-------" + mCheckOldList.size()+""+mOldFlag);
 
         // Adding header and childs to hash map
         hashMap.put(header.get(0), mCheckTodayList);
@@ -996,7 +1051,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         hashMap.put(header.get(2), mCheckOldList);
 
         adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag);
-
         // Setting adpater over expandablelistview
         expandlist.setAdapter(adapter);
         expandlist.setVerticalScrollBarEnabled(false);
@@ -1007,9 +1061,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         if (mCheckFutureList.size() > 0 || mFutureFlag)
             expandlist.expandGroup(1);
         if ((mCheckTodayList.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) || mOldFlag) {
-
             expandlist.expandGroup(2);
         }
+
 
     }
 

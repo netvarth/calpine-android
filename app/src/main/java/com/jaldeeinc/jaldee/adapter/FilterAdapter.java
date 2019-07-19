@@ -2,7 +2,11 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,10 +15,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -92,12 +99,9 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
-
-
         myViewHolder.tv_name.setText(filterList.getDisplayName());
 
         myViewHolder.tv_name.setTypeface(tyface);
-
 
         if (position == mFilterList.size() - 1) {
             myViewHolder.mView.setVisibility(View.GONE);
@@ -151,6 +155,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                                             final CheckBox cb = new CheckBox(v.getContext());
                                             cb.setText(jsonObj.getString("displayName"));
                                             final String name = jsonObj.getString("name");
+
                                             for (int j = 0; j < passFormula.size(); j++) {
                                                 String splitsFormula[] = passFormula.get(j).toString().split(":");
                                                 if (splitsFormula[0].equalsIgnoreCase(filterList.getCloudSearchIndex().replace("*", "1"))) {
@@ -252,7 +257,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
 
                             img.setImageDrawable(mContext.getResources().getDrawable(R.drawable.close));
 
-                            // img.setImageResource(R.drawable.close);
+                           // img.setImageResource(R.drawable.close);
                             LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             layoutParams.gravity=Gravity.CENTER;
                             layoutParams.setMargins(0,-15,0,0);
@@ -322,16 +327,19 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
 
 
                         for (int i = 0; i < filterList.getItemName().size(); i++) {
+
+                            LinearLayout parent = new LinearLayout(mContext);
+
+                            parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            parent.setOrientation(LinearLayout.HORIZONTAL);
+
                             final Switch sw = new Switch(mContext);
                             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                             layoutParams.setMargins(15, 15, 15, 15);
                             sw.setLayoutParams(layoutParams);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                sw.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                            }
-                            sw.setText(filterList.getItemName().get(i).toString());
-                            // keyFormula.add(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"));
-                            // keyFormula.add(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"));
+                           // sw.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                           // sw.setText(filterList.getItemName().get(i).toString());
+
                             boolean fAvailable=false;
                             for(int j=0;j<keyFormula.size();j++){
                                 if(keyFormula.get(j).toString().equalsIgnoreCase(filterList.getCloudIndexvalue().get(i).toString().replace("*", "1"))){
@@ -354,9 +362,24 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                                 }
                             }
 
+                            TextView txt=new TextView(mContext);
+                            txt.setText(filterList.getItemName().get(i).toString());
+                            LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            layoutParams1.setMargins(15, 15, 15, 15);
+                            txt.setLayoutParams(layoutParams1);
+                            Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Regular.otf");
+                            txt.setTypeface(tyface);
+                            txt.setTextColor(mContext.getResources().getColor(R.color.title_grey));
+
+                            if(parent!=null){
+                                parent.addView(sw);
+                                parent.addView(txt);
+                            }
+
                             // Add Switch to LinearLayout
                             if (myViewHolder.LexpandView != null) {
-                                myViewHolder.LexpandView.addView(sw);
+                                myViewHolder.LexpandView.addView(parent);
                             }
 
                             final int finalI = i;
@@ -364,8 +387,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                                 @Override
                                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                     if (isChecked) {
-                                        passFormula.add(filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1") + ":  '1'");
-
+                                     //   passFormula.add(filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1") + ":  '1'");
+                                        passFormula.add("not "+filterList.getCloudIndexvalue().get(finalI).toString().replace("*", "1") + ":  '0')");
                                         filterAdapterCallback.onMethodFilterCallback(passFormula, keyFormula);
                                     } else {
 

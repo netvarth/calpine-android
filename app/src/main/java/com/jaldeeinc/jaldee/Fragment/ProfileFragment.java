@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.jaldeeinc.jaldee.BuildConfig;
 import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.common.Config;

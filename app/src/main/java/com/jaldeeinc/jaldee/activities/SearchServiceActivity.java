@@ -49,7 +49,7 @@ public class SearchServiceActivity extends AppCompatActivity {
         i_servicegallery = findViewById(R.id.img_service);
         i_backpress = findViewById(R.id.backpress);
         Lprepayment = findViewById(R.id.Lprepayment);
-        LserviceLayout = findViewById(R.id.service_layout);
+        LserviceLayout = findViewById(R.id.Lprice);
         txtpreVal = findViewById(R.id.txtpreVal);
 
         i_backpress.setOnClickListener(new View.OnClickListener() {

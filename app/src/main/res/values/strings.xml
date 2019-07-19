@@ -12,6 +12,7 @@
     <string name="hint_firstname">First Name</string>
     <string name="signup">SignUp</string>
     <string name="hint_pwd">New Password</string>
+    <string name="cc_dc">Credit Card/Debit Card/Net Banking</string>
     <string name="hint_conf_pwd">Confirm Password</string>
     <string name="verify">Verify</string>
     <string name="hint_otp">Enter Otp Received</string>
@@ -56,7 +57,8 @@
     <string name="db_version">1</string>
     <string name="db_table_userinfo">USERINFO_TB</string>
     <string name="db_table_inbox">table_inbox</string>
-
+    <string name="db_table_popularsearch">POPULARSEARCH_TB</string>
+    <string name="db_table_domain">DOMAIN_TB</string>
 
 
     <string name="mobile">Phone Number</string>
@@ -125,6 +127,8 @@
     <string name="call_permission_denied_message">Call permission denied</string>
     <string name="db_table_checkin">tb_checkin</string>
     <string name="db_table_fav">tb_favour</string>
+    <string name="db_table_mycheckin">tb_mycheckin</string>
+    <string name="db_table_mfavID">tb_favID</string>
     <string name="serve_prepay">The service needs prepayment for Check-in</string>
     <string name="terms"><![CDATA[T & C]]></string>
     <string name="err_pwd_valid_login">Invalid password</string>
