@@ -1,39 +1,80 @@
 {
   "project_info": {
-    "project_number": "678747420066",
-    "firebase_url": "https://youneverwait-1fafa.firebaseio.com",
-    "project_id": "youneverwait-1fafa",
-    "storage_bucket": "youneverwait-1fafa.appspot.com"
+    "project_number": "906354236471",
+    "firebase_url": "https://jaldee-4e85e.firebaseio.com",
+    "project_id": "jaldee-4e85e",
+    "storage_bucket": "jaldee-4e85e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:678747420066:android:5d3e1ed8b3ecbbd8",
+        "mobilesdk_app_id": "1:906354236471:android:106c48b50f0b288c",
         "android_client_info": {
-          "package_name": "com.nv.youneverwait"
+          "package_name": "com.jaldeeinc.jaldee"
         }
       },
       "oauth_client": [
         {
-          "client_id": "678747420066-r3dnvekh9qm93jhin124lmeqh45qainc.apps.googleusercontent.com",
+          "client_id": "906354236471-m269aatldldhea76uu53uaild6v9rsis.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDG4PB5GHoqt_EVnCre6xaGn7NEWyqlVx8"
+          "current_key": "AIzaSyCtFtfLJhLB0btRShx1cXWr6o8Kjya3qI0"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906354236471-m269aatldldhea76uu53uaild6v9rsis.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "906354236471-m7mpq2h3f2ea9r8f6rcm2i52k13in6mm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaldeeinc.jaldeebusiness"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906354236471:android:49ad839716440904",
+        "android_client_info": {
+          "package_name": "com.jaldeeinc.jaldeebusiness"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906354236471-m269aatldldhea76uu53uaild6v9rsis.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtFtfLJhLB0btRShx1cXWr6o8Kjya3qI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906354236471-m269aatldldhea76uu53uaild6v9rsis.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "906354236471-m7mpq2h3f2ea9r8f6rcm2i52k13in6mm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaldeeinc.jaldeebusiness"
+              }
+            }
+          ]
         }
       }
     }

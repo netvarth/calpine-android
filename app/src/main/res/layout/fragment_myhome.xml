@@ -105,7 +105,7 @@
                 </Spinner>
 
 
-                <com.nv.youneverwait.utils.EmptySubmitSearchView
+                <com.jaldeeinc.jaldee.utils.EmptySubmitSearchView
                     android:id="@+id/search"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
