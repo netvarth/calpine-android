@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Jaldee Soft Pvt Ltd</string>
+    <string name="app_name">Jaldee</string>
 
     <string name="url">https://www.jaldee.com/v1/rest/</string>
     <string name="url_terms">https://www.jaldee.com/#/terms</string>
