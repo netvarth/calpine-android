@@ -841,7 +841,6 @@ public class CheckIn extends AppCompatActivity {
                         } else {
 
                             if(terminology.equals("order")){
-
                                 tv_title.setText("Order");
                                 Word_Change = "Order for ";
                                 btn_checkin.setText("CONFIRM");
@@ -2376,8 +2375,8 @@ public class CheckIn extends AppCompatActivity {
 
                                     txtprepayment.setText("Prepayment Amount ");
 
-                                    DecimalFormat format = new DecimalFormat("0.00");
-                                    txtamt.setText("Rs." + format.format(sAmountPay));
+//                                    DecimalFormat format = new DecimalFormat("0.00");
+                                    txtamt.setText("Rs." + sAmountPay);
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);

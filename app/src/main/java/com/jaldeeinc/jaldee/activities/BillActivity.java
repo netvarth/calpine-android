@@ -219,8 +219,8 @@ public class BillActivity extends AppCompatActivity {
 
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-                        DecimalFormat format = new DecimalFormat("0.00");
-                        txtamt.setText("Rs." + format.format(sAmountPay));
+//                        DecimalFormat format = new DecimalFormat("0.00");
+                        txtamt.setText("Rs." + sAmountPay);
                         Typeface tyface1 = Typeface.createFromAsset(mCOntext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         txtamt.setTypeface(tyface1);
@@ -467,8 +467,8 @@ public class BillActivity extends AppCompatActivity {
 
                         if (mBillData.getNetTotal() != 0.0) {
                             tv_grosstotal.setVisibility(View.VISIBLE);
-                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_grosstotal.setText("₹ " + format.format(mBillData.getNetTotal()));
+//                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_grosstotal.setText("₹ " + String.valueOf(mBillData.getNetTotal()));
 
                         } else {
                             tv_grosstotal.setVisibility(View.GONE);
@@ -494,8 +494,8 @@ public class BillActivity extends AppCompatActivity {
                         if (mBillData.getNetRate() != 0) {
 
                             amountlayout.setVisibility(View.VISIBLE);
-                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_amount.setText("₹ " + format.format(mBillData.getNetRate()));
+//                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_amount.setText("₹ " + String.valueOf(mBillData.getNetRate()));
                         } else {
 
                             amountlayout.setVisibility(View.GONE);
@@ -503,8 +503,8 @@ public class BillActivity extends AppCompatActivity {
 
                         if (mBillData.getTotalAmountPaid() != 0) {
                             paidlayout.setVisibility(View.VISIBLE);
-                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_paid.setText("₹ " + format.format(mBillData.getTotalAmountPaid()));
+//                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_paid.setText("₹ " + String.valueOf(mBillData.getTotalAmountPaid()));
                         } else {
 
                             paidlayout.setVisibility(View.GONE);
@@ -516,15 +516,15 @@ public class BillActivity extends AppCompatActivity {
                         if (total != 0 && total > 0) {
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setVisibility(View.VISIBLE);
-                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_totalamt.setText("₹ " + format.format(total));
+//                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_totalamt.setText("₹ " + String.valueOf(total));
                             txttotal.setText("Amount Due");
                         } else {
                             tv_totalamt.setVisibility(View.VISIBLE);
                             txttotal.setVisibility(View.VISIBLE);
-                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_totalamt.setText("₹ " + format.format(Math.abs(total)));
-                            txttotal.setText("Amount Due");
+//                            DecimalFormat format = new DecimalFormat("0.00");
+                            tv_totalamt.setText("₹ " + Math.abs(total));
+                            txttotal.setText("Refundable Amount");
                             btn_pay.setVisibility(View.INVISIBLE);
                             couponCheckin.setVisibility(View.INVISIBLE);
                         }

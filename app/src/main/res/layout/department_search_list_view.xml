@@ -313,7 +313,7 @@
             android:layout_marginBottom="@dimen/padding2"
             android:gravity="center"
             android:paddingRight="@dimen/padding5"
-            android:text="Claim my Business !"
+            android:text="Own this business? Claim it now"
             android:textColor="@color/title_consu"
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone" />

@@ -659,6 +659,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.tv_claimable.setVisibility(View.VISIBLE);
                     myViewHolder.L_layout_type.setVisibility(View.GONE);
                     myViewHolder.L_checkin.setVisibility(View.GONE);
+                    myViewHolder.tv_qmessage.setVisibility(View.GONE);
 
                 } else {
                     myViewHolder.tv_claimable.setVisibility(View.INVISIBLE);
@@ -742,12 +743,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     Date date1 = null, date2 = null;
                     try {
                         date1 = df.parse(formattedDate);
-                        if (searchdetailList.getAvail_date() != null)
+                        if (searchdetailList.getAvail_date() != null )
                             date2 = df.parse(searchdetailList.getAvail_date());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    if (searchdetailList.getMessage() != null) {
+                    if (searchdetailList.getMessage() != null && searchdetailList.getClaimable() == null) {
                         myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                         myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                     } else {

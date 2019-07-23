@@ -153,7 +153,6 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         });
 
 
-
         myViewHolder.tv_status.setVisibility(View.VISIBLE);
         Typeface tyfacestatus = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");

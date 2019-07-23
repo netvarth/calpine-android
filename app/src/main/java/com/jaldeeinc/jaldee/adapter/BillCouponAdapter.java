@@ -50,8 +50,8 @@ public class BillCouponAdapter extends RecyclerView.Adapter<BillCouponAdapter.Bi
         holder.txt_coupon_name.setText("( "+couponName+" )");
         couponValue = couponValue.replaceAll("^\"|\"$", "");
         Float f= Float.parseFloat(couponValue);
-        DecimalFormat format = new DecimalFormat("0.00");
-        holder.txt_coupon_value.setText("(-) ₹"+format.format(f));
+//        DecimalFormat format = new DecimalFormat("0.00");
+        holder.txt_coupon_value.setText("(-) ₹"+" "+(f));
         Log.i("JCoupon Name", couponName);
         Log.i("JCoupon Value", couponValue);
 
