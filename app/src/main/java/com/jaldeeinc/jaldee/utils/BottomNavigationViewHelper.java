@@ -26,7 +26,7 @@ public class BottomNavigationViewHelper {
                 BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
 
                 //noinspection RestrictedApi
-                item.setShiftingMode(false);
+                //   item.setShiftingMode(false);
                 // set once again checked value, so view will be updated
                 //noinspection RestrictedApi
                 item.setChecked(item.getItemData().isChecked());

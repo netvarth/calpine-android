@@ -56,7 +56,7 @@ public class HomeTabFragment extends Fragment {
 
         //Initializing the bottomNavigationView
         bottomNavigationView = (BottomNavigationView) rootView.findViewById(R.id.bottom_navigation);
-        BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
+        //  BottomNavigationViewHelper.removeShiftMode(bottomNavigationView);
         bottomNavigationView.setItemIconTintList(null);
 
 
