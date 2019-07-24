@@ -53,7 +53,7 @@ import retrofit2.Callback;
 public class Config {
 
 
-    public static boolean is_log_enabled = true;
+    public static boolean is_log_enabled = false;
     public static String APP_TAG = "YNW"; //app name
     public static Vector<AlertDialog> dialogs = new Vector<AlertDialog>();
     public static int taskCount;
@@ -71,6 +71,7 @@ public class Config {
     // id to handle the notification in the notification tray
     public static final int NOTIFICATION_ID = 100;
     public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
+
 
     public static void logV(String message) {
         if (is_log_enabled) {
