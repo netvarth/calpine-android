@@ -482,11 +482,11 @@ public class BillActivity extends AppCompatActivity {
                             gstLabel.setVisibility(View.GONE);
                         }
 
-                        if(String.valueOf(mBillData.getId()).equals("")){
+                        if(String.valueOf(mBillData.getBillId()).equals("")){
                             billLabel.setVisibility(View.GONE);
                             tv_bill.setVisibility(View.GONE);
                         }else{
-                            tv_bill.setText(String.valueOf(mBillData.getId()));
+                            tv_bill.setText(String.valueOf(mBillData.getBillId()));
                         }
 
 
@@ -524,7 +524,7 @@ public class BillActivity extends AppCompatActivity {
                             txttotal.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
                             tv_totalamt.setText("₹ " + Math.abs(total));
-                            txttotal.setText("Refundable Amount");
+                            txttotal.setText("Amount Due");
                             btn_pay.setVisibility(View.INVISIBLE);
                             couponCheckin.setVisibility(View.INVISIBLE);
                         }

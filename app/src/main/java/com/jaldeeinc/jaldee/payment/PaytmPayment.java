@@ -238,7 +238,12 @@ public class PaytmPayment {
             @Override
             public void onTransactionResponse(Bundle inResponse) {
                 Log.d("LOG", "Payment Transaction : " + inResponse);
-                Toast.makeText(context, "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
+                if(inResponse.toString().contains("TXN_SUCCESS")){
+                    Toast.makeText(context, "Payment Successful", Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(context, "Payment Failed ", Toast.LENGTH_LONG).show();
+                }
+
 
 
                 //Toast.makeText(context, "Payment Success", Toast.LENGTH_LONG).show();

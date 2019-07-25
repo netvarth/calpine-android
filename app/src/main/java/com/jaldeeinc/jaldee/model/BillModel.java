@@ -95,6 +95,16 @@ public class BillModel {
     double totalAmountPaid;
     int id;
 
+    public String getBillId() {
+        return billId;
+    }
+
+    public void setBillId(String billId) {
+        this.billId = billId;
+    }
+
+    String billId;
+
     public String getItemName() {
         return itemName;
     }
