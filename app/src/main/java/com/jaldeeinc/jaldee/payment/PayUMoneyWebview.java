@@ -188,7 +188,8 @@ public class PayUMoneyWebview extends Activity {
             runOnUiThread(new Runnable() {
                 public void run() {
 
-                	Toast.makeText(PayUMoneyWebview.this, "Status is txn is success "+" payment id is "+paymentId, Toast.LENGTH_SHORT).show();
+//                	Toast.makeText(PayUMoneyWebview.this, "Status is txn is success "+" payment id is "+paymentId, Toast.LENGTH_SHORT).show();
+					Toast.makeText(PayUMoneyWebview.this, "Payment Successful", Toast.LENGTH_SHORT).show();
 
 
 					Intent intent = new Intent(mContext, Home.class);
@@ -211,7 +212,8 @@ public class PayUMoneyWebview extends Activity {
 			runOnUiThread(new Runnable() {
 				public void run() {
 
-					Toast.makeText(PayUMoneyWebview.this, "Status is txn is failed "+" payment id is "+paymentId, Toast.LENGTH_SHORT).show();
+//					Toast.makeText(PayUMoneyWebview.this, "Status is txn is failed "+" payment id is "+paymentId, Toast.LENGTH_SHORT).show();
+					Toast.makeText(PayUMoneyWebview.this, "Payment Failed", Toast.LENGTH_SHORT).show();
 					//String str="Status is txn is failed "+" payment id is "+paymentId;
 					// new MainActivity().writeStatus(str);
 

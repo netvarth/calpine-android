@@ -84,6 +84,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     Fragment mFragment;
     String workingHrs = "";
     String termilogy;
+    String countTerminology;
     SearchView mSearchView;
     private AdapterCallback mAdapterCallback;
     Activity activity;
@@ -295,6 +296,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                             JSONObject term = new JSONObject(searchdetailList.getTerminologies().get(0).toString());
                             termilogy = term.get("waitlist").toString();
+                            countTerminology = term.get("provider").toString();
                             Log.i("waitlistAlternate", term.get("waitlist").toString());
 
 
@@ -635,7 +637,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                 if (searchdetailList.getBranchSpCount() > 0) {
-                    myViewHolder.tv_count.setText("Count :" + " " + +searchdetailList.getBranchSpCount());
+//                    myViewHolder.tv_count.setText(countTerminology + " " + +searchdetailList.getBranchSpCount());
+                    myViewHolder.tv_count.setText(searchdetailList.getBranchSpCount()+" "+countTerminology);
+                    myViewHolder.tv_count.setVisibility(View.VISIBLE);
+                }else{
+                    myViewHolder.tv_count.setVisibility(View.GONE);
                 }
 
 

@@ -214,6 +214,7 @@ public class ChangePasswordFragment extends RootFragment {
         }
     }
 
+
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
