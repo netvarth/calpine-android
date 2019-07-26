@@ -29,8 +29,6 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomPopUpWindow;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
-import com.jaldeeinc.jaldee.service.SmsBroadcastReceiver;
-import com.jaldeeinc.jaldee.service.SmsListener;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import org.json.JSONException;
@@ -57,7 +55,6 @@ public class VerifyOtp extends AppCompatActivity {
     TextView txt_ynw;
     Button btn_verify;
     TextView txt_enterotp,txtproceed;
-    private static final int SMS_PERMISSION_CODE = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,10 +67,6 @@ public class VerifyOtp extends AppCompatActivity {
         tv_title.setGravity(Gravity.CENTER);
         tv_title.setText("YouNeverWait");*/
 
-
-        if (!hasReadSmsPermission()) {
-            showRequestPermissionsInfoAlertDialog();
-        }
 
         txt_ynw= (TextView) findViewById(R.id.txt_ynw);
         txt_ynw.setVisibility(View.VISIBLE);
@@ -159,7 +152,7 @@ public class VerifyOtp extends AppCompatActivity {
 
         txt_enterotp.setText( spannable );
 
-        SmsBroadcastReceiver.bindListener(new SmsListener() {
+        /*SmsBroadcastReceiver.bindListener(new SmsListener() {
             @Override
             public void messageReceived(String otp) {
 
@@ -171,46 +164,12 @@ public class VerifyOtp extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
 
 
     }
 
-    /**
-     * Optional informative alert dialog to explain the user why the app needs the Read/Send SMS permission
-     */
-    private void showRequestPermissionsInfoAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.permission_alert_dialog_title);
-        builder.setMessage(R.string.permission_dialog_message);
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                requestReadAndSendSmsPermission();
-            }
-        });
-        builder.show();
-    }
 
-    /**
-     * Runtime permission shenanigans
-     */
-    private boolean hasReadSmsPermission() {
-        return ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestReadAndSendSmsPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)) {
-            Log.d("", "shouldShowRequestPermissionRationale(), no permission requested");
-            return;
-        }
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS},
-                SMS_PERMISSION_CODE);
-    }
     public void ApiResendOTp(final String firstname, final String lastname, String email, String check) {
 
         ApiInterface apiService =

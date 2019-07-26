@@ -141,11 +141,7 @@ public class PayUMoneyWebview extends Activity {
 				Config.logV("URL FINISH------------"+url);
 			}
 
-			@SuppressWarnings("unused")
-			public void onReceivedSslError(WebView view, SslErrorHandler handler) {
-				Log.e("Error", "Exception caught!");
-				handler.cancel();
-			}
+
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {

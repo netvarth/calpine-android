@@ -28,8 +28,6 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
-import com.jaldeeinc.jaldee.service.SmsBroadcastReceiver;
-import com.jaldeeinc.jaldee.service.SmsListener;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import okhttp3.ResponseBody;
@@ -51,7 +49,7 @@ public class ResetOtp extends AppCompatActivity {
     ImageView img_indicator;
     TextView txt_enterotp, txtproceed, txt_ynw;
 
-    private static final int SMS_PERMISSION_CODE = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +86,6 @@ public class ResetOtp extends AppCompatActivity {
 
         mContext = this;
 
-        if (!hasReadSmsPermission()) {
-            showRequestPermissionsInfoAlertDialog();
-        }
 
 
        /* if (checkAndRequestPermissions()) {
@@ -150,7 +145,7 @@ public class ResetOtp extends AppCompatActivity {
         txt_enterotp.setText(spannable);
 
 
-        SmsBroadcastReceiver.bindListener(new SmsListener() {
+        /*SmsBroadcastReceiver.bindListener(new SmsListener() {
             @Override
             public void messageReceived(String otp) {
 
@@ -162,49 +157,12 @@ public class ResetOtp extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
 
 
 
     }
 
-
-
-    /**
-     * Optional informative alert dialog to explain the user why the app needs the Read/Send SMS permission
-     */
-    private void showRequestPermissionsInfoAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.permission_alert_dialog_title);
-        builder.setMessage(R.string.permission_dialog_message);
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                requestReadAndSendSmsPermission();
-            }
-        });
-        builder.show();
-    }
-
-    /**
-     * Runtime permission shenanigans
-     */
-    private boolean hasReadSmsPermission() {
-        return ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestReadAndSendSmsPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)) {
-            Log.d("", "shouldShowRequestPermissionRationale(), no permission requested");
-            return;
-        }
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS},
-                SMS_PERMISSION_CODE);
-    }
 
     private void ApiResendOtp() {
 
