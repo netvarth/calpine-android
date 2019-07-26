@@ -120,11 +120,11 @@
 
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/Lprivacy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:visibility="gone"
             android:background="@color/app_background"
             android:orientation="horizontal">
 

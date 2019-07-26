@@ -28,8 +28,6 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
-import com.jaldeeinc.jaldee.service.SmsBroadcastReceiver;
-import com.jaldeeinc.jaldee.service.SmsListener;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import okhttp3.ResponseBody;
@@ -51,14 +49,14 @@ public class ResetOtp extends AppCompatActivity {
     ImageView img_indicator;
     TextView txt_enterotp, txtproceed, txt_ynw;
 
-    private static final int SMS_PERMISSION_CODE = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resetotp);
 
-        ImageView iBackPress = findViewById(R.id.backpress);
+        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,43 +64,56 @@ public class ResetOtp extends AppCompatActivity {
                 finish();
             }
         });
-        TextView tv_title = findViewById(R.id.title);
+        TextView tv_title = (TextView)findViewById(R.id.title);
         tv_title.setText("Forgot password");
+
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
-        img_indicator = findViewById(R.id.img_indicator);
+
+
+
+
+        img_indicator = (ImageView) findViewById(R.id.img_indicator);
         img_indicator.setVisibility(View.GONE);
-        txtproceed = findViewById(R.id.txtproceed);
+        txtproceed = (TextView) findViewById(R.id.txtproceed);
+
 
         Typeface tyface_p = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         txtproceed.setTypeface(tyface_p);
+
+
         mContext = this;
 
-        if (!hasReadSmsPermission()) {
-            showRequestPermissionsInfoAlertDialog();
-        }
-        editotp = findViewById(R.id.editotp);
-        otpverify = findViewById(R.id.btn_verify);
+
+
+       /* if (checkAndRequestPermissions()) {
+            // carry on the normal flow, as the case of  permissions  granted.
+        }*/
+        editotp = (TextInputEditText) findViewById(R.id.editotp);
+
+        otpverify = (Button) findViewById(R.id.btn_verify);
         otpverify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editotp.getText().toString() != null && !editotp.getText().toString().equalsIgnoreCase("")) {
                     ApiForgotResetOtp(editotp.getText().toString());
-                } else {
-                    Toast.makeText(mContext, "Please enter a valid otp", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(mContext,"Please enter a valid otp",Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
-        resendOtp = findViewById(R.id.resendOtp);
+        resendOtp = (TextView) findViewById(R.id.resendOtp);
         resendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ApiResendOtp();
             }
         });
-        txt_input_layout_otp = findViewById(R.id.text_input_layout_pwd);
+        txt_input_layout_otp = (TextInputLayout) findViewById(R.id.text_input_layout_pwd);
         Typeface tyface_edittext = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         editotp.setTypeface(tyface_edittext);
@@ -114,66 +125,44 @@ public class ResetOtp extends AppCompatActivity {
         Typeface tyface_btn = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Medium.otf");
         otpverify.setTypeface(tyface_btn);
+
+
         String firstWord = "Please enter ";
         String secondWord = "OTP";
-        txt_enterotp = findViewById(R.id.txt_enterotp);
+
+        txt_enterotp = (TextView) findViewById(R.id.txt_enterotp);
         Spannable spannable = new SpannableString(firstWord + secondWord);
+
         Typeface tyface_edittext1 = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         Typeface tyface_edittext2 = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
+
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
         txt_enterotp.setText(spannable);
-        SmsBroadcastReceiver.bindListener(new SmsListener() {
+
+
+        /*SmsBroadcastReceiver.bindListener(new SmsListener() {
             @Override
             public void messageReceived(String otp) {
 
                 editotp.setText(otp);
-                if (otp.length() > 0) {
+                if(otp.length()>0){
                     ApiForgotResetOtp(editotp.getText().toString());
-                } else {
-                    Toast.makeText(mContext, "Please enter a valid otp", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(mContext,"Please enter a valid otp",Toast.LENGTH_SHORT).show();
                 }
+
             }
-        });
+        });*/
+
+
+
     }
 
-    /**
-     * Optional informative alert dialog to explain the user why the app needs the Read/Send SMS permission
-     */
-    private void showRequestPermissionsInfoAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.permission_alert_dialog_title);
-        builder.setMessage(R.string.permission_dialog_message);
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                requestReadAndSendSmsPermission();
-            }
-        });
-        builder.show();
-    }
-
-    /**
-     * Runtime permission shenanigans
-     */
-    private boolean hasReadSmsPermission() {
-        return ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestReadAndSendSmsPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)) {
-            Log.d("", "shouldShowRequestPermissionRationale(), no permission requested");
-            return;
-        }
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS},
-                SMS_PERMISSION_CODE);
-    }
 
     private void ApiResendOtp() {
 
@@ -200,7 +189,7 @@ public class ResetOtp extends AppCompatActivity {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        Toast.makeText(mContext, "Otp has been resend to " + loginId, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext,"Otp has been resend to "+loginId,Toast.LENGTH_LONG).show();
                     }
 
 
@@ -216,8 +205,11 @@ public class ResetOtp extends AppCompatActivity {
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
+
             }
         });
+
+
     }
 
     public void ApiForgotResetOtp(String otp) {
@@ -249,18 +241,23 @@ public class ResetOtp extends AppCompatActivity {
                             startActivity(iPass);
                             finish();
 
-                        } else {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
                         }
 
 
-                    } else {
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
                     }
+
+
+
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
 
             @Override
@@ -277,13 +274,14 @@ public class ResetOtp extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+       // LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("otp"));
         super.onResume();
 
     }
-
     @Override
     public void onPause() {
         super.onPause();
+       // LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 
     }
 }

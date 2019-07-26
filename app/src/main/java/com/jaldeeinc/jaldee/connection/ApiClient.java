@@ -27,8 +27,6 @@ public class ApiClient {
             //"http://54.215.5.201:8181/v1/rest/";
             //"http://35.154.241.175/v1/rest/";
 
-
-
     private static Retrofit retrofit = null;
     private static Retrofit retrofitAWS = null;
     private static Retrofit retrofitCloud = null;

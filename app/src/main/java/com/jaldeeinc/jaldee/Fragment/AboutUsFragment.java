@@ -1,8 +1,11 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.http.SslError;
@@ -26,7 +29,7 @@ public class AboutUsFragment extends RootFragment {
 
     ImageView collapseabt, collapseterm, collapseprivacy;
     LinearLayout mLaboutus, mLterms, mLprivacy;
-    boolean expandabtFlag = false, expandtermFlag = false, expandpvyFlag = false;
+    boolean expandabtFlag = false, expandtermFlag = false;
     WebView aboutWeb, privacyWeb, termsWeb;
     Activity mActivity;
     String webabout, webterm, webprivacy;
@@ -86,7 +89,7 @@ public class AboutUsFragment extends RootFragment {
                     aboutWeb.loadData(webabout, "text/html", "UTF-8");
 
                     expandtermFlag=false;
-                    expandpvyFlag=false;
+
                     termsWeb.setVisibility(View.GONE);
                     privacyWeb.setVisibility(View.GONE);
                     collapseterm.setImageResource(R.drawable.icon_down_light);
@@ -101,8 +104,8 @@ public class AboutUsFragment extends RootFragment {
             }
         });
 
-        expandpvyFlag = false;
-        mLprivacy.setOnClickListener(new View.OnClickListener() {
+
+        /*mLprivacy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Config.logV("Click-----------------");
@@ -111,7 +114,7 @@ public class AboutUsFragment extends RootFragment {
                     privacyWeb.setVisibility(View.VISIBLE);
                     collapseprivacy.setImageResource(R.drawable.icon_up_light);
 
-
+                    privacyWeb.getSettings().setDomStorageEnabled(true);
                     expandtermFlag=false;
                     expandabtFlag=false;
                     termsWeb.setVisibility(View.GONE);
@@ -148,17 +151,19 @@ public class AboutUsFragment extends RootFragment {
 
                         // This method will be triggered when error page appear
 
-                        @Override
+                        *//*@Override
                         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError er) {
                             handler.proceed();
                             if (progressBar.isShowing()) {
                                 progressBar.dismiss();
                             }
                             // Ignore SSL certificate errors
-                        }
+                        }*//*
+
+
                     });
                     privacyWeb.loadUrl(mContext.getResources().getString(R.string.url_privacy));
-                    /*privacyWeb.setWebViewClient(new WebViewClient() {
+                    *//*privacyWeb.setWebViewClient(new WebViewClient() {
                         public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
                             view.loadUrl(url);
@@ -172,7 +177,7 @@ public class AboutUsFragment extends RootFragment {
                                 progressBar.dismiss();
                             }
                         }
-                    });*/
+                    });*//*
                 } else {
                     privacyWeb.setVisibility(View.GONE);
                     expandpvyFlag = false;
@@ -180,7 +185,7 @@ public class AboutUsFragment extends RootFragment {
                 }
 
             }
-        });
+        });*/
 
         expandtermFlag = false;
 
@@ -193,8 +198,6 @@ public class AboutUsFragment extends RootFragment {
                     expandtermFlag = true;
                     termsWeb.setVisibility(View.VISIBLE);
                     collapseterm.setImageResource(R.drawable.icon_up_light);
-
-                    expandpvyFlag=false;
                     expandabtFlag=false;
                     privacyWeb.setVisibility(View.GONE);
                     aboutWeb.setVisibility(View.GONE);
