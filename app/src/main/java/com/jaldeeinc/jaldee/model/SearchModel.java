@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.model;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -23,9 +24,10 @@ public class SearchModel {
     ArrayList<SearchModel> globalSearchLabels;
 
     @Override
-    public String toString(){
+    public String toString() {
         return displayname;
     }
+
     public ArrayList<SearchModel> getSectorLevelLabels() {
         return sectorLevelLabels;
     }
@@ -61,6 +63,7 @@ public class SearchModel {
     }
 
     String group;
+
     public void setName(String name) {
         this.name = name;
     }
@@ -96,5 +99,16 @@ public class SearchModel {
     }
 
     String displayname;
+
+
+    public JsonObject getPopularSearchLabels() {
+        return popularSearchLabels;
+    }
+
+    public void setPopularSearchLabels(JsonObject popularSearchLabels) {
+        this.popularSearchLabels = popularSearchLabels;
+    }
+
+    private JsonObject popularSearchLabels;
 
 }

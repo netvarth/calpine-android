@@ -29,6 +29,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +59,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
 
+import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.FilterActivity;
@@ -68,6 +70,7 @@ import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.adapter.ActiveCheckInAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchListAdpter;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
+import com.jaldeeinc.jaldee.model.PopularSearchModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.common.Config;
@@ -978,13 +981,18 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                     try {
 
+                        ArrayList<SearchModel> mPopularSearch = new ArrayList<>();
+
                         if (mDialog.isShowing())
                             Config.closeDialog(getActivity(), mDialog);
 
                         Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-------------------------" + response.code());
-                        // Config.logV("Response--BODY------Search-------------------" + new Gson().toJson(response));
+                        Config.logV("Response--BODY------Search-------------------" + new Gson().toJson(response.body()));
+                        Log.i("search1234",response.body().getPopularSearchLabels().toString());
+                        Log.i("search1234",response.body().getPopularSearchLabels().get("all").toString());
                         mGLobalSearch.clear();
+
                         if (response.code() == 200) {
 
                             SearchModel search = null;
@@ -1008,9 +1016,31 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             mSpecializationDomain.clear();
                             mSubDomain.clear();
 
+                            JsonArray lstPopularSearchLabel = response.body().getPopularSearchLabels().get("all").getAsJsonObject().get("labels").getAsJsonArray();
+                            for (int k = 0; k < lstPopularSearchLabel.size(); k++) {
+                                search = new SearchModel();
+                                search.setName(lstPopularSearchLabel.get(k).getAsJsonObject().get("name").getAsString());
+                                search.setDisplayname(lstPopularSearchLabel.get(k).getAsJsonObject().get("displayname").getAsString());
+                                search.setQuery(lstPopularSearchLabel.get(k).getAsJsonObject().get("query").getAsString());
+                                search.setSector("All");
+                                mPopularSearch.add(search);
+                            }
+
+                            Log.i("All Search Labels", new Gson().toJson(mPopularSearch));
+
                             for (int i = 0; i < response.body().getSectorLevelLabels().size(); i++) {
                                 int mSectorSize = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels().size();
 
+                                lstPopularSearchLabel = response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName()).getAsJsonObject().get("labels").getAsJsonArray();
+
+                                for (int l = 0; l < lstPopularSearchLabel.size(); l++) {
+                                    search = new SearchModel();
+                                    search.setName(lstPopularSearchLabel.get(l).getAsJsonObject().get("name").getAsString());
+                                    search.setDisplayname(lstPopularSearchLabel.get(l).getAsJsonObject().get("displayname").getAsString());
+                                    search.setQuery(lstPopularSearchLabel.get(l).getAsJsonObject().get("query").getAsString());
+                                    search.setSector(response.body().getSectorLevelLabels().get(i).getName());
+                                    mPopularSearch.add(search);
+                                }
 
                                 for (int k = 0; k < mSectorSize; k++) {
                                     ArrayList<SearchModel> getSubdomainSectorLevel = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels();
@@ -1032,8 +1062,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                         search.setSector(response.body().getSectorLevelLabels().get(i).getName());
                                         mSpecializationDomain.add(search);
                                     }
-
-
                                 }
                             }
                            /* ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
@@ -1042,8 +1070,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                             DatabaseHandler db = new DatabaseHandler(mContext);
                             db.DeletePopularSearch();
-                            db.insertPopularSearchInfo(mGLobalSearch);
-                            db.insertPopularSearchInfo(mSubDomain);
+
+                            Log.i("All Popular Search ", new Gson().toJson(mPopularSearch));
+
+                            db.insertPopularSearchInfo(mPopularSearch);
+//                            db.insertPopularSearchInfo();
+
+                            // db.insertPopularSearchInfo(mGLobalSearch);
+                            // db.insertPopularSearchInfo(mSubDomain);
                             if (Config.isOnline(mContext)) {
                                 APiGetDomain();
                             }
