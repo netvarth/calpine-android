@@ -51,19 +51,19 @@ public class BIllDiscountAdapter extends RecyclerView.Adapter<BIllDiscountAdapte
         holder.txtdiscountName.setText(String.valueOf(billServiceData.get(position).getName()));
         if(billServiceData.get(position).getDiscValue()!=0.0) {
             Config.logV("VALUE @@@@@@"+String.valueOf(billServiceData.get(position).getDiscValue()));
-            holder.txtdiscountVal.setText("(-)₹ " + String.valueOf(billServiceData.get(position).getDiscValue()));
+            holder.txtdiscountVal.setText("(-)₹ " + Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getDiscValue()));
         }
 
         if(billServiceData.get(position).getCouponValue()!=0.0) {
 
             Config.logV("VALUE @@@@@@"+String.valueOf(billServiceData.get(position).getCouponValue()));
-            holder.txtdiscountVal.setText("(-)₹ " + String.valueOf(billServiceData.get(position).getCouponValue()));
+            holder.txtdiscountVal.setText("(-)₹ " + Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getCouponValue()));
         }
 
         if(billServiceData.get(position).getDiscountValue()!=0.0) {
 
             Config.logV("VALUE @@@@@@"+String.valueOf(billServiceData.get(position).getDiscountValue()));
-            holder.txtdiscountVal.setText("(-)₹ " + String.valueOf(billServiceData.get(position).getDiscountValue()));
+            holder.txtdiscountVal.setText("(-)₹ " + Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getDiscountValue()));
         }
 
 

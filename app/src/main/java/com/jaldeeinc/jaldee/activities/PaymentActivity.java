@@ -10,6 +10,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,6 +52,7 @@ public class PaymentActivity extends AppCompatActivity {
     static Activity mActivity;
     String ynwUUID, accountID;
     double amountDue;
+    String purpose;
     boolean showPaytmWallet = false;
     boolean showPayU = false;
     Button btn_paytm;
@@ -83,9 +85,9 @@ public class PaymentActivity extends AppCompatActivity {
             ynwUUID = extras.getString("ynwUUID");
             accountID = extras.getString("accountID");
             amountDue = extras.getDouble("amountDue");
+            purpose = extras.getString("purpose");
         }
-
-        APIPayment(accountID, ynwUUID, amountDue);
+        APIPayment(accountID, ynwUUID, amountDue, purpose);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -133,7 +135,7 @@ public class PaymentActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void APIPayment(final String accountID, final String ynwUUID, final double amountDue) {
+    private void APIPayment(final String accountID, final String ynwUUID, final double amountDue, final String purpose) {
 
 
         ApiInterface apiService =
@@ -144,7 +146,7 @@ public class PaymentActivity extends AppCompatActivity {
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPayment(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -175,7 +177,7 @@ public class PaymentActivity extends AppCompatActivity {
                         if (!showPaytmWallet && !showPayU) {
 
                         } else {
-                            PaymentFunc(ynwUUID, accountID, amountDue);
+                            PaymentFunc(ynwUUID, accountID, amountDue, purpose);
                         }
 
                     } else {
@@ -204,7 +206,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     }
 
-    private void PaymentFunc(final String ynwUUID, final String accountID, final double amountDue) {
+    private void PaymentFunc(final String ynwUUID, final String accountID, final double amountDue, final String purpose) {
 
         if (showPaytmWallet) {
             btn_paytm.setVisibility(View.VISIBLE);
@@ -220,7 +222,7 @@ public class PaymentActivity extends AppCompatActivity {
         final EditText edt_message = (EditText) findViewById(R.id.edt_message);
         TextView txtamt = (TextView) findViewById(R.id.txtamount);
 //        DecimalFormat format = new DecimalFormat("0.00");
-        txtamt.setText("Rs." + String.valueOf(amountDue));
+        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(amountDue));
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         txtamt.setTypeface(tyface1);
@@ -228,7 +230,7 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
+                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, purpose, "dashboard");
 
             }
         });
@@ -238,7 +240,7 @@ public class PaymentActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 PaytmPayment payment = new PaytmPayment(mContext);
-                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, mContext, mActivity, "home");
+                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose,  mContext, mActivity, "home");
             }
         });
 

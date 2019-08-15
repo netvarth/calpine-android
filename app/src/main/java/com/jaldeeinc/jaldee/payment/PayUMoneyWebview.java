@@ -68,7 +68,8 @@ public class PayUMoneyWebview extends Activity {
 		if (extras != null) {
 			/*ynwUUID = extras.getString("ynwUUID");
 			accountID = extras.getString("accountID");*/
-			amount = extras.getString("amount");
+			// amount = extras.getString("amount");
+			amount =  Config.getAmountinSingleDecimalPoints(Double.parseDouble(extras.getString("amount")));
 			 response_data =(CheckSumModel)getIntent().getSerializableExtra("responsedata");
 
 

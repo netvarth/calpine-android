@@ -366,7 +366,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "amountPaid DOUBLE,"
                 + "amountDue DOUBLE,"
                 + "personsAhead INTEGER,"
-                + "serviceTime TEXT)";
+                + "serviceTime TEXT,"
+                + "statusUpdatedTime TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_checkin) + tblFields;
@@ -396,7 +397,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "amountPaid DOUBLE,"
                 + "amountDue DOUBLE,"
                 + "personsAhead INTEGER,"
-                + "serviceTime TEXT)";
+                + "serviceTime TEXT,"
+                + "statusUpdatedTime TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_mycheckin) + tblFields;
@@ -434,6 +436,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("amountDue", activeCheckIn.getAmountDue());
                 values.put("personsAhead", activeCheckIn.getPersonsAhead());
                 values.put("serviceTime", activeCheckIn.getServiceTime());
+                values.put("statusUpdatedTime", activeCheckIn.getStatusUpdatedTime());
 
                 db.insert(mContext.getString(R.string.db_table_checkin), null, values);
             }
@@ -457,7 +460,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_checkin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime"};
 
         db.beginTransaction();
 
@@ -492,7 +495,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 activeModel.setServiceTime(cursor.getString(20));
                 activeModel.setQueueEndTime(cursor.getString(21));
-
+                activeModel.setStatusUpdatedTime(cursor.getString(22));
 
                 checkin.add(activeModel);
             } while (cursor.moveToNext());
@@ -535,6 +538,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("amountDue", activeCheckIn.getAmountDue());
                 values.put("personsAhead", activeCheckIn.getPersonsAhead());
                 values.put("serviceTime", activeCheckIn.getServiceTime());
+                values.put("statusUpdatedTime", activeCheckIn.getStatusUpdatedTime());
 
                 db.insert(mContext.getString(R.string.db_table_mycheckin), null, values);
             }
@@ -558,7 +562,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_mycheckin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime"};
         String selection = "";
         String[] selectionArgs = null;
         selectionArgs = new String[]{Config.getTodaysDateString()};
@@ -603,7 +607,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setPersonsAhead(cursor.getInt(19));
 
                 activeModel.setServiceTime(cursor.getString(20));
-
+                activeModel.setStatusUpdatedTime(cursor.getString(21));
 
                 checkin.add(activeModel);
             } while (cursor.moveToNext());

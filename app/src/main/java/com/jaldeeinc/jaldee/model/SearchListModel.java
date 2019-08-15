@@ -8,16 +8,6 @@ import java.util.ArrayList;
  */
 
 public class SearchListModel implements Serializable {
-
-
-    public boolean isIs_SpecOpen() {
-        return is_SpecOpen;
-    }
-
-    public void setIs_SpecOpen(boolean is_SpecOpen) {
-        this.is_SpecOpen = is_SpecOpen;
-    }
-
     private boolean is_SpecOpen = false;
     private String id;
     private String Logo;
@@ -37,7 +27,47 @@ public class SearchListModel implements Serializable {
     private String claimable;
     private int coupon_enabled;
     private String department_code;
+    ArrayList gallery_thumb_nails;
+    String parking_location1;
+    String sectorname;
+    String account_type;
+    String branch_name;
+    String sub_sector;
+    String location1;
+    int ynw_verified;
+    String distance;
+    String ynw_verified_level;
+    String physiciansemergencyservices_location1;
+    String dentistemergencyservices_location1;
+    String qualification;
+    String specialization_displayname;
+    String show_waiting_time;
+    int queueWaitingTime;
+    private String message;
+    boolean showToken;
+    boolean onlineCheckIn;
+    boolean futureWaitlist;
+    boolean isAvailableToday;
+    int branchSpCount;
+    private String serviceTime;
+    int personAhead;
+    String calculationMode;
+    private String first_checkin_coupon_count;
+    private String future_checkins;
+    private String online_checkins;
+    private ArrayList business_hours1;
+    ArrayList terminologies;
+    boolean isopen;
+    private ArrayList services;
+    private ArrayList Departments;
 
+    public boolean isIs_SpecOpen() {
+        return is_SpecOpen;
+    }
+
+    public void setIs_SpecOpen(boolean is_SpecOpen) {
+        this.is_SpecOpen = is_SpecOpen;
+    }
 
     public String getParking_location1() {
         return parking_location1;
@@ -47,7 +77,6 @@ public class SearchListModel implements Serializable {
         this.parking_location1 = parking_location1;
     }
 
-
     public ArrayList getGallery_thumb_nails() {
         return gallery_thumb_nails;
     }
@@ -56,9 +85,6 @@ public class SearchListModel implements Serializable {
         this.gallery_thumb_nails = gallery_thumb_nails;
     }
 
-    ArrayList gallery_thumb_nails;
-    String parking_location1;
-
     public String getSectorname() {
         return sectorname;
     }
@@ -66,9 +92,6 @@ public class SearchListModel implements Serializable {
     public void setSectorname(String sectorname) {
         this.sectorname = sectorname;
     }
-
-    String sectorname;
-
 
     public String getClaimable() {
         return claimable;
@@ -86,8 +109,6 @@ public class SearchListModel implements Serializable {
         this.account_type = account_type;
     }
 
-    String account_type;
-
     public String getBranch_name() {
         return branch_name;
     }
@@ -95,9 +116,6 @@ public class SearchListModel implements Serializable {
     public void setBranch_name(String branch_name) {
         this.branch_name = branch_name;
     }
-
-    String branch_name;
-
 
     public int getCoupon_enabled() {
         return coupon_enabled;
@@ -107,7 +125,6 @@ public class SearchListModel implements Serializable {
         this.coupon_enabled = coupon_enabled;
     }
 
-
     public String getSub_sector() {
         return sub_sector;
     }
@@ -115,8 +132,6 @@ public class SearchListModel implements Serializable {
     public void setSub_sector(String sub_sector) {
         this.sub_sector = sub_sector;
     }
-
-    String sub_sector;
 
     public String getLocation1() {
         return location1;
@@ -126,8 +141,6 @@ public class SearchListModel implements Serializable {
         this.location1 = location1;
     }
 
-    String location1;
-
     public int getYnw_verified() {
         return ynw_verified;
     }
@@ -135,8 +148,6 @@ public class SearchListModel implements Serializable {
     public void setYnw_verified(int ynw_verified) {
         this.ynw_verified = ynw_verified;
     }
-
-    int ynw_verified;
 
     public String getDistance() {
         return distance;
@@ -146,19 +157,13 @@ public class SearchListModel implements Serializable {
         this.distance = distance;
     }
 
-    String distance;
-
-
     public void setYnw_verified_level(String ynw_verified_level) {
         this.ynw_verified_level = ynw_verified_level;
     }
 
-    String ynw_verified_level;
-
     public String getYnw_verified_level() {
         return ynw_verified_level;
     }
-
 
     public String getParking_type_location1() {
         return parking_type_location1;
@@ -216,10 +221,6 @@ public class SearchListModel implements Serializable {
         this.dentistemergencyservices_location1 = dentistemergencyservices_location1;
     }
 
-    String physiciansemergencyservices_location1;
-    String dentistemergencyservices_location1;
-
-
     public String getQualification() {
         return qualification;
     }
@@ -228,8 +229,6 @@ public class SearchListModel implements Serializable {
         this.qualification = qualification;
     }
 
-    String qualification;
-
     public String getSpecialization_displayname() {
         return specialization_displayname;
     }
@@ -237,8 +236,6 @@ public class SearchListModel implements Serializable {
     public void setSpecialization_displayname(String specialization_displayname) {
         this.specialization_displayname = specialization_displayname;
     }
-
-    String specialization_displayname;
 
     public String getShow_waiting_time() {
         return show_waiting_time;
@@ -256,7 +253,6 @@ public class SearchListModel implements Serializable {
         this.queueWaitingTime = queueWaitingTime;
     }
 
-
     public String getServiceTime() {
         return serviceTime;
     }
@@ -264,9 +260,6 @@ public class SearchListModel implements Serializable {
     public void setServiceTime(String serviceTime) {
         this.serviceTime = serviceTime;
     }
-
-    String show_waiting_time;
-    int queueWaitingTime;
 
     public int getBranchSpCount() {
         return branchSpCount;
@@ -283,9 +276,6 @@ public class SearchListModel implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
-
-    private String message;
-
 
     public boolean isOnlineCheckIn() {
         return onlineCheckIn;
@@ -311,7 +301,6 @@ public class SearchListModel implements Serializable {
         isAvailableToday = availableToday;
     }
 
-
     public boolean isShowToken() {
         return showToken;
     }
@@ -319,14 +308,6 @@ public class SearchListModel implements Serializable {
     public void setShowToken(boolean showToken) {
         this.showToken = showToken;
     }
-
-    boolean showToken;
-    boolean onlineCheckIn;
-    boolean futureWaitlist;
-    boolean isAvailableToday;
-
-    int branchSpCount;
-    private String serviceTime;
 
     public int getPersonAhead() {
         return personAhead;
@@ -336,9 +317,6 @@ public class SearchListModel implements Serializable {
         this.personAhead = personAhead;
     }
 
-    int personAhead;
-
-
     public String getCalculationMode() {
         return calculationMode;
     }
@@ -347,9 +325,6 @@ public class SearchListModel implements Serializable {
         this.calculationMode = calculationMode;
     }
 
-    String calculationMode;
-
-
     public ArrayList getServices() {
         return services;
     }
@@ -357,8 +332,6 @@ public class SearchListModel implements Serializable {
     public void setServices(ArrayList services) {
         this.services = services;
     }
-
-    private ArrayList services;
 
     public String getFuture_checkins() {
         return future_checkins;
@@ -376,7 +349,6 @@ public class SearchListModel implements Serializable {
         this.online_checkins = online_checkins;
     }
 
-
     public String getFirst_checkin_coupon_count() {
         return first_checkin_coupon_count;
     }
@@ -384,10 +356,6 @@ public class SearchListModel implements Serializable {
     public void setFirst_checkin_coupon_count(String first_checkin_coupon_count) {
         this.first_checkin_coupon_count = first_checkin_coupon_count;
     }
-
-    private String first_checkin_coupon_count;
-    private String future_checkins;
-    private String online_checkins;
 
     public String getId() {
         return id;
@@ -477,9 +445,6 @@ public class SearchListModel implements Serializable {
         this.business_hours1 = business_hours1;
     }
 
-    private ArrayList business_hours1;
-
-
     public ArrayList getTerminologies() {
         return terminologies;
     }
@@ -487,8 +452,6 @@ public class SearchListModel implements Serializable {
     public void setTerminologies(ArrayList terminologies) {
         this.terminologies = terminologies;
     }
-
-    ArrayList terminologies;
 
     public boolean isIsopen() {
         return isopen;
@@ -498,9 +461,6 @@ public class SearchListModel implements Serializable {
         this.isopen = isopen;
     }
 
-    boolean isopen;
-
-
     public String getDepartment_code() {
         return department_code;
     }
@@ -508,6 +468,12 @@ public class SearchListModel implements Serializable {
     public void setDepartment_code(String department_code) {
         this.department_code = department_code;
     }
+
+    public ArrayList getDepartments() {
+        return Departments;
+    }
+
+    public void setDepartments(ArrayList departments) {
+        Departments = departments;
+    }
 }
-
-

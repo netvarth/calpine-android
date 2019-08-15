@@ -60,10 +60,11 @@ public class DeptFragment extends RootFragment {
         });
 
         int count = 0;
-        if(msearchList!= null){
+        if(msearchList!= null) {
             count = msearchList.size();
         }
-        tv_title.setText(department.getDepartmentName()+ " "+"("+ count +")");
+
+            tv_title.setText(department.getDepartmentName() + " " + "(" + count + ")");
 
 
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);

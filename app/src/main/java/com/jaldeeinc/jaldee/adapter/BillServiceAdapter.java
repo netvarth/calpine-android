@@ -50,9 +50,9 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
 //        DecimalFormat format = new DecimalFormat("0.00");
         if (billServiceData.get(position).getServiceName() != null) {
             Config.logV("ServiceNAme" + billServiceData.get(position).getServiceName());
-            holder.txtservicenme.setText(billServiceData.get(position).getServiceName()+" @ "+billServiceData.get(position).getPrice());
+            holder.txtservicenme.setText(billServiceData.get(position).getServiceName()+" @ "+Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getPrice()));
         } else {
-            holder.txtservicenme.setText(billServiceData.get(position).getItemName()+" @ "+billServiceData.get(position).getPrice());
+            holder.txtservicenme.setText(billServiceData.get(position).getItemName()+" @ "+ Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getPrice()));
         }
         //holder.txt_amount.setText("₹ " + String.valueOf(billServiceData.get(position).getPrice()));
 
@@ -83,7 +83,7 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
             holder.txtcoupanval.setText("₹ " + String.valueOf(billServiceData.get(position).getCouponValue()));
         }*/
 
-        holder.qtyval.setText("₹ " + String.valueOf(billServiceData.get(position).getPrice() * billServiceData.get(position).getQuantity()));
+        holder.qtyval.setText("₹ " + Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getPrice() * billServiceData.get(position).getQuantity()));
 
         holder.qty.setText("Qty " + String.valueOf(billServiceData.get(position).getQuantity()));
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
@@ -92,7 +92,7 @@ public class BillServiceAdapter extends RecyclerView.Adapter<BillServiceAdapter.
 
             if(billServiceData.get(position).getDiscount().size()>0) {
                 holder.Lsubtotal.setVisibility(View.VISIBLE);
-                holder.txtsubtotalval.setText("₹ " + String.valueOf(billServiceData.get(position).getNetRate()));
+                holder.txtsubtotalval.setText("₹ " + Config.getAmountinTwoDecimalPoints(billServiceData.get(position).getNetRate()));
                 billDiscountAdapter = new BIllDiscountAdapter("service", billServiceData.get(position).getDiscount(), context);
                 holder.recyclerView_discount.setAdapter(billDiscountAdapter);
                 billDiscountAdapter.notifyDataSetChanged();

@@ -145,8 +145,7 @@ public class CheckInCopy extends AppCompatActivity {
         //  String uniqueID = UUID.randomUUID().toString();
         JSONObject jsonObj = new JSONObject();
         try {
-            String androidId = Settings.Secure.getString(getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
+            String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
             jsonObj.put("amount", amount);
             jsonObj.put("paymentMode", "DC");
             jsonObj.put("uuid", ynwUUID);
@@ -673,7 +672,7 @@ public class CheckInCopy extends AppCompatActivity {
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPayment(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override

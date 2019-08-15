@@ -125,6 +125,14 @@ public class Register extends AppCompatActivity {
         spannable_txt1.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, text_1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable_txt1.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_download.setText(spannable_txt1);
+        tv_download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.jaldeeinc.jaldeebusiness"));
+                startActivity(intent);
+            }
+        });
     }
 
     private boolean validatePhone() {

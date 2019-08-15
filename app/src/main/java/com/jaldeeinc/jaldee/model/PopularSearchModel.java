@@ -1,6 +1,9 @@
 package com.jaldeeinc.jaldee.model;
 
-import java.util.ArrayList;
+/**
+ * Created by Mani on 12/08/19.
+ */
+
 
 public class PopularSearchModel {
     String name;

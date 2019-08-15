@@ -241,6 +241,44 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/LDepartment_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding3"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txtdepartment1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Service1"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+                <!--<TextView-->
+                    <!--android:id="@+id/txtdepartment2"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/padding3"-->
+                    <!--android:gravity="left"-->
+                    <!--android:text="Service2"-->
+                    <!--android:textColor="@color/title_grey"-->
+                    <!--android:textSize="@dimen/txtsize_12" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/txtDSeeAll"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/padding3"-->
+                    <!--android:gravity="left"-->
+                    <!--android:text="See All"-->
+                    <!--android:textColor="@color/title_consu"-->
+                    <!--android:textSize="@dimen/txtsize_12" />-->
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/LService_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -85,7 +85,7 @@ public class BillActivity extends AppCompatActivity {
     String accountID;
     String payStatus, consumer;
     String coupon_entered;
-
+    String purpose;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +147,7 @@ public class BillActivity extends AppCompatActivity {
             accountID = extras.getString("accountID");
             payStatus = extras.getString("payStatus");
             consumer = extras.getString("consumer");
+            purpose = extras.getString("purpose");
         }
 
 
@@ -220,7 +221,7 @@ public class BillActivity extends AppCompatActivity {
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
 //                        DecimalFormat format = new DecimalFormat("0.00");
-                        txtamt.setText("Rs." + sAmountPay);
+                        txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay)));
                         Typeface tyface1 = Typeface.createFromAsset(mCOntext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         txtamt.setTypeface(tyface1);
@@ -228,7 +229,7 @@ public class BillActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
 
-                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, "bill");
+                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose,"bill");
 
                                 dialog.dismiss();
                             }
@@ -239,7 +240,7 @@ public class BillActivity extends AppCompatActivity {
                             public void onClick(View v) {
 
                                 PaytmPayment payment = new PaytmPayment(mCOntext);
-                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, mCOntext, mActivity, "");
+                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "");
                                 dialog.dismiss();
                             }
                         });
@@ -269,7 +270,7 @@ public class BillActivity extends AppCompatActivity {
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPayment(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -468,7 +469,7 @@ public class BillActivity extends AppCompatActivity {
                         if (mBillData.getNetTotal() != 0.0) {
                             tv_grosstotal.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_grosstotal.setText("₹ " + String.valueOf(mBillData.getNetTotal()));
+                            tv_grosstotal.setText("₹ " + Config.getAmountinTwoDecimalPoints(mBillData.getNetTotal()));
 
                         } else {
                             tv_grosstotal.setVisibility(View.GONE);
@@ -495,7 +496,7 @@ public class BillActivity extends AppCompatActivity {
 
                             amountlayout.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_amount.setText("₹ " + String.valueOf(mBillData.getNetRate()));
+                            tv_amount.setText("₹ " + Config.getAmountinTwoDecimalPoints(mBillData.getNetRate()));
                         } else {
 
                             amountlayout.setVisibility(View.GONE);
@@ -504,7 +505,7 @@ public class BillActivity extends AppCompatActivity {
                         if (mBillData.getTotalAmountPaid() != 0) {
                             paidlayout.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_paid.setText("₹ " + String.valueOf(mBillData.getTotalAmountPaid()));
+                            tv_paid.setText("₹ " + Config.getAmountinTwoDecimalPoints(mBillData.getTotalAmountPaid()));
                         } else {
 
                             paidlayout.setVisibility(View.GONE);
@@ -517,21 +518,23 @@ public class BillActivity extends AppCompatActivity {
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_totalamt.setText("₹ " + String.valueOf(total));
+//                            tv_totalamt.setText("₹ " + String.valueOf(total));
+                            tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(total));
                             txttotal.setText("Amount Due");
                         } else {
                             tv_totalamt.setVisibility(View.VISIBLE);
                             txttotal.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
-                            tv_totalamt.setText("₹ " + Math.abs(total));
+                            tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(Math.abs(total)));
                             txttotal.setText("Amount Due");
                             btn_pay.setVisibility(View.INVISIBLE);
                             couponCheckin.setVisibility(View.INVISIBLE);
                         }
 
 
-                        sAmountPay = String.valueOf(total);
-                        Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@" + sAmountPay);
+//                        sAmountPay = String.valueOf(total);
+                          sAmountPay = Config.getAmountinTwoDecimalPoints(total);
+//                        Config.logV("Amount PAy@@@@@@@@@@@@@@@@@@@@@@@@" + sAmountPay);
 
                         if (total != 0.0 && total > 0) {
                             btn_pay.setVisibility(View.VISIBLE);
@@ -541,9 +544,12 @@ public class BillActivity extends AppCompatActivity {
 
                         if (mBillData.getTaxableTotal() > 0) {
                             taxlayout.setVisibility(View.VISIBLE);
-                            txttax.setText("Tax " + String.valueOf(mBillData.getTaxPercentage()) + "% of " + "₹ " + String.valueOf(mBillData.getTaxableTotal()) + "\n" + "(CGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
+                             txttax.setText("Tax " + String.valueOf(mBillData.getTaxPercentage()) + "% of " + "₹ " + Config.getAmountinTwoDecimalPoints(mBillData.getTaxableTotal()) + "\n" + "(CGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
+//                        //    txttax.setText("Tax " + String.valueOf(mBillData.getTaxPercentage()) + "% of " + "₹ " + String.valueOf(mBillData.getTaxableTotal()) + "\n" + "(CGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %" + ", SGST: " + String.valueOf(mBillData.getTaxPercentage() / 2) + " %)");
 
-                            txtaxval.setText("(+)₹ " + String.valueOf(mBillData.getTotalTaxAmount()));
+
+//                            txtaxval.setText("(+)₹ " + String.valueOf(mBillData.getTotalTaxAmount()));
+                            txtaxval.setText("(+)₹ " + Config.getAmountinTwoDecimalPoints(mBillData.getTotalTaxAmount()));
                         } else {
                             taxlayout.setVisibility(View.GONE);
                         }

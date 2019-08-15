@@ -120,7 +120,7 @@ public class PaytmPayment {
             return "did not work";
         }
     }
-    public void ApiGenerateHashPaytm(String ynwUUID, String amount, String accountID, final Context mContext, final Activity mActivity, final String from) {
+    public void ApiGenerateHashPaytm(String ynwUUID, String amount, String accountID, String purpose, final Context mContext, final Activity mActivity, final String from) {
 
 
         ApiInterface apiService =
@@ -138,6 +138,8 @@ public class PaytmPayment {
             jsonObj.put("paymentMode", "PPI");
             jsonObj.put("uuid", ynwUUID);
             jsonObj.put("accountId", accountID);
+            jsonObj.put("purpose", purpose);
+
 
         } catch (JSONException e) {
             e.printStackTrace();

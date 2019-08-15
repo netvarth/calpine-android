@@ -349,4 +349,13 @@ public class ActiveCheckIn {
     boolean favFlag=false;
 
 
+    public void setStatusUpdatedTime(String statusUpdatedTime) {
+        this.statusUpdatedTime = statusUpdatedTime;
+    }
+
+    String statusUpdatedTime;
+
+    public String getStatusUpdatedTime() {
+        return statusUpdatedTime;
+    }
 }

@@ -112,14 +112,14 @@ public class SearchServiceActivity extends AppCompatActivity {
 
         if (duration != null) {
             tv_duration.setVisibility(View.VISIBLE);
-            tv_duration.setText(duration + " Mins");
+            tv_duration.setText(duration + " mins");
         } else {
             tv_duration.setVisibility(View.GONE);
 
         }
         if (isPrepayment) {
             Lprepayment.setVisibility(View.VISIBLE);
-            txtpreVal.setText("₹" + MinPrePaymentAmount);
+            txtpreVal.setText("₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(MinPrePaymentAmount)));
         } else {
             Lprepayment.setVisibility(View.GONE);
         }

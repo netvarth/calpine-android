@@ -321,6 +321,17 @@ public class SearchAWsResponse {
     @SerializedName("services")
     private ArrayList services;
 
+    public ArrayList getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(ArrayList departments) {
+        this.departments = departments;
+    }
+
+    @SerializedName("departments")
+    private ArrayList departments;
+
     public ArrayList getSpecialization_displayname() {
         return specialization_displayname;
     }

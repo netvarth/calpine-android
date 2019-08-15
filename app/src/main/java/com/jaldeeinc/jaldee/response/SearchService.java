@@ -25,6 +25,15 @@ public class SearchService implements Serializable {
     ArrayList<SearchService> mAllService;
     String url;
     String thumbUrl;
+    int department;
+
+    public int getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(int department) {
+        this.department = department;
+    }
 
     public int getId() {
         return id;
@@ -166,5 +175,9 @@ public class SearchService implements Serializable {
     }
 
     boolean taxable;
+
+
+
+
 
 }

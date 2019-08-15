@@ -1287,6 +1287,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     search.setServices(response.body().getHits().getHit().get(i).getFields().getServices());
                                 }
 
+                                if(response.body().getHits().getHit().get(i).getFields().getDepartments() !=null) {
+                                    search.setDepartments(response.body().getHits().getHit().get(i).getFields().getDepartments());
+                                }
+
                                 if (response.body().getHits().getHit().get(i).getFields().getBusiness_hours1() != null) {
                                     search.setBusiness_hours1(response.body().getHits().getHit().get(i).getFields().getBusiness_hours1());
                                 }
@@ -1536,6 +1540,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (response.body().getHits().getHit().get(i).getFields().getServices() != null) {
                                     search.setServices(response.body().getHits().getHit().get(i).getFields().getServices());
                                 }
+                                if(response.body().getHits().getHit().get(i).getFields().getDepartments() !=null) {
+                                    search.setDepartments(response.body().getHits().getHit().get(i).getFields().getDepartments());
+                                }
+
 
 
                                 //7 types
@@ -1765,9 +1773,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 }
 
-
                                 if (mSearchRespPass.get(i).getServices() != null) {
                                     searchList.setServices(mSearchRespPass.get(i).getServices());
+                                }
+
+                                if(mSearchRespPass.get(i).getDepartments() !=null) {
+                                    searchList.setDepartments(mSearchRespPass.get(i).getDepartments());
                                 }
 
                                 if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
@@ -1966,6 +1977,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 }
 
+                                if(mSearchRespPass.get(i).getDepartments()!=null) {
+                                    searchList.setDepartments(mSearchRespPass.get(i).getDepartments());
+                                }
 
                                 if (mSearchRespPass.get(i).getServices() != null) {
                                     searchList.setServices(mSearchRespPass.get(i).getServices());

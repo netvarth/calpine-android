@@ -131,7 +131,7 @@ String header;
                 txtnocheckold.setText("No Future Check-ins");
             }
             if (groupPosition == 2) {
-                txtnocheckold.setText("No Old Check-ins");
+                txtnocheckold.setText("No Past Check-ins");
             }
             txtnocheckold.setVisibility(View.VISIBLE);
         } else {
@@ -407,7 +407,7 @@ String header;
         {
             @Override
             public void onClick(View v) {
-                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()));
+                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf( Config.toTitleCase(activelist.getFirstName() )+ " " + Config.toTitleCase(activelist.getLastName())));
             }
         });
 
@@ -588,7 +588,7 @@ String header;
                         }
 
 
-                        String secondWord = activelist.getAppxWaitingTime() + " Mins ";
+                        String secondWord = Config.getTimeinHourMinutes(activelist.getAppxWaitingTime());
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -597,7 +597,7 @@ String header;
 
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             tv_status.setVisibility(View.VISIBLE);
-                            tv_status.setText(secondWord + " - Cancelled ");
+                            tv_status.setText("Cancelled at " + " "  + activelist.getStatusUpdatedTime());
                             tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
 
@@ -707,7 +707,7 @@ String header;
 
                     if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                         tv_status.setVisibility(View.VISIBLE);
-                        tv_status.setText(secondWord + " - Cancelled ");
+                        tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                         tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
 
@@ -805,7 +805,7 @@ String header;
 
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             tv_status.setVisibility(View.VISIBLE);
-                            tv_status.setText(secondWord + " - Cancelled ");
+                            tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                             tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
 

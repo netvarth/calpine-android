@@ -57,4 +57,6 @@
     <color name="arrived_green">#79e688</color>
     <color name="orange">#fd7e14</color>
 
+    <color name="department_search_results">#f0f0f5</color>
+
 </resources>

@@ -1063,7 +1063,7 @@ public class Appointment extends AppCompatActivity {
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPayment(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -2540,7 +2540,7 @@ public class Appointment extends AppCompatActivity {
 
                                     txtprepayment.setText("Prepayment Amount ");
 
-                                    txtamt.setText("Rs." + sAmountPay);
+                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay)));
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);
@@ -2559,7 +2559,7 @@ public class Appointment extends AppCompatActivity {
                                             startActivity(iPayu);*/
 
 
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, "checkin");
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT,"checkin");
 
                                             dialog.dismiss();
 
@@ -2573,7 +2573,7 @@ public class Appointment extends AppCompatActivity {
 
                                             Config.logV("Account ID --------Paytm------"+modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID,mContext,mActivity,"");
+                                            // payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, mContext,mActivity,"");
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);

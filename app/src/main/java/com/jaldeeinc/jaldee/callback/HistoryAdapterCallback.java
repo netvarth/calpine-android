@@ -7,7 +7,7 @@ package com.jaldeeinc.jaldee.callback;
 public interface HistoryAdapterCallback {
 
     void onMethodMessageCallback(String ynwuuid,String accountID,String provider);
-    void onMethodBillIconCallback(String payStatus,String value,String provider,String accountID);
+    void onMethodBillIconCallback(String payStatus,String value,String provider,String accountID,String CustomerName);
 
     void onMethodDelecteCheckinCallback(String ynwuuid,int accountID,boolean todayflag,boolean futflag,boolean oldflag);
     void onMethodActiveCallback(String value);

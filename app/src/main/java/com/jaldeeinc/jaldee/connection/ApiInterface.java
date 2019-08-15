@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.connection;
 
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
+import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
@@ -189,7 +190,7 @@ public interface ApiInterface {
 
 
     @GET(" consumer/payment/modes/{accountid}")
-    Call<ArrayList<PaymentModel>> getPayment(@Path("accountid") String accountid);
+    Call<ArrayList<PaymentModel>> getPaymentModes(@Path("accountid") String accountid);
 
 
     @GET("consumer/waitlist/history")
@@ -220,6 +221,7 @@ public interface ApiInterface {
     Call<CheckSumModel> generateHash(@Body RequestBody jsonObj, @Query("accountId") String account);
 
     @Headers("User-Agent: android")
+
     @POST("consumer/payment")
     Call<PaytmChecksum> generateHashPaytm(@Body RequestBody jsonObj);
 
@@ -242,6 +244,8 @@ public interface ApiInterface {
     @GET("{serviceid}/services.json")
     Call<ArrayList<SearchService>> getService(@Path("serviceid") int serviceid, @Query("modifiedDate") String mDate);
 
+    @GET("{uniqueId}/services.json")
+    Call<ArrayList<DepartmentModal>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
     /*@POST("PayUMoneyHash.php")
     Call<ResponseBody> generateHashTest(@Body RequestBody jsonObj);*/

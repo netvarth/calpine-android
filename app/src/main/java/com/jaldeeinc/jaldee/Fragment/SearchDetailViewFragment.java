@@ -57,6 +57,7 @@ import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.model.ContactModel;
+import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.SocialMediaModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
@@ -112,7 +113,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<CoupnResponse> couponResponse = new ArrayList<>();
     ArrayList<SearchViewDetail> mSearchGallery;
     ArrayList<SearchLocation> mSearchLocList;
-    ArrayList<SearchDepartment> mSearchDepartments;
+   ArrayList<SearchDepartment> mSearchDepartments;
     String mbranchId, latitude, longitude, lat_long;
     Boolean firstCouponAvailable,couponAvailable;
 
@@ -123,6 +124,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<QueueList> mSearchQueueList;
 
     ArrayList<SearchService> mServicesList;
+
+    ArrayList<DepartmentModal> mDepartmentsList;
 
     ArrayList<SearchCheckInMessage> mSearchmCheckMessageList;
 
@@ -170,7 +173,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     private boolean isLastPage = false;
     int total_foundcount = 0;
     String terminology;
-
+    List<SearchDepartment> mSearchDepartmentList;
 
     HashMap<String, List<SearchListModel>> departmentMap;
 
@@ -279,7 +282,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ApiSearchViewDetail(uniqueID);
         ApiSearchGallery(uniqueID);
         ApiSearchVirtualFields(uniqueID);
-
 
 
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
@@ -1028,6 +1030,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         UpdateMainUI(mBusinessDataList);
                         ApiSearchGallery(uniqueID);
                         ApiFavList();
+                        //APIServiceDepartments(mProvoderId);
                         ApiSearchViewLocation(uniqueID);
                         listDoctorsByDepartment();
 
@@ -1175,7 +1178,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         for (int k = 0; k < mSearchLocList.size(); k++) {
 
-                            ApiSearchViewServiceID(mSearchLocList.get(k).getId());
+                             ApiSearchViewServiceID(mSearchLocList.get(k).getId());
 
                         }
                     }
@@ -1401,6 +1404,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mService.setLocid(id);
                         mServicesList.add(mService);
 
+//                        ApiServicesGroupbyDepartment(mServicesList);
 
                         Config.logV("mServicesList @@@@" + response.body().size());
                         Config.logV("mServicesList" + mServicesList.size());
@@ -1439,6 +1443,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         });
     }
 
+//    private void ApiServicesGroupbyDepartment(ArrayList<SearchService> mServicesList) {
+//        mDepartmentsList.clear();
+//        for(int i=0;i<mServicesList.size();i++) {
+//
+//        }
+//    }
+
     private void ApiDepartment(final int id) {
 
 
@@ -1470,12 +1481,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         String responses = new Gson().toJson(response.body());
                         Config.logV("Deapartnamesss---------------" + responses);
 
-//                        for (int i = 0; i < response.body().getDepartments().size(); i++) {
-//                            departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
-//                            departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
-//
-//
-//                        }
+                        for (int i = 0; i < response.body().getDepartments().size(); i++) {
+                            departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
+                            departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
+
+
+                        }
 
                         mSearchDepartments.addAll(response.body().getDepartments());
 
@@ -1510,6 +1521,63 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
     }
+
+
+//    private void APIServiceDepartments(final int id) {
+//
+//
+//        ApiInterface apiService =
+//                ApiClient.getClient(mContext).create(ApiInterface.class);
+//
+//
+////        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+////        mDialog.show();
+//
+//
+//        Call<SearchDepartment> call = apiService.getDepartment(id);
+//
+//        call.enqueue(new Callback<SearchDepartment>() {
+//            @Override
+//            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
+//
+//                try {
+//
+//                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code----------Service---------------" + response.code());
+//
+//
+//                    if (response.code() == 200) {
+//
+//                        String responses = new Gson().toJson(response.body());
+//                        Config.logV("Deapartnamesss---------------" + responses);
+//
+////                        for (int i = 0; i < response.body().getDepartments().size(); i++) {
+////                            departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
+////                            departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
+////
+////
+////                        }
+//
+//                        mSearchDepartments.addAll(response.body().getDepartments());
+//
+//                    }
+//
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<SearchDepartment> call, Throwable t) {
+//                Config.logV("Fail---------------" + t.toString());
+//
+//            }
+//        });
+//
+//
+//    }
 
 
     private void ApiSearchViewID(int mProviderid, ArrayList<String> ids) {
@@ -1604,19 +1672,22 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         Config.logV("Location Adapter-----------------------");
 
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                        mRecyLocDetail.setLayoutManager(mLayoutManager);
-                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(),terminology,mSearchSettings.isShowTokenId());
-                        mRecyLocDetail.setAdapter(mSearchLocAdapter);
-                        mSearchLocAdapter.notifyDataSetChanged();
+
                     }
 
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                    mRecyLocDetail.setLayoutManager(mLayoutManager);
+                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(),terminology,mSearchSettings.isShowTokenId());
+                    mRecyLocDetail.setAdapter(mSearchLocAdapter);
+                    mSearchLocAdapter.notifyDataSetChanged();
                 }
 
             }
+
 
             @Override
             public void onFailure(Call<SearchSetting> call, Throwable t) {

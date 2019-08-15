@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.jaldeeinc.jaldee"
+        applicationId "com.nv.ynw"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 5
@@ -41,10 +41,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
     implementation 'com.github.drawers:SpinnerDatePicker:1.0.6'
     implementation 'com.paytm:pgplussdk:1.1.3'
-
-
-
-
 
 
 }

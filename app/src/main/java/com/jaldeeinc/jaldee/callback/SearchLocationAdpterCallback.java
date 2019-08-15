@@ -1,9 +1,11 @@
 package com.jaldeeinc.jaldee.callback;
 
 import com.jaldeeinc.jaldee.model.WorkingModel;
+import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sharmila on 13/9/18.

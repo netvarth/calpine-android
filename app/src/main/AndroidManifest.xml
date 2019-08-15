@@ -3,19 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.jaldeeinc.jaldee">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--Permission for checking whether wifi is enabled -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Permission for checking whether wifi is enabled -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-
-    <uses-permission android:name="android.permission.RECEIVE_SMS" tools:node="remove" />
-    <uses-permission android:name="android.permission.READ_SMS" tools:node="remove" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
-
-
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission
+        android:name="android.permission.RECEIVE_SMS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_SMS"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
+        tools:node="remove" />
 
     <application
         android:name=".common.MyApplication"
@@ -23,7 +25,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
-
         <activity
             android:name=".activities.Splash"
             android:screenOrientation="portrait">
@@ -35,107 +36,83 @@
         </activity>
         <activity
             android:name=".activities.Register"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Signup"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.VerifyOtp"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Password"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Home"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="FCM_PLUGIN_ACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".payment.PayUMoneyWebview"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Login"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ResetOtp"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SwipeGalleryImage"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.FilterActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SearchServiceActivity"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SearchLocationActivity"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CheckIn"
-            android:screenOrientation="portrait"></activity>
-
-        <activity android:name=".activities.Appointment"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.Appointment"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CheckInCopy"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.PaymentActivity"
-            android:screenOrientation="portrait"></activity>
-
-
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CheckinFamilyMember"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.MessageActivity"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.DetailInboxList"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AddMemberChekin"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.TermsOfUse"
-            android:screenOrientation="portrait"></activity>
-
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.BillActivity"
-            android:screenOrientation="portrait"></activity>
-
-
+            android:screenOrientation="portrait" />
 
         <service android:name=".service.FirebaseService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-
-        <!-- <service android:name="com.nv.youneverwait.service.FirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>-->
     </application>
 
 </manifest>

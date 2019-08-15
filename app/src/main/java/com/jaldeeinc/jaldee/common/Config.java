@@ -133,6 +133,42 @@ public class Config {
         return dialog;
     }
 
+    public static String getTimeinHourMinutes(int minutes) {
+        String hour_minutes = "";
+        if(minutes == 0) {
+            return "0 minute";
+        }
+        int hours = minutes/ 60; //since both are ints, you get an int
+        int mins = minutes % 60;
+        if(hours == 1) {
+            hour_minutes += "1 hour";
+        } else if(hours >1) {
+            hour_minutes += hours + " hours";
+        }
+        if(hours > 0) {
+            hour_minutes += " ";
+        }
+        if(mins == 1) {
+            hour_minutes += "1 minute";
+        } else if (mins > 1) {
+            hour_minutes += mins + " minutes";
+        }
+
+        return hour_minutes;
+    }
+
+    public static String getAmountinTwoDecimalPoints(double amount){
+        return String.format("%.2f", amount);
+    }
+    public static String getAmountinSingleDecimalPoints(double amount){
+        return String.format("%.1f", amount);
+    }
+
+
+
+
+
+
 
     public static void ApiSessionResetLogin(String loginId, String password, final Context context) {
 

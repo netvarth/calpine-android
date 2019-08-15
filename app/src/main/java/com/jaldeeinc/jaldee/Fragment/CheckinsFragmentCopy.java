@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.adapter.ExpandableListAdapter;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
@@ -413,12 +414,14 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID) {
+    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
         iBill.putExtra("accountID", accountID);
         iBill.putExtra("payStatus", payStatus);
+        iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
+        iBill.putExtra("consumer", CustomerName);
         startActivity(iBill);
     }
 

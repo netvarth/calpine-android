@@ -13,4 +13,7 @@ public class Constants {
     public static final String FIRST_NAME = "Debajyoti";
     public static final String MOBILE = "7204342561";
     public static final String EMAIL = "d.basak.db@gmail.com";
+    public static final  String PURPOSE_PREPAYMENT = "prePayment";
+    public static final  String PURPOSE_BILLPAYMENT = "billPayment";
+
 }

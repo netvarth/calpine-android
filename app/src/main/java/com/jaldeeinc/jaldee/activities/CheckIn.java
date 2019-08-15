@@ -471,7 +471,6 @@ public class CheckIn extends AppCompatActivity {
             }
         });
 
-
         mSpinnerService.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
@@ -535,8 +534,7 @@ public class CheckIn extends AppCompatActivity {
 
         });
         mSpinnerDepartment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 deptSpinnertext = depResponse.getDepartments().get(position).getDepartmentId();
                 Log.i("dfgdfg", String.valueOf(deptSpinnertext));
 
@@ -557,7 +555,21 @@ public class CheckIn extends AppCompatActivity {
                 }
                 LServicesList.clear();
                 LServicesList.addAll(serviceList);
+                if(LServicesList.size()==0) {
+                    mSpinnerService.setVisibility(View.GONE);
+                    btn_checkin.setVisibility(View.GONE);
+                    txt_chooseservice.setVisibility(View.GONE);
+                    Toast.makeText(CheckIn.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                } else {
+                    ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    mSpinnerService.setAdapter(adapter);
+                    mSpinnertext = ((SearchService) LServicesList.get(0)).getId();
+                    mSpinnerService.setVisibility(View.VISIBLE);
+                    txt_chooseservice.setVisibility(View.VISIBLE);
+                    btn_checkin.setVisibility(View.VISIBLE);
 
+                }
             }
 
             @Override
@@ -951,7 +963,7 @@ public class CheckIn extends AppCompatActivity {
         mDialog.show();
 
 
-        Call<ArrayList<PaymentModel>> call = apiService.getPayment(accountID);
+        Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
 
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
@@ -987,7 +999,7 @@ public class CheckIn extends AppCompatActivity {
                             txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
                             String firstWord = "Prepayment Amount: ";
-                            String secondWord = "₹" + sAmountPay;
+                            String secondWord = "₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -2308,6 +2320,8 @@ public class CheckIn extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        Log.i("QueueObj Checkin", queueobj.toString());
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
         Call<ResponseBody> call = apiService.Checkin(modifyAccountID, body);
         Config.logV("JSON--------------" + new Gson().toJson(queueobj.toString()));
@@ -2376,7 +2390,7 @@ public class CheckIn extends AppCompatActivity {
                                     txtprepayment.setText("Prepayment Amount ");
 
 //                                    DecimalFormat format = new DecimalFormat("0.00");
-                                    txtamt.setText("Rs." + sAmountPay);
+                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(sAmountPay))));
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);
@@ -2387,7 +2401,7 @@ public class CheckIn extends AppCompatActivity {
                                             // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
                                             Config.logV("Account ID --------------" + modifyAccountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, "checkin");
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID,Constants.PURPOSE_PREPAYMENT, "checkin");
                                             dialog.dismiss();
                                         }
                                     });
@@ -2399,7 +2413,7 @@ public class CheckIn extends AppCompatActivity {
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, mContext, mActivity, "");
+                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "");
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);

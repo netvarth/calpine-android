@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.common.Config;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -49,9 +50,10 @@ public class BillCouponAdapter extends RecyclerView.Adapter<BillCouponAdapter.Bi
          String couponValue = this.valueList.get(position);
         holder.txt_coupon_name.setText("( "+couponName+" )");
         couponValue = couponValue.replaceAll("^\"|\"$", "");
-        Float f= Float.parseFloat(couponValue);
+        Double jCouponValue = Double.parseDouble(couponValue);
+        //Float f= Float.parseFloat(couponValue);
 //        DecimalFormat format = new DecimalFormat("0.00");
-        holder.txt_coupon_value.setText("(-) ₹"+" "+(f));
+        holder.txt_coupon_value.setText("(-) ₹"+" "+(Config.getAmountinTwoDecimalPoints(jCouponValue)));
         Log.i("JCoupon Name", couponName);
         Log.i("JCoupon Value", couponValue);
 

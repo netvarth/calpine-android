@@ -116,7 +116,16 @@ public class ChangePasswordFragment extends RootFragment {
             @Override
             public void onClick(View v) {
                 if(Config.isOnline(mContext)){
-                    if(validatePassword()&&validateConfirmPassword()/*&&validateOldPassword()*/) {
+                    if(edtOldpwd.getText().toString().isEmpty()){
+                        Toast.makeText(getActivity(),"Enter Old Password",Toast.LENGTH_SHORT).show();
+                    }
+                    else if(edtNewpwd.getText().toString().isEmpty() && !edtOldpwd.getText().toString().isEmpty()){
+                        Toast.makeText(getActivity(),"Enter New Password",Toast.LENGTH_SHORT).show();
+                    }
+                    else if(edtconfirmpwd.getText().toString().isEmpty() && !edtNewpwd.getText().toString().isEmpty()){
+                        Toast.makeText(getActivity(),"Enter Confirm Password", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(validatePassword()&&validateConfirmPassword()/*&&validateOldPassword()*/) {
                         if (edtNewpwd.getText().toString().trim().equals(edtconfirmpwd.getText().toString().trim())) {
                             ApiChangePwd(edtOldpwd.getText().toString(), edtNewpwd.getText().toString().trim());
                         }else{

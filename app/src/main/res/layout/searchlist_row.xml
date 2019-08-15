@@ -300,7 +300,44 @@
 
 
             </HorizontalScrollView>
+            <TextView
+                android:id="@+id/departments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding5"
+                android:gravity="center_horizontal"
+                android:text="Departments"
+                android:textColor="@color/sky_blue"
+                android:textSize="@dimen/txtsize_12"
+                android:textStyle="bold"
+                android:visibility="gone"></TextView>
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:scrollbars="none">
+
+
+                <LinearLayout
+                android:id="@+id/department"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="@dimen/padding5"
+                android:gravity="left"
+                android:orientation="horizontal"
+                android:textColor="@color/title_consu"
+                android:textSize="@dimen/txtsize_12"
+                android:visibility="gone"
+                    >
+
+
+
+
+            </LinearLayout>
+            </HorizontalScrollView>
             <LinearLayout
                 android:id="@+id/service"
                 android:layout_width="match_parent"
@@ -316,6 +353,18 @@
 
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/services"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding5"
+            android:gravity="center_horizontal"
+            android:text="No Services"
+            android:textColor="@color/sky_blue"
+            android:textSize="@dimen/txtsize_12"
+            android:textStyle="bold"
+            android:visibility="gone"></TextView>
 
         <TextView
             android:id="@+id/claimable"

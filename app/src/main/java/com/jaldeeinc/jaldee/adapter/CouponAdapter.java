@@ -95,7 +95,7 @@ public class CouponAdapter  extends ArrayAdapter<CoupnResponse> {
 
         if(coupnResponse.getDiscountType().equals("AMOUNT")){
             TextView mcouponDisc = (TextView) listItem.findViewById(R.id.couponDisc);
-            mcouponDisc.setText("₹"+" "+coupnResponse.getDiscountValue());
+            mcouponDisc.setText("₹"+" "+ Config.getAmountinTwoDecimalPoints(Double.parseDouble((coupnResponse.getDiscountValue()))));
         }else{
             TextView mcouponDisc = (TextView) listItem.findViewById(R.id.couponDisc);
             mcouponDisc.setText(coupnResponse.getDiscountValue()+"%");

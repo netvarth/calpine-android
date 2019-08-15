@@ -223,4 +223,5 @@ public class SearchLocation {
     }
 
     boolean expandFlag=false;
+
 }

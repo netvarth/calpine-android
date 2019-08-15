@@ -62,6 +62,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.FilterActivity;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.PaymentActivity;
@@ -482,7 +483,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     ArrayList<SearchModel> dbSubDomain = new ArrayList<>();
                     dbSubDomain.clear();
                     dbSubDomain = db.getPopularSearch(mDomainSpinner);
-                    Config.logV("getPopularSearch sssssSearch Size-------------" + dbSubDomain.size());
+                    Config.logV("getPopularSearch Search Size-------------" + dbSubDomain.size());
                     for (int i = 0; i < dbSubDomain.size(); i++) {
 
                         if (dbSubDomain.get(i).getSector().toLowerCase().trim().equalsIgnoreCase(mDomainSpinner.toLowerCase().trim())) {
@@ -1268,7 +1269,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     if (response.code() == 200) {
 
 
-                        Config.logV("Response--Array size--Active-----------------------" + response.body().size());
+                        Config.logV("Response--Array size--Active-----------------------" + response.body());
 
                         if (response.body().size() > 0) {
                             txt_sorry.setVisibility(View.GONE);
@@ -1987,12 +1988,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     @Override
     public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer) {
+        Log.i("Purpose: ", "billPayment");
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
         iBill.putExtra("accountID", accountID);
         iBill.putExtra("payStatus", payStatus);
         iBill.putExtra("consumer", consumer);
+        iBill.putExtra("purpose",Constants.PURPOSE_BILLPAYMENT);
         startActivity(iBill);
 
     }
@@ -2000,11 +2003,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     @Override
     public void onMethodActivePayIconCallback(String payStatus, final String ynwUUID, String provider, final String accountID, final double amountDue) {
+        Log.i("Purpose: ", "prePayment");
         // APIPayment(accountID, ynwUUID, amountDue);
         Intent i = new Intent(mContext, PaymentActivity.class);
         i.putExtra("ynwUUID", ynwUUID);
         i.putExtra("accountID", accountID);
         i.putExtra("amountDue", amountDue);
+        i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
         startActivity(i);
     }
 

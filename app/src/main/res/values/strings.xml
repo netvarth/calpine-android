@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Jaldee</string>
+    <string name="app_name">JaldeeConsumerTest</string>
 
     <string name="url">https://www.jaldee.com/v1/rest/</string>
     <string name="url_terms">https://www.jaldee.com/#/terms</string>
@@ -18,7 +18,7 @@
     <string name="hint_otp">Enter Otp Received</string>
     <string name="working_hours">Working\nHours</string>
     <string name="first_coupon">Sign Up\nCoupon</string>
-<!--Error dialog-->
+    <!--Error dialog-->
     <string name="dialog_no_network_text">Please check your internet connection</string>
     <string name="dialog_time_out_text">Sorry,failed to establish a connection to the server</string>
     <string name="dialog_server_down_text">Error connecting to server. Please try again</string>
@@ -114,10 +114,10 @@
     <string name="discount">Discount</string>
     <string name="tax">Tax 10% of 13500</string>
     <string name="amt_pay">Amount Paid</string>
-    <string name="cancelcheckin" >Cancel Check-In</string>
+    <string name="cancelcheckin">Cancel Check-In</string>
     <string name="pay">PAY</string>
     <string name="aboutus">About</string>
-    <string name="address" >Jaldee Soft</string>
+    <string name="address">Jaldee Soft</string>
     <string name="rate">RATE</string>
     <string name="save">Save</string>
     <string name="clickhere">Click here to view More Details</string>
@@ -141,6 +141,9 @@
     <string name="department_name">Departments</string>
     <string name="distance"><![CDATA[( <1 km  )]]></string>
     <string name="signup_coupon">Sign Up Coupon</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

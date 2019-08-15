@@ -3,8 +3,11 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +46,7 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
         public TextView name, gender;
         ImageView edit, delete;
         LinearLayout lfamily;
+        Context mContext;
 
         public MyViewHolder(View view) {
             super(view);
@@ -126,7 +130,26 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
         myViewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiDeleteFamilyMember(familylist.getUserProfile().getId(), position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage("Do you really want to delete family member ?");
+                builder.setCancelable(true);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ApiDeleteFamilyMember(familylist.getUserProfile().getId(), position);
+                        // familyList.remove(position);
+                    }
+                });
+
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
+
+
             }
         });
         myViewHolder.lfamily.setOnClickListener(new View.OnClickListener() {
@@ -165,13 +188,9 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-
-
-                        if (response.body().string().equalsIgnoreCase("true")) {
-                            familyList.remove(pos);
-                            Toast.makeText(mContext, "Member deleted successfully ", Toast.LENGTH_LONG).show();
-                            notifyDataSetChanged();
-                        }
+                        familyList.remove(pos);
+                        Toast.makeText(mContext, "Member deleted successfully ", Toast.LENGTH_LONG).show();
+                        notifyDataSetChanged();
                     }else{
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
