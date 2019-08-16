@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.ServiceListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 
@@ -37,6 +38,7 @@ public class ServiceListFragment extends RootFragment {
     TextView tv_subtitle;
     RecyclerView mrecycle_service;
     ServiceListAdapter mAdapter;
+    ArrayList<SearchDepartment> departmentList;
     String from;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,14 +48,17 @@ public class ServiceListFragment extends RootFragment {
         mContext = getActivity();
         Bundle bundle = this.getArguments();
         serviceList_Detail=new ArrayList<>();
+        departmentList=new ArrayList<>();
         if (bundle != null) {
             title = bundle.getString("title", "");
             from = bundle.getString("from", "");
             if (from.equalsIgnoreCase("searchdetail")) {
                 serviceList_Detail=(ArrayList)getArguments().getSerializable("servicelist");
+                departmentList = (ArrayList)getArguments().getSerializable("departmentlist");
                 Config.logV("Service List-----11111----------"+serviceList_Detail.size());
             }else{
                 serviceList = (ArrayList)getArguments().getSerializable("servicelist");
+                departmentList = (ArrayList)getArguments().getSerializable("departmentlist");
                 for(int i=0;i<serviceList.size();i++){
                     SearchService data=new SearchService();
                     data.setName(serviceList.get(i).toString());
@@ -103,7 +108,7 @@ public class ServiceListFragment extends RootFragment {
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         mrecycle_service.setLayoutManager(mLayoutManager);
-        mAdapter = new ServiceListAdapter(serviceList_Detail, mContext,from,title,uniqueid,getActivity());
+        mAdapter = new ServiceListAdapter(serviceList_Detail, mContext,from,title,uniqueid,getActivity(), departmentList);
         mrecycle_service.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 

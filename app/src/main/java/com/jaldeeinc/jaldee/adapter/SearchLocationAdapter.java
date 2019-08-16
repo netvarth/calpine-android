@@ -129,9 +129,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     String calcMode;
     String terminology;
     boolean isShowTokenId;
-    List<SearchDepartment> mSearchDepartmentList;
+    ArrayList<SearchDepartment> mSearchDepartmentList;
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology,boolean isShowTokenId) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology,boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchServiceList = SearchServiceList;
@@ -148,7 +148,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         this.calcMode = mCalcMode;
         this.terminology = terminology;
         this.isShowTokenId=isShowTokenId;
-      // this.mSearchDepartmentList = mSearchDepartments;
+       this.mSearchDepartmentList = mSearchDepartments;
     }
 
     @Override
@@ -932,10 +932,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             myViewHolder.txtSeeAll.setVisibility(View.VISIBLE);
                         }
                         if (mSearchServiceList.get(i).getmAllService().get(0).getDepartment()!= 0) {
-                           // String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(0).getDepartment());
-                           // String deptName2 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
-                            myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());//.concat(" (").concat(deptName1).concat(")"));
-                            myViewHolder.txtservice2.setText(mSearchServiceList.get(i).getmAllService().get(1).getName());//.concat(" (").concat(deptName2).concat(")"));
+                            String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(0).getDepartment());
+                            String deptName2 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
+                            myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName().concat(" (").concat(deptName1).concat(")"));
+                            myViewHolder.txtservice2.setText(mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName2).concat(")"));
                         } else {
                             myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());
                             myViewHolder.txtservice2.setText(mSearchServiceList.get(i).getmAllService().get(1).getName());
@@ -947,11 +947,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle);
+                                adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle, mSearchDepartmentList);
                             }
                         });
-
-                        final String mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
+                        String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(i).getDepartment());
+                        final String mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName().concat(" (").concat(deptName1).concat(")");
                         final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
                         final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
                         final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
@@ -976,8 +976,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 mContext.startActivity(iService);
                             }
                         });
-                      //  String deptName = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
-                        final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName(); //.concat(" (").concat(deptName).concat(")");
+                        String deptName = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
+                        final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(i).getName().concat(" (").concat(deptName).concat(")");
                         final String mServiceprice1 = mSearchServiceList.get(i).getmAllService().get(1).getTotalAmount();
                         final String mServicedesc1 = mSearchServiceList.get(i).getmAllService().get(1).getDescription();
                         final String mServiceduration1 = mSearchServiceList.get(i).getmAllService().get(1).getServiceDuration();
@@ -1307,14 +1307,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
     }
 
-//    private String getDepartmentName(int department) {
-//        for(int i=0;i<mSearchDepartmentList.size();i++){
-//            if(mSearchDepartmentList.get(i).getDepartmentId()==department) {
-//                return mSearchDepartmentList.get(i).getDepartmentName();
-//            }
-//        }
-//        return "";
-//    }
+    private String getDepartmentName(int department) {
+        for(int i=0;i<mSearchDepartmentList.size();i++){
+            if(mSearchDepartmentList.get(i).getDepartmentId()==department) {
+                return mSearchDepartmentList.get(i).getDepartmentName();
+            }
+        }
+        return "";
+    }
 
 
     @Override

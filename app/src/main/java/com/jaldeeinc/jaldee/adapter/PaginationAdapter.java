@@ -1251,7 +1251,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             myViewHolder.L_departments.addView(tv_department);
 
                         }
+                    }else{
+                        searchdetailList.getDepartments().clear();
+                        myViewHolder.L_departments.setVisibility(View.GONE);
                     }
+
                 }
 
                 if (searchdetailList.getServices() != null) {

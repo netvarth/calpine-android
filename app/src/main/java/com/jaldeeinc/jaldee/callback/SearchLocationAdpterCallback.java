@@ -17,6 +17,8 @@ public interface SearchLocationAdpterCallback {
 
     void onMethodServiceCallback(ArrayList<SearchService> searchService, String value);
 
+    void onMethodServiceCallback(ArrayList<SearchService> searchService, String value,ArrayList<SearchDepartment> mSearchDepartment);
+
     void onMethodCheckinCallback(int locID,String from,String location);
 
 

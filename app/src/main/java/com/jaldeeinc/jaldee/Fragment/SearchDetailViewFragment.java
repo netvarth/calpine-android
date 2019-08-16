@@ -1030,7 +1030,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         UpdateMainUI(mBusinessDataList);
                         ApiSearchGallery(uniqueID);
                         ApiFavList();
-                        //APIServiceDepartments(mProvoderId);
+                        APIServiceDepartments(mProvoderId);
                         ApiSearchViewLocation(uniqueID);
                         listDoctorsByDepartment();
 
@@ -1443,12 +1443,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         });
     }
 
-//    private void ApiServicesGroupbyDepartment(ArrayList<SearchService> mServicesList) {
-//        mDepartmentsList.clear();
-//        for(int i=0;i<mServicesList.size();i++) {
-//
-//        }
-//    }
+    private void ApiServicesGroupbyDepartment(ArrayList<SearchService> mServicesList) {
+        mDepartmentsList.clear();
+        for(int i=0;i<mServicesList.size();i++) {
+
+        }
+    }
 
     private void ApiDepartment(final int id) {
 
@@ -1477,7 +1477,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                     if (response.code() == 200) {
-
+                        mSearchDepartments.clear();
                         String responses = new Gson().toJson(response.body());
                         Config.logV("Deapartnamesss---------------" + responses);
 
@@ -1523,61 +1523,61 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
 
-//    private void APIServiceDepartments(final int id) {
+    private void APIServiceDepartments(final int id) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+
+
+        Call<SearchDepartment> call = apiService.getDepartment(id);
+
+        call.enqueue(new Callback<SearchDepartment>() {
+            @Override
+            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
+
+                try {
+
+                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code----------Service---------------" + response.code());
+
+
+                    if (response.code() == 200) {
+
+                        String responses = new Gson().toJson(response.body());
+                        Config.logV("Deapartnamesss---------------" + responses);
+
+//                        for (int i = 0; i < response.body().getDepartments().size(); i++) {
+//                            departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
+//                            departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
 //
 //
-//        ApiInterface apiService =
-//                ApiClient.getClient(mContext).create(ApiInterface.class);
-//
-//
-////        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-////        mDialog.show();
-//
-//
-//        Call<SearchDepartment> call = apiService.getDepartment(id);
-//
-//        call.enqueue(new Callback<SearchDepartment>() {
-//            @Override
-//            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
-//
-//                try {
-//
-//                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code----------Service---------------" + response.code());
-//
-//
-//                    if (response.code() == 200) {
-//
-//                        String responses = new Gson().toJson(response.body());
-//                        Config.logV("Deapartnamesss---------------" + responses);
-//
-////                        for (int i = 0; i < response.body().getDepartments().size(); i++) {
-////                            departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
-////                            departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
-////
-////
-////                        }
-//
-//                        mSearchDepartments.addAll(response.body().getDepartments());
-//
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<SearchDepartment> call, Throwable t) {
-//                Config.logV("Fail---------------" + t.toString());
-//
-//            }
-//        });
-//
-//
-//    }
+//                        }
+
+                        mSearchDepartments.addAll(response.body().getDepartments());
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SearchDepartment> call, Throwable t) {
+                Config.logV("Fail---------------" + t.toString());
+
+            }
+        });
+
+
+    }
 
 
     private void ApiSearchViewID(int mProviderid, ArrayList<String> ids) {
@@ -1681,7 +1681,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 } finally {
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                     mRecyLocDetail.setLayoutManager(mLayoutManager);
-                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(),terminology,mSearchSettings.isShowTokenId());
+                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(),terminology,mSearchSettings.isShowTokenId(), mSearchDepartments);
                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
                     mSearchLocAdapter.notifyDataSetChanged();
                 }
@@ -2085,6 +2085,22 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putSerializable("servicelist", searchService);
+        bundle.putString("title", value);
+        bundle.putString("from", "searchdetail");
+        bundle.putString("uniqueID", uniqueID);
+        pfFragment.setArguments(bundle);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.add(R.id.mainlayout, pfFragment).commit();
+    }
+
+    @Override
+    public void onMethodServiceCallback(ArrayList<SearchService> searchService, String value, ArrayList<SearchDepartment> mSearchDepartment) {
+        ServiceListFragment pfFragment = new ServiceListFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("servicelist", searchService);
+        bundle.putSerializable("departmentlist", mSearchDepartment);
         bundle.putString("title", value);
         bundle.putString("from", "searchdetail");
         bundle.putString("uniqueID", uniqueID);

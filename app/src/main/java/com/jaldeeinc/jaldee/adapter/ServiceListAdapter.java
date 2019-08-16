@@ -5,21 +5,26 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -32,11 +37,13 @@ import retrofit2.Response;
  */
 
 public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.MyViewHolder> {
+    List<SearchDepartment> mSearchDepartmentList;
     Context mContext;
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_service;
         LinearLayout serviceList;
+
         public MyViewHolder(View view) {
             super(view);
             tv_service = (TextView) view.findViewById(R.id.tv_service);
@@ -49,7 +56,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     String title;
     String uniqueID;
     Activity activity;
-    public ServiceListAdapter(ArrayList<SearchService> mServiceList, Context mContext,String from,String title,String uniqueID,Activity mActivity) {
+    public ServiceListAdapter(ArrayList<SearchService> mServiceList, Context mContext, String from, String title, String uniqueID, Activity mActivity, ArrayList<SearchDepartment> departmentList) {
         this.mContext = mContext;
         this.mServiceList = mServiceList;
         Config.logV("ServiceList--------------"+mServiceList.size());
@@ -57,7 +64,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
         this.title=title;
         this.uniqueID=uniqueID;
         activity=mActivity;
-
+    this.mSearchDepartmentList = departmentList;
     }
 
     @Override
@@ -71,10 +78,12 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     @Override
     public void onBindViewHolder(final ServiceListAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchService serviceList = mServiceList.get(position);
-
-
-
-        myViewHolder.tv_service.setText(serviceList.getName());
+        String serviceName = serviceList.getName();
+        if(serviceList.getDepartment()!=0){
+            String deptName = getDepartmentName(serviceList.getDepartment());
+            serviceName = serviceName.concat(" (").concat(deptName).concat(")");
+        }
+        myViewHolder.tv_service.setText(serviceName);
         myViewHolder.serviceList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,6 +198,15 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
         });
 
 
+    }
+    public String getDepartmentName(int department) {
+        Log.i("departments", new Gson().toJson(mSearchDepartmentList));
+        for(int i=0;i<mSearchDepartmentList.size();i++){
+            if(mSearchDepartmentList.get(i).getDepartmentId()==department) {
+                return mSearchDepartmentList.get(i).getDepartmentName();
+            }
+        }
+        return "";
     }
     @Override
     public int getItemCount() {
