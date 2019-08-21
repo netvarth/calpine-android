@@ -1309,7 +1309,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     tv_token.setVisibility(View.GONE);
                                 }
 
-                                String firstWord = "Your Check-In at ";
+                                String firstWord = "Your " + terminology + " at ";
                                 String secondWord = loc;
                                 location = loc;
 
@@ -1338,7 +1338,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mSearchmCheckListShow = response.body();
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 checkloclist.setLayoutManager(mLayoutManager);
-                                LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback, String.valueOf(mProvoderId), mSearchmCheckListShow, mContext, getActivity());
+                                LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback, String.valueOf(mProvoderId), mSearchmCheckListShow, mContext, getActivity() );
                                 checkloclist.setAdapter(checkAdapter);
                                 checkAdapter.notifyDataSetChanged();
                             }
@@ -2119,7 +2119,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     @Override
     public void onMethodCallback() {
 
-        Toast.makeText(mContext, "Check-In cancelled successfully", Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext,  terminology + " cancelled successfully", Toast.LENGTH_LONG).show();
         dialog.dismiss();
         refreshList();
     }

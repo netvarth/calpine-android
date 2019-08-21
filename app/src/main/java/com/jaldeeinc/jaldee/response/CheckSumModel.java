@@ -24,7 +24,9 @@ public class CheckSumModel implements Serializable {
         return amount;
     }
 
-
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 
     public String getTxnid() {
         return txnid;

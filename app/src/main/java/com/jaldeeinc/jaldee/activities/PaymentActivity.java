@@ -249,7 +249,7 @@ public class PaymentActivity extends AppCompatActivity {
     public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
 
-        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
+        payUmoneyConfig.setDoneButtonText("Pay Rs. " + amount);
         String firstname = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         String lastname = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");

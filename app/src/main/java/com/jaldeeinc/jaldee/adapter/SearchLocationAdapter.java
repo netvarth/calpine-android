@@ -196,7 +196,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
                 String firstWord = "You have ";
-                String secondWord = mCheckInMessage.get(i).getmAllSearch_checkIn().size() + " Check-In";
+                String secondWord = mCheckInMessage.get(i).getmAllSearch_checkIn().size() + " " + terminology;
                 String thirdword = " at this location";
 
                 Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
@@ -950,7 +950,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle, mSearchDepartmentList);
                             }
                         });
-                        String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(i).getDepartment());
+                        String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(0).getDepartment());
                         final String mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName().concat(" (").concat(deptName1).concat(")");
                         final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
                         final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
@@ -977,7 +977,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             }
                         });
                         String deptName = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
-                        final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(i).getName().concat(" (").concat(deptName).concat(")");
+                        final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName).concat(")");
                         final String mServiceprice1 = mSearchServiceList.get(i).getmAllService().get(1).getTotalAmount();
                         final String mServicedesc1 = mSearchServiceList.get(i).getmAllService().get(1).getDescription();
                         final String mServiceduration1 = mSearchServiceList.get(i).getmAllService().get(1).getServiceDuration();

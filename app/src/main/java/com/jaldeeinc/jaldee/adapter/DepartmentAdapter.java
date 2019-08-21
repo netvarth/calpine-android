@@ -74,9 +74,10 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
         int count = 0;
         if( mdepartmentMap.get(searchDepartment.getDepartmentCode())!=null){
             count = mdepartmentMap.get(searchDepartment.getDepartmentCode()).size();
+            holder.deptName.setText(searchDepartment.getDepartmentName() + " " + "(" + count + ")");}
+        else{
+            holder.deptName.setVisibility(View.GONE);
         }
-
-        holder.deptName.setText(searchDepartment.getDepartmentName() + " " + "(" + count + ")");
 
         holder.deptName.setOnClickListener(new View.OnClickListener() {
             @Override

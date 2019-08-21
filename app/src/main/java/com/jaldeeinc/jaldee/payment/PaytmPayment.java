@@ -180,7 +180,7 @@ public class PaytmPayment {
                             map.put("CUST_ID", response_data.getCUST_ID());
                             map.put("INDUSTRY_TYPE_ID", response_data.getINDUSTRY_TYPE_ID());
                             map.put("CHANNEL_ID", response_data.getCHANNEL_ID());
-                            map.put("TXN_AMOUNT", response_data.getTXN_AMOUNT());
+                            map.put("TXN_AMOUNT", Config.getAmountinTwoDecimalPoints(Double.parseDouble(response_data.getTXN_AMOUNT())));
                             map.put("WEBSITE", response_data.getWEBSITE());
                             Config.logV("Response--Sucess----PAytm-CALLBACK_URL--------------------" + response_data.getCALLBACK_URL());
                             map.put("CALLBACK_URL", response_data.getCALLBACK_URL());

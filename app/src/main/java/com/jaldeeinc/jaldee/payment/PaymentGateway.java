@@ -77,10 +77,12 @@ public class PaymentGateway {
 
                     if (response.code() == 200) {
 
+                        CheckSumModel response_data = response.body();
+                        response_data.setAmount(Config.getAmountinTwoDecimalPoints(Double.parseDouble(response_data.getAmount())));
 
                         if (from.equalsIgnoreCase("checkin")) {
 
-                            CheckSumModel response_data = response.body();
+
                             Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
                             Config.logV("Response--Sucess----------@@@@---------------" + response.body().getPaymentEnv());
@@ -93,7 +95,7 @@ public class PaymentGateway {
                             mCOntext.startActivity(iPayu);
 
                         } else if (from.equalsIgnoreCase("bill")) {
-                            CheckSumModel response_data = response.body();
+                           // CheckSumModel response_data = response.body();
                             Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
                         //  BillActivity.launchPaymentFlow(amount, response_data);
@@ -103,13 +105,13 @@ public class PaymentGateway {
                             iPayu.putExtra("amount",amount);
                             mCOntext.startActivity(iPayu);
                         } else {
-                            CheckSumModel response_data = response.body();
+                           // CheckSumModel response_data = response.body();
 
                            // PaymentActivity.launchPaymentFlow(amount, response_data);
 
                             Intent iPayu=new Intent(mCOntext, PayUMoneyWebview.class);
                             iPayu.putExtra("responsedata",response_data);
-                            iPayu.putExtra("amount",amount);
+                            iPayu.putExtra("amount",Config.getAmountinTwoDecimalPoints(Double.parseDouble(amount)));
                             mCOntext.startActivity(iPayu);
                         }
 
