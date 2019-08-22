@@ -696,7 +696,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         disableCheckinButton(myViewHolder);
                     }
 
-                    if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
+                    if (searchdetailList.getFuture_checkins()!=null && searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
                         if (searchdetailList.getCalculationMode()!=null && searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc") && searchdetailList.isShowToken()) {
                             myViewHolder.tv_Futuredate.setText("Get Token for different Date?");
                         } else {

@@ -52,7 +52,7 @@ public class AddCookiesInterceptor implements Interceptor {
         try {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             String version = pInfo.versionName;
-           String androidVersion="api-1.0.0,config-1.0.0,android-" +version;
+           String androidVersion="api-1.1.0,config-1.1.0,android-" +version;
 
 
 
