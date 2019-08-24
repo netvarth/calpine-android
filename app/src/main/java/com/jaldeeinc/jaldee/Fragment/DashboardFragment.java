@@ -95,6 +95,7 @@ import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
+import java.io.LineNumberInputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
@@ -163,7 +164,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     static double latitude;
     static double longitude;
     TextView tv_activechkin, tv_popular;
-    LinearLayout LpopularSearch, LActiveCheckin, LinearPopularSearch, LinearMorePopularSearch, LMore;
+    LinearLayout LpopularSearch, LActiveCheckin, LinearPopularSearch,LMore,LinearMorePopularSearch;
     TextView tv_More;
     boolean is_MoreClick = false;
     LinearLayout Lhome_mainlayout;
@@ -181,20 +182,18 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
-
             is_MoreClick = false;
             LpopularSearch.setVisibility(View.VISIBLE);
             LinearPopularSearch.setVisibility(View.VISIBLE);
-            LinearMorePopularSearch.setVisibility(View.GONE);
+           LinearMorePopularSearch.setVisibility(View.GONE);
             LinearPopularSearch.removeAllViews();
             if (mPopularSearchList.size() > 6) {
-                tv_More.setVisibility(View.VISIBLE);
+               tv_More.setVisibility(View.VISIBLE);
                 LMore.setVisibility(View.VISIBLE);
             } else {
-                tv_More.setVisibility(View.GONE);
-                LMore.setVisibility(View.GONE);
-            }
-
+               tv_More.setVisibility(View.GONE);
+               LMore.setVisibility(View.GONE);
+           }
             int k = 0;
             int rowsize = 0;
 
@@ -227,7 +226,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         //dynaText.setEllipsize(TextUtils.TruncateAt.END);
                         dynaText.setMaxLines(1);
                         // dynaText.setMaxEms(8);
-                        dynaText.setWidth(dpToPx(130));
+                        dynaText.setMinWidth(dpToPx(130));
                         dynaText.setGravity(Gravity.CENTER);
 
                         params.setMargins(12, 10, 12, 0);
@@ -506,7 +505,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 }
 
-
                 LMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -574,7 +572,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                             dynaText.setMaxLines(1);
                                             //dynaText.setMaxEms(8);
                                             dynaText.setGravity(Gravity.CENTER);
-                                            dynaText.setWidth(dpToPx(130));
+                                            dynaText.setMinWidth(dpToPx(130));
 
                                             params.setMargins(12, 10, 12, 0);
                                             dynaText.setLayoutParams(params);

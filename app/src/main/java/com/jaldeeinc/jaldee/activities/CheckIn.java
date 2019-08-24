@@ -1071,7 +1071,8 @@ public class CheckIn extends AppCompatActivity {
                                 Spannable spannable = new SpannableString(secondWord + " " + firstWord);
                                 tv_personahead.setText(spannable);
 
-                            } else {
+                            }
+                            else {
                                 tv_personahead.setVisibility(View.GONE);
                             }
                         }
