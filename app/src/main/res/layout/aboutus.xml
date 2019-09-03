@@ -177,9 +177,22 @@
                     android:layout_weight="0.8"
                     android:background="@color/app_background"
                     android:padding="@dimen/default_padding"
-                    android:text="Version  1 . 1 . 1"
+                    android:text="Version  1 . 1 . 2"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+
+                    android:id="@+id/Released_Date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:background="@color/app_background"
+                    android:padding="@dimen/default_padding"
+                    android:text="Last Updated on 03/09/2019"
+                    android:textColor="@color/title_grey"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
 
 
             </LinearLayout>

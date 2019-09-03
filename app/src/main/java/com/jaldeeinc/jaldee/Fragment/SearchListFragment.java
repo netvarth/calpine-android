@@ -68,6 +68,7 @@ import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.utils.EmptySubmitSearchView;
 import com.jaldeeinc.jaldee.utils.PaginationScrollListener;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -117,6 +118,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     ProgressBar progressBar;
     LinearLayoutManager linearLayoutManager;
     PaginationAdapter pageadapter;
+    ArrayList<SearchViewDetail> mSpecializationList;
+
     private int PAGE_START = 0;
     private boolean isLoading = false;
     private boolean isLastPage = false;
@@ -1734,18 +1737,19 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+                                searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
 
-                                String spec = "";
-                                if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
-                                    for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
-                                        if (!spec.equalsIgnoreCase("")) {
-                                            spec = spec + ", " + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-                                        } else {
-                                            spec = spec + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-                                        }
-                                    }
-                                    searchList.setSpecialization_displayname(spec);
-                                }
+//                                String spec = "";
+//                                if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
+//                                    for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
+//                                        if (!spec.equalsIgnoreCase("")) {
+//                                            spec = spec + ", " + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
+//                                        } else {
+//                                            spec = spec + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
+//                                        }
+//                                    }
+//                                    searchList.setSpecialization_displayname(spec);
+//                                }
 
 
                                 String qualify = "";
@@ -1939,18 +1943,18 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
                                 searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
                                 searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
-
-                                String spec = "";
-                                if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
-                                    for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
-                                        if (!spec.equalsIgnoreCase("")) {
-                                            spec = spec + ", " + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-                                        } else {
-                                            spec = spec + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-                                        }
-                                    }
-                                    searchList.setSpecialization_displayname(spec);
-                                }
+                                searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
+//                                String spec = "";
+//                                if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
+//                                    for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
+//                                        if (!spec.equalsIgnoreCase("")) {
+//                                            spec = spec + ", " + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
+//                                        } else {
+//                                            spec = spec + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
+//                                        }
+//                                    }
+//                                    searchList.setSpecialization_displayname(spec);
+//                                }
 
 
                                 String qualify = "";
@@ -2513,6 +2517,20 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         transaction.replace(R.id.mainlayout, cffFragment).commit();
 
     }
+
+    @Override
+    public void onMethodSpecialization(ArrayList Specialization_displayname, String businessName) {
+        SpecializationFragment specialFragment = new SpecializationFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("businessName", businessName);
+        bundle.putStringArrayList("Specialization_displayname", Specialization_displayname);
+        specialFragment.setArguments(bundle);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, specialFragment).commit();}
+
+
 
     @Override
     public void onMethodCoupn(String uniqueID) {

@@ -80,7 +80,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_businessname, tv_estTime, tv_place, tv_status;
+        public TextView tv_businessname, tv_estTime, tv_place, tv_status, tv_check_in;
         TextView icon_bill, tv_prepaid, tv_service,tv_makepay,tv_peopleahead;
         LinearLayout layout_btnpay;
         Button btn_pay;
@@ -99,6 +99,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             tv_service = (TextView) view.findViewById(R.id.txt_service);
             tv_makepay= (TextView) view.findViewById(R.id.txtmakepay);
             tv_peopleahead= (TextView) view.findViewById(R.id.txt_peopleahead);
+            tv_check_in = (TextView) view.findViewById(R.id.txt_check_in);
         }
     }
 
@@ -519,9 +520,62 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                     if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                        String inputDateStr = activelist.getDate();
+                        Date datechange = null;
+                        try {
+                            datechange = inputFormat.parse(inputDateStr);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        String outputDateStr = outputFormat.format(datechange);
 
+
+                         tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                         firstWord = "Checked in for ";
+                        // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                        String dtStart = outputDateStr;
+                        Date dateParse = null;
+                        SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                        try {
+                            dateParse = format1.parse(dtStart);
+                            System.out.println(dateParse);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        SimpleDateFormat format = new SimpleDateFormat("d");
+                        String date1 = format.format(dateParse);
+
+                        if (date1.endsWith("1") && !date1.endsWith("11"))
+                            format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                        else if (date1.endsWith("2") && !date1.endsWith("12"))
+                            format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                        else if (date1.endsWith("3") && !date1.endsWith("13"))
+                            format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                        else
+                            format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                        String yourDate = format.format(dateParse);
+
+                        //to convert Date to String, use format method of SimpleDateFormat class.
+                         secondWord = yourDate + ", " + activelist.getQueueStartTime();
+                        //  String secondWord = "";
+
+
+
+                         spannable = new SpannableString(firstWord + secondWord);
+                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                                firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_check_in.setText(spannable);
                         myViewHolder.tv_status.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_status.setText("Cancelled " + "Today");
+                        myViewHolder.tv_status.setText("Cancelled at  " + activelist.getStatusUpdatedTime());
                         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
 
@@ -538,6 +592,61 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                     if (activelist.getAppxWaitingTime() == -1) {
                         myViewHolder.tv_estTime.setVisibility(View.GONE);
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                            String inputDateStr = activelist.getDate();
+                            Date datechange = null;
+                            try {
+                                datechange = inputFormat.parse(inputDateStr);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            String outputDateStr = outputFormat.format(datechange);
+
+
+                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                            String firstWord = "Checked in for ";
+                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                            String dtStart = outputDateStr;
+                            Date dateParse = null;
+                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                            try {
+                                dateParse = format1.parse(dtStart);
+                                System.out.println(dateParse);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            SimpleDateFormat format = new SimpleDateFormat("d");
+                            String date1 = format.format(dateParse);
+
+                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                            else
+                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                            String yourDate = format.format(dateParse);
+
+                            //to convert Date to String, use format method of SimpleDateFormat class.
+                            String secondWord = yourDate + ", " + activelist.getQueueStartTime();
+                            //  String secondWord = "";
+
+
+
+                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+                            myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_check_in.setText(spannable);
                             myViewHolder.tv_status.setVisibility(View.VISIBLE);
                             myViewHolder.tv_status.setText(" Cancelled ");
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
@@ -556,6 +665,60 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                            String inputDateStr = activelist.getDate();
+                            Date datechange = null;
+                            try {
+                                datechange = inputFormat.parse(inputDateStr);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            String outputDateStr = outputFormat.format(datechange);
+
+
+                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                             firstWord = "Checked in for ";
+                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                            String dtStart = outputDateStr;
+                            Date dateParse = null;
+                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                            try {
+                                dateParse = format1.parse(dtStart);
+                                System.out.println(dateParse);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            SimpleDateFormat format = new SimpleDateFormat("d");
+                            String date1 = format.format(dateParse);
+
+                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                            else
+                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                            String yourDate = format.format(dateParse);
+
+                            //to convert Date to String, use format method of SimpleDateFormat class.
+                             secondWord = yourDate + ", " + activelist.getQueueStartTime();
+                            //  String secondWord = "";
+
+
+
+                             spannable = new SpannableString(firstWord + secondWord);
+                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                            myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_check_in.setText(spannable);
                             myViewHolder.tv_status.setVisibility(View.VISIBLE);
                             myViewHolder.tv_status.setText("Cancelled at " + " " + activelist.getStatusUpdatedTime());
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
@@ -662,6 +825,59 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                     if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                         Config.logV("Provider cancelled----------"+activelist.getBusinessName());
+                         inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                         outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                         inputDateStr = activelist.getDate();datechange = null;
+                        try {
+                            datechange = inputFormat.parse(inputDateStr);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                         outputDateStr = outputFormat.format(datechange);
+
+
+                         tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                "fonts/Montserrat_Bold.otf");
+                         firstWord = "Checked in for ";
+                        // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                         dtStart = outputDateStr;
+                         dateParse = null;
+                         format1 = new SimpleDateFormat("dd-MM-yyyy");
+                        try {
+                            dateParse = format1.parse(dtStart);
+                            System.out.println(dateParse);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                         format = new SimpleDateFormat("d");
+                         date1 = format.format(dateParse);
+
+                        if (date1.endsWith("1") && !date1.endsWith("11"))
+                            format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                        else if (date1.endsWith("2") && !date1.endsWith("12"))
+                            format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                        else if (date1.endsWith("3") && !date1.endsWith("13"))
+                            format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                        else
+                            format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                         yourDate = format.format(dateParse);
+
+                        //to convert Date to String, use format method of SimpleDateFormat class.
+                         secondWord = yourDate + ", " + activelist.getQueueStartTime();
+                        //  String secondWord = "";
+
+
+
+                         spannable = new SpannableString(firstWord + secondWord);
+                        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                                firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ;
+                        myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_check_in.setText(spannable);
                         myViewHolder.tv_status.setVisibility(View.VISIBLE);
                         myViewHolder.tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
@@ -752,6 +968,60 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                             inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                             outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                             inputDateStr = activelist.getDate();
+                             datechange = null;
+                            try {
+                                datechange = inputFormat.parse(inputDateStr);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                             outputDateStr = outputFormat.format(datechange);
+
+
+                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Bold.otf");
+                             firstWord = "Checked in for ";
+                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
+
+                            dtStart = outputDateStr;
+                            dateParse = null;
+                            format1 = new SimpleDateFormat("dd-MM-yyyy");
+                            try {
+                                dateParse = format1.parse(dtStart);
+                                System.out.println(dateParse);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                             format = new SimpleDateFormat("d");
+                             date1 = format.format(dateParse);
+
+                            if (date1.endsWith("1") && !date1.endsWith("11"))
+                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+                            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+                            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+                            else
+                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+                             yourDate = format.format(dateParse);
+
+                            //to convert Date to String, use format method of SimpleDateFormat class.
+                             secondWord = yourDate + ", " + activelist.getQueueStartTime();
+                            //  String secondWord = "";
+
+
+
+                            spannable = new SpannableString(firstWord + secondWord);
+                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                            myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_check_in.setText(spannable);
                             myViewHolder.tv_status.setVisibility(View.VISIBLE);
                             myViewHolder.tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));

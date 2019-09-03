@@ -95,6 +95,8 @@ import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
+import org.json.JSONArray;
+
 import java.io.LineNumberInputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
@@ -238,7 +240,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         dynaText.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
 
                                 mPopularSearchtxt = mPopularSearchList.get(finalK).getDisplayname();
                                 Config.logV("Popular Text__________@@@____" + mPopularSearchtxt);
@@ -1004,6 +1005,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                     search.setDisplayname(response.body().getGlobalSearchLabels().get(k).getDisplayname());
                                     search.setQuery(response.body().getGlobalSearchLabels().get(k).getQuery());
                                     search.setSector("All");
+
+
                                     mGLobalSearch.add(search);
                                     // Config.logV("Query*****111********" + response.body().getGlobalSearchLabels().get(k).getQuery());
                                 }
@@ -1014,6 +1017,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                             mSpecializationDomain.clear();
                             mSubDomain.clear();
+
+
 
                             JsonArray lstPopularSearchLabel = response.body().getPopularSearchLabels().get("all").getAsJsonObject().get("labels").getAsJsonArray();
                             for (int k = 0; k < lstPopularSearchLabel.size(); k++) {
@@ -1029,7 +1034,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                             for (int i = 0; i < response.body().getSectorLevelLabels().size(); i++) {
                                 int mSectorSize = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels().size();
-
+                                Log.i("Sector",response.body().getSectorLevelLabels().get(i).getName());
+                                Log.i("KeyString",new Gson().toJson(response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName())));
+                                if(response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName())==null)
+                                    continue;
                                 lstPopularSearchLabel = response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName()).getAsJsonObject().get("labels").getAsJsonArray();
 
                                 for (int l = 0; l < lstPopularSearchLabel.size(); l++) {
@@ -1038,7 +1046,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                     search.setDisplayname(lstPopularSearchLabel.get(l).getAsJsonObject().get("displayname").getAsString());
                                     search.setQuery(lstPopularSearchLabel.get(l).getAsJsonObject().get("query").getAsString());
                                     search.setSector(response.body().getSectorLevelLabels().get(i).getName());
-                                    mPopularSearch.add(search);
+                                     mPopularSearch.add(search);
                                 }
 
                                 for (int k = 0; k < mSectorSize; k++) {
@@ -1372,15 +1380,18 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             subdomainquery = "sub_sector:'" + name + "'";
             subdomainName = name;
         }
+        if(sector.indexOf("sub_sector_displayname")!=-1) {
+            querycreate = sector;
+        } else {
+            if (category.equalsIgnoreCase("Suggested Search")) {
 
-        if (category.equalsIgnoreCase("Suggested Search")) {
+                String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf(")"));
+                Config.logV("Second---------" + requiredString);
+                querycreate = requiredString;
 
-            String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf(")"));
-            Config.logV("Second---------" + requiredString);
-            querycreate = requiredString;
-
-            subdomainquery = "sub_sector:'" + name + "'";
-            subdomainName = name;
+                subdomainquery = "sub_sector:'" + name + "'";
+                subdomainName = name;
+            }
         }
 
         if (category.equalsIgnoreCase("Business Name as")) {
@@ -1409,6 +1420,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
         //VALID QUERY PASS
+        if(sector.indexOf("sub_sector_displayname")!=-1) { // if keyw
+            String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf("))"));
+            Config.logV("Second---------" + requiredString);
+            querycreate = requiredString + ")";
+        }
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
 

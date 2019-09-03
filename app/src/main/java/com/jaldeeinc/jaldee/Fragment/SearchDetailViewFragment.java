@@ -2690,17 +2690,17 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                                         searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
-                                        String spec = "";
-                                        if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
-                                            for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
-                                                if (!spec.equalsIgnoreCase("")) {
-                                                    spec = spec + ", " + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-                                                } else {
-                                                    spec = spec + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-                                                }
-                                            }
-                                            searchList.setSpecialization_displayname(spec);
-                                        }
+                                        //String spec = "";
+//                                        if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
+//                                            for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
+//                                                if (!spec.equalsIgnoreCase("")) {
+//                                                    spec = spec + ", " + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
+//                                                } else {
+//                                                    spec = spec + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
+//                                                }
+//                                            }
+//                                            searchList.setSpecialization_displayname(spec);
+//                                        }
 
 
                                         String qualify = "";
@@ -2895,18 +2895,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
                                         searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
                                         searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
+                                        searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
 
-                                        String spec = "";
-                                        if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
-                                            for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
-                                                if (!spec.equalsIgnoreCase("")) {
-                                                    spec = spec + ", " + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-                                                } else {
-                                                    spec = spec + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-                                                }
-                                            }
-                                            searchList.setSpecialization_displayname(spec);
-                                        }
+//                                        String spec = "";
+//                                        if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
+//                                            for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
+//                                                if (!spec.equalsIgnoreCase("")) {
+//                                                    spec = spec + ", " + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
+//                                                } else {
+//                                                    spec = spec + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
+//                                                }
+//                                            }
+//                                            searchList.setSpecialization_displayname(spec);
+//                                        }
 
 
                                         String qualify = "";

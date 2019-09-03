@@ -12,6 +12,8 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Spannable;
@@ -32,6 +34,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaldeeinc.jaldee.Fragment.SpecializationFragment;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
@@ -47,6 +50,7 @@ import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchService;
 
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -71,7 +75,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     private static final int ITEM = 0;
     private static final int LOADING = 1;
@@ -89,6 +93,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<SearchListModel> searchResults;
     private boolean isLoadingAdded = false;
     private AdapterCallback mAdapterCallback;
+    ArrayList<SearchViewDetail> mSpecializationList;
+
 
     public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback) {
         this.context = context;
@@ -606,7 +612,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(activity, "Use Desktop browser to claim your business", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, "Use jaldee.com in web Browser to Claim your Business", Toast.LENGTH_SHORT).show();
                     }
                 });
                 if (searchdetailList.getQualification() != null) {
@@ -682,14 +688,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         e.printStackTrace();
                     }
                     if (searchdetailList.getMessage() != null && searchdetailList.getClaimable() == null) {
-                        myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_qmessage.setVisibility(View.GONE);
                         myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                     } else {
                         myViewHolder.tv_qmessage.setVisibility(View.GONE);
                     }
 
                     if (searchdetailList.getMessage() != null) {
-                        myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_qmessage.setVisibility(View.GONE);
                         myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                         myViewHolder.tv_qmessage.setTextColor(context.getResources().getColor(R.color.red));
                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
@@ -794,74 +800,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
                 /////////////////////////////////////////////////////////
-                if (searchdetailList.getSpecialization_displayname() != null) {
-                    final List<String> list_spec = new ArrayList<String>(Arrays.asList(searchdetailList.getSpecialization_displayname().split(",")));
-
-                    if (list_spec.size() > 0) {
-                        if (list_spec.size() == 1) {
-                            myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_spec1.setText(list_spec.get(0));
-                            myViewHolder.tv_spec1.setTextSize(13);
-                            myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_spec2.setVisibility(View.GONE);
-                            myViewHolder.tv_spec3.setVisibility(View.GONE);
-                            myViewHolder.tv_spec22.setVisibility(View.GONE);
-                        } else {
-                            myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_spec1.setText(list_spec.get(0) + " , ");
-                            myViewHolder.tv_spec1.setTextSize(13);
-                            myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                            // myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
-                            myViewHolder.tv_spec1.setMaxLines(1);
-                            if (list_spec.size() > 2) {
-                                myViewHolder.tv_spec1.setMaxEms(5);
-                                myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
-                                myViewHolder.tv_spec22.setText(list_spec.get(1) + " , ");
-                                myViewHolder.tv_spec22.setTextSize(13);
-                                myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
-                                myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
-                                myViewHolder.tv_spec22.setMaxLines(1);
-                                // myViewHolder.tv_spec22.setWidth(dpToPx(120));
-                                myViewHolder.tv_spec22.setMaxEms(8);
-                                myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
-                                myViewHolder.tv_spec2.setTextSize(13);
-                                myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
-                                myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
-                                myViewHolder.tv_spec2.setMaxLines(1);
-                                //  myViewHolder.tv_spec2.setWidth(dpToPx(120));
-                                myViewHolder.tv_spec2.setMaxEms(8);
-                                myViewHolder.tv_spec3.setText(" ...");
-                                myViewHolder.tv_spec3.setTextSize(13);
-                                myViewHolder.tv_spec3.setVisibility(View.VISIBLE);
-                            } else {
-                                myViewHolder.tv_spec22.setText(list_spec.get(1));
-                                myViewHolder.tv_spec22.setTextSize(13);
-                                myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
-                                //    myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
-                                myViewHolder.tv_spec22.setMaxLines(1);
-                                // myViewHolder.tv_spec22.setMaxEms(8);
-
-                                myViewHolder.tv_spec2.setVisibility(View.GONE);
-                                myViewHolder.tv_spec3.setVisibility(View.GONE);
-
-                            }
-
-                        }
-                        myViewHolder.tv_spec3.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
-                            }
-                        });
-                    }
-                } else {
-                    myViewHolder.tv_spec1.setVisibility(View.GONE);
-                    myViewHolder.tv_spec2.setVisibility(View.GONE);
-                    myViewHolder.tv_spec3.setVisibility(View.GONE);
-                    myViewHolder.tv_spec22.setVisibility(View.GONE);
-                    myViewHolder.L_specialization.setVisibility(View.GONE);
-                }
+                setSpecializations(myViewHolder, searchdetailList);
                 //  Picasso.with(context).load(searchdetailList.getLogo()).fit().into(myViewHolder.profile);
                 Config.logV("LOGO @@@@" + searchdetailList.getLogo() + searchdetailList.getTitle());
 
@@ -993,6 +932,79 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                Do nothing
                 final LoadingVH LHHolder = (LoadingVH) holder;
                 break;
+        }
+    }
+
+    public void setSpecializations(MyViewHolder myViewHolder, final SearchListModel searchdetailList) {
+        if (searchdetailList.getSpecialization_displayname() != null) {
+            final List<String> list_spec = searchdetailList.getSpecialization_displayname();
+
+            if (list_spec.size() > 0) {
+                if (list_spec.size() == 1) {
+                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_spec1.setText(list_spec.get(0));
+                    myViewHolder.tv_spec1.setTextSize(13);
+                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_spec2.setVisibility(View.GONE);
+                    myViewHolder.tv_spec_more.setVisibility(View.GONE);
+                    myViewHolder.tv_spec22.setVisibility(View.GONE);
+                } else {
+                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_spec1.setText(list_spec.get(0) + " , ");
+                    myViewHolder.tv_spec1.setTextSize(13);
+                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    // myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+                    myViewHolder.tv_spec1.setMaxLines(1);
+                    if (list_spec.size() > 2) {
+                        myViewHolder.tv_spec1.setMaxEms(5);
+                        myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+                        myViewHolder.tv_spec22.setText(list_spec.get(1) + " , ");
+                        myViewHolder.tv_spec22.setTextSize(13);
+                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
+                        myViewHolder.tv_spec22.setMaxLines(1);
+                        // myViewHolder.tv_spec22.setWidth(dpToPx(120));
+                        myViewHolder.tv_spec22.setMaxEms(8);
+                        myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
+                        myViewHolder.tv_spec2.setTextSize(13);
+                        myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
+                        myViewHolder.tv_spec2.setMaxLines(1);
+                        //  myViewHolder.tv_spec2.setWidth(dpToPx(120));
+                        myViewHolder.tv_spec2.setMaxEms(8);
+                        myViewHolder.tv_spec_more.setText(" > ");
+                        myViewHolder.tv_spec_more.setTextSize(20);
+                        myViewHolder.tv_spec_more.setVisibility(View.VISIBLE);
+                    } else {
+                        myViewHolder.tv_spec22.setText(list_spec.get(1));
+                        myViewHolder.tv_spec22.setTextSize(13);
+                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
+                        //    myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
+                        myViewHolder.tv_spec22.setMaxLines(1);
+                        // myViewHolder.tv_spec22.setMaxEms(8);
+
+                        myViewHolder.tv_spec2.setVisibility(View.GONE);
+                        myViewHolder.tv_spec_more.setVisibility(View.GONE);
+
+                    }
+
+                }
+                myViewHolder.tv_spec_more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
+                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization_displayname(), searchdetailList.getTitle());
+
+                    }
+                });
+            }
+        } else {
+            myViewHolder.tv_spec1.setVisibility(View.GONE);
+            myViewHolder.tv_spec2.setVisibility(View.GONE);
+            myViewHolder.tv_spec_more.setVisibility(View.GONE);
+            myViewHolder.tv_spec22.setVisibility(View.GONE);
+            myViewHolder.L_specialization.setVisibility(View.GONE);
         }
     }
 
@@ -1203,7 +1215,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_count, tv_qmessage,tv_dept,tv_services;
+        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec_more, tv_spec22, tv_count, tv_qmessage,tv_dept,tv_services;
         LinearLayout L_specialization, L_services, L_layout_type, L_checkin,L_departments;
 
         ImageView ic_jaldeeverifiedIcon;
@@ -1241,7 +1253,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             layout_row = view.findViewById(R.id.layout_row);
             tv_spec1 = view.findViewById(R.id.txtspec1);
             tv_spec2 = view.findViewById(R.id.txtspec2);
-            tv_spec3 = view.findViewById(R.id.txtspec3);
+            tv_spec_more = view.findViewById(R.id.txtspec3);
             tv_spec22 = view.findViewById(R.id.txtspec22);
             mImageViewText = view.findViewById(R.id.mImageViewText);
             layout_type = view.findViewById(R.id.layout_type);

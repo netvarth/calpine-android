@@ -40,7 +40,7 @@ public class SearchListModel implements Serializable {
     String physiciansemergencyservices_location1;
     String dentistemergencyservices_location1;
     String qualification;
-    String specialization_displayname;
+    ArrayList specialization_displayname;
     String show_waiting_time;
     int queueWaitingTime;
     private String message;
@@ -229,12 +229,12 @@ public class SearchListModel implements Serializable {
         this.qualification = qualification;
     }
 
-    public String getSpecialization_displayname() {
+    public ArrayList getSpecialization_displayname() {
         return specialization_displayname;
     }
 
-    public void setSpecialization_displayname(String specialization_displayname) {
-        this.specialization_displayname = specialization_displayname;
+    public void setSpecialization_displayname(ArrayList specialization_displaynames) {
+        this.specialization_displayname = specialization_displaynames;
     }
 
     public String getShow_waiting_time() {

@@ -653,7 +653,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(activity, "Use Desktop browser to claim your business", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "Use jaldee.com in Web Browser to Claim your Business", Toast.LENGTH_SHORT).show();
             }
         });
         if (searchdetailList.getQualification() != null) {
@@ -908,7 +908,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         });
         /////////////////////////////////////////////////////////
         if (searchdetailList.getSpecialization_displayname() != null) {
-            final List<String> list_spec = new ArrayList<String>(Arrays.asList(searchdetailList.getSpecialization_displayname().split(",")));
+            final List<String> list_spec = searchdetailList.getSpecialization_displayname();
 
             if (list_spec.size() > 0) {
                 if (list_spec.size() == 1) {

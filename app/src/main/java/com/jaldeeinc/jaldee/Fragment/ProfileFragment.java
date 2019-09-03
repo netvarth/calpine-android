@@ -105,7 +105,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
                     i.setType("text/plain");
                     i.putExtra(Intent.EXTRA_SUBJECT, mContext.getResources().getString(R.string.app_name));
                     String sAux = "\nLet me recommend you this application\n";
-                    sAux = sAux +  "https://play.google.com/store/apps/details?id=com.jaldeeinc.jaldeebusiness\n" + BuildConfig.APPLICATION_ID +"\n\n";
+                    sAux = sAux +  "https://play.google.com/store/apps/details?id=com.jaldeeinc.jaldee\n" + BuildConfig.APPLICATION_ID +"\n\n";
                     i.putExtra(Intent.EXTRA_TEXT, sAux);
                     startActivity(Intent.createChooser(i, "choose one"));
                 } catch(Exception e) {

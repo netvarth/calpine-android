@@ -17,6 +17,16 @@ public class SearchViewDetail {
     String instance;
     String permission;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    String name;
+
     public String getLabel() {
         return label;
     }
