@@ -104,19 +104,6 @@
                             android:textSize="@dimen/txtsize_10" />
 
                         <TextView
-                            android:visibility="gone"
-                            android:layout_marginTop="@dimen/padding3"
-                            android:id="@+id/count_search"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:text=""
-                            android:textColor="@color/title_consu"
-                            android:textSize="@dimen/txtsize_10" />
-
-
-
-                        <TextView
                             android:id="@+id/domain"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -244,7 +231,6 @@
 
                 <TextView
                     android:id="@+id/txtspec22"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -300,6 +286,21 @@
 
 
             </HorizontalScrollView>
+
+            <TextView
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/padding3"
+                android:id="@+id/count_doctors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:gravity="left"
+                android:text=""
+                android:textColor="@color/title_consu"
+                android:textSize="13sp" />
+
+
+
             <TextView
                 android:id="@+id/departments"
                 android:layout_width="wrap_content"
@@ -330,8 +331,64 @@
                 android:orientation="horizontal"
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_12"
-                android:visibility="gone"
-                    >
+                android:visibility="gone">
+                    <TextView
+                        android:id="@+id/txtdep1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="Spec1"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_12"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/txtdep2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/padding2"
+                        android:text="SPEC2"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_12"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/txtdep22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/padding2"
+                        android:text="SPEC2"
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_12"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+
+                        />
+
+                    <TextView
+                        android:id="@+id/txtdep_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding5"
+                        android:gravity="center"
+                        android:text="..."
+                        android:textColor="@color/title_grey"
+                        android:textSize="@dimen/txtsize_12"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+
+                        />
 
 
 

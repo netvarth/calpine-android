@@ -61,6 +61,9 @@ public class SearchListModel implements Serializable {
     private ArrayList services;
     private ArrayList Departments;
 
+
+    private String departmentName;
+
     public boolean isIs_SpecOpen() {
         return is_SpecOpen;
     }
@@ -475,5 +478,14 @@ public class SearchListModel implements Serializable {
 
     public void setDepartments(ArrayList departments) {
         Departments = departments;
+    }
+
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 }

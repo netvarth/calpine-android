@@ -29,7 +29,6 @@ public class SpecializationListAdapter extends RecyclerView.Adapter<Specializati
 
         }
     }
-
     ArrayList<SearchViewDetail> mSpecializationList;
     String from,businessName;
 
@@ -51,7 +50,7 @@ public class SpecializationListAdapter extends RecyclerView.Adapter<Specializati
     @Override
     public void onBindViewHolder(final SpecializationListAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchViewDetail specializationList = mSpecializationList.get(position);
-        myViewHolder.tv_specialization.setText( specializationList.getName());
+        myViewHolder.tv_specialization.setText(specializationList.getName());
     }
 
     @Override

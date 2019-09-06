@@ -22,7 +22,6 @@ import java.util.List;
 public class DeptFragment extends RootFragment {
 
     Context mContext;
-
     SearchDepartment department;
     List<SearchListModel> msearchList;
     RecyclerView mdepartment_searchresult;

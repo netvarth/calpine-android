@@ -1986,6 +1986,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
 
+
     public void onMethodJaldeeLogo(String ynw_verified, String providername) {
         CustomDialog cdd = new CustomDialog(mContext, ynw_verified, providername);
         cdd.setCanceledOnTouchOutside(true);

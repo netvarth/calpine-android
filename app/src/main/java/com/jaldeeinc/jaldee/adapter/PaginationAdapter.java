@@ -34,6 +34,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.Fragment.SpecializationFragment;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
@@ -48,6 +49,7 @@ import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
+import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -66,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -576,7 +579,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
                 if (searchdetailList.getBranchSpCount() > 0) {
                     if (searchdetailList.getBranchSpCount() > 1){
-                        myViewHolder.tv_count.setText(searchdetailList.getBranchSpCount()+" "+countTerminology + "s");
+                        myViewHolder.tv_count.setText(" "+ countTerminology + "s" + " " + ":" + " " + searchdetailList.getBranchSpCount());
                         myViewHolder.tv_count.setVisibility(View.VISIBLE);
                     }
                     else{
@@ -608,6 +611,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.tv_claimable.setVisibility(View.INVISIBLE);
                     myViewHolder.L_layout_type.setVisibility(View.VISIBLE);
                     myViewHolder.L_checkin.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                 }
                 myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -688,14 +692,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         e.printStackTrace();
                     }
                     if (searchdetailList.getMessage() != null && searchdetailList.getClaimable() == null) {
-                        myViewHolder.tv_qmessage.setVisibility(View.GONE);
+                        myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                         myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                     } else {
                         myViewHolder.tv_qmessage.setVisibility(View.GONE);
                     }
 
                     if (searchdetailList.getMessage() != null) {
-                        myViewHolder.tv_qmessage.setVisibility(View.GONE);
+                        myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                         myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                         myViewHolder.tv_qmessage.setTextColor(context.getResources().getColor(R.color.red));
                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
@@ -822,6 +826,74 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     myViewHolder.mImageViewText.setVisibility(View.GONE);
                 }
+
+//                if(searchdetailList.getDepartments()!= null) {
+//                if(searchdetailList.getDepartments().size() > 0) {
+//                    if (searchdetailList.getDepartments().size() == 1) {
+//                        myViewHolder.L_departments.setVisibility(View.VISIBLE);
+//                        myViewHolder.tv_dep1.setVisibility(View.VISIBLE);
+//                        myViewHolder.tv_dep1.setText(searchdetailList.getDepartments().get(0).toString());
+//                        myViewHolder.tv_dep1.setTextSize(13);
+//                        myViewHolder.tv_dep2.setVisibility(View.GONE);
+//                        myViewHolder.tv_dep_more.setVisibility(View.GONE);
+//                        myViewHolder.tv_dep22.setVisibility(View.GONE);
+//
+//                    } else {
+//                        myViewHolder.L_departments.setVisibility(View.VISIBLE);
+//                        myViewHolder.tv_dep1.setText(searchdetailList.getDepartments().get(0) + "   ");
+//                        myViewHolder.tv_dep1.setTextSize(13);
+//                        myViewHolder.tv_dep1.setVisibility(View.VISIBLE);
+//                        myViewHolder.tv_dep1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+//                        //    myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_dep1.setMaxLines(1);
+//
+//                        if (searchdetailList.getDepartments().size() > 2) {
+//                            myViewHolder.tv_dep1.setMaxEms(5);
+//                            myViewHolder.tv_dep1.setEllipsize(TextUtils.TruncateAt.END);
+//                            myViewHolder.tv_dep22.setText(searchdetailList.getDepartments().get(1) + "  ");
+//                            myViewHolder.tv_dep22.setTextSize(13);
+//                            myViewHolder.tv_dep22.setVisibility(View.VISIBLE);
+//                            myViewHolder.tv_dep22.setEllipsize(TextUtils.TruncateAt.END);
+//                            myViewHolder.tv_dep22.setMaxLines(1);
+//                            // myViewHolder.tv_dep22.setWidth(dpToPx(120));
+//                            myViewHolder.tv_dep22.setMaxEms(8);
+//                            myViewHolder.tv_dep2.setText(searchdetailList.getDepartments().get(2) +  "  ");
+//                            myViewHolder.tv_dep2.setTextSize(13);
+//                            myViewHolder.tv_dep2.setVisibility(View.VISIBLE);
+//                            myViewHolder.tv_dep2.setEllipsize(TextUtils.TruncateAt.END);
+//                            myViewHolder.tv_dep2.setMaxLines(1);
+//                            //  myViewHolder.tv_dep2.setWidth(dpToPx(120));
+//                            myViewHolder.tv_dep2.setMaxEms(8);
+//                            myViewHolder.tv_dep_more.setText(" > ");
+//                            myViewHolder.tv_dep_more.setTextSize(20);
+//                            myViewHolder.tv_dep_more.setVisibility(View.VISIBLE);
+//
+//                        } else {
+//                            myViewHolder.tv_dep22.setText(searchdetailList.getDepartments().get(1).toString() + " ");
+//                            myViewHolder.tv_dep22.setTextSize(13);
+//                            myViewHolder.tv_dep22.setVisibility(View.VISIBLE);
+//                            //    myViewHolder.tv_dep22.setEllipsize(TextUtils.TruncateAt.END);
+//                            myViewHolder.tv_dep22.setMaxLines(1);
+//                            //     myViewHolder.tv_dep22.setMaxEms(8);
+//
+//                            myViewHolder.tv_dep2.setVisibility(View.GONE);
+//                            myViewHolder.tv_dep_more.setVisibility(View.GONE);
+//
+//                        }
+//                        myViewHolder.tv_dep_more.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//
+//                                mAdapterCallback.onMethodDepartmentList(searchdetailList.getDepartments(), searchdetailList.getTitle());
+//
+//                            }
+//                        });
+//
+//                    }
+//                }
+//
+//                }
+
                 if(searchdetailList.getDepartments()!= null) {
                     if (searchdetailList.getDepartments().size() > 0) {
                         myViewHolder.L_departments.removeAllViews();
@@ -954,7 +1026,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.tv_spec1.setTextSize(13);
                     myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
                     myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                    // myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+                //    myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
                     myViewHolder.tv_spec1.setMaxLines(1);
                     if (list_spec.size() > 2) {
                         myViewHolder.tv_spec1.setMaxEms(5);
@@ -980,9 +1052,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.tv_spec22.setText(list_spec.get(1));
                         myViewHolder.tv_spec22.setTextSize(13);
                         myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
-                        //    myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
+                    //    myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
                         myViewHolder.tv_spec22.setMaxLines(1);
-                        // myViewHolder.tv_spec22.setMaxEms(8);
+                   //     myViewHolder.tv_spec22.setMaxEms(8);
 
                         myViewHolder.tv_spec2.setVisibility(View.GONE);
                         myViewHolder.tv_spec_more.setVisibility(View.GONE);
@@ -1215,8 +1287,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec_more, tv_spec22, tv_count, tv_qmessage,tv_dept,tv_services;
-        LinearLayout L_specialization, L_services, L_layout_type, L_checkin,L_departments;
+        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec_more, tv_spec22, tv_count, tv_qmessage,tv_dept,tv_services,tv_dep1,tv_dep2,tv_dep22,tv_dep_more;
+       LinearLayout L_specialization, L_services, L_layout_type, L_checkin,L_departments;
 
         ImageView ic_jaldeeverifiedIcon;
         ImageView profile;
@@ -1233,7 +1305,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             L_checkin = view.findViewById(R.id.checkinlayout);
             ic_jaldeeverifiedIcon = view.findViewById(R.id.ic_jaldeeverifiedIcon);
             tv_name = view.findViewById(R.id.name);
-            tv_count = view.findViewById(R.id.count_search);
+            tv_count = view.findViewById(R.id.count_doctors);
             tv_qmessage = view.findViewById(R.id.qmessage);
             tv_claimable = view.findViewById(R.id.claimable);
             tv_branch_name = view.findViewById(R.id.branch_name);
@@ -1259,6 +1331,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             layout_type = view.findViewById(R.id.layout_type);
             tv_dept = view.findViewById(R.id.departments);
             tv_services = view.findViewById(R.id.services);
+            tv_dep1 = view.findViewById(R.id.txtdep1);
+            tv_dep2 = view.findViewById(R.id.txtdep2);
+            tv_dep22 = view.findViewById(R.id.txtdep22);
+            tv_dep_more = view.findViewById(R.id.txtdep_more);
 
         }
     }

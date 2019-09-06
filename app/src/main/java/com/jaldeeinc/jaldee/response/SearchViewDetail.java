@@ -77,6 +77,7 @@ public class SearchViewDetail {
 
     ArrayList specialization;
 
+
     ArrayList<SocialMediaModel> socialMedia;
 
     public ArrayList<SearchViewDetail> getEmails() {
