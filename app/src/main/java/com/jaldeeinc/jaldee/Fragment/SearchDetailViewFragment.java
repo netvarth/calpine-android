@@ -153,6 +153,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     LocationCheckinCallback callback;
     String location;
     TextView tv_fav;
+    int department;
+
 
     boolean flag_more = false;
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
@@ -211,7 +213,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mSearchSettings = new SearchSetting();
         mSearchTerminology = new SearchTerminology();
         mSearchQueueList = new ArrayList<>();
-        mServicesList = new ArrayList<>();
+        mServicesList = new ArrayList<SearchService>();
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
         callback = (LocationCheckinCallback) this;
@@ -459,8 +461,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         Config.logV("Gallery--------------333-----" + mGallery.size());
         try {
-            if (mGallery.size() > 0) {
-
+            if (mGallery.size() > 0 || mBusinessDataList.getLogo() != null) {
 
                 mImgeProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1096,9 +1097,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                     } else {
                         if (mBusinessDataList.getLogo() != null) {
-                            Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
-
-                        }
+                           // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                            UpdateGallery(mSearchGallery);    }
                     }
 
 
@@ -1496,7 +1496,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
                         mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-                        mDepartmentAdapter.setFields(mSearchDepartments, departmentMap);
+                        mDepartmentAdapter.setFields(mSearchDepartments, departmentMap, mBusinessDataList.getBusinessName(),mServicesList.get(0).getmAllService(), department);
                         mRecycleDepartment.setAdapter(mDepartmentAdapter);
                         mDepartmentAdapter.notifyDataSetChanged();
 
@@ -1974,10 +1974,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         });
     }
 
-    public void onMethodDepartment(SearchDepartment departmentCode, List<SearchListModel> searchList) {
+    public void onMethodDepartment(SearchDepartment departmentCode, List<SearchListModel> searchList,String businessName,ArrayList<SearchService> mServicesList,int department) {
 
         Log.i("qweqweq", "qweqweqwe");
-        DeptFragment deptFragment = new DeptFragment(departmentCode, searchList, this);
+        DeptFragment deptFragment = new DeptFragment(departmentCode, searchList, this,businessName,mServicesList,department);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
@@ -3153,7 +3153,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
     @Override
-    public void departmentClicked(SearchDepartment searchDepartment, List<SearchListModel> searchListModels) {
-        onMethodDepartment(searchDepartment, searchListModels);
+    public void departmentClicked(SearchDepartment searchDepartment, List<SearchListModel> searchListModels,String businessName,ArrayList<SearchService> mServicesList,int department) {
+        onMethodDepartment(searchDepartment, searchListModels,businessName,mServicesList,department);
     }
 }

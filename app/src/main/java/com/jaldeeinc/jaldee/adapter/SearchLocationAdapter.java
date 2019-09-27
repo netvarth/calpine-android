@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,6 +69,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices, txtdayofweek;
         TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
         TextView txtdepartment1, txtdepartment2, txtDSeeAll;
+        TextView tv_dep1,tv_dep2,tv_dep3,tv_depmore,tv_deps,tv_docs;
+        LinearLayout L_department;
 
         ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
         String txtdataMon = "";
@@ -115,6 +118,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txtdepartment1 = ( TextView ) view.findViewById(R.id.txtdepartment1);
 //            txtdepartment2 = ( TextView ) view.findViewById(R.id.txtdepartment2);
 //            txtDSeeAll = ( TextView ) view.findViewById(R.id.txtDSeeAll);
+//            L_department = (LinearLayout) view.findViewById(R.id.departments);
+//            tv_dep1 = (TextView) view.findViewById(R.id.txtdeps1);
+//            tv_dep2 = (TextView) view.findViewById(R.id.txtdeps2);
+//            tv_dep3 = (TextView) view.findViewById(R.id.txtdeps22);
+//            tv_depmore = (TextView) view.findViewById(R.id.txtdeps_more);
+//            tv_deps = (TextView) view.findViewById(R.id.txtdeps);
+//            tv_docs = (TextView) view.findViewById(R.id.txtdoctors);
         }
     }
 
@@ -837,6 +847,84 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         }
 
+//        if(mSearchDepartmentList.toString()!= null) {
+//            myViewHolder.tv_deps.setText("Departments");
+//            myViewHolder.tv_docs.setText("Doctors:");
+//
+//            if (mSearchDepartmentList.size() > 0) {
+//                if (mSearchDepartmentList.size() == 1) {
+//                    myViewHolder.L_department.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_dep1.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_dep1.setText(mSearchDepartmentList.get(0).toString());
+//                    myViewHolder.tv_dep1.setTextSize(13);
+//                    myViewHolder.tv_dep2.setVisibility(View.GONE);
+//                    myViewHolder.tv_depmore.setVisibility(View.GONE);
+//                    myViewHolder.tv_dep3.setVisibility(View.GONE);
+//
+//                } else {
+//                    myViewHolder.L_department.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_dep1.setText(mSearchDepartmentList.get(0) + "   ");
+//                    myViewHolder.tv_dep1.setTextSize(13);
+//                    myViewHolder.tv_dep1.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_dep1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+//                    //    myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+//                    myViewHolder.tv_dep1.setMaxLines(1);
+//
+//                    if (mSearchDepartmentList.size() > 2) {
+//                        myViewHolder.tv_dep1.setMaxEms(5);
+//                        myViewHolder.tv_dep1.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_dep3.setText(mSearchDepartmentList.get(1) + "  ");
+//                        myViewHolder.tv_dep3.setTextSize(13);
+//                        myViewHolder.tv_dep3.setVisibility(View.VISIBLE);
+//                        myViewHolder.tv_dep3.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_dep3.setMaxLines(1);
+//                        // myViewHolder.tv_dep22.setWidth(dpToPx(120));
+//                        myViewHolder.tv_dep3.setMaxEms(8);
+//                        myViewHolder.tv_dep2.setText(mSearchDepartmentList.get(2) + "  ");
+//                        myViewHolder.tv_dep2.setTextSize(13);
+//                        myViewHolder.tv_dep2.setVisibility(View.VISIBLE);
+//                        myViewHolder.tv_dep2.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_dep2.setMaxLines(1);
+//                        //  myViewHolder.tv_dep2.setWidth(dpToPx(120));
+//                        myViewHolder.tv_dep2.setMaxEms(8);
+//                        myViewHolder.tv_depmore.setText(" > ");
+//                        myViewHolder.tv_depmore.setTextSize(20);
+//                        myViewHolder.tv_depmore.setVisibility(View.VISIBLE);
+//
+//                    } else {
+//                        myViewHolder.tv_dep3.setText(mSearchDepartmentList.get(1).toString() + " ");
+//                        myViewHolder.tv_dep3.setTextSize(13);
+//                        myViewHolder.tv_dep3.setVisibility(View.VISIBLE);
+//                        //    myViewHolder.tv_dep22.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_dep3.setMaxLines(1);
+//                        //     myViewHolder.tv_dep22.setMaxEms(8);
+//
+//                        myViewHolder.tv_dep2.setVisibility(View.GONE);
+//                        myViewHolder.tv_depmore.setVisibility(View.GONE);
+//
+//                    }
+////                    myViewHolder.tv_depmore.setOnClickListener(new View.OnClickListener() {
+////                        @Override
+////                        public void onClick(View v) {
+////
+////                            mAdapterCallback.onMethodDepartmentList(searchdetailList.getDepartments(), searchdetailList.getTitle());
+////
+////                        }
+////                    });
+//
+//                }
+//            }
+//                else {
+//                mSearchDepartmentList.clear();
+//                myViewHolder.L_department.setVisibility(View.GONE);
+//            }
+//        }else{
+//            myViewHolder.L_department.removeAllViews();
+//            myViewHolder.L_department.setVisibility(View.GONE);
+//        }
+
+
+
 
 //Services------------
 
@@ -858,7 +946,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
         }*/
 //       if(mSearchDepartmentList.getDepartmentNames().size() > 0){
-//           for(int i = 0; i < mSearchDepartmentList.get(i).getDepartments().size(); i++){
+ //          for(int i = 0; i < mSearchDepartmentList.get(i).getDepartments().size(); i++){
 //               myViewHolder.LDepartment_2.setVisibility(View.VISIBLE);
 //               myViewHolder.txtdepartment2.setVisibility(View.VISIBLE);
 //               myViewHolder.txtdepartment1.setVisibility(View.VISIBLE);

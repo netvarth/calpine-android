@@ -2530,17 +2530,20 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, specialFragment).commit();}
 
-//    @Override
-//    public void onMethodDepartmentList(ArrayList Departments, String businessName) {
-//        DeptListFragment departmentFragment = new DeptListFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putString("businessName", businessName);
-//        bundle.putStringArrayList("Departments", Departments);
-//        departmentFragment.setArguments(bundle);
-//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//        // Store the Fragment in stack
-//        transaction.addToBackStack(null);
-//        transaction.replace(R.id.mainlayout, departmentFragment).commit();}
+    @Override
+    public void onMethodDepartmentList(ArrayList Departments, String businessName) {
+        DeptListFragment departmentFragment = new DeptListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("businessName", businessName);
+        bundle.putStringArrayList("Departments", Departments);
+        departmentFragment.setArguments(bundle);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, departmentFragment).commit();}
+
+
+
 
 
 

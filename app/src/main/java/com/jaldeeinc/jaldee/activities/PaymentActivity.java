@@ -58,6 +58,7 @@ public class PaymentActivity extends AppCompatActivity {
     Button btn_paytm;
     Button btn_payu;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +87,7 @@ public class PaymentActivity extends AppCompatActivity {
             accountID = extras.getString("accountID");
             amountDue = extras.getDouble("amountDue");
             purpose = extras.getString("purpose");
+
         }
         APIPayment(accountID, ynwUUID, amountDue, purpose);
     }

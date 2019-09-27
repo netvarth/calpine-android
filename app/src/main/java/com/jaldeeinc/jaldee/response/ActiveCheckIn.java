@@ -189,6 +189,7 @@ public class ActiveCheckIn {
     String stars;
     ActiveCheckIn rating;
 
+
     @SerializedName("provider")
     private ActiveCheckIn provider;
 

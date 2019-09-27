@@ -21,11 +21,153 @@
 
 
     </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ProviderName"
+        android:id="@+id/providerName"
+        android:layout_gravity="center"
+        android:textSize="@dimen/dimen_16sp"
+        android:textAlignment="center"
+        android:padding="@dimen/dimen_10dp"
+        android:background="@color/add_amount_grey"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_12dp"
+        android:orientation="vertical"
+        android:background="@color/title_consu">
+<!--        <TextView-->
+<!--            android:id="@+id/txtdescription"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="@dimen/default_padding"-->
+<!--            android:fontFamily="@font/customfont"-->
+<!--            android:text="Description"-->
+<!--            android:textColor="@color/title_grey"-->
+<!--            android:textSize="@dimen/txtsize_subtitle"-->
+<!--            android:textStyle="bold" />-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Department"
+                    android:textSize="@dimen/txtsize_hint"
+                    android:id="@+id/txtdepartment"
+                    android:textColor="@color/title_grey" />
+
+<!--                <TextView-->
+<!--                    android:id="@+id/txtdepartment"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="@dimen/padding5"-->
+<!--                    android:fontFamily="@font/customfont"-->
+<!--                    android:text="Department"-->
+<!--                    android:textColor="@color/title_grey"-->
+<!--                    android:textSize="@dimen/txtsize_12"-->
+<!--                    android:textStyle="bold" />-->
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LDeptCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Department Code"
+                    android:textSize="@dimen/txtsize_hint"
+                    android:id="@+id/txtdeptCode"
+                    android:textColor="@color/title_grey" />
+
+<!--                <TextView-->
+<!--                    android:id="@+id/txtdeptCode"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="@dimen/padding5"-->
+<!--                    android:fontFamily="@font/customfont"-->
+<!--                    android:text="Code"-->
+<!--                    android:textColor="@color/title_grey"-->
+<!--                    android:textSize="@dimen/txtsize_12"-->
+<!--                    android:textStyle="bold" />-->
+            </LinearLayout>
+        </LinearLayout>
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="2dp"-->
+<!--            android:background="@color/opaque_title_grey"/>-->
+
+        <TextView
+            android:id="@+id/txt_doctors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Doctors:"
+            android:textSize="@dimen/txtsize_hint"
+            android:textColor="@color/opaque_title_grey"
+            android:layout_marginTop="10dp"
+            android:background="@color/green"/>
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/txt_services"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Services >"
+        android:textSize="@dimen/txtsize_hint"
+        android:textColor="@color/opaque_title_grey"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:background="@color/title_consu"
+        android:layout_margin="@dimen/dimen_10dp"/>
+
+    <LinearLayout
+        android:id="@+id/Lservice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding5"
+        android:layout_marginTop="@dimen/default_padding"
+        android:layout_marginRight="@dimen/padding5"
+        android:gravity="left"
+        android:orientation="horizontal"
+        android:textColor="@color/title_consu"
+        android:textSize="@dimen/txtsize_12"
+        android:visibility="gone">
+
+
+</LinearLayout>
+
+<TextView
+android:id="@+id/txtservice"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_marginLeft="@dimen/padding5"
+android:gravity="center_horizontal"
+android:text="No Services"
+android:textColor="@color/sky_blue"
+android:textSize="@dimen/txtsize_12"
+android:textStyle="bold"
+android:visibility="gone">
+
+</TextView>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/department_searchresult"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="392dp"></android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

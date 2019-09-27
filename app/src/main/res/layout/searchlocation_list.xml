@@ -409,6 +409,103 @@
                     android:textColor="@color/title_consu"
                     android:textSize="@dimen/txtsize_12" />
             </LinearLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/txtdeps"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center"-->
+<!--                android:maxLines="1"-->
+<!--                android:text="Departments"-->
+<!--                android:textColor="@color/title_grey"-->
+<!--                android:textSize="@dimen/txtsize_12"-->
+<!--                android:textStyle="bold"-->
+<!--                /> android:visibility="gone"-->
+
+<!--            />-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/departments"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="@dimen/padding5"-->
+<!--                android:layout_marginRight="@dimen/padding5"-->
+<!--                android:gravity="left"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:textColor="@color/title_consu"-->
+<!--                android:textSize="@dimen/txtsize_12"-->
+<!--                android:visibility="gone">-->
+
+
+
+<!--                <TextView-->
+<!--                    android:id="@+id/txtdeps1"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:maxLines="1"-->
+<!--                    android:text="Spec1"-->
+<!--                    android:textColor="@color/title_grey"-->
+<!--                    android:textSize="@dimen/txtsize_12"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:visibility="gone"-->
+
+<!--                    />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/txtdeps2"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:maxLines="1"-->
+<!--                    android:paddingLeft="@dimen/padding2"-->
+<!--                    android:text="SPEC2"-->
+<!--                    android:textColor="@color/title_grey"-->
+<!--                    android:textSize="@dimen/txtsize_12"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:visibility="gone"-->
+
+<!--                    />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/txtdeps22"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:maxLines="1"-->
+<!--                    android:paddingLeft="@dimen/padding2"-->
+<!--                    android:text="SPEC2"-->
+<!--                    android:textColor="@color/title_grey"-->
+<!--                    android:textSize="@dimen/txtsize_12"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:visibility="gone"-->
+
+<!--                    />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/txtdeps_more"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="@dimen/padding5"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="..."-->
+<!--                    android:textColor="@color/title_grey"-->
+<!--                    android:textSize="@dimen/txtsize_12"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:visibility="gone"-->
+
+<!--                    />-->
+<!--            </LinearLayout>-->
+<!--            <TextView-->
+<!--                android:id="@+id/txtdoctors"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="@dimen/padding5"-->
+<!--                android:gravity="center"-->
+<!--                android:text="Doctors:"-->
+<!--                android:textColor="@color/title_grey"-->
+<!--                android:textSize="@dimen/txtsize_12"-->
+<!--                android:textStyle="bold"-->
+<!--                />-->
 
 
             <TextView

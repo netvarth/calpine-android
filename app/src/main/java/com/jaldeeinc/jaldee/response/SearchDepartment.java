@@ -12,6 +12,8 @@ SearchDepartment implements Serializable {
 
     String departmentName;
 
+    String businessName;
+
     public String getDepartmentStatus() {
         return departmentStatus;
     }
@@ -57,6 +59,10 @@ SearchDepartment implements Serializable {
         return departments;
     }
 
+    public void setDepartments(ArrayList<SearchDepartment> departments) {
+        this.departments = departments;
+    }
+
     @SerializedName("departments")
     ArrayList<SearchDepartment> departments;
 
@@ -85,5 +91,12 @@ SearchDepartment implements Serializable {
         return this.departmentName; // Value to be displayed in the Spinner
     }
 
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
 
 }

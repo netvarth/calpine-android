@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
+import com.jaldeeinc.jaldee.response.SearchService;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,19 +29,28 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
     static Context mcontext;
     private List<SearchDepartment> mSearchDepartments;
     HashMap<String, List<SearchListModel>> mdepartmentMap;
+    String businessName;
+    ArrayList<SearchService> mServicesList;
+    int department;
+
+
 
 
     public DepartmentAdapter(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void setFields(ArrayList<SearchDepartment> mSearchDepartments, HashMap<String, List<SearchListModel>> departmentMap) {
+    public void setFields(ArrayList<SearchDepartment> mSearchDepartments, HashMap<String, List<SearchListModel>> departmentMap, String businessName,ArrayList<SearchService> mServicesList,int department) {
         this.mSearchDepartments = mSearchDepartments;
         this.mdepartmentMap = departmentMap;
+        this.businessName = businessName;
+        this.mServicesList = mServicesList;
+        this.department = department;
+
     }
 
     public interface OnItemClickListener {
-        void departmentClicked(SearchDepartment searchDepartment, List<SearchListModel> searchListModels);
+        void departmentClicked(SearchDepartment searchDepartment, List<SearchListModel> searchListModels, String businessName, ArrayList<SearchService> mServicesList,int department);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -73,11 +84,18 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
 
         int count = 0;
         if( mdepartmentMap.get(searchDepartment.getDepartmentCode())!=null){
-            count = mdepartmentMap.get(searchDepartment.getDepartmentCode()).size();
-            holder.deptName.setText(searchDepartment.getDepartmentName() + " " + "(" + count + ")");}
-        else{
-            holder.deptName.setVisibility(View.GONE);
+            count = mdepartmentMap.get(searchDepartment.getDepartmentCode()).size();}
+        if(count == 0){
+            holder.deptName.setText(searchDepartment.getDepartmentName() + " " + "(" + "No Doctors" + ")" );
         }
+        else if(count == 1) {
+            holder.deptName.setText(searchDepartment.getDepartmentName() + " " + "(" + count + " Doctor" + ")");
+        }
+        else{
+            holder.deptName.setText(searchDepartment.getDepartmentName() + " " + "(" + count + " Doctors" + ")");
+        }
+
+
 
         holder.deptName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +103,7 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
                 Log.i("deptNameClick", searchDepartment.getDepartmentCode());
                 Log.i("deptNameClick", searchDepartment.getDepartmentName());
 
-                onItemClickListener.departmentClicked(searchDepartment,mdepartmentMap.get(searchDepartment.getDepartmentCode()));
+                onItemClickListener.departmentClicked(searchDepartment,mdepartmentMap.get(searchDepartment.getDepartmentCode()),businessName,mServicesList,department);
             }
         });
 

@@ -25,6 +25,7 @@ import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -37,6 +38,7 @@ public class DeptListFragment extends Fragment {
     String from;
     String businessName;
     ArrayList department;
+    HashMap<String, List<SearchListModel>> mdepartmentMap;
 
 
     public DeptListFragment() {
@@ -54,7 +56,7 @@ public class DeptListFragment extends Fragment {
         if (bundle != null) {
             businessName = bundle.getString("businessName", "");
             from = bundle.getString("from", "");
-            department = bundle.getStringArrayList("departments");
+            department = bundle.getStringArrayList("Departments");
 
         if (department != null && department.size() > 0) {
             for (int i = 0; i < department.size(); i++) {
@@ -85,8 +87,10 @@ public class DeptListFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         departmentList.setLayoutManager(mLayoutManager);
         mAdapter = new DepartmentsListAdapter(department_List, mContext, from, businessName);
+        mAdapter.setFields(department_List,mdepartmentMap,businessName);
         departmentList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
+
 
 
     }

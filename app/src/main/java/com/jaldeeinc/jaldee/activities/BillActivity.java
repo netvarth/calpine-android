@@ -86,6 +86,8 @@ public class BillActivity extends AppCompatActivity {
     String payStatus, consumer;
     String coupon_entered;
     String purpose;
+
+    TextView tv_billnotes,tv_notes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +122,8 @@ public class BillActivity extends AppCompatActivity {
         recycle_discount_total = findViewById(R.id.recycle_discount_total);
         jcLayout = findViewById(R.id.jcLayout);
         TextView tv_title = findViewById(R.id.toolbartitle);
+        tv_billnotes = findViewById(R.id.billnotes);
+        tv_notes = findViewById(R.id.notes);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
@@ -148,6 +152,7 @@ public class BillActivity extends AppCompatActivity {
             payStatus = extras.getString("payStatus");
             consumer = extras.getString("consumer");
             purpose = extras.getString("purpose");
+
         }
 
 
@@ -250,7 +255,14 @@ public class BillActivity extends AppCompatActivity {
                 }
             }
         });
-
+            tv_billnotes.setVisibility(View.INVISIBLE);
+//             tv_billnotes.setOnClickListener(new View.OnClickListener() {
+//                 @Override
+//                 public void onClick(View view) {
+//                     if(displayNotes!=null){
+//                     tv_notes.setText(displayNotes);}
+//                 }
+//             });
 
     }
 

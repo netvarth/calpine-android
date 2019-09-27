@@ -93,10 +93,10 @@ public class ResponseInteceptor implements Interceptor {
             db.deleteDatabase();
             // if(response.body().equals("true")) {
 
-//            Intent iLogout=new Intent(context, Register.class);
-//            iLogout.putExtra("forceupdate","true");
-//            iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            context.startActivity(iLogout);
+            Intent iLogout=new Intent(context, Register.class);
+            iLogout.putExtra("forceupdate","true");
+            iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(iLogout);
 
 
         }
