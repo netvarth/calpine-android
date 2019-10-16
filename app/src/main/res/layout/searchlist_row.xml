@@ -39,6 +39,27 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:src="@drawable/icon_noimage" />
+                <ImageView
+                    android:id="@+id/iprofile1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="@dimen/padding7"
+                    android:layout_toRightOf="@+id/profile"
+                    android:src="@drawable/icon_noimage"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iprofile2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="@dimen/padding7"
+                    android:layout_toRightOf="@+id/iprofile1"
+                    android:alpha="0.8"
+                    android:foreground="@drawable/roundedrect_cicle"
+                    android:src="@drawable/icon_noimage"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/mImageViewText"
@@ -422,6 +443,13 @@
             android:textSize="@dimen/txtsize_12"
             android:textStyle="bold"
             android:visibility="gone"></TextView>
+        <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@color/button_gray" />
+
 
         <TextView
             android:id="@+id/claimable"
@@ -431,10 +459,24 @@
             android:layout_marginBottom="@dimen/padding2"
             android:gravity="center"
             android:paddingRight="@dimen/padding5"
-            android:text="Own this business? Claim it now"
-            android:textColor="@color/title_consu"
+            android:text="Own this business? Use jaldee.com in web browser to claim your Business"
+            android:textColor="@color/orange"
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone" />
+        <TextView
+            android:id="@+id/useWeb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding2"
+            android:layout_marginBottom="@dimen/padding2"
+            android:gravity="center"
+            android:paddingRight="@dimen/padding5"
+            android:text="Use jaldee.com in web browser to claim your Business"
+            android:textColor="@color/red"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone"/>
+<!--&lt;!&ndash;            android:background="@color/circle_indicator"/>&ndash;&gt;-->
+
 
         <TextView
             android:layout_marginLeft="@dimen/dimen_5dp"

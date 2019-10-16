@@ -253,8 +253,8 @@ public class Register extends AppCompatActivity {
     public void showForceUpdateDialog() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-        alertDialog.setTitle("Please update your app");
-        alertDialog.setMessage("This app version is not supported any longer. Please update your app from the Play Store.");
+        alertDialog.setTitle("Jaldee update required ");
+        alertDialog.setMessage(" This version of Jaldee is no longer supported. Please update to the latest version.");
         alertDialog.setPositiveButton("UPDATE NOW", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 final String appPackageName = mContext.getPackageName();

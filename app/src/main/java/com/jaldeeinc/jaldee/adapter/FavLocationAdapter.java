@@ -364,7 +364,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         if (queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().getAvailableDate() != null) {
             if (queueList.getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc") && queueList.getNextAvailableQueue().isShowToken()) {
                 myViewHolder.btn_checkin.setText("GET TOKEN");
-                myViewHolder.tv_date.setText("Get Token for different Date?");
+                myViewHolder.tv_date.setText("Do you want to Get Token for another day?");
                 if (queueList.getNextAvailableQueue().getPersonAhead() != -1) {
                     Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + queueList.getNextAvailableQueue().getPersonAhead());
                     if (queueList.getNextAvailableQueue().getPersonAhead() == 0) {
@@ -389,18 +389,18 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                     myViewHolder.tv_waittime.setVisibility(View.GONE);
                     if(terminologys.equals("order")){
                         myViewHolder.btn_checkin.setText("ORDER");
-                        myViewHolder.tv_date.setText("Do you want to Order for different date?");
+                        myViewHolder.tv_date.setText("Do you want to Order for another day?");
                     }else{
                         myViewHolder.btn_checkin.setText("CHECK-IN");
-                        myViewHolder.tv_date.setText("Check-in for different Date?");
+                        myViewHolder.tv_date.setText("Do you want to Check-in for another day?");
                     }
                 }else{
                     if(terminologys.equals("order")){
                         myViewHolder.btn_checkin.setText("ORDER");
-                        myViewHolder.tv_date.setText("Do you want to Order for different date?");
+                        myViewHolder.tv_date.setText("Do you want to Order for another day?");
                     }else{
                         myViewHolder.btn_checkin.setText("CHECK-IN");
-                        myViewHolder.tv_date.setText("Check-in for different Date?");
+                        myViewHolder.tv_date.setText("Do you want to Check-in for another day?");
                     }
 
 

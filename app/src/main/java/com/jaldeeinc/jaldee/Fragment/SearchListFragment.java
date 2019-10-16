@@ -160,6 +160,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     LinearLayout Lnosearchresult;
     boolean userIsInteracting;
     String sort = "";
+    String uniqueID;
 
     String selected="";
     @Override
@@ -221,7 +222,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
        sort= SharedPreference.getInstance(mContext).getStringValue("selected_sort_value","");
        if(sort.equalsIgnoreCase("")){
-           sort="ynw_verified_level desc, distance asc";
+           sort="claimable asc, ynw_verified_level desc, distance asc";
            SharedPreference.getInstance(mContext).setValue("selected_sort_value",sort);
            sort= SharedPreference.getInstance(mContext).getStringValue("selected_sort_value","");
        }
@@ -366,7 +367,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
 
 
-        pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this);
+        pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this, uniqueID);
 
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecySearchDetail.setLayoutManager(linearLayoutManager);
@@ -477,7 +478,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     public void onClick(View v) {
                         txtjaldeeVerified.setBackgroundColor(mContext.getResources().getColor(R.color.view_border));
                         txtDistance.setBackgroundColor(mContext.getResources().getColor(R.color.app_background));
-                        sort="ynw_verified_level desc, distance asc";
+                        sort="claimable asc, ynw_verified_level desc, distance asc";
                         SharedPreference.getInstance(mContext).setValue("selected_sort","jaldeeVerified");
                         SharedPreference.getInstance(mContext).setValue("selected_sort_value",sort);
                         SortBy(sort);
@@ -489,7 +490,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     public void onClick(View v) {
                         txtDistance.setBackgroundColor(mContext.getResources().getColor(R.color.view_border));
                         txtjaldeeVerified.setBackgroundColor(mContext.getResources().getColor(R.color.app_background));
-                        sort="distance asc, ynw_verified_level desc";
+                        sort="claimable asc,distance asc, ynw_verified_level desc";
                         SharedPreference.getInstance(mContext).setValue("selected_sort","distance");
                         SharedPreference.getInstance(mContext).setValue("selected_sort_value",sort);
                         SortBy(sort);
@@ -528,7 +529,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     if(passedFormulaArray.size()==0) {
 
-                        if (mDomainSpinner.equalsIgnoreCase("All")) {
+                        if (mDomainSpinner!= null &&  mDomainSpinner.equalsIgnoreCase("All")) {
                             ApiFilters(recycle_morefilter, "Select", passedFormulaArray);
                     /*for ( HashMap<String, ArrayList<Domain_Spinner>> hashMap : domain_subdomainArray) {
                         System.out.println("KEY"+hashMap.keySet());
@@ -1198,7 +1199,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         params.put("size", "10");
         params.put("q.parser", "structured");
-        params.put("sort", "ynw_verified_level desc, distance asc");
+        params.put("sort", "claimable asc, ynw_verified_level desc, distance asc");
 
         params.put("expr.distance", mPass);
         params.put("return", "_all_fields,distance");
@@ -1575,6 +1576,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     Config.logV("@@@@@--111----------------" + response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                     search.setParking_location1(response.body().getHits().getHit().get(i).getFields().getParking_location1());
                                 }
+
 
 
                                 if (response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails() != null) {
@@ -2141,7 +2143,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
     @Override
-    public void onMethodCallback(String value) {
+    public void onMethodCallback(String value, String claimable) {
 
         Bundle bundle = new Bundle();
 
@@ -2149,6 +2151,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         refreshQuery();
         bundle.putString("uniqueID", value);
+        bundle.putString("claimable", claimable);
         pfFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -2219,7 +2222,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         String querycreate = null;
 
-        if (!querypass.equalsIgnoreCase("")) {
+        if (!querypass.equalsIgnoreCase("") &&(mDomainSpinner.equalsIgnoreCase("All") || mDomainSpinner.equalsIgnoreCase(spinnerTxt))){
 
             if (!mDomainSpinner.equalsIgnoreCase("All")) {
 

@@ -622,7 +622,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
                 Config.logV("Popular Text__________@@@Dele");
                 String unique_id = searchdetailList.getUniqueid();
-                searchDetailViewFragment.onMethodCallback(searchdetailList.getUniqueid());
+                searchDetailViewFragment.onMethodCallback(searchdetailList.getUniqueid(),searchdetailList.getClaimable());
             }
         });
 
@@ -796,7 +796,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     if (searchdetailList.getCalculationMode() != null) {
                         if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc") && searchdetailList.isShowToken()) {
                             myViewHolder.btncheckin.setText("GET TOKEN");
-                            myViewHolder.tv_Futuredate.setText("Get Token for different Date?");
+                            myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
                             if (searchdetailList.getPersonAhead() != -1) {
                                 Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + searchdetailList.getPersonAhead());
                                 if (searchdetailList.getPersonAhead() == 0) {
@@ -819,18 +819,18 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
                                 if (termilogy.equals("order")) {
                                     myViewHolder.btncheckin.setText("ORDER");
-                                    myViewHolder.tv_Futuredate.setText("Do you want to Order for different date?");
+                                    myViewHolder.tv_Futuredate.setText("Do you want to Order for another day?");
                                 } else {
                                     myViewHolder.btncheckin.setText("CHECK-IN");
-                                    myViewHolder.tv_Futuredate.setText("Check-in for different Date?");
+                                    myViewHolder.tv_Futuredate.setText("Do you want to Check-in for another day?");
                                 }
                             } else {
                                 if (termilogy.equals("order")) {
                                     myViewHolder.btncheckin.setText("ORDER");
-                                    myViewHolder.tv_Futuredate.setText("Do you want to Order for different date?");
+                                    myViewHolder.tv_Futuredate.setText("Do you want to Order for another day?");
                                 } else {
                                     myViewHolder.btncheckin.setText("CHECK-IN");
-                                    myViewHolder.tv_Futuredate.setText("Check-in for different Date?");
+                                    myViewHolder.tv_Futuredate.setText("Do you want to Check-in for another day?");
                                 }
                             }
                         }
@@ -977,7 +977,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 myViewHolder.tv_spec3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
+                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(),searchdetailList.getClaimable());
                     }
                 });
             }

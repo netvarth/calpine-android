@@ -179,7 +179,7 @@ public class SearchListAdpter extends BaseAdapter implements Filterable {
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
             items = (ArrayList<ListCell>) results.values;
-            Config.logV("Push Reuslt @@@@@@@@@@@@@@@"+items.size());
+//           Config.logV("Push Reuslt @@@@@@@@@@@@@@@"+items.size());
             notifyDataSetChanged();
         }
 

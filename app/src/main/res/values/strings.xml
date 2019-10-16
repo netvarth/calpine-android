@@ -64,7 +64,7 @@
     <string name="mobile">Phone Number</string>
     <string name="updatepf">Update Profile</string>
     <string name="search_hint">Search...</string>
-    <string name="diff_date">Check-in for different date?</string>
+    <string name="diff_date">Do you want to Check-in for another day?</string>
     <string name="welcome">Welcome to</string>
     <string name="ynw">Jaldee</string>
     <string name="consumer">Consumer App</string>

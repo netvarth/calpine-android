@@ -61,6 +61,16 @@ public class SearchListModel implements Serializable {
     private ArrayList services;
     private ArrayList Departments;
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    String url;
+
 
     private String departmentName;
 

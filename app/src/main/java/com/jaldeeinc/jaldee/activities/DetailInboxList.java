@@ -106,7 +106,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     }
 
     @Override
-    public void onMethodCallback(final String waitListId, final int accountID, final long timestamp) {
+    public void  onMethodCallback(final String waitListId, final int accountID, final long timestamp) {
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();

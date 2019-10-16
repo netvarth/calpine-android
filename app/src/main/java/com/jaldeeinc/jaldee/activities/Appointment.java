@@ -190,6 +190,8 @@ public class Appointment extends AppCompatActivity {
 
     String spinnertext;
 
+    String displayNotes;
+
 
 
 
@@ -2561,7 +2563,7 @@ public class Appointment extends AppCompatActivity {
                                             startActivity(iPayu);*/
 
 
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT,"checkin");
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT,"checkin",displayNotes);
 
                                             dialog.dismiss();
 

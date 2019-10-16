@@ -57,6 +57,7 @@ public class PaymentActivity extends AppCompatActivity {
     boolean showPayU = false;
     Button btn_paytm;
     Button btn_payu;
+    String displayNotes;
 
 
     @Override
@@ -87,9 +88,10 @@ public class PaymentActivity extends AppCompatActivity {
             accountID = extras.getString("accountID");
             amountDue = extras.getDouble("amountDue");
             purpose = extras.getString("purpose");
+            displayNotes = extras.getString("displayNotes");
 
         }
-        APIPayment(accountID, ynwUUID, amountDue, purpose);
+        APIPayment(accountID, ynwUUID, amountDue, purpose, displayNotes);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -137,7 +139,7 @@ public class PaymentActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void APIPayment(final String accountID, final String ynwUUID, final double amountDue, final String purpose) {
+    private void APIPayment(final String accountID, final String ynwUUID, final double amountDue, final String purpose, final String displayNotes) {
 
 
         ApiInterface apiService =
@@ -179,7 +181,7 @@ public class PaymentActivity extends AppCompatActivity {
                         if (!showPaytmWallet && !showPayU) {
 
                         } else {
-                            PaymentFunc(ynwUUID, accountID, amountDue, purpose);
+                            PaymentFunc(ynwUUID, accountID, amountDue, purpose,displayNotes);
                         }
 
                     } else {
@@ -208,7 +210,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     }
 
-    private void PaymentFunc(final String ynwUUID, final String accountID, final double amountDue, final String purpose) {
+    private void PaymentFunc(final String ynwUUID, final String accountID, final double amountDue, final String purpose, final String displayNotes) {
 
         if (showPaytmWallet) {
             btn_paytm.setVisibility(View.VISIBLE);
@@ -232,7 +234,7 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, purpose, "dashboard");
+                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, purpose, "dashboard",displayNotes);
 
             }
         });
@@ -242,7 +244,7 @@ public class PaymentActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 PaytmPayment payment = new PaytmPayment(mContext);
-                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose,  mContext, mActivity, "home");
+                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose,  mContext, mActivity, "home",displayNotes);
             }
         });
 

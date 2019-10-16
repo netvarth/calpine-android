@@ -145,6 +145,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     int mProvoderId;
     ArrayList<String> ids;
     String uniqueID;
+    String claimable;
 
     TextView tv_ImageViewText, tv_Moredetails, tv_specializtion, tv_SocialMedia, tv_Gallery, tv_mImageViewTextnew;
     RatingBar rating;
@@ -178,6 +179,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     List<SearchDepartment> mSearchDepartmentList;
 
     HashMap<String, List<SearchListModel>> departmentMap;
+    LinearLayout L_layout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -236,6 +238,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         if (bundle != null) {
             Log.i("Bundle.............", bundle.toString());
             uniqueID = bundle.getString("uniqueID");
+            claimable = bundle.getString("claimable");
 
         }
         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
@@ -278,10 +281,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_Gallery.setTypeface(tyface);
         tv_specializtion.setTypeface(tyface);
         txtMore.setTypeface(tyface);
+        L_layout = row.findViewById(R.id.layout_type);
         //tv_contactdetails.setTypeface(tyface);
         ApiJaldeeCoupan(uniqueID);
         ApiSearchViewTerminology(uniqueID);
-        ApiSearchViewDetail(uniqueID);
+        ApiSearchViewDetail(uniqueID,mSearchResp);
         ApiSearchGallery(uniqueID);
         ApiSearchVirtualFields(uniqueID);
 
@@ -334,6 +338,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
         mInterface = (SearchLocationAdpterCallback) this;
+        if(claimable!=null && claimable.equals("1")){
+        tv_msg.setVisibility(View.GONE);
+        tv_fav.setVisibility(View.GONE);
+        }
+//        else if({
+//          L_layout.setVisibility(View.GONE);
+//        }
+//        else{
+//            L_layout.setVisibility(View.VISIBLE);
+//        }
         tv_msg.setEnabled(false);
         tv_msg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -950,7 +964,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             ic_jaldeeverifiedIcon.setVisibility(View.GONE);
         }
 
-
         tv_msg.setEnabled(true);
         tv_busName.setText(getBussinessData.getBusinessName());
         rating.setRating(getBussinessData.getAvgRating());
@@ -989,7 +1002,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     }
 
-    private void ApiSearchViewDetail(final String muniqueID) {
+    private void ApiSearchViewDetail(final String muniqueID, final List<SearchAWsResponse> mSearchRespPass) {
 
 
         ApiInterface apiService =
@@ -1030,7 +1043,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mProvoderId = response.body().getId();
                         UpdateMainUI(mBusinessDataList);
                         ApiSearchGallery(uniqueID);
-                        ApiFavList();
+                        ApiFavList(mSearchRespPass, claimable);
                         APIServiceDepartments(mProvoderId);
                         ApiSearchViewLocation(uniqueID);
                         listDoctorsByDepartment();
@@ -2126,12 +2139,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
 
-    public void onMethodCallback(String value) {
+    public void onMethodCallback(String value, String claimable) {
 
         Bundle bundle = new Bundle();
 
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
         bundle.putString("uniqueID", value);
+        bundle.putString("claimable",claimable);
         pfFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -2159,7 +2173,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
         contactDetail = new ArrayList<>();
-        ApiSearchViewDetail(uniqueID);
+        ApiSearchViewDetail(uniqueID,mSearchResp);
         //ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
 
@@ -2193,7 +2207,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Added to Favourites", Toast.LENGTH_LONG).show();
-                            ApiFavList();
+                            ApiFavList(mSearchResp,claimable);
                         }
 
 
@@ -2222,7 +2236,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     boolean favFlag = false;
     ArrayList<FavouriteModel> mFavList = new ArrayList<>();
 
-    private void ApiFavList() {
+    private void ApiFavList( final List<SearchAWsResponse> mSearchRespPass, final String claimable ) {
 
         Config.logV("API Call");
         final ApiInterface apiService =
@@ -2236,11 +2250,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             public void onResponse(Call<ArrayList<FavouriteModel>> call, Response<ArrayList<FavouriteModel>> response) {
 
                 try {
+                     tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourite_line, 0, 0);
+                     tv_fav.setText("Favourite");
 
-                    tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourite_line, 0, 0);
-                    tv_fav.setText("Favourite");
-                    Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
+
+                     Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
+                     Config.logV("Response--code-------------------------" + response.code());
+
 
                     if (response.code() == 200) {
                         mFavList.clear();
@@ -2251,13 +2267,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             Config.logV("Fav Fav List--------%%%%--" + mBusinessDataList.getId());
 
                             if (mFavList.get(i).getId() == mBusinessDataList.getId()) {
-
                                 favFlag = true;
                                 tv_fav.setVisibility(View.VISIBLE);
                                 tv_fav.setText("Favourite");
                                 tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
 
                             }
+
+
                         }
 
                         tv_fav.setOnClickListener(new View.OnClickListener() {
@@ -2340,7 +2357,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Removed from favourites", Toast.LENGTH_LONG).show();
-                            ApiFavList();
+                            ApiFavList(mSearchResp,claimable);
                         }
 
 
@@ -2452,7 +2469,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         params.put("size", "10000");
         params.put("q.parser", "structured");
-        params.put("sort", "ynw_verified_level desc, distance asc");
+        params.put("sort", "claimable asc,ynw_verified_level desc, distance asc");
         params.put("expr.distance", "haversin(" + lat_long + ", location1.latitude, location1.longitude)");
         params.put("return", "_all_fields,distance");
 
@@ -2595,6 +2612,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 if (response.body().getHits().getHit().get(i).getFields().getDepartment_code() != null) {
                                     search.setDepartment_code(response.body().getHits().getHit().get(i).getFields().getDepartment_code());
                                 }
+                                if(response.body().getHits().getHit().get(i).getFields().getClaimable().equals("1")){
+                                    tv_fav.setVisibility(View.GONE);
+                                }
+
 
                                 mSearchResp.add(search);
 
@@ -2603,6 +2624,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 ids.add(response.body().getHits().getHit().get(i).getId());
                             }
                             ApiQueueList(ids, mSearchResp, "next");
+                            if(mSearchResp.get(0).getClaimable().equals("1")){
+                                tv_fav.setVisibility(View.GONE);
+                            }
+
                         }
 
                     }
@@ -2703,7 +2728,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                            searchList.setSpecialization_displayname(spec);
 //                                        }
 
-
                                         String qualify = "";
                                         if (mSearchRespPass.get(i).getQualification() != null) {
                                             for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
@@ -2795,7 +2819,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
                                             searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
                                         }
-
+                                        if(mSearchRespPass.get(i).getClaimable().equals("1")){
+                                            tv_fav.setVisibility(View.GONE);
+                                        }
                                         searchList.setQId(mSearchRespPass.get(i).getId());
                                         if (mQueueList.get(i).getMessage() != null) {
                                             searchList.setMessage(mQueueList.get(i).getMessage());
@@ -2822,6 +2848,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                                     searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
                                                 }
                                             }
+
                                         }
 //                                        for (int j = 0; j < mQueueList.size(); j++) {
 //                                            Config.logV("mQueueList.get(j).getLocation().getId()" + mQueueList.get(j).getNextAvailableQueue().getLocation());
@@ -2862,8 +2889,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                         mSearchListModel.add(searchList);
                                         Log.i("iopiop", new Gson().toJson(mSearchListModel));
-
                                     }
+
 
                                     Config.logV("Response--Sucess-------------------------" + new Gson().toJson(mSearchListModel));
                                     List<SearchListModel> results = mSearchListModel;
@@ -3120,6 +3147,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
     }
+
 
     void groupByDepartmentCode(List<SearchListModel> mSearchListModel) {
         departmentMap = new HashMap<String, List<SearchListModel>>();

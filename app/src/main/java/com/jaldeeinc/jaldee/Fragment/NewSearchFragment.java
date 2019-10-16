@@ -75,7 +75,7 @@ public class NewSearchFragment extends RootFragment {
 
         params.put("size", "10");
         params.put("q.parser", "structured");
-        params.put("sort", "ynw_verified_level desc, distance asc");
+        params.put("sort", "claimable asc, ynw_verified_level desc, distance asc");
         params.put("expr.distance", mPass);
         params.put("return","_all_fields,distance");
 

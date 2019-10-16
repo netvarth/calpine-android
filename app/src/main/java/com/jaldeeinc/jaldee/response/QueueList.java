@@ -7,7 +7,7 @@ import com.jaldeeinc.jaldee.model.NextAvailableQModel;
  * Created by sharmila on 25/7/18.
  */
 
-public class QueueList {
+public class QueueList  {
 
     public String getMessage() {
         return message;

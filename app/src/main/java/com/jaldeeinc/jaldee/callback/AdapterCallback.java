@@ -17,7 +17,7 @@ import java.util.List;
  */
 
 public interface AdapterCallback {
-    void onMethodCallback(String value);
+    void onMethodCallback(String value, String claimable);
     void onMethodWorkingCallback(ArrayList<WorkingModel> workingModel,String value,String UniqueID);
 
     void onMethodServiceCallback(ArrayList services,String value,String uniqueID);

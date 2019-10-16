@@ -4,23 +4,18 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,10 +29,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
-import com.jaldeeinc.jaldee.Fragment.SpecializationFragment;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
+import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckIn;
@@ -49,7 +43,6 @@ import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
-import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -59,16 +52,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -97,15 +85,21 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean isLoadingAdded = false;
     private AdapterCallback mAdapterCallback;
     ArrayList<SearchViewDetail> mSpecializationList;
+    SearchViewDetail mBusinessDataList;
+    ArrayList<SearchViewDetail> mSearchGallery;
+    String uniqueID;
 
 
-    public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback) {
+
+
+    public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID ) {
         this.context = context;
         searchResults = new ArrayList<>();
         this.mFragment = mFragment;
         mSearchView = searchview;
         this.mAdapterCallback = callback;
         this.activity = activity;
+        this.uniqueID = uniqueID;
     }
 
     private static Date parseDate(String date) {
@@ -149,9 +143,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return viewHolder;
     }
 
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final SearchListModel searchdetailList = searchResults.get(position);
+
         switch (getItemViewType(position)) {
             case ITEM:
                 final MyViewHolder myViewHolder = (MyViewHolder) holder;
@@ -574,8 +570,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         mSearchView.setQuery("", false);
-                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
-                    }
+                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(),searchdetailList.getClaimable());
+                     }
                 });
                 if (searchdetailList.getBranchSpCount() > 0) {
                     if (searchdetailList.getBranchSpCount() > 1){
@@ -583,7 +579,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.tv_count.setVisibility(View.VISIBLE);
                     }
                     else{
-                    myViewHolder.tv_count.setText(searchdetailList.getBranchSpCount()+" "+countTerminology);
+                    myViewHolder.tv_count.setText(searchdetailList.getBranchSpCount() + " " + countTerminology);
                     myViewHolder.tv_count.setVisibility(View.VISIBLE);}
 
                 }else{
@@ -603,22 +599,30 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 if (searchdetailList.getClaimable().equals("1")) {
                     myViewHolder.tv_claimable.setVisibility(View.VISIBLE);
+                   // myViewHolder.tv_useWeb.setVisibility(View.VISIBLE);
                     myViewHolder.L_layout_type.setVisibility(View.GONE);
                     myViewHolder.L_checkin.setVisibility(View.GONE);
                     myViewHolder.tv_qmessage.setVisibility(View.GONE);
 
                 } else {
                     myViewHolder.tv_claimable.setVisibility(View.INVISIBLE);
+                   // myViewHolder.tv_useWeb.setVisibility(View.INVISIBLE);
                     myViewHolder.L_layout_type.setVisibility(View.VISIBLE);
                     myViewHolder.L_checkin.setVisibility(View.VISIBLE);
                     myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                 }
-                myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Use jaldee.com in web Browser to Claim your Business", Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Toast.makeText(activity, "Use jaldee.com in web Browser to Claim your Business", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+                if(searchdetailList.getClaimable().equals("0")){
+                    myViewHolder.vsep.setVisibility(View.GONE);
+                }
+                else{
+                    myViewHolder.vsep.setVisibility(View.VISIBLE);
+                }
                 if (searchdetailList.getQualification() != null) {
                     myViewHolder.tv_name.setText(searchdetailList.getTitle());
                 } else {
@@ -708,9 +712,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     if (searchdetailList.getFuture_checkins()!=null && searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
                         if (searchdetailList.getCalculationMode()!=null && searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc") && searchdetailList.isShowToken()) {
-                            myViewHolder.tv_Futuredate.setText("Get Token for different Date?");
+                            myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
                         } else {
-                            myViewHolder.tv_Futuredate.setText(termilogy + " for different date?");
+                            myViewHolder.tv_Futuredate.setText("Do you want to" + " " + termilogy + " for another day?");
                         }
                     } else {
                         myViewHolder.tv_Futuredate.setVisibility(View.GONE);
@@ -815,7 +819,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         exception.printStackTrace();
                     }
                 });
-               builder.build().load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+
+               builder.build().load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile);
+               profile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ApiSearchGallery(searchdetailList.getUniqueid(),searchdetailList);
+
+                    }
+
+
+
+                });
                 if (searchdetailList.getGallery_thumb_nails() != null) {
                     if (searchdetailList.getGallery_thumb_nails().size() > 0) {
                         myViewHolder.mImageViewText.setVisibility(View.VISIBLE);
@@ -1316,15 +1331,17 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
     }
 
+
     /**
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec_more, tv_spec22, tv_count, tv_qmessage,tv_dept,tv_services,tv_dep1,tv_dep2,tv_dep22,tv_dep_more;
        LinearLayout L_specialization, L_services, L_layout_type, L_checkin,L_departments;
+       View vsep;
 
         ImageView ic_jaldeeverifiedIcon;
-        ImageView profile;
+       // ImageView profile, profile1, profile2;
         RatingBar rating;
         TextView tv_claimable, tv_distance, tv_branch_name;
 
@@ -1332,6 +1349,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LinearLayout layout_row;
         TextView mImageViewText;
         LinearLayout layout_type;
+
 
         public MyViewHolder(View view) {
             super(view);
@@ -1368,9 +1386,210 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             tv_dep2 = view.findViewById(R.id.txtdep2);
             tv_dep22 = view.findViewById(R.id.txtdep22);
             tv_dep_more = view.findViewById(R.id.txtdep_more);
+            //tv_useWeb = view.findViewById(R.id.useWeb);
+            profile1 = view.findViewById(R.id.iprofile1);
+            profile2 = view.findViewById(R.id.iprofile2);
+            vsep = view.findViewById(R.id.separator);
 
         }
     }
+    ImageView profile, profile1, profile2;
+
+
+
+    public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery, final SearchListModel searchdetailList) {
+        //  Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
+
+        Config.logV("Gallery--------------333-----" + mGallery.size());
+        try {
+            if (mGallery.size() > 0 || searchdetailList.getLogo() != null) {
+                profile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+
+                        if (searchdetailList.getLogo() != null) {
+                            mGalleryList.add(searchdetailList.getLogo());
+                        }
+
+                        for (int i = 0; i < mGallery.size(); i++) {
+
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+
+
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+
+                            Intent intent = new Intent(context, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 0);
+                            context.startActivity(intent);
+                        }
+
+
+                    }
+                });
+
+
+                profile1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+
+
+                        if (searchdetailList.getLogo() != null) {
+
+                            mGalleryList.add(searchdetailList.getLogo());
+                        }
+                        for (int i = 0; i < mGallery.size(); i++) {
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+
+
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+
+                            Intent intent = new Intent(context, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 1);
+                            context.startActivity(intent);
+                        }
+
+
+                    }
+                });
+
+
+                profile2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+
+
+                        if (searchdetailList.getLogo() != null) {
+
+                            mGalleryList.add(searchdetailList.getLogo());
+                        }
+                        for (int i = 0; i < mGallery.size(); i++) {
+
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+
+
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+
+                            Intent intent = new Intent(context, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 2);
+                            context.startActivity(intent);
+                        }
+
+
+                    }
+                });
+
+
+            } /*else {
+                tv_Gallery.setVisibility(View.GONE);
+            }*/
+
+           // Config.logV("Bussiness logo @@@@@@@@@@" + mBusinessDataList.getLogo());
+            if (searchdetailList.getLogo() != null) {
+                Picasso.with(context).load(searchdetailList.getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile);
+
+            } else {
+                Picasso.with(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile);
+
+            }
+
+
+//            if (mBusinessDataList.getLogo() != null) {
+//                if (mGallery.size() > 0) {
+//                    tv_mImageViewTextnew.setVisibility(View.VISIBLE);
+//                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
+//                }
+//
+//            } else if (mBusinessDataList.getLogo() == null) {
+//                if (mGallery.size() > 0) {
+//                    tv_mImageViewTextnew.setVisibility(View.VISIBLE);
+//                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size() - 1));
+//                } else {
+//                    tv_mImageViewTextnew.setVisibility(View.GONE);
+//                }
+//            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ApiSearchGallery(final String muniqueID, final SearchListModel searchdetailList) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(context).create(ApiInterface.class);
+
+
+        //final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
+        //mDialog.show();
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+
+
+        Call<ArrayList<SearchViewDetail>> call = apiService.getSearchGallery(Integer.parseInt(muniqueID), sdf.format(currentTime));
+
+        call.enqueue(new Callback<ArrayList<SearchViewDetail>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchViewDetail>> call, Response<ArrayList<SearchViewDetail>> response) {
+
+                try {
+
+                   // if (mDialog.isShowing())
+                       // Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----gallery--------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        mSearchGallery = response.body();
+                        UpdateGallery(mSearchGallery,searchdetailList);
+
+                    } else {
+                        if (searchdetailList.getLogo() != null) {
+                            // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                            UpdateGallery(mSearchGallery,searchdetailList);    }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchViewDetail>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                //if (mDialog.isShowing())
+                  //  Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
 
     protected class LoadingVH extends RecyclerView.ViewHolder {
         ProgressBar loadmore_progress;
@@ -1380,4 +1599,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             loadmore_progress = itemView.findViewById(R.id.loadmore_progress);
         }
     }
+
+
 }
