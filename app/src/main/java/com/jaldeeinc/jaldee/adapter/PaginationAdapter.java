@@ -670,6 +670,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
                                 iCheckIn.putExtra("terminology", termilogy);
                                 iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
+                                iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
                                 context.startActivity(iCheckIn);
                             }
                         });
@@ -788,6 +789,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
                         iCheckIn.putExtra("terminology", termilogy);
                         iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
+                        iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
                         context.startActivity(iCheckIn);
                     }
                 });
@@ -820,10 +822,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
 
-               builder.build().load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile);
-               profile.setOnClickListener(new View.OnClickListener() {
+               builder.build().load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+              myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Config.logV("Unique Id List",searchdetailList.getUniqueid());
                         ApiSearchGallery(searchdetailList.getUniqueid(),searchdetailList);
 
                     }
@@ -839,6 +842,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.mImageViewText.setVisibility(View.GONE);
                     }
                 } else {
+
+
                     myViewHolder.mImageViewText.setVisibility(View.GONE);
                 }
 
@@ -1341,7 +1346,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
        View vsep;
 
         ImageView ic_jaldeeverifiedIcon;
-       // ImageView profile, profile1, profile2;
+        ImageView profile, profile1, profile2;
         RatingBar rating;
         TextView tv_claimable, tv_distance, tv_branch_name;
 
@@ -1391,9 +1396,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             profile2 = view.findViewById(R.id.iprofile2);
             vsep = view.findViewById(R.id.separator);
 
+
         }
     }
-    ImageView profile, profile1, profile2;
+    ImageView  profile1,profile2, profile3;
+
 
 
 
@@ -1401,26 +1408,34 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         //  Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
 
         Config.logV("Gallery--------------333-----" + mGallery.size());
+
         try {
             if (mGallery.size() > 0 || searchdetailList.getLogo() != null) {
-                profile.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+//                profile.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
 
                         Config.logV("Gallery------------------------------" + mGallery.size());
+
                         ArrayList<String> mGalleryList = new ArrayList<>();
 
+
+
                         if (searchdetailList.getLogo() != null) {
+
                             mGalleryList.add(searchdetailList.getLogo());
                         }
 
                         for (int i = 0; i < mGallery.size(); i++) {
 
                             mGalleryList.add(mGallery.get(i).getUrl());
+
+
                         }
+                        mGallery.clear();
 
 
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, context);
                         if (mValue) {
 
                             Intent intent = new Intent(context, SwipeGalleryImage.class);
@@ -1429,11 +1444,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
 
 
-                    }
-                });
 
 
-                profile1.setOnClickListener(new View.OnClickListener() {
+//                    }
+//                });
+
+
+                profile2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -1463,7 +1480,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
 
 
-                profile2.setOnClickListener(new View.OnClickListener() {
+                profile3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -1500,10 +1517,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
            // Config.logV("Bussiness logo @@@@@@@@@@" + mBusinessDataList.getLogo());
             if (searchdetailList.getLogo() != null) {
-                Picasso.with(context).load(searchdetailList.getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile);
+                Picasso.with(context).load(searchdetailList.getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
 
             } else {
-                Picasso.with(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile);
+                Picasso.with(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
 
             }
 
@@ -1567,6 +1584,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } else {
                         if (searchdetailList.getLogo() != null) {
                             // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+
                             UpdateGallery(mSearchGallery,searchdetailList);    }
                     }
 

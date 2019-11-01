@@ -5,11 +5,13 @@ package com.jaldeeinc.jaldee.adapter;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.InboxModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,6 +36,8 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
     private List<InboxModel> mInboxList;
     Context mContext;
     //boolean is_seemore=false;
+    public static final int PICKFILE_RESULT_CODE = 1;
+    File attachment;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -40,6 +45,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         LinearLayout linear_inbox_layout;
         ImageView img_sent;
         TextView tv_seemore;
+
 
         public MyViewHolder(View view) {
             super(view);
@@ -50,6 +56,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
             img_sent = (ImageView) view.findViewById(R.id.img_sent);
             tv_reply = (TextView) view.findViewById(R.id.txtreply);
             tv_seemore = (TextView) view.findViewById(R.id.tv_seemore);
+
 
 
         }
@@ -99,8 +106,10 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
 
         if (consumerId == inboxList.getId()) {
             myViewHolder.tv_reply.setVisibility(View.INVISIBLE);
+           // myViewHolder.tv_attach.setVisibility(View.INVISIBLE);
         } else {
             myViewHolder.tv_reply.setVisibility(View.VISIBLE);
+          //  myViewHolder.tv_attach.setVisibility(View.VISIBLE);
         }
 
 
@@ -202,10 +211,19 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
             @Override
             public void onClick(View v) {
 
-                callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId(),inboxList.getTimeStamp());
+                callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId(),inboxList.getTimeStamp(), attachment);
 
             }
         });
+
+//        myViewHolder.tv_attach.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                callback.onMethodCallbackAttach(inboxList.getWaitlistId(), inboxList.getId(),inboxList.getTimeStamp(),PICKFILE_RESULT_CODE, attachment);
+//
+//            }
+//        });
 
 
     }

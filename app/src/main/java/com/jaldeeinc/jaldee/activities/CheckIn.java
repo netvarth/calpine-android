@@ -123,7 +123,8 @@ public class CheckIn extends AppCompatActivity {
     ImageView img_calender_checkin;
     LinearLayout LcheckinDatepicker;
     static String mFrom;
-    String title, place,terminology,isShowToken;
+    String title, place,terminology;
+    static  String isShowToken;
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
     static TextView tv_queuetime;
@@ -165,6 +166,9 @@ public class CheckIn extends AppCompatActivity {
     static String Word_Change = "";
     SearchDepartment depResponse;
     String displayNotes;
+    String getAvail_date;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -297,6 +301,7 @@ public class CheckIn extends AppCompatActivity {
                 //to convert Date to String, use format method of SimpleDateFormat class.
                 String strDate = dateFormat.format(added_date);
                 txt_date.setText(strDate);
+
                 DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
                 selectedDateFormat = selecteddateParse.format(added_date);
                 UpdateDAte(selectedDateFormat);
@@ -370,6 +375,7 @@ public class CheckIn extends AppCompatActivity {
                 place = extras.getString("place", "");
                 terminology = extras.getString("terminology", "");
                 isShowToken = extras.getString("isShowToken", "");
+                getAvail_date = extras.getString("getAvail_date","");
                 ApiSearchViewDetail(uniqueID);
             } else {
 
@@ -389,6 +395,8 @@ public class CheckIn extends AppCompatActivity {
                 subsector = extras.getString("subsector", "");
                 terminology = extras.getString("terminology","");
                 isShowToken = extras.getString("isShowToken","");
+                getAvail_date = extras.getString("getAvail_date","");
+
             }
         }
         if (sector != null && subsector != null) {
@@ -500,14 +508,14 @@ public class CheckIn extends AppCompatActivity {
 
                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime),isShowToken);
                 } else {
                     if (selectedDateFormat != null) {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat);
+                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
                     } else {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime),isShowToken);
                     }
                 }
 
@@ -786,7 +794,7 @@ public class CheckIn extends AppCompatActivity {
             e.printStackTrace();
         }
         Config.logV("Selected Date---&&&&&&&&&&&#%%%%%%%-------------" + selectedDate);
-        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate);
+        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate,isShowToken);
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -1035,7 +1043,7 @@ public class CheckIn extends AppCompatActivity {
 
     private static Date dateCompareOne;
 
-    private static void ApiQueueTimeSlot(String serviceId, String subSeriveID, String accountID, String mDate) {
+    private static void ApiQueueTimeSlot(String serviceId, String subSeriveID, String accountID, String mDate, final String isShowToken) {
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1063,7 +1071,7 @@ public class CheckIn extends AppCompatActivity {
 
                         if (mQueueTimeSlotList.size() > 0) {
                             i = 0;
-                            if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null) {
+                           if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null && isShowToken.equals("false")) {
                                 tv_personahead.setVisibility(View.VISIBLE);
 
                                 String firstWord = "People ahead of you ";
@@ -1917,6 +1925,7 @@ public class CheckIn extends AppCompatActivity {
     }
 
 
+
     private void ApiSearchViewServiceID(final int id) {
 
 
@@ -2068,14 +2077,14 @@ public class CheckIn extends AppCompatActivity {
 
                                         if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                                            ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                                            ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                         } else {
                                             if (selectedDateFormat != null) {
 
-                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat);
+                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
                                             } else {
 
-                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime),isShowToken);
                                             }
                                         }
                                     }

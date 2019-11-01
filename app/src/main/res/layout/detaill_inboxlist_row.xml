@@ -65,6 +65,19 @@
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_title_term_small" />
 
+<!--            <TextView-->
+<!--                android:id="@+id/txtattach"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="right"-->
+<!--                android:layout_weight="0.4"-->
+<!--                android:background="@drawable/input_border_rectblue_bg"-->
+<!--                android:gravity="center"-->
+<!--                android:padding="@dimen/padding2"-->
+<!--                android:text="Attach Files"-->
+<!--                android:textColor="@color/title_consu"-->
+<!--                android:textSize="@dimen/txtsize_12" />-->
+
             <TextView
                 android:id="@+id/txtreply"
                 android:layout_width="0dp"

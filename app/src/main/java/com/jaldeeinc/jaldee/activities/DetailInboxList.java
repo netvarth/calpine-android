@@ -1,22 +1,32 @@
 package com.jaldeeinc.jaldee.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DetailInboxAdapter;
 import com.jaldeeinc.jaldee.callback.DetailInboxAdapterCallback;
@@ -28,6 +38,15 @@ import com.jaldeeinc.jaldee.response.InboxModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.text.BreakIterator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +60,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.jaldeeinc.jaldee.adapter.DetailInboxAdapter.PICKFILE_RESULT_CODE;
+
 /**
  * Created by sharmila on 27/8/18.
  */
@@ -50,9 +71,16 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     Context mContext;
     DetailInboxAdapter mDetailAdapter;
     static ArrayList<InboxModel> mDetailInboxList = new ArrayList<>();
-    TextView txtprovider;
+    TextView txtprovider, tv_attach, tv_fileAttach;
     String provider;
     DetailInboxAdapterCallback mInterface;
+    String message;
+    BottomSheetDialog dialog;
+    private static final int CREATE_REQUEST_CODE = 40;
+    private static final int OPEN_REQUEST_CODE = 41;
+    private static final int SAVE_REQUEST_CODE = 42;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +107,8 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
         txtprovider = (TextView) findViewById(R.id.txtprovider);
+    //   tv_attach = (TextView) findViewById(R.id.txt_attach);
+    //   tv_fileAttach = (TextView) findViewById(R.id.txt_file);
 
         tv_title.setTypeface(tyface);
         txtprovider.setTypeface(tyface);
@@ -106,7 +136,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     }
 
     @Override
-    public void  onMethodCallback(final String waitListId, final int accountID, final long timestamp) {
+    public void  onMethodCallback(final String waitListId, final int accountID, final long timestamp,final File attachment) {
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();
@@ -115,7 +145,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
         final EditText edt_message = dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
-
+     //   TextView tv_attach = dialog.findViewById(R.id.txt_attach);
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
@@ -160,10 +190,10 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                     try {
                         if (new SimpleDateFormat("dd/MM/yyyy").parse(dateString).before(currentdate)) {
                             Config.logV("WAITLIST Past Date --------------------" + new Date());
-                            ApiCommunicate("h_" + waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                            ApiCommunicate("h_" + waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog, attachment);
                         } else {
                             Config.logV("WAITLIST Today Date --------------------");
-                            ApiCommunicate(waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                            ApiCommunicate(waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog, attachment);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -182,7 +212,51 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 dialog.dismiss();
             }
         });
+
+//        tv_attach.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                intent.setType("file/*");
+//                startActivityForResult(intent,PICKFILE_RESULT_CODE);
+//             //  ApiCommunicate(waitListId,String.valueOf(accountID),message,dialog,attachment);
+//            }
+//        });
+
     }
+
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        switch(requestCode){
+//            case PICKFILE_RESULT_CODE:
+//                if(resultCode==RESULT_OK){
+//                    String FilePath = data.getData().getPath();
+//                    tv_fileAttach.setText(FilePath);
+//                    tv_fileAttach.setVisibility(View.VISIBLE);
+////
+//                    String path="File Path";
+//                    Intent intent = new Intent();
+//                    intent.setAction(android.content.Intent.ACTION_VIEW);
+//                    File file = new File(path);
+//
+//                    MimeTypeMap mime = MimeTypeMap.getSingleton();
+//                    String ext=file.getName().substring(file.getName().indexOf(".")+1);
+//                    String type = mime.getMimeTypeFromExtension(ext);
+//
+//                    intent.setDataAndType(Uri.fromFile(file),type);
+//
+//                    startActivity(intent);
+//
+//                }
+//                break;
+//
+//        }
+//    }
+
+
+
+
 
 
     private void ApiCommunicateWithoutWaitListID(String accountID, String message, final BottomSheetDialog dialog) {
@@ -249,7 +323,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
     }
 
-    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
+    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog, File attachment) {
 
 
         ApiInterface apiService =
@@ -263,6 +337,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("communicationMessage", message);
+            jsonObj.put("attachments",attachment);
 
 
         } catch (JSONException e) {

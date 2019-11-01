@@ -2263,12 +2263,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 if(querypass.equals("")) {
                     querycreate = "sector :'" + mDomainSpinner + "'";
                 } else {
-                    querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "' title: " + "'" + querypass + "' services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
+                    querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "'( prefix field = title " + "'" + querypass + "') (phrase field = title " + "'" + querypass + "')services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
                 }
             } else {
                 if(!querypass.equals("")) {
                     Config.logV("Query @@@@@@@@@@@@@@" + querypass);
-                    querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "' title: " + "'" + querypass + "' services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "')";
+                    querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "'( prefix field = title " + "'" + querypass + "') (phrase field = title " + "'" + querypass + "') services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "')";
                 } else {
                     querycreate = "";
                 }

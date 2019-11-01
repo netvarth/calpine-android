@@ -89,7 +89,7 @@
                                     android:textColor="@color/app_background"
                                     android:textSize="@dimen/txtsize_12"
                                     android:textStyle="bold"
-                                    android:visibility="gone" />
+                                    android:visibility="visible" />
 
                                 <RatingBar
                                     android:id="@+id/mRatingBar"
