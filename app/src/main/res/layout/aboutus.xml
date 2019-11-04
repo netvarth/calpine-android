@@ -189,7 +189,7 @@
                     android:layout_weight="1.5"
                     android:background="@color/app_background"
                     android:padding="@dimen/default_padding"
-                    android:text="Last Updated on 01/11/2019"
+                    android:text="Last Updated on 04/11/2019"
                     android:textColor="@color/title_grey"
                     android:textSize="12sp"
                     android:textStyle="italic" />

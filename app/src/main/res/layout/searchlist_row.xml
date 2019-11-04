@@ -456,11 +456,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding2"
             android:layout_marginBottom="@dimen/padding2"
-            android:gravity="center"
+            android:layout_marginLeft="@dimen/padding2"
+
+            android:gravity="left"
             android:paddingRight="@dimen/padding5"
-            android:text="Own this business? Use jaldee.com in web browser to claim your Business"
+            android:text="Claim it now in www.jaldee.com"
             android:textColor="@color/orange"
-            android:textSize="@dimen/txtsize_12"
+            android:textSize="@dimen/txtsize_10"
             android:visibility="gone" />
         <TextView
             android:id="@+id/useWeb"
@@ -468,11 +470,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding2"
             android:layout_marginBottom="@dimen/padding2"
-            android:gravity="center"
+            android:layout_marginLeft="@dimen/padding2"
+
+            android:gravity="left"
             android:paddingRight="@dimen/padding5"
-            android:text="Claim it in www.jaldee.com"
+            android:text="Claim it now in www.jaldee.com"
             android:textColor="@color/red"
-            android:textSize="@dimen/txtsize_12"
+            android:textSize="@dimen/txtsize_10"
             android:visibility="gone"/>
 <!--&lt;!&ndash;            android:background="@color/circle_indicator"/>&ndash;&gt;-->
 

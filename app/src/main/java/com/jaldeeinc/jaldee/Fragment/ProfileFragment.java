@@ -195,7 +195,6 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
                 LogouFragment pfFragment = new LogouFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
-                // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
 

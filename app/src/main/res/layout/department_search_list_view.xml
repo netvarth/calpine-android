@@ -311,12 +311,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding2"
             android:layout_marginBottom="@dimen/padding2"
-            android:gravity="center"
+            android:layout_marginLeft="@dimen/padding2"
+            android:gravity="left"
             android:paddingRight="@dimen/padding5"
-            android:text="Own this business? Claim it now"
+            android:text="Claim it now in www.jaldee.com"
             android:textColor="@color/title_consu"
-            android:textSize="@dimen/txtsize_12"
-            android:visibility="gone" />
+            android:textSize="@dimen/txtsize_10"
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/checkinlayout"
