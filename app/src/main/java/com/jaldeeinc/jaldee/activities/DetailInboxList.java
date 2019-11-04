@@ -1,16 +1,20 @@
 package com.jaldeeinc.jaldee.activities;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.icu.util.Calendar;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +22,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -39,6 +44,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -76,9 +82,12 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     DetailInboxAdapterCallback mInterface;
     String message;
     BottomSheetDialog dialog;
-    private static final int CREATE_REQUEST_CODE = 40;
-    private static final int OPEN_REQUEST_CODE = 41;
-    private static final int SAVE_REQUEST_CODE = 42;
+//    private static final int GALLERY = 1;
+//    private ImageView imageview;
+//    private static final String IMAGE_DIRECTORY = "/demonuts";
+
+
+
 
 
 
@@ -107,8 +116,8 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
         txtprovider = (TextView) findViewById(R.id.txtprovider);
-    //   tv_attach = (TextView) findViewById(R.id.txt_attach);
-    //   tv_fileAttach = (TextView) findViewById(R.id.txt_file);
+
+
 
         tv_title.setTypeface(tyface);
         txtprovider.setTypeface(tyface);
@@ -136,7 +145,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     }
 
     @Override
-    public void  onMethodCallback(final String waitListId, final int accountID, final long timestamp,final File attachment) {
+    public void  onMethodCallback(final String waitListId, final int accountID, final long timestamp) {
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();
@@ -145,7 +154,10 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
         final EditText edt_message = dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
-     //   TextView tv_attach = dialog.findViewById(R.id.txt_attach);
+//        TextView tv_attach = dialog.findViewById(R.id.txt_attach);
+//        ImageView iv_file = dialog.findViewById(R.id.txt_file);
+
+
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
@@ -190,10 +202,10 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                     try {
                         if (new SimpleDateFormat("dd/MM/yyyy").parse(dateString).before(currentdate)) {
                             Config.logV("WAITLIST Past Date --------------------" + new Date());
-                            ApiCommunicate("h_" + waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog, attachment);
+                            ApiCommunicate("h_" + waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
                         } else {
                             Config.logV("WAITLIST Today Date --------------------");
-                            ApiCommunicate(waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog, attachment);
+                            ApiCommunicate(waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -212,47 +224,44 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 dialog.dismiss();
             }
         });
-
 //        tv_attach.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onClick(View view) {
+//                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//
+//                startActivityForResult(galleryIntent, GALLERY);
 //                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 //                intent.setType("file/*");
 //                startActivityForResult(intent,PICKFILE_RESULT_CODE);
-//             //  ApiCommunicate(waitListId,String.valueOf(accountID),message,dialog,attachment);
+//                String path="File Path";
+//                intent = new Intent();
+//                intent.setAction(android.content.Intent.ACTION_VIEW);
+//                File file = new File(path);
+//
+//                MimeTypeMap mime = MimeTypeMap.getSingleton();
+//                String ext=file.getName().substring(file.getName().indexOf(".")+1);
+//                String type = mime.getMimeTypeFromExtension(ext);
+//
+//                intent.setDataAndType(Uri.fromFile(file),type);
+//
+//                startActivity(intent);
+//                String path="File Path";
+//                intent = new Intent();
+//                intent.setAction(android.content.Intent.ACTION_VIEW);
+//                File file = new File(path);
+//
+//                intent.setData(Uri.fromFile(file));
+//
+//                startActivity(intent);
 //            }
 //        });
+
 
     }
 
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        switch(requestCode){
-//            case PICKFILE_RESULT_CODE:
-//                if(resultCode==RESULT_OK){
-//                    String FilePath = data.getData().getPath();
-//                    tv_fileAttach.setText(FilePath);
-//                    tv_fileAttach.setVisibility(View.VISIBLE);
-////
-//                    String path="File Path";
-//                    Intent intent = new Intent();
-//                    intent.setAction(android.content.Intent.ACTION_VIEW);
-//                    File file = new File(path);
-//
-//                    MimeTypeMap mime = MimeTypeMap.getSingleton();
-//                    String ext=file.getName().substring(file.getName().indexOf(".")+1);
-//                    String type = mime.getMimeTypeFromExtension(ext);
-//
-//                    intent.setDataAndType(Uri.fromFile(file),type);
-//
-//                    startActivity(intent);
-//
-//                }
-//                break;
-//
-//        }
-//    }
+
 
 
 
@@ -323,7 +332,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
     }
 
-    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog, File attachment) {
+    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 
 
         ApiInterface apiService =
@@ -337,7 +346,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("communicationMessage", message);
-            jsonObj.put("attachments",attachment);
 
 
         } catch (JSONException e) {
@@ -388,4 +396,68 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
 
     }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        switch(requestCode){
+//            case PICKFILE_RESULT_CODE:
+//                if(resultCode==RESULT_OK){
+//                    String FilePath = data.getData().getPath();
+//                    tv_attach.setText(FilePath);
+//                }
+//                break;
+//
+//        }
+//        if (requestCode == GALLERY) {
+//            if (data != null) {
+//                Uri contentURI = data.getData();
+//                try {
+//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+//                    String path = saveImage(bitmap);
+//                    Toast.makeText(DetailInboxList.this, "Image Saved!", Toast.LENGTH_SHORT).show();
+//                    imageview.setImageBitmap(bitmap);
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(DetailInboxList.this, "Failed!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//        }
+
+
+
+
+//    }
+//
+//    @RequiresApi(api = Build.VERSION_CODES.N)
+//    public String saveImage(Bitmap myBitmap) {
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+//        File wallpaperDirectory = new File(
+//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+//        // have the object build the directory structure, if needed.
+//        if (!wallpaperDirectory.exists()) {
+//            wallpaperDirectory.mkdirs();
+//        }
+//
+//        try {
+//            File f = new File(wallpaperDirectory, Calendar.getInstance()
+//                    .getTimeInMillis() + ".jpg");
+//            f.createNewFile();
+//            FileOutputStream fo = new FileOutputStream(f);
+//            fo.write(bytes.toByteArray());
+//            MediaScannerConnection.scanFile(this,
+//                    new String[]{f.getPath()},
+//                    new String[]{"image/jpeg"}, null);
+//            fo.close();
+//            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+//
+//            return f.getAbsolutePath();
+//        } catch (IOException e1) {
+//            e1.printStackTrace();
+//        }
+//        return "";
+//    }
+
 }
+

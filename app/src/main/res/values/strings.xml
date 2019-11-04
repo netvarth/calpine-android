@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Jaldee</string>
+    <string name="app_name">JaldeeConsumerTest</string>
 
     <string name="url">https://www.jaldee.com/v1/rest/</string>
     <string name="url_terms">https://www.jaldee.com/#/terms</string>
@@ -27,6 +27,7 @@
     <string name="agree_policy">I Agree Terms of Service  and Privacy Policy</string>
     <string name="btnlogin">Login</string>
     <string name="send">Send</string>
+    <string name="attach">Attachment</string>
     <string name="enterEmail">Enter Your Email</string>
     <string name="err_msg_phone">Phone number should have 10 digits</string>
     <string name="err_msg_password">Confirm Password</string>

@@ -10,7 +10,7 @@ import java.io.File;
 
 public interface DetailInboxAdapterCallback {
 
-    void onMethodCallback(String waitlistId,int accountID,long timestamp, File attachment);
+    void onMethodCallback(String waitlistId,int accountID,long timestamp);
     //void onMethodCallbackAttach(String waitlistId, int accountID, long timestamp, int PICKFILE_RESULT_CODE, File attachment) ;
 
 }

@@ -1410,6 +1410,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Config.logV("Gallery--------------333-----" + mGallery.size());
 
         try {
+
             if (mGallery.size() > 0 || searchdetailList.getLogo() != null) {
 //                profile.setOnClickListener(new View.OnClickListener() {
 //                    @Override
@@ -1576,7 +1577,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----gallery--------------------" + response.code());
 
-                    if (response.code() == 200) {
+                    if (response.code() == 200 ) {
 
                         mSearchGallery = response.body();
                         UpdateGallery(mSearchGallery,searchdetailList);
@@ -1584,8 +1585,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } else {
                         if (searchdetailList.getLogo() != null) {
                             // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            mGalleryList.add(searchdetailList.getLogo());
 
-                            UpdateGallery(mSearchGallery,searchdetailList);    }
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, context);
+                            if (mValue) {
+
+                                Intent intent = new Intent(context, SwipeGalleryImage.class);
+                                intent.putExtra("pos", 0);
+                                context.startActivity(intent);
+                            }
+                           // UpdateGallery(mSearchGallery,searchdetailList);
+                        }
                     }
 
 

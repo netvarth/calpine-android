@@ -577,7 +577,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
 
             } else {
-                Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                //Toast.makeText(mContext, "There is no Profile Pic", Toast.LENGTH_SHORT).show();
+                // Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
 
             }
 
@@ -591,7 +592,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             } else if (mBusinessDataList.getLogo() == null) {
                 if (mGallery.size() > 0) {
                     tv_mImageViewTextnew.setVisibility(View.VISIBLE);
-                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size() - 1));
+                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
                 } else {
                     tv_mImageViewTextnew.setVisibility(View.GONE);
                 }
@@ -1109,10 +1110,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         UpdateGallery(mSearchGallery);
 
                     } else {
+                        tv_mImageViewTextnew.setVisibility(View.GONE);
                         if (mBusinessDataList.getLogo() != null) {
                            // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
                             UpdateGallery(mSearchGallery);    }
+                        else {
+                            tv_mImageViewTextnew.setVisibility(View.GONE);
+                        }
                     }
+
+
 
 
                 } catch (Exception e) {

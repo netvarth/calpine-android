@@ -85,7 +85,6 @@
                                     android:fontFamily="@font/customfont"
                                     android:gravity="center"
                                     android:padding="@dimen/padding3"
-                                    android:text="+3"
                                     android:textColor="@color/app_background"
                                     android:textSize="@dimen/txtsize_12"
                                     android:textStyle="bold"

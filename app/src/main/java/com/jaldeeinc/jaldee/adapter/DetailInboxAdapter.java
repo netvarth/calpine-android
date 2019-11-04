@@ -37,7 +37,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
     Context mContext;
     //boolean is_seemore=false;
     public static final int PICKFILE_RESULT_CODE = 1;
-    File attachment;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -106,10 +106,10 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
 
         if (consumerId == inboxList.getId()) {
             myViewHolder.tv_reply.setVisibility(View.INVISIBLE);
-           // myViewHolder.tv_attach.setVisibility(View.INVISIBLE);
+
         } else {
             myViewHolder.tv_reply.setVisibility(View.VISIBLE);
-          //  myViewHolder.tv_attach.setVisibility(View.VISIBLE);
+
         }
 
 
@@ -211,19 +211,12 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
             @Override
             public void onClick(View v) {
 
-                callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId(),inboxList.getTimeStamp(), attachment);
+                callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId(),inboxList.getTimeStamp());
 
             }
         });
 
-//        myViewHolder.tv_attach.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                callback.onMethodCallbackAttach(inboxList.getWaitlistId(), inboxList.getId(),inboxList.getTimeStamp(),PICKFILE_RESULT_CODE, attachment);
-//
-//            }
-//        });
+
 
 
     }
