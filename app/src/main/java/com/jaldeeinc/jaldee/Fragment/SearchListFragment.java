@@ -1244,6 +1244,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setUnique_id(response.body().getHits().getHit().get(i).getFields().getUnique_id());
                                 search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
                                 search.setFirst_checkin_coupon_count(response.body().getHits().getHit().get(i).getFields().getFirst_checkin_coupon_count());
+                                search.setJdn(response.body().getHits().getHit().get(i).getFields().getJdn());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
@@ -1502,6 +1503,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
                                 search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
                                 search.setFirst_checkin_coupon_count(response.body().getHits().getHit().get(i).getFields().getFirst_checkin_coupon_count());
+                                search.setJdn(response.body().getHits().getHit().get(i).getFields().getJdn());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
@@ -1731,6 +1733,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
                                 searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
                                 searchList.setFirst_checkin_coupon_count(mSearchRespPass.get(i).getFirst_checkin_coupon_count());
+                                searchList.setJdn(mSearchRespPass.get(i).getJdn());
                                 searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
                                 searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
                                 searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
@@ -1942,6 +1945,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
                                 searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
                                 searchList.setFirst_checkin_coupon_count(mSearchRespPass.get(i).getFirst_checkin_coupon_count());
+                                searchList.setJdn(mSearchRespPass.get(i).getJdn());
                                 searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
                                 searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
                                 searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
@@ -2505,6 +2509,22 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 //      //  ApiJaldeeCoupan(uniqueID);
 //
 //    }
+
+
+    @Override
+    public void onMethodJdn(String uniqueid) {
+
+        JdnFragment jdnFragment = new JdnFragment();
+        refreshQuery();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("uniqueID", uniqueid);
+        jdnFragment.setArguments(bundle);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, jdnFragment).commit();
+
+    }
 
     @Override
     public void onMethodFirstCoupn(String uniqueid) {

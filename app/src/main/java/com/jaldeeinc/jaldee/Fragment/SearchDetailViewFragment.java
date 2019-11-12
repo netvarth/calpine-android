@@ -47,6 +47,7 @@ import com.jaldeeinc.jaldee.adapter.DepartmentAdapter;
 import com.jaldeeinc.jaldee.adapter.LocationCheckinAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchLocationAdapter;
 import com.jaldeeinc.jaldee.adapter.VirtualFieldAdapter;
+import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.callback.LocationCheckinCallback;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
@@ -63,6 +64,7 @@ import com.jaldeeinc.jaldee.model.SocialMediaModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
+import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
@@ -113,9 +115,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<CoupnResponse> couponResponse = new ArrayList<>();
     ArrayList<SearchViewDetail> mSearchGallery;
     ArrayList<SearchLocation> mSearchLocList;
-   ArrayList<SearchDepartment> mSearchDepartments;
+    ArrayList<SearchDepartment> mSearchDepartments;
     String mbranchId, latitude, longitude, lat_long;
-    Boolean firstCouponAvailable,couponAvailable;
+    Boolean firstCouponAvailable, couponAvailable;
+    JdnResponse jdnList;
+    String jdnDiscount, jdnMaxvalue;
+    AdapterCallback mAdapterCallback;
 
 
     SearchSetting mSearchSettings;
@@ -161,7 +166,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
-    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon,tv_first_ccoupon;
+    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon, tv_first_ccoupon,tv_jdn;
     List<SearchDepartment> departmentList;
     private String departmentCode;
 
@@ -203,6 +208,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_SocialMedia = (TextView) row.findViewById(R.id.txtSocialMedia);
         txtMore = (TextView) row.findViewById(R.id.txtMore);
         tv_contact = (TextView) row.findViewById(R.id.txtcontact);
+        tv_jdn = (TextView) row.findViewById(R.id.txtjdn);
         tv_coupon = (TextView) row.findViewById(R.id.txtcoupon);
         tv_first_ccoupon = (TextView) row.findViewById(R.id.txtFirstCoupon);
         count = 0;
@@ -284,8 +290,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         L_layout = row.findViewById(R.id.layout_type);
         //tv_contactdetails.setTypeface(tyface);
         ApiJaldeeCoupan(uniqueID);
+        ApiJDN(uniqueID);
         ApiSearchViewTerminology(uniqueID);
-        ApiSearchViewDetail(uniqueID,mSearchResp);
+        ApiSearchViewDetail(uniqueID, mSearchResp);
         ApiSearchGallery(uniqueID);
         ApiSearchVirtualFields(uniqueID);
 
@@ -323,14 +330,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
 
+        tv_jdn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onMethodJdn(uniqueID);
+            }
+        });
         tv_coupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onMethodCoupn(uniqueID);
             }
         });
-
-
         tv_first_ccoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -338,9 +349,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
         mInterface = (SearchLocationAdpterCallback) this;
-        if(claimable!=null && claimable.equals("1")){
-        tv_msg.setVisibility(View.GONE);
-        tv_fav.setVisibility(View.GONE);
+        if (claimable != null && claimable.equals("1")) {
+            tv_msg.setVisibility(View.GONE);
+            tv_fav.setVisibility(View.GONE);
         }
 //        else if({
 //          L_layout.setVisibility(View.GONE);
@@ -970,10 +981,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         rating.setRating(getBussinessData.getAvgRating());
 
 
-        if(getBussinessData.getServiceSector().getDisplayName()!=null && getBussinessData.getServiceSubSector().getDisplayName()!=null){
-            tv_domain.setText(getBussinessData.getServiceSector().getDisplayName()+" "+"("+getBussinessData.getServiceSubSector().getDisplayName()+")");
+        if (getBussinessData.getServiceSector().getDisplayName() != null && getBussinessData.getServiceSubSector().getDisplayName() != null) {
+            tv_domain.setText(getBussinessData.getServiceSector().getDisplayName() + " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
         }
-
 
 
         if (getBussinessData.getBusinessDesc() != null) {
@@ -1112,14 +1122,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     } else {
                         tv_mImageViewTextnew.setVisibility(View.GONE);
                         if (mBusinessDataList.getLogo() != null) {
-                           // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
-                            UpdateGallery(mSearchGallery);    }
-                        else {
+                            // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
+                            UpdateGallery(mSearchGallery);
+                        } else {
                             tv_mImageViewTextnew.setVisibility(View.GONE);
                         }
                     }
-
-
 
 
                 } catch (Exception e) {
@@ -1198,7 +1206,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         for (int k = 0; k < mSearchLocList.size(); k++) {
 
-                             ApiSearchViewServiceID(mSearchLocList.get(k).getId());
+                            ApiSearchViewServiceID(mSearchLocList.get(k).getId());
 
                         }
                     }
@@ -1358,7 +1366,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mSearchmCheckListShow = response.body();
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 checkloclist.setLayoutManager(mLayoutManager);
-                                LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback, String.valueOf(mProvoderId), mSearchmCheckListShow, mContext, getActivity() );
+                                LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback, String.valueOf(mProvoderId), mSearchmCheckListShow, mContext, getActivity());
                                 checkloclist.setAdapter(checkAdapter);
                                 checkAdapter.notifyDataSetChanged();
                             }
@@ -1465,7 +1473,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     private void ApiServicesGroupbyDepartment(ArrayList<SearchService> mServicesList) {
         mDepartmentsList.clear();
-        for(int i=0;i<mServicesList.size();i++) {
+        for (int i = 0; i < mServicesList.size(); i++) {
 
         }
     }
@@ -1516,7 +1524,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
                         mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-                        mDepartmentAdapter.setFields(mSearchDepartments, departmentMap, mBusinessDataList.getBusinessName(),mServicesList.get(0).getmAllService(), department);
+                        mDepartmentAdapter.setFields(mSearchDepartments, departmentMap, mBusinessDataList.getBusinessName(), mServicesList.get(0).getmAllService(), department);
                         mRecycleDepartment.setAdapter(mDepartmentAdapter);
                         mDepartmentAdapter.notifyDataSetChanged();
 
@@ -1701,7 +1709,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 } finally {
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                     mRecyLocDetail.setLayoutManager(mLayoutManager);
-                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(),terminology,mSearchSettings.isShowTokenId(), mSearchDepartments);
+                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments);
                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
                     mSearchLocAdapter.notifyDataSetChanged();
                 }
@@ -1919,6 +1927,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
 
+    public void onMethodJdn(String uniqueid) {
+
+        JdnFragment jdnFragment = new JdnFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("uniqueID", uniqueid);
+        jdnFragment.setArguments(bundle);
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, jdnFragment).commit();
+
+    }
+
     public void onMethodFirstCoupn(String uniqueid) {
 
         CouponFirstFragment cffFragment = new CouponFirstFragment();
@@ -1934,10 +1955,72 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
 
+    private void ApiJDN(String uniqueID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+
+
+        Call<JdnResponse> call = apiService.getJdnList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+
+        call.enqueue(new Callback<JdnResponse>() {
+            @Override
+            public void onResponse(Call<JdnResponse> call, Response<JdnResponse> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----detail--------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        jdnList = response.body();
+                        jdnDiscount = jdnList.getDiscPercentage();
+                        jdnMaxvalue = jdnList.getDiscMax();
+
+
+                        if(jdnList != null){
+                            tv_jdn.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JdnResponse> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
     private void ApiJaldeeCoupan(String uniqueID) {
 
-        couponAvailable =false;
-        firstCouponAvailable =false;
+        couponAvailable = false;
+        firstCouponAvailable = false;
 
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
@@ -1963,21 +2046,21 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                 if (couponResponse.get(i).isFirstCheckinOnly()) {
                                     firstCouponAvailable = true;
-                                }else {
+                                } else {
                                     couponAvailable = true;
                                 }
 
-                                if(firstCouponAvailable && couponAvailable){
+                                if (firstCouponAvailable && couponAvailable) {
                                     break;
                                 }
                             }
                         }
 
-                        if(firstCouponAvailable){
+                        if (firstCouponAvailable) {
                             tv_first_ccoupon.setVisibility(View.VISIBLE);
                         }
 
-                        if(couponAvailable){
+                        if (couponAvailable) {
                             tv_coupon.setVisibility(View.VISIBLE);
                         }
 
@@ -1994,17 +2077,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         });
     }
 
-    public void onMethodDepartment(SearchDepartment departmentCode, List<SearchListModel> searchList,String businessName,ArrayList<SearchService> mServicesList,int department) {
+    public void onMethodDepartment(SearchDepartment departmentCode, List<SearchListModel> searchList, String businessName, ArrayList<SearchService> mServicesList, int department) {
 
         Log.i("qweqweq", "qweqweqwe");
-        DeptFragment deptFragment = new DeptFragment(departmentCode, searchList, this,businessName,mServicesList,department);
+        DeptFragment deptFragment = new DeptFragment(departmentCode, searchList, this, businessName, mServicesList, department);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, deptFragment).commit();
 
     }
-
 
 
     public void onMethodJaldeeLogo(String ynw_verified, String providername) {
@@ -2021,7 +2103,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
         mContext.startActivity(intent);
     }
-
 
 
     public void onMethodMessage(String provider, final String accountID, String from) {
@@ -2140,7 +2221,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     @Override
     public void onMethodCallback() {
 
-        Toast.makeText(mContext,  terminology + " cancelled successfully", Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, terminology + " cancelled successfully", Toast.LENGTH_LONG).show();
         dialog.dismiss();
         refreshList();
     }
@@ -2152,7 +2233,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
         bundle.putString("uniqueID", value);
-        bundle.putString("claimable",claimable);
+        bundle.putString("claimable", claimable);
         pfFragment.setArguments(bundle);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -2180,7 +2261,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
         contactDetail = new ArrayList<>();
-        ApiSearchViewDetail(uniqueID,mSearchResp);
+        ApiSearchViewDetail(uniqueID, mSearchResp);
         //ApiSearchGallery(uniqueID);
         ApiSearchViewTerminology(uniqueID);
 
@@ -2214,7 +2295,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Added to Favourites", Toast.LENGTH_LONG).show();
-                            ApiFavList(mSearchResp,claimable);
+                            ApiFavList(mSearchResp, claimable);
                         }
 
 
@@ -2243,7 +2324,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     boolean favFlag = false;
     ArrayList<FavouriteModel> mFavList = new ArrayList<>();
 
-    private void ApiFavList( final List<SearchAWsResponse> mSearchRespPass, final String claimable ) {
+    private void ApiFavList(final List<SearchAWsResponse> mSearchRespPass, final String claimable) {
 
         Config.logV("API Call");
         final ApiInterface apiService =
@@ -2257,12 +2338,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             public void onResponse(Call<ArrayList<FavouriteModel>> call, Response<ArrayList<FavouriteModel>> response) {
 
                 try {
-                     tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourite_line, 0, 0);
-                     tv_fav.setText("Favourite");
+                    tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourite_line, 0, 0);
+                    tv_fav.setText("Favourite");
 
 
-                     Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
-                     Config.logV("Response--code-------------------------" + response.code());
+                    Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
 
 
                     if (response.code() == 200) {
@@ -2364,7 +2445,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Removed from favourites", Toast.LENGTH_LONG).show();
-                            ApiFavList(mSearchResp,claimable);
+                            ApiFavList(mSearchResp, claimable);
                         }
 
 
@@ -2619,7 +2700,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 if (response.body().getHits().getHit().get(i).getFields().getDepartment_code() != null) {
                                     search.setDepartment_code(response.body().getHits().getHit().get(i).getFields().getDepartment_code());
                                 }
-                                if(response.body().getHits().getHit().get(i).getFields().getClaimable().equals("1")){
+                                if (response.body().getHits().getHit().get(i).getFields().getClaimable().equals("1")) {
                                     tv_fav.setVisibility(View.GONE);
                                 }
 
@@ -2631,7 +2712,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 ids.add(response.body().getHits().getHit().get(i).getId());
                             }
                             ApiQueueList(ids, mSearchResp, "next");
-                            if(mSearchResp.get(0).getClaimable().equals("1")){
+                            if (mSearchResp.get(0).getClaimable().equals("1")) {
                                 tv_fav.setVisibility(View.GONE);
                             }
 
@@ -2826,7 +2907,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
                                             searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
                                         }
-                                        if(mSearchRespPass.get(i).getClaimable().equals("1")){
+                                        if (mSearchRespPass.get(i).getClaimable().equals("1")) {
                                             tv_fav.setVisibility(View.GONE);
                                         }
                                         searchList.setQId(mSearchRespPass.get(i).getId());
@@ -3188,7 +3269,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
     @Override
-    public void departmentClicked(SearchDepartment searchDepartment, List<SearchListModel> searchListModels,String businessName,ArrayList<SearchService> mServicesList,int department) {
-        onMethodDepartment(searchDepartment, searchListModels,businessName,mServicesList,department);
+    public void departmentClicked(SearchDepartment searchDepartment, List<SearchListModel> searchListModels, String businessName, ArrayList<SearchService> mServicesList, int department) {
+        onMethodDepartment(searchDepartment, searchListModels, businessName, mServicesList, department);
     }
 }

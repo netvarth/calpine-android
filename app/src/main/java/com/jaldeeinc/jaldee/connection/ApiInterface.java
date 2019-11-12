@@ -13,6 +13,7 @@ import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.InboxModel;
+import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.LocationResponse;
 import com.jaldeeinc.jaldee.response.LoginResponse;
 import com.jaldeeinc.jaldee.response.PaymentModel;
@@ -295,6 +296,10 @@ public interface ApiInterface {
 
     @GET("{consumerID}/coupon.json")
     Call<ArrayList<CoupnResponse>> getCoupanList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+
+
+    @GET("{consumerID}/jaldeediscount.json")
+    Call<JdnResponse> getJdnList(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
     @PUT("consumer/updatePushToken")
     Call<ResponseBody> updatePushToken(@Body RequestBody jsonObj);

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/contactLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="@drawable/app_bg_gradient_home"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/hometopbar"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/custom_toolbar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding20">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/padding30"
+            android:layout_marginLeft="@dimen/padding20"
+            android:layout_marginRight="@dimen/padding20"
+            android:layout_marginTop="@dimen/padding20"
+            android:background="@drawable/input_border_gray_bg"
+            android:orientation="vertical">
+
+
+
+
+            <LinearLayout
+                android:id="@+id/jdn_Discount_Layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/padding30">
+
+
+                <TextView
+                    android:id="@+id/jdn_discount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Discount : "
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:textIsSelectable="true"
+                    android:textStyle="bold"
+                    android:textColor="@color/green"
+                    android:id="@+id/jdn_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="@dimen/txtsize_hint" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/jdn_maxLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/default_padding"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/padding30">
+
+
+                <TextView
+                    android:id="@+id/jdn_maximum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Maximum Value : "
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:textIsSelectable="true"
+                    android:textStyle="bold"
+                    android:textColor="@color/green"
+                    android:id="@+id/jdn_maximum_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="@dimen/txtsize_hint" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

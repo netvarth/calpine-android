@@ -23,33 +23,6 @@
             android:text=" Reply to"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
-<!--        <RelativeLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content">-->
-<!--            <ImageView-->
-<!--                android:id="@+id/txt_file"-->
-<!--                style="?android:attr/borderlessButtonStyle"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="180dp"-->
-<!--                android:text=""-->
-<!--                android:textSize="@dimen/txtsize_hint"-->
-<!--                android:src="@mipmap/ic_launcher"/>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/txt_attach"-->
-<!--                style="?android:attr/borderlessButtonStyle"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="300dp"-->
-<!--                android:drawableTop="@drawable/icon_attach"-->
-<!--                android:textSize="@dimen/txtsize_hint" />-->
-
-<!--        </RelativeLayout>-->
-
-
-
-
         <EditText
             android:id="@+id/edt_message"
             android:layout_width="match_parent"
@@ -65,6 +38,7 @@
             android:textSize="@dimen/txtsize_12" />
 
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
