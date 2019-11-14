@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,8 +80,8 @@ public class BillActivity extends AppCompatActivity {
     ArrayList<BillModel> coupanArrayList = new ArrayList<>();
 
     Button btn_pay, mbill_applybtn;
-    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax,billLabel;
-    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin,jcLayout;
+    TextView txtnetRate, txttotal, tv_amount, tv_grosstotal, tv_gross, txtaxval, txttax,billLabel,jdnLabel,jdnValue;
+    LinearLayout paidlayout, amountlayout, taxlayout, couponCheckin,jcLayout,jdnLayout;
     String sAmountPay;
     String accountID;
     String payStatus, consumer;
@@ -130,6 +131,9 @@ public class BillActivity extends AppCompatActivity {
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
         txtnetRate = findViewById(R.id.txtnetRate);
+        jdnLabel = findViewById(R.id.jdnLabel);
+        jdnLayout = findViewById(R.id.jdnLayout);
+        jdnValue = findViewById(R.id.jdnValue);
         txttotal = findViewById(R.id.txttotal);
 
         tv_totalamt.setTypeface(tyface);
@@ -475,6 +479,8 @@ public class BillActivity extends AppCompatActivity {
                         String formattedDate = targetFormat.format(date);
                         tv_date.setText(formattedDate);
 
+                        Log.i("Maxxx",String.valueOf(mBillData.getJdn().getMaxDiscount()));
+
 
                         Typeface tyface = Typeface.createFromAsset(getAssets(),
                                 "fonts/Montserrat_Bold.otf");
@@ -482,9 +488,9 @@ public class BillActivity extends AppCompatActivity {
                         tv_grosstotal.setTypeface(tyface);
 
 
+
                         if (mBillData.getNetTotal() != 0.0) {
                             tv_grosstotal.setVisibility(View.VISIBLE);
-//                            DecimalFormat format = new DecimalFormat("0.00");
                             tv_grosstotal.setText("₹ " + Config.getAmountinTwoDecimalPoints(mBillData.getNetTotal()));
 
                         } else {
@@ -589,6 +595,19 @@ public class BillActivity extends AppCompatActivity {
                             billCouponAdapter.notifyDataSetChanged();
                         }else{
                             jcLayout.setVisibility(View.GONE);
+                        }
+
+
+                        if (mBillData.getJdn()!=null){
+                            jdnLayout.setVisibility(View.VISIBLE);
+                            jdnLabel.setText("JDN");
+                            jdnLabel.setVisibility(View.VISIBLE);
+                            jdnValue.setText(("(-)₹ " + Config.getAmountinTwoDecimalPoints(mBillData.getJdn().getDiscount())));
+                            jdnValue.setVisibility(View.VISIBLE);
+                        }else {
+                            jdnLayout.setVisibility(View.GONE);
+                            jdnLabel.setVisibility(View.GONE);
+                            jdnValue.setVisibility(View.GONE);
                         }
 
 

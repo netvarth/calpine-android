@@ -12,6 +12,16 @@ import java.util.Map;
 
 public class BillModel {
 
+    public Jdn getJdn() {
+        return jdn;
+    }
+
+    public void setJdn(Jdn jdn) {
+        this.jdn = jdn;
+    }
+
+    Jdn jdn;
+
     public double getTaxableTotal() {
         return taxableTotal;
     }
@@ -27,6 +37,7 @@ public class BillModel {
     double taxableTotal;
     double totalTaxAmount;
     double taxPercentage;
+
 
 
     public double getNetTotal() {

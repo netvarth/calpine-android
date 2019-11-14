@@ -38,6 +38,7 @@ public interface AdapterCallback {
 
     void onMethodQuery(ArrayList<String> formula,ArrayList<String> key);
     void onMethodFirstCoupn(String uniqueid);
+    void onMethodJdn(String uniqueid);
     void onMethodSpecialization(ArrayList<String> Specialization_displayname, String title);
     void onMethodDepartmentList(ArrayList<String> Departments,String businessName);
     void onMethodForceUpdate();

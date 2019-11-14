@@ -386,6 +386,16 @@ public class SearchAWsResponse {
 
     String claimable;
 
+    public String getJdn() {
+        return jdn;
+    }
+
+    public void setJdn(String jdn) {
+        this.jdn = jdn;
+    }
+
+    String jdn;
+
     public String getClaimable() {
         return claimable;
     }

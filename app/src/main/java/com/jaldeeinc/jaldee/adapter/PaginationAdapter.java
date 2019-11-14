@@ -194,6 +194,40 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 parent.setOrientation(LinearLayout.HORIZONTAL);
                 parent.setLayoutParams(params1);
+
+
+
+                TextView jdn = new TextView(context);
+                Typeface tyface_4 = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                jdn.setTypeface(tyface_4);
+                jdn.setText("JDN Assured");
+                jdn.setText(context.getResources().getString(R.string.jdn));
+                jdn.setTextSize(13);
+                jdn.setTextColor(context.getResources().getColor(R.color.title_grey));
+                jdn.setPadding(5, 5, 5, 5);
+                jdn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_jdn, 0, 0);
+                jdn.setVisibility(View.GONE);
+                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                jdn.setMaxLines(2);
+                jdn.setLayoutParams(params1);
+                params1.setMargins(10, 7, 10, 7);
+                jdn.setGravity(Gravity.CENTER);
+                parent.addView(jdn);
+
+                if (searchdetailList.getJdn() != null) {
+                    jdn.setVisibility(View.VISIBLE);
+                }
+
+
+                jdn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mAdapterCallback.onMethodJdn(searchdetailList.getUniqueid());
+                    }
+                });
+
+
                 TextView firstCoupon = new TextView(context);
                 Typeface tyface_3 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Regular.otf");
@@ -205,12 +239,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 firstCoupon.setPadding(5, 5, 5, 5);
                 firstCoupon.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
                 firstCoupon.setVisibility(View.GONE);
-                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
                 firstCoupon.setMaxLines(2);
                 firstCoupon.setLayoutParams(params1);
                 params1.setMargins(10, 7, 10, 7);
                 firstCoupon.setGravity(Gravity.CENTER);
                 parent.addView(firstCoupon);
+
                 if (searchdetailList.getFirst_checkin_coupon_count() != null && searchdetailList.getFirst_checkin_coupon_count().equals("1")) {
                     firstCoupon.setVisibility(View.VISIBLE);
                 }

@@ -25,6 +25,16 @@ public class SearchListModel implements Serializable {
     private String docambulance_location1;
     private String always_open_location1;
     private String claimable;
+
+    public String getJdn() {
+        return jdn;
+    }
+
+    public void setJdn(String jdn) {
+        this.jdn = jdn;
+    }
+
+    private String jdn;
     private int coupon_enabled;
     private String department_code;
     ArrayList gallery_thumb_nails;
@@ -53,6 +63,7 @@ public class SearchListModel implements Serializable {
     int personAhead;
     String calculationMode;
     private String first_checkin_coupon_count;
+
     private String future_checkins;
     private String online_checkins;
     private ArrayList business_hours1;

@@ -195,7 +195,23 @@
                                     android:orientation="horizontal"
                                     android:padding="@dimen/padding5">
 
+
+
                                     <TextView
+                                        android:visibility="gone"
+                                        android:id="@+id/txtjdn"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:drawableTop="@drawable/icon_jdn"
+                                        android:drawablePadding="@dimen/padding2"
+                                        android:gravity="center"
+                                        android:text="JDN Assured"
+                                        android:textColor="@color/title_grey"
+                                        android:textSize="@dimen/txtsize_12" />
+
+                                    <TextView
+                                        android:layout_marginLeft="@dimen/padding5"
                                         android:id="@+id/txtcontact"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -206,6 +222,9 @@
                                         android:text="Contact"
                                         android:textColor="@color/title_grey"
                                         android:textSize="@dimen/txtsize_12" />
+
+
+
 
 
                                     <TextView
