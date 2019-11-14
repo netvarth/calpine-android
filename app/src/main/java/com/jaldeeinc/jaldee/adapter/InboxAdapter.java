@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.jaldeeinc.jaldee.R;
@@ -42,6 +43,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
             tv_date=(TextView)view.findViewById(R.id.txt_date);
             tv_message=(TextView)view.findViewById(R.id.txt_message);
             linear_inbox_layout=(LinearLayout) view.findViewById(R.id.inbox_layout);
+
 
 
         }

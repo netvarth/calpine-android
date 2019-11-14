@@ -16,4 +16,5 @@
     <dimen name="txtsize_subtitle">15dp</dimen>
     <dimen name="txtsize_12">13sp</dimen>
     <dimen name="txtsize_10">11sp</dimen>
+    <dimen name="dimen_scrlimg_dp">100dp</dimen>
 </resources>

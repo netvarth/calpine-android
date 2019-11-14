@@ -40,6 +40,7 @@ public interface AdapterCallback {
     void onMethodFirstCoupn(String uniqueid);
     void onMethodSpecialization(ArrayList<String> Specialization_displayname, String title);
     void onMethodDepartmentList(ArrayList<String> Departments,String businessName);
+    void onMethodForceUpdate();
 
 
 

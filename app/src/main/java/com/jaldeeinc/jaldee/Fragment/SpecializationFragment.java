@@ -17,7 +17,7 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.util.ArrayList;
 
-public class SpecializationFragment extends Fragment {
+public class SpecializationFragment extends RootFragment {
     public SpecializationFragment() {
         // Required empty public constructor
     }
@@ -79,4 +79,5 @@ public class SpecializationFragment extends Fragment {
         }
         return row;
     }
+
 }

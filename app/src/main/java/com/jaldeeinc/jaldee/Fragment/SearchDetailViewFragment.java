@@ -2163,6 +2163,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     }
 
+
     public void refreshList() {
         Config.logV("Refresh $$$$$@@@@@@@@@@@@@@@@@@");
         count = 0;

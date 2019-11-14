@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.callback;
 import android.content.Intent;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by sharmila on 26/9/18.
@@ -10,7 +11,6 @@ import java.io.File;
 
 public interface DetailInboxAdapterCallback {
 
-    void onMethodCallback(String waitlistId,int accountID,long timestamp);
-    //void onMethodCallbackAttach(String waitlistId, int accountID, long timestamp, int PICKFILE_RESULT_CODE, File attachment) ;
+    void onMethodCallback(String waitlistId, int accountID, long timestamp);
 
 }

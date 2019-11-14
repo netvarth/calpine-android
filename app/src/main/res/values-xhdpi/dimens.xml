@@ -22,4 +22,6 @@
     <dimen name="txtsize_14">15sp</dimen>
     <dimen name="txtsize_10">11sp</dimen>
     <dimen name="txtsize_12">12sp</dimen>
+    <dimen name="dimen_scrlimg_dp">100dp</dimen>
+
 </resources>

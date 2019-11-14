@@ -2575,6 +2575,22 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         cdd.show();
 
     }
+    @Override
+    public void onMethodForceUpdate() {
+
+        Bundle bundle = new Bundle();
+
+        DashboardFragment pfFragment = new DashboardFragment();
+        bundle.putString("forceupdate","true");
+        pfFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.add(R.id.mainlayout, pfFragment).commit();
+
+    }
 
 
     @Override

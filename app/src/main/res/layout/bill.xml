@@ -69,7 +69,8 @@
                             android:gravity="left"
                             android:text="@string/customer"
                             android:textColor="@color/sec_title_grey"
-                            android:textSize="@dimen/txtsize_12" />
+                            android:textSize="@dimen/txtsize_12"
+                            android:visibility="gone"/>
 
                         <TextView
                             android:layout_width="0dp"
@@ -77,7 +78,8 @@
                             android:layout_weight="0.6"
                             android:text="@string/datetime"
                             android:textColor="@color/sec_title_grey"
-                            android:textSize="@dimen/txtsize_12" />
+                            android:textSize="@dimen/txtsize_12"
+                            android:visibility="gone"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -101,7 +103,6 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.6"
-
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
@@ -144,7 +145,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"
                             android:gravity="left"
-
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
@@ -153,7 +153,6 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.6"
-
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
@@ -324,7 +323,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0.3"
                             android:gravity="right"
-
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>

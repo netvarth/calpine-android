@@ -4,9 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 
+import com.jaldeeinc.jaldee.Fragment.DashboardFragment;
+import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
+import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.Register;
+import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
+import com.jaldeeinc.jaldee.activities.Splash;
+import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -36,6 +44,7 @@ import retrofit2.Callback;
 public class ResponseInteceptor implements Interceptor {
 
     private Context context;
+    private AdapterCallback mAdapterCallback;
 
     public ResponseInteceptor(Context context) {
         this.context = context;
@@ -88,16 +97,16 @@ public class ResponseInteceptor implements Interceptor {
         if(response.code()==301){
 
             Config.logV(" ERROR  301 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            SharedPreference.getInstance(context).clear();
-            DatabaseHandler db=new DatabaseHandler(context);
-            db.deleteDatabase();
+           // SharedPreference.getInstance(context).clear();
+            DatabaseHandler db = new DatabaseHandler(context);
+           // db.deleteDatabase();
             // if(response.body().equals("true")) {
 
-            Intent iLogout=new Intent(context, Register.class);
-            iLogout.putExtra("forceupdate","true");
-            iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            context.startActivity(iLogout);
-
+              Intent iLogout=new Intent(context, SearchLocationActivity.class);
+              iLogout.putExtra("forceupdate","true");
+              iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+              context.startActivity(iLogout);
+              // mAdapterCallback.onMethodForceUpdate();
 
         }
         return response;
@@ -222,4 +231,5 @@ public class ResponseInteceptor implements Interceptor {
         });
 
     }
+
 }

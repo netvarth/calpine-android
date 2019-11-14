@@ -1,72 +1,76 @@
 package com.jaldeeinc.jaldee.activities;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.icu.util.Calendar;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.adapter.DetailFileAdapter;
 import com.jaldeeinc.jaldee.adapter.DetailInboxAdapter;
 import com.jaldeeinc.jaldee.callback.DetailInboxAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.model.FileAttachment;
 import com.jaldeeinc.jaldee.response.InboxModel;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.text.BreakIterator;
+import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Multipart;
 
-import static com.jaldeeinc.jaldee.adapter.DetailInboxAdapter.PICKFILE_RESULT_CODE;
 
 /**
  * Created by sharmila on 27/8/18.
@@ -77,15 +81,23 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     Context mContext;
     DetailInboxAdapter mDetailAdapter;
     static ArrayList<InboxModel> mDetailInboxList = new ArrayList<>();
-    TextView txtprovider, tv_attach, tv_fileAttach;
+    TextView txtprovider;
     String provider;
     DetailInboxAdapterCallback mInterface;
-    String message;
     BottomSheetDialog dialog;
-//    private static final int GALLERY = 1;
-//    private ImageView imageview;
-//    private static final String IMAGE_DIRECTORY = "/demonuts";
-
+    ImageView imageview;
+    TextView tv_attach, tv_camera;
+    private static final String IMAGE_DIRECTORY = "/demonuts";
+    private int GALLERY = 1, CAMERA = 2;
+    ArrayList<String> fileAttachment;
+    String path;
+    Bitmap bitmap;
+    File f;
+    RecyclerView recycle_image_attachment;
+    RelativeLayout displayImages;
+    ArrayList<String> imagePathList = new ArrayList<>();
+    private Uri mImageUri;
+    ArrayList<FileAttachment> attachments;
 
 
 
@@ -96,7 +108,12 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailinbox);
         recylce_inbox_detail = findViewById(R.id.recylce_inbox_detail);
+
+
         mContext = this;
+
+
+        //  requestMultiplePermissions();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             provider = extras.getString("provider");
@@ -118,7 +135,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         txtprovider = (TextView) findViewById(R.id.txtprovider);
 
 
-
         tv_title.setTypeface(tyface);
         txtprovider.setTypeface(tyface);
         txtprovider.setText(provider);
@@ -127,15 +143,22 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recylce_inbox_detail.setLayoutManager(mLayoutManager);
 
+
         Collections.sort(mDetailInboxList, new Comparator<InboxModel>() {
             @Override
             public int compare(InboxModel r1, InboxModel r2) {
                 return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
             }
         });
-        mDetailAdapter = new DetailInboxAdapter(mDetailInboxList, mContext, mInterface);
+        mDetailAdapter = new DetailInboxAdapter(mDetailInboxList, mContext, mInterface,bitmap);
         recylce_inbox_detail.setAdapter(mDetailAdapter);
         mDetailAdapter.notifyDataSetChanged();
+
+//
+
+
+
+
     }
 
     public static boolean setInboxList(ArrayList<InboxModel> data) {
@@ -145,19 +168,47 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     }
 
     @Override
-    public void  onMethodCallback(final String waitListId, final int accountID, final long timestamp) {
+    public void onMethodCallback(final String waitListId, final int accountID, final long timestamp) {
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();
-
         final Button btn_send = dialog.findViewById(R.id.btn_send);
         Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
         final EditText edt_message = dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
-//        TextView tv_attach = dialog.findViewById(R.id.txt_attach);
-//        ImageView iv_file = dialog.findViewById(R.id.txt_file);
+        tv_attach = dialog.findViewById(R.id.btn);
+        tv_camera = dialog.findViewById(R.id.camera);
+        recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
+      //  imageview = dialog.findViewById(R.id.iv);
+        RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
+
+        requestMultiplePermissions();
 
 
+
+        tv_attach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(galleryIntent,GALLERY);
+            }
+
+        });
+
+
+        tv_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, CAMERA);
+
+            }
+        });
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
@@ -202,6 +253,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                     try {
                         if (new SimpleDateFormat("dd/MM/yyyy").parse(dateString).before(currentdate)) {
                             Config.logV("WAITLIST Past Date --------------------" + new Date());
+
                             ApiCommunicate("h_" + waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
                         } else {
                             Config.logV("WAITLIST Today Date --------------------");
@@ -224,48 +276,118 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 dialog.dismiss();
             }
         });
-//        tv_attach.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-//                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//
-//                startActivityForResult(galleryIntent, GALLERY);
-//                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//                intent.setType("file/*");
-//                startActivityForResult(intent,PICKFILE_RESULT_CODE);
-//                String path="File Path";
-//                intent = new Intent();
-//                intent.setAction(android.content.Intent.ACTION_VIEW);
-//                File file = new File(path);
-//
-//                MimeTypeMap mime = MimeTypeMap.getSingleton();
-//                String ext=file.getName().substring(file.getName().indexOf(".")+1);
-//                String type = mime.getMimeTypeFromExtension(ext);
-//
-//                intent.setDataAndType(Uri.fromFile(file),type);
-//
-//                startActivity(intent);
-//                String path="File Path";
-//                intent = new Intent();
-//                intent.setAction(android.content.Intent.ACTION_VIEW);
-//                File file = new File(path);
-//
-//                intent.setData(Uri.fromFile(file));
-//
-//                startActivity(intent);
-//            }
-//        });
-
-
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == this.RESULT_CANCELED) {
+            return;
+        }
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                try {
+                    if(data.getData()!=null) {
+                        Uri mImageUri = data.getData();
+                        imagePathList.add(mImageUri.toString());
+//                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+////                    path = saveImage(bitmap);
+//
+                        DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this,3);
+                        recycle_image_attachment.setLayoutManager(mLayoutManager);
+                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
+                        mDetailFileAdapter.notifyDataSetChanged();
+                    }
+                }
+                catch (Exception e) {
+                   e.printStackTrace();
+                }
+                }
 
+            }
+        else if (requestCode == CAMERA) {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+      //      imageview.setImageBitmap(bitmap);
+           // path = saveImage(bitmap);
+            imagePathList.add(bitmap.toString());
+//                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
+////                    path = saveImage(bitmap);
+//
+            DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this,3);
+            recycle_image_attachment.setLayoutManager(mLayoutManager);
+            recycle_image_attachment.setAdapter(mDetailFileAdapter);
+            mDetailFileAdapter.notifyDataSetChanged();
 
+        }
+    }
 
+    public String saveImage(Bitmap myBitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File wallpaperDirectory = new File(
+                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        // have the object build the directory structure, if needed.
+        if (!wallpaperDirectory.exists()) {
+            wallpaperDirectory.mkdirs();
+        }
 
+        try {
+             f = new File(wallpaperDirectory, Calendar.getInstance()
+                    .getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(this,
+                    new String[]{f.getPath()},
+                    new String[]{"image/jpeg"}, null);
+            fo.close();
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
 
+            return f.getAbsolutePath();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return "";
+    }
+
+    private void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            //openSettingsDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
 
 
     private void ApiCommunicateWithoutWaitListID(String accountID, String message, final BottomSheetDialog dialog) {
@@ -337,22 +459,25 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
+        MediaType type= MediaType.parse("image/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        mBuilder.addFormDataPart("message", message);
+        for(int i=0;i<imagePathList.size();i++) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(imagePathList.get(i)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            path = saveImage(bitmap);
+            File file = new File(path);
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+        }
+        RequestBody requestBody = mBuilder.build();
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
+        Call<ResponseBody> call = apiService.WaitListMessageWithAttachment(waitListId, accountID, requestBody);
 
-
-        JSONObject jsonObj = new JSONObject();
-        try {
-            jsonObj.put("communicationMessage", message);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), body);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -367,7 +492,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-
                         Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         finish();
@@ -382,6 +506,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                     e.printStackTrace();
                 }
 
+
             }
 
             @Override
@@ -393,71 +518,5 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
             }
         });
-
-
     }
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        switch(requestCode){
-//            case PICKFILE_RESULT_CODE:
-//                if(resultCode==RESULT_OK){
-//                    String FilePath = data.getData().getPath();
-//                    tv_attach.setText(FilePath);
-//                }
-//                break;
-//
-//        }
-//        if (requestCode == GALLERY) {
-//            if (data != null) {
-//                Uri contentURI = data.getData();
-//                try {
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-//                    String path = saveImage(bitmap);
-//                    Toast.makeText(DetailInboxList.this, "Image Saved!", Toast.LENGTH_SHORT).show();
-//                    imageview.setImageBitmap(bitmap);
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    Toast.makeText(DetailInboxList.this, "Failed!", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//        }
-
-
-
-
-//    }
-//
-//    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public String saveImage(Bitmap myBitmap) {
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//        File wallpaperDirectory = new File(
-//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-//        // have the object build the directory structure, if needed.
-//        if (!wallpaperDirectory.exists()) {
-//            wallpaperDirectory.mkdirs();
-//        }
-//
-//        try {
-//            File f = new File(wallpaperDirectory, Calendar.getInstance()
-//                    .getTimeInMillis() + ".jpg");
-//            f.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(f);
-//            fo.write(bytes.toByteArray());
-//            MediaScannerConnection.scanFile(this,
-//                    new String[]{f.getPath()},
-//                    new String[]{"image/jpeg"}, null);
-//            fo.close();
-//            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-//
-//            return f.getAbsolutePath();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
-//        return "";
-//    }
-
 }
-

@@ -65,6 +65,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -102,6 +104,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     HistoryAdapterCallback mInterface;
     ExpandableListView expandlist;
     /*TextView  tv_notodaychekcin, tv_nofuturecheckin, tv_nocheckold;*/
+
 
 
     @Override
@@ -733,10 +736,13 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             jsonObj.put("communicationMessage", message);
 
 
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+//        MultipartBody.Part body1 =
+//                MultipartBody.Part.createFormData("attachements", file.getName(),okhttp3.RequestBody.create( MediaType.parse("application/json; charset=utf-8"),  file));
         Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), body);
 
         call.enqueue(new Callback<ResponseBody>() {

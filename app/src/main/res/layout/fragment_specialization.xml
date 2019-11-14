@@ -28,7 +28,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable ="true">
 
             <TextView
                 android:id="@+id/txt_specialization"
@@ -36,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/app_background_opaque"
                 android:padding="@dimen/default_padding"
-                android:textColor="@color/title_consu" />
+                android:textColor="@color/title_consu"/>
         </LinearLayout>
         <FrameLayout
             android:layout_width="match_parent"

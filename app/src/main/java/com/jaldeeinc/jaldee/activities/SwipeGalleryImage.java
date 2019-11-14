@@ -19,7 +19,8 @@ import java.util.ArrayList;
  * Created by sharmila on 31/7/18.
  */
 
-public class SwipeGalleryImage extends AppCompatActivity {
+public class
+SwipeGalleryImage extends AppCompatActivity {
 
 
     public static Activity mActivity;

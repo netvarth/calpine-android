@@ -6,8 +6,10 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.callback.DetailInboxAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
@@ -25,6 +28,7 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -35,15 +39,16 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
 
     private List<InboxModel> mInboxList;
     Context mContext;
-    //boolean is_seemore=false;
-    public static final int PICKFILE_RESULT_CODE = 1;
+    //boolean is_seemore=false;\
+    Bitmap bitmap;
+
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_provider, tv_date, tv_message, tv_reply;
         LinearLayout linear_inbox_layout;
-        ImageView img_sent;
+        ImageView img_sent, iv_file_attach;
         TextView tv_seemore;
 
 
@@ -59,17 +64,19 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
 
 
 
+
         }
     }
 
     DetailInboxAdapterCallback callback;
 
-    public DetailInboxAdapter(List<InboxModel> mInboxList, Context mContext, DetailInboxAdapterCallback callback) {
+    public DetailInboxAdapter(List<InboxModel> mInboxList, Context mContext, DetailInboxAdapterCallback callback, Bitmap bitmap) {
         this.mContext = mContext;
         this.mInboxList = mInboxList;
         Config.logV("Detail Inbox----------***************----" + mInboxList.size());
         this.callback = callback;
         // this.activity = mActivity;
+        this.bitmap = bitmap;
 
     }
 
@@ -210,8 +217,8 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         myViewHolder.tv_reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId(),inboxList.getTimeStamp());
+
 
             }
         });

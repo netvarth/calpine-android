@@ -2,6 +2,9 @@ package com.jaldeeinc.jaldee.response;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.jaldeeinc.jaldee.model.FileAttachment;
+
+import java.util.ArrayList;
 
 /**
  * Created by sharmila on 14/8/18.
@@ -168,4 +171,15 @@ public class InboxModel {
     }
 
     boolean is_see;
+
+    public ArrayList<FileAttachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(ArrayList<FileAttachment> attachments) {
+        this.attachments = attachments;
+    }
+    @SerializedName("attachments")
+    public ArrayList<FileAttachment> attachments;
+
 }

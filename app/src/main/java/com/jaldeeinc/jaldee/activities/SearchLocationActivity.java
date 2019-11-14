@@ -1,9 +1,13 @@
 package com.jaldeeinc.jaldee.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,6 +51,8 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
     LocationSearchCallback mCallback;
     TextView tv_currentloc;
     String from;
+    String sforceupdate = "";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +87,14 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             from = extras.getString("from");
+            sforceupdate = extras.getString("forceupdate", "");
+
+            if (sforceupdate != null) {
+                if (sforceupdate.equalsIgnoreCase("true")) {
+
+                    showForceUpdateDialog();
+                }
+            }
 
         }
         tv_currentloc.setOnClickListener(new View.OnClickListener() {
@@ -175,5 +189,22 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
                 finish();
             }
         }
+    }
+    public void showForceUpdateDialog() {
+
+        android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        alertDialog.setTitle("Jaldee update required ");
+        alertDialog.setMessage(" This version of Jaldee is no longer supported. Please update to the latest version.");
+        alertDialog.setPositiveButton("UPDATE NOW", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                final String appPackageName = mContext.getPackageName();
+                try {
+                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+            }
+        });
+        alertDialog.show();
     }
 }
