@@ -58,7 +58,6 @@ public class JdnFragment extends RootFragment {
         mContext = getActivity();
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-
             uniqueid = bundle.getString("uniqueID", "");
             ApiJDN(uniqueid);
 
@@ -113,6 +112,8 @@ public class JdnFragment extends RootFragment {
                     Config.logV("Response--code-----detail--------------------" + response.code());
 
                     if (response.code() == 200) {
+
+
 
                         jdnList = response.body();
                         jdnDiscount = jdnList.getDiscPercentage();
