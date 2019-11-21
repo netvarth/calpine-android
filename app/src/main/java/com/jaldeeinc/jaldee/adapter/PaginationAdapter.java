@@ -194,9 +194,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 parent.setOrientation(LinearLayout.HORIZONTAL);
                 parent.setLayoutParams(params1);
-
-
-
                 TextView jdn = new TextView(context);
                 Typeface tyface_4 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Regular.otf");
@@ -215,8 +212,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 jdn.setGravity(Gravity.CENTER);
                 parent.addView(jdn);
 
-                if (searchdetailList.getJdn() != null) {
-                    jdn.setVisibility(View.VISIBLE);
+                if(searchdetailList.getJdn()!=null){
+
+                    if (searchdetailList.getJdn().equals("1")) {
+                        jdn.setVisibility(View.VISIBLE);
+                    }else{
+                        jdn.setVisibility(View.GONE);
+                    }
+                }else{
+                    jdn.setVisibility(View.GONE);
                 }
 
 

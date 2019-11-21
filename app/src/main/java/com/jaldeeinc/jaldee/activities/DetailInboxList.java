@@ -262,12 +262,6 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
 
 
-
-
-
-
-
-
     private void ApiCommunicateWithoutWaitListID(String accountID, String message, final BottomSheetDialog dialog) {
 
 
@@ -331,6 +325,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
 
     }
+
 
     private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 

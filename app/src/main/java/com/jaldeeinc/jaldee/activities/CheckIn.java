@@ -1088,7 +1088,7 @@ public class CheckIn extends AppCompatActivity {
 
 
 
-                        if (mQueueTimeSlotList.size() > 1) {
+                        if (mQueueTimeSlotList.size() > 0) {
                             Lbottomlayout.setVisibility(View.VISIBLE);
                             tv_queuename.setVisibility(View.VISIBLE);
                             tv_queuetime.setVisibility(View.VISIBLE);

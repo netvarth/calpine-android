@@ -1106,6 +1106,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     }
 
 
+
+
     private void ApiService(String uniqueID, final String serviceName, final String title) {
 
         ApiInterface apiService =

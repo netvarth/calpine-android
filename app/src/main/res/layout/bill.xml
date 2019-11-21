@@ -486,20 +486,41 @@
                             android:textColor="@color/colorAccent"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
-                    <TextView
-                        android:layout_width="wrap_content"
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/billnotes"
-                        android:text="Bill Notes"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/txtsize_hint" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_marginTop="@dimen/default_padding"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/billnotes"
+                            android:text="Bill Notes"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="@dimen/txtsize_hint" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/notes"
-                        android:text=""
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint" />
+                        android:layout_marginTop="@dimen/padding3"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/notes"
+                            android:text=""
+                            android:textColor="@color/title_grey"
+                            android:textSize="@dimen/txtsize_hint" />
+
+                    </LinearLayout>
+
+
                     <LinearLayout
                         android:layout_marginTop="@dimen/default_padding"
                         android:background="@drawable/cutom_edittext"
