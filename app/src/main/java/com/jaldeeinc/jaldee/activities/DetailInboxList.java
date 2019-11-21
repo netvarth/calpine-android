@@ -4,16 +4,21 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
+import android.icu.util.EthiopicCalendar;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +36,7 @@ import android.widget.Toast;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DetailFileAdapter;
 import com.jaldeeinc.jaldee.adapter.DetailInboxAdapter;
+import com.jaldeeinc.jaldee.adapter.DetailInboxAttachmentsAdapter;
 import com.jaldeeinc.jaldee.callback.DetailInboxAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -81,13 +87,16 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     Context mContext;
     DetailInboxAdapter mDetailAdapter;
     static ArrayList<InboxModel> mDetailInboxList = new ArrayList<>();
+
+
     TextView txtprovider;
     String provider;
     DetailInboxAdapterCallback mInterface;
     BottomSheetDialog dialog;
     ImageView imageview;
     TextView tv_attach, tv_camera;
-    private static final String IMAGE_DIRECTORY = "/demonuts";
+    private static final String IMAGE_DIRECTORY = "/Jaldee" +
+            "";
     private int GALLERY = 1, CAMERA = 2;
     ArrayList<String> fileAttachment;
     String path;
@@ -100,20 +109,14 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     ArrayList<FileAttachment> attachments;
 
 
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailinbox);
         recylce_inbox_detail = findViewById(R.id.recylce_inbox_detail);
-
-
         mContext = this;
 
 
-        //  requestMultiplePermissions();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             provider = extras.getString("provider");
@@ -127,14 +130,14 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 finish();
             }
         });
+
+
         TextView tv_title = findViewById(R.id.toolbartitle);
         tv_title.setText(Config.toTitleCase(provider));
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
         txtprovider = (TextView) findViewById(R.id.txtprovider);
-
-
         tv_title.setTypeface(tyface);
         txtprovider.setTypeface(tyface);
         txtprovider.setText(provider);
@@ -142,24 +145,19 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         Config.logV("mDetailInboxList SIZE #############" + mDetailInboxList.size());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recylce_inbox_detail.setLayoutManager(mLayoutManager);
-
-
         Collections.sort(mDetailInboxList, new Comparator<InboxModel>() {
             @Override
             public int compare(InboxModel r1, InboxModel r2) {
                 return new Long(r2.getTimeStamp()).compareTo(new Long(r1.getTimeStamp()));
             }
         });
-        mDetailAdapter = new DetailInboxAdapter(mDetailInboxList, mContext, mInterface,bitmap);
+
+        mDetailAdapter = new DetailInboxAdapter(mDetailInboxList, mContext, mInterface, bitmap);
         recylce_inbox_detail.setAdapter(mDetailAdapter);
         mDetailAdapter.notifyDataSetChanged();
 
-//
-
-
-
-
     }
+
 
     public static boolean setInboxList(ArrayList<InboxModel> data) {
         mDetailInboxList = data;
@@ -179,36 +177,43 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         tv_attach = dialog.findViewById(R.id.btn);
         tv_camera = dialog.findViewById(R.id.camera);
         recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
-      //  imageview = dialog.findViewById(R.id.iv);
+        //  imageview = dialog.findViewById(R.id.iv);
         RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
 
-        requestMultiplePermissions();
+
+        if (waitListId != null) {
+            requestMultiplePermissions();
+            tv_attach.setVisibility(View.VISIBLE);
+            tv_camera.setVisibility(View.VISIBLE);
+
+            tv_attach.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(galleryIntent, GALLERY);
+                }
+
+            });
 
 
+            tv_camera.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent cameraIntent = new Intent();
+                    cameraIntent.setType("image/*");
+                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent, CAMERA);
 
-        tv_attach.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(galleryIntent,GALLERY);
-            }
-
-        });
-
-
-        tv_camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, CAMERA);
-
-            }
-        });
+                }
+            });
+        }
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
@@ -288,35 +293,47 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         if (requestCode == GALLERY) {
             if (data != null) {
                 try {
-                    if(data.getData()!=null) {
+                    if (data.getData() != null) {
                         Uri mImageUri = data.getData();
-                        imagePathList.add(mImageUri.toString());
-//                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-////                    path = saveImage(bitmap);
+                        float size = getImageSize(mContext, mImageUri);
+//                        if(size<= 1) {
+                           imagePathList.add(mImageUri.toString());
+                            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageUri);
+                            path = saveImage(bitmap);
 //
+
+//                        }
+//                        else{
+//                            Toast.makeText(mContext, "The Selected Image exceeds the Limit, Please try to select Image of size 1 MB", Toast.LENGTH_SHORT).show();
+//                        }
+
+
+
                         DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this,3);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                catch (Exception e) {
-                   e.printStackTrace();
-                }
-                }
-
             }
-        else if (requestCode == CAMERA) {
+
+        } else if (requestCode == CAMERA) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-      //      imageview.setImageBitmap(bitmap);
-           // path = saveImage(bitmap);
-            imagePathList.add(bitmap.toString());
-//                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contentURI);
-////                    path = saveImage(bitmap);
-//
+            //      imageview.setImageBitmap(bitmap);
+            path = saveImage(bitmap);
+            // imagePathList.add(bitmap.toString());
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+            mImageUri = Uri.parse(paths);
+            float size = getImageSize(mContext, mImageUri);
+            imagePathList.add(mImageUri.toString());
+
             DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this,3);
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(mDetailFileAdapter);
             mDetailFileAdapter.notifyDataSetChanged();
@@ -335,7 +352,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         }
 
         try {
-             f = new File(wallpaperDirectory, Calendar.getInstance()
+            f = new File(wallpaperDirectory, Calendar.getInstance()
                     .getTimeInMillis() + ".jpg");
             f.createNewFile();
             FileOutputStream fo = new FileOutputStream(f);
@@ -388,6 +405,19 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 .onSameThread()
                 .check();
     }
+
+    public static float getImageSize(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        if (cursor != null) {
+            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+            cursor.moveToFirst();
+            float imageSize = cursor.getLong(sizeIndex);
+            cursor.close();
+            return imageSize/(1024f*1024f); // returns size in bytes
+        }
+        return 0;
+    }
+
 
 
     private void ApiCommunicateWithoutWaitListID(String accountID, String message, final BottomSheetDialog dialog) {
@@ -459,11 +489,11 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type= MediaType.parse("image/*");
+        MediaType type = MediaType.parse("image/*");
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
-        for(int i=0;i<imagePathList.size();i++) {
+        for (int i = 0; i < imagePathList.size(); i++) {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(imagePathList.get(i)));
             } catch (IOException e) {

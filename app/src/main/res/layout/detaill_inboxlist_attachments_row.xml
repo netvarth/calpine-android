@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:id="@+id/fileList">
+    android:id="@+id/displayImageInbox">
 
     <ImageView
         android:layout_width="@dimen/dimen_scrlimg_dp"
         android:layout_height="@dimen/dimen_scrlimg_dp"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dimen_10dp"
         android:scaleType="fitXY"
+        android:src="@mipmap/ic_launcher"
         android:adjustViewBounds="true"
-        android:id="@+id/file"/>
+        android:id="@+id/file_attach_detail"/>
 
-    <ImageView
-        android:id="@+id/deletefile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_delete" />
+
 
 </LinearLayout>

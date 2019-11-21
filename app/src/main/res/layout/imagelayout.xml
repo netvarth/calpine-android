@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:id="@+id/fileList">
+    android:id="@+id/displayImageInbox">
 
     <ImageView
         android:layout_width="@dimen/dimen_scrlimg_dp"
@@ -13,12 +13,15 @@
         android:layout_marginTop="@dimen/dimen_10dp"
         android:scaleType="fitXY"
         android:adjustViewBounds="true"
-        android:id="@+id/file"/>
+        android:id="@+id/file_attach_detail"
+        app:srcCompat="@drawable/icon_noimage"/>
 
-    <ImageView
-        android:id="@+id/deletefile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_delete" />
+<!--    <ImageView-->
+<!--    android:id="@+id/image_view"-->
+<!--    android:layout_width="200dp"-->
+<!--    android:layout_height="100dp"-->
+<!--    android:scaleType="fitXY"/>-->
+
+
 
 </LinearLayout>

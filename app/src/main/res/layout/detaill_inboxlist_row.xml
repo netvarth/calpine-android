@@ -28,11 +28,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="left"
                 android:paddingLeft="@dimen/default_padding"
                 android:text="Date"
                 android:textColor="@color/title_grey_light"
                 android:textSize="@dimen/txtsize_12" />
+
         </LinearLayout>
 
         <TextView
@@ -46,6 +46,50 @@
 
 
 
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/imageScroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"
+                android:background="@drawable/input_border_cyan_bg"
+                android:gravity="left"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding5">
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:scrollbars="horizontal" />
+
+            </LinearLayout>
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding7"
+            android:orientation="vertical">
+
+
+            <!--        <ImageView-->
+            <!--            android:layout_width="@dimen/dimen_scrlimg_dp"-->
+            <!--            android:layout_height="@dimen/dimen_scrlimg_dp"-->
+            <!--            android:layout_gravity="center"-->
+            <!--            android:layout_marginTop="@dimen/dimen_10dp"-->
+            <!--            android:scaleType="fitXY"-->
+            <!--            android:src="@mipmap/ic_launcher"-->
+            <!--            android:adjustViewBounds="true"-->
+            <!--            android:id="@+id/file_attach_detail"/>-->
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,18 +111,18 @@
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_title_term_small" />
 
-<!--            <TextView-->
-<!--                android:id="@+id/txtattach"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="right"-->
-<!--                android:layout_weight="0.4"-->
-<!--                android:background="@drawable/input_border_rectblue_bg"-->
-<!--                android:gravity="center"-->
-<!--                android:padding="@dimen/padding2"-->
-<!--                android:text="Attach Files"-->
-<!--                android:textColor="@color/title_consu"-->
-<!--                android:textSize="@dimen/txtsize_12" />-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/txtattach"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="right"-->
+            <!--                android:layout_weight="0.4"-->
+            <!--                android:background="@drawable/input_border_rectblue_bg"-->
+            <!--                android:gravity="center"-->
+            <!--                android:padding="@dimen/padding2"-->
+            <!--                android:text="Attach Files"-->
+            <!--                android:textColor="@color/title_consu"-->
+            <!--                android:textSize="@dimen/txtsize_12" />-->
 
             <TextView
                 android:id="@+id/txtreply"
@@ -93,13 +137,9 @@
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_12" />
         </LinearLayout>
+
+
     </LinearLayout>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="horizontal"
-        android:nestedScrollingEnabled="false"/>
 
 
     <View

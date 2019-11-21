@@ -2230,18 +2230,22 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
             if (!mDomainSpinner.equalsIgnoreCase("All")) {
 
+
                 for (int i = 0; i < mSubDomain.size(); i++) {
                     if (mSubDomain.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())) {
+                        if (mSubDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
 
-                        Config.logV("Query------------" + mSubDomain.get(i).getQuery());
-                        String requiredString = mSubDomain.get(i).getQuery().substring(mSubDomain.get(i).getQuery().indexOf("]") + 1, mSubDomain.get(i).getQuery().indexOf(")"));
-                        Config.logV("Second----@@@@@@-----" + requiredString);
-                        querycreate = requiredString;
+                            Config.logV("Query------------" + mSubDomain.get(i).getQuery());
+                            String requiredString = mSubDomain.get(i).getQuery().substring(mSubDomain.get(i).getQuery().indexOf("]") + 1, mSubDomain.get(i).getQuery().indexOf(")"));
+                            Config.logV("Second----@@@@@@-----" + requiredString);
+                            querycreate = requiredString;
 
+                        }
                     }
+                    Config.logV("Query @@@@@@@@@@-----------" + querycreate);
                 }
-                Config.logV("Query @@@@@@@@@@-----------" + querycreate);
-            } else {
+            }
+            else {
                 for (int i = 0; i < mGLobalSearch.size(); i++) {
                     if (mGLobalSearch.get(i).getDisplayname().toLowerCase().equalsIgnoreCase(querypass.toLowerCase())) {
                         Config.logV("Query-ALL-----------" + mGLobalSearch.get(i).getQuery());

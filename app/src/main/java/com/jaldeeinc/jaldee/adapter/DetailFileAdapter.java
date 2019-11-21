@@ -24,10 +24,12 @@ public class DetailFileAdapter extends RecyclerView.Adapter<DetailFileAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView iv_file_attach;
         LinearLayout fileList;
+        ImageView delete_file;
         public MyViewHolder(View view) {
             super(view);
             iv_file_attach = view.findViewById(R.id.file);
             fileList = view.findViewById(R.id.fileList);
+            delete_file = view.findViewById(R.id.deletefile);
 
         }
     }
@@ -51,6 +53,13 @@ public class DetailFileAdapter extends RecyclerView.Adapter<DetailFileAdapter.My
        // final  fileList = mfileList.get(position);
         Log.i("path", this.imagePathList.get(position));
         myViewHolder.iv_file_attach.setImageURI(Uri.parse(this.imagePathList.get(position)));
+        myViewHolder.delete_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imagePathList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override

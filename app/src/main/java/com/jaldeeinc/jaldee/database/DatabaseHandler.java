@@ -10,8 +10,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.model.FileAttachment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.InboxModel;
@@ -19,6 +23,9 @@ import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.SearchModel;
 
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -809,7 +816,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
               /*  + "receiverID INT,"
                 + "receiverName TEXT,"*/
                 + "messageStatus TEXT,"
-                + "waitlistId TEXT)";
+                + "waitlistId TEXT,"
+                + "attachements TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_inbox) + tblFields;
@@ -833,10 +841,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("uniqueID", inbox.getUniqueID());
                 values.put("waitlistId", inbox.getWaitlistId());
 
+
               /*  values.put("receiverID", inbox.getReceiver().getReceiverId());
                 values.put("receiverName", inbox.getReceiver().getReceiverName());*/
 
                 values.put("messageStatus", inbox.getMessageStatus());
+                values.put("attachements", new Gson().toJson(inbox.getAttachments()));
 
                 db.insert(mContext.getString(R.string.db_table_inbox), null, values);
             }
@@ -872,7 +882,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("receiverName", inbox.getReceiver().getReceiverName());*/
 
             values.put("messageStatus", inbox.getMessageStatus());
-
+            values.put("attachements", new Gson().toJson(inbox.getAttachments()));
             db.insert(mContext.getString(R.string.db_table_inbox), null, values);
 
             db.setTransactionSuccessful();
@@ -969,7 +979,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                /* values.put("receiverID", inbox.getReceiver().getReceiverId());
                 values.put("receiverName", inbox.getReceiver().getReceiverName());*/
                 values.put("messageStatus", inbox.getMessageStatus());
-
+                values.put("attachements", new Gson().toJson(inbox.getAttachments()));
 
                 db.update(mContext.getString(R.string.db_table_inbox), values, "timestamp=" + inbox.getTimeStamp(), null);
 
@@ -990,7 +1000,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<InboxModel> inboxData = new ArrayList<InboxModel>();
         String table = mContext.getString(R.string.db_table_inbox);
        /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
-        String[] columns = {"provider", "service", "id", "timestamp", "uniqueID", "message", "messageStatus", "waitlistId"};
+        String[] columns = {"provider", "service", "id", "timestamp", "uniqueID", "message", "messageStatus", "waitlistId", "attachements"};
         String selection = " uniqueID =?";
         String[] selectionArgs = new String[]{uniqueID};
 
@@ -1013,7 +1023,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 //   inbox.setRecevierName(cursor.getString(7));
                 inbox.setMessageStatus(cursor.getString(6));
                 inbox.setWaitlistId(cursor.getString(7));
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<FileAttachment>>() {}.getType();
+                List<FileAttachment> attachments = gson.fromJson(cursor.getString(8), type);
+//
+//                ChannelSearchEnum[] enums = gson.fromJson(yourJson, ChannelSearchEnum[].class);
+//
+                inbox.setAttachments(attachments);
 
+//                Type collectionType = new TypeToken<Collection<ChannelSearchEnum>>(){}.getType();
+//                Collection<ChannelSearchEnum> enums = gson.fromJson(yourJson, collectionType);
 
                 inboxData.add(inbox);
             } while (cursor.moveToNext());
@@ -1037,7 +1056,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_inbox);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"provider", "service", "id", "timestamp", "uniqueID", "message", "messageStatus", "waitlistId"};
+        String[] columns = {"provider", "service", "id", "timestamp", "uniqueID", "message", "messageStatus", "waitlistId", "attachements"};
         String groupBy = "uniqueID";
         db.beginTransaction();
 
@@ -1057,8 +1076,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 // inboxModel.setRecevierName(cursor.getString(7));
                 inboxModel.setMessageStatus(cursor.getString(6));
                 inboxModel.setWaitlistId(cursor.getString(7));
-
-
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<FileAttachment>>() {}.getType();
+                List<FileAttachment> attachments = gson.fromJson(cursor.getString(8), type);
+                inboxModel.setAttachments(attachments);
                 inbox.add(inboxModel);
             } while (cursor.moveToNext());
         }

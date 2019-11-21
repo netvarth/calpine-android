@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.DetailInboxList;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
@@ -99,6 +102,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
         final InboxModel inboxList = mInboxList.get(position);
 
         myViewHolder.tv_message.setText(inboxList.getMsg());
+        Log.i("kingiii",new Gson().toJson(inboxList.getAttachments()));
 
 
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");

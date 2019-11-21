@@ -36,7 +36,8 @@
                 android:id="@+id/btn"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="310dp"
-                android:drawableBottom="@drawable/icon_attach" />
+                android:drawableBottom="@drawable/icon_attach"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -44,7 +45,8 @@
                 android:id="@+id/camera"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="270dp"
-                android:drawableBottom="@drawable/camera_icon" />
+                android:drawableBottom="@drawable/camera_icon"
+                android:visibility="gone"/>
 
 
 <!--            <ImageView-->
