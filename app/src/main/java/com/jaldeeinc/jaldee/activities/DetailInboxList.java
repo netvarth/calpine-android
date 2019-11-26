@@ -278,6 +278,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imagePathList.clear();
                 dialog.dismiss();
             }
         });

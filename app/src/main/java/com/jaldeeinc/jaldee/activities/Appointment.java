@@ -2563,7 +2563,7 @@ public class Appointment extends AppCompatActivity {
                                             startActivity(iPayu);*/
 
 
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT,"checkin",displayNotes);
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT,"checkin");
 
                                             dialog.dismiss();
 

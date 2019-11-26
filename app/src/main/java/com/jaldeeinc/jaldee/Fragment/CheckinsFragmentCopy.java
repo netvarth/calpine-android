@@ -454,6 +454,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                imagePathList.clear();
                 dialog.dismiss();
             }
         });

@@ -11,7 +11,6 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.BillModel;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 

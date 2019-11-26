@@ -198,12 +198,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Typeface tyface_4 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Regular.otf");
                 jdn.setTypeface(tyface_4);
-                jdn.setText("JDN Assured");
+                jdn.setText("JDN");
                 jdn.setText(context.getResources().getString(R.string.jdn));
                 jdn.setTextSize(13);
                 jdn.setTextColor(context.getResources().getColor(R.color.title_grey));
                 jdn.setPadding(5, 5, 5, 5);
-                jdn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_jdn, 0, 0);
+                jdn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.jdn_icon, 0, 0);
                 jdn.setVisibility(View.GONE);
                 //dynaText.setEllipsize(TextUtils.TruncateAt.END);
                 jdn.setMaxLines(2);
@@ -994,11 +994,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             });
 
                         }
-                    } else {
+                    }
+                    else {
                         searchdetailList.getDepartments().clear();
                         myViewHolder.L_departments.setVisibility(View.GONE);
                     }
-                } else {
+                }
+                else {
                     myViewHolder.L_departments.removeAllViews();
                     myViewHolder.L_departments.setVisibility(View.GONE);
                 }

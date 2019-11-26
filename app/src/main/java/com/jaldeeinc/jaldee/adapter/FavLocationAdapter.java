@@ -395,7 +395,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         myViewHolder.tv_date.setText("Do you want to Check-in for another day?");
                     }
                 }else{
-                    if(terminologys.equals("order")){
+                    if(terminologys!= null && terminologys.equals("order")){
                         myViewHolder.btn_checkin.setText("ORDER");
                         myViewHolder.tv_date.setText("Do you want to Order for another day?");
                     }else{

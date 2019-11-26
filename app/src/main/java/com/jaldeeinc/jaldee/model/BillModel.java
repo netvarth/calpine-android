@@ -117,6 +117,16 @@ public class BillModel {
     double totalAmountPaid;
     int id;
 
+    public String getDisplayNote() {
+        return displayNote;
+    }
+
+    public void setDisplayNote(String displayNote) {
+        this.displayNote = displayNote;
+    }
+
+    String displayNote;
+
     public String getBillId() {
         return billId;
     }

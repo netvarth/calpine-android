@@ -88,7 +88,7 @@ public class BillActivity extends AppCompatActivity {
     String coupon_entered;
     String purpose;
     String displayNotes;
-    TextView tv_billnotes, tv_notes;
+    TextView tv_billnotes, tv_notes, tv_discountNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +126,7 @@ public class BillActivity extends AppCompatActivity {
         TextView tv_title = findViewById(R.id.toolbartitle);
         tv_billnotes = findViewById(R.id.billnotes);
         tv_notes = findViewById(R.id.notes);
+        tv_discountNote = findViewById(R.id.discountNotes);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
@@ -157,7 +158,7 @@ public class BillActivity extends AppCompatActivity {
             payStatus = extras.getString("payStatus");
             consumer = extras.getString("consumer");
             purpose = extras.getString("purpose");
-            displayNotes = extras.getString("displayNotes");
+
 
 
         }
@@ -241,7 +242,7 @@ public class BillActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
 
-                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill", displayNotes);
+                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill");
 
                                 dialog.dismiss();
                             }
@@ -252,7 +253,7 @@ public class BillActivity extends AppCompatActivity {
                             public void onClick(View v) {
 
                                 PaytmPayment payment = new PaytmPayment(mCOntext);
-                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "", displayNotes);
+                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "");
                                 dialog.dismiss();
                             }
                         });
@@ -468,14 +469,7 @@ public class BillActivity extends AppCompatActivity {
                         String formattedDate = targetFormat.format(date);
                         tv_date.setText(formattedDate);
 
-                        if (mBillData.getDisplayNotes().getDisplayNotes() != null) {
-                            tv_billnotes.setVisibility(View.VISIBLE);
-                            tv_notes.setVisibility(View.VISIBLE);
-                            tv_notes.setText(mBillData.getDisplayNotes().getDisplayNotes());
-                        } else {
-                            tv_billnotes.setVisibility(View.GONE);
-                            tv_notes.setVisibility(View.GONE);
-                        }
+
 
                         Typeface tyface = Typeface.createFromAsset(getAssets(),
                                 "fonts/Montserrat_Bold.otf");
@@ -516,6 +510,8 @@ public class BillActivity extends AppCompatActivity {
 
                             amountlayout.setVisibility(View.GONE);
                         }
+
+
 
                         if (mBillData.getTotalAmountPaid() != 0) {
                             paidlayout.setVisibility(View.VISIBLE);
@@ -603,6 +599,22 @@ public class BillActivity extends AppCompatActivity {
                             jdnValue.setVisibility(View.GONE);
                         }
 
+                        try {
+
+                            if (mBillData.getDisplayNotes()!= null && mBillData.getDisplayNotes().getDisplayNotes() != null) {
+                                tv_billnotes.setVisibility(View.VISIBLE);
+                                tv_notes.setVisibility(View.VISIBLE);
+                                tv_notes.setText(mBillData.getDisplayNotes().getDisplayNotes());
+                            } else {
+                                tv_billnotes.setVisibility(View.GONE);
+                                tv_notes.setVisibility(View.GONE);
+
+                            }
+                        }
+                        catch(Exception e){
+                            e.printStackTrace();
+                        }
+
 
                         serviceArrayList = response.body().getService();
                         itemArrayList = response.body().getItems();
@@ -658,6 +670,7 @@ public class BillActivity extends AppCompatActivity {
         });
 
     }
+
 
     private void ApigetBill(final String couponss, String ynwuuid, String acccount) {
 
