@@ -1996,10 +1996,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         jdnMaxvalue = jdnList.getDiscMax();
 
 
-                        if(jdnList != null){
-                            tv_jdn.setVisibility(View.VISIBLE);
-                        }else {
+                        if(new Gson().toJson(jdnList).equals("{}")){
                             tv_jdn.setVisibility(View.GONE);
+                        }else {
+                            tv_jdn.setVisibility(View.VISIBLE);
                         }
                     }
 
