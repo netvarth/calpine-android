@@ -62,6 +62,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
+import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.FilterActivity;
 import com.jaldeeinc.jaldee.activities.Home;
@@ -1557,6 +1558,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         if (mylocation != null) {
             latitude = mylocation.getLatitude();
             longitude = mylocation.getLongitude();
+            SharedPreference.getInstance(mContext).setValue("latitudes", latitude);
+            SharedPreference.getInstance(mContext).setValue("longitudes", longitude);
             Config.logV("Update Location Changed Connected---------------------11111------" + location.getLatitude());
             Config.logV("Latitude-------------" + latitude);
 

@@ -1995,6 +1995,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         if(jdnList != null){
                             tv_jdn.setVisibility(View.VISIBLE);
+                        }else{
+                            tv_jdn.setVisibility(View.GONE);
                         }
                     }
 

@@ -33,7 +33,8 @@ import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
-import com.jaldeeinc.jaldee.response.CheckInModel;
+import com.jaldeeinc.jaldee.response.ShareLocation;
+import com.jaldeeinc.jaldee.response.Waitlist;
 
 
 import java.util.ArrayList;
@@ -111,6 +112,23 @@ public interface ApiInterface {
     @POST("consumer/login/verifyLogin/{phone}")
     Call<ResponseBody> ChangePhone(@Path("phone") String phone);
 
+    @POST("consumer/waitlist/saveMyLoc/{uuid}")
+    Call<ShareLocation> ShareLiveLocation(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
+
+    @PUT("consumer/waitlist/update/travelmode/{uuid}")
+    Call<ResponseBody> PutTravelMode(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+
+    @PUT("consumer/waitlist/update/latlong/{uuid}")
+    Call<ResponseBody> UpdateLatLong(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+
+    @PUT("consumer/waitlist/start/mytracking/{uuid}")
+    Call<ResponseBody> StartTracking(@Path("uuid") String uuid,@Query("account") Integer account);
+
+    @DELETE("consumer/waitlist/stop/mytracking/{uuid}")
+    Call<ResponseBody> StopTracking(@Path("uuid") String uuid,@Query("account") Integer account);
+
+    @GET("consumer/waitlist/status/mytracking/{uuid}")
+    Call<ResponseBody> StatusTracking(@Path("uuid") String uuid,@Query("account") Integer account);
 
     @PUT("consumer/login/{otp}/verifyLogin")
     Call<ResponseBody> ChngeEmailOtp(@Path("otp") String otp, @Body RequestBody jsonObj);
@@ -241,6 +259,9 @@ public interface ApiInterface {
     @DELETE("consumer/waitlist/{ynwuuid}")
     Call<ResponseBody> deleteActiveCheckIn(@Path("ynwuuid") String uuid, @Query("account") String account);
 
+    @GET("consumer/waitlist/{ynwuuid}")
+    Call<List<ResponseBody>> waitlist(@Path("ynwuuid") String uuid, @Query("account") String account);
+
 
     @GET("{serviceid}/services.json")
     Call<ArrayList<SearchService>> getService(@Path("serviceid") int serviceid, @Query("modifiedDate") String mDate);
@@ -273,6 +294,8 @@ public interface ApiInterface {
 
     @PUT("consumer/waitlist/rating")
     Call<ResponseBody> PutRating(@Query("account") String account, @Body RequestBody jsonObj);
+
+
 
     @POST("consumer/waitlist/rating")
     Call<ResponseBody> PostRating(@Query("account") String account, @Body RequestBody jsonObj);

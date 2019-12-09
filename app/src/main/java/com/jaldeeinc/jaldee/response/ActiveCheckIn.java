@@ -10,6 +10,16 @@ import java.util.ArrayList;
 
 public class ActiveCheckIn {
 
+    public String getJaldeeStartTimeType() {
+        return jaldeeStartTimeType;
+    }
+
+    public void setJaldeeStartTimeType(String jaldeeStartTimeType) {
+        this.jaldeeStartTimeType = jaldeeStartTimeType;
+    }
+
+    String jaldeeStartTimeType;
+
     public String getPaymentStatus() {
         return paymentStatus;
     }
@@ -359,4 +369,16 @@ public class ActiveCheckIn {
     public String getStatusUpdatedTime() {
         return statusUpdatedTime;
     }
+
+    public JaldeeWaitlistDistanceTime getJaldeeWaitlistDistanceTime() {
+        return jaldeeWaitlistDistanceTime;
+    }
+
+    public void setJaldeeWaitlistDistanceTime(JaldeeWaitlistDistanceTime jaldeeWaitlistDistanceTime) {
+        this.jaldeeWaitlistDistanceTime = jaldeeWaitlistDistanceTime;
+    }
+
+    @SerializedName("jaldeeWaitlistDistanceTime")
+    private JaldeeWaitlistDistanceTime jaldeeWaitlistDistanceTime;
+
 }

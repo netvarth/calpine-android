@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/hometopbar"
+        android:orientation="vertical">
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/custom_toolbar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+
+            android:id="@+id/Laboutus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/app_background"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/checkinMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".8"
+                android:gravity="center"
+                android:padding="@dimen/default_padding"
+                android:text="Your checkIn is successfull !!"
+                android:textColor="@color/green"
+                android:textSize="@dimen/txtsize_hint" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_background" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/app_background"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/terms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".8"
+                android:background="@color/app_background"
+                android:padding="@dimen/default_padding"
+                android:text="Track your ETA"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_hint" />
+
+            <Switch
+                android:id="@+id/shareSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:padding="@dimen/dimen_10dp"
+                android:thumbTint="@color/dark_blue"
+                android:trackTint="@color/green" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_background" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/Lterms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/app_background"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".8"
+                    android:background="@color/app_background"
+                    android:paddingLeft="@dimen/default_padding"
+                    android:paddingTop="@dimen/default_padding"
+                    android:paddingRight="@dimen/default_padding"
+                    android:text="Automatically track your ETA"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <Switch
+                    android:id="@+id/automaticTrackSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:padding="@dimen/dimen_10dp"
+                    android:thumbTint="@color/dark_blue"
+                    android:trackTint="@color/green" />
+
+            </LinearLayout>
+
+            <TextView
+                android:paddingBottom="@dimen/default_padding"
+                android:id="@+id/trackLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:paddingLeft="@dimen/default_padding"
+                android:textColor="@color/title_grey_light"
+                android:textSize="@dimen/twelveScaled"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_background" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
+            <LinearLayout
+
+                android:id="@+id/transportLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/app_background"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:background="@color/app_background"
+                    android:paddingLeft="@dimen/default_padding"
+                    android:paddingTop="@dimen/default_padding"
+                    android:paddingRight="@dimen/default_padding"
+                    android:text="Mode of Transport"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/drivingIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:background="@color/app_background"
+                    android:drawableLeft="@drawable/car"
+                    android:paddingLeft="@dimen/default_padding"
+                    android:paddingTop="@dimen/default_padding"
+                    android:paddingRight="@dimen/default_padding"                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/walkingIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:background="@color/app_background"
+                    android:drawableLeft="@drawable/walk"
+                    android:paddingLeft="@dimen/default_padding"
+                    android:paddingTop="@dimen/default_padding"
+                    android:paddingRight="@dimen/default_padding"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/bicycleIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:background="@color/app_background"
+                    android:drawableLeft="@drawable/icon_cycle"
+                    android:paddingLeft="@dimen/default_padding"
+                    android:paddingTop="@dimen/default_padding"
+                    android:paddingRight="@dimen/default_padding"                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:paddingBottom="@dimen/default_padding"
+                android:id="@+id/modeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/app_background"
+                android:paddingLeft="@dimen/default_padding"
+                android:paddingTop="@dimen/default_padding"
+                android:textColor="@color/title_grey_light"
+                android:textSize="@dimen/twelveScaled"
+                android:textStyle="italic" />
+
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_background" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_marginBottom="@dimen/dimen_60dp"
+        android:gravity="bottom"
+        android:layout_weight="0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding7"
+        android:background="@color/app_background"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@drawable/roundedrect_grey"
+            android:text="@string/cancel"
+            android:textColor="@color/app_background"
+            android:textSize="@dimen/txtsize_hint" />
+
+        <Button
+            android:id="@+id/btn_send"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:background="@drawable/roundedrect_blue"
+            android:text="@string/save"
+            android:textAllCaps="true"
+            android:textColor="@color/app_background"
+            android:textSize="@dimen/txtsize_hint" />
+    </LinearLayout>
+
+
+</LinearLayout>

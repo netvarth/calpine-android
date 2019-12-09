@@ -6,6 +6,7 @@
     <color name="text_hint_color">#cfcfcf</color>
 
     <color name="app_background">#ffffff</color>
+    <color name="light_background">#C9DDFF</color>
 
     <color name="input_border">#dddddd</color>
     <color name="app_theme">#e1f5fd</color>

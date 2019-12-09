@@ -87,6 +87,9 @@
             android:name=".activities.CheckIn"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activities.CheckinShareLocation"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activities.Appointment"
             android:screenOrientation="portrait" />
         <activity

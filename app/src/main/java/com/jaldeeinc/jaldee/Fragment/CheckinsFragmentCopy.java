@@ -185,7 +185,10 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         mCheckTodayList.clear();
 
 
+
+
                         mCheckTodayFutureList = response.body();
+
 
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mCheckTodayFutureList.size(); i++) {
@@ -473,6 +476,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
+
+
+
 
     @Override
     public void onMethodAddFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
@@ -1019,6 +1025,8 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
     void setItems() {
 
+
+
         mCheckTodayList.clear();
         mCheckOldList.clear();
         mCheckFutureList.clear();
@@ -1057,6 +1065,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         // Setting adpater over expandablelistview
         expandlist.setAdapter(adapter);
         expandlist.setVerticalScrollBarEnabled(false);
+        adapter.notifyDataSetChanged();
 
 
         if (mCheckTodayList.size() > 0 || mTodayFlag)
@@ -1069,5 +1078,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
 
     }
+
 
 }

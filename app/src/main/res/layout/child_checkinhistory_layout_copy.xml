@@ -224,6 +224,173 @@
 
             </LinearLayout>
 
+
+        <LinearLayout
+            android:id="@+id/travelDetailsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding5"
+            android:background="@color/app_background"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding5"
+                android:background="@color/app_background"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/txt_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Distance : "
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+                <TextView
+                    android:id="@+id/txt_distance_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding5"
+                android:background="@color/app_background"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/txt_travelTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Travel time : "
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+                <TextView
+                    android:id="@+id/txt_travelTime_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding5"
+                android:background="@color/app_background"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/txt_travelmode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Mode of transport   "
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+                <TextView
+                    android:id="@+id/txt_travelmode_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+                <TextView
+                    android:id="@+id/travelMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+                <TextView
+
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:drawableLeft="@drawable/icon_edit"
+                    android:id="@+id/travelmddeEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:drawableLeft="@drawable/car"
+                    android:id="@+id/travelCar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:drawableLeft="@drawable/walk"
+                    android:id="@+id/traveWalf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:drawableLeft="@drawable/icon_cycle"
+                    android:id="@+id/travelCycle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding5"
+                android:background="@color/app_background"
+                android:orientation="horizontal">
+
+
+
+
+                <Switch
+                    android:id="@+id/switch1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Live Track : " />
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
