@@ -12,16 +12,19 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.ShareLocation;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.RequestBody;
@@ -101,7 +104,7 @@ public class CheckinShareLocation extends AppCompatActivity {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiShareLiveLocation();
+                UpdateShareLiveLocation();
                 finish();
             }
         });
@@ -162,7 +165,7 @@ public class CheckinShareLocation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 travelMode = "DRIVING";
-                ApiShareLiveLocation();
+                ApiUpdateTravelMode();
             }
         });
 
@@ -170,7 +173,7 @@ public class CheckinShareLocation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 travelMode = "WALKING";
-                ApiShareLiveLocation();
+                ApiUpdateTravelMode();
             }
         });
 
@@ -178,7 +181,7 @@ public class CheckinShareLocation extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 travelMode = "BICYCLING";
-                ApiShareLiveLocation();
+                ApiUpdateTravelMode();
             }
         });
     }
@@ -222,6 +225,93 @@ public class CheckinShareLocation extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void UpdateShareLiveLocation() {
+
+        final ApiInterface apiService = ApiClient.getClient(this).create(ApiInterface.class);
+        final JSONObject jsonObj = new JSONObject();
+        final JSONObject geoLoc = new JSONObject();
+        try {
+            geoLoc.put("latitude", latitudes);
+            geoLoc.put("longitude", longitudes);
+            jsonObj.put("jaldeeGeoLocation", geoLoc);
+            jsonObj.put("travelMode", travelMode);
+            jsonObj.put("waitlistPhonenumber", waitlistPhonenumber);
+            jsonObj.put("jaldeeStartTimeMod", startTime);
+            jsonObj.put("shareLocStatus", locationStatus);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ShareLocation> call = apiService.UpdateShareLiveLocation(uuid, accountID, body);
+        call.enqueue(new Callback<ShareLocation>() {
+            @Override
+            public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
+
+                try {
+                    if (response.code() == 200) {
+                        modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime().toString() + " " + response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTimeUnit() + " to reach");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ShareLocation> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+
+            }
+        });
+    }
+
+
+    private void ApiUpdateTravelMode() {
+
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("travelMode", travelMode);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+
+        Call<ShareLocation> call;
+        call = apiService.PutTravelModes(uuid, Integer.parseInt(accountID), body);
+
+
+        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+
+        call.enqueue(new Callback<ShareLocation>() {
+            @Override
+            public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
+
+                try {
+                    if (response.code() == 200) {
+                        modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime().toString() + " " + response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTimeUnit() + " to reach");
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+            @Override
+            public void onFailure(Call<ShareLocation> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+
+
+            }
+        });
+
     }
 
 //

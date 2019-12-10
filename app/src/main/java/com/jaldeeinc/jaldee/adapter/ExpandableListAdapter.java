@@ -237,7 +237,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view, ViewGroup parent) {
+    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View view, ViewGroup parent) {
         // Getting child text
         final ActiveCheckIn activelist = (ActiveCheckIn) getChild(groupPosition, childPosition);
 
@@ -274,10 +274,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView tv_date = (TextView) view.findViewById(R.id.txt_date);
         TextView tv_partysize = (TextView) view.findViewById(R.id.txt_partysizevalue);
         TextView tv_check_in = (TextView) view.findViewById(R.id.txt_check_in_list);
-        final TextView tv_distance = (TextView) view.findViewById(R.id.txt_distance_value);
+
+        final TextView distanceTravel = (TextView) view.findViewById(R.id.distanceTravel);
         final TextView tv_travelmode = (TextView) view.findViewById(R.id.txt_travelmode_value);
         final TextView travelMessage = (TextView) view.findViewById(R.id.travelMessage);
-        final TextView tv_travelValue = (TextView) view.findViewById(R.id.txt_travelTime_value);
+
         final TextView tv_travelCar = (TextView) view.findViewById(R.id.travelCar);
         final TextView tv_travelWalk = (TextView) view.findViewById(R.id.traveWalf);
         final TextView tv_cycle = (TextView) view.findViewById(R.id.travelCycle);
@@ -287,19 +288,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn")) {
             travelDetailsLayout.setVisibility(View.VISIBLE);
-            if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime()!=null){
-                tv_distance.setText(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString());
+            if (activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
+                int hours =  activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
+                int minutes =  activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
+
+                if(hours<1){
+                    distanceTravel.setText(" You are " + activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + minutes +" Mins"+ " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
+
+                }else {
+                    distanceTravel.setText(" You are " + activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + hours+"Hr"+" "+minutes+" Mins" + " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
+
+                }
                 tv_travelmode.setText(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode());
-                tv_travelValue.setText(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime().toString());
-            }else {
-                tv_distance.setVisibility(View.GONE);
+            } else {
                 tv_travelmode.setVisibility(View.GONE);
-                tv_travelValue.setVisibility(View.GONE);
+
             }
-
-
-
-
 
 
             if (activelist.getJaldeeStartTimeType().equals("AFTERSTART") && header.equals("today")) {
@@ -373,13 +377,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
 
                                                 if (activelist.getWaitlistStatus().equals("checkedIn") && liveTrackSwitch.isChecked()) {
-                                                    Log.i("poipoipoi", "poipoipoi");
                                                     ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
                                                     JSONObject jsonObj = new JSONObject();
                                                     try {
 
                                                         latValue = SharedPreference.getInstance(mContext).getStringValue("latitudes", "");
                                                         longValue = SharedPreference.getInstance(mContext).getStringValue("longitudes", "");
+                                                        Log.i("poiuytrew",latValue);
+                                                        Log.i("poiuytrew",longValue);
                                                         jsonObj.put("latitude", latValue);
                                                         jsonObj.put("longitude", longValue);
 
@@ -491,7 +496,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             });
 
 
-
             tv_cycle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -530,13 +534,59 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                             try {
                                 if (response.code() == 200) {
-
+                                    ApiTodayChekInList();
                                 }
 
 
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                        }
+
+                        private void ApiTodayChekInList() {
+
+
+                            final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+                            Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
+                            call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
+                                @Override
+                                public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
+
+                                    try {
+                                        if (response.code() == 200) {
+                                            int hours =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
+                                            int minutes =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
+
+                                            if(hours<1){
+                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + minutes +" Mins"+ " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
+
+                                            }else {
+                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + hours+"Hr"+" "+minutes+" Mins" + " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
+
+                                            }
+
+                                        } else {
+                                            if (response.code() != 419) {
+                                                Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
+                                    // Log error here since request failed
+                                    Config.logV("Fail---------------" + t.toString());
+
+                                }
+                            });
+
 
                         }
 
@@ -592,13 +642,57 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                             try {
                                 if (response.code() == 200) {
-
+                                    ApiTodayChekInList();
                                 }
 
 
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                        }
+
+                        private void ApiTodayChekInList() {
+
+
+                            final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+                            Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
+                            call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
+                                @Override
+                                public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
+
+                                    try {
+                                        if (response.code() == 200) {
+                                            int hours =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
+                                            int minutes =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
+
+                                            if(hours<1){
+                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + minutes +" Mins"+ " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
+
+                                            }else {
+                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + hours+"Hr"+" "+minutes+" Mins" + " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
+
+                                            }                                        } else {
+                                            if (response.code() != 419) {
+                                                Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
+                                    // Log error here since request failed
+                                    Config.logV("Fail---------------" + t.toString());
+
+                                }
+                            });
+
 
                         }
 
@@ -652,12 +746,56 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                             try {
                                 if (response.code() == 200) {
-
+                                    ApiTodayChekInList();
                                 }
 
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                        }
+
+                        private void ApiTodayChekInList() {
+
+
+                            final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+                            Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
+                            call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
+                                @Override
+                                public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
+
+                                    try {
+                                        if (response.code() == 200) {
+                                            int hours =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
+                                            int minutes =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
+
+                                            if(hours<1){
+                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + minutes +" Mins"+ " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
+
+                                            }else {
+                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + hours+"Hr"+" "+minutes+" Mins" + " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
+
+                                            }                                        } else {
+                                            if (response.code() != 419) {
+                                                Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
+                                    // Log error here since request failed
+                                    Config.logV("Fail---------------" + t.toString());
+
+                                }
+                            });
+
+
                         }
 
                         @Override
@@ -921,7 +1059,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         tv_service.setVisibility(View.GONE);
 
 
-
         if (activelist.getName() != null) {
             tv_service.setVisibility(View.VISIBLE);
 
@@ -951,16 +1088,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             } else {
                 icon_bill.setVisibility(View.GONE);
             }
-        } else
-
-        {
+        } else {
             icon_bill.setVisibility(View.GONE);
         }
 
 
-        icon_bill.setOnClickListener(new View.OnClickListener()
-
-        {
+        icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName())));
@@ -971,7 +1104,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         Config.logV("Date------------" + activelist.getDate());
 
 
-      //  tv_estTime.setVisibility(View.VISIBLE);
+        //  tv_estTime.setVisibility(View.VISIBLE);
 
         if (activelist.getServiceTime() != null) {
 

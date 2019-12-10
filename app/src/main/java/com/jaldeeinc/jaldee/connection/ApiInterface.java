@@ -115,8 +115,14 @@ public interface ApiInterface {
     @POST("consumer/waitlist/saveMyLoc/{uuid}")
     Call<ShareLocation> ShareLiveLocation(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
 
+    @PUT("consumer/waitlist/updateMyLoc/{uuid}")
+    Call<ShareLocation> UpdateShareLiveLocation(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
+
     @PUT("consumer/waitlist/update/travelmode/{uuid}")
     Call<ResponseBody> PutTravelMode(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+
+    @PUT("consumer/waitlist/update/travelmode/{uuid}")
+    Call<ShareLocation> PutTravelModes(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
 
     @PUT("consumer/waitlist/update/latlong/{uuid}")
     Call<ResponseBody> UpdateLatLong(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
