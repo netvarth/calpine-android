@@ -212,7 +212,7 @@ public class VerifyOtp extends AppCompatActivity {
 
                           //  Toast.makeText(mContext, "OTP resend", Toast.LENGTH_LONG).show();
 
-                            Toast.makeText(mContext,"Otp has been resend to  "+mobno,Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext,"Otp has been resent to  "+mobno,Toast.LENGTH_LONG).show();
                         }
 
                     }

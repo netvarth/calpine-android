@@ -67,6 +67,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1089,7 +1090,8 @@ public class CheckIn extends AppCompatActivity {
                         }
 
 
-                        if (mQueueTimeSlotList.size() > 1) {
+
+                        if (mQueueTimeSlotList.size() > 0) {
                             Lbottomlayout.setVisibility(View.VISIBLE);
                             tv_queuename.setVisibility(View.VISIBLE);
                             tv_queuetime.setVisibility(View.VISIBLE);
@@ -2463,7 +2465,7 @@ public class CheckIn extends AppCompatActivity {
                                             // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
                                             Config.logV("Account ID --------------" + modifyAccountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin", displayNotes);
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID,Constants.PURPOSE_PREPAYMENT, "checkin");
                                             dialog.dismiss();
                                         }
                                     });
@@ -2475,7 +2477,7 @@ public class CheckIn extends AppCompatActivity {
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", displayNotes);
+                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "");
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);

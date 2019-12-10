@@ -1,7 +1,11 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -31,6 +35,7 @@ public class HomeTabFragment extends Fragment {
     private CustomViewPager viewPager;
     Toolbar toolbar;
     Context mContext;
+    String sforceupdate = "";
 
     //Fragments
 
@@ -64,6 +69,16 @@ public class HomeTabFragment extends Fragment {
         if (bundle != null) {
             tab = bundle.getString("tab");
 
+        }
+        if (bundle != null) {
+            sforceupdate = bundle.getString("forceupdate", "");
+        }
+
+        if (sforceupdate != null) {
+            if (sforceupdate.equalsIgnoreCase("true")) {
+
+                showForceUpdateDialog();
+            }
         }
 
         return rootView;
@@ -233,6 +248,23 @@ public class HomeTabFragment extends Fragment {
 
         // this Fragment couldn't handle the onBackPressed call
         return false;
+    }
+    public void showForceUpdateDialog() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        alertDialog.setTitle("Jaldee update required ");
+        alertDialog.setMessage(" This version of Jaldee is no longer supported. Please update to the latest version.");
+        alertDialog.setPositiveButton("UPDATE NOW", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                final String appPackageName = mContext.getPackageName();
+                try {
+                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+            }
+        });
+        alertDialog.show();
     }
 
 }

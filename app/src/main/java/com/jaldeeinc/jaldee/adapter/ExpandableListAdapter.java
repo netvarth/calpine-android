@@ -2068,7 +2068,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_star_line, 0, 0);
         if (activelist.getRating() != null) {
-            Config.logV("Rating " + activelist.getRating().getStars() + "Activepr" + activelist.getBusinessName());
+      //      Config.logV("Rating " + activelist.getRating().getStars() + "Activepr" + activelist.getBusinessName());
             if (Integer.parseInt(activelist.getRating().getStars()) > 0) {
 
                 icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.star_full, 0, 0);

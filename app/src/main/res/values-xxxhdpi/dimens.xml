@@ -25,4 +25,5 @@
     <dimen name="txtsize_14">16sp</dimen>
     <dimen name="txtsize_10">12sp</dimen>
     <dimen name="padding3">5dp</dimen>
+    <dimen name="dimen_scrlimg_dp">100dp</dimen>
 </resources>

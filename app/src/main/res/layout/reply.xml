@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -23,6 +26,43 @@
             android:text=" Reply to"
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/display_images">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="310dp"
+                android:drawableBottom="@drawable/icon_attach"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/camera"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="270dp"
+                android:drawableBottom="@drawable/camera_icon"
+                android:visibility="gone"/>
+
+
+<!--            <ImageView-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="100dp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:scaleType="fitXY"-->
+<!--                android:src="@mipmap/ic_launcher"-->
+<!--                android:id="@+id/iv"/>-->
+
+
+
+
+        </RelativeLayout>
+
         <EditText
             android:id="@+id/edt_message"
             android:layout_width="match_parent"
@@ -39,7 +79,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,6 +86,7 @@
         android:layout_margin="@dimen/padding7"
         android:background="@color/app_background"
         android:orientation="horizontal">
+
 
 
 
@@ -75,5 +115,23 @@
             android:textAllCaps="true"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/padding7"
+        android:background="@color/app_background"
+        android:orientation="horizontal">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="horizontal"
+        android:nestedScrollingEnabled="false"/>
+
     </LinearLayout>
 </LinearLayout>
+

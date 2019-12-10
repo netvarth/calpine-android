@@ -423,7 +423,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
-        Config.logV("IDS SIZE @@@@@@@@@@@@@@@@@@@@"+ids.size());
+        Config.logV("IDS SIZE @@@@@@@@@@@@@@@@@@@@" + ids.size());
         List<String> idList = Arrays.asList(ids.get(0).split(","));
 
 
@@ -433,46 +433,49 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
             idPass += mProviderid + "-" + idList.get(i) + ",";
         }
 
-        Config.logV("IDS_--------------------" + idPass);
-        Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
+        if (idPass != "") {
 
-        call.enqueue(new Callback<ArrayList<QueueList>>() {
-            @Override
-            public void onResponse(Call<ArrayList<QueueList>> call, Response<ArrayList<QueueList>> response) {
+            Config.logV("IDS_--------------------" + idPass);
+            Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
 
-                try {
+            call.enqueue(new Callback<ArrayList<QueueList>>() {
+                @Override
+                public void onResponse(Call<ArrayList<QueueList>> call, Response<ArrayList<QueueList>> response) {
 
+                    try {
+
+                        if (mDialog.isShowing())
+                            Config.closeDialog(mActivity, mDialog);
+
+                        Config.logV("URL-------SEARCH--------" + response.raw().request().url().toString().trim());
+                        Config.logV("Response--code-------------------------" + response.code());
+
+                        if (response.code() == 200) {
+
+                            mSearchQueueList = response.body();
+                            ApiSearchViewSetting(rfavlocRecycleview);
+
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Fail---------------" + t.toString());
                     if (mDialog.isShowing())
                         Config.closeDialog(mActivity, mDialog);
 
-                    Config.logV("URL-------SEARCH--------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-
-                        mSearchQueueList = response.body();
-                        ApiSearchViewSetting(rfavlocRecycleview);
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(mActivity, mDialog);
-
-            }
-        });
+            });
 
 
+        }
     }
 
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {

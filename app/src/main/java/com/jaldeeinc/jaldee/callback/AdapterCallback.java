@@ -41,6 +41,7 @@ public interface AdapterCallback {
     void onMethodJdn(String uniqueid);
     void onMethodSpecialization(ArrayList<String> Specialization_displayname, String title);
     void onMethodDepartmentList(ArrayList<String> Departments,String businessName);
+    void onMethodForceUpdate();
 
 
 

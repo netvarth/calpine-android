@@ -1623,43 +1623,46 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             idPass += mProviderid + "-" + ids.get(i) + ",";
         }
 
-        Config.logV("IDS_--------------------" + idPass);
-        Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
+        if(!idPass.equals("")) {
+            Config.logV("IDS_--------------------" + idPass);
 
-        call.enqueue(new Callback<ArrayList<QueueList>>() {
-            @Override
-            public void onResponse(Call<ArrayList<QueueList>> call, Response<ArrayList<QueueList>> response) {
+            Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
 
-                try {
+            call.enqueue(new Callback<ArrayList<QueueList>>() {
+                @Override
+                public void onResponse(Call<ArrayList<QueueList>> call, Response<ArrayList<QueueList>> response) {
 
+                    try {
+
+                        if (mDialog.isShowing())
+                            Config.closeDialog(getActivity(), mDialog);
+
+                        Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
+                        Config.logV("Response--code-----SearchViewID--------------------" + response.code());
+                        Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
+
+                        if (response.code() == 200) {
+
+                            mSearchQueueList = response.body();
+                            ApiSearchViewSetting(uniqueID);
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Fail---------------" + t.toString());
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
-                    Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-----SearchViewID--------------------" + response.code());
-                    Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
-
-                    if (response.code() == 200) {
-
-                        mSearchQueueList = response.body();
-                        ApiSearchViewSetting(uniqueID);
-
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
+            });
 
-            @Override
-            public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-            }
-        });
-
+        }
     }
 
     private void ApiSearchViewSetting(String muniqueID) {
@@ -1993,10 +1996,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         jdnMaxvalue = jdnList.getDiscMax();
 
 
-                        if(jdnList != null){
-                            tv_jdn.setVisibility(View.VISIBLE);
-                        }else{
+                        if(new Gson().toJson(jdnList).equals("{}")){
                             tv_jdn.setVisibility(View.GONE);
+                        }else {
+                            tv_jdn.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -2245,6 +2248,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.add(R.id.mainlayout, pfFragment).commit();
 
     }
+
 
     public void refreshList() {
         Config.logV("Refresh $$$$$@@@@@@@@@@@@@@@@@@");

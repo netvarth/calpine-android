@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.Fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
@@ -22,7 +24,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SlidingPaneLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -137,6 +138,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     static TextView mCurrentLoc;
     Spinner mSpinnerDomain;
     String AWS_URL = "";
+
 
 
     ArrayList<Domain_Spinner> domainList = new ArrayList<>();
@@ -956,8 +958,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
             }
         });
-
-
         return row;
 
     }
@@ -2137,6 +2137,4 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             // mTxvBuy.setEnabled(true);
         }
     }*/
-
-
 }

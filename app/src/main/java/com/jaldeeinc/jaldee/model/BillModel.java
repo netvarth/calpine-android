@@ -22,6 +22,17 @@ public class BillModel {
 
     Jdn jdn;
 
+
+    public BillDisplayNotes getDisplayNotes() {
+        return displayNotes;
+    }
+
+    public void setDisplayNotes(BillDisplayNotes displayNotes) {
+        this.displayNotes = displayNotes;
+    }
+
+    BillDisplayNotes displayNotes;
+
     public double getTaxableTotal() {
         return taxableTotal;
     }
@@ -105,6 +116,16 @@ public class BillModel {
     double couponValue;
     double totalAmountPaid;
     int id;
+
+    public String getDisplayNote() {
+        return displayNote;
+    }
+
+    public void setDisplayNote(String displayNote) {
+        this.displayNote = displayNote;
+    }
+
+    String displayNote;
 
     public String getBillId() {
         return billId;
@@ -198,8 +219,6 @@ public class BillModel {
     public Map<String, JsonObject> getJCoupon() {
         return jCoupon;
     }
-
-
 
 
 

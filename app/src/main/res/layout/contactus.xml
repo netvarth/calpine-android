@@ -80,14 +80,13 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/padding30">
 
-               <!-- <ImageView
+                <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/mail" />-->
+                    android:src="@drawable/mailicon" />
 
                 <TextView
-                    android:layout_marginTop="@dimen/default_padding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email : support@jaldee.com"
@@ -106,13 +105,12 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/padding30">
 
-               <!-- <ImageView
+                <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/phoneicon" />-->
+                    android:src="@drawable/phoneicon" />
 
-                <!--android:paddingLeft="@dimen/default_padding"-->
                 <TextView
                     android:id="@+id/txtphone"
                     android:layout_width="wrap_content"
@@ -120,7 +118,56 @@
                     android:text="Phone : 0487-2325650"
                     android:textColor="@color/sec_title_grey"
                     android:textSize="@dimen/txtsize_hint" />
+
+
+
+
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_whatsapp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/padding30"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/padding30">
+
+                <TextView
+                    android:id="@+id/txtsupport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Support : "
+                    android:textColor="@color/sec_title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/whatsappicon" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/phoneicon" />
+
+                <TextView
+                    android:id="@+id/txtwhatsapp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="073068 23011"
+                    android:textColor="@color/sec_title_grey"
+                    android:textSize="@dimen/txtsize_hint" />
+
+
+
+
+            </LinearLayout>
+
+
+
 
 
         </LinearLayout>

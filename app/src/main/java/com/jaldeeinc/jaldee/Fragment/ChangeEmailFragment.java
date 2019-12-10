@@ -81,9 +81,6 @@ public class ChangeEmailFragment extends RootFragment {
 
         edtEmail.addTextChangedListener(new MyTextWatcher(edtEmail));
 
-
-
-
         return row;
     }
 

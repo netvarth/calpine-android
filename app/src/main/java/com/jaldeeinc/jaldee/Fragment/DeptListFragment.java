@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class DeptListFragment extends Fragment {
+public class DeptListFragment extends RootFragment {
     Context mContext;
     ArrayList<SearchDepartment> department_List;
     TextView tv_subtitle;

@@ -191,18 +191,19 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 Config.logV("Locationttt-----kkkk###########@@@@@@" + searchLoclist.getId());
                 Config.logV("Locationttt-----aaaa###########@@@@@@" + mCheckInMessage.get(i).getmAllSearch_checkIn().size());
 
+                 if(terminology!= null) {
+                     String firstWord = "You have ";
+                     String secondWord = mCheckInMessage.get(i).getmAllSearch_checkIn().size() + " " + terminology;
+                     String thirdword = " at this location";
 
-                String firstWord = "You have ";
-                String secondWord = mCheckInMessage.get(i).getmAllSearch_checkIn().size() + " " + terminology;
-                String thirdword = " at this location";
+                     Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
+                     Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
+                             "fonts/Montserrat_Bold.otf");
+                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                     myViewHolder.tv_checkin.setText(spannable);
 
-                Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
-                Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
-                        "fonts/Montserrat_Bold.otf");
-                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_checkin.setText(spannable);
-
-            } else {
+                 }
+            }else {
                 //myViewHolder.tv_checkin.setVisibility(View.GONE);
             }
         }
@@ -385,7 +386,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             Config.logV("Place-------------" + searchLoclist.getPlace() + " " + "," + " " + searchLoclist.getAddress());
         }
 
-        Config.logV("---Place 3333----11---" + searchLoclist.getbSchedule().getTimespec().size());
         if (searchLoclist.getbSchedule() != null) {
             if (searchLoclist.getbSchedule().getTimespec().size() > 0) {
 

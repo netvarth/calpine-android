@@ -88,10 +88,10 @@ public class PaymentActivity extends AppCompatActivity {
             accountID = extras.getString("accountID");
             amountDue = extras.getDouble("amountDue");
             purpose = extras.getString("purpose");
-            displayNotes = extras.getString("displayNotes");
+
 
         }
-        APIPayment(accountID, ynwUUID, amountDue, purpose, displayNotes);
+        APIPayment(accountID, ynwUUID, amountDue, purpose);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -139,7 +139,7 @@ public class PaymentActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void APIPayment(final String accountID, final String ynwUUID, final double amountDue, final String purpose, final String displayNotes) {
+    private void APIPayment(final String accountID, final String ynwUUID, final double amountDue, final String purpose) {
 
 
         ApiInterface apiService =
@@ -175,13 +175,14 @@ public class PaymentActivity extends AppCompatActivity {
 
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
                                 showPayU = true;
+
                             }
                         }
 
                         if (!showPaytmWallet && !showPayU) {
 
                         } else {
-                            PaymentFunc(ynwUUID, accountID, amountDue, purpose,displayNotes);
+                            PaymentFunc(ynwUUID, accountID, amountDue, purpose);
                         }
 
                     } else {
@@ -210,7 +211,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     }
 
-    private void PaymentFunc(final String ynwUUID, final String accountID, final double amountDue, final String purpose, final String displayNotes) {
+    private void PaymentFunc(final String ynwUUID, final String accountID, final double amountDue, final String purpose) {
 
         if (showPaytmWallet) {
             btn_paytm.setVisibility(View.VISIBLE);
@@ -234,7 +235,7 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, purpose, "dashboard",displayNotes);
+                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, purpose, "dashboard");
 
             }
         });
@@ -244,7 +245,7 @@ public class PaymentActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 PaytmPayment payment = new PaytmPayment(mContext);
-                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose,  mContext, mActivity, "home",displayNotes);
+                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose,  mContext, mActivity, "home");
             }
         });
 

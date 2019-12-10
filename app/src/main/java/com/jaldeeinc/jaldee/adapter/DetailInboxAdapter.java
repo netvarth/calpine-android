@@ -6,8 +6,13 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.callback.DetailInboxAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
@@ -25,6 +31,7 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -35,8 +42,8 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
 
     private List<InboxModel> mInboxList;
     Context mContext;
-    //boolean is_seemore=false;
-    public static final int PICKFILE_RESULT_CODE = 1;
+    //boolean is_seemore=false;\
+    Bitmap bitmap;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -45,31 +52,34 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         LinearLayout linear_inbox_layout;
         ImageView img_sent;
         TextView tv_seemore;
+        RecyclerView recyclerImage;
+        LinearLayout imageScroll;
 
 
         public MyViewHolder(View view) {
             super(view);
-            tv_provider = (TextView) view.findViewById(R.id.txt_provider);
-            tv_date = (TextView) view.findViewById(R.id.txt_date);
-            tv_message = (TextView) view.findViewById(R.id.txt_message);
-            linear_inbox_layout = (LinearLayout) view.findViewById(R.id.inbox_layout);
-            img_sent = (ImageView) view.findViewById(R.id.img_sent);
-            tv_reply = (TextView) view.findViewById(R.id.txtreply);
-            tv_seemore = (TextView) view.findViewById(R.id.tv_seemore);
-
-
+            tv_provider = view.findViewById(R.id.txt_provider);
+            tv_date = view.findViewById(R.id.txt_date);
+            tv_message = view.findViewById(R.id.txt_message);
+            linear_inbox_layout = view.findViewById(R.id.inbox_layout);
+            img_sent = view.findViewById(R.id.img_sent);
+            tv_reply = view.findViewById(R.id.txtreply);
+            tv_seemore = view.findViewById(R.id.tv_seemore);
+            recyclerImage = view.findViewById(R.id.recyclerImage);
+            imageScroll = view.findViewById(R.id.imageScroll);
 
         }
     }
 
     DetailInboxAdapterCallback callback;
 
-    public DetailInboxAdapter(List<InboxModel> mInboxList, Context mContext, DetailInboxAdapterCallback callback) {
+    public DetailInboxAdapter(List<InboxModel> mInboxList, Context mContext, DetailInboxAdapterCallback callback, Bitmap bitmap) {
         this.mContext = mContext;
         this.mInboxList = mInboxList;
         Config.logV("Detail Inbox----------***************----" + mInboxList.size());
         this.callback = callback;
         // this.activity = mActivity;
+        this.bitmap = bitmap;
 
     }
 
@@ -88,6 +98,14 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         final InboxModel inboxList = mInboxList.get(position);
 
         myViewHolder.tv_message.setText(inboxList.getMsg());
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext,3);
+        myViewHolder.recyclerImage.setLayoutManager(mLayoutManager);
+        if (inboxList.getAttachments() != null) {
+            myViewHolder.imageScroll.setVisibility(View.VISIBLE);
+            ImageAdapter imageAdapter = new ImageAdapter(inboxList.getAttachments());
+            myViewHolder.recyclerImage.setAdapter(imageAdapter);
+            imageAdapter.notifyDataSetChanged();
+        }
 
         //Config.logV("Detail Inbox-------&&&&&&&&&&&&-------"+inboxList.getMsg());
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
@@ -113,15 +131,13 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         }
 
 
-
-
         if (!inboxList.isIs_see()) {
             myViewHolder.tv_message.post(new Runnable() {
                 @Override
                 public void run() {
                     int lineCount = myViewHolder.tv_message.getLineCount();
 
-                    if(inboxList.getLineCount()==0){
+                    if (inboxList.getLineCount() == 0) {
                         inboxList.setLineCount(lineCount);
 
                     }
@@ -147,7 +163,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
                 public void run() {
                     int lineCount = myViewHolder.tv_message.getLineCount();
 
-                    if(inboxList.getLineCount()==0){
+                    if (inboxList.getLineCount() == 0) {
                         inboxList.setLineCount(lineCount);
 
                     }
@@ -210,13 +226,11 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         myViewHolder.tv_reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId(), inboxList.getTimeStamp());
 
-                callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId(),inboxList.getTimeStamp());
 
             }
         });
-
-
 
 
     }
@@ -227,3 +241,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         return mInboxList.size();
     }
 }
+
+
+
+

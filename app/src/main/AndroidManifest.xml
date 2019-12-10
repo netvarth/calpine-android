@@ -20,6 +20,7 @@
         tools:node="remove" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".common.MyApplication"
@@ -30,7 +31,9 @@
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:allowBackup">
+        tools:replace="android:allowBackup"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true">
         <activity
             android:name=".activities.Splash"
             android:screenOrientation="portrait">

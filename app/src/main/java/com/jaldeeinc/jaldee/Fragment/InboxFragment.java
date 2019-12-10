@@ -5,8 +5,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.adapter.InboxAdapter;
@@ -150,7 +153,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                     if (response.code() == 200) {
                         mInboxList.clear();
                         mInboxList = response.body();
-
+                        Log.i("mInboxList", new Gson().toJson(mInboxList));
 
                         /*Collections.sort(mInboxList, new Comparator<InboxModel>() {
                             @Override
@@ -196,7 +199,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                                 inbox.setId(mInboxList.get(i).getOwner().getId());
                                 inbox.setWaitlistId(mInboxList.get(i).getWaitlistId());
                                 inbox.setMessageStatus(messageStatus);
-
+                                inbox.setAttachments(mInboxList.get(i).getAttachments());
                                 //Config.logV("AccountID--------------"+mInboxList.get(i).getAccountId());
                                 inbox.setUniqueID(mInboxList.get(i).getAccountId());
                                 // mDBInboxList.add(inbox);

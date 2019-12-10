@@ -1,8 +1,11 @@
 package com.jaldeeinc.jaldee.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +26,7 @@ public class Home extends AppCompatActivity {
     HomeTabFragment mHomeTab;
     Context mContext;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +40,8 @@ public class Home extends AppCompatActivity {
             // withholding the previously created fragment from being created again
             // On orientation change, it will prevent fragment recreation
             // its necessary to reserving the fragment stack inside each tab
-            initScreen();
+               initScreen();
+
 
             Config.logV("Init Screen@@@@@@@@@@@@@@@@@@@");
         } else {
@@ -51,10 +56,12 @@ public class Home extends AppCompatActivity {
         Config.logV("REGISTARION ID___3333####___________@@@@@@@___" + regId);
 
 
-        Bundle b = getIntent().getExtras();// add these lines of code to get data from notification
+        Bundle b = getIntent().getExtras();
+        // add these lines of code to get data from notification
         if (b != null) {
             String from = b.getString("message");
-            if (!from.equalsIgnoreCase("")) {
+
+            if (from != null && !from.equalsIgnoreCase("")) {
                 Config.logV("Push Notification Background@@@@@@@@@@@@@@@@@@@@@");
 
                 String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
@@ -75,6 +82,7 @@ public class Home extends AppCompatActivity {
                     finish();
                 }
             }
+
         }
 
     }
@@ -87,6 +95,7 @@ public class Home extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.container, mHomeTab)
                 .commit();
+
     }
 
     @Override
@@ -133,4 +142,7 @@ public class Home extends AppCompatActivity {
         } else {
         }
     }
-}
+
+    }
+
+
