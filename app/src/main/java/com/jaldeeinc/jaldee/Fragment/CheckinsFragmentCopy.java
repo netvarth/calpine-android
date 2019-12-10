@@ -1,27 +1,37 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 
-import android.Manifest;
+import android.Manifest.permission;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +70,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,8 +78,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -90,6 +106,8 @@ import retrofit2.Response;
  */
 public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapterCallback {
 
+    String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
+    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
 
     public CheckinsFragmentCopy() {
         // Required empty public constructor
@@ -124,12 +142,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     ArrayList<String> fileAttachment;
     String path;
     Bitmap bitmap;
-    File f;
+    File f, file;
     RecyclerView recycle_image_attachment;
     RelativeLayout displayImages;
     ArrayList<String> imagePathList = new ArrayList<>();
     private Uri mImageUri;
-
+    String filePath;
 
 
     @Override
@@ -162,21 +180,23 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
       /*  tv_nofuturecheckin = (TextView) row.findViewById(R.id.txtnocheckfuture);
         tv_notodaychekcin = (TextView) row.findViewById(R.id.txtnocheckintoday);
         tv_nocheckold = (TextView) row.findViewById(R.id.txtnocheckold);*/
-      if(Config.isOnline(mContext)) {
-          ApiFavList();
-      }else{
-          DatabaseHandler db=new DatabaseHandler(mContext);
-          mFavList.clear();
-          mFavList=db.getFavouriteID();
-      }
+        if (Config.isOnline(mContext)) {
+            ApiFavList();
+        } else {
+            DatabaseHandler db = new DatabaseHandler(mContext);
+            mFavList.clear();
+            mFavList = db.getFavouriteID();
+        }
 
-        if(Config.isOnline(mContext)) {
+        if (Config.isOnline(mContext)) {
             ApiTodayChekInList();
-        }else{
+        } else {
 
             setItems();
         }
-        mFutureFlag=false;mTodayFlag=false;mOldFlag=false;
+        mFutureFlag = false;
+        mTodayFlag = false;
+        mOldFlag = false;
 
 
         return row;
@@ -223,7 +243,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
                         }
 
-                        DatabaseHandler db=new DatabaseHandler(mContext);
+                        DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteMyCheckin("today");
                         db.insertMyCheckinInfo(mCheckTodayList);
                         ApiFutureChekInList();
@@ -256,7 +276,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
 
-
     private void ApiOldChekInList() {
 
         Config.logV("API Call");
@@ -286,7 +305,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         mCheckOldList.clear();
                         mCheckOldList = response.body();
 
-                        DatabaseHandler db=new DatabaseHandler(mContext);
+                        DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteMyCheckin("old");
                         db.insertMyCheckinInfo(mCheckOldList);
 
@@ -350,7 +369,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         mCheckFutureList.clear();
                         mCheckFutureList = response.body();
 
-                        DatabaseHandler db=new DatabaseHandler(mContext);
+                        DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteMyCheckin("future");
                         db.insertMyCheckinInfo(mCheckFutureList);
 
@@ -408,21 +427,42 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
 
 
-
         if (ynwuuid != null) {
             requestMultiplePermissions();
             tv_attach.setVisibility(View.VISIBLE);
             tv_camera.setVisibility(View.VISIBLE);
 
 
-
             tv_attach.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if ((ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+
+
+
+                                requestPermissions(new String[]{
+                                        permission.READ_EXTERNAL_STORAGE}, GALLERY);
+
+                                return;
+                            } else {
+                                Intent intent = new Intent();
+                                intent.setType("*/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                            }
+                        } else {
+
+                            Intent intent = new Intent();
+                            intent.setType("*/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
 
             });
@@ -431,14 +471,39 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             tv_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    Intent cameraIntent = new Intent();
-                    cameraIntent.setType("image/*");
-                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(intent, CAMERA);
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (ContextCompat.checkSelfPermission(mContext, permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
 
+
+
+                                requestPermissions(new String[]{
+                                        permission.CAMERA}, CAMERA);
+
+                                return;
+                            } else {
+                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                Intent cameraIntent = new Intent();
+                                cameraIntent.setType("image/*");
+                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(intent, CAMERA);
+                            }
+                        } else {
+
+                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            Intent cameraIntent = new Intent();
+                            cameraIntent.setType("image/*");
+                            cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                            cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(intent, CAMERA);
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
+
             });
         }
 
@@ -484,7 +549,65 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
 
+    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
+        //copy file and send new file path
+        String fileName = getFileNameInfo(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            String ext = "";
+            if (fileName.contains(".")) {
+            } else {
+                ext = "." + extension;
+            }
+            File wallpaperDirectoryFile = new File(
+                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
+            copy(context, contentUri, wallpaperDirectoryFile);
+            return wallpaperDirectoryFile.getAbsolutePath();
+        }
+        return null;
+    }
 
+    protected static String getFileNameInfo(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public static void copy(Context context, Uri srcUri, File dstFile) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
+            if (inputStream == null) return;
+            FileOutputStream outputStream = new FileOutputStream(dstFile);
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -497,11 +620,35 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             if (data != null) {
                 try {
                     if (data.getData() != null) {
-                        Uri mImageUri = data.getData();
-                        imagePathList.add(mImageUri.toString());
-                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
-                        path = saveImage(bitmap);
+                        Uri uri = data.getData();
+                        String orgFilePath = getRealPathFromURI(uri, getActivity());
+                        String filepath = "";//default fileName
+
+                        String mimeType = this.mContext.getContentResolver().getType(uri);
+                        String uriString = uri.toString();
+                        String extension = "";
+                        if (uriString.contains(".")) {
+                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                        }
+
+
+
+                        if (mimeType != null) {
+                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                        }
+                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if(orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                           }
+                       } else {
+                           Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                        return;
+                     }
+
 //
+                        imagePathList.add(orgFilePath);
+//
+
                         DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -520,9 +667,16 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             // imagePathList.add(bitmap.toString());
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
-            mImageUri = Uri.parse(paths);
-            imagePathList.add(mImageUri.toString());
+//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+            if (path != null) {
+                mImageUri = Uri.parse(path);
+                imagePathList.add(mImageUri.toString());
+            }
+            try {
+                bytes.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
             recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -533,10 +687,11 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
 
-
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        if (myBitmap != null) {
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        }
         File wallpaperDirectory = new File(
                 Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
         // have the object build the directory structure, if needed.
@@ -566,9 +721,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     private void requestMultiplePermissions() {
         Dexter.withActivity((Activity) mContext)
                 .withPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                        permission.CAMERA,
+                        permission.WRITE_EXTERNAL_STORAGE,
+                        permission.READ_EXTERNAL_STORAGE)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -581,6 +736,8 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
                             //openSettingsDialog();
+                            Toast.makeText(mContext, "You Denied the Permissions", Toast.LENGTH_SHORT).show();
+
                         }
                     }
 
@@ -597,6 +754,49 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 })
                 .onSameThread()
                 .check();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public String getPDFPath(Uri uri) {
+
+        final String id = DocumentsContract.getDocumentId(uri);
+        final Uri contentUri = ContentUris.withAppendedId(
+                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = mActivity.getApplicationContext().getContentResolver().query(contentUri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    public String getFilePathFromURI(Uri contentUri, Context context) {
+        //copy file and send new file path
+        String fileName = getFileName(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
+            //copy(context, contentUri, copyFile);
+            return copyFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    public String getFileName(Uri uri) {
+        if (uri == null) return null;
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public String getRealFilePath(Uri uri) {
+        String path = uri.getPath();
+        String[] pathArray = path.split(":");
+        String fileName = pathArray[pathArray.length - 1];
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
     }
 
 
@@ -747,8 +947,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         btn_rate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
-
                                 rate = rating.getRating();
                                 comment = edt_message.getText().toString();
 
@@ -903,24 +1101,67 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
     }
 
+    private String getFileNameByUri(Context context, Uri uri) {
+        String filepath = "";//default fileName
+        //Uri filePathUri = uri;
+        File file;
+        if (uri.getScheme().toString().compareTo("content") == 0) {
+            Cursor cursor = context.getContentResolver().query(uri, new String[]{android.provider.MediaStore.Images.ImageColumns.DATA, MediaStore.Images.Media.ORIENTATION}, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+            cursor.moveToFirst();
+
+            String mImagePath = cursor.getString(column_index);
+            cursor.close();
+            filepath = mImagePath;
+
+        } else if (uri.getScheme().compareTo("file") == 0) {
+            try {
+                file = new File(new URI(uri.toString()));
+                if (file.exists())
+                    filepath = file.getAbsolutePath();
+                file = null;
+            } catch (URISyntaxException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else {
+            filepath = uri.getPath();
+        }
+        return filepath;
+    }
 
     private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type= MediaType.parse("image/*");
+        MediaType type = MediaType.parse("*/*");
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
-        for(int i=0;i<imagePathList.size();i++) {
+        for (int i = 0; i < imagePathList.size(); i++) {
+//            if(imagePathList.contains("content://")) {
+//                Uri imageUri = Uri.parse(imagePathList.get(i));
+//                File file = new File(String.valueOf(imageUri));
+//                mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+//            }
+
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getApplicationContext().getContentResolver(), Uri.parse(imagePathList.get(i)));
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            path = saveImage(bitmap);
-            File file = new File(path);
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            }
+//            else{
+//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
+//            }
+            else {
+                file = new File(imagePathList.get(i));
+            }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
@@ -928,14 +1169,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("communicationMessage", message);
-
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1134,11 +1370,11 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
                     if (response.code() == 200) {
                         mFavList.clear();
-                      //  mFavList = response.body();
-                        DatabaseHandler db=new DatabaseHandler(mContext);
+                        //  mFavList = response.body();
+                        DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteFAVID();
                         db.insertFavIDInfo(response.body());
-                        mFavList=db.getFavouriteID();
+                        mFavList = db.getFavouriteID();
                         ApiTodayChekInList();
 
 
@@ -1241,16 +1477,16 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         // Adding child data
 
 
-        DatabaseHandler db=new DatabaseHandler(mContext);
+        DatabaseHandler db = new DatabaseHandler(mContext);
 
-        mCheckTodayList=db.getMyCheckinList("today");
-        mCheckOldList=db.getMyCheckinList("old");
-        mCheckFutureList=db.getMyCheckinList("future");
+        mCheckTodayList = db.getMyCheckinList("today");
+        mCheckOldList = db.getMyCheckinList("old");
+        mCheckFutureList = db.getMyCheckinList("future");
 
 
-        Config.logV("Today---#####----" + mCheckTodayList.size()+""+mTodayFlag);
-        Config.logV("Futrue-------" + mCheckFutureList.size()+""+mFutureFlag);
-        Config.logV("Old-------" + mCheckOldList.size()+""+mOldFlag);
+        Config.logV("Today---#####----" + mCheckTodayList.size() + "" + mTodayFlag);
+        Config.logV("Futrue-------" + mCheckFutureList.size() + "" + mFutureFlag);
+        Config.logV("Old-------" + mCheckOldList.size() + "" + mOldFlag);
 
         // Adding header and childs to hash map
         hashMap.put(header.get(0), mCheckTodayList);

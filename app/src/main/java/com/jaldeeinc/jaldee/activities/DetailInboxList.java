@@ -1,9 +1,12 @@
 package com.jaldeeinc.jaldee.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,17 +15,22 @@ import android.graphics.Typeface;
 import android.icu.util.EthiopicCalendar;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -51,6 +59,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,10 +67,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -101,12 +114,15 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     ArrayList<String> fileAttachment;
     String path;
     Bitmap bitmap;
-    File f;
+    File f,file;
     RecyclerView recycle_image_attachment;
     RelativeLayout displayImages;
     ArrayList<String> imagePathList = new ArrayList<>();
     private Uri mImageUri;
     ArrayList<FileAttachment> attachments;
+
+    String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
+    String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
 
 
     @Override
@@ -189,13 +205,33 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             tv_attach.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(galleryIntent, GALLERY);
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+
+                                //requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST);
+
+                                requestPermissions(new String[]{
+                                        Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
+
+                                return;
+                            } else {
+                                Intent intent = new Intent();
+                                intent.setType("*/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                            }
+                        } else {
+
+                            Intent intent = new Intent();
+                            intent.setType("*/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
 
             });
@@ -204,16 +240,43 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             tv_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    Intent cameraIntent = new Intent();
-                    cameraIntent.setType("image/*");
-                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(intent, CAMERA);
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
 
+                                //requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST);
+
+                                requestPermissions(new String[]{
+                                        Manifest.permission.CAMERA}, CAMERA);
+
+                                return;
+                            } else {
+                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                Intent cameraIntent = new Intent();
+                                cameraIntent.setType("image/*");
+                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(intent, CAMERA);
+                            }
+                        } else {
+
+                            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                            Intent cameraIntent = new Intent();
+                            cameraIntent.setType("image/*");
+                            cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                            cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(intent, CAMERA);
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
+
             });
         }
+
+
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
@@ -284,34 +347,156 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         });
     }
 
+    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
+        //copy file and send new file path
+        String fileName = getFileNameInfo(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            String ext = "";
+            if (fileName.contains(".")) {
+            } else {
+                ext = "." + extension;
+            }
+            File wallpaperDirectoryFile = new File(
+                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
+            copy(context, contentUri, wallpaperDirectoryFile);
+            return wallpaperDirectoryFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    protected static String getFileNameInfo(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public static void copy(Context context, Uri srcUri, File dstFile) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
+            if (inputStream == null) return;
+            FileOutputStream outputStream = new FileOutputStream(dstFile);
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == this.RESULT_CANCELED) {
             return;
         }
+
         if (requestCode == GALLERY) {
             if (data != null) {
                 try {
                     if (data.getData() != null) {
-                        Uri mImageUri = data.getData();
-                        float size = getImageSize(mContext, mImageUri);
-//                        if(size<= 1) {
-                           imagePathList.add(mImageUri.toString());
-                            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageUri);
-                            path = saveImage(bitmap);
+                        Uri uri = data.getData();
+                        String orgFilePath = getRealPathFromURI(uri, DetailInboxList.this);
+                        String filepath = "";//default fileName
+                        //Uri filePathUri = uri;
+                        // File file;
+                        String mimeType = this.mContext.getContentResolver().getType(uri);
+                        String uriString = uri.toString();
+                        String extension = "";
+                        if (uriString.contains(".")) {
+                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                        }
+
+
+//                        if(Arrays.asList(imgExtsSupported).contains(extension)) {
+//                            try {
+//                                file = new File(new URI(uri.toString()));
+//                                if (file.exists())
+//                                    filepath = file.getAbsolutePath();
 //
-
+//                            } catch (URISyntaxException e) {
+//                                // TODO Auto-generated catch block
+//                                e.printStackTrace();
+//                            }
 //                        }
-//                        else{
-//                            Toast.makeText(mContext, "The Selected Image exceeds the Limit, Please try to select Image of size 1 MB", Toast.LENGTH_SHORT).show();
+                        //
+                        //    else {
+                        if (mimeType != null) {
+                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                        }
+                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if(orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                            }
+                        } else {
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+//                        if (uri.getScheme().toString().compareTo("external/images/media") == 0) {
+//
+////                            String[] projection = { MediaStore.Images.Media.DATA };
+////                            Cursor cursor = this.mContext.getContentResolver().query(uri, projection, null, null, null);
+////                            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+////
+////                            cursor.moveToFirst();
+////                            String mImagePath = cursor.getString(column_index);
+////                            cursor.close();
+////                            }
+//                            filepath = getFilePathFromURI(this.mContext, uri);
+//                        } else if (uri.getScheme().compareTo("file") == 0) {
+//                            try {
+//                                file = new File(new URI(uri.toString()));
+//                                if (file.exists())
+//                                    filepath = file.getAbsolutePath();
+//
+//                            } catch (URISyntaxException e) {
+//                                // TODO Auto-generated catch block
+//                                e.printStackTrace();
+//                            }
+//                        }  else {
+//                            filepath = uri.getPath();
 //                        }
-
-
+                        imagePathList.add(orgFilePath);
+//                        Uri mImageUri = data.getData();
+//                        filePath = data.getData().getPath();
+//                        String ext1 = FilenameUtils.getExtension(filePath);
+//
+//
+//                        imagePathList.add(mImageUri.toString());
+//             //         bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
+//                       // if(bitmap!=null){
+//                    //    path = saveImage(bitmap);}
+//
+//                      //  else{
+//                            path = getRealFilePath(mImageUri);
+//                     //   }
 
                         DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(DetailInboxList.this, 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
@@ -328,13 +513,18 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             // imagePathList.add(bitmap.toString());
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
-            mImageUri = Uri.parse(paths);
-            float size = getImageSize(mContext, mImageUri);
-            imagePathList.add(mImageUri.toString());
-
+//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+            if (path != null) {
+                mImageUri = Uri.parse(path);
+                imagePathList.add(mImageUri.toString());
+            }
+            try {
+                bytes.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(DetailInboxList.this, 3);
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(mDetailFileAdapter);
             mDetailFileAdapter.notifyDataSetChanged();
@@ -342,9 +532,12 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         }
     }
 
+
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        if (myBitmap != null) {
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        }
         File wallpaperDirectory = new File(
                 Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
         // have the object build the directory structure, if needed.
@@ -358,7 +551,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             f.createNewFile();
             FileOutputStream fo = new FileOutputStream(f);
             fo.write(bytes.toByteArray());
-            MediaScannerConnection.scanFile(this,
+            MediaScannerConnection.scanFile(mContext,
                     new String[]{f.getPath()},
                     new String[]{"image/jpeg"}, null);
             fo.close();
@@ -372,7 +565,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
     }
 
     private void requestMultiplePermissions() {
-        Dexter.withActivity(this)
+        Dexter.withActivity((Activity) mContext)
                 .withPermissions(
                         Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -382,13 +575,15 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
-                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
 
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
                             //openSettingsDialog();
+                            Toast.makeText(mContext, "You Denied the Permissions", Toast.LENGTH_SHORT).show();
+
                         }
                     }
 
@@ -400,23 +595,54 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 withErrorListener(new PermissionRequestErrorListener() {
                     @Override
                     public void onError(DexterError error) {
-                        Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Some Error! ", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .onSameThread()
                 .check();
     }
 
-    public static float getImageSize(Context context, Uri uri) {
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        if (cursor != null) {
-            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
-            cursor.moveToFirst();
-            float imageSize = cursor.getLong(sizeIndex);
-            cursor.close();
-            return imageSize/(1024f*1024f); // returns size in bytes
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public String getPDFPath(Uri uri) {
+
+        final String id = DocumentsContract.getDocumentId(uri);
+        final Uri contentUri = ContentUris.withAppendedId(
+                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = mContext.getContentResolver().query(contentUri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    public String getFilePathFromURI(Uri contentUri, Context context) {
+        //copy file and send new file path
+        String fileName = getFileName(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
+            //copy(context, contentUri, copyFile);
+            return copyFile.getAbsolutePath();
         }
-        return 0;
+        return null;
+    }
+
+    public String getFileName(Uri uri) {
+        if (uri == null) return null;
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public String getRealFilePath(Uri uri) {
+        String path = uri.getPath();
+        String[] pathArray = path.split(":");
+        String fileName = pathArray[pathArray.length - 1];
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
     }
 
 
@@ -488,28 +714,48 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
     private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        MediaType type = MediaType.parse("image/*");
+        MediaType type = MediaType.parse("*/*");
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
         for (int i = 0; i < imagePathList.size(); i++) {
+//            if(imagePathList.contains("content://")) {
+//                Uri imageUri = Uri.parse(imagePathList.get(i));
+//                File file = new File(String.valueOf(imageUri));
+//                mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+//            }
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(imagePathList.get(i)));
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            path = saveImage(bitmap);
-            File file = new File(path);
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                 file = new File(path);
+            }
+//            else{
+//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
+//            }
+            else{
+             file = new File(imagePathList.get(i));}
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
+
+
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        Call<ResponseBody> call = apiService.WaitListMessageWithAttachment(waitListId, accountID, requestBody);
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("communicationMessage", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
 
+        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), requestBody);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -518,26 +764,27 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 try {
 
                     if (mDialog.isShowing())
-                        Config.closeDialog(getParent(), mDialog);
+                        Config.closeDialog(DetailInboxList.this, mDialog);
 
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
+                        imagePathList.clear();
                         dialog.dismiss();
-                        finish();
 
 
                     } else {
-                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
 
             }
 
@@ -546,7 +793,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
-                    Config.closeDialog(getParent(), mDialog);
+                 Config.closeDialog( DetailInboxList.this, mDialog);
 
             }
         });

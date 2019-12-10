@@ -97,12 +97,12 @@ public class ResponseInteceptor implements Interceptor {
         if(response.code()==301){
 
             Config.logV(" ERROR  301 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-           // SharedPreference.getInstance(context).clear();
+            SharedPreference.getInstance(context).clear();
             DatabaseHandler db = new DatabaseHandler(context);
-           // db.deleteDatabase();
+            db.deleteDatabase();
             // if(response.body().equals("true")) {
 
-              Intent iLogout=new Intent(context, SearchLocationActivity.class);
+              Intent iLogout=new Intent(context, Register.class);
               iLogout.putExtra("forceupdate","true");
               iLogout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
               context.startActivity(iLogout);
