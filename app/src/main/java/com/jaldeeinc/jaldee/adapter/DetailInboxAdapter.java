@@ -48,7 +48,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_provider, tv_date, tv_message, tv_reply;
+        TextView tv_provider, tv_date, tv_message, tv_reply, tv_noAttachments;
         LinearLayout linear_inbox_layout;
         ImageView img_sent;
         TextView tv_seemore;
@@ -67,6 +67,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
             tv_seemore = view.findViewById(R.id.tv_seemore);
             recyclerImage = view.findViewById(R.id.recyclerImage);
             imageScroll = view.findViewById(R.id.imageScroll);
+            tv_noAttachments = view.findViewById(R.id.txt_attachments);
 
         }
     }
@@ -98,14 +99,30 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         final InboxModel inboxList = mInboxList.get(position);
 
         myViewHolder.tv_message.setText(inboxList.getMsg());
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext,3);
-        myViewHolder.recyclerImage.setLayoutManager(mLayoutManager);
         if (inboxList.getAttachments() != null) {
-            myViewHolder.imageScroll.setVisibility(View.VISIBLE);
-            ImageAdapter imageAdapter = new ImageAdapter(inboxList.getAttachments());
-            myViewHolder.recyclerImage.setAdapter(imageAdapter);
-            imageAdapter.notifyDataSetChanged();
+            if (inboxList.getAttachments().size() == 1) {
+                myViewHolder.tv_noAttachments.setText(inboxList.getAttachments().size() + " " + "Attachment");
+                myViewHolder.tv_noAttachments.setVisibility(View.VISIBLE);
+            } else {
+                myViewHolder.tv_noAttachments.setText(inboxList.getAttachments().size() + " " + "Attachments");
+                myViewHolder.tv_noAttachments.setVisibility(View.VISIBLE);
+            }
+
         }
+        myViewHolder.tv_noAttachments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext,3);
+                myViewHolder.recyclerImage.setLayoutManager(mLayoutManager);
+                if (inboxList.getAttachments() != null) {
+                    myViewHolder.imageScroll.setVisibility(View.VISIBLE);
+                    ImageAdapter imageAdapter = new ImageAdapter(inboxList.getAttachments(),mContext);
+                    myViewHolder.recyclerImage.setAdapter(imageAdapter);
+                    imageAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+
 
         //Config.logV("Detail Inbox-------&&&&&&&&&&&&-------"+inboxList.getMsg());
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");

@@ -4,7 +4,8 @@ package com.jaldeeinc.jaldee.callback;
  * Created by sharmila on 26/10/18.
  */
 
-public interface HistoryAdapterCallback {
+public interface
+HistoryAdapterCallback {
 
     void onMethodMessageCallback(String ynwuuid,String accountID,String provider);
     void onMethodBillIconCallback(String payStatus,String value,String provider,String accountID,String CustomerName);
