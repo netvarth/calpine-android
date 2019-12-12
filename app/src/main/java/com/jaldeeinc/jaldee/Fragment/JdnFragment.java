@@ -37,10 +37,10 @@ import retrofit2.Response;
 public class JdnFragment extends RootFragment {
 
     JdnResponse jdnList;
-    String jdnDiscount, jdnMaxvalue;
+    String jdnDiscount, jdnMaxvalue,jdnNote;
     String uniqueid;
 
-    TextView discount, maxvalue;
+    TextView discount, maxvalue, note;
 
     public JdnFragment() {
 
@@ -54,6 +54,7 @@ public class JdnFragment extends RootFragment {
         View row = inflater.inflate(R.layout.jdnlist, container, false);
         discount = row.findViewById(R.id.jdn_value);
         maxvalue = row.findViewById(R.id.jdn_maximum_value);
+            note = row.findViewById(R.id.jdn_note);
 
         mContext = getActivity();
         Bundle bundle = this.getArguments();
@@ -112,16 +113,22 @@ public class JdnFragment extends RootFragment {
                     Config.logV("Response--code-----detail--------------------" + response.code());
 
                     if (response.code() == 200) {
-
-
-
-                        jdnList = response.body();
-                        jdnDiscount = jdnList.getDiscPercentage();
-                        jdnMaxvalue = jdnList.getDiscMax();
+                          jdnList = response.body();
+//                        jdnDiscount = jdnList.getDiscPercentage();
+//                        jdnMaxvalue = jdnList.getDiscMax();
+//                        jdnNote = jdnList.getDisplayNote();
 
                         if (jdnList.getDiscMax() != null && jdnList.getDiscPercentage() != null) {
-                            discount.setText(jdnList.getDiscPercentage() + "%");
-                            maxvalue.setText("₹" + jdnList.getDiscMax());
+//                            discount.setText(jdnList.getDiscPercentage() + "%");
+//                            maxvalue.setText("₹" + jdnList.getDiscMax());
+                            discount.setText("You will get a discount of "+ jdnList.getDiscPercentage() + "%" + " " + "(" + "upto" + " " + "Rs" + " "+ jdnList.getDiscMax() + ")" + " " + " for every visit.");
+
+                        }
+                        if(jdnList.getDisplayNote()!= null){
+                            note.setText(jdnList.getDisplayNote());
+                        }
+                        if(jdnList.getDisplayNote() == null){
+                            note.setVisibility(View.GONE);
                         }
                     }
 

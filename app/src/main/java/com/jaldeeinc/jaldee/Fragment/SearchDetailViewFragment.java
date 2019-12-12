@@ -166,7 +166,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
-    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon, tv_first_ccoupon,tv_jdn;
+    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon, tv_first_ccoupon;
+    ImageView tv_jdn;
     List<SearchDepartment> departmentList;
     private String departmentCode;
 
@@ -208,7 +209,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_SocialMedia = (TextView) row.findViewById(R.id.txtSocialMedia);
         txtMore = (TextView) row.findViewById(R.id.txtMore);
         tv_contact = (TextView) row.findViewById(R.id.txtcontact);
-        tv_jdn = (TextView) row.findViewById(R.id.txtjdn);
+        tv_jdn = (ImageView) row.findViewById(R.id.txtjdn);
         tv_coupon = (TextView) row.findViewById(R.id.txtcoupon);
         tv_first_ccoupon = (TextView) row.findViewById(R.id.txtFirstCoupon);
         count = 0;

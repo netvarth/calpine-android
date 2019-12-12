@@ -194,37 +194,37 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 parent.setOrientation(LinearLayout.HORIZONTAL);
                 parent.setLayoutParams(params1);
-                TextView jdn = new TextView(context);
-                Typeface tyface_4 = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                jdn.setTypeface(tyface_4);
-                jdn.setText("JDN");
-                jdn.setText(context.getResources().getString(R.string.jdn));
-                jdn.setTextSize(13);
-                jdn.setTextColor(context.getResources().getColor(R.color.title_grey));
-                jdn.setPadding(5, 5, 5, 5);
-                jdn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.jdn_icon, 0, 0);
-                jdn.setVisibility(View.GONE);
-                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                jdn.setMaxLines(2);
-                jdn.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                jdn.setGravity(Gravity.CENTER);
-                parent.addView(jdn);
+//                TextView jdn = new TextView(context);
+//                Typeface tyface_4 = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Regular.otf");
+//                jdn.setTypeface(tyface_4);
+//                jdn.setText("JDN");
+//                jdn.setText(context.getResources().getString(R.string.jdn));
+//                jdn.setTextSize(13);
+//                jdn.setTextColor(context.getResources().getColor(R.color.title_grey));
+//                jdn.setPadding(5, 5, 5, 5);
+//                jdn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.jdn_icon, 0, 0);
+//                jdn.setVisibility(View.GONE);
+//                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//                jdn.setMaxLines(2);
+//                jdn.setLayoutParams(params1);
+//                params1.setMargins(10, 7, 10, 7);
+//                jdn.setGravity(Gravity.CENTER);
+//                parent.addView(jdn);
 
                 if(searchdetailList.getJdn()!=null){
 
                     if (searchdetailList.getJdn().equals("1")) {
-                        jdn.setVisibility(View.VISIBLE);
+                       myViewHolder.jdn_icon.setVisibility(View.VISIBLE);
                     }else{
-                        jdn.setVisibility(View.GONE);
+                        myViewHolder.jdn_icon.setVisibility(View.GONE);
                     }
                 }else{
-                    jdn.setVisibility(View.GONE);
+                    myViewHolder.jdn_icon.setVisibility(View.GONE);
                 }
 
 
-                jdn.setOnClickListener(new View.OnClickListener() {
+                myViewHolder.jdn_icon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mAdapterCallback.onMethodJdn(searchdetailList.getUniqueid());
@@ -1431,6 +1431,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LinearLayout layout_row;
         TextView mImageViewText;
         LinearLayout layout_type;
+        ImageView jdn_icon;
 
 
         public MyViewHolder(View view) {
@@ -1472,6 +1473,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             profile1 = view.findViewById(R.id.iprofile1);
             profile2 = view.findViewById(R.id.iprofile2);
             vsep = view.findViewById(R.id.separator);
+            jdn_icon = view.findViewById(R.id.txtjdn);
 
 
         }

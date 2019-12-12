@@ -34,10 +34,26 @@
             android:layout_marginLeft="@dimen/padding20"
             android:layout_marginRight="@dimen/padding20"
             android:layout_marginTop="@dimen/padding20"
-            android:background="@drawable/input_border_gray_bg"
+            android:background="@drawable/app_bg_gradient_home"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:id="@+id/jdn_noteLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/default_padding"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/padding15">
 
+
+                <TextView
+                    android:id="@+id/jdn_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/txtsize_hint"
+                    android:fontFamily="@font/customfont"/>
+            </LinearLayout>
 
 
             <LinearLayout
@@ -45,6 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/padding15">
 
@@ -54,16 +71,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Discount available : "
-                    android:textSize="@dimen/txtsize_hint" />
+                    android:textSize="@dimen/txtsize_hint"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:textIsSelectable="true"
                     android:textStyle="bold"
-                    android:textColor="@color/green"
+                    android:textColor="@color/opaque_title_grey"
                     android:id="@+id/jdn_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
+                    android:fontFamily="@font/customfont"
                     android:textSize="@dimen/txtsize_hint" />
 
 
@@ -84,7 +103,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Maximum discount available : "
-                    android:textSize="@dimen/txtsize_hint" />
+                    android:textSize="@dimen/txtsize_hint"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:textIsSelectable="true"
@@ -96,6 +116,7 @@
                     android:text=""
                     android:textSize="@dimen/txtsize_hint" />
             </LinearLayout>
+
 
 
         </LinearLayout>
