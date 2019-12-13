@@ -264,7 +264,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView tv_personahead = (TextView) view.findViewById(R.id.txt_personahead);
         TextView tv_token = (TextView) view.findViewById(R.id.txt_token);
         TextView tv_time_queue = (TextView) view.findViewById(R.id.time_queue);
-        //  tv_waitsatus=(TextView)view.findViewById(R.id.txt_waitsatus);
         TextView icon_fav = (TextView) view.findViewById(R.id.icon_fav);
         TextView icon_message = (TextView) view.findViewById(R.id.icon_message);
         TextView icon_cancel = (TextView) view.findViewById(R.id.icon_cancel);
@@ -274,41 +273,32 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView tv_date = (TextView) view.findViewById(R.id.txt_date);
         TextView tv_partysize = (TextView) view.findViewById(R.id.txt_partysizevalue);
         TextView tv_check_in = (TextView) view.findViewById(R.id.txt_check_in_list);
-
-        final TextView distanceTravel = (TextView) view.findViewById(R.id.distanceTravel);
+        final TextView trackinLabel = (TextView) view.findViewById(R.id.trackinLabel);
         final TextView tv_travelmode = (TextView) view.findViewById(R.id.txt_travelmode_value);
-        final TextView travelMessage = (TextView) view.findViewById(R.id.travelMessage);
-
         final TextView tv_travelCar = (TextView) view.findViewById(R.id.travelCar);
         final TextView tv_travelWalk = (TextView) view.findViewById(R.id.traveWalf);
-        final TextView tv_cycle = (TextView) view.findViewById(R.id.travelCycle);
         final TextView tv_travelmddeEdit = (TextView) view.findViewById(R.id.travelmddeEdit);
         final LinearLayout travelDetailsLayout = view.findViewById(R.id.travelDetailsLayout);
         final Switch liveTrackSwitch = (Switch) view.findViewById(R.id.switch1);
 
         if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn")) {
             travelDetailsLayout.setVisibility(View.VISIBLE);
-            if (activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
-                int hours =  activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
-                int minutes =  activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
 
-                if(hours<1){
-                    distanceTravel.setText(" You are " + activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + minutes +" Mins"+ " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
-
-                }else {
-                    distanceTravel.setText(" You are " + activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + hours+"Hr"+" "+minutes+" Mins" + " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
-
-                }
-                tv_travelmode.setText(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode());
-            } else {
-                tv_travelmode.setVisibility(View.GONE);
-
+            if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("WALKING")){
+                tv_travelWalk.setVisibility(View.VISIBLE);
+                tv_travelCar.setVisibility(View.GONE);
+                trackinLabel.setText("I am walking");
+            }else if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("DRIVING")){
+                tv_travelCar.setVisibility(View.VISIBLE);
+                tv_travelWalk.setVisibility(View.GONE);
+                trackinLabel.setText("I am driving");
             }
 
 
             if (activelist.getJaldeeStartTimeType().equals("AFTERSTART") && header.equals("today")) {
-
                 liveTrackSwitch.setVisibility(View.VISIBLE);
+                trackinLabel.setText("Enable live tracking");
+
 
                 ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
                 Call<ResponseBody> cal;
@@ -323,24 +313,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 } else {
                                     liveTrackSwitch.setChecked(false);
                                 }
-
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-
                     @Override
                     public void onFailure(Call<ResponseBody> cal, Throwable t) {
                         // Log error here since request failed
                         Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
                     }
                 });
-
-
             } else {
                 liveTrackSwitch.setVisibility(View.GONE);
             }
+
 
 
             liveTrackSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -402,11 +389,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                                                             try {
                                                                 if (response.code() == 200) {
-
-
                                                                 }
-
-
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();
                                                             }
@@ -417,8 +400,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                                         public void onFailure(Call<ResponseBody> callLivetrack, Throwable t) {
                                                             // Log error here since request failed
                                                             Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-
-
                                                         }
 
                                                     });
@@ -426,31 +407,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                             }
 
                                         }, 0, period);
-
-
                                     }
-
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
                         }
-
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
                             // Log error here since request failed
                             Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-
-
                         }
                     });
-
                 }
 
                 private void ApiStopTracking() {
-
-
                     ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
                     Call<ResponseBody> call;
                     call = apiService.StopTracking(activelist.getYnwUuid(), activelist.getId());
@@ -460,7 +431,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                             try {
                                 if (response.code() == 200) {
-
                                     if (response.body().string().equals("false")) {
                                         liveTrackSwitch.setChecked(false);
                                     }
@@ -468,9 +438,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
                         }
-
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
                             // Log error here since request failed
@@ -481,145 +449,33 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                 }
             });
-
 
             tv_travelmddeEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tv_travelmode.setVisibility(View.GONE);
                     tv_travelmddeEdit.setVisibility(View.GONE);
                     tv_travelCar.setVisibility(View.VISIBLE);
                     tv_travelWalk.setVisibility(View.VISIBLE);
-                    tv_cycle.setVisibility(View.VISIBLE);
 
                 }
             });
-
-
-            tv_cycle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    tv_travelCar.setVisibility(View.GONE);
-                    tv_travelWalk.setVisibility(View.GONE);
-                    tv_cycle.setVisibility(View.GONE);
-                    tv_travelmddeEdit.setVisibility(View.VISIBLE);
-                    tv_travelmode.setVisibility(View.VISIBLE);
-                    tv_travelmode.setText("BICYCLING");
-                    ApiUpdateTravelMode();
-
-                }
-
-                private void ApiUpdateTravelMode() {
-
-
-                    ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                    JSONObject jsonObj = new JSONObject();
-                    try {
-                        jsonObj.put("travelMode", tv_travelmode.getText());
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
-                    Call<ResponseBody> call;
-                    call = apiService.PutTravelMode(activelist.getYnwUuid(), activelist.getId(), body);
-
-
-                    Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-
-                    call.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                            try {
-                                if (response.code() == 200) {
-                                    ApiTodayChekInList();
-                                }
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                        private void ApiTodayChekInList() {
-
-
-                            final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                            Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
-                            call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
-                                @Override
-                                public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
-                                    try {
-                                        if (response.code() == 200) {
-                                            int hours =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
-                                            int minutes =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
-
-                                            if(hours<1){
-                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + minutes +" Mins"+ " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
-
-                                            }else {
-                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + hours+"Hr"+" "+minutes+" Mins" + " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
-
-                                            }
-
-                                        } else {
-                                            if (response.code() != 419) {
-                                                Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
-                                    // Log error here since request failed
-                                    Config.logV("Fail---------------" + t.toString());
-
-                                }
-                            });
-
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            // Log error here since request failed
-                            Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-
-
-                        }
-                    });
-
-                }
-
-            });
-
 
             tv_travelCar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tv_travelCar.setVisibility(View.GONE);
+                    tv_travelCar.setVisibility(View.VISIBLE);
                     tv_travelWalk.setVisibility(View.GONE);
-                    tv_cycle.setVisibility(View.GONE);
                     tv_travelmddeEdit.setVisibility(View.VISIBLE);
-                    tv_travelmode.setVisibility(View.VISIBLE);
                     tv_travelmode.setText("DRIVING");
+                    if (activelist.getJaldeeStartTimeType().equals("AFTERSTART")){
+                        trackinLabel.setText("Enable live tracking");
+                    }else {
+                        trackinLabel.setText("I am driving");
+                    }
                     ApiUpdateTravelMode();
-
                 }
 
                 private void ApiUpdateTravelMode() {
-
-
                     ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
                     JSONObject jsonObj = new JSONObject();
                     try {
@@ -642,7 +498,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                             try {
                                 if (response.code() == 200) {
-                                    ApiTodayChekInList();
+
                                 }
 
 
@@ -651,50 +507,50 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             }
 
                         }
-
-                        private void ApiTodayChekInList() {
-
-
-                            final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                            Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
-                            call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
-                                @Override
-                                public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
-                                    try {
-                                        if (response.code() == 200) {
-                                            int hours =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
-                                            int minutes =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
-
-                                            if(hours<1){
-                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + minutes +" Mins"+ " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
-
-                                            }else {
-                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + hours+"Hr"+" "+minutes+" Mins" + " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
-
-                                            }                                        } else {
-                                            if (response.code() != 419) {
-                                                Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
-                                    // Log error here since request failed
-                                    Config.logV("Fail---------------" + t.toString());
-
-                                }
-                            });
-
-
-                        }
+//
+//                        private void ApiTodayChekInList() {
+//
+//
+//                            final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+//                            Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
+//                            call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
+//                                @Override
+//                                public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
+//
+//                                    try {
+//                                        if (response.code() == 200) {
+//                                            int hours =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
+//                                            int minutes =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
+//
+//                                            if(hours<1){
+//                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + minutes +" Mins"+ " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
+//
+//                                            }else {
+//                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + hours+"Hr"+" "+minutes+" Mins" + " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
+//
+//                                            }                                        } else {
+//                                            if (response.code() != 419) {
+//                                                Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        }
+//
+//
+//                                    } catch (Exception e) {
+//                                        e.printStackTrace();
+//                                    }
+//
+//                                }
+//
+//                                @Override
+//                                public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
+//                                    // Log error here since request failed
+//                                    Config.logV("Fail---------------" + t.toString());
+//
+//                                }
+//                            });
+//
+//
+//                        }
 
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
@@ -713,11 +569,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onClick(View v) {
                     tv_travelCar.setVisibility(View.GONE);
-                    tv_travelWalk.setVisibility(View.GONE);
-                    tv_cycle.setVisibility(View.GONE);
+                    tv_travelWalk.setVisibility(View.VISIBLE);
                     tv_travelmddeEdit.setVisibility(View.VISIBLE);
-                    tv_travelmode.setVisibility(View.VISIBLE);
                     tv_travelmode.setText("WALKING");
+                    if (activelist.getJaldeeStartTimeType().equals("AFTERSTART")){
+                        trackinLabel.setText("Enable live tracking");
+                    }else {
+                        trackinLabel.setText("I am walking");
+                    }
+
                     ApiUpdateTravelMode();
                 }
 
@@ -746,7 +606,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                             try {
                                 if (response.code() == 200) {
-                                    ApiTodayChekInList();
+
                                 }
 
                             } catch (Exception e) {
@@ -754,60 +614,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             }
                         }
 
-                        private void ApiTodayChekInList() {
-
-
-                            final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                            Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
-                            call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
-                                @Override
-                                public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
-                                    try {
-                                        if (response.code() == 200) {
-                                            int hours =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
-                                            int minutes =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
-
-                                            if(hours<1){
-                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + minutes +" Mins"+ " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
-
-                                            }else {
-                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + hours+"Hr"+" "+minutes+" Mins" + " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
-
-                                            }                                        } else {
-                                            if (response.code() != 419) {
-                                                Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
-                                    // Log error here since request failed
-                                    Config.logV("Fail---------------" + t.toString());
-
-                                }
-                            });
-
-
-                        }
-
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
                             // Log error here since request failed
                             Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-
-
                         }
                     });
-
-
                 }
             });
 
@@ -821,11 +633,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         if (activelist.getDate() != null && activelist.getJaldeeWaitlistDistanceTime() != null) {
             pollingTime = activelist.getDate() + activelist.getJaldeeWaitlistDistanceTime().getPollingTime();
-
-
-//             qwe = activelist.getDate();
-//             asd = activelist.getJaldeeWaitlistDistanceTime().getPollingTime();
-
 
             try {
                 date1 = simpleDateFormat.parse(currentDateandTime);

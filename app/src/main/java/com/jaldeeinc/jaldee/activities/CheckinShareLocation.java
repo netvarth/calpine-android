@@ -41,15 +41,16 @@ public class CheckinShareLocation extends AppCompatActivity {
 
     Switch shareSwitch, automaticTrackSwitch;
     TextView drivingIcon, walkingIcon, bicycleIcon, trackLabel, modeLabel, checkinMessage,tv_title;
-    Context mContext;
+    static Context mContext;
     Boolean locationStatus;
     String waitlistPhonenumber, travelMode, startTime, latValue, longValue, uuid, accountID, title;
     Drawable highlight, border;
     double latitudes, longitudes;
-    LinearLayout Lterms, transportLayout;
+    LinearLayout Lterms, transportLayout,saveAndClose;
     ShareLocation shareLocation;
     View view1,view2,view3;
     Button btn_send,btn_cancel;
+    ActiveCheckIn a;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class CheckinShareLocation extends AppCompatActivity {
         checkinMessage = findViewById(R.id.checkinMessage);
         Lterms = findViewById(R.id.Lterms);
         transportLayout = findViewById(R.id.transportLayout);
+        saveAndClose = findViewById(R.id.saveAndClose);
         automaticTrackSwitch = findViewById(R.id.automaticTrackSwitch);
         trackLabel = findViewById(R.id.trackLabel);
         modeLabel = findViewById(R.id.modeLabel);
@@ -73,8 +75,6 @@ public class CheckinShareLocation extends AppCompatActivity {
         view2 = findViewById(R.id.view2);
         view3 = findViewById(R.id.view3);
 
-        tv_title = findViewById(R.id.toolbartitle);
-        tv_title.setText("");
 
         highlight = getResources().getDrawable(R.drawable.highlight);
         border = getResources().getDrawable(R.drawable.border_image);
@@ -95,11 +95,21 @@ public class CheckinShareLocation extends AppCompatActivity {
         startTime = "ONEHOUR";
         travelMode = "DRIVING";
 
-        checkinMessage.setText("Your check-in is successful !!");
+
 
 //        ApiWaitlist();
+        ApiActiveCheckIn();
         ApiShareLiveLocation();
-        modeLabel.setText("Hello");
+
+        if(shareSwitch.isChecked()){
+            Lterms.setVisibility(View.VISIBLE);
+            transportLayout.setVisibility(View.VISIBLE);
+            saveAndClose.setVisibility(View.VISIBLE);
+        }else{
+            Lterms.setVisibility(View.GONE);
+            transportLayout.setVisibility(View.GONE);
+            saveAndClose.setVisibility(View.GONE);
+        }
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +133,7 @@ public class CheckinShareLocation extends AppCompatActivity {
                     locationStatus = true;
                     Lterms.setVisibility(View.VISIBLE);
                     transportLayout.setVisibility(View.VISIBLE);
+                    saveAndClose.setVisibility(View.VISIBLE);
                     trackLabel.setVisibility(View.VISIBLE);
                     modeLabel.setVisibility(View.VISIBLE);
                     view2.setVisibility(View.VISIBLE);
@@ -133,6 +144,7 @@ public class CheckinShareLocation extends AppCompatActivity {
                     locationStatus = false;
                     Lterms.setVisibility(View.GONE);
                     transportLayout.setVisibility(View.GONE);
+                    saveAndClose.setVisibility(View.GONE);
                     trackLabel.setVisibility(View.GONE);
                     modeLabel.setVisibility(View.GONE);
                     view1.setVisibility(View.GONE);
@@ -145,7 +157,7 @@ public class CheckinShareLocation extends AppCompatActivity {
         if (automaticTrackSwitch.isChecked()) {
             trackLabel.setText("In \"Automatic tracking\" Jaldee will start tracking 1 hour prior to your turn");
         } else {
-            trackLabel.setText("If \"Automatic tracking\" is turned off you will have to enable tracking manually");
+            trackLabel.setText("If \"Automatic tracking\" is turned off, you will have to enable tracking manually from your check-in");
         }
 
         automaticTrackSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -186,6 +198,39 @@ public class CheckinShareLocation extends AppCompatActivity {
         });
     }
 
+
+
+    public void ApiActiveCheckIn() {
+
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(uuid,accountID);
+        call.enqueue(new Callback<ActiveCheckIn>() {
+            @Override
+            public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
+                try {
+                    Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                         a = response.body();
+                        Log.i("fghffghfgh",response.body().toString());
+                        checkinMessage.setText("Your check-in for "+response.body().getService().getName()+" is successful !!");
+                        shareSwitch.setText("Allow "+response.body().getProvider().getBusinessName()+" to track your ETA");
+                    }
+                } catch (Exception e) {
+                    Log.i("mnbbnmmnbbnm",e.toString());
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ActiveCheckIn> call, Throwable t) {
+            }
+        });
+    }
+
+
+
+
     private void ApiShareLiveLocation() {
 
         final ApiInterface apiService = ApiClient.getClient(this).create(ApiInterface.class);
@@ -211,7 +256,26 @@ public class CheckinShareLocation extends AppCompatActivity {
 
                 try {
                     if (response.code() == 200) {
-                        modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime().toString() + " " + response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTimeUnit() + " to reach");
+
+                        int hours = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
+                        int minutes = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
+
+                        if(response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance()>0){
+
+
+                            if (hours < 1) {
+                                modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes +" mins"+ " to reach");
+
+                            } else {
+                                modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around "+hours+" hours " + minutes +" mins"+ " to reach");
+
+                            }
+
+
+                        }else{
+                            modeLabel.setText("You are close to "+a.getProvider().getBusinessName());
+                        }
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -252,7 +316,26 @@ public class CheckinShareLocation extends AppCompatActivity {
 
                 try {
                     if (response.code() == 200) {
-                        modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime().toString() + " " + response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTimeUnit() + " to reach");
+
+                        int hours = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
+                        int minutes = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
+
+                        if(response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance()>0){
+
+
+                            if (hours < 1) {
+                                modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes +" mins"+ " to reach");
+
+                            } else {
+                                modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around "+hours+" hours " + minutes +" mins"+ " to reach");
+
+                            }
+
+
+                        }else{
+                            modeLabel.setText("You are close to "+a.getProvider().getBusinessName());
+                        }
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -271,46 +354,67 @@ public class CheckinShareLocation extends AppCompatActivity {
 
     private void ApiUpdateTravelMode() {
 
+        if(!uuid.equals("") && !accountID.equals("")){
+            ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+            JSONObject jsonObj = new JSONObject();
+            try {
+                jsonObj.put("travelMode", travelMode);
 
-        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        JSONObject jsonObj = new JSONObject();
-        try {
-            jsonObj.put("travelMode", travelMode);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+            Call<ShareLocation> call;
 
-        Call<ShareLocation> call;
-        call = apiService.PutTravelModes(uuid, Integer.parseInt(accountID), body);
+            call = apiService.PutTravelModes(uuid, Integer.parseInt(accountID), body);
 
 
-        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+            Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
 
-        call.enqueue(new Callback<ShareLocation>() {
-            @Override
-            public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
+            call.enqueue(new Callback<ShareLocation>() {
+                @Override
+                public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
 
-                try {
-                    if (response.code() == 200) {
-                        modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime().toString() + " " + response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTimeUnit() + " to reach");
+                    try {
+                        if (response.code() == 200) {
+                            int hours = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
+                            int minutes = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
+
+                            if(response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance()>0){
+
+
+                                if (hours < 1) {
+                                    modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes +" mins"+ " to reach");
+
+                                } else {
+                                    modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around "+hours+" hours " + minutes +" mins"+ " to reach");
+
+                                }
+
+
+                            }else{
+                                modeLabel.setText("You are close to "+a.getProvider().getBusinessName());
+                            }
+
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-
-            }
-            @Override
-            public void onFailure(Call<ShareLocation> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+                @Override
+                public void onFailure(Call<ShareLocation> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
 
 
-            }
-        });
+                }
+            });
+        }
+
 
     }
 

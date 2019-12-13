@@ -2906,7 +2906,7 @@ public class CheckIn extends AppCompatActivity {
                         Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
                         checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
                         checkinShareLocations.putExtra("uuid", value);
-                        checkinShareLocations.putExtra("accountID", accountID);
+                        checkinShareLocations.putExtra("accountID", modifyAccountID);
                         checkinShareLocations.putExtra("title", title);
                         startActivity(checkinShareLocations);
 
