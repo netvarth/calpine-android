@@ -109,7 +109,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/phoneicon" />
+                    android:src="@drawable/call_icon" />
 
                 <TextView
                     android:id="@+id/txtphone"
