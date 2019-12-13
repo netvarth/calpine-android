@@ -159,6 +159,11 @@ public interface ApiInterface {
     @GET("consumer/waitlist")
     Call<ArrayList<ActiveCheckIn>> getActiveCheckIn();
 
+
+    @GET("consumer/waitlist/{uuid}")
+    Call<ActiveCheckIn> getActiveCheckInUUID(@Path("uuid") String uuid,@Query("account") String account);
+
+
     @GET("ynwConf/businessDomains")
     Call<ArrayList<Domain_Spinner>> getAllDomains();
 
