@@ -27,10 +27,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.KeyListener;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
@@ -141,7 +143,7 @@ public class CheckIn extends AppCompatActivity {
     ArrayList<SearchService> gServiceList = new ArrayList<>();
     String uniqueID;
     String uuid;
-    TextView tv_addmember;
+    TextView tv_addmember,tv_editphone;
     String accountID;
     static int mSpinnertext;
     static int deptSpinnertext;
@@ -174,7 +176,7 @@ public class CheckIn extends AppCompatActivity {
     ImageView ic_cal_add;
     Button btn_checkin;
     static int queueId = 0;
-    EditText couponEdit, phoneNumberValue;
+    EditText couponEdit,phoneNumberValue;
     Button applycouponbtn;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     String couponEntered;
@@ -236,7 +238,7 @@ public class CheckIn extends AppCompatActivity {
         mtermsandCond.setVisibility(View.INVISIBLE);
         mtxtTermsandCondition.setVisibility(View.INVISIBLE);
         couponEdit = findViewById(R.id.coupon_edit);
-        phoneNumberValue = findViewById(R.id.phoneNumberValue);
+        phoneNumberValue =  findViewById(R.id.phoneNumberValue);
         applycouponbtn = findViewById(R.id.applybtn);
         mActivity = this;
         recycle_family = findViewById(R.id.recycle_family);
@@ -283,6 +285,8 @@ public class CheckIn extends AppCompatActivity {
                 TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
                 txtsendmsg.setVisibility(View.GONE);
                 btn_send.setText("ADD");
+
+
 
 //                tv_attach = dialog.findViewById(R.id.btn);
 //                tv_camera = dialog.findViewById(R.id.camera);
@@ -596,6 +600,7 @@ public class CheckIn extends AppCompatActivity {
         consumerID = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         tv_name.setText(mFirstName + " " + mLastName);
         tv_addmember = findViewById(R.id.txtaddmember);
+      //  tv_editphone = findViewById(R.id.txteditphone);
 
 
         tv_addmember.setOnClickListener(new View.OnClickListener() {
@@ -612,6 +617,13 @@ public class CheckIn extends AppCompatActivity {
                 startActivity(iFamily);
             }
         });
+
+//        tv_editphone.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                phoneNumberValue.setEnabled(true);
+//            }
+//        });
 
         mSpinnerService.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,

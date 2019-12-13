@@ -37,23 +37,6 @@
             android:background="@drawable/app_bg_gradient_home"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/jdn_noteLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/default_padding"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/padding15">
-
-
-                <TextView
-                    android:id="@+id/jdn_note"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/txtsize_hint"
-                    android:fontFamily="@font/customfont"/>
-            </LinearLayout>
 
 
             <LinearLayout
@@ -89,6 +72,26 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/jdn_noteLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/default_padding"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/padding15">
+
+
+                <TextView
+                    android:id="@+id/jdn_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/txtsize_hint"
+                    android:fontFamily="@font/customfont"/>
+            </LinearLayout>
+
+
+
+            <LinearLayout
                 android:id="@+id/jdn_maxLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,8 +119,6 @@
                     android:text=""
                     android:textSize="@dimen/txtsize_hint" />
             </LinearLayout>
-
-
 
         </LinearLayout>
     </LinearLayout>

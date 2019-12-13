@@ -174,11 +174,11 @@
 
                                 </LinearLayout>
 
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:layout_margin="@dimen/padding7"
-                                    android:background="#1A000000" />
+<!--                                <View-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="1dp"-->
+<!--                                    android:layout_margin="@dimen/padding7"-->
+<!--                                    android:background="#1A000000" />-->
                             </LinearLayout>
 
 
@@ -187,36 +187,63 @@
                                 android:id="@+id/phoneNumberLayout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:layout_marginTop="@dimen/dimen_10dp">
 
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:layout_margin="@dimen/padding7"
-                                    android:background="#1A000000" />
+<!--                                <View-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="1dp"-->
+<!--                                    android:layout_margin="@dimen/padding7"-->
+<!--                                    android:background="#1A000000" />-->
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="@dimen/default_padding"
                                     android:layout_marginRight="@dimen/default_padding"
                                     android:gravity="left"
                                     android:orientation="horizontal">
 
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/call_icon"
+                                       />
+
                                     <TextView
                                         android:id="@+id/txtPhoneNumberLabel"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Phone Number : "
+                                        android:text="Mobile"
                                         android:textColor="@color/title_grey"
-                                        android:textSize="@dimen/txtsize_12" />
+                                        android:textSize="@dimen/txtsize_12"
+                                        android:layout_marginLeft="@dimen/dimen_5dp"/>
 
                                     <EditText
                                         android:id="@+id/phoneNumberValue"
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:ems="10"
-                                        android:inputType="phone" />
+                                        android:textSize="@dimen/dimen_14sp"
+                                        android:inputType="phone"
+                                        android:layout_marginLeft="@dimen/dimen_10dp"
+                                        android:layout_marginRight="@dimen/dimen_50dp"
+                                        android:theme="@android:style/Theme.Holo.Light"
+                                        android:textColor="@color/black"
+
+                                        />
+
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/txteditphone"-->
+<!--                                        android:layout_width="match_parent"-->
+<!--                                        android:layout_height="wrap_content"-->
+<!--                                        android:gravity="right"-->
+<!--                                        android:text=""-->
+<!--                                        android:textAllCaps="false"-->
+<!--                                        android:textColor="@color/title_consu"-->
+<!--                                        android:textSize="13sp"-->
+<!--                                        android:drawableRight="@drawable/edit_icon"/>-->
+
 
 
                                 </LinearLayout>

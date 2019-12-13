@@ -89,7 +89,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email : support@jaldee.com"
+                    android:text="Email  support@jaldee.com"
                     android:textColor="@color/sec_title_grey"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -115,7 +115,7 @@
                     android:id="@+id/txtphone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phone : 0487-2325650"
+                    android:text="Phone  0487-2325650"
                     android:textColor="@color/sec_title_grey"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -137,7 +137,7 @@
                     android:id="@+id/txtsupport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Support : "
+                    android:text="Support "
                     android:textColor="@color/sec_title_grey"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -151,7 +151,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/phoneicon" />
+                    android:src="@drawable/call_icon" />
 
                 <TextView
                     android:id="@+id/txtwhatsapp"
