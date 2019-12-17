@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Desktop-JaldeeAndroidLatest.iml" filepath="$PROJECT_DIR$/Desktop-JaldeeAndroidLatest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/Desktop-JaldeeAndroidLatest-app.iml" filepath="$PROJECT_DIR$/app/Desktop-JaldeeAndroidLatest-app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/JaldeeAndroidLatest.iml" filepath="$PROJECT_DIR$/JaldeeAndroidLatest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/JaldeeAndroidLatest-app.iml" filepath="$PROJECT_DIR$/app/JaldeeAndroidLatest-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaldee-android.iml" filepath="$PROJECT_DIR$/jaldee-android.iml" />
     </modules>

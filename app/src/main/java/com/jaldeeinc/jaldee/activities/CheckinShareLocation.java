@@ -91,7 +91,7 @@ public class CheckinShareLocation extends AppCompatActivity {
             accountID = extras.getString("accountID");
             title = extras.getString("title");
         }
-        locationStatus = true;
+        locationStatus = false;
         startTime = "ONEHOUR";
         travelMode = "DRIVING";
 
