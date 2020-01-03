@@ -14,13 +14,19 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -39,6 +45,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
+import com.jaldeeinc.jaldee.activities.GPSTracker;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -62,9 +70,7 @@ import retrofit2.Response;
 /**
  * Created by sharmila on 14/1/19.
  */
-
-
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class ExpandableListAdapter extends BaseExpandableListAdapter implements LocationListener {
 
     private Context mContext;
     private List<String> headerData; // header titles
@@ -79,9 +85,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     String qwe, asd, pollingTime;
     Date qwee, asdd;
     String latValue, longValue;
+    LocationManager locationManager;
+    ActiveCheckIn activelistLatest;
+    boolean liveTrackSwitchLatest;
 
 
-    public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData, boolean mTodayFlag, boolean mFutureFlag, boolean mOldFlag) {
+    public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData, boolean mTodayFlag, boolean mFutureFlag, boolean mOldFlag, LocationManager locationManager) {
         this.mContext = mContext;
         this.headerData = listDataHeader;
         this.child = listChildData;
@@ -92,6 +101,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         this.mFutureFlag = mFutureFlag;
         this.mTodayFlag = mTodayFlag;
         this.mOldFlag = mOldFlag;
+        this.locationManager = locationManager;
 
     }
 
@@ -235,7 +245,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
-
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View view, ViewGroup parent) {
         // Getting child text
@@ -249,8 +258,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             header = "old";
 
 
-        //  activelist = activeChekinList.get(position);
-        // Inflating child layout and setting textview
         if (view == null) {
             LayoutInflater infalInflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = infalInflater.inflate(R.layout.child_checkinhistory_layout_copy, parent, false);
@@ -280,158 +287,41 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final TextView tv_travelmddeEdit = (TextView) view.findViewById(R.id.travelmddeEdit);
         final LinearLayout travelDetailsLayout = view.findViewById(R.id.travelDetailsLayout);
         final Switch liveTrackSwitch = (Switch) view.findViewById(R.id.switch1);
+        TextView tv_queueTime = (TextView) view.findViewById(R.id.txt_queuetime);
 
-        if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn")) {
-            travelDetailsLayout.setVisibility(View.VISIBLE);
-
-            if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("WALKING")){
-                tv_travelWalk.setVisibility(View.VISIBLE);
-                tv_travelCar.setVisibility(View.GONE);
-                trackinLabel.setText("I am walking");
-            }else if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("DRIVING")){
-                tv_travelCar.setVisibility(View.VISIBLE);
-                tv_travelWalk.setVisibility(View.GONE);
-                trackinLabel.setText("I am driving");
-            }
-
-
-            if (activelist.getJaldeeStartTimeType().equals("AFTERSTART") && header.equals("today")) {
-                liveTrackSwitch.setVisibility(View.VISIBLE);
-                trackinLabel.setText("Enable live tracking");
-
-
-                ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                Call<ResponseBody> cal;
-                cal = apiService.StatusTracking(activelist.getYnwUuid(), activelist.getId());
-                cal.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        try {
-                            if (response.code() == 200) {
-                                if (response.body().string().equals("true")) {
-                                    liveTrackSwitch.setChecked(true);
-                                } else {
-                                    liveTrackSwitch.setChecked(false);
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<ResponseBody> cal, Throwable t) {
-                        // Log error here since request failed
-                        Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-                    }
-                });
-            } else {
-                liveTrackSwitch.setVisibility(View.GONE);
-            }
-
-
-
-            liveTrackSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        ApiStartTracking();
-                    } else {
-                        ApiStopTracking();
-                    }
+        if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().
+                equals("checkedIn")) {
+            activelistLatest = activelist;
+            if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime()!=null){
+                if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("WALKING")){
+                    tv_travelWalk.setVisibility(View.VISIBLE);
+                    tv_travelCar.setVisibility(View.GONE);
+                    trackinLabel.setText("I am walking");
+                }else if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("DRIVING")){
+                    tv_travelCar.setVisibility(View.VISIBLE);
+                    tv_travelWalk.setVisibility(View.GONE);
+                    trackinLabel.setText("I am driving");
                 }
+            }
 
-
-                private void ApiStartTracking() {
-
-
+            if (activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
+                travelDetailsLayout.setVisibility(View.VISIBLE);
+                if(activelist.getJaldeeStartTimeType()!= null){
+                if (activelist.getJaldeeStartTimeType().equals("AFTERSTART") && header.equals("today")) {
+                    liveTrackSwitch.setVisibility(View.VISIBLE);
+                    trackinLabel.setText("Enable live tracking");
                     ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                    Call<ResponseBody> call;
-                    call = apiService.StartTracking(activelist.getYnwUuid(), activelist.getId());
-                    call.enqueue(new Callback<ResponseBody>() {
+                    Call<ResponseBody> cal;
+                    cal = apiService.StatusTracking(activelist.getYnwUuid(), activelist.getId());
+                    cal.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                             try {
                                 if (response.code() == 200) {
                                     if (response.body().string().equals("true")) {
                                         liveTrackSwitch.setChecked(true);
-
-
-                                        final long period = 300000;
-                                        new Timer().schedule(new TimerTask() {
-                                            @Override
-                                            public void run() {
-
-
-                                                if (activelist.getWaitlistStatus().equals("checkedIn") && liveTrackSwitch.isChecked()) {
-                                                    ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                                                    JSONObject jsonObj = new JSONObject();
-                                                    try {
-
-                                                        latValue = SharedPreference.getInstance(mContext).getStringValue("latitudes", "");
-                                                        longValue = SharedPreference.getInstance(mContext).getStringValue("longitudes", "");
-                                                        Log.i("poiuytrew",latValue);
-                                                        Log.i("poiuytrew",longValue);
-                                                        jsonObj.put("latitude", latValue);
-                                                        jsonObj.put("longitude", longValue);
-
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
-                                                    Call<ResponseBody> callLivetrack;
-                                                    callLivetrack = apiService.UpdateLatLong(activelist.getYnwUuid(), activelist.getId(), body);
-
-                                                    callLivetrack.enqueue(new Callback<ResponseBody>() {
-                                                        @Override
-                                                        public void onResponse(Call<ResponseBody> callLivetrack, Response<ResponseBody> response) {
-
-                                                            try {
-                                                                if (response.code() == 200) {
-                                                                }
-                                                            } catch (Exception e) {
-                                                                e.printStackTrace();
-                                                            }
-
-                                                        }
-
-                                                        @Override
-                                                        public void onFailure(Call<ResponseBody> callLivetrack, Throwable t) {
-                                                            // Log error here since request failed
-                                                            Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-                                                        }
-
-                                                    });
-                                                }
-                                            }
-
-                                        }, 0, period);
-                                    }
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            // Log error here since request failed
-                            Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-                        }
-                    });
-                }
-
-                private void ApiStopTracking() {
-                    ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                    Call<ResponseBody> call;
-                    call = apiService.StopTracking(activelist.getYnwUuid(), activelist.getId());
-                    call.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                            try {
-                                if (response.code() == 200) {
-                                    if (response.body().string().equals("false")) {
+                                        enableTrack();
+                                    } else {
                                         liveTrackSwitch.setChecked(false);
                                     }
                                 }
@@ -439,292 +329,160 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 e.printStackTrace();
                             }
                         }
+
                         @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        public void onFailure(Call<ResponseBody> cal, Throwable t) {
                             // Log error here since request failed
                             Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-
                         }
                     });
 
+                    // Call When toggle the live track switch
+                    liveTrackSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+                                Call<ResponseBody> call;
+                                call = apiService.StartTracking(activelist.getYnwUuid(), activelist.getId());
+                                call.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                        try {
+                                            if (response.code() == 200) {
+                                                if (response.body().string().equals("true")) {
+                                                    activelistLatest = activelist;
+                                                    enableTrack();
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                        // Log error here since request failed
+                                        Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+                                    }
+                                });
+                            } else {
+                                ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+                                Call<ResponseBody> call;
+                                call = apiService.StopTracking(activelist.getYnwUuid(), activelist.getId());
+                                call.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                        try {
+                                            if (response.code() == 200) {
+                                                if (response.body().string().equals("false")) {
+                                                    liveTrackSwitch.setChecked(false);
+                                                    locationManager.removeUpdates(ExpandableListAdapter.this);
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                        // Log error here since request failed
+                                        Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else if (activelist.getJaldeeStartTimeType().equals("ONEHOUR") && header.equals("today")) {
+                    liveTrackSwitch.setVisibility(View.GONE);
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    String currentDateandTime = simpleDateFormat.format(new Date());
+                    if (activelist.getDate() != null && activelist.getJaldeeWaitlistDistanceTime() != null) {
+                        pollingTime = activelist.getDate() + " " + activelist.getJaldeeWaitlistDistanceTime().getPollingTime();
+
+                        try {
+                            date1 = simpleDateFormat.parse(currentDateandTime);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            date2 = simpleDateFormat.parse(pollingTime);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        if (date1 != null && date2 != null) {
+                            if (!date1.before(date2)) {
+                                activelistLatest = new ActiveCheckIn();
+                                activelistLatest = activelist;
+                                liveTrackSwitchLatest = liveTrackSwitch.isChecked();
+                                enableTrack();
+                            }
+                        }
+                    }
                 }
-            });
+            }}else {
+                travelDetailsLayout.setVisibility(View.GONE);
+            }
+        } else {
+            locationManager.removeUpdates(ExpandableListAdapter.this);
+        }
 
-            tv_travelmddeEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    tv_travelmddeEdit.setVisibility(View.GONE);
-                    tv_travelCar.setVisibility(View.VISIBLE);
-                    tv_travelWalk.setVisibility(View.VISIBLE);
 
-                }
-            });
 
-            tv_travelCar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    tv_travelCar.setVisibility(View.VISIBLE);
-                    tv_travelWalk.setVisibility(View.GONE);
-                    tv_travelmddeEdit.setVisibility(View.VISIBLE);
-                    tv_travelmode.setText("DRIVING");
-                    if (activelist.getJaldeeStartTimeType().equals("AFTERSTART")){
+        tv_travelmddeEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tv_travelmddeEdit.setVisibility(View.GONE);
+                tv_travelCar.setVisibility(View.VISIBLE);
+                tv_travelWalk.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        tv_travelCar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tv_travelCar.setVisibility(View.VISIBLE);
+                tv_travelWalk.setVisibility(View.GONE);
+                tv_travelmddeEdit.setVisibility(View.VISIBLE);
+                tv_travelmode.setText("DRIVING");
+                if (activelist.getJaldeeStartTimeType() != null) {
+                    if (activelist.getJaldeeStartTimeType().equals("AFTERSTART")) {
                         trackinLabel.setText("Enable live tracking");
-                    }else {
+                    } else {
                         trackinLabel.setText("I am driving");
                     }
                     ApiUpdateTravelMode();
                 }
-
-                private void ApiUpdateTravelMode() {
-                    ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                    JSONObject jsonObj = new JSONObject();
-                    try {
-                        jsonObj.put("travelMode", tv_travelmode.getText());
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
-                    Call<ResponseBody> call;
-                    call = apiService.PutTravelMode(activelist.getYnwUuid(), activelist.getId(), body);
-
-
-                    Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-
-                    call.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                            try {
-                                if (response.code() == 200) {
-
-                                }
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-//
-//                        private void ApiTodayChekInList() {
-//
-//
-//                            final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-//                            Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
-//                            call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
-//                                @Override
-//                                public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-//
-//                                    try {
-//                                        if (response.code() == 200) {
-//                                            int hours =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
-//                                            int minutes =  response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
-//
-//                                            if(hours<1){
-//                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + minutes +" Mins"+ " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
-//
-//                                            }else {
-//                                                distanceTravel.setText(" You are " + response.body().get(childPosition).getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance().toString() + " km away and will take around " + hours+"Hr"+" "+minutes+" Mins" + " to reach  " + (Config.toTitleCase(activelist.getBusinessName())));
-//
-//                                            }                                        } else {
-//                                            if (response.code() != 419) {
-//                                                Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-//                                            }
-//                                        }
-//
-//
-//                                    } catch (Exception e) {
-//                                        e.printStackTrace();
-//                                    }
-//
-//                                }
-//
-//                                @Override
-//                                public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
-//                                    // Log error here since request failed
-//                                    Config.logV("Fail---------------" + t.toString());
-//
-//                                }
-//                            });
-//
-//
-//                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            // Log error here since request failed
-                            Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-
-
-                        }
-                    });
-
-                }
-
-            });
-
-            tv_travelWalk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    tv_travelCar.setVisibility(View.GONE);
-                    tv_travelWalk.setVisibility(View.VISIBLE);
-                    tv_travelmddeEdit.setVisibility(View.VISIBLE);
-                    tv_travelmode.setText("WALKING");
-                    if (activelist.getJaldeeStartTimeType().equals("AFTERSTART")){
-                        trackinLabel.setText("Enable live tracking");
-                    }else {
-                        trackinLabel.setText("I am walking");
-                    }
-
-                    ApiUpdateTravelMode();
-                }
-
-                private void ApiUpdateTravelMode() {
-
-
-                    ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                    JSONObject jsonObj = new JSONObject();
-                    try {
-                        jsonObj.put("travelMode", tv_travelmode.getText());
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
-                    Call<ResponseBody> call;
-                    call = apiService.PutTravelMode(activelist.getYnwUuid(), activelist.getId(), body);
-
-
-                    Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-
-                    call.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                            try {
-                                if (response.code() == 200) {
-
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            // Log error here since request failed
-                            Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-                        }
-                    });
-                }
-            });
-
-        } else {
-            travelDetailsLayout.setVisibility(View.GONE);
-        }
-
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm ");
-        String currentDateandTime = simpleDateFormat.format(new Date());
-
-        if (activelist.getDate() != null && activelist.getJaldeeWaitlistDistanceTime() != null) {
-            pollingTime = activelist.getDate() + activelist.getJaldeeWaitlistDistanceTime().getPollingTime();
-
-            try {
-                date1 = simpleDateFormat.parse(currentDateandTime);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            try {
-                date2 = simpleDateFormat.parse(pollingTime);
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
 
-        }
+            private void ApiUpdateTravelMode() {
+                ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+                JSONObject jsonObj = new JSONObject();
+                try {
+                    jsonObj.put("travelMode", tv_travelmode.getText());
 
-        if (activelist.getJaldeeStartTimeType() != null) {
-            if (!activelist.getJaldeeStartTimeType().equals("AFTERSTART")) {
-                if (date1 != null && date2 != null) {
-                    if (!date1.before(date2)) {
-                        final long period = 300000;
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-
-                            }
-
-                        }, 0, period);
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
 
-            } else {
+                Call<ResponseBody> call;
+                call = apiService.PutTravelMode(activelist.getYnwUuid(), activelist.getId(), body);
 
-                final ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                Call<ResponseBody> call = apiService.StatusTracking(activelist.getYnwUuid(), activelist.getId());
+
+                Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                         try {
-                            Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                            Config.logV("Response--code-------------------------" + response.code());
-
                             if (response.code() == 200) {
-                                if (response.body().equals("true")) {
-
-
-                                    ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                                    JSONObject jsonObj = new JSONObject();
-                                    try {
-                                        jsonObj.put("travelMode", tv_travelmode.getText());
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
-                                    Call<ResponseBody> cal;
-                                    cal = apiService.UpdateLatLong(activelist.getYnwUuid(), activelist.getId(), body);
-
-
-                                    Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-
-                                    cal.enqueue(new Callback<ResponseBody>() {
-                                        @Override
-                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                                            try {
-                                                if (response.code() == 200) {
-
-
-                                                }
-
-
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<ResponseBody> cal, Throwable t) {
-                                            // Log error here since request failed
-                                            Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-
-
-                                        }
-                                    });
-
-
-                                } else {
-
-                                }
-
 
                             }
 
@@ -738,15 +496,75 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         // Log error here since request failed
-                        Config.logV("Fail---------------" + t.toString());
+                        Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
 
 
                     }
                 });
 
-
             }
-        }
+
+        });
+
+        tv_travelWalk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tv_travelCar.setVisibility(View.GONE);
+                tv_travelWalk.setVisibility(View.VISIBLE);
+                tv_travelmddeEdit.setVisibility(View.VISIBLE);
+                tv_travelmode.setText("WALKING");
+                if (activelist.getJaldeeStartTimeType() != null) {
+                    if (activelist.getJaldeeStartTimeType().equals("AFTERSTART")) {
+                        trackinLabel.setText("Enable live tracking");
+                    } else {
+                        trackinLabel.setText("I am walking");
+                    }
+
+                    ApiUpdateTravelMode();
+                }
+            }
+
+            private void ApiUpdateTravelMode() {
+
+
+                ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+                JSONObject jsonObj = new JSONObject();
+                try {
+                    jsonObj.put("travelMode", tv_travelmode.getText());
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+
+                Call<ResponseBody> call;
+                call = apiService.PutTravelMode(activelist.getYnwUuid(), activelist.getId(), body);
+
+
+                Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        try {
+                            if (response.code() == 200) {
+
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        // Log error here since request failed
+                        Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+                    }
+                });
+            }
+        });
+
 
 
         tv_businessname.setText(Config.toTitleCase(activelist.getBusinessName()));
@@ -769,35 +587,24 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-       /* if (activelist.getQueue() != null) {
-            if (activelist.getQueue().getLocation().getPlace() != null) {
-                myViewHolder.tv_place.setVisibility(View.VISIBLE);
-                myViewHolder.tv_place.setText(activelist.getQueue().getLocation().getPlace());
-            } else {
-                myViewHolder.tv_place.setVisibility(View.GONE);
-            }
-        }*/
-
 
         try {
-            /*  if (activelist.getQueue() != null) {*/
             String geoUri = activelist.getGoogleMapUrl();
             if (activelist.getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
-
                 tv_place.setVisibility(View.VISIBLE);
                 tv_place.setText(activelist.getPlace());
-                /*} else {
-                    tv_place.setVisibility(View.GONE);
-                }*/
+
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
 
         icon_fav.setText("Favourite");
         icon_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourite_line, 0, 0);
 
-        for (int i = 0; i < FavList.size(); i++) {
+        for (
+                int i = 0; i < FavList.size(); i++) {
             Config.logV("Fav List-----##&&&-----" + FavList.get(i).getId());
 
 
@@ -817,35 +624,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                     Config.logV("Fav" + activelist.getId());
                     callback.onMethodDeleteFavourite(activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag);
-
-                   /* AlertDialog myQuittingDialogBox =new AlertDialog.Builder(mContext)
-                            //set message, title, and icon
-                            .setTitle("Delete")
-                            .setMessage("Do you want to remove "+toTitleCase(activelist.getProvider().getBusinessName())+" from favourite list?")
-
-
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    //your deleting code
-                                    dialog.dismiss();
-                                    callback.onMethodDeleteFavourite(activelist.getProvider().getId());
-                                }
-
-                            })
-
-
-
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    dialog.dismiss();
-
-                                }
-                            })
-                            .create();
-                    myQuittingDialogBox.show();*/
-
 
                 } else {
                     Config.logV("Fav Addd" + activelist.getId());
@@ -882,7 +660,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             tv_service.setVisibility(View.GONE);
         }
 
-        if (activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid")) {
+        if (activelist.getPaymentStatus().
+
+                equalsIgnoreCase("FullyPaid")) {
             icon_bill.setText("Receipt");
         } else {
             icon_bill.setText("Bill");
@@ -921,13 +701,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 String firstWord = "";
-               /* if(header.equalsIgnoreCase("future")){
-                    firstWord = "Est Service Time ";
-                }
-
-                if(header.equalsIgnoreCase("today")){
-                    firstWord = "Est Service Time ";
-                }*/
                 firstWord = "Checked in for ";
 
                 String secondWord = "Today," + activelist.getServiceTime();
@@ -943,10 +716,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 }
 
                 if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
-                    tv_estTime.setVisibility(View.VISIBLE);
-                    tv_estTime.setText(spannable);
+                   // tv_estTime.setVisibility(View.VISIBLE);
+                   // tv_estTime.setText(spannable);
+                    tv_queueTime.setVisibility(View.VISIBLE);
+                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                 } else {
                     tv_estTime.setVisibility(View.GONE);
+                    tv_queueTime.setVisibility(View.VISIBLE);
+                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                 }
 
 
@@ -968,16 +745,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 String firstWord = "";
-                /*if(header.equalsIgnoreCase("future")){
-                    firstWord = "Est Service Time ";
-                }
-
-                if(header.equalsIgnoreCase("today")){
-                    firstWord = "Est Wait Time ";
-                }*/
                 firstWord = "Checked in for ";
-
-                //   String secondWord = outputDateStr + ", " + activelist.getServiceTime();
 
                 String dtStart = outputDateStr;
                 Date dateParse = null;
@@ -1016,15 +784,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                 }
                 if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
-                    tv_estTime.setVisibility(View.VISIBLE);
-                    tv_estTime.setText(spannable);
+                 //   tv_estTime.setVisibility(View.VISIBLE);
+                 //   tv_estTime.setText(spannable);
+                    tv_queueTime.setVisibility(View.VISIBLE);
+                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                 } else {
                     tv_estTime.setVisibility(View.GONE);
+                    tv_queueTime.setVisibility(View.VISIBLE);
+                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                 }
-
-
-                // myViewHolder.tv_estTime.setText(Html.fromHtml("Approx Wait Time " +"<font color=\"#6065FF\"><b>"+ activelist.getAppxWaitingTime() +" Mins "+"</font><b>")) ;
-
             }
 
 
@@ -1033,8 +801,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             if (date.equalsIgnoreCase(activelist.getDate())) {
                 Config.logV("getAppxWaitingTime------------" + activelist.getAppxWaitingTime());
                 if (activelist.getAppxWaitingTime() == 0) {
-                    // myViewHolder.tv_estTime.setText("Estimated Time Now");
-                    /* tv_estTime.setVisibility(View.VISIBLE);*/
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
                     String firstWord = "Est Time ";
@@ -1064,24 +830,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
-
                         long finalcheckin = appwaittime + millis;
-
-
                         String timeFORAMT = getDate(finalcheckin, "hh:mm a");
-
-
-                        firstWord = "";
-
-                    /*if(header.equalsIgnoreCase("future")){
-                        firstWord = "Checked in for ";
-                    }
-
-                    if(header.equalsIgnoreCase("today")){
-                        firstWord = "Est Wait Time ";
-                    }
-*/
                         DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                         DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
                         String inputDateStr = activelist.getDate();
@@ -1092,11 +842,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             e.printStackTrace();
                         }
                         String outputDateStr = outputFormat.format(datechange);
-
-
                         firstWord = "Checked in for ";
-                        // String strDate = outputDateStr + ", " + activelist.getServiceTime();
-
                         String dtStart = outputDateStr;
                         Date dateParse = null;
                         SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
@@ -1106,7 +852,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
                         SimpleDateFormat format = new SimpleDateFormat("d");
                         String date1 = format.format(dateParse);
 
@@ -1122,32 +867,33 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         String yourDate = format.format(dateParse);
                         tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
-
-
                         secondWord = yourDate + ", " + timeFORAMT;
                         spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-
-                        tv_check_in.setVisibility(View.VISIBLE);
-                        tv_check_in.setText(spannable);
+//                        tv_check_in.setVisibility(View.VISIBLE);
+//                        tv_check_in.setText(spannable);
                         tv_status.setVisibility(View.VISIBLE);
                         tv_status.setText("Cancelled at " + activelist.getStatusUpdatedTime());
                         tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
                     if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
-                        tv_estTime.setVisibility(View.VISIBLE);
-                        tv_estTime.setText(spannable);
+                      //  tv_estTime.setVisibility(View.VISIBLE);
+                       // tv_estTime.setText(spannable);
+                        tv_queueTime.setVisibility(View.VISIBLE);
+                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                     } else {
                         tv_estTime.setVisibility(View.GONE);
+                        tv_queueTime.setVisibility(View.VISIBLE);
+                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                     }
-
-
                 } else {
                     if (activelist.getAppxWaitingTime() == -1) {
                         tv_estTime.setVisibility(View.GONE);
+                        tv_queueTime.setVisibility(View.VISIBLE);
+                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             tv_status.setVisibility(View.VISIBLE);
                             tv_status.setText(" Cancelled ");
@@ -1166,13 +912,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             firstWord = "Est Wait Time ";
                         }
 
-
                         String secondWord = Config.getTimeinHourMinutes(activelist.getAppxWaitingTime());
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
 
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             long appwaittime;
@@ -1193,23 +937,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 e.printStackTrace();
                             }
 
-
                             long finalcheckin = appwaittime + millis;
-
-
                             String timeFORAMT = getDate(finalcheckin, "hh:mm a");
-
-
-                            firstWord = "";
-
-                    /*if(header.equalsIgnoreCase("future")){
-                        firstWord = "Checked in for ";
-                    }
-
-                    if(header.equalsIgnoreCase("today")){
-                        firstWord = "Est Wait Time ";
-                    }
-*/
                             DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                             DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
                             String inputDateStr = activelist.getDate();
@@ -1220,11 +949,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 e.printStackTrace();
                             }
                             String outputDateStr = outputFormat.format(datechange);
-
-
                             firstWord = "Checked in for ";
-                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
-
                             String dtStart = outputDateStr;
                             Date dateParse = null;
                             SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
@@ -1234,7 +959,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-
                             SimpleDateFormat format = new SimpleDateFormat("d");
                             String date1 = format.format(dateParse);
 
@@ -1250,39 +974,30 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             String yourDate = format.format(dateParse);
                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-
-
                             secondWord = yourDate + ", " + timeFORAMT;
                             spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
-                            //   tv_check_in.setVisibility(View.VISIBLE);
-                            //   tv_check_in.setText(spannable);
                             tv_status.setVisibility(View.VISIBLE);
                             tv_status.setText("Cancelled at " + " " + activelist.getStatusUpdatedTime());
                             tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
-
-
                         if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
-                            tv_estTime.setVisibility(View.VISIBLE);
-                            tv_estTime.setText(spannable);
+                          //  tv_estTime.setVisibility(View.VISIBLE);
+                           // tv_estTime.setText(spannable);
+                            tv_queueTime.setVisibility(View.VISIBLE);
+                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                         } else {
                             tv_estTime.setVisibility(View.GONE);
+                            tv_queueTime.setVisibility(View.VISIBLE);
+                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                         }
                     }
-
-
-                    // myViewHolder.tv_estTime.setText(Html.fromHtml("Approx Wait Time " +"<font color=\"#6065FF\"><b>"+ activelist.getAppxWaitingTime() +" Mins "+"</font><b>")) ;
-
                 }
             } else {
 
                 Config.logV("response.body().get(i).getQueue().getQueueStartTime()" + activelist.getQueueStartTime());
-                //Calulate appxtime+questime
                 Config.logV("Quueue Time----------------" + activelist.getQueueStartTime());
                 Config.logV("App Time----------------" + activelist.getAppxWaitingTime());
                 long appwaittime;
@@ -1291,7 +1006,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 } else {
                     appwaittime = 0;
                 }
-
                 if (activelist.getQueueStartTime() != null) {
 
                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
@@ -1305,25 +1019,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-
-
                     long finalcheckin = appwaittime + millis;
-
-
                     String timeFORAMT = getDate(finalcheckin, "hh:mm a");
-
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
                     String firstWord = "";
-
-                    /*if(header.equalsIgnoreCase("future")){
-                        firstWord = "Checked in for ";
-                    }
-
-                    if(header.equalsIgnoreCase("today")){
-                        firstWord = "Est Wait Time ";
-                    }
-*/
                     DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                     DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
                     String inputDateStr = activelist.getDate();
@@ -1334,11 +1034,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         e.printStackTrace();
                     }
                     String outputDateStr = outputFormat.format(datechange);
-
-
                     firstWord = "Checked in for ";
-                    // String strDate = outputDateStr + ", " + activelist.getServiceTime();
-
                     String dtStart = outputDateStr;
                     Date dateParse = null;
                     SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
@@ -1348,7 +1044,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-
                     SimpleDateFormat format = new SimpleDateFormat("d");
                     String date1 = format.format(dateParse);
 
@@ -1362,8 +1057,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         format = new SimpleDateFormat("EE, MMM d'th' yyyy");
 
                     String yourDate = format.format(dateParse);
-
-
                     String secondWord = activelist.getDate() + ", " + activelist.getQueueStartTime();
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1381,31 +1074,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         Timeconvert = null;
                         millis = 0;
                         try {
-                            // sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                             Timeconvert = sdf.parse(activelist.getQueueStartTime());
                             millis = Timeconvert.getTime();
                             Config.logV("millsss----" + millis);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
-
                         finalcheckin = appwaittime + millis;
-
-
                         timeFORAMT = getDate(finalcheckin, "hh:mm a");
-
-
-                        firstWord = "";
-
-                    /*if(header.equalsIgnoreCase("future")){
-                        firstWord = "Checked in for ";
-                    }
-
-                    if(header.equalsIgnoreCase("today")){
-                        firstWord = "Est Wait Time ";
-                    }
-*/
                         inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                         outputFormat = new SimpleDateFormat("dd-MM-yyyy");
                         inputDateStr = activelist.getDate();
@@ -1416,11 +1092,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             e.printStackTrace();
                         }
                         outputDateStr = outputFormat.format(datechange);
-
-
                         firstWord = "Checked in for ";
-                        // String strDate = outputDateStr + ", " + activelist.getServiceTime();
-
                         dtStart = outputDateStr;
                         dateParse = null;
                         format1 = new SimpleDateFormat("dd-MM-yyyy");
@@ -1430,7 +1102,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
                         format = new SimpleDateFormat("d");
                         date1 = format.format(dateParse);
 
@@ -1446,27 +1117,27 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         yourDate = format.format(dateParse);
                         tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
-
-
                         secondWord = yourDate + ", " + timeFORAMT;
                         spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                        tv_check_in.setVisibility(View.VISIBLE);
-                        tv_check_in.setText(spannable);
+//                        tv_check_in.setVisibility(View.VISIBLE);
+//                        tv_check_in.setText(spannable);
                         tv_status.setVisibility(View.VISIBLE);
                         tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                         tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
-
-
                     if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
-                        tv_estTime.setVisibility(View.VISIBLE);
-                        tv_estTime.setText(spannable);
+                    //    tv_estTime.setVisibility(View.VISIBLE);
+                      //  tv_estTime.setText(spannable);
+                        tv_queueTime.setVisibility(View.VISIBLE);
+                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                     } else {
                         tv_estTime.setVisibility(View.GONE);
+                        tv_queueTime.setVisibility(View.VISIBLE);
+                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                     }
                 } else {
 
@@ -1488,10 +1159,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                                 firstWord = "Est Wait Time ";
                             }
-
-
-                            //  firstWord = "Est Wait Time ";
-
                             if (m > 0 && h > 0) {
                                 newtime = h + " Hour :" + m + " Minutes";
                             } else if (h > 0 && m == 0) {
@@ -1506,7 +1173,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
-
                         DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                         DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
                         String inputDateStr = activelist.getDate();
@@ -1517,11 +1183,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             e.printStackTrace();
                         }
                         String outputDateStr = outputFormat.format(datechange);
-
-
-                        //firstWord = "Checked in for ";
-                        // String strDate = outputDateStr + ", " + activelist.getServiceTime();
-
                         String dtStart = outputDateStr;
                         Date dateParse = null;
                         SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
@@ -1531,7 +1192,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
                         SimpleDateFormat format = new SimpleDateFormat("d");
                         String date1 = format.format(dateParse);
 
@@ -1545,14 +1205,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             format = new SimpleDateFormat("EE, MMM d'th' yyyy");
 
                         String yourDate = format.format(dateParse);
-
                         String secondWord = yourDate + ", " + sTime;
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             if (activelist.getAppxWaitingTime() != -1) {
                                 appwaittime = TimeUnit.MINUTES.toMillis(activelist.getAppxWaitingTime());
@@ -1570,24 +1227,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-
-
                             long finalcheckin = appwaittime + millis;
-
-
                             String timeFORAMT = getDate(finalcheckin, "hh:mm a");
-
-
-                            firstWord = "";
-
-                    /*if(header.equalsIgnoreCase("future")){
-                        firstWord = "Checked in for ";
-                    }
-
-                    if(header.equalsIgnoreCase("today")){
-                        firstWord = "Est Wait Time ";
-                    }
-*/
                             inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                             outputFormat = new SimpleDateFormat("dd-MM-yyyy");
                             inputDateStr = activelist.getDate();
@@ -1598,11 +1239,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                                 e.printStackTrace();
                             }
                             outputDateStr = outputFormat.format(datechange);
-
-
                             firstWord = "Checked in for ";
-                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
-
                             dtStart = outputDateStr;
                             dateParse = null;
                             format1 = new SimpleDateFormat("dd-MM-yyyy");
@@ -1612,7 +1249,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-
                             format = new SimpleDateFormat("d");
                             date1 = format.format(dateParse);
 
@@ -1628,40 +1264,37 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                             yourDate = format.format(dateParse);
                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-
-
                             secondWord = yourDate + ", " + timeFORAMT;
                             spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
-                            tv_check_in.setVisibility(View.VISIBLE);
-                            tv_check_in.setText(spannable);
+//                            tv_check_in.setVisibility(View.VISIBLE);
+//                            tv_check_in.setText(spannable);
                             tv_status.setVisibility(View.VISIBLE);
                             tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                             tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
-
                         if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
-                            tv_estTime.setVisibility(View.VISIBLE);
-                            tv_estTime.setText(spannable);
+                          //  tv_estTime.setVisibility(View.VISIBLE);
+                           // tv_estTime.setText(spannable);
+                            tv_queueTime.setVisibility(View.VISIBLE);
+                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                         } else {
                             tv_estTime.setVisibility(View.GONE);
+                            tv_queueTime.setVisibility(View.VISIBLE);
+                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                         }
                     } else {
                         tv_estTime.setVisibility(View.GONE);
+                        tv_queueTime.setVisibility(View.VISIBLE);
+                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
                     }
                 }
 
             }
 
         }
-        /*} else {
-            myViewHolder.tv_estTime.setVisibility(View.GONE);
-        }*/
-
         layout_token.setVisibility(View.GONE);
         if (!header.equalsIgnoreCase("old") && !activelist.getWaitlistStatus().
 
@@ -1677,7 +1310,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 tv_time_queue.setVisibility(View.VISIBLE);
                 layout_token.setVisibility(View.VISIBLE);
                 String firstWord = "Token # ";
-
                 Config.logV("Token------------" + activelist.getToken());
                 String secondWord = String.valueOf(activelist.getToken());
                 String queStart = String.valueOf(activelist.getQueue().getQueueStartTime());
@@ -1686,7 +1318,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 Spannable spannable = new SpannableString(firstWord + secondWord);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                         0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -1697,8 +1328,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 tv_token.setVisibility(View.GONE);
                 tv_time_queue.setVisibility(View.GONE);
             }
-
-
             if (String.valueOf(activelist.getPartySize()) != null) {
                 if (activelist.getPartySize() > 1) {
                     layout_token.setVisibility(View.VISIBLE);
@@ -1708,8 +1337,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                     spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                             0, partyWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_partysize.setVisibility(View.VISIBLE);
-                    // myViewHolder.tv_partysize.setText(String.valueOf(activelist.getPartySize()));
-
                     spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), partyWord.length(), partyWord.length() + ValueWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                     spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -1721,14 +1348,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             } else {
                 tv_partysize.setVisibility(View.GONE);
             }
-
-
         } else {
             layout_token.setVisibility(View.GONE);
             tv_estTime.setVisibility(View.GONE);
+            tv_queueTime.setVisibility(View.VISIBLE);
+            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime());
         }
-
-
         if (activelist.getPersonsAhead() != -1 && !activelist.getWaitlistStatus().
 
                 equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
@@ -1744,63 +1369,32 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 Spannable spannable1 = new SpannableString(nobody_ahead);
                 spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                         0, nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
-//                        "fonts/Montserrat_Bold.otf");
-//                spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), nobody_ahead.length(), nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-//                        nobody_ahead.length(), nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_personahead.setText(spannable1);
-
             } else if (activelist.getPersonsAhead() == 1) {
 
                 Spannable spannable1 = new SpannableString(one_person_ahead);
                 spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                         0, one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
-//                        "fonts/Montserrat_Bold.otf");
-//                spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), one_person_ahead.length(), one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-//                        one_person_ahead.length(), one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_personahead.setText(spannable1);
             } else {
 
                 Spannable spannable1 = new SpannableString(secondWord1 + " " + firstWord1);
                 spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                         0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
-//                        "fonts/Montserrat_Bold.otf");
-//                spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface3), firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
-//                        firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_personahead.setText(spannable1);
-
             }
-
-
         } else {
             tv_personahead.setVisibility(View.INVISIBLE);
         }
-
-
         icon_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getId()), activelist.getBusinessName());
-
             }
         });
-
-
         if (header.equalsIgnoreCase("old")) {
-
-
             tv_date.setVisibility(View.VISIBLE);
-
             try {
-
                 String mDate = Config.ChangeDateFormat(activelist.getDate());
                 if (mDate != null)
                     tv_date.setText(mDate);
@@ -1808,17 +1402,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 e.printStackTrace();
             }
         } else {
-
             tv_date.setVisibility(View.GONE);
         }
-
-
         tv_status.setVisibility(View.VISIBLE);
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_status.setTypeface(tyface1);
-
-        // myViewHolder.tv_status.setText(activelist.getWaitlistStatus());
         if (activelist.getWaitlistStatus().
 
                 equalsIgnoreCase("done")) {
@@ -1827,26 +1416,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             tv_status.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
         }
+        if (activelist.getWaitlistStatus().
 
-        if (activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
+                equalsIgnoreCase("arrived")) {
             tv_status.setText("Arrived");
             tv_status.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
         }
-
         if (activelist.getWaitlistStatus().
 
                 equalsIgnoreCase("checkedIn")) {
             tv_status.setVisibility(View.GONE);
             tv_check_in.setVisibility(View.GONE);
-            //  myViewHolder.tv_status.setText("Checked In");
-            //  myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.violet));
         }
 
-          /* if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
-               myViewHolder.tv_status.setText("Cancelled");
-               myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
-           }*/
         if (activelist.getWaitlistStatus().
 
                 equalsIgnoreCase("started")) {
@@ -1875,7 +1458,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_star_line, 0, 0);
         if (activelist.getRating() != null) {
-      //      Config.logV("Rating " + activelist.getRating().getStars() + "Activepr" + activelist.getBusinessName());
             if (Integer.parseInt(activelist.getRating().getStars()) > 0) {
 
                 icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.star_full, 0, 0);
@@ -1883,10 +1465,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_star_line, 0, 0);
             }
         }
-
-        /*}else {
-            myViewHolder.icon_rate.setVisibility(View.GONE);
-        }*/
         icon_rate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1905,12 +1483,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 icon_cancel.setVisibility(View.GONE);
             }
         }
-
-
         Config.logV("Header Title" + header + "Title" + activelist.getBusinessName() + "Group" + groupPosition);
-
-
         return view;
+    }
+
+    private void enableTrack() {
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 0, this);
     }
 
     public static String getDate(long milliSeconds, String dateFormat) {
@@ -1929,4 +1517,56 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        JSONObject jsonObj = new JSONObject();
+        try {
+            Log.i("LatlongTest", String.valueOf(location.getLatitude()));
+            Log.i("LatlongTest", String.valueOf(location.getLongitude()));
+            jsonObj.put("latitude", location.getLatitude());
+            jsonObj.put("longitude", location.getLongitude());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> callLivetrack;
+        callLivetrack = apiService.UpdateLatLong(activelistLatest.getYnwUuid(), activelistLatest.getId(), body);
+        callLivetrack.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> callLivetrack, Response<ResponseBody> response) {
+                try {
+                    if (response.code() == 200) {
+                        Log.i("MELVIN", "MELVIN");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> callLivetrack, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+            }
+
+        });
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }

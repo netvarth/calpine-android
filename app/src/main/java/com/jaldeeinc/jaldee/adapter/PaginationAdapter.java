@@ -1001,7 +1001,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
                 else {
-                    myViewHolder.L_departments.removeAllViews();
+                  //  myViewHolder.L_departments.removeAllViews();
                     myViewHolder.L_departments.setVisibility(View.GONE);
                 }
 

@@ -138,6 +138,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     static TextView mCurrentLoc;
     Spinner mSpinnerDomain;
     String AWS_URL = "";
+    String query1 = "";
 
 
 
@@ -1805,6 +1806,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
 
+        if (query.contains(" ")) {
+            Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
+            query1 = query.replace(" ", "__");
+        }
+
 
         if (query.contains("'")) {
             Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
@@ -1817,11 +1823,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             if(query.equals("")) {
                 querycreate = "sector :'" + mDomainSpinner + "'";
             } else {
-                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query + "') sector :'" + mDomainSpinner + "'";
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "') sector :'" + mDomainSpinner + "'";
             }
         } else {
             if(!query.equals("")) {
-                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query + "')";
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "')";
             } else {
                 querycreate = "";
             }

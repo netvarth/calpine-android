@@ -60,16 +60,15 @@
             android:orientation="horizontal">
 
             <Switch
-                android:textStyle="bold"
-                android:text="Track your ETA"
                 android:id="@+id/shareSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:padding="@dimen/dimen_10dp" />
+                android:padding="@dimen/dimen_10dp"
+                android:text="Track your ETA"
+                android:textStyle="bold" />
 
         </LinearLayout>
-
 
 
         <View
@@ -77,7 +76,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/light_background" />
-
 
 
         <LinearLayout
@@ -95,16 +93,15 @@
 
 
                 <Switch
-                    android:textStyle="bold"
-
-                    android:layout_gravity="right"
-                    android:text="Automatically track your ETA"
                     android:id="@+id/automaticTrackSwitch"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="right"
                     android:checked="true"
                     android:padding="@dimen/dimen_10dp"
-              />
+                    android:text="Automatically track your ETA"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -129,7 +126,6 @@
         </LinearLayout>
 
 
-
         <LinearLayout
             android:id="@+id/transportLayout"
             android:layout_width="match_parent"
@@ -146,7 +142,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:textStyle="bold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".3"
@@ -156,16 +151,16 @@
                     android:paddingRight="@dimen/default_padding"
                     android:text="Mode of Transport"
                     android:textColor="@color/title_grey"
-                    android:textSize="@dimen/txtsize_hint" />
+                    android:textSize="@dimen/txtsize_hint"
+                    android:textStyle="bold" />
+
 
                 <TextView
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
                     android:id="@+id/drivingIcon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".1"
-                    android:drawableLeft="@drawable/ic_directions_car_black_24dp"
+                    android:clickable="true"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingTop="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
@@ -173,13 +168,11 @@
                     android:textSize="@dimen/txtsize_hint" />
 
                 <TextView
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
                     android:id="@+id/walkingIcon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".1"
-                    android:drawableLeft="@drawable/ic_directions_walk_black_24dp"
+                    android:clickable="true"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingTop="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
@@ -187,16 +180,17 @@
                     android:textSize="@dimen/txtsize_hint" />
 
                 <TextView
-                    android:clickable="false"
                     android:id="@+id/bicycleIcon"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".1"
+                    android:clickable="false"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingTop="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint" />
+
 
             </LinearLayout>
 

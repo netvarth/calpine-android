@@ -1490,7 +1490,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mDialog.show();
 
 
-        Call<SearchDepartment> call = apiService.getDepartment(id);
+        Call<SearchDepartment> call = apiService.                                                  getDepartment(id);
 
         call.enqueue(new Callback<SearchDepartment>() {
             @Override

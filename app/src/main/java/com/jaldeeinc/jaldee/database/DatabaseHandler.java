@@ -173,19 +173,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
         db.beginTransaction();
         try {
-           // for (FavouriteModel favorite : favouriteModel) {
+            // for (FavouriteModel favorite : favouriteModel) {
 
-                ContentValues values = new ContentValues();
-                values.put("id", favorite.getId());
-                values.put("businessname", favorite.getBusinessName());
-                values.put("uniqueId", favorite.getUniqueId());
-                values.put("locid", favorite.getLocationId());
-                values.put("isRevelPhoneno", favorite.isRevealPhoneNumber());
-                values.put("place", favorite.getPlace());
+            ContentValues values = new ContentValues();
+            values.put("id", favorite.getId());
+            values.put("businessname", favorite.getBusinessName());
+            values.put("uniqueId", favorite.getUniqueId());
+            values.put("locid", favorite.getLocationId());
+            values.put("isRevelPhoneno", favorite.isRevealPhoneNumber());
+            values.put("place", favorite.getPlace());
 
 
-                db.insert(mContext.getString(R.string.db_table_fav), null, values);
-           // }
+            db.insert(mContext.getString(R.string.db_table_fav), null, values);
+            // }
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
@@ -279,7 +279,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
         ArrayList<FavouriteModel> favData = new ArrayList<FavouriteModel>();
         String table = mContext.getString(R.string.db_table_fav);
-       /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
+        /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
         String[] columns = {"id","businessname","locid","uniqueid","isRevelPhoneno","place"};
 
 
@@ -320,7 +320,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
         ArrayList<FavouriteModel> favData = new ArrayList<FavouriteModel>();
         String table = mContext.getString(R.string.db_table_mfavID);
-       /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
+        /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
         String[] columns = {"id"};
 
 
@@ -378,7 +378,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "serviceTime TEXT,"
                 + "statusUpdatedTime TEXT,"
                 + "distance TEXT,"
-                + "jaldeeStartTimeType TEXT)";
+                + "jaldeeStartTimeType TEXT,"
+                + "rating TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_checkin) + tblFields;
@@ -411,7 +412,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "serviceTime TEXT,"
                 + "statusUpdatedTime TEXT,"
                 + "distance TEXT,"
-                + "jaldeeStartTimeType TEXT)";
+                + "jaldeeStartTimeType TEXT,"
+                + "rating TEXT )";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_mycheckin) + tblFields;
@@ -473,7 +475,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_checkin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating"};
 
         db.beginTransaction();
 
@@ -511,6 +513,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setStatusUpdatedTime(cursor.getString(22));
                 activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(23), JaldeeWaitlistDistanceTime.class));
                 activeModel.setJaldeeStartTimeType(cursor.getString(24));
+                activeModel.setRating(new Gson().fromJson(cursor.getString(25),ActiveCheckIn.class));
 
 
 
@@ -558,6 +561,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("statusUpdatedTime", activeCheckIn.getStatusUpdatedTime());
                 values.put("distance", new Gson().toJson(activeCheckIn.getJaldeeWaitlistDistanceTime()));
                 values.put("jaldeeStartTimeType",activeCheckIn.getJaldeeStartTimeType());
+                values.put("rating", new Gson().toJson(activeCheckIn.getRating()));
 
 
                 db.insert(mContext.getString(R.string.db_table_mycheckin), null, values);
@@ -582,7 +586,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_mycheckin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime","distance","jaldeeStartTimeType"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating"};
         String selection = "";
         String[] selectionArgs = null;
         selectionArgs = new String[]{Config.getTodaysDateString()};
@@ -630,6 +634,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setStatusUpdatedTime(cursor.getString(21));
                 activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(22), JaldeeWaitlistDistanceTime.class));
                 activeModel.setJaldeeStartTimeType(cursor.getString(23));
+                activeModel.setRating(new Gson().fromJson(cursor.getString(24),ActiveCheckIn.class));
 
                 checkin.add(activeModel);
             } while (cursor.moveToNext());
@@ -1014,7 +1019,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
         ArrayList<InboxModel> inboxData = new ArrayList<InboxModel>();
         String table = mContext.getString(R.string.db_table_inbox);
-       /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
+        /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
         String[] columns = {"provider", "service", "id", "timestamp", "uniqueID", "message", "messageStatus", "waitlistId", "attachements"};
         String selection = " uniqueID =?";
         String[] selectionArgs = new String[]{uniqueID};

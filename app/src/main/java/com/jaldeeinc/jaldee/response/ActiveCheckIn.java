@@ -197,6 +197,11 @@ public class ActiveCheckIn {
     }
 
     String stars;
+
+    public void setRating(ActiveCheckIn rating) {
+        this.rating = rating;
+    }
+
     ActiveCheckIn rating;
 
 

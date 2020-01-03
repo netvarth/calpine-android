@@ -163,6 +163,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     String uniqueID;
 
     String selected="";
+    String querypass1 = "";
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -2261,6 +2262,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         if (querycreate == null) {
 
+            if (querypass.contains(" ")) {
+                Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + querypass);
+                querypass1 = querypass.replace(" ", "__");
+            }
+
             if (querypass.contains("'")) {
                 Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + querypass);
                 querypass = querypass.replace("'", "%5C%27");
@@ -2271,12 +2277,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 if(querypass.equals("")) {
                     querycreate = "sector :'" + mDomainSpinner + "'";
                 } else {
-                    querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "'( prefix field = title " + "'" + querypass + "') (phrase field = title " + "'" + querypass + "')services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "') sector :'" + mDomainSpinner + "'";
+                    querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "'( prefix field = title " + "'" + querypass + "') (phrase field = title " + "'" + querypass + "')services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass1 + "') sector :'" + mDomainSpinner + "'";
                 }
             } else {
                 if(!querypass.equals("")) {
                     Config.logV("Query @@@@@@@@@@@@@@" + querypass);
-                    querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "'( prefix field = title " + "'" + querypass + "') (phrase field = title " + "'" + querypass + "') services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass + "')";
+                    querycreate = "(or sub_sector_displayname: " + "'" + querypass + "' sub_sector: " + "'" + querypass + "' specialization: " + "'" + querypass + "' specialization_displayname: " + "'" + querypass + "'( prefix field = title " + "'" + querypass + "') (phrase field = title " + "'" + querypass + "') services: " + "'" + querypass + "' qualification: " + "'" + querypass + "' adwords: " + "'" + querypass1 + "')";
                 } else {
                     querycreate = "";
                 }

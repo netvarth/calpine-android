@@ -39,10 +39,10 @@ public class AddMemberChekin extends AppCompatActivity {
     EditText tv_firstName, tv_Lastname;
 
     @Override
-    public void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addmember_checkin);
-        mActivity=this;
+        mActivity = this;
         tv_firstName = (EditText) findViewById(R.id.txt_firstname);
         tv_Lastname = (EditText) findViewById(R.id.txt_lastname);
         btn_savemember = (Button) findViewById(R.id.btn_savemember);
@@ -52,7 +52,7 @@ public class AddMemberChekin extends AppCompatActivity {
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
         tv_title.setText("Add Member");
-        ImageView iBackPress=(ImageView)findViewById(R.id.backpress) ;
+        ImageView iBackPress = (ImageView) findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,10 +63,10 @@ public class AddMemberChekin extends AppCompatActivity {
         btn_savemember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!tv_firstName.getText().toString().isEmpty()&&!tv_Lastname.getText().toString().isEmpty()) {
+                if (!tv_firstName.getText().toString().isEmpty() && !tv_Lastname.getText().toString().isEmpty()) {
                     ApiAddFamilyMember();
-                }else{
-                    Toast.makeText(mActivity,"Please enter name",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mActivity, "Please enter name", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -121,10 +121,10 @@ public class AddMemberChekin extends AppCompatActivity {
                         finish();
 
 
-                    }else{
+                    } else {
                         String responseerror = response.errorBody().string();
                         Config.logV("Response--error----11111---------------------" + responseerror);
-                        Toast.makeText(mActivity,responseerror,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, responseerror, Toast.LENGTH_SHORT).show();
                     }
 
 

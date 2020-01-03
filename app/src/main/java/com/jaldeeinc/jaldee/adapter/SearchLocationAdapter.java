@@ -1254,7 +1254,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 if (mShowWaitTime) {
                                     myViewHolder.btn_checkin.setText("Check-in".toUpperCase());
                                     // For ML/Fixed
-                                    if (mShowWaitTime) {
+                                    if (mShowWaitTime && isShowTokenId == false) {
                                     } else {
                                         if (mSearchSetting.getCalculationMode() != null) {
                                             if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {

@@ -11,6 +11,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +22,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -127,7 +131,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class CheckIn extends AppCompatActivity {
+public class CheckIn extends AppCompatActivity  {
 
     ArrayList<String> couponArraylist = new ArrayList<String>();
 
@@ -413,6 +417,7 @@ public class CheckIn extends AppCompatActivity {
                 });
             }
         });
+
         ic_left = findViewById(R.id.ic_left);
         ic_right = findViewById(R.id.ic_right);
         ic_cal_minus = findViewById(R.id.ic_cal_minus);
@@ -490,13 +495,14 @@ public class CheckIn extends AppCompatActivity {
         tv_queuename.setTypeface(tyface);
         txt_date.setTypeface(tyface);
 
+        mContext = this;
+        mActivity = this;
 
         int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         Config.logV("Consumer ID------------" + consumerId);
         familyMEmID = consumerId;
 
-        mContext = this;
-        mActivity = this;
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mFrom = extras.getString("from", "");
@@ -1142,6 +1148,7 @@ public class CheckIn extends AppCompatActivity {
 
     static String mDate;
 
+
     public static class MyDatePickerDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -1502,7 +1509,7 @@ public class CheckIn extends AppCompatActivity {
 
                         if (mQueueTimeSlotList.size() > 0) {
                             Lbottomlayout.setVisibility(View.VISIBLE);
-                            tv_queuename.setVisibility(View.VISIBLE);
+                            tv_queuename.setVisibility(View.GONE);
                             tv_queuetime.setVisibility(View.VISIBLE);
                             tv_waittime.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
@@ -1535,17 +1542,15 @@ public class CheckIn extends AppCompatActivity {
                                     newtime = m + " Minutes";
                                 }
 
-
                                 secondWord = newtime;
                                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
                                     if (h > 0) {
-                                        firstWord = "Checked in for Today, ";
+                                        firstWord = "Checked in for Today,"+ " "+"Est Wait Time ";
                                     } else {
                                         firstWord = "Est Wait Time ";
 
                                     }
-
                                 } else {
 
                                     firstWord = "Next Available Time ";
