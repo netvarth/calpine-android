@@ -320,7 +320,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         String firstWord="Est Wait Time ";
-                        String secondWord= queueList.getNextAvailableQueue().getQueueWaitingTime() + " Minutes";
+                        String secondWord= Config.getTimeinHourMinutes(queueList.getNextAvailableQueue().getQueueWaitingTime());// + " Minutes";
                         Spannable spannable = new SpannableString(firstWord+secondWord);
                         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),

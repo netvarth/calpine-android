@@ -87,7 +87,18 @@
             android:layout_margin="@dimen/padding2"
             android:text="esttime"
             android:textColor="@color/title_grey"
-            android:textSize="@dimen/txtsize_12" />
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/txt_queuetime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:gravity="left"
+            android:text="Your Queue Time:"
+            android:textColor="@color/sec_title_grey"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/txt_peopleahead"

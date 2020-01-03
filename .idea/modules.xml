@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/jaldee-android.iml" filepath="$PROJECT_DIR$/jaldee-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jaldee-android-1.2.1-latest.iml" filepath="$PROJECT_DIR$/jaldee-android-1.2.1-latest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/jaldee-android-1.2.1-latest-app.iml" filepath="$PROJECT_DIR$/app/jaldee-android-1.2.1-latest-app.iml" />
     </modules>
   </component>
 </project>

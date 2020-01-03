@@ -413,8 +413,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "statusUpdatedTime TEXT,"
                 + "distance TEXT,"
                 + "jaldeeStartTimeType TEXT,"
-                + "rating TEXT )";
-
+                + "rating TEXT,"
+                + "queueEndTime TEXT)";
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_mycheckin) + tblFields;
         db.execSQL(tblCreateStr);
@@ -562,6 +562,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("distance", new Gson().toJson(activeCheckIn.getJaldeeWaitlistDistanceTime()));
                 values.put("jaldeeStartTimeType",activeCheckIn.getJaldeeStartTimeType());
                 values.put("rating", new Gson().toJson(activeCheckIn.getRating()));
+                values.put("queueEndTime",activeCheckIn.getQueue().getQueueEndTime());
 
 
                 db.insert(mContext.getString(R.string.db_table_mycheckin), null, values);
@@ -586,7 +587,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_mycheckin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating", "queueEndTime"};
         String selection = "";
         String[] selectionArgs = null;
         selectionArgs = new String[]{Config.getTodaysDateString()};
@@ -635,6 +636,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(22), JaldeeWaitlistDistanceTime.class));
                 activeModel.setJaldeeStartTimeType(cursor.getString(23));
                 activeModel.setRating(new Gson().fromJson(cursor.getString(24),ActiveCheckIn.class));
+                activeModel.setQueueEndTime(cursor.getString(25));
 
                 checkin.add(activeModel);
             } while (cursor.moveToNext());

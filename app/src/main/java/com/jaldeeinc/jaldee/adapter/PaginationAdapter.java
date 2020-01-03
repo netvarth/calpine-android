@@ -417,26 +417,30 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 if (searchdetailList.getParking_type_location1() != null) {
                     if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
-                        TextView dynaText = new TextView(context);
-                        Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                                "fonts/Montserrat_Regular.otf");
-                        dynaText.setTypeface(tyface);
-                        dynaText.setText(Config.toTitleCase(searchdetailList.getParking_type_location1()) + " Parking ");
-                        dynaText.setTextSize(13);
-                        dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                        dynaText.setPadding(5, 5, 5, 5);
-                        dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_parking, 0, 0);
-                        dynaText.setMaxLines(1);
-                        params1.setMargins(10, 7, 10, 7);
-                        dynaText.setGravity(Gravity.LEFT);
-                        dynaText.setLayoutParams(params1);
-                        parent.addView(dynaText);
-                        dynaText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Toast.makeText(activity, searchdetailList.getParking_type_location1() + " parking available", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        if (searchdetailList.getParking_type_location1().equalsIgnoreCase("none")) {
+                            dynaText1.setVisibility(View.GONE);
+                        } else {
+                            TextView dynaText = new TextView(context);
+                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                    "fonts/Montserrat_Regular.otf");
+                            dynaText.setTypeface(tyface);
+                            dynaText.setText(Config.toTitleCase(searchdetailList.getParking_type_location1()) + " Parking ");
+                            dynaText.setTextSize(13);
+                            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                            dynaText.setPadding(5, 5, 5, 5);
+                            dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_parking, 0, 0);
+                            dynaText.setMaxLines(1);
+                            params1.setMargins(10, 7, 10, 7);
+                            dynaText.setGravity(Gravity.LEFT);
+                            dynaText.setLayoutParams(params1);
+                            parent.addView(dynaText);
+                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Toast.makeText(activity, searchdetailList.getParking_type_location1() + " parking available", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     }
                 }
                 if (searchdetailList.getAlways_open_location1() != null) {
