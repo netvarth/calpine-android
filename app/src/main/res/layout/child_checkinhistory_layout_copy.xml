@@ -263,6 +263,13 @@
                         android:gravity="left"
                         android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12" />
+
+                    <Switch
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:id="@+id/switch1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
                     <TextView
                         android:visibility="gone"
                         android:id="@+id/txt_travelmode_value"
@@ -309,11 +316,7 @@
                         android:textSize="@dimen/txtsize_12" />
 
                 </LinearLayout>
-                <Switch
-                    android:id="@+id/switch1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+
             </LinearLayout>
 
 
