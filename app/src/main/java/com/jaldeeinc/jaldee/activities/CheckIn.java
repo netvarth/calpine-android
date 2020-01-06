@@ -659,14 +659,14 @@ public class CheckIn extends AppCompatActivity  {
 
                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime),isShowToken);
                 } else {
                     if (selectedDateFormat != null) {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat,isShowToken);
                     } else {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime),isShowToken);
                     }
                 }
 
@@ -1215,7 +1215,7 @@ public class CheckIn extends AppCompatActivity  {
             e.printStackTrace();
         }
         Config.logV("Selected Date---&&&&&&&&&&&#%%%%%%%-------------" + selectedDate);
-        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, isShowToken);
+        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate,String.valueOf(isShowToken));
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -1274,30 +1274,32 @@ public class CheckIn extends AppCompatActivity  {
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-
-                        if (response.body().getCalculationMode().equalsIgnoreCase("NoCalc") && isShowToken.equals(true)) {
-                            tv_title.setText("Get Token");
-                            Word_Change = "Token for ";
-                            btn_checkin.setText("CONFIRM");
-                            toastMessage = "Token has been generated successfully";
-                        } else {
-
-                            if (terminology.equals("order")) {
-                                tv_title.setText("Order");
-                                Word_Change = "Order for ";
+                        if (response.body().getCalculationMode() != null) {
+                            if (response.body().getCalculationMode().equalsIgnoreCase("NoCalc") && response.body().isShowTokenId()) {
+                                isShowToken = String.valueOf(response.body().isShowTokenId());
+                                tv_title.setText("Get Token");
+                                Word_Change = "Token for ";
                                 btn_checkin.setText("CONFIRM");
-                                toastMessage = "You have ordered successfully";
-
+                                toastMessage = "Token has been generated successfully";
                             } else {
-                                tv_title.setText("Check-in");
-                                Word_Change = "Check-in for ";
-                                btn_checkin.setText("CONFIRM");
-                                toastMessage = "Check-in saved successfully ";
+
+                                if (terminology.equals("order")) {
+                                    tv_title.setText("Order");
+                                    Word_Change = "Order for ";
+                                    btn_checkin.setText("CONFIRM");
+                                    toastMessage = "You have ordered successfully";
+
+                                } else {
+                                    tv_title.setText("Check-in");
+                                    Word_Change = "Check-in for ";
+                                    btn_checkin.setText("CONFIRM");
+                                    toastMessage = "Check-in saved successfully ";
+                                }
+
+
                             }
-
-
+                            ApiSearchViewServiceID(serviceId);
                         }
-                        ApiSearchViewServiceID(serviceId);
                     }
 
                 } catch (Exception e) {
@@ -1491,7 +1493,7 @@ public class CheckIn extends AppCompatActivity  {
 
                         if (mQueueTimeSlotList.size() > 0) {
                             i = 0;
-                            if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null && isShowToken.equals("false")) {
+                            if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true")) {
                                 tv_personahead.setVisibility(View.VISIBLE);
 
                                 String firstWord = "People ahead of you ";
@@ -2493,14 +2495,14 @@ public class CheckIn extends AppCompatActivity  {
 
                                         if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                                            ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                            ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime),isShowToken);
                                         } else {
                                             if (selectedDateFormat != null) {
 
-                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat,isShowToken);
                                             } else {
 
-                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime),isShowToken);
                                             }
                                         }
                                     }
