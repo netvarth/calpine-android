@@ -13,6 +13,7 @@ import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -297,6 +298,10 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             }
         });
 
+
+            if(activelist.getCheckInTime()!=null){
+                Log.i("checkinTimeActivelist",activelist.getCheckInTime());
+            }
 
         Config.logV("Bill------------" + activelist.getWaitlistStatus());
         if (!(activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid"))&&(activelist.getBillViewStatus()!=null) || activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {

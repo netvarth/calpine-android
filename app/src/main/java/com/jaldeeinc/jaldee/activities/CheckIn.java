@@ -167,7 +167,7 @@ public class CheckIn extends AppCompatActivity  {
     LinearLayout LcheckinDatepicker;
     static String mFrom;
     String title, place, terminology;
-    static String isShowToken;
+     static String isShowToken;
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
     static TextView tv_queuetime;
