@@ -25,6 +25,16 @@ public class ActiveCheckIn {
     }
 
     String paymentStatus;
+    String checkInTime;
+
+    public String getCheckInTime() {
+        return checkInTime;
+    }
+
+    public void setCheckInTime(String checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
     public int getPartySize() {
         return partySize;
     }

@@ -209,7 +209,7 @@ public class CheckIn extends AppCompatActivity  {
     static String Word_Change = "";
     SearchDepartment depResponse;
     String displayNotes;
-    String getAvail_date;
+    static String getAvail_date;
     TextView tv_attach, tv_camera;
     private static final String IMAGE_DIRECTORY = "/Jaldee" +
             "";
@@ -444,7 +444,7 @@ public class CheckIn extends AppCompatActivity  {
 
                 DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
                 selectedDateFormat = selecteddateParse.format(added_date);
-                UpdateDAte(selectedDateFormat);
+                UpdateDAte(selectedDateFormat,getAvail_date);
             }
         });
 
@@ -469,7 +469,7 @@ public class CheckIn extends AppCompatActivity  {
                 txt_date.setText(strDate);
                 DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
                 selectedDateFormat = selecteddateParse.format(added_date);
-                UpdateDAte(selectedDateFormat);
+                UpdateDAte(selectedDateFormat,getAvail_date);
                 //  UpdateDAte(strDate);
             }
         });
@@ -751,14 +751,36 @@ public class CheckIn extends AppCompatActivity  {
             System.out.println("UTC time: " + sdf.format(currentTime));
             Date added_date = addDays(currentTime, 1);
             DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             //to convert Date to String, use format method of SimpleDateFormat class.
-            String strDate = dateFormat.format(added_date);
+            String strDate = getAvail_date;
+            String strDatef = null;
+            try {
+                Date date = df.parse(getAvail_date);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(currentTime);
+                cal.clear(Calendar.HOUR);
+                cal.clear(Calendar.MINUTE);
+                cal.clear(Calendar.SECOND);
+                cal.clear(Calendar.MILLISECOND);
+                Date desiredDate = cal.getTime();
+               String currentDate = df.format(desiredDate);
+
+                if(currentDate.equalsIgnoreCase(getAvail_date)){
+                    date = addDays(desiredDate, 1);
+                }
+                strDatef = dateFormat.format(date);
+                txt_date.setText(strDatef);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             /* txt_date.setText(sdf.format(currentTime));*/
-            txt_date.setText(strDate);
+
             DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
             // selectedDateFormat = selecteddateParse.format(currentTime);
-            selectedDateFormat = selecteddateParse.format(added_date);
-            UpdateDAte(selectedDateFormat);
+            selectedDateFormat = getAvail_date;
+            UpdateDAte(selectedDateFormat, getAvail_date);
         }
 
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
@@ -1198,18 +1220,18 @@ public class CheckIn extends AppCompatActivity  {
                         txt_date.setText(mDate);
 
                         selectedDateFormat = view.getYear() + "-" + (view.getMonth() + 1) + "-" + view.getDayOfMonth();
-                        UpdateDAte(selectedDateFormat);
+                        UpdateDAte(selectedDateFormat,getAvail_date);
 
                     }
                 };
     }
 
-    public static void UpdateDAte(String selectedDate) {
+    public static void UpdateDAte(String selectedDate, String getAvail_date) {
         Date selecteddate = null;
         String dtStart = txt_date.getText().toString();
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            selecteddate = format.parse(dtStart);
+            selecteddate = format.parse(getAvail_date);
             //  System.out.println(selecteddate);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -1221,7 +1243,7 @@ public class CheckIn extends AppCompatActivity  {
         cal.add(Calendar.DAY_OF_YEAR, 1);
         Date tomorow = cal.getTime();
         if (tomorow.before(selecteddate)) {
-            Config.logV("Date Enabled---------------");
+//            Config.logV("Date Enabled---------------");
             ic_cal_minus.setEnabled(true);
             ic_cal_minus.setImageResource(R.drawable.icon_minus_active);
 

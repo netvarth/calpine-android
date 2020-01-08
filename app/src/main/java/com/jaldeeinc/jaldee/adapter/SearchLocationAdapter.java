@@ -54,6 +54,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
     private List<SearchLocation> mSearchLocationList;
     static Context mContext;
+    String secondWord,firstWord;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate;
@@ -446,6 +447,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("getAvail_date",mQueueList.get(0).getNextAvailableQueue().getAvailableDate());
 
                 mContext.startActivity(iCheckIn);
             }
@@ -455,20 +457,28 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.txt_diffdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //Config.logV("DETAIL !!!!!!!!!!!!!------"+);
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                iCheckIn.putExtra("serviceId", searchLoclist.getId());
-                iCheckIn.putExtra("uniqueID", mUniqueID);
-                iCheckIn.putExtra("accountID", accountID);
-                iCheckIn.putExtra("from", "searchdetail_future");
-                iCheckIn.putExtra("title", mTitle);
-                iCheckIn.putExtra("place", searchLoclist.getPlace());
-                iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
-                iCheckIn.putExtra("sector", sector);
-                iCheckIn.putExtra("subsector", subsector);
-                iCheckIn.putExtra("terminology", terminology);
+
+
+                for (int i = 0; i < mQueueList.size(); i++) {
+                    if (mQueueList.get(i).getNextAvailableQueue() != null) {
+                        //Config.logV("DETAIL !!!!!!!!!!!!!------"+);
+                        iCheckIn.putExtra("serviceId", searchLoclist.getId());
+                        iCheckIn.putExtra("uniqueID", mUniqueID);
+                        iCheckIn.putExtra("accountID", accountID);
+                        iCheckIn.putExtra("from", "searchdetail_future");
+                        iCheckIn.putExtra("title", mTitle);
+                        iCheckIn.putExtra("place", searchLoclist.getPlace());
+                        iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
+                        iCheckIn.putExtra("sector", sector);
+                        iCheckIn.putExtra("subsector", subsector);
+                        iCheckIn.putExtra("terminology", terminology);
+
+                        iCheckIn.putExtra("getAvail_date", mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
+                    }
+                }
                 mContext.startActivity(iCheckIn);
+
             }
         });
 
@@ -486,6 +496,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("getAvail_date",mQueueList.get(0).getNextAvailableQueue().getAvailableDate());
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -504,6 +515,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("getAvail_date",mQueueList.get(0).getNextAvailableQueue().getAvailableDate());
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -1035,6 +1047,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 iService.putExtra("price", mServiceprice);
                                 iService.putExtra("desc", mServicedesc);
                                 iService.putExtra("servicegallery", mServiceGallery);
+
                                 iService.putExtra("taxable", mTaxable);
                                 iService.putExtra("title", mTitle);
                                 iService.putExtra("isPrePayment", isPrepayment);
@@ -1231,6 +1244,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 if (mSearchSetting.getCalculationMode() != null) { //   Token/No Token
                                     if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
                                         myViewHolder.btn_checkin.setText("GET TOKEN");
+                                        if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()!= -1) {
+                                            Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
+                                            if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()== 0) {
+
+
+                                            }
+                                            else{
+                                            firstWord = String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());}
+                                        }
                                         noCalcShowToken(mQueueList, myViewHolder);
                                     } else {
                                         myViewHolder.tv_waittime.setVisibility(View.GONE);
@@ -1238,6 +1260,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 if (mShowWaitTime) { // ML/Fixed
                                     myViewHolder.btn_checkin.setText( "Check-in".toUpperCase());
                                     if (mShowWaitTime && mQueueList != null) {
+                                        if (mQueueList!= null &&  mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                                            secondWord = "\nToday, " +mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                                        }
+                                        else{
+                                        secondWord = "\n" + Config.getTimeinHourMinutes(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());}
+
                                         setCurrentDateCheckin(mQueueList, myViewHolder);
                                     } else {
                                         enableCheckinButton(myViewHolder);
@@ -1259,6 +1287,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         if (mSearchSetting.getCalculationMode() != null) {
                                             if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
                                                 myViewHolder.btn_checkin.setText("GET TOKEN");
+                                                if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()!= -1) {
+                                                    Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
+                                                    if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()== 0) {
+                                                    }
+                                                    else{
+                                                        firstWord = String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());}
+                                                }
                                                 noCalcShowToken(mQueueList, myViewHolder);
                                             } else {
                                                 myViewHolder.tv_waittime.setVisibility(View.GONE);
@@ -1266,6 +1301,16 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                             }
                                         }
                                     }
+                                    try{
+                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                                    Date date = format.parse(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
+                                    String day = (String) DateFormat.format("dd", date);
+                                    String monthString = (String) DateFormat.format("MMM", date);
+                                    secondWord = "\n" + monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();}
+                                    catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
                                     setFutureDateCheckin(mQueueList, myViewHolder);
                                 }
                             } else {
@@ -1487,23 +1532,24 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     }
 
     public void setFutureDateCheckin(List<QueueList> mQueueList, MyViewHolder myViewHolder) {
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = format.parse(mQueueList.get(0).getNextAvailableQueue().getAvailableDate());
-            String day = (String) DateFormat.format("dd", date);
-            String monthString = (String) DateFormat.format("MMM", date);
+        //try {
+//            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//            Date date = format.parse(mQueueList.get(0).getNextAvailableQueue().getAvailableDate());
+//            String day = (String) DateFormat.format("dd", date);
+//            String monthString = (String) DateFormat.format("MMM", date);
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             String firstWord = "Next Available Time ";
-            String secondWord = "\n" + monthString + " " + day + ", " + mQueueList.get(0).getNextAvailableQueue().getServiceTime();
+        //    String secondWord = "\n" + monthString + " " + day + ", " + mQueueList.get(0).getNextAvailableQueue().getServiceTime();
             myViewHolder.tv_waittime.setText(firstWord + secondWord);
             myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
             myViewHolder.txtwaittime_expand.setText( firstWord + secondWord);
             myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
             disableCheckinButton(myViewHolder);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+       // }
+//        catch (ParseException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void setCurrentDateCheckin(List<QueueList> mQueueList,MyViewHolder myViewHolder) {
@@ -1512,7 +1558,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             String firstWord = "Next Available Time ";
-            String secondWord = "\nToday, " +mQueueList.get(0).getNextAvailableQueue().getServiceTime();
+        //    String secondWord = "\nToday, " +mQueueList.get(0).getNextAvailableQueue().getServiceTime();
             myViewHolder.tv_waittime.setText(firstWord + secondWord);
             myViewHolder.txtwaittime_expand.setText( firstWord + secondWord);
             enableCheckinButton(myViewHolder);
@@ -1520,9 +1566,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             String firstWord = "Est Wait Time ";
-            String secondWord = " ";
+           // String secondWord = " ";
             if(mQueueList != null){
-            secondWord = "\n" + Config.getTimeinHourMinutes(mQueueList.get(0).getNextAvailableQueue().getQueueWaitingTime());}
+         //   secondWord = "\n" + Config.getTimeinHourMinutes(mQueueList.get(0).getNextAvailableQueue().getQueueWaitingTime());
+                }
 
             myViewHolder.tv_waittime.setText(firstWord + secondWord);
             myViewHolder.txtwaittime_expand.setText( firstWord + secondWord);

@@ -133,6 +133,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 if(queueList.getNextAvailableQueue()!=null){
                     iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
                 }
+                iCheckIn.putExtra("getAvail_date",queueList.getNextAvailableQueue().getAvailableDate());
 
 
                 mContext.startActivity(iCheckIn);
@@ -154,6 +155,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 if(queueList.getNextAvailableQueue()!=null){
                     iCheckIn.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
                 }
+                iCheckIn.putExtra("getAvail_date",queueList.getNextAvailableQueue().getAvailableDate());
 
 
                 mContext.startActivity(iCheckIn);

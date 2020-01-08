@@ -134,7 +134,6 @@
 
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -142,9 +141,9 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".3"
                     android:background="@color/app_background"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingTop="@dimen/default_padding"
@@ -156,10 +155,12 @@
 
 
                 <TextView
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
                     android:id="@+id/drivingIcon"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".1"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:clickable="true"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingTop="@dimen/default_padding"
@@ -168,23 +169,13 @@
                     android:textSize="@dimen/txtsize_hint" />
 
                 <TextView
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:gravity="center"
+                    android:layout_gravity="center"
                     android:id="@+id/walkingIcon"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".1"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:clickable="true"
-                    android:paddingLeft="@dimen/default_padding"
-                    android:paddingTop="@dimen/default_padding"
-                    android:paddingRight="@dimen/default_padding"
-                    android:textColor="@color/title_grey"
-                    android:textSize="@dimen/txtsize_hint" />
-
-                <TextView
-                    android:id="@+id/bicycleIcon"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".1"
-                    android:clickable="false"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingTop="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"

@@ -77,7 +77,7 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
         modeLabel = findViewById(R.id.modeLabel);
         drivingIcon = findViewById(R.id.drivingIcon);
         walkingIcon = findViewById(R.id.walkingIcon);
-        bicycleIcon = findViewById(R.id.bicycleIcon);
+
         btn_send = findViewById(R.id.btn_send);
         btn_cancel = findViewById(R.id.btn_cancel);
         view1 = findViewById(R.id.view1);
@@ -99,11 +99,9 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
         if(!isCar){
             drivingIcon.setBackgroundResource(R.drawable.icon_driving);
             walkingIcon.setBackgroundResource(R.drawable.icons_walking_green);
-
         }else{
             drivingIcon.setBackgroundResource(R.drawable.icons_driving_green);
             walkingIcon.setBackgroundResource(R.drawable.icon_walking);
-
         }
         drivingIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,38 +117,24 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
                 }else{
                     v.setBackgroundResource(R.drawable.icons_driving_green);
                     walkingIcon.setBackgroundResource(R.drawable.icon_walking);
-
                 }
-
                 ApiUpdateTravelMode();
-
-
             }
         });
-
         walkingIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 travelMode = "WALKING";
-
                 if(isWalk){
                     v.setBackgroundResource(R.drawable.icon_walking);
                     drivingIcon.setBackgroundResource(R.drawable.icons_driving_green);
                     isWalk = !isWalk; // reverse
                     isCar = false;
-
-
                 }else{
                     v.setBackgroundResource(R.drawable.icons_walking_green);
                     drivingIcon.setBackgroundResource(R.drawable.icon_driving);
-
                 }
                 ApiUpdateTravelMode();
-
-
-
-
             }
         });
 
@@ -165,11 +149,7 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
-
-
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -179,9 +159,6 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
             title = extras.getString("title");
         }
         ApiActiveCheckIn();
-
-
-
         if(shareSwitch.isChecked()){
             Lterms.setVisibility(View.VISIBLE);
             transportLayout.setVisibility(View.VISIBLE);
@@ -194,7 +171,6 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
             btn_send.setVisibility(View.GONE);
             btn_cancel.setVisibility(View.VISIBLE);
         }
-
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,7 +184,6 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
                 finish();
             }
         });
-
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,7 +195,6 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
                 finish();
             }
         });
-
         shareSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -241,8 +215,6 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
                     } else {
                         UpdateShareLiveLocation();
                     }
-
-
                 } else {
                     locationStatus = false;
                     Lterms.setVisibility(View.GONE);
@@ -259,13 +231,11 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
                 }
             }
         });
-
         if (automaticTrackSwitch.isChecked()) {
             trackLabel.setText("In \"Automatic tracking\" Jaldee will start tracking 1 hour prior to your turn");
         } else {
             trackLabel.setText("If \"Automatic tracking\" is turned off, you will have to enable tracking manually from your check-in");
         }
-
         automaticTrackSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -278,14 +248,9 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
                 }
             }
         });
-
-
     }
 
-
-
     public void ApiActiveCheckIn() {
-
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(uuid,accountID);
@@ -312,10 +277,7 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
         });
     }
 
-
-
     private void ApiShareLiveLocation() {
-
         final ApiInterface apiService = ApiClient.getClient(this).create(ApiInterface.class);
         final JSONObject jsonObj = new JSONObject();
         final JSONObject geoLoc = new JSONObject();
@@ -330,13 +292,11 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ShareLocation> call = apiService.ShareLiveLocation(uuid, accountID, body);
         call.enqueue(new Callback<ShareLocation>() {
             @Override
             public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
-
                 try {
                     if (response.code() == 200) {
                         firstCall = false;
@@ -353,32 +313,25 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
 
                                 } else {
                                     modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
-
                                 }
-
-
                             } else {
                                 modeLabel.setText("You are close to " + a.getProvider().getBusinessName());
                             }
-
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ShareLocation> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-
             }
         });
     }
 
     private void UpdateShareLiveLocation() {
-
         final ApiInterface apiService = ApiClient.getClient(this).create(ApiInterface.class);
         final JSONObject jsonObj = new JSONObject();
         final JSONObject geoLoc = new JSONObject();
@@ -393,55 +346,41 @@ public class CheckinShareLocation extends AppCompatActivity implements LocationL
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ShareLocation> call = apiService.UpdateShareLiveLocation(uuid, accountID, body);
         call.enqueue(new Callback<ShareLocation>() {
             @Override
             public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
-
                 try {
                     if (response.code() == 200) {
                         if (response.body().getJaldeeDistanceTime() != null) {
 
                             int hours = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
                             int minutes = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
-
                             if (response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() > 0) {
-
-
                                 if (hours < 1) {
                                     modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes + " mins" + " to reach");
-
                                 } else {
                                     modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
-
                                 }
-
-
                             } else {
                                 modeLabel.setText("You are close to " + a.getProvider().getBusinessName());
                             }
-
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ShareLocation> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-
             }
         });
     }
 
-
     private void ApiUpdateTravelMode() {
-
         if(!uuid.equals("") && !accountID.equals("")){
             ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
             JSONObject jsonObj = new JSONObject();
