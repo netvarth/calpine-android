@@ -376,6 +376,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "amountDue DOUBLE,"
                 + "personsAhead INTEGER,"
                 + "serviceTime TEXT,"
+                + "checkInTime TEXT,"
                 + "statusUpdatedTime TEXT,"
                 + "distance TEXT,"
                 + "jaldeeStartTimeType TEXT,"
@@ -410,6 +411,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "amountDue DOUBLE,"
                 + "personsAhead INTEGER,"
                 + "serviceTime TEXT,"
+                + "checkInTime TEXT,"
                 + "statusUpdatedTime TEXT,"
                 + "distance TEXT,"
                 + "jaldeeStartTimeType TEXT,"
@@ -451,6 +453,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("amountDue", activeCheckIn.getAmountDue());
                 values.put("personsAhead", activeCheckIn.getPersonsAhead());
                 values.put("serviceTime", activeCheckIn.getServiceTime());
+                values.put("checkInTime", activeCheckIn.getCheckInTime());
                 values.put("statusUpdatedTime", activeCheckIn.getStatusUpdatedTime());
 
                 db.insert(mContext.getString(R.string.db_table_checkin), null, values);
@@ -475,7 +478,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_checkin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","checkInTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating"};
 
         db.beginTransaction();
 
@@ -509,11 +512,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setPersonsAhead(cursor.getInt(19));
 
                 activeModel.setServiceTime(cursor.getString(20));
-                activeModel.setQueueEndTime(cursor.getString(21));
-                activeModel.setStatusUpdatedTime(cursor.getString(22));
-                activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(23), JaldeeWaitlistDistanceTime.class));
-                activeModel.setJaldeeStartTimeType(cursor.getString(24));
-                activeModel.setRating(new Gson().fromJson(cursor.getString(25),ActiveCheckIn.class));
+                activeModel.setCheckInTime(cursor.getString(21));
+                activeModel.setQueueEndTime(cursor.getString(22));
+                activeModel.setStatusUpdatedTime(cursor.getString(23));
+                activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(24), JaldeeWaitlistDistanceTime.class));
+                activeModel.setJaldeeStartTimeType(cursor.getString(25));
+                activeModel.setRating(new Gson().fromJson(cursor.getString(26),ActiveCheckIn.class));
 
 
 
@@ -558,6 +562,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("amountDue", activeCheckIn.getAmountDue());
                 values.put("personsAhead", activeCheckIn.getPersonsAhead());
                 values.put("serviceTime", activeCheckIn.getServiceTime());
+                values.put("checkInTime", activeCheckIn.getCheckInTime());
                 values.put("statusUpdatedTime", activeCheckIn.getStatusUpdatedTime());
                 values.put("distance", new Gson().toJson(activeCheckIn.getJaldeeWaitlistDistanceTime()));
                 values.put("jaldeeStartTimeType",activeCheckIn.getJaldeeStartTimeType());
@@ -586,7 +591,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_mycheckin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime","checkInTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating"};
         String selection = "";
         String[] selectionArgs = null;
         selectionArgs = new String[]{Config.getTodaysDateString()};
@@ -631,10 +636,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setPersonsAhead(cursor.getInt(19));
 
                 activeModel.setServiceTime(cursor.getString(20));
-                activeModel.setStatusUpdatedTime(cursor.getString(21));
-                activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(22), JaldeeWaitlistDistanceTime.class));
-                activeModel.setJaldeeStartTimeType(cursor.getString(23));
-                activeModel.setRating(new Gson().fromJson(cursor.getString(24),ActiveCheckIn.class));
+                activeModel.setCheckInTime(cursor.getString(21));
+                activeModel.setStatusUpdatedTime(cursor.getString(22));
+                activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(23), JaldeeWaitlistDistanceTime.class));
+                activeModel.setJaldeeStartTimeType(cursor.getString(24));
+                activeModel.setRating(new Gson().fromJson(cursor.getString(25),ActiveCheckIn.class));
 
                 checkin.add(activeModel);
             } while (cursor.moveToNext());
