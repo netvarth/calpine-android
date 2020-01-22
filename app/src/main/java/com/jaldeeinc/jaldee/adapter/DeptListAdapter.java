@@ -684,6 +684,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onClick(View v) {
                         Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                        iCheckIn.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
                         iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
                         iCheckIn.putExtra("accountID", searchdetailList.getId());
@@ -876,6 +877,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                iCheckIn.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
                 iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
                 iCheckIn.putExtra("accountID", searchdetailList.getId());
