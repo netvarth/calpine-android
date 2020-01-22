@@ -704,7 +704,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 firstWord = "Checked in for ";
 
                 String secondWord = "Today";// + activelist.getServiceTime();
-                Spannable spannable = new SpannableString(firstWord + secondWord);
+                Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -718,12 +718,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                     tv_estTime.setVisibility(View.VISIBLE);
                     tv_estTime.setText(spannable);
-                    tv_queueTime.setVisibility(View.VISIBLE);
-                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                    tv_queueTime.setVisibility(View.VISIBLE);
+//                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                 } else {
                     tv_estTime.setVisibility(View.GONE);
-                    tv_queueTime.setVisibility(View.VISIBLE);
-                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                    tv_queueTime.setVisibility(View.VISIBLE);
+//                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                 }
 
 
@@ -773,7 +773,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 String secondWord = yourDate ; // + ", " + activelist.getServiceTime();
 
 
-                Spannable spannable = new SpannableString(firstWord + secondWord);
+                Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -782,16 +782,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     tv_status.setVisibility(View.VISIBLE);
                     tv_status.setText(secondWord + " - Cancelled ");
                     tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+                    tv_estTime.setText(spannable);
                 }
                 if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                     tv_estTime.setVisibility(View.VISIBLE);
                     tv_estTime.setText(spannable);
-                    tv_queueTime.setVisibility(View.VISIBLE);
-                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                    tv_queueTime.setVisibility(View.VISIBLE);
+//                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                 } else {
                     tv_estTime.setVisibility(View.GONE);
-                    tv_queueTime.setVisibility(View.VISIBLE);
-                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                    tv_queueTime.setVisibility(View.VISIBLE);
+//                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                 }
             }
 
@@ -868,7 +869,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         secondWord = yourDate;//+ ", " + timeFORAMT;
-                        spannable = new SpannableString(firstWord + secondWord);
+                        spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -882,18 +883,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                         tv_estTime.setVisibility(View.VISIBLE);
                         tv_estTime.setText(spannable);
-                        tv_queueTime.setVisibility(View.VISIBLE);
-                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                        tv_queueTime.setVisibility(View.VISIBLE);
+//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                     } else {
                         tv_estTime.setVisibility(View.GONE);
-                        tv_queueTime.setVisibility(View.VISIBLE);
-                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                        tv_queueTime.setVisibility(View.VISIBLE);
+//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                     }
                 } else {
                     if (activelist.getAppxWaitingTime() == -1) {
                         tv_estTime.setVisibility(View.GONE);
-                        tv_queueTime.setVisibility(View.VISIBLE);
-                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                        tv_queueTime.setVisibility(View.VISIBLE);
+//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             tv_status.setVisibility(View.VISIBLE);
                             tv_status.setText(" Cancelled ");
@@ -913,7 +914,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         }
 
                         String secondWord = Config.getTimeinHourMinutes(activelist.getAppxWaitingTime());
-                        Spannable spannable = new SpannableString(firstWord + secondWord);
+                        Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -975,7 +976,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             secondWord = yourDate;// + ", " + timeFORAMT;
-                            spannable = new SpannableString(firstWord + secondWord);
+                            spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -986,12 +987,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                             tv_estTime.setVisibility(View.VISIBLE);
                             tv_estTime.setText(spannable);
-                            tv_queueTime.setVisibility(View.VISIBLE);
-                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                            tv_queueTime.setVisibility(View.VISIBLE);
+//                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         } else {
                             tv_estTime.setVisibility(View.GONE);
-                            tv_queueTime.setVisibility(View.VISIBLE);
-                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                            tv_queueTime.setVisibility(View.VISIBLE);
+//                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         }
                     }
                 }
@@ -1058,7 +1059,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                     String yourDate = format.format(dateParse);
                     String secondWord = activelist.getDate(); // + ", " + activelist.getQueueStartTime();
-                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                    Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1118,13 +1119,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         secondWord = yourDate; // + ", " + timeFORAMT;
-                        spannable = new SpannableString(firstWord + secondWord);
+                        spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-//                        tv_check_in.setVisibility(View.VISIBLE);
-//                        tv_check_in.setText(spannable);
+                        tv_check_in.setVisibility(View.VISIBLE);
+                        tv_check_in.setText(spannable);
                         tv_status.setVisibility(View.VISIBLE);
                         tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                         tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
@@ -1132,12 +1133,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                         tv_estTime.setVisibility(View.VISIBLE);
                         tv_estTime.setText(spannable);
-                        tv_queueTime.setVisibility(View.VISIBLE);
-                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                        tv_queueTime.setVisibility(View.VISIBLE);
+//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                     } else {
                         tv_estTime.setVisibility(View.GONE);
-                        tv_queueTime.setVisibility(View.VISIBLE);
-                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                        tv_queueTime.setVisibility(View.VISIBLE);
+//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                     }
                 } else {
 
@@ -1206,7 +1207,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                         String yourDate = format.format(dateParse);
                         String secondWord = yourDate; //+ ", " + sTime;
-                        Spannable spannable = new SpannableString(firstWord + secondWord);
+                        Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1265,7 +1266,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             secondWord = yourDate;// + ", " + timeFORAMT;
-                            spannable = new SpannableString(firstWord + secondWord);
+                            spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1278,17 +1279,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                             tv_estTime.setVisibility(View.VISIBLE);
                             tv_estTime.setText(spannable);
-                            tv_queueTime.setVisibility(View.VISIBLE);
-                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                            tv_queueTime.setVisibility(View.VISIBLE);
+//                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         } else {
                             tv_estTime.setVisibility(View.GONE);
-                            tv_queueTime.setVisibility(View.VISIBLE);
-                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                            tv_queueTime.setVisibility(View.VISIBLE);
+//                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         }
                     } else {
                         tv_estTime.setVisibility(View.GONE);
-                        tv_queueTime.setVisibility(View.VISIBLE);
-                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//                        tv_queueTime.setVisibility(View.VISIBLE);
+//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                     }
                 }
 
@@ -1351,8 +1352,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         } else {
             layout_token.setVisibility(View.GONE);
             tv_estTime.setVisibility(View.GONE);
-            tv_queueTime.setVisibility(View.VISIBLE);
-            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+//            tv_queueTime.setVisibility(View.VISIBLE);
+//            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
         }
         if (activelist.getPersonsAhead() != -1 && !activelist.getWaitlistStatus().
 

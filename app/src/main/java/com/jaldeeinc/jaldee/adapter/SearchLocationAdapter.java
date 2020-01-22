@@ -447,7 +447,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
-                iCheckIn.putExtra("getAvail_date",mQueueList.get(0).getNextAvailableQueue().getAvailableDate());
 
                 mContext.startActivity(iCheckIn);
             }
@@ -457,28 +456,20 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.txt_diffdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Config.logV("DETAIL !!!!!!!!!!!!!------"+);
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-
-
-                for (int i = 0; i < mQueueList.size(); i++) {
-                    if (mQueueList.get(i).getNextAvailableQueue() != null) {
-                        //Config.logV("DETAIL !!!!!!!!!!!!!------"+);
-                        iCheckIn.putExtra("serviceId", searchLoclist.getId());
-                        iCheckIn.putExtra("uniqueID", mUniqueID);
-                        iCheckIn.putExtra("accountID", accountID);
-                        iCheckIn.putExtra("from", "searchdetail_future");
-                        iCheckIn.putExtra("title", mTitle);
-                        iCheckIn.putExtra("place", searchLoclist.getPlace());
-                        iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
-                        iCheckIn.putExtra("sector", sector);
-                        iCheckIn.putExtra("subsector", subsector);
-                        iCheckIn.putExtra("terminology", terminology);
-
-                        iCheckIn.putExtra("getAvail_date", mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
-                    }
-                }
+                iCheckIn.putExtra("serviceId", searchLoclist.getId());
+                iCheckIn.putExtra("uniqueID", mUniqueID);
+                iCheckIn.putExtra("accountID", accountID);
+                iCheckIn.putExtra("from", "searchdetail_future");
+                iCheckIn.putExtra("title", mTitle);
+                iCheckIn.putExtra("place", searchLoclist.getPlace());
+                iCheckIn.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
+                iCheckIn.putExtra("sector", sector);
+                iCheckIn.putExtra("subsector", subsector);
+                iCheckIn.putExtra("terminology", terminology);
                 mContext.startActivity(iCheckIn);
-
             }
         });
 
@@ -496,7 +487,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
-                iCheckIn.putExtra("getAvail_date",mQueueList.get(0).getNextAvailableQueue().getAvailableDate());
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -515,7 +505,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
-                iCheckIn.putExtra("getAvail_date",mQueueList.get(0).getNextAvailableQueue().getAvailableDate());
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -1047,7 +1036,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 iService.putExtra("price", mServiceprice);
                                 iService.putExtra("desc", mServicedesc);
                                 iService.putExtra("servicegallery", mServiceGallery);
-
                                 iService.putExtra("taxable", mTaxable);
                                 iService.putExtra("title", mTitle);
                                 iService.putExtra("isPrePayment", isPrepayment);

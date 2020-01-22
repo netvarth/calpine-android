@@ -81,15 +81,6 @@
             android:textSize="@dimen/txtsize_12" />
 
         <TextView
-            android:id="@+id/txt_esttime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding2"
-            android:text="esttime"
-            android:textColor="@color/title_grey"
-            android:textSize="@dimen/txtsize_12"
-            android:visibility="gone"/>
-        <TextView
             android:id="@+id/txt_queuetime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,6 +90,20 @@
             android:textColor="@color/sec_title_grey"
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone"/>
+
+
+
+
+        <TextView
+            android:id="@+id/txt_esttime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding2"
+            android:text="esttime"
+            android:textColor="@color/title_grey"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone"/>
+
 
         <TextView
             android:id="@+id/txt_peopleahead"

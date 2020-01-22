@@ -417,12 +417,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 if (searchdetailList.getParking_type_location1() != null) {
                     if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
-                        if (searchdetailList.getParking_type_location1().equalsIgnoreCase("none")) {
-                            dynaText1.setVisibility(View.GONE);
-                        } else {
+
                             TextView dynaText = new TextView(context);
                             Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                                     "fonts/Montserrat_Regular.otf");
+                        if (searchdetailList.getParking_type_location1().equalsIgnoreCase("none")) {
+                            dynaText.setVisibility(View.GONE);
+                        } else {
                             dynaText.setTypeface(tyface);
                             dynaText.setText(Config.toTitleCase(searchdetailList.getParking_type_location1()) + " Parking ");
                             dynaText.setTextSize(13);
