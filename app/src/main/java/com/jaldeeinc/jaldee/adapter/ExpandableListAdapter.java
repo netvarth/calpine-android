@@ -1,24 +1,13 @@
 package com.jaldeeinc.jaldee.adapter;
 
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -26,8 +15,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -40,25 +29,32 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
-import com.jaldeeinc.jaldee.activities.GPSTracker;
+import com.jaldeeinc.jaldee.service.LocationUpdatesService;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
-import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
-import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -70,7 +66,7 @@ import retrofit2.Response;
 /**
  * Created by sharmila on 14/1/19.
  */
-public class ExpandableListAdapter extends BaseExpandableListAdapter implements LocationListener {
+public class ExpandableListAdapter extends BaseExpandableListAdapter implements LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Context mContext;
     private List<String> headerData; // header titles
@@ -90,6 +86,40 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     boolean liveTrackSwitchLatest;
 
 
+    // Used in checking for runtime permissions.
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+
+    // The BroadcastReceiver used to listen from broadcasts from the service.
+    private CheckinShareLocation.MyReceiver myReceiver;
+
+    // A reference to the service used to get location updates.
+    private LocationUpdatesService mService = null;
+
+    // Tracks the bound state of the service.
+    private boolean mBound = false;
+
+
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
+        }
+    };
+
+
+
+
+
+
     public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData, boolean mTodayFlag, boolean mFutureFlag, boolean mOldFlag, LocationManager locationManager) {
         this.mContext = mContext;
         this.headerData = listDataHeader;
@@ -104,6 +134,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         this.locationManager = locationManager;
 
     }
+
 
     @Override
     public int getGroupCount() {
@@ -289,8 +320,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         final Switch liveTrackSwitch = (Switch) view.findViewById(R.id.switch1);
         TextView tv_queueTime = (TextView) view.findViewById(R.id.txt_queuetime);
 
-        if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().
-                equals("checkedIn")) {
+        if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn")) {
+
+
+
             activelistLatest = activelist;
             if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime()!=null){
                 if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("WALKING")){
@@ -1475,6 +1508,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         });
 
         if (header.equalsIgnoreCase("old")) {
+            travelDetailsLayout.setVisibility(View.GONE);
             icon_cancel.setVisibility(View.GONE);
         } else {
 
@@ -1570,4 +1604,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     public void onProviderDisabled(String provider) {
 
     }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+    }
+
+
 }

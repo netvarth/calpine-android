@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission
         android:name="android.permission.RECEIVE_SMS"
         tools:node="remove" />
@@ -128,12 +129,15 @@
 
 
 
-
         <service android:name=".service.FirebaseService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".service.LocationUpdatesService"/>
+        <service
+            android:name=".service.LiveTrackService"/>
+
     </application>
 
 </manifest>

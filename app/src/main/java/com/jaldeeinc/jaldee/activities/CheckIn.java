@@ -1,42 +1,25 @@
 package com.jaldeeinc.jaldee.activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.KeyListener;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
@@ -54,7 +37,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
-import com.jaldeeinc.jaldee.adapter.DetailFileAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -75,43 +57,25 @@ import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.DexterError;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.PermissionRequestErrorListener;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -119,8 +83,6 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -131,7 +93,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class CheckIn extends AppCompatActivity  {
+public class CheckIn extends AppCompatActivity {
 
     ArrayList<String> couponArraylist = new ArrayList<String>();
 
@@ -147,7 +109,7 @@ public class CheckIn extends AppCompatActivity  {
     ArrayList<SearchService> gServiceList = new ArrayList<>();
     String uniqueID;
     String uuid;
-    TextView tv_addmember,tv_editphone;
+    TextView tv_addmember, tv_editphone;
     String accountID;
     static int mSpinnertext;
     static int deptSpinnertext;
@@ -180,7 +142,7 @@ public class CheckIn extends AppCompatActivity  {
     ImageView ic_cal_add;
     Button btn_checkin;
     static int queueId = 0;
-    EditText couponEdit,phoneNumberValue;
+    EditText couponEdit, phoneNumberValue;
     Button applycouponbtn;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
     String couponEntered;
@@ -225,7 +187,6 @@ public class CheckIn extends AppCompatActivity  {
     Bitmap bitmap;
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,7 +203,7 @@ public class CheckIn extends AppCompatActivity  {
         mtermsandCond.setVisibility(View.INVISIBLE);
         mtxtTermsandCondition.setVisibility(View.INVISIBLE);
         couponEdit = findViewById(R.id.coupon_edit);
-        phoneNumberValue =  findViewById(R.id.phoneNumberValue);
+        phoneNumberValue = findViewById(R.id.phoneNumberValue);
         applycouponbtn = findViewById(R.id.applybtn);
         mActivity = this;
         recycle_family = findViewById(R.id.recycle_family);
@@ -289,7 +250,6 @@ public class CheckIn extends AppCompatActivity  {
                 TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
                 txtsendmsg.setVisibility(View.GONE);
                 btn_send.setText("ADD");
-
 
 
 //                tv_attach = dialog.findViewById(R.id.btn);
@@ -373,7 +333,6 @@ public class CheckIn extends AppCompatActivity  {
                 if (!txtsendmsg.equals("")) {
                     edt_message.setText(txt_message);
                 }
-
 
 
                 btn_send.setOnClickListener(new View.OnClickListener() {
@@ -606,7 +565,7 @@ public class CheckIn extends AppCompatActivity  {
         consumerID = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         tv_name.setText(mFirstName + " " + mLastName);
         tv_addmember = findViewById(R.id.txtaddmember);
-      //  tv_editphone = findViewById(R.id.txteditphone);
+        //  tv_editphone = findViewById(R.id.txteditphone);
 
 
         tv_addmember.setOnClickListener(new View.OnClickListener() {
@@ -752,6 +711,9 @@ public class CheckIn extends AppCompatActivity  {
             Date added_date = addDays(currentTime, 1);
             DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
             //to convert Date to String, use format method of SimpleDateFormat class.
+
+
+
             String strDate = dateFormat.format(added_date);
             /* txt_date.setText(sdf.format(currentTime));*/
             txt_date.setText(strDate);
@@ -847,7 +809,6 @@ public class CheckIn extends AppCompatActivity  {
             }
         });
     }
-
 
 
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1108,14 +1069,6 @@ public class CheckIn extends AppCompatActivity  {
 //            e.printStackTrace();
 //        }
 //    }
-
-
-
-
-
-
-
-
 
 
     public void setCouponList(ArrayList couponArraylistNew) {
@@ -1513,6 +1466,11 @@ public class CheckIn extends AppCompatActivity  {
                             tv_queue.setText("Choose the time window");
                         }
 
+                        if (mQueueTimeSlotList.size() == 1) {
+                            tv_queue.setText("Time window");
+                        } else {
+                            tv_queue.setText("Choose the time window");
+                        }
 
                         if (mQueueTimeSlotList.size() > 0) {
                             Lbottomlayout.setVisibility(View.VISIBLE);
@@ -1702,177 +1660,6 @@ public class CheckIn extends AppCompatActivity  {
                             }
 
 
-                        } else if (mQueueTimeSlotList.size() == 1) {
-                            Lbottomlayout.setVisibility(View.VISIBLE);
-                            tv_waittime.setVisibility(View.VISIBLE);
-                            txtnocheckin.setVisibility(View.GONE);
-
-                            String firstWord = null;
-
-                            String secondWord = null;
-                            try {
-                                String startTime = "00:00";
-                                String newtime = null;
-                                int minutes = mQueueTimeSlotList.get(0).getQueueWaitingTime();
-                                int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
-                                int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
-                                if (m > 0 && h > 0) {
-                                    newtime = h + " Hour :" + m + " Minutes";
-                                } else if (h > 0 && m == 0) {
-                                    newtime = h + " Hour";
-                                } else {
-                                    newtime = m + " Minutes";
-                                }
-                                secondWord = newtime;
-                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                    if (h > 0) {
-                                        firstWord = "Next Available Time Today, ";
-                                    } else {
-                                        firstWord = "Est Wait Time ";
-
-                                    }
-
-                                } else {
-
-                                    firstWord = "Next Available Time ";
-                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
-                                    Date datechange = null;
-                                    try {
-                                        datechange = inputFormat.parse(inputDateStr);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-                                    String outputDateStr = outputFormat.format(datechange);
-                                    String dtStart = outputDateStr;
-                                    Date dateParse = null;
-                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                                    try {
-                                        dateParse = format1.parse(dtStart);
-                                        System.out.println(dateParse);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    SimpleDateFormat format = new SimpleDateFormat("d");
-                                    String date1 = format.format(dateParse);
-
-                                    if (date1.endsWith("1") && !date1.endsWith("11"))
-                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
-                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
-                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                                    else
-                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                                    String yourDate = format.format(dateParse);
-
-                                    secondWord = yourDate + ", " + newtime;
-                                }
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            if (mQueueTimeSlotList.get(i).getId() != 0) {
-                                queueId = mQueueTimeSlotList.get(i).getId();
-                            }
-
-                            if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
-
-                                Config.logV("Second WORD---@@@@-------111--2222222---" + secondWord);
-
-                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-                                    firstWord = "Next Available Time Today, ";
-                                    secondWord = mQueueTimeSlotList.get(0).getServiceTime();
-
-                                } else {
-
-                                    firstWord = "Next Available Time ";
-                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
-                                    Date datechange = null;
-                                    try {
-                                        datechange = inputFormat.parse(inputDateStr);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-                                    String outputDateStr = outputFormat.format(datechange);
-                                    String dtStart = outputDateStr;
-                                    Date dateParse = null;
-                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                                    try {
-                                        dateParse = format1.parse(dtStart);
-                                        System.out.println(dateParse);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    SimpleDateFormat format = new SimpleDateFormat("d");
-                                    String date1 = format.format(dateParse);
-
-                                    if (date1.endsWith("1") && !date1.endsWith("11"))
-                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
-                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
-                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                                    else
-                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                                    String yourDate = format.format(dateParse);
-                                    secondWord = yourDate + ", " + mQueueTimeSlotList.get(0).getServiceTime();
-                                }
-                            }
-
-                            Spannable spannable = new SpannableString(firstWord + secondWord);
-                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                    "fonts/Montserrat_Bold.otf");
-                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            tv_waittime.setText(spannable);
-
-                            if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                                tv_waittime.setVisibility(View.VISIBLE);
-                                Config.logV("TV WAITTIME-------------INVISIBLE-------");
-
-                                Date c = Calendar.getInstance().getTime();
-                                System.out.println("Current time => " + c);
-                                String formattedDate;
-                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyy");
-                                    formattedDate = "Today, " + df.format(c);
-                                } else {
-                                    String dtStart = selectedDateFormat;
-                                    Date dateParse = null;
-                                    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-                                    try {
-                                        dateParse = format1.parse(dtStart);
-                                        System.out.println(dateParse);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    SimpleDateFormat df = new SimpleDateFormat("EE,dd-MM-yyy");
-                                    formattedDate = df.format(dateParse);
-                                }
-                                tv_waittime.setText(formattedDate);
-
-                            } else {
-                                tv_waittime.setVisibility(View.VISIBLE);
-                            }
-
-                            Config.logV("TV WAITTIME--------------------" + spannable);
-                            tv_queue.setVisibility(View.GONE);
-                            queuelayout.setVisibility(View.GONE);
-
                         } else {
 
                             Config.logV("No Checkins-------------------" + mQueueTimeSlotList.size());
@@ -1882,7 +1669,6 @@ public class CheckIn extends AppCompatActivity  {
                             tv_queuetime.setVisibility(View.GONE);
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
-
                             txtnocheckin.setVisibility(View.VISIBLE);
                             txtnocheckin.setText(Word_Change + "this service is not accepted ");
                         }
@@ -2824,8 +2610,6 @@ public class CheckIn extends AppCompatActivity  {
                     if (response.code() == 200) {
 
 
-
-
                         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
                         txt_message = "";
 
@@ -2886,7 +2670,7 @@ public class CheckIn extends AppCompatActivity  {
                                             // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
                                             Config.logV("Account ID --------------" + modifyAccountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID,Constants.PURPOSE_PREPAYMENT, "checkin");
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin");
                                             dialog.dismiss();
                                         }
                                     });
@@ -3212,8 +2996,6 @@ public class CheckIn extends AppCompatActivity  {
             }
         });
     }
-
-
 
 
 //    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {

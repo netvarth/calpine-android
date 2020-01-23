@@ -1,7 +1,6 @@
 package com.jaldeeinc.jaldee.activities;
 
-
-
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,33 +8,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.provider.Settings;
-
-import com.google.gson.Gson;
-import com.jaldeeinc.jaldee.BuildConfig;
-import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.connection.ApiClient;
-import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.response.ActiveCheckIn;
-import com.jaldeeinc.jaldee.response.ShareLocation;
-import com.jaldeeinc.jaldee.service.LocationUpdatesService;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -43,6 +28,16 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.ShareLocation;
+import com.jaldeeinc.jaldee.service.LocationUpdatesService;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,30 +47,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Created by Vivek on 12/9/18.
+ */
 
-public class CheckinShareLocation extends AppCompatActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String TAG = CheckinShareLocation.class.getSimpleName();
+public class CheckinShareLocationNew extends AppCompatActivity implements LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    // Used in checking for runtime permissions.
+    private static final String TAG = CheckinShareLocationNew.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-
-    // The BroadcastReceiver used to listen from broadcasts from the service.
     private MyReceiver myReceiver;
-
-    // A reference to the service used to get location updates.
     private LocationUpdatesService mService = null;
-
-    // Tracks the bound state of the service.
     private boolean mBound = false;
-
 
 
     Switch shareSwitch, automaticTrackSwitch;
     TextView bicycleIcon, trackLabel, modeLabel, checkinMessage, tv_title;
     static Context mContext;
     Boolean locationStatus;
-    String waitlistPhonenumber, travelMode, startTime, uuid, accountID, title;
+    String waitlistPhonenumber, travelMode, startTime, latValue, longValue, uuid, accountID, title;
     Drawable highlight, border;
     double latitudes, longitudes;
     LinearLayout Lterms, transportLayout, saveAndClose;
@@ -90,12 +79,6 @@ public class CheckinShareLocation extends AppCompatActivity implements
     LocationManager locationManager;
     String latValues,longValues;
 
-
-    // UI elements.
-
-
-
-    // Monitors the state of the connection to the service.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override
@@ -113,10 +96,17 @@ public class CheckinShareLocation extends AppCompatActivity implements
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myReceiver = new MyReceiver();
         setContentView(R.layout.sharelocation);
+
+        if (Utilss.requestingLocationUpdates(this)) {
+            if (!checkPermissions()) {
+                requestPermissions();
+            }
+        }
+
 
 
         shareSwitch = findViewById(R.id.shareSwitch);
@@ -137,17 +127,14 @@ public class CheckinShareLocation extends AppCompatActivity implements
         view3 = findViewById(R.id.view3);
         highlight = getResources().getDrawable(R.drawable.highlight);
         border = getResources().getDrawable(R.drawable.border_image);
+        latValue = SharedPreference.getInstance(CheckinShareLocationNew.this).getStringValue("latitudes", "");
+        longValue = SharedPreference.getInstance(CheckinShareLocationNew.this).getStringValue("longitudes", "");
+        latitudes = Double.parseDouble(latValue);
+        longitudes = Double.parseDouble(longValue);
         shareLocation = new ShareLocation();
         travelMode ="DRIVING";
         locationStatus = true;
         startTime = "ONEHOUR";
-
-        // Check that the user hasn't revoked permissions by going to Settings.
-        if (Utilss.requestingLocationUpdates(CheckinShareLocation.this)) {
-            if (!checkPermissions()) {
-                requestPermissions();
-            }
-        }
 
 
         if(!isCar){
@@ -216,9 +203,9 @@ public class CheckinShareLocation extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 if(automaticTrackSwitch.isChecked()){
-                    Toast.makeText(CheckinShareLocation.this, "Automatic live tracking enabled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckinShareLocationNew.this, "Automatic live tracking enabled", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(CheckinShareLocation.this, "Automatic live tracking enabled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckinShareLocationNew.this, "Automatic live tracking enabled", Toast.LENGTH_SHORT).show();
                 }
                 UpdateShareLiveLocation();
                 mService.removeLocationUpdates();
@@ -231,7 +218,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 shareSwitch.setChecked(false);
                 locationStatus = false;
                 UpdateShareLiveLocation();
-                Toast.makeText(CheckinShareLocation.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CheckinShareLocationNew.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
                 mService.removeLocationUpdates();
                 finish();
             }
@@ -241,12 +228,21 @@ public class CheckinShareLocation extends AppCompatActivity implements
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     locationStatus = true;
-                    if (!checkPermissions()) {
-                        requestPermissions();
-                    } else {
-                        mService.requestLocationUpdatess();
-                    }
+                    Lterms.setVisibility(View.VISIBLE);
+                    transportLayout.setVisibility(View.VISIBLE);
+                    btn_send.setVisibility(View.VISIBLE);
+                    btn_cancel.setVisibility(View.VISIBLE);
+                    trackLabel.setVisibility(View.VISIBLE);
+                    modeLabel.setVisibility(View.VISIBLE);
+                    view2.setVisibility(View.VISIBLE);
+                    view2.setVisibility(View.VISIBLE);
+                    view3.setVisibility(View.VISIBLE);
+                    if(firstCall){
+                        ApiShareLiveLocation();
 
+                    } else {
+                        UpdateShareLiveLocation();
+                    }
                 } else {
                     locationStatus = false;
                     Lterms.setVisibility(View.GONE);
@@ -280,16 +276,19 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 }
             }
         });
-
-
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
 
+
+        if (!checkPermissions()) {
+            requestPermissions();
+        } else {
+            mService.requestLocationUpdatess();
+        }
 
 
         // Bind to the  service. If the service is in foreground mode, this signals to the service
@@ -325,9 +324,6 @@ public class CheckinShareLocation extends AppCompatActivity implements
         super.onStop();
     }
 
-    /**
-     * Returns the current state of the permissions needed.
-     */
     private boolean checkPermissions() {
         return  PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
@@ -350,7 +346,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
                         @Override
                         public void onClick(View view) {
                             // Request permission
-                            ActivityCompat.requestPermissions(CheckinShareLocation.this,
+                            ActivityCompat.requestPermissions(CheckinShareLocationNew.this,
                                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                     REQUEST_PERMISSIONS_REQUEST_CODE);
                         }
@@ -361,53 +357,11 @@ public class CheckinShareLocation extends AppCompatActivity implements
             // Request permission. It's possible this can be auto answered if device policy
             // sets the permission in a given state or the user denied the permission
             // previously and checked "Never ask again".
-            ActivityCompat.requestPermissions(CheckinShareLocation.this,
+            ActivityCompat.requestPermissions(CheckinShareLocationNew.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionResult");
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
-            if (grantResults.length <= 0) {
-                // If user interaction was interrupted, the permission request is cancelled and you
-                // receive empty arrays.
-                Log.i(TAG, "User interaction was cancelled.");
-            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission was granted.
-                mService.requestLocationUpdatess();
-            } else {
-                // Permission denied.
-                Snackbar.make(
-                        findViewById(R.id.activity_main),
-                        R.string.permission_denied_explanation,
-                        Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.settings, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // Build intent that displays the App settings screen.
-                                Intent intent = new Intent();
-                                intent.setAction(
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package",
-                                        BuildConfig.APPLICATION_ID, null);
-                                intent.setData(uri);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        })
-                        .show();
-            }
-        }
-    }
-
-
 
     public void ApiActiveCheckIn() {
         final ApiInterface apiService =
@@ -458,15 +412,6 @@ public class CheckinShareLocation extends AppCompatActivity implements
             public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
                 try {
                     if (response.code() == 200) {
-                        Lterms.setVisibility(View.VISIBLE);
-                        transportLayout.setVisibility(View.VISIBLE);
-                        btn_send.setVisibility(View.VISIBLE);
-                        btn_cancel.setVisibility(View.VISIBLE);
-                        trackLabel.setVisibility(View.VISIBLE);
-                        modeLabel.setVisibility(View.VISIBLE);
-                        view2.setVisibility(View.VISIBLE);
-                        view2.setVisibility(View.VISIBLE);
-                        view3.setVisibility(View.VISIBLE);
                         firstCall = false;
                         if(response.body().getJaldeeDistanceTime()!= null) {
 
@@ -521,15 +466,6 @@ public class CheckinShareLocation extends AppCompatActivity implements
             public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
                 try {
                     if (response.code() == 200) {
-                        Lterms.setVisibility(View.VISIBLE);
-                        transportLayout.setVisibility(View.VISIBLE);
-                        btn_send.setVisibility(View.VISIBLE);
-                        btn_cancel.setVisibility(View.VISIBLE);
-                        trackLabel.setVisibility(View.VISIBLE);
-                        modeLabel.setVisibility(View.VISIBLE);
-                        view2.setVisibility(View.VISIBLE);
-                        view2.setVisibility(View.VISIBLE);
-                        view3.setVisibility(View.VISIBLE);
                         if (response.body().getJaldeeDistanceTime() != null) {
 
                             int hours = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() / 60; //since both are ints, you get an int
@@ -613,31 +549,45 @@ public class CheckinShareLocation extends AppCompatActivity implements
         }
     }
 
-    /**
-     * Receiver for broadcasts sent by {@link LocationUpdatesService}.
-     */
-    public class MyReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
-            if (location != null) {
-                latValues = String.valueOf(location.getLatitude());
-                longValues = String.valueOf(location.getLongitude());
-                if(firstCall){
-                    ApiShareLiveLocation();
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i("LatitudeCurrent",String.valueOf(location.getLatitude()));
+        Log.i("LongitudeCurrent",String.valueOf(location.getLongitude()));
+        latValues = String.valueOf(location.getLatitude());
+        longValues = String.valueOf(location.getLongitude());
+        locationManager.removeUpdates(CheckinShareLocationNew.this);
 
-                } else {
-                    UpdateShareLiveLocation();
-                }
-                mService.removeLocationUpdates();
-            }
-        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        // Update the buttons state depending on whether location updates are being requested.
-        }
+
     }
 
 
+    private class MyReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
+            if (location != null) {
+                Toast.makeText(CheckinShareLocationNew.this, Utilss.getLocationText(location),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}

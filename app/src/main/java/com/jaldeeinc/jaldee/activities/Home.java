@@ -1,19 +1,19 @@
 package com.jaldeeinc.jaldee.activities;
 
-import android.app.AlertDialog;
+import android.app.ActivityManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.service.LiveTrackService;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 
@@ -27,20 +27,42 @@ public class Home extends AppCompatActivity {
     Context mContext;
 
 
+    Intent mLiveTrackClient;
+    private LiveTrackService liveTrackService;
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mContext = this;
 
         Config.logV("Home Screen@@@@@@@@@@@@@@@@@@@");
+
+        mContext = this;
+
+        liveTrackService = new LiveTrackService();
+        mLiveTrackClient = new Intent(Home.this, liveTrackService.getClass());
+        if (!isMyServiceRunning(liveTrackService.getClass())) {
+            Log.i("vivivivi?", true + "");
+            startService(mLiveTrackClient);
+        }
+
 
         if (savedInstanceState == null) {
             // withholding the previously created fragment from being created again
             // On orientation change, it will prevent fragment recreation
             // its necessary to reserving the fragment stack inside each tab
-               initScreen();
+            initScreen();
 
 
             Config.logV("Init Screen@@@@@@@@@@@@@@@@@@@");
@@ -86,6 +108,8 @@ public class Home extends AppCompatActivity {
         }
 
     }
+
+
 
     private void initScreen() {
         // Creating the ViewPager container fragment once
@@ -143,6 +167,50 @@ public class Home extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        Log.i("ServiceRunningDestroy", true + "");
+
+            Log.i("vivivivi?", true + "");
+            startService(mLiveTrackClient);
+
+        Log.i("Destroy", "onDestroy!");
+        Log.i("MAINACT", "onDestroy!");
+        super.onDestroy();
     }
+
+//    @Override
+//    protected void onResume() {
+//        Log.i("onResume123", true + "");
+////        Toast.makeText(this, "Resume", Toast.LENGTH_SHORT).show();
+//        super.onResume();
+//            startService(mLiveTrackClient);
+//
+//    }
+
+    @Override
+    protected void onStart() {
+        Log.i("onPause123", true + "");
+
+            Log.i("ServiceRunningStart", true + "");
+        if (!isMyServiceRunning(liveTrackService.getClass())) {
+            Log.i("vivivivi?", true + "");
+            startService(mLiveTrackClient);
+        }
+
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i("onStop123", true + "");
+
+            Log.i("ServiceRunningStop", true + "");
+        stopService(mLiveTrackClient);
+
+        super.onStop();
+    }
+
+}
 
 

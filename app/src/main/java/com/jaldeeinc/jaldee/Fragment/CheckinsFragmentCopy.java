@@ -203,6 +203,8 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         return row;
     }
 
+
+
     private void ApiTodayChekInList() {
 
         Config.logV("API TODAY Call");

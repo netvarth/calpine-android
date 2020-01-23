@@ -166,7 +166,7 @@ public class Password extends AppCompatActivity {
 
         mEdtpwd.addTextChangedListener(new MyTextWatcher(mEdtpwd));
         mEdtconfirmPwd.addTextChangedListener(new MyTextWatcher(mEdtconfirmPwd));
-        pattern = Pattern.compile(PASSWORD_PATTERN);
+   //     pattern = Pattern.compile(PASSWORD_PATTERN);
 
         mEdtpwd.setTransformationMethod(new PasswordTransformationMethod());
         mEdtconfirmPwd.setTransformationMethod(new PasswordTransformationMethod());
@@ -206,18 +206,18 @@ public class Password extends AppCompatActivity {
     }
 
 
-    /**
-     * Validate password with regular expression
-     *
-     * @param password password for validation
-     * @return true valid password, false invalid password
-     */
-    public boolean validatePwd(final String password) {
-
-        matcher = pattern.matcher(password);
-        return matcher.matches();
-
-    }
+//    /**
+//     * Validate password with regular expression
+//     *
+//     * @param password password for validation
+//     * @return true valid password, false invalid password
+//     */
+//    public boolean validatePwd(final String password) {
+//
+//        matcher = pattern.matcher(password);
+//        return matcher.matches();
+//
+//    }
 
     private class MyTextWatcher implements TextWatcher {
 
@@ -240,7 +240,7 @@ public class Password extends AppCompatActivity {
                 switch (view.getId()) {
                     case R.id.editpassword:
                         Config.logV("Text Change---- After");
-                        validatePassword();
+                      //  validatePassword();
                         break;
                     case R.id.editconfirm_password:
                         validateConfirmPassword();
@@ -278,44 +278,44 @@ public class Password extends AppCompatActivity {
         return true;
     }
 
-    private boolean validatePassword() {
-        if (!validatePwd(mEdtpwd.getText().toString())) {
-
-            SpannableString s = new SpannableString(getString(R.string.err_pwd_valid));
-            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Light.otf");
-            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            txt_InputPwd.setError(s);
-
-            requestFocus(mEdtpwd);
-            return false;
-        } else {
-            txt_InputPwd.setError(null);
-            txt_InputPwd.setErrorEnabled(false);
-        }
-        return true;
-    }
+//    private boolean validatePassword() {
+//        if (!validatePwd(mEdtpwd.getText().toString())) {
+//
+//            SpannableString s = new SpannableString(getString(R.string.err_pwd_valid));
+//            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+//                    "fonts/Montserrat_Light.otf");
+//            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            txt_InputPwd.setError(s);
+//
+//            requestFocus(mEdtpwd);
+//            return false;
+//        } else {
+//            txt_InputPwd.setError(null);
+//            txt_InputPwd.setErrorEnabled(false);
+//        }
+//        return true;
+//    }
 
     public void Btn_Pwdsubmit(View view) {
 
         if (from.equalsIgnoreCase("login")) {
 
-            if (validatePassword() && validateConfirmPassword()) {
+         //   if (validatePassword() && validateConfirmPassword()) {
                 if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
                     ApiReSetPassword(otp, mEdtconfirmPwd.getText().toString());
                 } else {
                     Toast.makeText(mContext, " Password mismatch", Toast.LENGTH_LONG).show();
                 }
-            }
+         //   }
         } else {
 
-            if (validatePassword() && validateConfirmPassword()) {
+         //   if (validatePassword() && validateConfirmPassword()) {
                 if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
                     ApiSetPassword(otp, mEdtconfirmPwd.getText().toString());
                 } else {
                     Toast.makeText(mContext, "Password mismatch", Toast.LENGTH_LONG).show();
                 }
-            }
+          //  }
         }
     }
 
