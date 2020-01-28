@@ -398,7 +398,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 String firstWord = "Checked in for ";
-                String secondWord = "Today ";// + activelist.getServiceTime();
+                String secondWord = "Today" + ","+ activelist.getServiceTime();
                 Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -468,7 +468,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 String yourDate = format.format(dateParse);
 
                 //to convert Date to String, use format method of SimpleDateFormat class.
-                String secondWord = yourDate;// + ", " + activelist.getServiceTime();
+                String secondWord = yourDate + ", " + activelist.getServiceTime();
               //  String secondWord = "";
 
 
@@ -576,7 +576,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         String yourDate = format.format(dateParse);
 
                         //to convert Date to String, use format method of SimpleDateFormat class.
-                         secondWord = yourDate;// + ", " + activelist.getQueueStartTime();
+                         secondWord = yourDate + ", " + activelist.getQueueStartTime();
                         //  String secondWord = "";
 
 
@@ -654,7 +654,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             String yourDate = format.format(dateParse);
 
                             //to convert Date to String, use format method of SimpleDateFormat class.
-                            String secondWord = yourDate;// + ", " + activelist.getQueueStartTime();
+                            String secondWord = yourDate + ", " + activelist.getQueueStartTime();
                             //  String secondWord = "";
 
 
@@ -840,7 +840,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                     String yourDate = format.format(dateParse);
 
 
-                    String secondWord = yourDate ;//+", "+timeFORAMT;
+                    String secondWord = yourDate +", "+timeFORAMT;
                     Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -890,7 +890,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                          yourDate = format.format(dateParse);
 
                         //to convert Date to String, use format method of SimpleDateFormat class.
-                         secondWord = yourDate;// + ", " + activelist.getQueueStartTime();
+                         secondWord = yourDate + ", " + activelist.getQueueStartTime();
                         //  String secondWord = "";
 
 
@@ -989,7 +989,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                         String yourDate = format.format(dateParse);
 
-                        String secondWord = yourDate;// +", "+sTime;
+                        String secondWord = yourDate +", "+sTime;
                         Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -1038,7 +1038,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                              yourDate = format.format(dateParse);
 
                             //to convert Date to String, use format method of SimpleDateFormat class.
-                             secondWord = yourDate;// + ", " + activelist.getQueueStartTime();
+                             secondWord = yourDate  + ", " + activelist.getQueueStartTime();
                             //  String secondWord = "";
 
 

@@ -73,7 +73,7 @@ public class Login extends AppCompatActivity {
         txt_InputPwd = findViewById(R.id.text_input_layout_pwd);
         edtpassword_login = findViewById(R.id.edtpassword_login);
         edtpassword_login.addTextChangedListener(new MyTextWatcher(edtpassword_login));
-        pattern = Pattern.compile(PASSWORD_PATTERN);
+      //  pattern = Pattern.compile(PASSWORD_PATTERN);
         tv_account = findViewById(R.id.txt_account);
         btn_login = findViewById(R.id.btn_login);
         TextView tv_ynw = findViewById(R.id.txtynw);
@@ -133,13 +133,13 @@ public class Login extends AppCompatActivity {
 
 
 
-    public boolean validatePwd(String password) {
-
-        matcher = pattern.matcher(password);
-        Config.logV("Pass------------" + matcher.matches());
-        return matcher.matches();
-
-    }
+//    public boolean validatePwd(String password) {
+//
+//        matcher = pattern.matcher(password);
+//        Config.logV("Pass------------" + matcher.matches());
+//        return matcher.matches();
+//
+//    }
 
     private class MyTextWatcher implements TextWatcher {
 
@@ -158,7 +158,7 @@ public class Login extends AppCompatActivity {
         public void afterTextChanged(Editable editable) {
             switch (view.getId()) {
                 case R.id.editpassword:
-                    validatePassword();
+                   // validatePassword();
                     break;
             }
         }
@@ -170,25 +170,25 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    private boolean validatePassword() {
-        Config.logV("Password--------" + edtpassword_login.getText().toString());
-        if (!validatePwd(edtpassword_login.getText().toString()) || edtpassword_login.getText().toString().isEmpty()) {
-            //txt_InputPwd.setError(getString(R.string.err_pwd_valid));
-
-            SpannableString s = new SpannableString(getString(R.string.err_pwd_valid_login));
-            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Light.otf");
-            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            txt_InputPwd.setError(s);
-
-            requestFocus(edtpassword_login);
-            return false;
-        } else {
-            txt_InputPwd.setError(null);
-        }
-
-        return true;
-    }
+//    private boolean validatePassword() {
+//        Config.logV("Password--------" + edtpassword_login.getText().toString());
+//        if (!validatePwd(edtpassword_login.getText().toString()) || edtpassword_login.getText().toString().isEmpty()) {
+//            //txt_InputPwd.setError(getString(R.string.err_pwd_valid));
+//
+//            SpannableString s = new SpannableString(getString(R.string.err_pwd_valid_login));
+//            Typeface tyface_edittext_hint = Typeface.createFromAsset(getAssets(),
+//                    "fonts/Montserrat_Light.otf");
+//            s.setSpan(new TypefaceFont(tyface_edittext_hint), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            txt_InputPwd.setError(s);
+//
+//            requestFocus(edtpassword_login);
+//            return false;
+//        } else {
+//            txt_InputPwd.setError(null);
+//        }
+//
+//        return true;
+//    }
 
     public void ApiLogin(String loginId, String password) {
 
@@ -300,9 +300,9 @@ public class Login extends AppCompatActivity {
 
     public void BtnLogin(View view) {
         String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
-        if (validatePassword()) {
+      //  if (validatePassword()) {
             ApiLogin(loginId, edtpassword_login.getText().toString());
-        }
+      //  }
     }
 
     public void ForgotPwd(View view) {

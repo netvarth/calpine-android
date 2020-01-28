@@ -819,6 +819,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     for (int i = 0; i < mSubDomain.size(); i++) {
                         if (mSubDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
 
+
                             SearchModel search = new SearchModel();
                             search.setDisplayname(mSubDomain.get(i).getDisplayname());
                             search.setSector(mSubDomain.get(i).getSector());

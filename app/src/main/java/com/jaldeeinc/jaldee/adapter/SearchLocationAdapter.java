@@ -701,6 +701,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             }
                             // txtdataSat += workingModelArrayList.get(i).getTime_value() + "\n";
                         }
+                    }
                         if (myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Sunday")) {
                             if (myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
                                 if (myViewHolder.txtdataSun.equalsIgnoreCase("")) {
@@ -712,7 +713,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             //txtdataSun += workingModelArrayList.get(i).getTime_value() + "\n";
                         }
 
-                    }
+
 
 
                     SimpleDateFormat sdf = new SimpleDateFormat("EEEE");

@@ -156,8 +156,8 @@
                 <TextView
                     android:id="@+id/txtwhatsapp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="073068 23011"
+                    android:layout_height="match_parent"
+                    android:text="8880125000"
                     android:textColor="@color/sec_title_grey"
                     android:textSize="@dimen/txtsize_hint" />
 
