@@ -532,12 +532,22 @@ public class BillActivity extends AppCompatActivity {
 //                            tv_totalamt.setText("₹ " + String.valueOf(total));
                             tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(total));
                             txttotal.setText("Amount Due");
-                        } else {
+                        } else if(total < 0) {
                             tv_totalamt.setVisibility(View.VISIBLE);
                             txttotal.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");
                             tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(Math.abs(total)));
-                            txttotal.setText("Amount Due");
+                            txttotal.setText("Refund Amount");
+                            btn_pay.setVisibility(View.INVISIBLE);
+                            couponCheckin.setVisibility(View.INVISIBLE);
+                        } else{
+                            tv_totalamt.setVisibility(View.INVISIBLE);
+                            txttotal.setVisibility(View.INVISIBLE);
+//                            DecimalFormat format = new DecimalFormat("0.00");
+                      //      tv_totalamt.setText("₹ " + Config.getAmountinTwoDecimalPoints(Math.abs(total)));
+                          //
+                            //
+                            //  txttotal.setText("Refund Amount");
                             btn_pay.setVisibility(View.INVISIBLE);
                             couponCheckin.setVisibility(View.INVISIBLE);
                         }
