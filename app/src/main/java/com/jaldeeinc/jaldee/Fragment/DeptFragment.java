@@ -24,6 +24,7 @@ import com.jaldeeinc.jaldee.adapter.DeptListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -181,7 +182,6 @@ public class DeptFragment extends RootFragment {
 
 
     }
-
     //    private void ApiService(String uniqueID, final String serviceName, final String title) {
 //        ApiInterface apiService =
 //                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);

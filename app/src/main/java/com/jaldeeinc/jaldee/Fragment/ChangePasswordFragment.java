@@ -125,7 +125,7 @@ public class ChangePasswordFragment extends RootFragment {
                     else if(edtconfirmpwd.getText().toString().isEmpty() && !edtNewpwd.getText().toString().isEmpty()){
                         Toast.makeText(getActivity(),"Enter Confirm Password", Toast.LENGTH_SHORT).show();
                     }
-                    else if(validatePassword()&&validateConfirmPassword()/*&&validateOldPassword()*/) {
+                    else if(validateConfirmPassword()/*&&validateOldPassword()*/) {
                         if (edtNewpwd.getText().toString().trim().equals(edtconfirmpwd.getText().toString().trim())) {
                             ApiChangePwd(edtOldpwd.getText().toString(), edtNewpwd.getText().toString().trim());
                         }else{
@@ -145,28 +145,28 @@ public class ChangePasswordFragment extends RootFragment {
         edtOldpwd.addTextChangedListener(new MyTextWatcher(edtOldpwd));
         edtNewpwd.addTextChangedListener(new MyTextWatcher(edtNewpwd));
         edtconfirmpwd.addTextChangedListener(new MyTextWatcher(edtconfirmpwd));
-        pattern = Pattern.compile(PASSWORD_PATTERN);
+    //    pattern = Pattern.compile(PASSWORD_PATTERN);
 
         return row;
     }
-    public boolean validatePwd(final String password){
-
-        matcher = pattern.matcher(password);
-        return matcher.matches();
-
-    }
-    private boolean validatePassword() {
-        if (!validatePwd(edtNewpwd.getText().toString())) {
-            txt_InputPwd.setError(getString(R.string.err_pwd_valid));
-            requestFocus(edtNewpwd);
-            return false;
-        } else {
-            txt_InputPwd.setError(null);
-            txt_InputPwd. setErrorEnabled(false);
-        }
-
-        return true;
-    }
+//    public boolean validatePwd(final String password){
+//
+//        matcher = pattern.matcher(password);
+//        return matcher.matches();
+//
+//    }
+//    private boolean validatePassword() {
+//        if (!validatePwd(edtNewpwd.getText().toString())) {
+//            txt_InputPwd.setError(getString(R.string.err_pwd_valid));
+//            requestFocus(edtNewpwd);
+//            return false;
+//        } else {
+//            txt_InputPwd.setError(null);
+//            txt_InputPwd. setErrorEnabled(false);
+//        }
+//
+//        return true;
+//    }
 
     private boolean validateConfirmPassword() {
         if (edtconfirmpwd.getText().toString().trim().isEmpty()) {
@@ -213,7 +213,7 @@ public class ChangePasswordFragment extends RootFragment {
                     //validateOldPassword();
                     break;*/
                 case R.id.edt_newpwd:
-                    validatePassword();
+                   // validatePassword();
                     break;
                 case R.id.confirmpwd:
                     validateConfirmPassword();

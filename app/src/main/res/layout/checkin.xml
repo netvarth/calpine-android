@@ -230,6 +230,7 @@
                                         android:layout_marginRight="@dimen/dimen_50dp"
                                         android:theme="@android:style/Theme.Holo.Light"
                                         android:textColor="@color/black"
+                                        android:maxLength="10"
 
                                         />
 
