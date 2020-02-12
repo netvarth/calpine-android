@@ -20,6 +20,7 @@
     <dimen name="item_offset">5dp</dimen>
     <dimen name="padding45">40dp</dimen>
     <dimen name="txtsize_subtitle">16dp</dimen>
+    <dimen name="aboutus">16dp</dimen>
 
     <dimen name="txtsize_12">13sp</dimen>
     <dimen name="txtsize_14">15sp</dimen>

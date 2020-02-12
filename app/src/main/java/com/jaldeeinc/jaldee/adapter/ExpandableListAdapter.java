@@ -29,6 +29,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
@@ -84,6 +85,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     LocationManager locationManager;
     ActiveCheckIn activelistLatest;
     boolean liveTrackSwitchLatest;
+    double dist;
 
 
     // Used in checking for runtime permissions.
@@ -114,10 +116,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             mBound = false;
         }
     };
-
-
-
-
 
 
     public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData, boolean mTodayFlag, boolean mFutureFlag, boolean mOldFlag, LocationManager locationManager) {
@@ -323,14 +321,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn")) {
 
 
-
             activelistLatest = activelist;
-            if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime()!=null){
-                if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("WALKING")){
+            if (activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
+                if (activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("WALKING")) {
                     tv_travelWalk.setVisibility(View.VISIBLE);
                     tv_travelCar.setVisibility(View.GONE);
                     trackinLabel.setText("I am walking");
-                }else if(activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("DRIVING")){
+                } else if (activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelMode().equals("DRIVING")) {
                     tv_travelCar.setVisibility(View.VISIBLE);
                     tv_travelWalk.setVisibility(View.GONE);
                     trackinLabel.setText("I am driving");
@@ -339,131 +336,131 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
             if (activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
                 travelDetailsLayout.setVisibility(View.VISIBLE);
-                if(activelist.getJaldeeStartTimeType()!= null){
-                if (activelist.getJaldeeStartTimeType().equals("AFTERSTART") && header.equals("today")) {
-                    liveTrackSwitch.setVisibility(View.VISIBLE);
-                    trackinLabel.setText("Enable live tracking");
-                    ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                    Call<ResponseBody> cal;
-                    cal = apiService.StatusTracking(activelist.getYnwUuid(), activelist.getId());
-                    cal.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            try {
-                                if (response.code() == 200) {
-                                    if (response.body().string().equals("true")) {
-                                        liveTrackSwitch.setChecked(true);
-                                        enableTrack();
-                                    } else {
-                                        liveTrackSwitch.setChecked(false);
+                if (activelist.getJaldeeStartTimeType() != null) {
+                    if (activelist.getJaldeeStartTimeType().equals("AFTERSTART") && header.equals("today")) {
+                        liveTrackSwitch.setVisibility(View.VISIBLE);
+                        trackinLabel.setText("Enable live tracking");
+                        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+                        Call<ResponseBody> cal;
+                        cal = apiService.StatusTracking(activelist.getYnwUuid(), activelist.getId());
+                        cal.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                try {
+                                    if (response.code() == 200) {
+                                        if (response.body().string().equals("true")) {
+                                            liveTrackSwitch.setChecked(true);
+//                                        enableTrack("general");
+                                        } else {
+                                            liveTrackSwitch.setChecked(false);
+                                        }
                                     }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (Exception e) {
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> cal, Throwable t) {
+                                // Log error here since request failed
+                                Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+                            }
+                        });
+
+                        // Call When toggle the live track switch
+                        liveTrackSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                if (isChecked) {
+                                    ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+                                    Call<ResponseBody> call;
+                                    call = apiService.StartTracking(activelist.getYnwUuid(), activelist.getId());
+                                    call.enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                            try {
+                                                if (response.code() == 200) {
+                                                    if (response.body().string().equals("true")) {
+                                                        activelistLatest = activelist;
+//                                                    enableTrack("manual");
+                                                    }
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                            // Log error here since request failed
+                                            Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+                                        }
+                                    });
+                                } else {
+                                    ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+                                    Call<ResponseBody> call;
+                                    call = apiService.StopTracking(activelist.getYnwUuid(), activelist.getId());
+                                    call.enqueue(new Callback<ResponseBody>() {
+                                        @Override
+                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                            try {
+                                                if (response.code() == 200) {
+                                                    if (response.body().string().equals("false")) {
+                                                        liveTrackSwitch.setChecked(false);
+                                                        locationManager.removeUpdates(ExpandableListAdapter.this);
+                                                    }
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                            // Log error here since request failed
+                                            Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
+
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    } else if (activelist.getJaldeeStartTimeType().equals("ONEHOUR") && header.equals("today")) {
+                        liveTrackSwitch.setVisibility(View.GONE);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                        String currentDateandTime = simpleDateFormat.format(new Date());
+                        if (activelist.getDate() != null && activelist.getJaldeeWaitlistDistanceTime() != null) {
+                            pollingTime = activelist.getDate() + " " + activelist.getJaldeeWaitlistDistanceTime().getPollingTime();
+
+                            try {
+                                date1 = simpleDateFormat.parse(currentDateandTime);
+                            } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ResponseBody> cal, Throwable t) {
-                            // Log error here since request failed
-                            Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-                        }
-                    });
-
-                    // Call When toggle the live track switch
-                    liveTrackSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked) {
-                                ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                                Call<ResponseBody> call;
-                                call = apiService.StartTracking(activelist.getYnwUuid(), activelist.getId());
-                                call.enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                                        try {
-                                            if (response.code() == 200) {
-                                                if (response.body().string().equals("true")) {
-                                                    activelistLatest = activelist;
-                                                    enableTrack();
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        // Log error here since request failed
-                                        Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-                                    }
-                                });
-                            } else {
-                                ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                                Call<ResponseBody> call;
-                                call = apiService.StopTracking(activelist.getYnwUuid(), activelist.getId());
-                                call.enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                                        try {
-                                            if (response.code() == 200) {
-                                                if (response.body().string().equals("false")) {
-                                                    liveTrackSwitch.setChecked(false);
-                                                    locationManager.removeUpdates(ExpandableListAdapter.this);
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        // Log error here since request failed
-                                        Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
-
-                                    }
-                                });
+                            try {
+                                date2 = simpleDateFormat.parse(pollingTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                        }
-                    });
-                } else if (activelist.getJaldeeStartTimeType().equals("ONEHOUR") && header.equals("today")) {
-                    liveTrackSwitch.setVisibility(View.GONE);
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                    String currentDateandTime = simpleDateFormat.format(new Date());
-                    if (activelist.getDate() != null && activelist.getJaldeeWaitlistDistanceTime() != null) {
-                        pollingTime = activelist.getDate() + " " + activelist.getJaldeeWaitlistDistanceTime().getPollingTime();
-
-                        try {
-                            date1 = simpleDateFormat.parse(currentDateandTime);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            date2 = simpleDateFormat.parse(pollingTime);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        if (date1 != null && date2 != null) {
-                            if (!date1.before(date2)) {
-                                activelistLatest = new ActiveCheckIn();
-                                activelistLatest = activelist;
-                                liveTrackSwitchLatest = liveTrackSwitch.isChecked();
-                                enableTrack();
+                            if (date1 != null && date2 != null) {
+                                if (!date1.before(date2)) {
+                                    activelistLatest = new ActiveCheckIn();
+                                    activelistLatest = activelist;
+                                    liveTrackSwitchLatest = liveTrackSwitch.isChecked();
+//                                enableTrack("automatic");
+                                }
                             }
                         }
                     }
                 }
-            }}else {
+            } else {
                 travelDetailsLayout.setVisibility(View.GONE);
             }
         } else {
             locationManager.removeUpdates(ExpandableListAdapter.this);
         }
-
 
 
         tv_travelmddeEdit.setOnClickListener(new View.OnClickListener() {
@@ -597,7 +594,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 });
             }
         });
-
 
 
         tv_businessname.setText(Config.toTitleCase(activelist.getBusinessName()));
@@ -803,7 +799,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     format = new SimpleDateFormat("EE, MMM d'th' yyyy");
 
                 String yourDate = format.format(dateParse);
-                String secondWord = yourDate  + ", " + activelist.getServiceTime();
+                String secondWord = yourDate + ", " + activelist.getServiceTime();
 
 
                 Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
@@ -1008,7 +1004,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                             String yourDate = format.format(dateParse);
                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                            secondWord = yourDate  + ", " + timeFORAMT;
+                            secondWord = yourDate + ", " + timeFORAMT;
                             spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -1298,7 +1294,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                             yourDate = format.format(dateParse);
                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                            secondWord = yourDate  + ", " + timeFORAMT;
+                            secondWord = yourDate + ", " + timeFORAMT;
                             spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -1522,19 +1518,26 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         return view;
     }
 
-    private void enableTrack() {
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 0, this);
-    }
+//    private void enableTrack(String source) {
+//        int a = 0;
+//        if(a==1){
+//            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                //    ActivityCompat#requestPermissions
+//                // here to request the missing permissions, and then overriding
+//                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                //                                          int[] grantResults)
+//                // to handle the case where the user grants the permission. See the documentation
+//                // for ActivityCompat#requestPermissions for more details.
+//                return;
+//            }
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+//        }else{
+//            Log.i("KOoooi",source);
+//        }
+//
+//
+//
+//    }
 
     public static String getDate(long milliSeconds, String dateFormat) {
         // Create a DateFormatter object for displaying date in specified format.
@@ -1554,9 +1557,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
     @Override
     public void onLocationChanged(Location location) {
+
+        distance(location.getLatitude(), location.getLongitude(), 10.5276, 76.2144);
+
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         JSONObject jsonObj = new JSONObject();
         try {
+            Toast.makeText(mContext, "Live", Toast.LENGTH_SHORT).show();
             Log.i("LatlongTest", String.valueOf(location.getLatitude()));
             Log.i("LatlongTest", String.valueOf(location.getLongitude()));
             jsonObj.put("latitude", location.getLatitude());
@@ -1573,7 +1580,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             public void onResponse(Call<ResponseBody> callLivetrack, Response<ResponseBody> response) {
                 try {
                     if (response.code() == 200) {
-                        Log.i("MELVIN", "MELVIN");
+                        Log.i("MELVINS", "UpdateLatLong");
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1586,8 +1594,32 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 // Log error here since request failed
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
             }
-
         });
+
+
+    }
+
+
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        dist = Math.sin(deg2rad(lat1))
+                * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1))
+                * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515 * 1000;
+        Log.i("DistanceVivek", String.valueOf(dist));
+        return (dist);
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
     }
 
     @Override

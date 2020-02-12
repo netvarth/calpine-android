@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -33,7 +35,9 @@ public class AboutUsFragment extends RootFragment {
     WebView aboutWeb, privacyWeb, termsWeb;
     Activity mActivity;
     String webabout, webterm, webprivacy;
-    private Dialog progressBar;
+    private Dialog progressBar;float fontSize;
+
+
 
     Context mContext;
     @Override
@@ -50,6 +54,7 @@ public class AboutUsFragment extends RootFragment {
         privacyWeb = (WebView) row.findViewById(R.id.privacyWeb);
         mLterms = (LinearLayout)row. findViewById(R.id.Lterms);
         termsWeb = (WebView) row.findViewById(R.id.termsWeb);
+
 
         //expList = (ExpandableListView) row.findViewById(R.id.exp_list);
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -72,11 +77,15 @@ public class AboutUsFragment extends RootFragment {
         collapseterm = (ImageView) row.findViewById(R.id.collapseterm);
         collapseprivacy = (ImageView)row. findViewById(R.id.collapseprivacy);
         expandabtFlag = false;
+
         webabout = "<html><body>" +
                 "<p>Jaldee is an all-in-one web portal integrated with mobile application. It manages service providers’ day to day operations like  waitlist, schedule, billing and payments. Customers can search service providers and book their time slots either from the portal or from the mobile app.</p>" +
                 "<p>Jaldee's cloud-based platform is scalable, secure, and ready for any size deployment. Jaldee is developed and operated by Jaldee soft Pvt Ltd.in partnership with Jaldee Inc.California,USA.</p>" +
                 "</body>" +
                 "</html>";
+
+
+
         mLaboutus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +93,7 @@ public class AboutUsFragment extends RootFragment {
                 if (!expandabtFlag) {
                     expandabtFlag = true;
                     aboutWeb.setVisibility(View.VISIBLE);
+                    aboutWeb.setBackgroundColor(Color.parseColor("#f1f1f1"));
                     collapseabt.setImageResource(R.drawable.icon_up_light);
                     Config.logV("WEbabout--5556-------------" + webabout);
                     aboutWeb.loadData(webabout, "text/html", "UTF-8");
