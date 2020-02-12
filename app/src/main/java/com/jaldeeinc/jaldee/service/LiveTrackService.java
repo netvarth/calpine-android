@@ -39,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LiveTrackService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener  {
+public class LiveTrackService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 
     public LiveTrackService() {
@@ -50,6 +50,10 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
     private MyReceiver myReceiver;
     private LocationUpdatesService mService = null;
     private boolean mBound = false;
+    Double dist;
+    Double latStartOne;
+    Double longStartOne;
+
 
     private final IBinder mBinder = new LocalBinder();
 
@@ -80,7 +84,7 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
             LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
-            Log.i("onServiceConnected123","Working");
+            Log.i("onServiceConnected123", "Working");
             mService.requestLocationUpdatess();
         }
 
@@ -91,42 +95,45 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
 
         }
     };
-//
+
+    //
 //    @Override
 //    public void onCreate() {
 //        Log.i("onStartCommand in","Working");
 //    }
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId)  {
-        Log.i("onStartCommandIn","Working");
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i("onStartCommandIn", "Working");
         super.onStartCommand(intent, flags, startId);
 //        if(intent.getExtras()!=null && intent.getExtras().get("STOP_SERVICE")!=null && intent.getExtras().get("STOP_SERVICE").equals("true")) {
 //            terminateStatus = (String) intent.getExtras().get("STOP_SERVICE");
 //            getApplicationContext().stopService(intent);
 //        } else {
-            Log.i("onStartElse","onStartElse");
-            myReceiver = new MyReceiver();
-            PreferenceManager.getDefaultSharedPreferences(this)
-                    .registerOnSharedPreferenceChangeListener(this);
-            bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection,
-                    Context.BIND_AUTO_CREATE);
-            LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
-                    new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
+        Log.i("onStartElse", "onStartElse");
+        myReceiver = new MyReceiver();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+        bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection,
+                Context.BIND_AUTO_CREATE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
+                new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
 //            sendBroadcast(intent);
 //            Toast.makeText(this, "Service started by user.", Toast.LENGTH_LONG).show();
 //
 //        }
         return START_STICKY;
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
 
-      //   mService.removeLocationUpdates();
+        //   mService.removeLocationUpdates();
 
-        Log.i("LiveTrackDestroy","broadcase");
+        Log.i("LiveTrackDestroy", "broadcase");
 //        Toast.makeText(this, "Service destroyed by user.", Toast.LENGTH_LONG).show();
-        Log.i("Urekasss","Working");
+        Log.i("Urekasss", "Working");
+        Log.i("Urekasss", terminateStatus);
 //
 //        if(!this.terminateStatus.equals("true")) {
 //
@@ -137,22 +144,20 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
 //        Intent broadcastIntent = new Intent(this, LiveTrackBroadCastReceiver.class);
 //        sendBroadcast(broadcastIntent);
 //        mService.removeLocationUpdates();
-        if(!this.terminateStatus.equals("true")) {
+        if (!this.terminateStatus.equals("true")) {
             unbindService(mServiceConnection);
             myReceiver = new MyReceiver();
             PreferenceManager.getDefaultSharedPreferences(this)
                     .registerOnSharedPreferenceChangeListener(this);
-            bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection,
-                    Context.BIND_AUTO_CREATE);
+            bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection,Context.BIND_AUTO_CREATE);
             LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                     new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
-        }else if(this.terminateStatus.equals("true")){
+        } else if (this.terminateStatus.equals("true")) {
             mService.removeLocationUpdates();
             unbindService(mServiceConnection);
         }
 //        mService.removeLocationUpdates();
 //        this.startService();
-
 
 
     }
@@ -169,16 +174,87 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
     public class MyReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+
             Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
-            Log.i("OnReceiveLocation","Before Checking location");
+            Log.i("OnReceiveLocation", "Before Checking location");
             if (location != null) {
-                Log.i("OnReceiveLocation",location.toString());
-                if(Config.isOnline(getApplicationContext())){
-                    ApiTodayChekInList(location);
+
+                if (latStartOne == null) {
+                    latStartOne = location.getLatitude();
+                }
+                if (longStartOne == null) {
+                    longStartOne = location.getLongitude();
+                }
+
+                if (Config.isOnline(getApplicationContext())) {
+
+
+                    double theta = longStartOne - location.getLongitude();
+                    dist = Math.sin(deg2rad(latStartOne))
+                            * Math.sin(deg2rad(location.getLatitude()))
+                            + Math.cos(deg2rad(latStartOne))
+                            * Math.cos(deg2rad(location.getLatitude()))
+                            * Math.cos(deg2rad(theta));
+                    dist = Math.acos(dist);
+                    dist = rad2deg(dist);
+                    dist = dist * 60 * 1.1515 * 1000;
+
+                    String distValue = String.format("%.2f", dist);
+
+//
+//                    double proLong = Math.toRadians(location.getLongitude());
+//                    double conLong = Math.toRadians(longStartTwo);
+//                    double proLat = Math.toRadians(location.getLatitude());
+//                    double conLat = Math.toRadians(latStartTwo);
+//                    double dLong = conLong - proLong;
+//                    double dLat = conLat - proLat;
+//                    double a = Math.pow(Math.sin(dLat / 2), 2)
+//                            + Math.cos(proLat) * Math.cos(conLat)
+//                            * Math.pow(Math.sin(dLong / 2), 2);
+//                    double c = 2 * Math.asin(Math.sqrt(a));
+//                    double r = 6371;
+//                    double value = (c * r) * 1000;
+//
+//                    String valueValue = String.format("%.2f", value);
+
+
+//                    Location mylocation = new Location("");
+//                    Location dest_location = new Location("");
+//                    String lat = String.valueOf(location.getLatitude());
+//                    String lon = String.valueOf(location.getLongitude());
+//                    dest_location.setLatitude(Double.parseDouble(lat));
+//                    dest_location.setLongitude(Double.parseDouble(lon));
+//                    mylocation.setLatitude(latStartThree);
+//                    mylocation.setLongitude(longStartThree);
+//                    float distance = mylocation.distanceTo(dest_location);//in meters
+//
+//                    String distanceValue = String.format("%.2f", distance);
+
+
+                    Log.i("GeoLatLong", String.valueOf(latStartOne + "" + longStartOne + "" + location.getLatitude() + "" + location.getLongitude()));
+                    Log.i("GeoLatLong",distValue);
+
+                    if (dist > 100) {
+                        ApiTodayChekInList(location);
+                        latStartOne = location.getLatitude();
+                        longStartOne = location.getLongitude();
+
+                    }
+
                 }
 
             }
         }
+    }
+
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
     }
 
     private void ApiTodayChekInList(final Location location) {
@@ -192,12 +268,11 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
                     if (response.code() == 200) {
 
                         ArrayList<ActiveCheckIn> mCheckTodayFutureList = response.body();
-                        Log.i("ApiTodayChekInListSize",Integer.toString(mCheckTodayFutureList.size()));
+                        Log.i("ApiTodayChekInListSize", Integer.toString(mCheckTodayFutureList.size()));
                         ArrayList<ActiveCheckIn> pollCheckinsList = new ArrayList<>();
 
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mCheckTodayFutureList.size(); i++) {
-
 
 
                             if (date.equalsIgnoreCase(mCheckTodayFutureList.get(i).getDate()) && mCheckTodayFutureList.get(i).getWaitlistStatus().equals("checkedIn") && mCheckTodayFutureList.get(i).getJaldeeStartTimeType() != null
@@ -205,7 +280,7 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
                                 pollCheckinsList.add(response.body().get(i));
                             }
                         }
-                        Log.i("ApiTodayPollingListSize",Integer.toString(pollCheckinsList.size()));
+                        Log.i("ApiTodayPollingListSize", Integer.toString(pollCheckinsList.size()));
                         if (pollCheckinsList.size() > 0) {
                             for (int i = 0; i < pollCheckinsList.size(); i++) {
                                 final ActiveCheckIn activeCheckin = pollCheckinsList.get(i);
@@ -259,8 +334,8 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
                                 }
                             }
 
-                        } else{
-                            Log.i("pollingElse","pollingelse");
+                        } else {
+                            Log.i("pollingElse", "pollingelse");
                             Intent mLiveTrackIntent = new Intent(getApplicationContext(), LiveTrackService.class);
 //                            mLiveTrackIntent.putExtra("STOP_SERVICE", "true");
                             terminateStatus = "true";
@@ -283,6 +358,7 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
     }
 
     private void updateLatLong(Location location, ActiveCheckIn activeCheckin) {
+        Log.i("Locationcalled", "LocationCalled2");
         ApiInterface apiService = ApiClient.getClient(LiveTrackService.this).create(ApiInterface.class);
         JSONObject jsonObj = new JSONObject();
         try {
