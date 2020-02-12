@@ -1427,6 +1427,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             }
         });
         if (header.equalsIgnoreCase("old")) {
+            tv_place.setVisibility(View.VISIBLE);
+            tv_place.setText(activelist.getPlace());
             tv_date.setVisibility(View.VISIBLE);
             try {
                 String mDate = Config.ChangeDateFormat(activelist.getDate());
@@ -1460,7 +1462,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         if (activelist.getWaitlistStatus().
 
                 equalsIgnoreCase("checkedIn")) {
-            tv_status.setVisibility(View.GONE);
+            tv_status.setText("checked in");
+            tv_status.setVisibility(View.VISIBLE);
+            tv_status.setTextColor(mContext.getResources().getColor(R.color.purple));
             tv_check_in.setVisibility(View.GONE);
         }
 

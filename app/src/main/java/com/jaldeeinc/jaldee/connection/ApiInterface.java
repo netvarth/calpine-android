@@ -3,7 +3,6 @@ package com.jaldeeinc.jaldee.connection;
 
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
-import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
@@ -26,6 +25,7 @@ import com.jaldeeinc.jaldee.response.RefinedFilters;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
+import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
@@ -34,7 +34,6 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ShareLocation;
-import com.jaldeeinc.jaldee.response.Waitlist;
 
 
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ import java.util.Map;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
@@ -281,7 +279,7 @@ public interface ApiInterface {
     Call<ArrayList<SearchService>> getService(@Path("serviceid") int serviceid, @Query("modifiedDate") String mDate);
 
     @GET("{uniqueId}/services.json")
-    Call<ArrayList<DepartmentModal>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+    Call<ArrayList<SearchDepartmentServices>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
     /*@POST("PayUMoneyHash.php")
     Call<ResponseBody> generateHashTest(@Body RequestBody jsonObj);*/

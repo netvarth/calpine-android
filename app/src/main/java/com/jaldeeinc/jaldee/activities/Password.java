@@ -309,6 +309,7 @@ public class Password extends AppCompatActivity {
          //   }
         } else {
 
+
          //   if (validatePassword() && validateConfirmPassword()) {
                 if (mEdtpwd.getText().toString().equals(mEdtconfirmPwd.getText().toString())) {
                     ApiSetPassword(otp, mEdtconfirmPwd.getText().toString());
@@ -406,6 +407,11 @@ public class Password extends AppCompatActivity {
                             String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
                             ApiLogin(loginId, pwd);
 
+                        }
+                    }
+                    else{
+                        if(response.code() == 422){
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                         }
                     }
                 } catch (Exception e) {

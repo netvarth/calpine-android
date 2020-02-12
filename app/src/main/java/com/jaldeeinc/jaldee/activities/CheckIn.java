@@ -1446,8 +1446,9 @@ public class CheckIn extends AppCompatActivity {
 
                         if (mQueueTimeSlotList.size() > 0) {
                             i = 0;
-                            if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true")) {
+                            if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("Ml")))) {
                                 tv_personahead.setVisibility(View.VISIBLE);
+
 
                                 String firstWord = "People ahead of you ";
                                 String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize());
@@ -1455,7 +1456,8 @@ public class CheckIn extends AppCompatActivity {
                                 Spannable spannable = new SpannableString(secondWord + " " + firstWord);
                                 tv_personahead.setText(spannable);
 
-                            } else {
+                            }
+                            else{
                                 tv_personahead.setVisibility(View.GONE);
                             }
                         }

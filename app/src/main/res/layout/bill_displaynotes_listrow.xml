@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/displayNotesList"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/txtbill_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BillNotes"
+        android:textColor="@color/colorAccent"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/txtdisplay_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:drawablePadding="@dimen/padding5"
+        android:textColor="@color/black"
+        android:text="" />
+<!--    <View-->
+<!--        android:id="@+id/vsep"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="1dp"-->
+<!--        android:background="@color/view_border"/>-->
+
+</LinearLayout>

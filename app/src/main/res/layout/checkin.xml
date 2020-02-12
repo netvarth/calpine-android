@@ -167,7 +167,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:gravity="right"
-                                        android:text="Edit"
+                                        android:text="ADD / CHANGE MEMBER"
                                         android:textAllCaps="false"
                                         android:textColor="@color/title_consu"
                                         android:textSize="@dimen/txtsize_12" />

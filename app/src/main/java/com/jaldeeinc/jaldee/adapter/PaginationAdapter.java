@@ -788,6 +788,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                         myViewHolder.tv_qmessage.setTextColor(context.getResources().getColor(R.color.red));
                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                        myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                         disableCheckinButton(myViewHolder);
                     }
 
@@ -803,6 +804,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                     if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) { // if Today
                         myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
+                        myViewHolder.tv_peopleahead.setVisibility(View.INVISIBLE);
                         if (searchdetailList.isOnlineCheckIn()) {
                             enableCheckinButton(myViewHolder);
                         } else {
@@ -820,6 +822,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         noCalcShowToken(searchdetailList, myViewHolder);
                                     } else {
                                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                                        myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                                     }
                                 }
 
@@ -839,6 +842,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         noCalcShowToken(searchdetailList, myViewHolder);
                                     } else {
                                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                                        myViewHolder.tv_peopleahead.setVisibility(View.GONE);
 
                                     }
                                 }
@@ -849,6 +853,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         disableCheckinButton(myViewHolder);
                         myViewHolder.btncheckin.setVisibility(View.GONE);
                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                        myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                         myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                     }
                 }
@@ -1240,6 +1245,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
             myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+            myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
+            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
             disableCheckinButton(myViewHolder);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -1254,6 +1261,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String firstWord = "Next Available Time ";
             String secondWord = "\nToday, " + searchdetailList.getServiceTime();
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
+            myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
             enableCheckinButton(myViewHolder);
         } else { // Est. Waiting Time
             Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
@@ -1261,10 +1269,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String firstWord = "Est Wait Time ";
             String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
+            myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
             enableCheckinButton(myViewHolder);
         }
 
         myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+        myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
 
     }
 
@@ -1274,6 +1284,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (searchdetailList.getPersonAhead() == 0) {
                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
                 myViewHolder.tv_WaitTime.setText(" Be the first in line");
+                myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
+                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
             } else {
                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
                 String firstWord = String.valueOf(searchdetailList.getPersonAhead());
@@ -1283,6 +1295,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Spannable spannable = new SpannableString(firstWord + secondWord);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 myViewHolder.tv_WaitTime.setText(spannable);
+//                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -1423,7 +1436,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * Main list's content ViewHolder
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec_more, tv_spec22, tv_count, tv_qmessage, tv_dept, tv_services, tv_dep1, tv_dep2, tv_dep22, tv_dep_more;
+        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec_more, tv_spec22, tv_count, tv_qmessage, tv_dept, tv_services, tv_dep1, tv_dep2, tv_dep22, tv_dep_more, tv_peopleahead;
         LinearLayout L_specialization, L_services, L_layout_type, L_checkin, L_departments;
         View vsep;
 
@@ -1479,6 +1492,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             profile2 = view.findViewById(R.id.iprofile2);
             vsep = view.findViewById(R.id.separator);
             jdn_icon = view.findViewById(R.id.txtjdn);
+            tv_peopleahead = view.findViewById(R.id.txt_peopleahead);
 
 
         }

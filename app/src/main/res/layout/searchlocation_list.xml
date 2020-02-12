@@ -530,6 +530,29 @@
                 android:text="See All"
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_12" />
+            <TextView
+                android:id="@+id/txt_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding2"
+                android:layout_marginTop="@dimen/padding5"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/red"
+                android:textSize="@dimen/dimen_12sp"
+                android:visibility="gone" />
+            <TextView
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:id="@+id/txt_PeopleAhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding2"
+                android:layout_marginBottom="@dimen/padding2"
+                android:gravity="left"
+                android:text=""
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                />
 
 
             <!--<View
@@ -593,6 +616,8 @@
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_title_term_small"
                 android:visibility="gone" />
+
+
 
 
         </LinearLayout>

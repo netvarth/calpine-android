@@ -21,12 +21,14 @@ import android.widget.TextView;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.adapter.DeptListAdapter;
+import com.jaldeeinc.jaldee.adapter.ServicesListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
+import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
@@ -46,9 +48,13 @@ public class DeptFragment extends RootFragment {
 
     Context mContext;
     SearchDepartment departments;
+    SearchDepartmentServices departmentServices;
     List<SearchListModel> msearchList;
+    List<SearchService> mSearchDepartmentServices;
     RecyclerView mdepartment_searchresult;
+    RecyclerView mservice_searchresult;
     private DeptListAdapter deptListAdapter;
+    private ServicesListAdapter servicesListAdapter;
     LinearLayoutManager linearLayoutManager;
     SearchDetailViewFragment searchDetailViewFragment;
     TextView tv_services, tv_departmentName, tv_departmentCode, tv_doctors, tv_providerName;
@@ -60,9 +66,9 @@ public class DeptFragment extends RootFragment {
     TextView tv_service;
 
 
-    public DeptFragment(SearchDepartment departments, List<SearchListModel> searchList, SearchDetailViewFragment searchDetailViewFragment, String businessName, ArrayList<SearchService> mServicesList,int department) {
+    public DeptFragment(SearchDepartmentServices departmentServices, List<SearchListModel> searchList, SearchDetailViewFragment searchDetailViewFragment, String businessName, ArrayList<SearchService> mServicesList,int department ) {
         this.msearchList = searchList;
-        this.departments = departments;
+        this.departmentServices = departmentServices;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.businessName = businessName;
         this.mServicesList = mServicesList;
@@ -77,6 +83,7 @@ public class DeptFragment extends RootFragment {
 
         View row = inflater.inflate(R.layout.departmentview, container, false);
         mdepartment_searchresult = (RecyclerView) row.findViewById(R.id.department_searchresult);
+        mservice_searchresult = (RecyclerView) row.findViewById(R.id.service_searchresult);
 
 
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -84,7 +91,7 @@ public class DeptFragment extends RootFragment {
         tv_departmentName = row.findViewById(R.id.txtdepartment);
         tv_departmentCode = row.findViewById(R.id.txtdeptCode);
         tv_doctors = row.findViewById(R.id.txt_doctors);
-        tv_providerName = row.findViewById(R.id.providerName);
+      //  tv_providerName = row.findViewById(R.id.providerName);
         LServices = row.findViewById(R.id.Lservice);
         tv_service = row.findViewById(R.id.txtservice);
 
@@ -102,10 +109,10 @@ public class DeptFragment extends RootFragment {
             count = msearchList.size();
         }
         tv_title.setText(this.businessName);
-        tv_departmentCode.setText(departments.getDepartmentCode());
-        tv_departmentName.setText(departments.getDepartmentName());
-        tv_doctors.setText("Doctors: " + count);
-        tv_providerName.setText(departments.getDepartmentName() + " " + "(" + count + ")");
+        tv_departmentCode.setText(departmentServices.getDepartmentCode());
+        tv_departmentName.setText(departmentServices.getDepartmentName());
+        tv_doctors.setText("Doctors : " + count);
+      //  tv_providerName.setText(departmentServices.getDepartmentName() + " " + "(" + count + ")");
         tv_services.setText("Services >");
         tv_services.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,42 +127,54 @@ public class DeptFragment extends RootFragment {
 //                        }
 //                    }
 //                }
-                if(mServicesList!= null) {
-                   if (mServicesList.size() > 0) {
-                       LServices.removeAllViews();
-                        LServices.setVisibility(View.VISIBLE);
-                        int size = mServicesList.size();
-                       for (int i = 0; i < size; i++) {
-                           //TextView tv_service1 = new TextView(mContext);
-                           //Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                            //        "fonts/Montserrat_Regular.otf");
-                           // tv_service.setTypeface(tyface);
-                           tv_service.setText(mServicesList.get(i).getName());
-                         //  tv_service.setBackground(mContext.getResources().getDrawable(R.color.department_search_results));
-                            tv_service.setTextSize(12);
-//                            tv_service.setTextColor(mContext.getResources().getColor(R.color.active_text));
-                           tv_service.setPadding(15, 10, 15, 10);
-                            //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                            tv_service.setMaxLines(1);
-                            // dynaText.setMaxEms(8);
-                           tv_service.setGravity(Gravity.CENTER);
-//                           LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                           params.setMargins(0, 0, 20, 0);
-//                          tv_service.setLayoutParams(params);
-                           if(tv_service.getParent() != null) {
-                               ((ViewGroup)tv_service.getParent()).removeView(tv_service);
-                           }
-                          LServices.addView(tv_service);
-                        }
-                   }else{
-                        mServicesList.clear();
-                        LServices.setVisibility(View.GONE);
-                   }
+                linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+                servicesListAdapter = new ServicesListAdapter(getActivity(),mServicesList,departmentServices);
+                mservice_searchresult.setAdapter(servicesListAdapter);
+                mservice_searchresult.setLayoutManager(linearLayoutManager);
+                servicesListAdapter.notifyDataSetChanged();
 
-               } else {
-                   LServices.removeAllViews();
-                   LServices.setVisibility(View.GONE);
-               }
+
+
+
+
+
+
+//                if(mServicesList!= null) {
+//                   if (mServicesList.size() > 0) {
+//                       LServices.removeAllViews();
+//                        LServices.setVisibility(View.VISIBLE);
+//                        int size = mServicesList.size();
+//                       for (int i = 0; i < size; i++) {
+//                           //TextView tv_service1 = new TextView(mContext);
+//                           //Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+//                            //        "fonts/Montserrat_Regular.otf");
+//                           // tv_service.setTypeface(tyface);
+//                           tv_service.setText(mServicesList.get(i).getName());
+//                         //  tv_service.setBackground(mContext.getResources().getDrawable(R.color.department_search_results));
+//                            tv_service.setTextSize(12);
+////                            tv_service.setTextColor(mContext.getResources().getColor(R.color.active_text));
+//                           tv_service.setPadding(15, 10, 15, 10);
+//                            //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//                            tv_service.setMaxLines(1);
+//                            // dynaText.setMaxEms(8);
+//                           tv_service.setGravity(Gravity.CENTER);
+////                           LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+////                           params.setMargins(0, 0, 20, 0);
+////                          tv_service.setLayoutParams(params);
+//                           if(tv_service.getParent() != null) {
+//                               ((ViewGroup)tv_service.getParent()).removeView(tv_service);
+//                           }
+//                          LServices.addView(tv_service);
+//                        }
+//                   }else{
+//                        mServicesList.clear();
+//                        LServices.setVisibility(View.GONE);
+//                   }
+//
+//               } else {
+//                   LServices.removeAllViews();
+//                   LServices.setVisibility(View.GONE);
+//               }
 
 
             }

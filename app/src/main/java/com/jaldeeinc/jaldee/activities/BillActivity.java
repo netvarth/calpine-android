@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.BIllDiscountAdapter;
 import com.jaldeeinc.jaldee.adapter.BillCouponAdapter;
+import com.jaldeeinc.jaldee.adapter.BillDemandDisplayNotesAdapter;
 import com.jaldeeinc.jaldee.adapter.BillServiceAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -49,6 +50,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,7 +70,7 @@ public class BillActivity extends AppCompatActivity {
     EditText mbill_coupon_edit;
     BillModel mBillData;
     TextView tv_paid, tv_totalamt, tv_jaldeeCouponLabel, gstLabel;
-    RecyclerView recycle_item, recycle_discount_total, coupon_added;
+    RecyclerView recycle_item, recycle_discount_total, coupon_added, recycle_display_notes;
     BillServiceAdapter billServiceAdapter;
     BillCouponAdapter billCouponAdapter;
     ArrayList<BillModel> serviceArrayList = new ArrayList<>();
@@ -88,7 +90,7 @@ public class BillActivity extends AppCompatActivity {
     String coupon_entered;
     String purpose;
     String displayNotes;
-    TextView tv_billnotes, tv_notes, tv_discountNote;
+    TextView tv_billnotes, tv_notes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +128,6 @@ public class BillActivity extends AppCompatActivity {
         TextView tv_title = findViewById(R.id.toolbartitle);
         tv_billnotes = findViewById(R.id.billnotes);
         tv_notes = findViewById(R.id.notes);
-        tv_discountNote = findViewById(R.id.discountNotes);
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
@@ -135,6 +136,7 @@ public class BillActivity extends AppCompatActivity {
         jdnLayout = findViewById(R.id.jdnLayout);
         jdnValue = findViewById(R.id.jdnValue);
         txttotal = findViewById(R.id.txttotal);
+        recycle_display_notes = findViewById(R.id.recycle_display_notes_demand);
 
         tv_totalamt.setTypeface(tyface);
         txttotal.setTypeface(tyface);
@@ -430,6 +432,7 @@ public class BillActivity extends AppCompatActivity {
     }
 
     BIllDiscountAdapter billDiscountAdapter;
+    BillDemandDisplayNotesAdapter billDemandDisplayNotesAdapter;
 
     private void ApiBill(String ynwuuid) {
 
@@ -489,8 +492,8 @@ public class BillActivity extends AppCompatActivity {
                         if (mBillData.getGstNumber() != null) {
                             tv_gstn.setText(mBillData.getGstNumber());
                         } else {
-                            tv_gstn.setVisibility(View.GONE);
-                            gstLabel.setVisibility(View.GONE);
+                            tv_gstn.setVisibility(View.INVISIBLE);
+                            gstLabel.setVisibility(View.INVISIBLE);
                         }
 
                         if (String.valueOf(mBillData.getBillId()).equals("")) {
@@ -658,6 +661,22 @@ public class BillActivity extends AppCompatActivity {
                         } else {
                             recycle_discount_total.setVisibility(View.GONE);
                         }
+                        if(discountArrayList!=null){
+                            RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(mCOntext);
+                            recycle_display_notes.setLayoutManager(mLayoutManager1);
+                            if (discountArrayList.size() > 0) {
+
+                                recycle_display_notes.setVisibility(View.VISIBLE);
+                                billDemandDisplayNotesAdapter = new BillDemandDisplayNotesAdapter( discountArrayList, mCOntext, mBillData);
+                            }
+                            recycle_display_notes.setAdapter(billDemandDisplayNotesAdapter);
+                            billDemandDisplayNotesAdapter.notifyDataSetChanged();
+                        } else {
+                            recycle_display_notes.setVisibility(View.GONE);
+                        }
+
+
+
 
 
                     }

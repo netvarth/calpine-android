@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_bg_gradient_home"
@@ -18,7 +20,7 @@
             layout="@layout/custom_toolbar" />
     </LinearLayout>
 
-    <android.support.v4.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusableInTouchMode="true"
@@ -29,8 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <android.support.v7.widget.CardView
                 android:id="@+id/card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -101,7 +102,7 @@
                             android:id="@+id/txtdate"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.6"
+                            android:layout_weight="1"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
                     </LinearLayout>
@@ -114,47 +115,41 @@
 
                         <TextView
                             android:id="@+id/billLabel"
-                            android:layout_width="0dp"
+                            android:layout_width="8dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.7"
+                            android:layout_weight="0.4"
                             android:gravity="left"
                             android:text="@string/bill"
                             android:textColor="@color/sec_title_grey"
                             android:textSize="@dimen/txtsize_12" />
-
-                        <TextView
-                            android:id="@+id/gstLabel"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.6"
-                            android:text="@string/GSTIN"
-                            android:textColor="@color/sec_title_grey"
-                            android:textSize="@dimen/txtsize_12" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/padding3"
-                        android:orientation="horizontal">
-
                         <TextView
                             android:id="@+id/txtbill"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.7"
-                            android:gravity="left"
+                            android:layout_weight="1"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
+
+                        <TextView
+                            android:id="@+id/gstLabel"
+                            android:layout_width="24dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.3"
+                            android:text="@string/GSTIN"
+                            android:textColor="@color/sec_title_grey"
+                            android:textSize="@dimen/txtsize_12" />
 
                         <TextView
                             android:id="@+id/txtgstn"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="0.6"
+                            android:layout_weight="1.8"
                             android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
+
                     </LinearLayout>
+
+
 
                     <View
                         android:layout_width="match_parent"
@@ -515,20 +510,27 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="@dimen/padding3"-->
+<!--                        android:orientation="horizontal">-->
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:id="@+id/discountNotes"-->
+<!--                            android:text=""-->
+<!--                            android:textColor="@color/title_grey"-->
+<!--                            android:textSize="@dimen/txtsize_hint" />-->
+
+<!--                    </LinearLayout>-->
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycle_display_notes_demand"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding3"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/discountNotes"
-                            android:text=""
-                            android:textColor="@color/title_grey"
-                            android:textSize="@dimen/txtsize_hint" />
-
-                    </LinearLayout>
+                        android:nestedScrollingEnabled="false">
+                    </android.support.v7.widget.RecyclerView>
 
 
                     <LinearLayout
