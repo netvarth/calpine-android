@@ -459,6 +459,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 travelDetailsLayout.setVisibility(View.GONE);
             }
         } else {
+            travelDetailsLayout.setVisibility(View.GONE);
             locationManager.removeUpdates(ExpandableListAdapter.this);
         }
 
