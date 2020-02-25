@@ -22,7 +22,6 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
  */
 public class Home extends AppCompatActivity {
 
-
     HomeTabFragment mHomeTab;
     Context mContext;
 
@@ -52,8 +51,9 @@ public class Home extends AppCompatActivity {
 
         liveTrackService = new LiveTrackService();
         mLiveTrackClient = new Intent(Home.this, liveTrackService.getClass());
+
         if (!isMyServiceRunning(liveTrackService.getClass())) {
-            Log.i("vivivivi?", true + "");
+            Log.i("OnCreateHome?", true + "");
             startService(mLiveTrackClient);
         }
 
@@ -108,7 +108,6 @@ public class Home extends AppCompatActivity {
         }
 
     }
-
 
 
     private void initScreen() {
@@ -169,32 +168,18 @@ public class Home extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.i("ServiceRunningDestroy", true + "");
+        Log.i("OnDestroyHome", true + "");
+        stopService(mLiveTrackClient);
 
-            Log.i("vivivivi?", true + "");
-            startService(mLiveTrackClient);
-
-        Log.i("Destroy", "onDestroy!");
-        Log.i("MAINACT", "onDestroy!");
         super.onDestroy();
     }
 
-//    @Override
-//    protected void onResume() {
-//        Log.i("onResume123", true + "");
-////        Toast.makeText(this, "Resume", Toast.LENGTH_SHORT).show();
-//        super.onResume();
-//            startService(mLiveTrackClient);
-//
-//    }
 
     @Override
     protected void onStart() {
-        Log.i("onPause123", true + "");
-
-            Log.i("ServiceRunningStart", true + "");
+        Log.i("onStartHomeBefore", true + "");
         if (!isMyServiceRunning(liveTrackService.getClass())) {
-            Log.i("vivivivi?", true + "");
+            Log.i("OnStartHomeAter", true + "");
             startService(mLiveTrackClient);
         }
 
@@ -203,14 +188,30 @@ public class Home extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        Log.i("onStop123", true + "");
-
-            Log.i("ServiceRunningStop", true + "");
-        stopService(mLiveTrackClient);
-
+        Log.i("onStopHome", true + "");
         super.onStop();
+        if (isMyServiceRunning(liveTrackService.getClass())) {
+            Log.i("OnStartHomeAter", true + "");
+            stopService(mLiveTrackClient);
+        } else {
+            startService(mLiveTrackClient);
+        }
+
     }
 
+//    @Override
+//    protected void onPause() {
+//        Log.i("onStopHome", true + "");
+//        stopService(mLiveTrackClient);
+//
+//        super.onPause();
+//    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        Log.i("onResumeHome", true + "");
+//        startService(mLiveTrackClient);
+//    }
 }
 
 

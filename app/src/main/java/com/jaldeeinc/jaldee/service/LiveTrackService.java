@@ -1,6 +1,6 @@
 package com.jaldeeinc.jaldee.service;
 
-import android.app.Notification;
+import android.app.ActivityManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -55,8 +55,7 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
     Double longStartOne;
 
 
-    private final IBinder mBinder = new LocalBinder();
-
+//
 
     /**
      * Class used for the client Binder.  Since this service runs in the same process as its
@@ -68,100 +67,89 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
         }
     }
 
+    private final IBinder mBinder = new LocalBinder();
 
     String terminateStatus = "false";
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
     }
 
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+    @Override
+    public void onRebind(Intent intent) {
+        Log.i("Rebind", intent.toString());
+        mService.requestLocationUpdatess();
+    }
+
+    private final ServiceConnection mLTServiceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+
+            Log.i("IBinderService", service.toString());
+            Log.i("Components", name.toString());
+
             LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
             mService = binder.getService();
             mBound = true;
             Log.i("onServiceConnected123", "Working");
             mService.requestLocationUpdatess();
+
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Log.i("onServiceConnected123", "Remove");
             mService = null;
             mBound = false;
 
         }
     };
 
-    //
-//    @Override
-//    public void onCreate() {
-//        Log.i("onStartCommand in","Working");
-//    }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("onStartCommandIn", "Working");
+
+        // this getter is just for example purpose, can differ
+        if (intent !=null && intent.getExtras()!=null) {
+            String value = intent.getExtras().getString("bolleanValue");
+            Log.i("qwerfdsa",value);
+        }
+
+        Log.i("LocalService", "Received start id " + startId + ": " + intent);
         super.onStartCommand(intent, flags, startId);
-//        if(intent.getExtras()!=null && intent.getExtras().get("STOP_SERVICE")!=null && intent.getExtras().get("STOP_SERVICE").equals("true")) {
-//            terminateStatus = (String) intent.getExtras().get("STOP_SERVICE");
-//            getApplicationContext().stopService(intent);
-//        } else {
-        Log.i("onStartElse", "onStartElse");
+        Log.i("onStartCommandIn", "mServiceNull");
+
         myReceiver = new MyReceiver();
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
-        bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection,
-                Context.BIND_AUTO_CREATE);
+            bindService(new Intent(LiveTrackService.this, LocationUpdatesService.class), mLTServiceConnection,
+                    Context.BIND_AUTO_CREATE);
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                 new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
-//            sendBroadcast(intent);
-//            Toast.makeText(this, "Service started by user.", Toast.LENGTH_LONG).show();
-//
-//        }
+
+
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+//        getApplicationContext().unbindService(mLTServiceConnection);
+        Log.i("LiveTrackDestroy", terminateStatus);
+//        this.unbindService(mLTServiceConnection);
 
-        //   mService.removeLocationUpdates();
-
-        Log.i("LiveTrackDestroy", "broadcase");
-//        Toast.makeText(this, "Service destroyed by user.", Toast.LENGTH_LONG).show();
-        Log.i("Urekasss", "Working");
-        Log.i("Urekasss", terminateStatus);
-//
-//        if(!this.terminateStatus.equals("true")) {
-//
-//
-//            Log.i("Ureka","Working");
-//            getApplicationContext().startService(new Intent(getApplicationContext(), LiveTrackService.class));
-//        }
-//        Intent broadcastIntent = new Intent(this, LiveTrackBroadCastReceiver.class);
-//        sendBroadcast(broadcastIntent);
-//        mService.removeLocationUpdates();
-        if (!this.terminateStatus.equals("true")) {
-            unbindService(mServiceConnection);
+        if(!terminateStatus.equals("true")) {
             myReceiver = new MyReceiver();
             PreferenceManager.getDefaultSharedPreferences(this)
                     .registerOnSharedPreferenceChangeListener(this);
-            bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection,Context.BIND_AUTO_CREATE);
+            this.bindService(new Intent(this, LocationUpdatesService.class), mLTServiceConnection,
+                    Context.BIND_AUTO_CREATE);
             LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                     new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
-        } else if (this.terminateStatus.equals("true")) {
-            mService.removeLocationUpdates();
-            unbindService(mServiceConnection);
         }
-//        mService.removeLocationUpdates();
-//        this.startService();
-
-
     }
-
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -174,8 +162,6 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
     public class MyReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-
-
             Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
             Log.i("OnReceiveLocation", "Before Checking location");
             if (location != null) {
@@ -201,39 +187,8 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
                     dist = dist * 60 * 1.1515 * 1000;
 
                     String distValue = String.format("%.2f", dist);
-
-//
-//                    double proLong = Math.toRadians(location.getLongitude());
-//                    double conLong = Math.toRadians(longStartTwo);
-//                    double proLat = Math.toRadians(location.getLatitude());
-//                    double conLat = Math.toRadians(latStartTwo);
-//                    double dLong = conLong - proLong;
-//                    double dLat = conLat - proLat;
-//                    double a = Math.pow(Math.sin(dLat / 2), 2)
-//                            + Math.cos(proLat) * Math.cos(conLat)
-//                            * Math.pow(Math.sin(dLong / 2), 2);
-//                    double c = 2 * Math.asin(Math.sqrt(a));
-//                    double r = 6371;
-//                    double value = (c * r) * 1000;
-//
-//                    String valueValue = String.format("%.2f", value);
-
-
-//                    Location mylocation = new Location("");
-//                    Location dest_location = new Location("");
-//                    String lat = String.valueOf(location.getLatitude());
-//                    String lon = String.valueOf(location.getLongitude());
-//                    dest_location.setLatitude(Double.parseDouble(lat));
-//                    dest_location.setLongitude(Double.parseDouble(lon));
-//                    mylocation.setLatitude(latStartThree);
-//                    mylocation.setLongitude(longStartThree);
-//                    float distance = mylocation.distanceTo(dest_location);//in meters
-//
-//                    String distanceValue = String.format("%.2f", distance);
-
-
                     Log.i("GeoLatLong", String.valueOf(latStartOne + "" + longStartOne + "" + location.getLatitude() + "" + location.getLongitude()));
-                    Log.i("GeoLatLong",distValue);
+                    Log.i("GeoLatLong", distValue);
 
                     if (dist > 100) {
                         ApiTodayChekInList(location);
@@ -248,6 +203,15 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
         }
     }
 
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
@@ -258,6 +222,7 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
     }
 
     private void ApiTodayChekInList(final Location location) {
+        Toast.makeText(LiveTrackService.this, "Hello", Toast.LENGTH_SHORT).show();
         final ApiInterface apiService =
                 ApiClient.getClient(LiveTrackService.this).create(ApiInterface.class);
         Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();

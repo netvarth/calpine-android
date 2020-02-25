@@ -88,34 +88,34 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     double dist;
 
 
-    // Used in checking for runtime permissions.
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
-
-    // The BroadcastReceiver used to listen from broadcasts from the service.
-    private CheckinShareLocation.MyReceiver myReceiver;
-
-    // A reference to the service used to get location updates.
-    private LocationUpdatesService mService = null;
-
-    // Tracks the bound state of the service.
-    private boolean mBound = false;
-
-
-    private final ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mService = null;
-            mBound = false;
-        }
-    };
+//    // Used in checking for runtime permissions.
+//    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+//
+//    // The BroadcastReceiver used to listen from broadcasts from the service.
+//    private CheckinShareLocation.MyReceiver myReceiver;
+//
+//    // A reference to the service used to get location updates.
+//    private LocationUpdatesService mService = null;
+//
+//    // Tracks the bound state of the service.
+//    private boolean mBound = false;
+//
+//
+//    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+//
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service) {
+//            LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
+//            mService = binder.getService();
+//            mBound = true;
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName name) {
+//            mService = null;
+//            mBound = false;
+//        }
+//    };
 
 
     public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData, boolean mTodayFlag, boolean mFutureFlag, boolean mOldFlag, LocationManager locationManager) {
@@ -318,7 +318,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         final Switch liveTrackSwitch = (Switch) view.findViewById(R.id.switch1);
         TextView tv_queueTime = (TextView) view.findViewById(R.id.txt_queuetime);
 
-        if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn")) {
+        if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn") && header.equals("today")) {
 
 
             activelistLatest = activelist;

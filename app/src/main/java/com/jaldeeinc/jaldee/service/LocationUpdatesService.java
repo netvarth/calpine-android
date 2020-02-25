@@ -1,12 +1,31 @@
+/**
+ * Copyright 2017 Google Inc. All Rights Reserved.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.jaldeeinc.jaldee.service;
 
 import android.app.ActivityManager;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Binder;
 import android.os.Build;
@@ -15,6 +34,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -26,18 +46,19 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.Utilss;
-
-//import android.support.v4.app.NotificationCompat;
+import com.payu.magicretry.MainActivity;
+import com.payumoney.sdkui.ui.utils.Utils;
 
 /**
  * A bound and started service that is promoted to a foreground service when location updates have
  * been requested and all clients unbind.
- * <p>
+ *
  * For apps running in the background on "O" devices, location is computed only once every 10
  * minutes and delivered batched every 30 minutes. This restriction applies even to apps
  * targeting "N" or lower which are run on "O" devices.
- * <p>
+ *
  * This sample show how to use a long-running service for location updates. When an activity is
  * bound to this service, frequent location updates are permitted. When the activity is removed
  * from the foreground, the service promotes itself to a foreground service, and location updates
@@ -47,7 +68,7 @@ import com.jaldeeinc.jaldee.activities.Utilss;
 public class LocationUpdatesService extends Service {
 
     private static final String PACKAGE_NAME =
-            "com.jaldeeinc.jaldee.service;";
+            "com.google.android.gms.location.sample.locationupdatesforegroundservice";
 
     private static final String TAG = LocationUpdatesService.class.getSimpleName();
 
@@ -58,7 +79,7 @@ public class LocationUpdatesService extends Service {
 
     public static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
 
-    public static String EXTRA_LOCATION = PACKAGE_NAME + ".location";
+    public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
     private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
             ".started_from_notification";
 
@@ -88,7 +109,7 @@ public class LocationUpdatesService extends Service {
      */
     private boolean mChangingConfiguration = false;
 
-//    private NotificationManager mNotificationManager;
+    private NotificationManager mNotificationManager;
 
     /**
      * Contains parameters used by {@link com.google.android.gms.location.FusedLocationProviderApi}.
@@ -133,17 +154,16 @@ public class LocationUpdatesService extends Service {
         HandlerThread handlerThread = new HandlerThread(TAG);
         handlerThread.start();
         mServiceHandler = new Handler(handlerThread.getLooper());
-//        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Android O requires a Notification Channel.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.app_name);
             // Create the channel for the notification
-            NotificationChannel mChannel =
-                    new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW);
 
             // Set the Notification Channel for the Notification Manager.
-//            mNotificationManager.createNotificationChannel(mChannel);
+            mNotificationManager.createNotificationChannel(mChannel);
         }
     }
 
@@ -200,7 +220,7 @@ public class LocationUpdatesService extends Service {
         if (!mChangingConfiguration && Utilss.requestingLocationUpdates(this)) {
             Log.i(TAG, "Starting foreground service");
 
-//            startForeground(NOTIFICATION_ID, getNotification());
+            startForeground(NOTIFICATION_ID, getNotification());
         }
         return true; // Ensures onRebind() is called when a client re-binds.
     }
@@ -243,45 +263,40 @@ public class LocationUpdatesService extends Service {
         }
     }
 
-//    /**
-//     * Returns the {@link NotificationCompat} used as part of the foreground service.
-//     */
-//    private Notification getNotification() {
-//        Intent intent = new Intent(this, LocationUpdatesService.class);
-//
-//        CharSequence text = Utilss.getLocationText(mLocation);
-//
-//        // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
-//        intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
-//
-//        // The PendingIntent that leads to a call to onStartCommand() in this service.
-//        PendingIntent servicePendingIntent = PendingIntent.getService(this, 0, intent,
-//                PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//        // The PendingIntent to launch activity.
-//        PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
-//                new Intent(this, CheckinShareLocation.class), 0);
-//
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-//                .addAction(R.drawable.common_google_signin_btn_icon_dark, getString(R.string.launch_activity),
-//                        activityPendingIntent)
-//                .addAction(R.drawable.common_google_signin_btn_icon_dark_focused, getString(R.string.remove_location_updates),
-//                        servicePendingIntent)
-//                .setContentText(text)
-//                .setContentTitle(Utilss.getLocationTitle(this))
-//                .setOngoing(true)
-//                .setPriority(Notification.PRIORITY_HIGH)
-//                .setSmallIcon(R.mipmap.ic_launcher)
-//                .setTicker(text)
-//                .setWhen(System.currentTimeMillis());
-//
-//        // Set the Channel ID for Android O.
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            builder.setChannelId(CHANNEL_ID); // Channel ID
-//        }
-//
-//        return builder.build();
-//    }
+    /**
+     * Returns the {@link NotificationCompat} used as part of the foreground service.
+     */
+    private Notification getNotification() {
+        Intent intent = new Intent(this, LocationUpdatesService.class);
+
+        CharSequence text = Utilss.getLocationText(mLocation);
+
+        // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
+        intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
+
+        // The PendingIntent that leads to a call to onStartCommand() in this service.
+        PendingIntent servicePendingIntent = PendingIntent.getService(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // The PendingIntent to launch activity.
+        PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, Home.class), 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this).addAction(R.drawable.ynw_logo, getString(R.string.launch_activity), activityPendingIntent)
+                .addAction(R.drawable.ynw_logo, getString(R.string.remove_location_updates),
+                        servicePendingIntent)
+                .setContentTitle(Utilss.getLocationTitle(this))
+                .setOngoing(true)
+                .setSmallIcon(R.drawable.ynw_logo)
+                .setWhen(System.currentTimeMillis());
+
+        // Set the Channel ID for Android O.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder.setChannelId(CHANNEL_ID); // Channel ID
+        }
+
+        return builder.build();
+    }
 
     private void getLastLocation() {
         try {
@@ -312,9 +327,9 @@ public class LocationUpdatesService extends Service {
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
         // Update notification content if running as a foreground service.
-//        if (serviceIsRunningInForeground(this)) {
+        if (serviceIsRunningInForeground(this)) {
 //            mNotificationManager.notify(NOTIFICATION_ID, getNotification());
-//        }
+        }
     }
 
     /**

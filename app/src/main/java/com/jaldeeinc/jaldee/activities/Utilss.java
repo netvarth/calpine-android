@@ -44,7 +44,6 @@ public class Utilss {
     }
 
     public static String getLocationTitle(Context context) {
-        return context.getString(R.string.location_updated,
-                DateFormat.getDateTimeInstance().format(new Date()));
+        return context.getString(R.string.location_updated);
     }
 }
