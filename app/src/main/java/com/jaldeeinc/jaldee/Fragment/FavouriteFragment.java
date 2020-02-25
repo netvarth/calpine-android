@@ -433,7 +433,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
             idPass += mProviderid + "-" + idList.get(i) + ",";
         }
 
-        if (idPass != "") {
+        if (idPass != "" && idPass!= null) {
 
             Config.logV("IDS_--------------------" + idPass);
             Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
