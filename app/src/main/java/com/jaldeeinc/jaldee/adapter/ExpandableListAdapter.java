@@ -318,7 +318,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         final Switch liveTrackSwitch = (Switch) view.findViewById(R.id.switch1);
         TextView tv_queueTime = (TextView) view.findViewById(R.id.txt_queuetime);
 
-        if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn")) {
+        if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn") && header.equals("today")) {
 
 
             activelistLatest = activelist;

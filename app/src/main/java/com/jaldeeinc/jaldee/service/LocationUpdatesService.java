@@ -1,12 +1,12 @@
 /**
  * Copyright 2017 Google Inc. All Rights Reserved.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Binder;
 import android.os.Build;
@@ -36,6 +37,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -44,6 +46,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.Utilss;
 import com.payu.magicretry.MainActivity;
 import com.payumoney.sdkui.ui.utils.Utils;
@@ -157,8 +160,7 @@ public class LocationUpdatesService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.app_name);
             // Create the channel for the notification
-            NotificationChannel mChannel =
-                    new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW);
 
             // Set the Notification Channel for the Notification Manager.
             mNotificationManager.createNotificationChannel(mChannel);
@@ -278,19 +280,14 @@ public class LocationUpdatesService extends Service {
 
         // The PendingIntent to launch activity.
         PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
+                new Intent(this, Home.class), 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .addAction(R.drawable.icon_24hours, getString(R.string.launch_activity),
-                        activityPendingIntent)
-                .addAction(R.drawable.icon_cancel, getString(R.string.remove_location_updates),
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this).addAction(R.drawable.ynw_logo, getString(R.string.launch_activity), activityPendingIntent)
+                .addAction(R.drawable.ynw_logo, getString(R.string.remove_location_updates),
                         servicePendingIntent)
-                .setContentText(text)
                 .setContentTitle(Utilss.getLocationTitle(this))
                 .setOngoing(true)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setTicker(text)
+                .setSmallIcon(R.drawable.ynw_logo)
                 .setWhen(System.currentTimeMillis());
 
         // Set the Channel ID for Android O.

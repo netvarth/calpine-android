@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.common.Config;
@@ -109,6 +110,13 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        // this getter is just for example purpose, can differ
+        if (intent !=null && intent.getExtras()!=null) {
+            String value = intent.getExtras().getString("bolleanValue");
+            Log.i("qwerfdsa",value);
+        }
+
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
         super.onStartCommand(intent, flags, startId);
         Log.i("onStartCommandIn", "mServiceNull");
@@ -141,12 +149,6 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
             LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                     new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
         }
-
-
-        // Bind to the  service. If the service is in foreground mode, this signals to the service
-        // that since this activity is in the foreground, the service can exit foreground mode.
-//            bindService(new Intent(this, LocationUpdatesService.class), mLTServiceConnection,
-//                    Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -220,6 +222,7 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
     }
 
     private void ApiTodayChekInList(final Location location) {
+        Toast.makeText(LiveTrackService.this, "Hello", Toast.LENGTH_SHORT).show();
         final ApiInterface apiService =
                 ApiClient.getClient(LiveTrackService.this).create(ApiInterface.class);
         Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
