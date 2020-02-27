@@ -78,7 +78,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
     String waitlistPhonenumber, travelMode, startTime, uuid, accountID, title;
     Drawable highlight, border;
     double latitudes, longitudes;
-    LinearLayout Lterms, transportLayout, saveAndClose;
+    LinearLayout Lterms, transportLayout, saveAndClose,Laboutus;
     ShareLocation shareLocation;
     View view1, view2, view3;
     Button btn_send, btn_cancel;
@@ -88,7 +88,8 @@ public class CheckinShareLocation extends AppCompatActivity implements
     boolean isWalk = false;
     boolean firstCall = true;
     LocationManager locationManager;
-    String latValues,longValues;
+    String latValues,longValues,terminology,calcMode;
+    Boolean isShow;
 
 
     // UI elements.
@@ -123,6 +124,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
         checkinMessage = findViewById(R.id.checkinMessage);
         Lterms = findViewById(R.id.Lterms);
         transportLayout = findViewById(R.id.transportLayout);
+        Laboutus = findViewById(R.id.Laboutus);
         saveAndClose = findViewById(R.id.saveAndClose);
         automaticTrackSwitch = findViewById(R.id.automaticTrackSwitch);
         trackLabel = findViewById(R.id.trackLabel);
@@ -198,6 +200,9 @@ public class CheckinShareLocation extends AppCompatActivity implements
             uuid = extras.getString("uuid");
             accountID = extras.getString("accountID");
             title = extras.getString("title");
+            terminology = extras.getString("terminology");
+            calcMode = extras.getString("calcMode");
+            isShow = extras.getBoolean("isShow");
         }
         ApiActiveCheckIn();
         if(shareSwitch.isChecked()){
@@ -422,8 +427,31 @@ public class CheckinShareLocation extends AppCompatActivity implements
                     if (response.code() == 200) {
                         a = response.body();
                         Log.i("fghffghfgh",response.body().toString());
-                        checkinMessage.setText("Your check-in for "+response.body().getService().getName()+" is successful !!");
                         shareSwitch.setText("Allow "+response.body().getProvider().getBusinessName()+" to track your ETA");
+
+                        if (calcMode.equalsIgnoreCase("NoCalc")) {
+                            checkinMessage.setText("Your token for "+response.body().getService().getName()+" is successful !!");
+                        }
+                        else if(terminology.equalsIgnoreCase("Check-in")){
+                            checkinMessage.setText("Your check-in for "+response.body().getService().getName()+" is successful !!");
+                        }
+                            else{
+                            checkinMessage.setText("Your order for "+response.body().getService().getName()+" is successful !!");
+                        }
+
+                        checkinMessage.setText("Your check-in for "+response.body().getService().getName()+" is successful !!");
+
+                        if(a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")){
+                            Laboutus.setVisibility(View.GONE);
+                            checkinMessage.setVisibility(View.GONE);
+                        }
+                        else {
+                            Laboutus.setVisibility(View.VISIBLE);
+                            checkinMessage.setVisibility(View.VISIBLE);
+
+                        }
+
+
                     }
                 } catch (Exception e) {
                     Log.i("mnbbnmmnbbnm",e.toString());

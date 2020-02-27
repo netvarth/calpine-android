@@ -128,7 +128,7 @@ public class CheckIn extends AppCompatActivity {
     ImageView img_calender_checkin;
     LinearLayout LcheckinDatepicker;
     static String mFrom;
-    String title, place, terminology;
+    String title, place, terminology,calcMode;
     static String isShowToken;
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
@@ -185,6 +185,7 @@ public class CheckIn extends AppCompatActivity {
     File f;
     String path;
     Bitmap bitmap;
+    Boolean isShow;
 
 
     @Override
@@ -1228,6 +1229,10 @@ public class CheckIn extends AppCompatActivity {
 
                     if (response.code() == 200) {
                         if (response.body().getCalculationMode() != null) {
+
+                            calcMode = response.body().getCalculationMode();
+                            isShow = response.body().isShowTokenId();
+
                             if (response.body().getCalculationMode().equalsIgnoreCase("NoCalc") && response.body().isShowTokenId()) {
                                 isShowToken = String.valueOf(response.body().isShowTokenId());
                                 tv_title.setText("Get Token");
@@ -2706,6 +2711,9 @@ public class CheckIn extends AppCompatActivity {
                         checkinShareLocations.putExtra("uuid", value);
                         checkinShareLocations.putExtra("accountID", modifyAccountID);
                         checkinShareLocations.putExtra("title", title);
+                        checkinShareLocations.putExtra("terminology", terminology);
+                        checkinShareLocations.putExtra("calcMode", calcMode);
+                        checkinShareLocations.putExtra("calcMode", isShow);
                         startActivity(checkinShareLocations);
 
                     } else {
