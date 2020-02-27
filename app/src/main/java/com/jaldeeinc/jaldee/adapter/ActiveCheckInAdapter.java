@@ -177,6 +177,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             String firstWord1 = "People ahead of you ";
             String secondWord1 = String.valueOf(activelist.getPersonsAhead());
 
+
             if(secondWord1.equals("0")){
                 String nobody_ahead = "You are first in line ";
                 Spannable spannable1 = new SpannableString(nobody_ahead);
@@ -188,7 +189,11 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //
 //                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
 //                        nobody_ahead.length(), nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_peopleahead.setText(spannable1);
+                if(activelist.getAppxWaitingTime() == 0){
+                myViewHolder.tv_peopleahead.setText(spannable1 );}
+                else{
+                    myViewHolder.tv_peopleahead.setText(spannable1  + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                }
 
             }
             else if(secondWord1.equals("1")){
@@ -202,7 +207,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //
 //                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
 //                        one_ahead.length(), one_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_peopleahead.setText(spannable1);
+                myViewHolder.tv_peopleahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
             }
             else {
 
@@ -215,7 +220,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //
 //                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
 //                        firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_peopleahead.setText(spannable1);
+                myViewHolder.tv_peopleahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
             }
 
 
