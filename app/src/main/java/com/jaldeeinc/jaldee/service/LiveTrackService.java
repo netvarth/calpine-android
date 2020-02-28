@@ -222,7 +222,7 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
     }
 
     private void ApiTodayChekInList(final Location location) {
-        Toast.makeText(LiveTrackService.this, "Hello", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(LiveTrackService.this, "Hello", Toast.LENGTH_SHORT).show();
         final ApiInterface apiService =
                 ApiClient.getClient(LiveTrackService.this).create(ApiInterface.class);
         Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();

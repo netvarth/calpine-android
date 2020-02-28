@@ -289,7 +289,7 @@ public class ActiveCheckIn {
         this.token = token;
     }
 
-    int token=-1;
+    int token;
 
     public void setService(ActiveCheckIn service) {
         this.service = service;

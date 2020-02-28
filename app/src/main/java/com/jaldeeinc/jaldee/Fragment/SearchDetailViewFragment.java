@@ -13,6 +13,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.FragmentTransaction;
@@ -1039,7 +1040,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         call.enqueue(new Callback<SearchViewDetail>() {
             @Override
-            public void onResponse(Call<SearchViewDetail> call, Response<SearchViewDetail> response) {
+            public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
 
                 try {
 
@@ -1056,7 +1057,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mbranchId = mBusinessDataList.getBranchId();
                         lat_long = mBusinessDataList.getBaseLocation().getLattitude() + "," + mBusinessDataList.getBaseLocation().getLongitude();
                         Config.logV("Provider------------" + new Gson().toJson(mBusinessDataList));
-                        mProvoderId = response.body().getId();
+//                        Handler handler = new Handler();
+//                        handler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                if(response.body().getId()!=0){
+//                                    mProvoderId = response.body().getId();}
+//                            }
+//                        }, 1000);
+                        if(response.body().getId()!=0){
+                            mProvoderId = response.body().getId();}
+
+
                         UpdateMainUI(mBusinessDataList);
                         ApiSearchGallery(uniqueID);
                         ApiFavList(mSearchRespPass, claimable);
@@ -1712,7 +1724,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             idPass += mProviderid + "-" + ids.get(i) + ",";
         }
 
-        if (!idPass.equals("")) {
+        if (!idPass.equals("") && idPass!= null) {
             Config.logV("IDS_--------------------" + idPass);
 
             Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
@@ -2833,21 +2845,23 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 String csv = csvBuilder.toString();
                 System.out.println(csv);
 
-                Call<List<QueueList>> call = apiService.getQueueCheckReponse(csv);
+                if(csv!= " " && csv!= null) {
 
-                call.enqueue(new Callback<List<QueueList>>() {
-                    @Override
-                    public void onResponse(Call<List<QueueList>> call, Response<List<QueueList>> response) {
+                    Call<List<QueueList>> call = apiService.getQueueCheckReponse(csv);
 
-                        try {
-                            Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                            Config.logV("code---------------" + response.code());
-                            mQueueList.clear();
-                            if (response.code() == 200) {
-                                Config.logV("Sucess123 ----------" + response.body());
+                    call.enqueue(new Callback<List<QueueList>>() {
+                        @Override
+                        public void onResponse(Call<List<QueueList>> call, Response<List<QueueList>> response) {
+
+                            try {
+                                Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                                Config.logV("code---------------" + response.code());
+                                mQueueList.clear();
+                                if (response.code() == 200) {
+                                    Config.logV("Sucess123 ----------" + response.body());
 
 
-                                for (int i = 0; i < response.body().size(); i++) {
+                                    for (int i = 0; i < response.body().size(); i++) {
 //                                    QueueList que = new QueueList();
 //                                    que.setId(response.body().get(i).getProvider().getId());
 //
@@ -2868,37 +2882,37 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //
 //                                    }
 
-                                    mQueueList.add(response.body().get(i));
-                                }
+                                        mQueueList.add(response.body().get(i));
+                                    }
 
-                                if (mCheck.equalsIgnoreCase("next")) {
+                                    if (mCheck.equalsIgnoreCase("next")) {
 
-                                    Config.logV("TOTAL PAGES_--------------" + TOTAL_PAGES);
-                                    Config.logV("CURRENT PAGE**22222**555***********" + TOTAL_PAGES);
-                                    // pageadapter.removeLoadingFooter();
-                                    isLoading = false;
-
-
-                                    mSearchListModel.clear();
-                                    for (int i = 0; i < mSearchRespPass.size(); i++) {
-                                        SearchListModel searchList = new SearchListModel();
-                                        searchList.setId(mSearchRespPass.get(i).getId());
-                                        searchList.setLogo(mSearchRespPass.get(i).getLogo());
-                                        searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
-                                        searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
-                                        searchList.setTitle(mSearchRespPass.get(i).getTitle());
-                                        searchList.setRating(mSearchRespPass.get(i).getRating());
-                                        searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
-                                        searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
-                                        searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
-                                        searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
-                                        searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
-                                        searchList.setSectorname(mSearchRespPass.get(i).getSector());
-                                        searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
+                                        Config.logV("TOTAL PAGES_--------------" + TOTAL_PAGES);
+                                        Config.logV("CURRENT PAGE**22222**555***********" + TOTAL_PAGES);
+                                        // pageadapter.removeLoadingFooter();
+                                        isLoading = false;
 
 
-                                        searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
-                                        //String spec = "";
+                                        mSearchListModel.clear();
+                                        for (int i = 0; i < mSearchRespPass.size(); i++) {
+                                            SearchListModel searchList = new SearchListModel();
+                                            searchList.setId(mSearchRespPass.get(i).getId());
+                                            searchList.setLogo(mSearchRespPass.get(i).getLogo());
+                                            searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
+                                            searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
+                                            searchList.setTitle(mSearchRespPass.get(i).getTitle());
+                                            searchList.setRating(mSearchRespPass.get(i).getRating());
+                                            searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
+                                            searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
+                                            searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
+                                            searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
+                                            searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
+                                            searchList.setSectorname(mSearchRespPass.get(i).getSector());
+                                            searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
+
+
+                                            searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+                                            //String spec = "";
 //                                        if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
 //                                            for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
 //                                                if (!spec.equalsIgnoreCase("")) {
@@ -2910,128 +2924,128 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                            searchList.setSpecialization_displayname(spec);
 //                                        }
 
-                                        String qualify = "";
-                                        if (mSearchRespPass.get(i).getQualification() != null) {
-                                            for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
-                                                qualify = qualify + ", " + mSearchRespPass.get(i).getQualification().get(l);
+                                            String qualify = "";
+                                            if (mSearchRespPass.get(i).getQualification() != null) {
+                                                for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
+                                                    qualify = qualify + ", " + mSearchRespPass.get(i).getQualification().get(l);
+
+                                                }
+                                                searchList.setQualification(qualify);
+                                            }
+                                            if (mSearchRespPass.get(i).getDepartment_code() != null) {
+                                                searchList.setDepartment_code(mSearchRespPass.get(i).getDepartment_code());
+                                            }
+                                            if (mSearchRespPass.get(i).getYnw_verified() != null) {
+                                                searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
 
                                             }
-                                            searchList.setQualification(qualify);
-                                        }
-                                        if (mSearchRespPass.get(i).getDepartment_code() != null) {
-                                            searchList.setDepartment_code(mSearchRespPass.get(i).getDepartment_code());
-                                        }
-                                        if (mSearchRespPass.get(i).getYnw_verified() != null) {
-                                            searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
 
-                                        }
+                                            if (mSearchRespPass.get(i).getDistance() != null) {
+                                                Config.logV("Distance @@@@@@@@@@@" + mSearchRespPass.get(i).getDistance());
+                                                searchList.setDistance(mSearchRespPass.get(i).getDistance());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getDistance() != null) {
-                                            Config.logV("Distance @@@@@@@@@@@" + mSearchRespPass.get(i).getDistance());
-                                            searchList.setDistance(mSearchRespPass.get(i).getDistance());
-                                        }
+                                            if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
+                                                searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
 
-                                        if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
-                                            searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
-
-                                        }
+                                            }
 
 
-                                        if (mSearchRespPass.get(i).getServices() != null) {
-                                            searchList.setServices(mSearchRespPass.get(i).getServices());
-                                        }
+                                            if (mSearchRespPass.get(i).getServices() != null) {
+                                                searchList.setServices(mSearchRespPass.get(i).getServices());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
-                                            searchList.setBusiness_hours1(mSearchRespPass.get(i).getBusiness_hours1());
-                                        }
+                                            if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
+                                                searchList.setBusiness_hours1(mSearchRespPass.get(i).getBusiness_hours1());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getTerminologies() != null) {
-                                            searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
-                                        }
+                                            if (mSearchRespPass.get(i).getTerminologies() != null) {
+                                                searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getOnline_checkins() != null) {
-                                            searchList.setOnline_checkins(mSearchRespPass.get(i).getOnline_checkins());
-                                        }
+                                            if (mSearchRespPass.get(i).getOnline_checkins() != null) {
+                                                searchList.setOnline_checkins(mSearchRespPass.get(i).getOnline_checkins());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getFuture_checkins() != null) {
-                                            searchList.setFuture_checkins(mSearchRespPass.get(i).getFuture_checkins());
-                                        }
+                                            if (mSearchRespPass.get(i).getFuture_checkins() != null) {
+                                                searchList.setFuture_checkins(mSearchRespPass.get(i).getFuture_checkins());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getShow_waiting_time() != null) {
-                                            searchList.setShow_waiting_time(mSearchRespPass.get(i).getShow_waiting_time());
-                                        }
-
-
-                                        if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
-                                            //   Config.logV("Gallery-@@@@---111-------5555---------" + mSearchRespPass.get(i).getGallery_thumb_nails());
-                                            searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
-                                        }
-
-                                        //7types
-
-                                        if (mSearchRespPass.get(i).getParking_type_location1() != null) {
-                                            Config.logV("PArking-------------" + mSearchRespPass.get(i).getParking_type_location1());
-                                            searchList.setParking_type_location1(mSearchRespPass.get(i).getParking_type_location1());
-                                        }
+                                            if (mSearchRespPass.get(i).getShow_waiting_time() != null) {
+                                                searchList.setShow_waiting_time(mSearchRespPass.get(i).getShow_waiting_time());
+                                            }
 
 
-                                        if (mSearchRespPass.get(i).getParking_location1() != null) {
+                                            if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
+                                                //   Config.logV("Gallery-@@@@---111-------5555---------" + mSearchRespPass.get(i).getGallery_thumb_nails());
+                                                searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
+                                            }
 
-                                            Config.logV("Park-@@@@-------------3333------" + mSearchRespPass.get(i).getParking_location1());
-                                            searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
-                                        }
+                                            //7types
 
-
-                                        if (mSearchRespPass.get(i).getAlways_open_location1() != null) {
-                                            searchList.setAlways_open_location1(mSearchRespPass.get(i).getAlways_open_location1());
-                                        }
-
-                                        if (mSearchRespPass.get(i).getTraumacentre_location1() != null) {
-                                            searchList.setTraumacentre_location1(mSearchRespPass.get(i).getTraumacentre_location1());
-                                        }
-                                        if (mSearchRespPass.get(i).getDentistemergencyservices_location1() != null) {
-                                            searchList.setDentistemergencyservices_location1(mSearchRespPass.get(i).getDentistemergencyservices_location1());
-                                        }
-                                        if (mSearchRespPass.get(i).getDocambulance_location1() != null) {
-                                            searchList.setDocambulance_location1(mSearchRespPass.get(i).getDocambulance_location1());
-                                        }
-                                        if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
-                                            searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
-                                        }
-                                        if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
-                                            searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
-                                        }
-                                        if (mSearchRespPass.get(i).getClaimable().equals("1")) {
-                                            tv_fav.setVisibility(View.GONE);
-                                        }
-                                        searchList.setQId(mSearchRespPass.get(i).getId());
-                                        if (mQueueList.get(i).getMessage() != null) {
-                                            searchList.setMessage(mQueueList.get(i).getMessage());
-                                        }
+                                            if (mSearchRespPass.get(i).getParking_type_location1() != null) {
+                                                Config.logV("PArking-------------" + mSearchRespPass.get(i).getParking_type_location1());
+                                                searchList.setParking_type_location1(mSearchRespPass.get(i).getParking_type_location1());
+                                            }
 
 
-                                        if (mQueueList.get(i).getNextAvailableQueue() != null) {
-                                            if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
-                                                if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
-                                                    searchList.setAvail_date(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
-                                                }
+                                            if (mSearchRespPass.get(i).getParking_location1() != null) {
+
+                                                Config.logV("Park-@@@@-------------3333------" + mSearchRespPass.get(i).getParking_location1());
+                                                searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
+                                            }
+
+
+                                            if (mSearchRespPass.get(i).getAlways_open_location1() != null) {
+                                                searchList.setAlways_open_location1(mSearchRespPass.get(i).getAlways_open_location1());
+                                            }
+
+                                            if (mSearchRespPass.get(i).getTraumacentre_location1() != null) {
+                                                searchList.setTraumacentre_location1(mSearchRespPass.get(i).getTraumacentre_location1());
+                                            }
+                                            if (mSearchRespPass.get(i).getDentistemergencyservices_location1() != null) {
+                                                searchList.setDentistemergencyservices_location1(mSearchRespPass.get(i).getDentistemergencyservices_location1());
+                                            }
+                                            if (mSearchRespPass.get(i).getDocambulance_location1() != null) {
+                                                searchList.setDocambulance_location1(mSearchRespPass.get(i).getDocambulance_location1());
+                                            }
+                                            if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
+                                                searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
+                                            }
+                                            if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
+                                                searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
+                                            }
+                                            if (mSearchRespPass.get(i).getClaimable().equals("1")) {
+                                                tv_fav.setVisibility(View.GONE);
+                                            }
+                                            searchList.setQId(mSearchRespPass.get(i).getId());
+                                            if (mQueueList.get(i).getMessage() != null) {
+                                                searchList.setMessage(mQueueList.get(i).getMessage());
+                                            }
+
+
+                                            if (mQueueList.get(i).getNextAvailableQueue() != null) {
                                                 if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
-                                                    searchList.setmLoc(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getLocation().getId()));
+                                                    if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
+                                                        searchList.setAvail_date(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
+                                                    }
+                                                    if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
+                                                        searchList.setmLoc(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getLocation().getId()));
+                                                    }
+                                                    searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
+                                                    searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                                                    searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
+                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
+                                                    searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
+                                                    searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
+                                                    searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
+                                                    searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
+                                                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                                                        searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
+                                                    }
                                                 }
-                                                searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
-                                                searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
-                                                searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
-                                                searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
-                                                searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
-                                                searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
-                                                searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
-                                                searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
-                                                if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
-                                                    searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
-                                                }
-                                            }
 
-                                        }
+                                            }
 //                                        for (int j = 0; j < mQueueList.size(); j++) {
 //                                            Config.logV("mQueueList.get(j).getLocation().getId()" + mQueueList.get(j).getNextAvailableQueue().getLocation());
 //                                            if (mQueueList.get(j).getNextAvailableQueue().getLocation() != null) {
@@ -3069,13 +3083,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                        }
 
 
-                                        mSearchListModel.add(searchList);
-                                        Log.i("iopiop", new Gson().toJson(mSearchListModel));
-                                    }
+                                            mSearchListModel.add(searchList);
+                                            Log.i("iopiop", new Gson().toJson(mSearchListModel));
+                                        }
 
 
-                                    Config.logV("Response--Sucess-------------------------" + new Gson().toJson(mSearchListModel));
-                                    List<SearchListModel> results = mSearchListModel;
+                                        Config.logV("Response--Sucess-------------------------" + new Gson().toJson(mSearchListModel));
+                                        List<SearchListModel> results = mSearchListModel;
 //                                    pageadapter.addAll(results);
 //                                    pageadapter.notifyDataSetChanged();
 
@@ -3084,28 +3098,28 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                    } else {
 //                                        isLastPage = true;
 //                                    }
-                                } else {
+                                    } else {
 
 
-                                    mSearchListModel.clear();
-                                    for (int i = 0; i < mSearchRespPass.size(); i++) {
-                                        SearchListModel searchList = new SearchListModel();
-                                        searchList.setId(mSearchRespPass.get(i).getId());
-                                        searchList.setLogo(mSearchRespPass.get(i).getLogo());
-                                        searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
-                                        searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
-                                        searchList.setTitle(mSearchRespPass.get(i).getTitle());
-                                        searchList.setRating(mSearchRespPass.get(i).getRating());
-                                        searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
-                                        searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+                                        mSearchListModel.clear();
+                                        for (int i = 0; i < mSearchRespPass.size(); i++) {
+                                            SearchListModel searchList = new SearchListModel();
+                                            searchList.setId(mSearchRespPass.get(i).getId());
+                                            searchList.setLogo(mSearchRespPass.get(i).getLogo());
+                                            searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
+                                            searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
+                                            searchList.setTitle(mSearchRespPass.get(i).getTitle());
+                                            searchList.setRating(mSearchRespPass.get(i).getRating());
+                                            searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
+                                            searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
 
-                                        searchList.setSectorname(mSearchRespPass.get(i).getSector());
-                                        searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
-                                        searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
-                                        searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
-                                        searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
-                                        searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
-                                        searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
+                                            searchList.setSectorname(mSearchRespPass.get(i).getSector());
+                                            searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
+                                            searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
+                                            searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
+                                            searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
+                                            searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
+                                            searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
 
 //                                        String spec = "";
 //                                        if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
@@ -3120,124 +3134,124 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                        }
 
 
-                                        String qualify = "";
-                                        if (mSearchRespPass.get(i).getQualification() != null) {
-                                            for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
-                                                qualify = qualify + ", " + mSearchRespPass.get(i).getQualification().get(l);
+                                            String qualify = "";
+                                            if (mSearchRespPass.get(i).getQualification() != null) {
+                                                for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
+                                                    qualify = qualify + ", " + mSearchRespPass.get(i).getQualification().get(l);
+
+                                                }
+                                                searchList.setQualification(qualify);
+                                            }
+
+                                            if (mSearchRespPass.get(i).getYnw_verified() != null) {
+                                                searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
 
                                             }
-                                            searchList.setQualification(qualify);
-                                        }
+                                            if (mSearchRespPass.get(i).getDepartment_code() != null) {
+                                                searchList.setDepartment_code(mSearchRespPass.get(i).getDepartment_code());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getYnw_verified() != null) {
-                                            searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
+                                            if (mSearchRespPass.get(i).getDistance() != null) {
+                                                Config.logV("Distance @@@@@@@@@@@44444" + mSearchRespPass.get(i).getDistance());
+                                                searchList.setDistance(mSearchRespPass.get(i).getDistance());
+                                            }
 
-                                        }
-                                        if (mSearchRespPass.get(i).getDepartment_code() != null) {
-                                            searchList.setDepartment_code(mSearchRespPass.get(i).getDepartment_code());
-                                        }
+                                            if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
+                                                searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
 
-                                        if (mSearchRespPass.get(i).getDistance() != null) {
-                                            Config.logV("Distance @@@@@@@@@@@44444" + mSearchRespPass.get(i).getDistance());
-                                            searchList.setDistance(mSearchRespPass.get(i).getDistance());
-                                        }
-
-                                        if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
-                                            searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
-
-                                        }
+                                            }
 
 
-                                        if (mSearchRespPass.get(i).getServices() != null) {
-                                            searchList.setServices(mSearchRespPass.get(i).getServices());
-                                        }
+                                            if (mSearchRespPass.get(i).getServices() != null) {
+                                                searchList.setServices(mSearchRespPass.get(i).getServices());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
-                                            searchList.setBusiness_hours1(mSearchRespPass.get(i).getBusiness_hours1());
-                                        }
+                                            if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
+                                                searchList.setBusiness_hours1(mSearchRespPass.get(i).getBusiness_hours1());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getTerminologies() != null) {
-                                            searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
-                                        }
+                                            if (mSearchRespPass.get(i).getTerminologies() != null) {
+                                                searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getOnline_checkins() != null) {
-                                            searchList.setOnline_checkins(mSearchRespPass.get(i).getOnline_checkins());
-                                        }
+                                            if (mSearchRespPass.get(i).getOnline_checkins() != null) {
+                                                searchList.setOnline_checkins(mSearchRespPass.get(i).getOnline_checkins());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getFuture_checkins() != null) {
-                                            searchList.setFuture_checkins(mSearchRespPass.get(i).getFuture_checkins());
-                                        }
+                                            if (mSearchRespPass.get(i).getFuture_checkins() != null) {
+                                                searchList.setFuture_checkins(mSearchRespPass.get(i).getFuture_checkins());
+                                            }
 
-                                        if (mSearchRespPass.get(i).getShow_waiting_time() != null) {
-                                            searchList.setShow_waiting_time(mSearchRespPass.get(i).getShow_waiting_time());
-                                        }
-
-
-                                        if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
-                                            // Config.logV("Gallery ###########"+mSearchRespPass.get(i).getGallery_thumb_nails());
-                                            searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
-                                        }
+                                            if (mSearchRespPass.get(i).getShow_waiting_time() != null) {
+                                                searchList.setShow_waiting_time(mSearchRespPass.get(i).getShow_waiting_time());
+                                            }
 
 
-                                        if (mSearchRespPass.get(i).getParking_type_location1() != null) {
-                                            searchList.setParking_type_location1(mSearchRespPass.get(i).getParking_type_location1());
-                                        }
-
-                                        if (mSearchRespPass.get(i).getParking_location1() != null) {
-
-                                            Config.logV("Park-@@@@----------4444-----" + mSearchRespPass.get(i).getParking_location1());
-                                            searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
-                                        }
-
-                                        if (mSearchRespPass.get(i).getAlways_open_location1() != null) {
-                                            searchList.setAlways_open_location1(mSearchRespPass.get(i).getAlways_open_location1());
-                                        }
-
-                                        if (mSearchRespPass.get(i).getTraumacentre_location1() != null) {
-                                            searchList.setTraumacentre_location1(mSearchRespPass.get(i).getTraumacentre_location1());
-                                        }
-                                        if (mSearchRespPass.get(i).getDentistemergencyservices_location1() != null) {
-                                            searchList.setDentistemergencyservices_location1(mSearchRespPass.get(i).getDentistemergencyservices_location1());
-                                        }
-                                        if (mSearchRespPass.get(i).getDocambulance_location1() != null) {
-                                            searchList.setDocambulance_location1(mSearchRespPass.get(i).getDocambulance_location1());
-                                        }
-                                        if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
-                                            searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
-                                        }
-                                        if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
-                                            searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
-                                        }
+                                            if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
+                                                // Config.logV("Gallery ###########"+mSearchRespPass.get(i).getGallery_thumb_nails());
+                                                searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
+                                            }
 
 
-                                        searchList.setQId(mSearchRespPass.get(i).getId());
-                                        if (mQueueList.get(i).getMessage() != null) {
-                                            searchList.setMessage(mQueueList.get(i).getMessage());
-                                        }
+                                            if (mSearchRespPass.get(i).getParking_type_location1() != null) {
+                                                searchList.setParking_type_location1(mSearchRespPass.get(i).getParking_type_location1());
+                                            }
+
+                                            if (mSearchRespPass.get(i).getParking_location1() != null) {
+
+                                                Config.logV("Park-@@@@----------4444-----" + mSearchRespPass.get(i).getParking_location1());
+                                                searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
+                                            }
+
+                                            if (mSearchRespPass.get(i).getAlways_open_location1() != null) {
+                                                searchList.setAlways_open_location1(mSearchRespPass.get(i).getAlways_open_location1());
+                                            }
+
+                                            if (mSearchRespPass.get(i).getTraumacentre_location1() != null) {
+                                                searchList.setTraumacentre_location1(mSearchRespPass.get(i).getTraumacentre_location1());
+                                            }
+                                            if (mSearchRespPass.get(i).getDentistemergencyservices_location1() != null) {
+                                                searchList.setDentistemergencyservices_location1(mSearchRespPass.get(i).getDentistemergencyservices_location1());
+                                            }
+                                            if (mSearchRespPass.get(i).getDocambulance_location1() != null) {
+                                                searchList.setDocambulance_location1(mSearchRespPass.get(i).getDocambulance_location1());
+                                            }
+                                            if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
+                                                searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
+                                            }
+                                            if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
+                                                searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
+                                            }
 
 
-                                        if (mQueueList.get(i).getNextAvailableQueue() != null) {
-                                            if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
-                                                if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
-                                                    searchList.setAvail_date(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
-                                                }
+                                            searchList.setQId(mSearchRespPass.get(i).getId());
+                                            if (mQueueList.get(i).getMessage() != null) {
+                                                searchList.setMessage(mQueueList.get(i).getMessage());
+                                            }
+
+
+                                            if (mQueueList.get(i).getNextAvailableQueue() != null) {
                                                 if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
-                                                    searchList.setmLoc(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getLocation().getId()));
-                                                }
-                                                searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
-                                                searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
-                                                searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
-                                                searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
-                                                searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
+                                                    if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
+                                                        searchList.setAvail_date(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
+                                                    }
+                                                    if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
+                                                        searchList.setmLoc(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getLocation().getId()));
+                                                    }
+                                                    searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
+                                                    searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                                                    searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
+                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
+                                                    searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
 
-                                                searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
-                                                searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
-                                                searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
-                                                if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
-                                                    searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
+                                                    searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
+                                                    searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
+                                                    searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
+                                                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                                                        searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
+                                                    }
                                                 }
                                             }
-                                        }
 
 
 //                                        for (int j = 0; j < mQueueList.size(); j++) {
@@ -3274,11 +3288,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                        }
 
 
-                                        mSearchListModel.add(searchList);
-                                    }
+                                            mSearchListModel.add(searchList);
+                                        }
 
 
-                                    final List<SearchListModel> results = mSearchListModel;
+                                        final List<SearchListModel> results = mSearchListModel;
 
 //                                    pageadapter.addAll(results);
 //                                    pageadapter.notifyDataSetChanged();
@@ -3295,28 +3309,29 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                    } else {
 //                                        isLastPage = true;
 //                                    }
+                                    }
+                                    groupByDepartmentCode(mSearchListModel);
+                                    ApiDepartment(mProvoderId);
+                                    ApiDepartmentServices(uniqueID);
                                 }
-                                groupByDepartmentCode(mSearchListModel);
-                                ApiDepartment(mProvoderId);
-                                ApiDepartmentServices(uniqueID);
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
 
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
 
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<QueueList>> call, Throwable t) {
-                        // Log error here since request failed
-                        Config.logV("Fail---------------" + t.toString());
+                        @Override
+                        public void onFailure(Call<List<QueueList>> call, Throwable t) {
+                            // Log error here since request failed
+                            Config.logV("Fail---------------" + t.toString());
                /* if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
 */
-                    }
-                });
+                        }
+                    });
+                }
 
             }
 

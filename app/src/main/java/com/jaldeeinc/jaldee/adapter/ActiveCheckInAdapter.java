@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -39,6 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -138,7 +140,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
     }
 
     @Override
-    public void onBindViewHolder(ActiveCheckInAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final ActiveCheckInAdapter.MyViewHolder myViewHolder, final int position) {
         final ActiveCheckIn activelist = activeChekinList.get(position);
 
         Config.logV("Provider NAme-------------------" + activelist.getBusinessName());
@@ -175,6 +177,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             String firstWord1 = "People ahead of you ";
             String secondWord1 = String.valueOf(activelist.getPersonsAhead());
 
+
             if(secondWord1.equals("0")){
                 String nobody_ahead = "You are first in line ";
                 Spannable spannable1 = new SpannableString(nobody_ahead);
@@ -186,7 +189,11 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //
 //                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
 //                        nobody_ahead.length(), nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_peopleahead.setText(spannable1);
+                if(activelist.getAppxWaitingTime() == 0){
+                myViewHolder.tv_peopleahead.setText(spannable1 );}
+                else{
+                    myViewHolder.tv_peopleahead.setText(spannable1  + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                }
 
             }
             else if(secondWord1.equals("1")){
@@ -200,7 +207,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //
 //                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
 //                        one_ahead.length(), one_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_peopleahead.setText(spannable1);
+                myViewHolder.tv_peopleahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
             }
             else {
 
@@ -213,7 +220,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //
 //                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
 //                        firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_peopleahead.setText(spannable1);
+                myViewHolder.tv_peopleahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
             }
 
 
@@ -322,7 +329,49 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 myViewHolder.btn_pay.setVisibility(View.VISIBLE);
                 myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
                 myViewHolder.btn_pay.setText("PRE-PAY");
-                myViewHolder.tv_makepay.setText("Click PRE-PAY button in 15 minutes to complete your check-in");
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                Date time = new Date();
+                Log.i("shankar",simpleDateFormat.format(time));
+
+                String checkinTime = activelist.getDate() + " " + activelist.getCheckInTime();
+
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+                try {
+                    Date date2 = format.parse(checkinTime);
+                    long diff = (time.getTime() - date2.getTime());
+                    final long diffMins = diff/60000;
+
+                    if (diffMins <= 15 ) {
+                                new CountDownTimer(diff, 60000) {
+
+                                    public void onTick(long millisUntilFinished) {
+                                        long mins = 15 - diffMins;
+                                        myViewHolder.tv_makepay.setText("Click PRE-PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                        myViewHolder.tv_makepay.setVisibility(View.VISIBLE
+                                        );
+                                        mins--;
+
+                                    }
+
+                                    public void onFinish() {
+                                        myViewHolder.tv_makepay.setVisibility(View.GONE);
+                                    }
+                                }.start();
+                            }
+                    else{
+                        myViewHolder.tv_makepay.setVisibility(View.GONE);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+
+
+
+
+               // myViewHolder.tv_makepay.setText("Click PRE-PAY button in 15 minutes to complete your check-in");
                 if(activelist.getAmountDue()>0) {
                     myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
                     myViewHolder.tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
@@ -399,7 +448,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         "fonts/Montserrat_Bold.otf");
                 String firstWord = "Checked in for ";
                 String secondWord = "Today" + ","+ activelist.getServiceTime();
-                Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                Spannable spannable = new SpannableString(firstWord + secondWord + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -473,7 +522,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
 
-                Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                Spannable spannable = new SpannableString(firstWord + secondWord + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -528,7 +577,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             "fonts/Montserrat_Bold.otf");
                     String firstWord = "Est Time ";
                     String secondWord = "Now";
-                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                    Spannable spannable = new SpannableString(firstWord + secondWord + "\n" + "Time Window" +  " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -581,7 +630,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
 
-                         spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                         spannable = new SpannableString(firstWord + secondWord + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -659,7 +708,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
 
-                            Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                            Spannable spannable = new SpannableString(firstWord + secondWord+ "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -732,7 +781,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
 
-                             spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                             spannable = new SpannableString(firstWord + secondWord + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -841,7 +890,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
                     String secondWord = yourDate +", "+timeFORAMT;
-                    Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                    Spannable spannable = new SpannableString(firstWord + secondWord + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -895,7 +944,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
 
-                         spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                         spannable = new SpannableString(firstWord + secondWord + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -990,7 +1039,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         String yourDate = format.format(dateParse);
 
                         String secondWord = yourDate +", "+sTime;
-                        Spannable spannable = new SpannableString(firstWord + secondWord + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                        Spannable spannable = new SpannableString(firstWord + secondWord + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

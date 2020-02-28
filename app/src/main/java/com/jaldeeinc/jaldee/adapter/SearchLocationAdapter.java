@@ -1255,12 +1255,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()!= -1) {
                                             Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
                                             if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()== 0) {
-                                                myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " People waiting in line");
+                                                myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()) + " People waiting in line");
 
                                             }
                                             else{
                                             firstWord = String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
-                                                myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " People waiting in line");}
+                                                myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()) + " People waiting in line");}
                                         }
                                         noCalcShowToken(mQueueList, myViewHolder);
                                     } else {
@@ -1272,11 +1272,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     if (mShowWaitTime && mQueueList != null) {
                                         if (mQueueList!= null &&  mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                                             secondWord = "\nToday, " +mQueueList.get(i).getNextAvailableQueue().getServiceTime();
-                                            myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " People waiting in line");
+                                            myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()) + " People waiting in line");
                                         }
                                         else{
                                         secondWord = "\n" + Config.getTimeinHourMinutes(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());}
-                                        myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " People waiting in line");
+                                        myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()) + " People waiting in line");
                                         setCurrentDateCheckin(mQueueList, myViewHolder);
                                     } else {
                                         enableCheckinButton(myViewHolder);
@@ -1301,11 +1301,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                                 if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()!= -1) {
                                                     Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
                                                     if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()== 0) {
-                                                        myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                                                        myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()));
                                                     }
                                                     else{
                                                         firstWord = String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
-                                                        myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " People waiting in line");}
+                                                        myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()) + " People waiting in line");}
                                                 }
                                                 noCalcShowToken(mQueueList, myViewHolder);
                                             } else {
@@ -1321,8 +1321,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     String day = (String) DateFormat.format("dd", date);
                                     String monthString = (String) DateFormat.format("MMM", date);
                                     secondWord = "\n" + monthString + " " + day + ", " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
-                                    myViewHolder.txt_peopleahead.setText(
-                                            mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " People waiting in line");}
+                                    myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()) + " People waiting in line");}
                                     catch (ParseException e) {
                                         e.printStackTrace();
                                     }
