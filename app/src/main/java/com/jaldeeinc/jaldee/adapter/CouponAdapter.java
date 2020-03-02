@@ -106,9 +106,13 @@ public class CouponAdapter  extends ArrayAdapter<CoupnResponse> {
          TextView mcouponName = (TextView) listItem.findViewById(R.id.couponName);
         mcouponName.setText(coupnResponse.getCouponName());
 
-
         TextView mvalidity = (TextView) listItem.findViewById(R.id.validityvaluetext);
-        mvalidity.setText(startDate+"-"+endDate);
+        if(startdate!=null && enddate!=null){
+            mvalidity.setText(startDate+"-"+endDate);
+        }else {
+            mvalidity.setText("");
+        }
+
 
 
 

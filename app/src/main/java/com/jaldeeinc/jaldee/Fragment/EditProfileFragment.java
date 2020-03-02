@@ -9,7 +9,11 @@ import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -77,31 +81,6 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
     static SimpleDateFormat simpleDateFormat;
     LinearLayout Llayout;
 
-    /*public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
-    public void setupUI(View view) {
-
-        // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof TextInputEditText)&&!(view instanceof Button)) {
-            view.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
-                    hideSoftKeyboard(getActivity());
-                    return false;
-                }
-            });
-        }
-
-        //If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                View innerView = ((ViewGroup) view).getChildAt(i);
-                setupUI(innerView);
-            }
-        }
-    }*/
-
     private static final String DATE_PATTERN =
             "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
 
@@ -139,7 +118,6 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         txtfirstname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         txtlastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
-
         mContext = getActivity();
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -151,25 +129,22 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
             @Override
             public void onClick(View v) {
 
-                if(!txtfirstname.getText().toString().equalsIgnoreCase("")&&!txtlastname.getText().toString().equalsIgnoreCase("")) {
-                    if (!txtdob.getText().toString().equalsIgnoreCase("")) {
-                        String dateSelected = txtdob.getText().toString().replaceAll("-", "/");
-                        Matcher matcher = Pattern.compile(DATE_PATTERN).matcher(dateSelected);
-                        if (matcher.matches()) {
+                    if(!txtfirstname.getText().toString().equalsIgnoreCase("")&&!txtlastname.getText().toString().equalsIgnoreCase("")) {
+                        if (!txtdob.getText().toString().equalsIgnoreCase("")) {
+                            String dateSelected = txtdob.getText().toString().replaceAll("-", "/");
+                            Matcher matcher = Pattern.compile(DATE_PATTERN).matcher(dateSelected);
+                            if (matcher.matches()) {
 
-                            ApiEditProfileDetail();
+                                ApiEditProfileDetail();
+                            } else {
+                                Toast.makeText(mContext, "Invalid Date!", Toast.LENGTH_LONG).show();
+                            }
                         } else {
-                            Toast.makeText(mContext, "Invalid Date!", Toast.LENGTH_LONG).show();
-
+                            ApiEditProfileDetail();
                         }
-                    } else {
-                        ApiEditProfileDetail();
+                    }else{
+                        Toast.makeText(mContext, "Please enter your name", Toast.LENGTH_LONG).show();
                     }
-                }else{
-                    Toast.makeText(mContext, "Please enter your name", Toast.LENGTH_LONG).show();
-                }
-
-
 
             }
         });
@@ -243,6 +218,11 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         }
 
         return row;
+    }
+
+    public static boolean isNumeric(String str)
+    {
+        return str.matches("-?\\d+(.\\d+)?");
     }
 
     private void ApiGetProfileDetail() {

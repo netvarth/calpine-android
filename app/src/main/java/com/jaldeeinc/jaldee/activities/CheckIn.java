@@ -544,15 +544,22 @@ public class CheckIn extends AppCompatActivity {
             public void onClick(View v) {
                 // ApiGenerateHash();
 
-                if (enableparty) {
-                    if (Integer.parseInt(editpartysize.getText().toString()) > maxPartysize) {
-                        Toast.makeText(mContext, "Sorry, Max party size allowed is " + maxPartysize, Toast.LENGTH_LONG).show();
+                phoneNumber = phoneNumberValue.getText().toString();
+                if(phoneNumber.length()<10){
+                    Toast.makeText(CheckIn.this, "Please enter a 10 digit phone number", Toast.LENGTH_SHORT).show();
+                }else{
+                    if (enableparty) {
+                        if (Integer.parseInt(editpartysize.getText().toString()) > maxPartysize) {
+                            Toast.makeText(mContext, "Sorry, Max party size allowed is " + maxPartysize, Toast.LENGTH_LONG).show();
+                        } else {
+                            ApiCheckin(txt_message);
+                        }
                     } else {
                         ApiCheckin(txt_message);
                     }
-                } else {
-                    ApiCheckin(txt_message);
                 }
+
+
             }
         });
 
@@ -2517,6 +2524,7 @@ public class CheckIn extends AppCompatActivity {
 
         phoneNumber = phoneNumberValue.getText().toString();
         uuid = UUID.randomUUID().toString();
+
 
 
         ApiInterface apiService =
