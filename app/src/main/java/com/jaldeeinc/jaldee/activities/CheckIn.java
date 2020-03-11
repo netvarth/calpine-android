@@ -543,15 +543,20 @@ public class CheckIn extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // ApiGenerateHash();
+                if (phoneNumberValue.length() < 10) {
+                    Toast.makeText(mContext, "Mobile number should have 10 digits" +
+                            "",Toast.LENGTH_SHORT).show();
+                } else {
 
-                if (enableparty) {
-                    if (Integer.parseInt(editpartysize.getText().toString()) > maxPartysize) {
-                        Toast.makeText(mContext, "Sorry, Max party size allowed is " + maxPartysize, Toast.LENGTH_LONG).show();
+                    if (enableparty) {
+                        if (Integer.parseInt(editpartysize.getText().toString()) > maxPartysize) {
+                            Toast.makeText(mContext, "Sorry, Max party size allowed is " + maxPartysize, Toast.LENGTH_LONG).show();
+                        } else {
+                            ApiCheckin(txt_message);
+                        }
                     } else {
                         ApiCheckin(txt_message);
                     }
-                } else {
-                    ApiCheckin(txt_message);
                 }
             }
         });

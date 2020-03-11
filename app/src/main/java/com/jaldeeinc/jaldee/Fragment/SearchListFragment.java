@@ -1350,10 +1350,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 mSearchResp.add(search);
+                                if(response.body().getHits().getHit().get(i).getId()!= null) {
 
-                                ids.add(response.body().getHits().getHit().get(i).getId());
+                                    ids.add(response.body().getHits().getHit().get(i).getId());
 
-
+                                }
                             }
 
 
@@ -1460,7 +1461,6 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     if (response.code() == 200) {
 
-
                         Config.logV("Response--Body AWS-------------------------" + new Gson().toJson(response.body()));
 
                         Config.logV("Status" + response.body().getStatus().getRid());
@@ -1477,6 +1477,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             tv_searchresult.setVisibility(View.VISIBLE);
                             String firstWord = String.valueOf(total_foundcount);
                             String secondWord = "";
+
+
                             if (total_foundcount > 1) {
                                 secondWord = " results found ";
                             } else {
@@ -1609,7 +1611,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     search.setFirstaid_location1(response.body().getHits().getHit().get(i).getFields().getFirstaid_location1());
                                 }
 
+                                if(response.body().getHits().getHit().get(i).getId()!= null){
                                 ids.add(response.body().getHits().getHit().get(i).getId());
+                                }
 
                                 mSearchResp.add(search);
                             }
@@ -2265,9 +2269,25 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         if (querycreate == null) {
 
-            if (querypass.contains(" ")) {
+            querypass1 = querypass;
+
+            if (querypass1.contains(" ")) {
                 Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + querypass);
-                querypass1 = querypass.replace(" ", "__");
+                querypass1 = querypass.replaceFirst(" ", "__");
+              //  querypass = querypass.replace(" ","%20");
+                Log.i("querryGiven",querypass1);
+                Log.i("querryGiven",querypass);
+            }
+
+
+            if (querypass1.contains("'")) {
+                Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + querypass);
+                querypass1 = querypass1.replace("'", "%5C%27");
+            }
+
+            if (querypass1.contains(" ")) {
+                Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + querypass);
+                querypass1 = querypass1.replace(" ", "%20");
             }
 
             if (querypass.contains("'")) {

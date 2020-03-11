@@ -822,6 +822,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 if (searchdetailList.getCalculationMode() != null) {
                                     if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc") && searchdetailList.isShowToken()) {
                                         myViewHolder.btncheckin.setText("GET TOKEN");
+                                        myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
                                         noCalcShowToken(searchdetailList, myViewHolder);
                                     } else {
                                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
@@ -842,6 +843,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 if (searchdetailList.getCalculationMode() != null) {
                                     if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc") && searchdetailList.isShowToken()) {
                                         myViewHolder.btncheckin.setText("GET TOKEN");
+                                        myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
                                         noCalcShowToken(searchdetailList, myViewHolder);
                                     } else {
                                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
@@ -1286,18 +1288,41 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + searchdetailList.getPersonAhead());
             if (searchdetailList.getPersonAhead() == 0) {
                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                myViewHolder.tv_WaitTime.setText(" Be the first in line");
+              //  myViewHolder.tv_WaitTime.setText(" Be the first in line");
+                String firstWord = "Next Available Time ";
+                String secondWord = "\nToday, " + searchdetailList.getServiceTime();
+                Spannable spannable = new SpannableString(firstWord + secondWord);
+               // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                myViewHolder.tv_WaitTime.setText(spannable);
+                if(searchdetailList.getServiceTime()!= null){
+                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                }
+                else{
+                    myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                }
                 myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
                 myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
             } else {
                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                String firstWord = String.valueOf(searchdetailList.getPersonAhead());
-                String secondWord = " People waiting in line";
+//                String firstWord = String.valueOf(searchdetailList.getPersonAhead());
+//                String secondWord = " People waiting in line";
+                String firstWord = "Next Available Time ";
+                String secondWord = "\nToday, " + searchdetailList.getServiceTime();
                 Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 Spannable spannable = new SpannableString(firstWord + secondWord);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 myViewHolder.tv_WaitTime.setText(spannable);
+                if(searchdetailList.getServiceTime()!=null){
+                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                }
+                else{
+                    myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+
+                }
+
+                myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
+                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
 //                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
             }
         }

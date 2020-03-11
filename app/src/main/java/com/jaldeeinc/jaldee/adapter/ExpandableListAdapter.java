@@ -944,7 +944,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         }
 
                         String secondWord = Config.getTimeinHourMinutes(activelist.getAppxWaitingTime());
-                        Spannable spannable = new SpannableString(firstWord + secondWord +"\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                        Spannable spannable = new SpannableString(firstWord + secondWord );
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1406,23 +1406,35 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 Spannable spannable1 = new SpannableString(nobody_ahead);
                 spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                         0, nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                if(activelist.getAppxWaitingTime()==0){
+                if(activelist.getAppxWaitingTime()==0 ){
                 tv_personahead.setText(spannable1);}
+
                 else{
                     tv_personahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                 }
             } else if (activelist.getPersonsAhead() == 1) {
 
-                Spannable spannable1 = new SpannableString(one_person_ahead + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                Spannable spannable1 = new SpannableString(one_person_ahead);
                 spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                         0, one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                tv_personahead.setText(spannable1);
+                if(activelist.getAppxWaitingTime()==0){
+                    tv_personahead.setText(spannable1);}
+
+                else{
+                    tv_personahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                }
             } else {
 
                 Spannable spannable1 = new SpannableString(secondWord1 + " " + firstWord1);
                 spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                         0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                tv_personahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                if(activelist.getAppxWaitingTime()==0){
+                    tv_personahead.setText(spannable1);}
+
+                else{
+                    tv_personahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                }
+
             }
         } else {
             tv_personahead.setVisibility(View.INVISIBLE);

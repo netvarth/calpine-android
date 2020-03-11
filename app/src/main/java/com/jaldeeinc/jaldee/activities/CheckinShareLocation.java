@@ -223,7 +223,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 if(automaticTrackSwitch.isChecked()){
                     Toast.makeText(CheckinShareLocation.this, "Automatic live tracking enabled", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(CheckinShareLocation.this, "Automatic live tracking enabled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckinShareLocation.this, "Automatic live tracking disabled", Toast.LENGTH_SHORT).show();
                 }
                 UpdateShareLiveLocation();
                 mService.removeLocationUpdates();

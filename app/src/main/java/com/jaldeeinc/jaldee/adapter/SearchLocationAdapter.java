@@ -411,19 +411,19 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
         }
 
-        for (int i = 0; i < mQueueList.size(); i++) {
-
-            if (mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null && mSearchSetting.isFutureDateWaitlist()) {
-                myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
-                myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
-
-            } else {
-                myViewHolder.txt_diffdate.setVisibility(View.GONE);
-                myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
-            }
-
-
-        }
+//        for (int i = 0; i < mQueueList.size(); i++) {
+//
+//            if (mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null && mSearchSetting.isFutureDateWaitlist()) {
+//                myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+//                myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+//
+//            } else {
+//                myViewHolder.txt_diffdate.setVisibility(View.GONE);
+//                myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
+//            }
+//
+//
+//        }
 //        if (mSearchSetting.isFutureDateWaitlist()) {
 //            myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
 //            myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
@@ -1225,7 +1225,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                             if (mSearchSetting.isFutureDateWaitlist()) {
                                 if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
-                                    myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
+                                   myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
                                     myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
 
                                 } else {
@@ -1234,7 +1234,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 }
                             } else {
                                 myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                                myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
+
                             }
+
 
                             if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) { // if Today
                                 myViewHolder.tv_waittime.setVisibility(View.INVISIBLE);
@@ -1252,8 +1255,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 if (mSearchSetting.getCalculationMode() != null) { //   Token/No Token
                                     if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
                                         myViewHolder.btn_checkin.setText("GET TOKEN");
+                                        myViewHolder.btn_checkin_expand.setText("GET TOKEN");
+                                        myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
+
                                         if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()!= -1) {
-                                            Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
+//                                            Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
                                             if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()== 0) {
                                                 myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()) + " People waiting in line");
 
@@ -1262,13 +1268,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                             firstWord = String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
                                                 myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()) + " People waiting in line");}
                                         }
-                                        noCalcShowToken(mQueueList, myViewHolder);
+                                        noCalcShowToken(mQueueList, myViewHolder,i);
                                     } else {
                                         myViewHolder.tv_waittime.setVisibility(View.GONE);
                                         myViewHolder.txt_peopleahead.setVisibility(View.GONE);
 
                                 if (mShowWaitTime) { // ML/Fixed
                                     myViewHolder.btn_checkin.setText( "Check-in".toUpperCase());
+                                    myViewHolder.btn_checkin_expand.setText( "Check-in".toUpperCase());
                                     if (mShowWaitTime && mQueueList != null) {
                                         if (mQueueList!= null &&  mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                                             secondWord = "\nToday, " +mQueueList.get(i).getNextAvailableQueue().getServiceTime();
@@ -1277,7 +1284,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         else{
                                         secondWord = "\n" + Config.getTimeinHourMinutes(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());}
                                         myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()) + " People waiting in line");
-                                        setCurrentDateCheckin(mQueueList, myViewHolder);
+                                        setCurrentDateCheckin(mQueueList, myViewHolder,i);
                                     } else {
                                         enableCheckinButton(myViewHolder);
 
@@ -1292,14 +1299,17 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 // ML/Fixed
                                 if (mShowWaitTime) {
                                     myViewHolder.btn_checkin.setText("Check-in".toUpperCase());
+                                    myViewHolder.btn_checkin_expand.setText("Check-in".toUpperCase());
                                     // For ML/Fixed
                                     if (mShowWaitTime && isShowTokenId == false) {
                                     } else {
                                         if (mSearchSetting.getCalculationMode() != null) {
                                             if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
                                                 myViewHolder.btn_checkin.setText("GET TOKEN");
+                                                myViewHolder.btn_checkin_expand.setText("GET TOKEN");
+                                                myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
                                                 if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()!= -1) {
-                                                    Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
+                                                 //   Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
                                                     if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()== 0) {
                                                         myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()));
                                                     }
@@ -1307,7 +1317,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                                         firstWord = String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
                                                         myViewHolder.txt_peopleahead.setText(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead()) + " People waiting in line");}
                                                 }
-                                                noCalcShowToken(mQueueList, myViewHolder);
+                                                noCalcShowToken(mQueueList, myViewHolder,i);
                                             } else {
                                                 myViewHolder.tv_waittime.setVisibility(View.GONE);
                                                 myViewHolder.txt_peopleahead.setVisibility(View.GONE);
@@ -1496,6 +1506,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             }
                         }
 
+
 //                         else {
 //                            if (terminology != null && !terminology.equals("") && terminology.equals("order")) {
 //                                myViewHolder.btn_checkin_expand.setText("ORDER");
@@ -1578,56 +1589,82 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 //        }
     }
 
-    public void setCurrentDateCheckin(List<QueueList> mQueueList,MyViewHolder myViewHolder) {
-
-        if (mQueueList!= null &&  mQueueList.get(0).getNextAvailableQueue().getServiceTime() != null) {
-            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            String firstWord = "Next Available Time ";
-        //    String secondWord = "\nToday, " +mQueueList.get(0).getNextAvailableQueue().getServiceTime();
-            myViewHolder.tv_waittime.setText(firstWord + secondWord);
-            myViewHolder.txtwaittime_expand.setText( firstWord + secondWord);
-            enableCheckinButton(myViewHolder);
-        } else { // Est. Waiting Time
-            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            String firstWord = "Est Wait Time ";
-           // String secondWord = " ";
-            if(mQueueList != null){
-         //   secondWord = "\n" + Config.getTimeinHourMinutes(mQueueList.get(0).getNextAvailableQueue().getQueueWaitingTime());
-                }
-
-            myViewHolder.tv_waittime.setText(firstWord + secondWord);
-            myViewHolder.txtwaittime_expand.setText( firstWord + secondWord);
-            enableCheckinButton(myViewHolder);
-        }
-
-        myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
-        myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
-
-    }
-    public void noCalcShowToken(List<QueueList> mQueueList, MyViewHolder myViewHolder) {
-        if (mQueueList.get(0).getNextAvailableQueue().getPersonAhead()!= -1) {
-            Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
-            if (mQueueList.get(0).getNextAvailableQueue().getPersonAhead()== 0) {
-                myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
-                myViewHolder.tv_waittime.setText(" Be the first in line");
-                myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                myViewHolder.txtwaittime_expand.setText(" Be the first in line");
-                myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
-            } else {
-                myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
-                myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                String firstWord = String.valueOf(mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
-                String secondWord = " People waiting in line";
+    public void setCurrentDateCheckin(List<QueueList> mQueueList,MyViewHolder myViewHolder, int i) {
+            if (mQueueList != null && mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
-                Spannable spannable = new SpannableString(firstWord + secondWord);
-                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_waittime.setText(spannable);
-                myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+                String firstWord = "Next Available Time ";
+                //    String secondWord = "\nToday, " +mQueueList.get(0).getNextAvailableQueue().getServiceTime();
+                myViewHolder.tv_waittime.setText(firstWord + secondWord);
+                myViewHolder.txtwaittime_expand.setText(firstWord + secondWord);
+                enableCheckinButton(myViewHolder);
+            } else { // Est. Waiting Time
+                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                String firstWord = "Est Wait Time ";
+                // String secondWord = " ";
+                if (mQueueList != null) {
+                    //   secondWord = "\n" + Config.getTimeinHourMinutes(mQueueList.get(0).getNextAvailableQueue().getQueueWaitingTime());
+                }
+
+                myViewHolder.tv_waittime.setText(firstWord + secondWord);
+                myViewHolder.txtwaittime_expand.setText(firstWord + secondWord);
+                enableCheckinButton(myViewHolder);
             }
-        }
+
+            myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+            myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
+
+
+    }
+    public void noCalcShowToken(List<QueueList> mQueueList, MyViewHolder myViewHolder,int i) {
+
+            if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != -1) {
+//                Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
+                if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead()
+                        == 0) {
+                    myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                  //  myViewHolder.tv_waittime.setText(" Be the first in line");
+                    myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+                   // myViewHolder.txtwaittime_expand.setText(" Be the first in line");
+                    String firstWord = "Next Available Time ";
+                    String secondWord = "\nToday, " +mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                    if(mQueueList.get(i).getNextAvailableQueue().getServiceTime()!= null){
+                        myViewHolder.tv_waittime.setText(firstWord + secondWord);
+                        myViewHolder.txtwaittime_expand.setText(firstWord + secondWord);
+                        myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
+                        myViewHolder.tv_waittime.setVisibility(View.GONE);
+                    }
+                    myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
+                } else {
+                    myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                    myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+//                    String firstWord = String.valueOf(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+//                    String secondWord = " People waiting in line";
+                    String firstWord = "Next Available Time ";
+                    String secondWord = "\nToday, " +mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                            "fonts/Montserrat_Bold.otf");
+                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    myViewHolder.tv_waittime.setText(spannable);
+                    if(mQueueList.get(i).getNextAvailableQueue().getServiceTime()!= null){
+                        myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
+                        myViewHolder.tv_waittime.setVisibility(View.GONE);
+                    }
+                    myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
+
+                }
+            }
+
     }
 
     private String getDepartmentName(int department) {

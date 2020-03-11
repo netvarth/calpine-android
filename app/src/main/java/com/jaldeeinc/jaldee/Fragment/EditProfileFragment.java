@@ -136,8 +136,8 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         tv_phone = (TextView) row.findViewById(R.id.txtphone);
         tv_email = (TextInputEditText) row.findViewById(R.id.txtemail);
 
-        txtfirstname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        txtlastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+//        txtfirstname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+//        txtlastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
 
         mContext = getActivity();

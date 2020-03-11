@@ -207,7 +207,10 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //
 //                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
 //                        one_ahead.length(), one_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_peopleahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                if(activelist.getAppxWaitingTime() == 0){
+                    myViewHolder.tv_peopleahead.setText(spannable1 );}
+                 else{
+                myViewHolder.tv_peopleahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");}
             }
             else {
 
@@ -220,7 +223,11 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //
 //                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
 //                        firstWord1.length(), firstWord1.length() + secondWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_peopleahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                if(activelist.getAppxWaitingTime() == 0){
+                    myViewHolder.tv_peopleahead.setText(spannable1 );}
+                else{
+                myViewHolder.tv_peopleahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");}
+
             }
 
 
@@ -314,15 +321,19 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         Config.logV("Bill------------" + activelist.getWaitlistStatus());
         if (!(activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid"))&&(activelist.getBillViewStatus()!=null) || activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
            if(activelist.getAmountDue()!=0) {
-               if (activelist.getBillViewStatus()!=null && activelist.getBillViewStatus().equalsIgnoreCase("Show") && activelist.getAmountDue() > 0) {
+
+               if (activelist.getBillViewStatus()!=null && activelist.getBillViewStatus().equalsIgnoreCase("Show") && activelist.getAmountDue() > 0 &&  !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                    myViewHolder.btn_pay.setVisibility(View.VISIBLE);
                    myViewHolder.btn_pay.setText("PAY");
-                   if(activelist.getAmountDue()>0) {
+                   if(activelist.getAmountDue()>0 ) {
                        myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
                        myViewHolder.tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
                    }else{
                        myViewHolder.tv_prepaid.setVisibility(View.GONE);
                    }
+               }
+               else{
+                   myViewHolder.btn_pay.setVisibility(View.GONE);
                }
            }
             if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
@@ -439,7 +450,6 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
         if (activelist.getServiceTime() != null) {
-
             Config.logV("Provider cancelled------@@@@@---%%%%-"+activelist.getBusinessName()+"status "+activelist.getWaitlistStatus());
             String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             if (date.equalsIgnoreCase(activelist.getDate())) {

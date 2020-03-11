@@ -1207,7 +1207,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mSearchLocList = response.body();
 
                         for (int i = 0; i < response.body().size(); i++) {
+                            if(String.valueOf(response.body().get(i).getId())!= null){
                             ids.add(String.valueOf(response.body().get(i).getId()));
+                            }
                         }
 
 
@@ -1724,7 +1726,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             idPass += mProviderid + "-" + ids.get(i) + ",";
         }
 
-        if (!idPass.equals("") && idPass!= null) {
+        if (!idPass.equals("")) {
             Config.logV("IDS_--------------------" + idPass);
 
             Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
@@ -2815,7 +2817,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                 Config.logV("mSearchResp" + new Gson().toJson(mSearchResp));
 
+                                if(response.body().getHits().getHit().get(i).getId()!= null){
+
                                 ids.add(response.body().getHits().getHit().get(i).getId());
+                                }
                             }
                             ApiQueueList(ids, mSearchResp, "next");
                             if (mSearchResp.get(0).getClaimable().equals("1")) {

@@ -114,7 +114,9 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
                     /*for (int i = 0; i < favList.getLocations().size(); i++) {
                         ids.add(favList.getLocations().get(i).getLocId());
                     }*/
+                    if(favList.getLocationId()!= null){
                         ids = new ArrayList<String>(Arrays.asList(favList.getLocationId().split(" , ")));
+                    }
                         places = new ArrayList<String>(Arrays.asList(favList.getPlace().split(" , ")));
 
                         Config.logV("Ids------------" + ids.size());

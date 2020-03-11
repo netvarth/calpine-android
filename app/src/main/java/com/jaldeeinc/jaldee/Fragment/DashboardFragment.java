@@ -1778,11 +1778,22 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
 
-        if (query.contains(" ")) {
+        query1 = query;
+
+        if (query1.contains(" ")) {
             Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
-            query1 = query.replace(" ", "__");
+            query1 = query.replaceFirst(" ", "__");
         }
 
+        if (query1.contains("'")) {
+            Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query1);
+            query1 = query1.replace("'", "%5C%27");
+        }
+
+        if (query1.contains(" ")) {
+            Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query1);
+            query1 = query1.replace(" ", "%20");
+        }
 
         if (query.contains("'")) {
             Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
