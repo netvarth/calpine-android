@@ -56,6 +56,7 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.FilterActivity;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.PaymentActivity;
+import com.jaldeeinc.jaldee.activities.newSearchLocationActivity;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
 import com.jaldeeinc.jaldee.adapter.ActiveCheckInAdapter;
@@ -104,6 +105,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     Toolbar toolbar;
     static Fragment home;
     static TextView mCurrentLoc;
+    static TextView mNewLoc;
     Spinner mSpinnerDomain;
     String AWS_URL = "";
     String query1 = "";
@@ -266,6 +268,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         txt_sorry = (TextView) row.findViewById(R.id.txt_sorry);
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
         mCurrentLoc = (TextView) row.findViewById(R.id.currentloc);
+        mNewLoc = (TextView) row.findViewById(R.id.newLoc);
 
         Config.logV("OnCreateView-@@@@@@@@@------------------");
 
@@ -374,6 +377,16 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 Intent iLoc = new Intent(mContext, SearchLocationActivity.class);
                 iLoc.putExtra("from", "dashboard");
                 mContext.startActivity(iLoc);
+            }
+        });
+
+
+        mNewLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newLoc = new Intent(mContext, newSearchLocationActivity.class);
+                newLoc.putExtra("from", "dashboard");
+                mContext.startActivity(newLoc);
             }
         });
         /////////////////////////////////////

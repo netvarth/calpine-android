@@ -77,9 +77,6 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
                 callback.onMethodCallback(searchdetailList.getName(),searchdetailList.getLatitude(),searchdetailList.getLongitude(),searchdetailList.getName());
             }
         });
-
-
-
     }
 
 
