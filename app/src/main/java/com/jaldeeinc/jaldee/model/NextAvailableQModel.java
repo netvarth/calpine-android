@@ -17,7 +17,7 @@ public class NextAvailableQModel {
     private int queueWaitingTime;
     private int queueSize;
     private int delay;
-    private int personAhead;
+    private Integer personAhead;
     private int turnAroundTime;
     private String availableDate;
     private String serviceTime;
@@ -72,11 +72,11 @@ public class NextAvailableQModel {
         this.delay = delay;
     }
 
-    public int getPersonAhead() {
+    public Integer getPersonAhead() {
         return personAhead;
     }
 
-    public void setPersonAhead(int personAhead) {
+    public void setPersonAhead(Integer personAhead) {
         this.personAhead = personAhead;
     }
 

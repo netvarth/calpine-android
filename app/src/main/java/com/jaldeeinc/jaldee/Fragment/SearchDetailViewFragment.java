@@ -348,6 +348,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 onMethodCoupn(uniqueID);
             }
         });
+
+
         tv_first_ccoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -2165,10 +2167,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         if (firstCouponAvailable) {
                             tv_first_ccoupon.setVisibility(View.VISIBLE);
+                        }else{
+                            tv_first_ccoupon.setVisibility(View.GONE);
                         }
 
                         if (couponAvailable) {
                             tv_coupon.setVisibility(View.VISIBLE);
+                        }else{
+                            tv_coupon.setVisibility(View.GONE);
                         }
 
 

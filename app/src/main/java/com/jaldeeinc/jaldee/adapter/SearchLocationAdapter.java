@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -51,10 +53,9 @@ import java.util.Locale;
  */
 
 public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAdapter.MyViewHolder> {
-
     private List<SearchLocation> mSearchLocationList;
     static Context mContext;
-    String secondWord,firstWord;
+    String secondWord, firstWord;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate, txt_msg, txt_peopleahead;
@@ -110,7 +111,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txtworkSeeAll = (TextView) view.findViewById(R.id.txtworkSeeAll);
             LWorkinHrs = (LinearLayout) view.findViewById(R.id.LWorkinHrs);
             txtworking = (TextView) view.findViewById(R.id.txtworking);
-            LDepartment_2 = ( LinearLayout ) view.findViewById(R.id.LDepartment_2);
+            LDepartment_2 = (LinearLayout) view.findViewById(R.id.LDepartment_2);
             txt_msg = (TextView) view.findViewById(R.id.txt_msg);
             txt_peopleahead = (TextView) view.findViewById(R.id.txt_PeopleAhead);
         }
@@ -130,7 +131,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     ArrayList<SearchDepartment> mSearchDepartmentList;
 
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology,boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchServiceList = SearchServiceList;
@@ -146,8 +147,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         Config.logV("Search Service-----1111-----------" + mSearchServiceList.size());
         this.calcMode = mCalcMode;
         this.terminology = terminology;
-        this.isShowTokenId=isShowTokenId;
-       this.mSearchDepartmentList = mSearchDepartments;
+        this.isShowTokenId = isShowTokenId;
+        this.mSearchDepartmentList = mSearchDepartments;
 
     }
 
@@ -177,6 +178,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
     ArrayList<ParkingModel> listType = new ArrayList<>();
 
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     @Override
     public void onBindViewHolder(final SearchLocationAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
@@ -194,19 +196,19 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 Config.logV("Locationttt-----kkkk###########@@@@@@" + searchLoclist.getId());
                 Config.logV("Locationttt-----aaaa###########@@@@@@" + mCheckInMessage.get(i).getmAllSearch_checkIn().size());
 
-                 if(terminology!= null) {
-                     String firstWord = "You have ";
-                     String secondWord = mCheckInMessage.get(i).getmAllSearch_checkIn().size() + " " + terminology;
-                     String thirdword = " at this location";
+                if (terminology != null) {
+                    String firstWord = "You have ";
+                    String secondWord = mCheckInMessage.get(i).getmAllSearch_checkIn().size() + " " + terminology;
+                    String thirdword = " at this location";
 
-                     Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
-                     Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
-                             "fonts/Montserrat_Bold.otf");
-                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                     myViewHolder.tv_checkin.setText(spannable);
+                    Spannable spannable = new SpannableString(firstWord + secondWord + thirdword);
+                    Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
+                            "fonts/Montserrat_Bold.otf");
+                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    myViewHolder.tv_checkin.setText(spannable);
 
-                 }
-            }else {
+                }
+            } else {
                 //myViewHolder.tv_checkin.setVisibility(View.GONE);
             }
         }
@@ -704,16 +706,16 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             // txtdataSat += workingModelArrayList.get(i).getTime_value() + "\n";
                         }
                     }
-                        if (myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Sunday")) {
-                            if (myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
-                                if (myViewHolder.txtdataSun.equalsIgnoreCase("")) {
-                                    myViewHolder.txtdataSun += myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
-                                } else {
-                                    myViewHolder.txtdataSun += "\n" + myViewHolder.workingModelArrayList.get(i).getTime_value();
-                                }
+                    if (myViewHolder.workingModelArrayList.get(i).getDay().equalsIgnoreCase("Sunday")) {
+                        if (myViewHolder.workingModelArrayList.get(i).getTime_value() != null) {
+                            if (myViewHolder.txtdataSun.equalsIgnoreCase("")) {
+                                myViewHolder.txtdataSun += myViewHolder.workingModelArrayList.get(i).getTime_value()/*+"\n"*/;
+                            } else {
+                                myViewHolder.txtdataSun += "\n" + myViewHolder.workingModelArrayList.get(i).getTime_value();
                             }
-                            //txtdataSun += workingModelArrayList.get(i).getTime_value() + "\n";
                         }
+                        //txtdataSun += workingModelArrayList.get(i).getTime_value() + "\n";
+                    }
 
 
 
@@ -1505,7 +1507,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                             }
                         }
-
 
 //                         else {
 //                            if (terminology != null && !terminology.equals("") && terminology.equals("order")) {
