@@ -127,7 +127,8 @@
                         android:inputType="number"
                         android:textAppearance="@style/GreyTextInputLayoutHint"
                         android:textColor="@color/title_grey"
-                        android:textColorHint="@color/title_grey" />
+                        android:textColorHint="@color/title_grey"
+                        android:maxLength="5"/>
                 </android.support.design.widget.TextInputLayout>
 
 
