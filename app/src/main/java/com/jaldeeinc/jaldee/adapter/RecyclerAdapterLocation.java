@@ -31,7 +31,7 @@ public class RecyclerAdapterLocation extends RecyclerView.Adapter<RecyclerView.V
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.name);
+            name = (TextView) itemView.findViewById(R.id.names);
         }
     }
 

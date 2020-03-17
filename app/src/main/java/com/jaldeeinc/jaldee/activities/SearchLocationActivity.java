@@ -13,10 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Fragment.DashboardFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchListFragment;
 import com.jaldeeinc.jaldee.R;
@@ -154,6 +156,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
 
                     if (response.code() == 200) {
                         items = response.body();
+                        Log.i("LocationName",new Gson().toJson(response.body()));
                         mSearchLocAdapter = new LocationSearchAdapter(mContext, items, mCallback);
                         mrRecylce_searchloc.setAdapter(mSearchLocAdapter);
                         mSearchLocAdapter.notifyDataSetChanged();

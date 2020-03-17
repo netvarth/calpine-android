@@ -56,6 +56,7 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.FilterActivity;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.PaymentActivity;
+import com.jaldeeinc.jaldee.activities.SampleLocation;
 import com.jaldeeinc.jaldee.activities.newSearchLocationActivity;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
@@ -384,8 +385,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         mNewLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent newLoc = new Intent(mContext, newSearchLocationActivity.class);
-                newLoc.putExtra("from", "dashboard");
+                Intent newLoc = new Intent(mContext, SampleLocation.class);
                 mContext.startActivity(newLoc);
             }
         });

@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
@@ -34,7 +35,9 @@ public class newSearchLocationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.newsearchlocation);
+        setContentView(R.layout.location);
+
+        Toast.makeText(this, "Entered location class", Toast.LENGTH_SHORT).show();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.myRecyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -45,7 +48,6 @@ public class newSearchLocationActivity extends AppCompatActivity {
 
         mAdapter = new RecyclerAdapterLocation(this, viewItems);
         mRecyclerView.setAdapter(mAdapter);
-
         addItemsFromJSON();
 
 
@@ -88,6 +90,11 @@ public class newSearchLocationActivity extends AppCompatActivity {
             String jsonString = null;
             inputStream = getResources().openRawResource(R.raw.locationmin);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
+
+            while((jsonString = bufferedReader.readLine()) != null){
+                builder.append(jsonString);
+            }
+
         } finally {
 if(inputStream != null){
     inputStream.close();

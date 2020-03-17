@@ -37,7 +37,7 @@
         android:largeHeap="true">
         <activity
             android:name=".activities.Splash"
-            android:screenOrientation="portrait">
+            android:screenOrientation="fullSensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,20 +46,20 @@
         </activity>
         <activity
             android:name=".activities.Register"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.Signup"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.VerifyOtp"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.Password"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.Home"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:windowSoftInputMode="adjustPan"
             android:hardwareAccelerated="true">
             <intent-filter>
@@ -70,62 +70,74 @@
         </activity>
         <activity
             android:name=".payment.PayUMoneyWebview"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.Login"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.ResetOtp"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.SwipeGalleryImage"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.FilterActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.SearchServiceActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.SearchLocationActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
+
+        <activity
+        android:name=".activities.newSearchLocationActivity"
+        android:screenOrientation="fullSensor" />
+
+
+        <activity
+            android:name=".activities.Locations"
+            android:screenOrientation="fullSensor" />
+
+
+        <activity
+            android:name=".activities.SampleLocation"
+            android:screenOrientation="fullSensor" />
+
         <activity
             android:name=".activities.CheckIn"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".activities.CheckinShareLocation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activities.Appointment"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.CheckInCopy"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.PaymentActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.CheckinFamilyMember"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.MessageActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.DetailInboxList"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
 
         <activity
             android:name=".activities.AddMemberChekin"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.TermsOfUse"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".activities.BillActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
 
 
 
