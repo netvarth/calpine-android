@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,22 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.callback.LocationSearchCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.LocationResponse;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Locale;
 
 /**
@@ -29,6 +38,7 @@ import java.util.Locale;
 
 
 public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAdapter.MyViewHolder> implements Filterable {
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_loc;
@@ -40,20 +50,28 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
             tv_loc = (TextView) view.findViewById(R.id.txtLoc);
             l_searchlayout = (LinearLayout) view.findViewById(R.id.searchlayout);
 
+
         }
     }
 
     Context mContext;
     LocationSearchAdapter.ValueFilter valueFilter;
-    ArrayList<LocationResponse> items;
-    ArrayList<LocationResponse> filteredItems;
+    ArrayList<String> items;
+    ArrayList<String> filteredItems;
+    String name;
+    String latitude;
+    String longitude;
+    double lat;
+    double longi;
+
 
     LocationSearchCallback callback;
-    public LocationSearchAdapter(Context context, ArrayList<LocationResponse> item,LocationSearchCallback callback) {
+
+    public LocationSearchAdapter(Context context, ArrayList<String> item, LocationSearchCallback callback) {
         mContext = context;
         items = item;
         filteredItems = item;
-        this.callback=callback;
+        this.callback = callback;
 
 
     }
@@ -62,19 +80,36 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
     public LocationSearchAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.searchlocation_row, parent, false);
-
         return new LocationSearchAdapter.MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(LocationSearchAdapter.MyViewHolder myViewHolder, final int position) {
-        final LocationResponse searchdetailList = items.get(position);
-        myViewHolder.tv_loc.setText(searchdetailList.getName());
+//        final String searchdetailList = items.get(position);
+
+
+        String response = new Gson().toJson(items);
+        try {
+            JSONArray itemArray = new JSONArray(response);
+            String valueJson = itemArray.getString(position);
+            JSONObject jsonObj = new JSONObject(valueJson);
+            name = jsonObj.get("name").toString();
+            latitude = jsonObj.get("latitude").toString();
+            lat = Double.parseDouble(latitude);
+            longitude = jsonObj.get("longitude").toString();
+            longi = Double.parseDouble(longitude);
+            myViewHolder.tv_loc.setText(name);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
         myViewHolder.l_searchlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("Latitude-----------"+searchdetailList.getLatitude());
-                callback.onMethodCallback(searchdetailList.getName(),searchdetailList.getLatitude(),searchdetailList.getLongitude(),searchdetailList.getName());
+                callback.onMethodCallback(name, lat, longi, name);
             }
         });
     }
@@ -89,6 +124,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
     }
 
     String text = "";
+
     private class ValueFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -96,20 +132,18 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
 
             if (constraint != null && constraint.length() > 0) {
                 text = constraint.toString();
-                ArrayList<LocationResponse> filterList = new ArrayList<LocationResponse>();
+                ArrayList<String> filterList = new ArrayList<String>();
                 for (int i = 0; i < filteredItems.size(); i++) {
 
                   /*  if ((String.valueOf(filteredItems.get(i).getName()).toLowerCase())
                             .contains(constraint.toString().toLowerCase())) {*/
 
 
-                    if ((String.valueOf(filteredItems.get(i).getName()).toLowerCase())
+                    if ((String.valueOf(filteredItems.get(i)).toLowerCase())
                             .contains(constraint.toString().toLowerCase())) {
 
-                        Config.logV("Same---------------" + filteredItems.get(i).getName());
-                        LocationResponse loc=new LocationResponse();
-                        loc.setName(filteredItems.get(i).getName());
-                        filterList.add(loc);
+                        Config.logV("Same---------------" + filteredItems.get(i));
+                        filterList.add(filteredItems.get(i));
 
 
                     }
@@ -130,7 +164,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
         @Override
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
-            items = (ArrayList<LocationResponse>) results.values;
+            items = (ArrayList<String>) results.values;
             notifyDataSetChanged();
         }
 
@@ -141,7 +175,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
         return items.size();
     }
 
-    public  CharSequence highlight(String search, String originalText) {
+    public CharSequence highlight(String search, String originalText) {
         // ignore case and accents
         // the same thing should have been done for the search text
         String normalizedText = Normalizer
@@ -168,7 +202,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
                 start = normalizedText.indexOf(search, spanEnd);
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
-                highlighted.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                highlighted.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             }
 
