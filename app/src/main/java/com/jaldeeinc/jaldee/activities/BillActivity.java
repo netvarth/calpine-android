@@ -528,7 +528,7 @@ public class BillActivity extends AppCompatActivity {
 
                         double total = mBillData.getNetRate() - mBillData.getTotalAmountPaid();
 
-                        if (total != 0 && total > 0) {
+                        if (total >= 0) {
                             txttotal.setVisibility(View.VISIBLE);
                             tv_totalamt.setVisibility(View.VISIBLE);
 //                            DecimalFormat format = new DecimalFormat("0.00");

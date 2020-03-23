@@ -1782,7 +1782,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         if (query1.contains(" ")) {
             Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
-            query1 = query.replaceFirst(" ", "__");
+            query1 = query.replace(" ", "__");
         }
 
         if (query1.contains("'")) {

@@ -129,9 +129,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     String terminology;
     boolean isShowTokenId;
     ArrayList<SearchDepartment> mSearchDepartmentList;
+    List<SearchListModel> mSearchList = new ArrayList<>();
 
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments) {
+
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments, List<SearchListModel> mSearchList) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchServiceList = SearchServiceList;
@@ -149,6 +151,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         this.terminology = terminology;
         this.isShowTokenId = isShowTokenId;
         this.mSearchDepartmentList = mSearchDepartments;
+        this.mSearchList = mSearchList;
 
     }
 
@@ -1224,21 +1227,27 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 //                            } catch (ParseException e) {
 //                                e.printStackTrace();
 //                            }
+                        for(int j= 0;j<mSearchList.size();j++) {
+                            if (mSearchList.get(j).getFuture_checkins() != null) {
+                                if (mSearchList.get(j).getCalculationMode() != null) {
+                                    if (mSearchList.get(j).getFuture_checkins().equalsIgnoreCase("1")) {
+                                        if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
+                                            myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
+                                            myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
 
-                            if (mSearchSetting.isFutureDateWaitlist()) {
-                                if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
-                                   myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
-                                    myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                        } else {
+                                            myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
+                                            myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                        }
+                                    } else {
+                                        myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                                        myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
 
-                                } else {
-                                    myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
-                                    myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                    }
                                 }
-                            } else {
-                                myViewHolder.txt_diffdate.setVisibility(View.GONE);
-                                myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
-
                             }
+                        }
+
 
 
                             if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) { // if Today

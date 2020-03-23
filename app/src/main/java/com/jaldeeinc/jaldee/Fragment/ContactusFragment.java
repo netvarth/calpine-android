@@ -26,9 +26,10 @@ import com.jaldeeinc.jaldee.common.Config;
 
 public class ContactusFragment extends RootFragment {
     Context mContext;
-    LinearLayout layout_phone,maillayout;
+    LinearLayout layout_phone,maillayout, layout_support;
     private final int CALL_REQUEST = 100;
-    TextView tv_phone;
+    TextView tv_phone,tv_support;
+    String phoneNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,9 +45,11 @@ public class ContactusFragment extends RootFragment {
         TextView txtreach = (TextView) row.findViewById(R.id.txtreach);
 
         tv_phone = (TextView) row.findViewById(R.id.txtphone);
+        tv_support = (TextView) row.findViewById(R.id.txtwhatsapp);
         LinearLayout contactLayout = (LinearLayout) row.findViewById(R.id.contactLayout);
         layout_phone = (LinearLayout) row.findViewById(R.id.layout_phone);
         maillayout= (LinearLayout) row.findViewById(R.id.maillayout);
+        layout_support = (LinearLayout) row.findViewById(R.id.layout_whatsapp);
 
         contactLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +78,7 @@ public class ContactusFragment extends RootFragment {
         layout_phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                phoneNumber = tv_phone.getText().toString();
                 callPhoneNumber();
             }
         });
@@ -90,6 +94,14 @@ public class ContactusFragment extends RootFragment {
                 } catch (android.content.ActivityNotFoundException ex) {
                     Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        layout_support.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                phoneNumber = tv_support.getText().toString();
+                callPhoneNumber();
             }
         });
 
@@ -115,15 +127,30 @@ public class ContactusFragment extends RootFragment {
 
                     return;
                 }else{
+                    if(phoneNumber.equals("Phone  0487-2325650")){
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:0487-2325650"));
+                        startActivity(callIntent);
+                    }
+                    else{
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:8880125000"));
+                        startActivity(callIntent);
+                    }
+
+                }
+            }else {
+
+                if(phoneNumber.equals("Phone  0487-2325650")){
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     callIntent.setData(Uri.parse("tel:0487-2325650"));
                     startActivity(callIntent);
                 }
-            }else {
-
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:0487-2325650"));
-                startActivity(callIntent);
+                else{
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:8880125000"));
+                    startActivity(callIntent);
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -136,9 +163,16 @@ public class ContactusFragment extends RootFragment {
         if (requestCode == CALL_REQUEST) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Config.logV("CALL GRANTED @@@@@@@@@@@@@@");
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:0487-2325650"));
-                startActivity(callIntent);
+                if(phoneNumber.equals("Phone  0487-2325650")){
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:0487-2325650"));
+                    startActivity(callIntent);
+                }
+                else{
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:8880125000"));
+                    startActivity(callIntent);
+                }
             } else {
                 Toast.makeText(mContext, getResources().getString(R.string.call_permission_denied_message), Toast.LENGTH_SHORT).show();
             }

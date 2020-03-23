@@ -2273,7 +2273,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
             if (querypass1.contains(" ")) {
                 Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + querypass);
-                querypass1 = querypass.replaceFirst(" ", "__");
+                querypass1 = querypass.replace(" ", "__");
               //  querypass = querypass.replace(" ","%20");
                 Log.i("querryGiven",querypass1);
                 Log.i("querryGiven",querypass);
