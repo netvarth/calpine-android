@@ -104,6 +104,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     Toolbar toolbar;
     static Fragment home;
     static TextView mCurrentLoc;
+
     Spinner mSpinnerDomain;
     String AWS_URL = "";
     String query1 = "";
@@ -376,6 +377,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 mContext.startActivity(iLoc);
             }
         });
+
         /////////////////////////////////////
 
 
