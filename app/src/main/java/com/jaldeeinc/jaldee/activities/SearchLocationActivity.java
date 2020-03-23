@@ -38,6 +38,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,6 +67,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
     JSONObject locationName = new JSONObject();
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayList<String> newArrayList = new ArrayList<>();
+
 
 
     @Override
@@ -144,14 +148,6 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
                 if(query.length()>1){
                     getJson(query);
                 }
-
-                    mSearchLocAdapter = new LocationSearchAdapter(mContext, newArrayList, mCallback);
-                    mrRecylce_searchloc.setAdapter(mSearchLocAdapter);
-                    mSearchLocAdapter.notifyDataSetChanged();
-//                    ApiLocationSearch(query);
-
-
-
                 return false;
             }
         });
@@ -161,6 +157,8 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
     public void getJson(String query) {
         Log.i("locoloco", "getJson");
         String json;
+        arrayList.clear();
+
 
         try {
 
@@ -180,26 +178,35 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
             JSONArray ja_states = jsonObj.getJSONArray("states");
             for (int i = 0; i < ja_states.length(); i++) {
                 JSONObject jsonObj1 = ja_states.getJSONObject(i);
+//                locationName.put("name", jsonObj1.getString("name") + ", " + jsonObj.getString("name"));
                 locationName.put("name", jsonObj1.getString("name"));
                 locationName.put("latitude", jsonObj1.getString("latitude"));
                 locationName.put("longitude", jsonObj1.getString("longitude"));
+                locationName.put("typ","state");
+                locationName.put("rank", "4");
                 arrayList.add(locationName.toString());
 
                 JSONArray citys = jsonObj1.getJSONArray("cities");
                 for (int j = 0; j < citys.length(); j++) {
                     JSONObject json1 = citys.getJSONObject(j);
+//                    locationName.put("name", json1.getString("name") + ", " + jsonObj1.getString("name"));
                     locationName.put("name", json1.getString("name"));
                     locationName.put("latitude", json1.getString("latitude"));
                     locationName.put("longitude", json1.getString("longitude"));
+                    locationName.put("typ","city");
+                    locationName.put("rank", "3");
                     arrayList.add(locationName.toString());
 
 
                     JSONArray locations = json1.getJSONArray("locations");
                     for (int k = 0; k < locations.length(); k++) {
                         JSONObject json12 = locations.getJSONObject(k);
+//                        locationName.put("name", json12.getString("name") + ", " + json1.getString("name"));
                         locationName.put("name", json12.getString("name"));
                         locationName.put("latitude", json12.getString("latitude"));
                         locationName.put("longitude", json12.getString("longitude"));
+                        locationName.put("typ","area");
+                        locationName.put("rank", "5");
                         arrayList.add(locationName.toString());
                     }
 
@@ -211,17 +218,15 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
                     newArrayList.add(arrayList.get(i));
                 }
             }
-
-
-
-
-
+            Log.i("locoLastStateDetail", newArrayList.toString());
             mSearchLocAdapter = new LocationSearchAdapter(mContext, newArrayList, mCallback);
             mrRecylce_searchloc.setAdapter(mSearchLocAdapter);
             mSearchLocAdapter.notifyDataSetChanged();
 
             Log.i("locoLastStateDetail", arrayList.toString());
             Log.i("locoLastStateDetail", newArrayList.toString());
+
+
 
         } catch (IOException | JSONException e) {
             Log.i("locoloco", "exception");
