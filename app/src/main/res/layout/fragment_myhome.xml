@@ -65,16 +65,6 @@
                         android:orientation="horizontal">
 
 
-                        <TextView
-                            android:text="New Location"
-                            android:id="@+id/newLoc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:gravity="right|center"
-                            android:paddingRight="@dimen/padding3"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/txtsize_12" />
 
                         <ImageView
                             android:paddingBottom="-2dp"
