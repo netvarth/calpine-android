@@ -56,8 +56,8 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
 
     Context mContext;
     LocationSearchAdapter.ValueFilter valueFilter;
-    ArrayList<String> items;
-    ArrayList<String> filteredItems;
+    ArrayList<LocationResponse> items;
+    ArrayList<LocationResponse> filteredItems;
     String name;
     String latitude;
     String longitude;
@@ -67,7 +67,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
 
     LocationSearchCallback callback;
 
-    public LocationSearchAdapter(Context context, ArrayList<String> item, LocationSearchCallback callback) {
+    public LocationSearchAdapter(Context context, ArrayList<LocationResponse> item, LocationSearchCallback callback) {
         mContext = context;
         items = item;
         filteredItems = item;
@@ -85,31 +85,34 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
 
     @Override
     public void onBindViewHolder(LocationSearchAdapter.MyViewHolder myViewHolder, final int position) {
-//        final String searchdetailList = items.get(position);
+        final LocationResponse searchdetailList = items.get(position);
 
 
-        String response = new Gson().toJson(items);
-        try {
-            JSONArray itemArray = new JSONArray(response);
-            String valueJson = itemArray.getString(position);
-            JSONObject jsonObj = new JSONObject(valueJson);
-            name = jsonObj.get("name").toString();
-            latitude = jsonObj.get("latitude").toString();
-            lat = Double.parseDouble(latitude);
-            longitude = jsonObj.get("longitude").toString();
-            longi = Double.parseDouble(longitude);
-            myViewHolder.tv_loc.setText(name);
+            myViewHolder.tv_loc.setText(searchdetailList.getName());
 
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        String response = new Gson().toJson(items);
+//        try {
+//            JSONArray itemArray = new JSONArray(response);
+//            String valueJson = itemArray.getString(position);
+//            JSONObject jsonObj = new JSONObject(valueJson);
+//            name = jsonObj.get("name").toString();
+//            latitude = jsonObj.get("latitude").toString();
+//            lat = Double.parseDouble(latitude);
+//            longitude = jsonObj.get("longitude").toString();
+//            longi = Double.parseDouble(longitude);
+//            myViewHolder.tv_loc.setText(name);
+//
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
 
         myViewHolder.l_searchlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodCallback(name, lat, longi, name);
+
+                    callback.onMethodCallback(searchdetailList.getName(), searchdetailList.getLatitude(), searchdetailList.getLongitude(), searchdetailList.getName());
             }
         });
     }
@@ -143,7 +146,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
                             .contains(constraint.toString().toLowerCase())) {
 
                         Config.logV("Same---------------" + filteredItems.get(i));
-                        filterList.add(filteredItems.get(i));
+                        filterList.add(filteredItems.get(i).toString());
 
 
                     }
@@ -164,7 +167,7 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
         @Override
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
-            items = (ArrayList<String>) results.values;
+            items = (ArrayList<LocationResponse>) results.values;
             notifyDataSetChanged();
         }
 
