@@ -116,6 +116,7 @@
                         android:digits="0123456789"
                         android:hint="@string/hint_otp_pwd"
                         android:inputType="number"
+                        android:maxLength="5"
                         android:textAppearance="@style/GreyTextInputLayoutHint"
                         android:textColor="@color/title_grey"
                         android:textColorHint="@color/title_grey" />

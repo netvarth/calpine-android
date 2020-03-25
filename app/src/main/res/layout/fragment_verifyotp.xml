@@ -59,12 +59,13 @@
                     android.support.design:hintTextAppearance="@style/GreyTextInputLayoutPassword">
 
                     <android.support.design.widget.TextInputEditText
-                            android:id="@+id/editotp"
+                        android:id="@+id/editotp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/padding7"
                         android:hint="@string/hint_otp"
                         android:inputType="number"
+                        android:maxLength="5"
                         android:digits="0123456789"
                         android:textAppearance="@style/GreyTextInputLayoutHintPwd"
                         android:textColor="@color/title_grey"
