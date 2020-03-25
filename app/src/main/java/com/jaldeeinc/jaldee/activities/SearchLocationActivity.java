@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -64,9 +65,10 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
     TextView tv_currentloc;
     String from;
     String sforceupdate = "";
-    JSONObject locationName = new JSONObject();
-    ArrayList<String> arrayList = new ArrayList<>();
-    ArrayList<String> newArrayList = new ArrayList<>();
+    LocationResponse locationName = new LocationResponse();
+    ArrayList<LocationResponse> arrayList = new ArrayList<>();
+    ArrayList<LocationResponse> newArrayList = new ArrayList<>();
+//    ArrayList<JSONObject> newArrayList = new ArrayList<>();
 
 
 
@@ -161,7 +163,6 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
 
 
         try {
-
             Log.i("locoloco", "try");
             InputStream is = getResources().openRawResource(R.raw.locationmin);
             int size = is.available();
@@ -174,50 +175,53 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
 
 
             JSONObject jsonObj = new JSONObject(json);
-
             JSONArray ja_states = jsonObj.getJSONArray("states");
             for (int i = 0; i < ja_states.length(); i++) {
+                LocationResponse locationResponse = new LocationResponse();
                 JSONObject jsonObj1 = ja_states.getJSONObject(i);
 //                locationName.put("name", jsonObj1.getString("name") + ", " + jsonObj.getString("name"));
-                locationName.put("name", jsonObj1.getString("name"));
-                locationName.put("latitude", jsonObj1.getString("latitude"));
-                locationName.put("longitude", jsonObj1.getString("longitude"));
-                locationName.put("typ","state");
-                locationName.put("rank", "4");
-                arrayList.add(locationName.toString());
+                locationResponse.setName(jsonObj1.getString("name"));
+                locationResponse.setLatitude(jsonObj1.getDouble("latitude"));
+                locationResponse.setLongitude(jsonObj1.getDouble("longitude"));
+//                locationResponse.put("typ","city");
+//                locationResponse.put("rank", "3");
+                arrayList.add(locationResponse);
 
                 JSONArray citys = jsonObj1.getJSONArray("cities");
                 for (int j = 0; j < citys.length(); j++) {
+                    locationResponse = new LocationResponse();
                     JSONObject json1 = citys.getJSONObject(j);
-//                    locationName.put("name", json1.getString("name") + ", " + jsonObj1.getString("name"));
-                    locationName.put("name", json1.getString("name"));
-                    locationName.put("latitude", json1.getString("latitude"));
-                    locationName.put("longitude", json1.getString("longitude"));
-                    locationName.put("typ","city");
-                    locationName.put("rank", "3");
-                    arrayList.add(locationName.toString());
+                    locationResponse.setName(json1.getString("name") + ", " + jsonObj1.getString("name"));
+                    locationResponse.setLatitude(json1.getDouble("latitude"));
+                    locationResponse.setLongitude(json1.getDouble("longitude"));
+                    arrayList.add(locationResponse);
 
 
                     JSONArray locations = json1.getJSONArray("locations");
                     for (int k = 0; k < locations.length(); k++) {
+                        locationResponse = new LocationResponse();
                         JSONObject json12 = locations.getJSONObject(k);
-//                        locationName.put("name", json12.getString("name") + ", " + json1.getString("name"));
-                        locationName.put("name", json12.getString("name"));
-                        locationName.put("latitude", json12.getString("latitude"));
-                        locationName.put("longitude", json12.getString("longitude"));
-                        locationName.put("typ","area");
-                        locationName.put("rank", "5");
-                        arrayList.add(locationName.toString());
+                        locationResponse.setName(json12.getString("name") + ", " + json1.getString("name") + ", " + jsonObj1.getString("name"));
+                        locationResponse.setLatitude(json12.getDouble("latitude"));
+                        locationResponse.setLongitude(json12.getDouble("longitude"));
+////                        locationName.put("name", json12.getString("name") + ", " + json1.getString("name"));
+//                        locationName.put("name", json12.getString("name"));
+//                        locationName.put("latitude", json12.getString("latitude"));
+//                        locationName.put("longitude", json12.getString("longitude"));
+//                        locationName.put("typ","area");
+//                        locationName.put("rank", "5");
+                        arrayList.add(locationResponse);
                     }
 
                 }
             }
             newArrayList.clear();
             for(int i = 0; i<arrayList.size(); i ++){
-                if(arrayList.get(i).toLowerCase().contains(query.toLowerCase())){
+                if(arrayList.get(i).getName().toLowerCase().startsWith(query.toLowerCase())){
                     newArrayList.add(arrayList.get(i));
                 }
             }
+
             Log.i("locoLastStateDetail", newArrayList.toString());
             mSearchLocAdapter = new LocationSearchAdapter(mContext, newArrayList, mCallback);
             mrRecylce_searchloc.setAdapter(mSearchLocAdapter);
@@ -256,7 +260,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
                     if (response.code() == 200) {
                         items = response.body();
                         Log.i("LocationName",new Gson().toJson(response.body()));
-                        mSearchLocAdapter = new LocationSearchAdapter(mContext, arrayList, mCallback);
+                        mSearchLocAdapter = new LocationSearchAdapter(mContext, (ArrayList<LocationResponse>) arrayList, mCallback);
                         mrRecylce_searchloc.setAdapter(mSearchLocAdapter);
                         mSearchLocAdapter.notifyDataSetChanged();
                     }
