@@ -8,6 +8,24 @@ public class LocationResponse {
     String name;
     Double latitude;
     Double longitude;
+    String  typ;
+    String rank;
+
+    public String getTyp() {
+        return typ;
+    }
+
+    public void setTyp(String typ) {
+        this.typ = typ;
+    }
+
+    public String getRank() {
+        return rank;
+    }
+
+    public void setRank(String rank) {
+        this.rank = rank;
+    }
 
     public String getName() {
         return name;

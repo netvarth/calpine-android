@@ -85,36 +85,23 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
 
     @Override
     public void onBindViewHolder(LocationSearchAdapter.MyViewHolder myViewHolder, final int position) {
-        final LocationResponse searchdetailList = items.get(position);
+
+        if(items!=null){
+            final LocationResponse searchdetailList = items.get(position);
 
 
             myViewHolder.tv_loc.setText(searchdetailList.getName());
-
-//        String response = new Gson().toJson(items);
-//        try {
-//            JSONArray itemArray = new JSONArray(response);
-//            String valueJson = itemArray.getString(position);
-//            JSONObject jsonObj = new JSONObject(valueJson);
-//            name = jsonObj.get("name").toString();
-//            latitude = jsonObj.get("latitude").toString();
-//            lat = Double.parseDouble(latitude);
-//            longitude = jsonObj.get("longitude").toString();
-//            longi = Double.parseDouble(longitude);
-//            myViewHolder.tv_loc.setText(name);
-//
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-
-
-        myViewHolder.l_searchlayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            myViewHolder.l_searchlayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
                     callback.onMethodCallback(searchdetailList.getName(), searchdetailList.getLatitude(), searchdetailList.getLongitude(), searchdetailList.getName());
-            }
-        });
+                }
+            });
+        }
+
+
+
     }
 
 
