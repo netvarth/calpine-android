@@ -128,6 +128,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
     SearchSetting mSearchSettings;
+    SearchAWsResponse mSearchAWSResponse;
     SearchTerminology mSearchTerminology;
 
     ArrayList<QueueList> mSearchQueueList;
@@ -177,6 +178,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     private int TOTAL_PAGES = 0;
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
+    List<SearchAWsResponse> mSearchRespDetail = new ArrayList<>();
     List<QueueList> mQueueList = new ArrayList<>();
     //    PaginationAdapter pageadapter;
     List<SearchListModel> mSearchListModel = new ArrayList<>();
@@ -225,6 +227,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mSearchDepartments = new ArrayList<>();
         mSearchDepartmentServices = new ArrayList<>();
         mSearchSettings = new SearchSetting();
+        mSearchAWSResponse = new SearchAWsResponse();
         mSearchTerminology = new SearchTerminology();
         mSearchQueueList = new ArrayList<>();
         mServicesList = new ArrayList<SearchService>();
@@ -1076,6 +1079,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ApiFavList(mSearchRespPass, claimable);
                         APIServiceDepartments(mProvoderId);
                         ApiSearchViewLocation(uniqueID);
+                        listProviders(uniqueID);
                         listDoctorsByDepartment();
 
 
@@ -1815,7 +1819,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 } finally {
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                     mRecyLocDetail.setLayoutManager(mLayoutManager);
-                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(),mSearchDepartments);
+                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(),mSearchDepartments,mSearchRespDetail,mSearchAWSResponse);
                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
                     mSearchLocAdapter.notifyDataSetChanged();
                 }
@@ -3345,7 +3349,78 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             @Override
             public void onFailure(Call<SearchAWsResponse> call, Throwable t) {
                 t.printStackTrace();
-                // TODO: 08/11/16 handle failure
+
+            }
+        });
+
+
+    }
+
+
+
+    private void listProviders(final String muniqueID) {
+
+        final ApiInterface apiService = ApiClient.getClientAWS(mContext).create(ApiInterface.class);
+        Map<String, String> query = new HashMap<>();
+        query.put("start", "0");
+        query.put("q", "(and " + "unique_id:" + muniqueID + ")");
+        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+        if (mobile.startsWith("55")) {
+            query.put("fq", "(and  test_account:1 )");
+        } else {
+            query.put("fq", "(and  (not test_account:1) )");
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("size", "10000");
+        params.put("q.parser", "structured");
+        params.put("sort", "claimable asc,ynw_verified_level desc, distance asc");
+        params.put("expr.distance", "haversin(" + lat_long + ", location1.latitude, location1.longitude)");
+        params.put("return", "_all_fields,distance");
+
+        Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
+        call.enqueue(new Callback<SearchAWsResponse>() {
+            @Override
+            public void onResponse(Call<SearchAWsResponse> call, Response<SearchAWsResponse> response) {
+                try {
+
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        if (response.body().getHits().getFound() > 0) {
+
+
+                            mSearchResp.clear();
+                            ArrayList<String> ids = new ArrayList<>();
+                            for (int i = 0; i < response.body().getHits().getHit().size(); i++) {
+                                SearchAWsResponse search = new SearchAWsResponse();
+
+
+                                if (response.body().getHits().getHit().get(i).getFields().getFuture_checkins() != null) {
+                                    search.setFuture_checkins(response.body().getHits().getHit().get(i).getFields().getFuture_checkins());
+                                }
+                                mSearchResp.add(search);
+                            }
+
+                        }
+                        mSearchAWSResponse = response.body();
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Call<SearchAWsResponse> call, Throwable t) {
+                t.printStackTrace();
+
             }
         });
 

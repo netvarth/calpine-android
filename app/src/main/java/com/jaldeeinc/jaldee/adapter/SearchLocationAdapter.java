@@ -9,9 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +19,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
+import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
-import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
+import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchLocation;
@@ -52,6 +49,7 @@ import java.util.Locale;
 
 public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAdapter.MyViewHolder> {
     private List<SearchLocation> mSearchLocationList;
+    private List<SearchAWsResponse> mSearchRespDetail;
     static Context mContext;
     String secondWord, firstWord;
 
@@ -118,6 +116,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     List<SearchService> mSearchServiceList;
     List<QueueList> mQueueList;
     SearchSetting mSearchSetting;
+
+    SearchAWsResponse mSearachAwsResponse;
     String mTitle;
     private SearchLocationAdpterCallback adaptercallback;
     String mUniqueID, accountID;
@@ -129,12 +129,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     ArrayList<SearchDepartment> mSearchDepartmentList;
 
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments) {
+
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments,List<SearchAWsResponse> mSearchRespDetails,SearchAWsResponse mSearchAWSResponse) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
+        this.mSearchRespDetail = mSearchRespDetails;
         this.mSearchServiceList = SearchServiceList;
         this.mQueueList = SearchQueueList;
         this.mSearchSetting = searchSetting;
+        this.mSearachAwsResponse = mSearchAWSResponse;
         this.mTitle = title;
         this.adaptercallback = callback;
         mUniqueID = uniqueid;
@@ -1220,17 +1223,26 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 //                                e.printStackTrace();
 //                            }
 
-                        if (mSearchSetting.isFutureDateWaitlist()) {
-                            if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
-                                myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
-                                myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
 
-                            } else {
-                                myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
-                                myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                        if (mSearachAwsResponse.getHits().getHit().get(i).getFields() !=null && mSearachAwsResponse.getHits().getHit().get(i).getFields().getFuture_checkins()!=null) {
+                            if(mSearachAwsResponse.getHits().getHit().get(i).getFields().getFuture_checkins().equals("1")){
+                                if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
+                                    myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
+                                    myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                    myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+
+                                } else {
+                                    myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
+                                    myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                    myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+                                }
+                            }else {
+                                myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                                myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                             }
                         } else {
                             myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                            myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                         }
 
                         if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) { // if Today
