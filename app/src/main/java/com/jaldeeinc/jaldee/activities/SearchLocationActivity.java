@@ -147,7 +147,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
             public boolean onQueryTextChange(String query) {
                 // filter recycler view when text is changed
                 mSearchLocAdapter.getFilter().filter(query);
-                if(query.length()>1){
+                if(query.length()>0){
                     getJson(query);
                 }
                 return false;
@@ -159,32 +159,30 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
     public void getJson(String query) {
         Log.i("locoloco", "getJson");
         String json;
+        String jsonMetro;
         arrayList.clear();
 
 
         try {
-            Log.i("locoloco", "try");
             InputStream is = getResources().openRawResource(R.raw.locationmin);
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            Log.i("locoloco", "tryover");
             json = new String(buffer, "UTF-8");
-            Log.i("jsonValue", json);
-
-
             JSONObject jsonObj = new JSONObject(json);
+
+
+
             JSONArray ja_states = jsonObj.getJSONArray("states");
             for (int i = 0; i < ja_states.length(); i++) {
                 LocationResponse locationResponse = new LocationResponse();
                 JSONObject jsonObj1 = ja_states.getJSONObject(i);
-//                locationName.put("name", jsonObj1.getString("name") + ", " + jsonObj.getString("name"));
                 locationResponse.setName(jsonObj1.getString("name"));
                 locationResponse.setLatitude(jsonObj1.getDouble("latitude"));
                 locationResponse.setLongitude(jsonObj1.getDouble("longitude"));
-//                locationResponse.put("typ","city");
-//                locationResponse.put("rank", "3");
+                locationResponse.setTyp("state");
+                locationResponse.setRank("4");
                 arrayList.add(locationResponse);
 
                 JSONArray citys = jsonObj1.getJSONArray("cities");
@@ -194,6 +192,8 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
                     locationResponse.setName(json1.getString("name") + ", " + jsonObj1.getString("name"));
                     locationResponse.setLatitude(json1.getDouble("latitude"));
                     locationResponse.setLongitude(json1.getDouble("longitude"));
+                    locationResponse.setTyp("city");
+                    locationResponse.setRank("3");
                     arrayList.add(locationResponse);
 
 
@@ -204,23 +204,68 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
                         locationResponse.setName(json12.getString("name") + ", " + json1.getString("name") + ", " + jsonObj1.getString("name"));
                         locationResponse.setLatitude(json12.getDouble("latitude"));
                         locationResponse.setLongitude(json12.getDouble("longitude"));
-////                        locationName.put("name", json12.getString("name") + ", " + json1.getString("name"));
-//                        locationName.put("name", json12.getString("name"));
-//                        locationName.put("latitude", json12.getString("latitude"));
-//                        locationName.put("longitude", json12.getString("longitude"));
-//                        locationName.put("typ","area");
-//                        locationName.put("rank", "5");
+                        locationResponse.setTyp("area");
+                        locationResponse.setRank("5");
                         arrayList.add(locationResponse);
                     }
 
                 }
             }
+
+
+            //
+            InputStream isMetro = getResources().openRawResource(R.raw.metros);
+            int sizeMetro = isMetro.available();
+            byte[] bufferMetro = new byte[sizeMetro];
+            isMetro.read(bufferMetro);
+            isMetro.close();
+            jsonMetro = new String(bufferMetro, "UTF-8");
+
+            JSONObject jsonObjMetro = new JSONObject(jsonMetro);
+
+
+            JSONArray ja_statesMetro = jsonObjMetro.getJSONArray("metros");
+            for (int i = 0; i < ja_statesMetro.length(); i++) {
+                LocationResponse locationResponseMetro = new LocationResponse();
+                JSONObject jsonObj1Metro = ja_statesMetro.getJSONObject(i);
+                locationResponseMetro.setName(jsonObj1Metro.getString("name") + " " + "( Metro )");
+                locationResponseMetro.setLatitude(jsonObj1Metro.getDouble("latitude"));
+                locationResponseMetro.setLatitude(jsonObj1Metro.getDouble("longitude"));
+                locationResponseMetro.setTyp("metro");
+                locationResponseMetro.setRank("1");
+                arrayList.add(locationResponseMetro);
+            }
+
+            JSONArray ja_statesCapital = jsonObjMetro.getJSONArray("capitals");
+            for (int i = 0; i < ja_statesCapital.length(); i++) {
+                LocationResponse locationResponseMetro = new LocationResponse();
+                JSONObject jsonObj1Metro = ja_statesCapital.getJSONObject(i);
+                locationResponseMetro.setName(jsonObj1Metro.getString("name") + " " + "( Capital )");
+                locationResponseMetro.setLatitude(jsonObj1Metro.getDouble("latitude"));
+                locationResponseMetro.setLatitude(jsonObj1Metro.getDouble("longitude"));
+                locationResponseMetro.setTyp("capital");
+                locationResponseMetro.setRank("2");
+                arrayList.add(locationResponseMetro);
+            }
+
+
+
+
             newArrayList.clear();
             for(int i = 0; i<arrayList.size(); i ++){
                 if(arrayList.get(i).getName().toLowerCase().startsWith(query.toLowerCase())){
                     newArrayList.add(arrayList.get(i));
                 }
             }
+
+            Collections.sort(newArrayList, new Comparator<LocationResponse>() {
+                @Override
+                public int compare(LocationResponse lhs, LocationResponse rhs) {
+                    return lhs.getRank().compareTo(rhs.getRank());
+                }
+            });
+
+
 
             Log.i("locoLastStateDetail", newArrayList.toString());
             mSearchLocAdapter = new LocationSearchAdapter(mContext, newArrayList, mCallback);

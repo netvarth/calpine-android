@@ -3,45 +3,67 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/padding5"
-    android:orientation="vertical">
+    android:weightSum="10"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/lfamily"
+        android:layout_weight="2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding3"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-       <!-- <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.8"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+      <TextView
+          android:padding="@dimen/dimen_10dp"
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"/>
-
-            <TextView
-                android:id="@+id/gender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding5"
-                android:text="Name"/>
-
-        </LinearLayout>-->
+          android:id="@+id/name"
+          android:layout_weight="0.8"
+          android:textSize="@dimen/txtsize_hint"
+          android:textColor="@color/title_grey"
+          android:text="Name"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"/>
         <TextView
-            android:id="@+id/name"
-            android:layout_width="0dp"
+            android:padding="@dimen/dimen_10dp"
+            android:id="@+id/lastName"
             android:layout_weight="0.8"
             android:textSize="@dimen/txtsize_hint"
             android:textColor="@color/title_grey"
-            android:layout_height="wrap_content"
-            android:text="Name"/>
+            android:text="Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:padding="@dimen/dimen_10dp"
+            android:id="@+id/gender"
+            android:layout_weight="0.8"
+            android:textSize="@dimen/txtsize_hint"
+            android:textColor="@color/title_grey"
+            android:text="Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:padding="@dimen/dimen_10dp"
+            android:id="@+id/dateOfBirth"
+            android:layout_weight="0.8"
+            android:textSize="@dimen/txtsize_hint"
+            android:textColor="@color/title_grey"
+            android:text="Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="8"
+        android:id="@+id/edit_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/padding3"
+        android:orientation="vertical">
 
         <ImageView
+            android:layout_marginTop="@dimen/dimen_10dp"
             android:id="@+id/edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,6 +72,8 @@
             android:src="@drawable/icon_edit" />
 
         <ImageView
+            android:layout_marginTop="@dimen/dimen_10dp"
+
             android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,11 +81,4 @@
             android:layout_gravity="center"
             android:src="@drawable/icon_delete" />
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/view_border" />
-
-
 </LinearLayout>
