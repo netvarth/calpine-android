@@ -473,6 +473,7 @@ public class SearchAWsResponse {
 
     private String first_checkin_coupon_count;
 
+
 }
 
 

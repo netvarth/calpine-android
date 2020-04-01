@@ -33,6 +33,7 @@ import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
+import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchLocation;
@@ -192,7 +193,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.txtservices.setTypeface(tyface3);
         myViewHolder.txtworking.setTypeface(tyface3);
         for (int i = 0; i < mCheckInMessage.size(); i++) {
-            if (searchLoclist.getId() == mCheckInMessage.get(i).getLocid()) {
+            if ( searchLoclist.getId() == mCheckInMessage.get(i).getLocid()) {
 
                 myViewHolder.tv_checkin.setVisibility(View.VISIBLE);
                 //  myViewHolder.tv_checkin.setText("You have "+mCheckInMessage.get(i).getmAllSearch_checkIn().size()+" Check-In at this location");
@@ -1179,14 +1180,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             for (int i = 0; i < mQueueList.size(); i++) {
 
 
-//                if(mQueueList.get(i).getMessage()!= null && mQueueList.get(i).getNextAvailableQueue()==null ){
-//                    myViewHolder.txt_msg.setVisibility(View.VISIBLE);
-//                    myViewHolder.txt_msg.setText(mQueueList.get(i).getMessage());
-//                }else{
-//                    myViewHolder.txt_msg.setVisibility(View.GONE);
-//                    myViewHolder.txt_msg.setText("");
-//                }
-
 
                 if (mQueueList.get(i).getNextAvailableQueue() != null) {
                     Config.logV("1--" + searchLoclist.getId() + "  2--" + mQueueList.get(i).getNextAvailableQueue().getLocation().getId());
@@ -1233,11 +1226,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     if (mSearchList.get(j).getFuture_checkins().equalsIgnoreCase("1")) {
                                         if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
                                             myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
+                                            myViewHolder.txt_diffdate_expand.setText("Do you want to Get Token for another day?");
                                             myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                            myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
 
                                         } else {
                                             myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
+                                            myViewHolder.txt_diffdate_expand.setText("Do you want to " + " " + terminology + " for another day?");
                                             myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                            myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
                                         }
                                     } else {
                                         myViewHolder.txt_diffdate.setVisibility(View.GONE);
@@ -1245,6 +1242,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     }
                                 }
+                                else{
+
+                                        myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                                        myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
+                                }
+                            }
+                            else{
+                                myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                                myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                             }
                         }
 
@@ -1257,10 +1263,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     enableCheckinButton(myViewHolder);
                                 } else {
                                     disableCheckinButton(myViewHolder);
-//                                    if(mQueueList.get(i).getMessage()!= null){
-//                                        myViewHolder.txt_msg.setVisibility(View.VISIBLE);
-//                                        myViewHolder.txt_msg.setText(mQueueList.get(i).getMessage());
-//                                    }
+
 
                                 }
                                 if (mSearchSetting.getCalculationMode() != null) { //   Token/No Token
@@ -1538,14 +1541,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     }
 
                 }
-//                else{
-//                    if(mQueueList.get(i).getMessage()!= null ){
-//                        myViewHolder.txt_msg.setVisibility(View.VISIBLE);
-//                        myViewHolder.txt_msg.setText(mQueueList.get(i).getMessage());
-//                    }
-//                }
 
             }
+
         }
 
     }

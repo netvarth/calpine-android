@@ -56,9 +56,9 @@ public class Signup extends AppCompatActivity {
         mContext = this;
         tv_terms = findViewById(R.id.txt_terms);
         firstName = findViewById(R.id.firstname);
-        firstName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+      //  firstName.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         Lastname = findViewById(R.id.lastname);
-        Lastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+      //  Lastname.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         mInputFirst = findViewById(R.id.text_input_layout_first);
         mInputLast = findViewById(R.id.text_input_layout_last);
         tv_createaccc = findViewById(R.id.txtcreate_acc);

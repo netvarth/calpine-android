@@ -43,7 +43,7 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
     Context mContext;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name, gender, lastName, dateOfBirth;
+        public TextView name;
         ImageView edit, delete;
         LinearLayout lfamily;
         Context mContext;
@@ -51,12 +51,9 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
         public MyViewHolder(View view) {
             super(view);
             name = (TextView) view.findViewById(R.id.name);
-            gender = (TextView) view.findViewById(R.id.gender);
             edit = (ImageView) view.findViewById(R.id.edit);
             delete = (ImageView) view.findViewById(R.id.delete);
             lfamily = (LinearLayout) view.findViewById(R.id.lfamily);
-            lastName = (TextView) view.findViewById(R.id.lastName);
-            dateOfBirth = (TextView) view.findViewById(R.id.dateOfBirth);
 
         }
     }
@@ -86,9 +83,6 @@ public class FamilyListAdapter extends RecyclerView.Adapter<FamilyListAdapter.My
         final FamilyArrayModel familylist = familyList.get(position);
         Config.logV("Family -----------------");
         myViewHolder.name.setText(familylist.getUserProfile().getFirstName());
-        myViewHolder.gender.setText(familylist.getUserProfile().getGender());
-        myViewHolder.lastName.setText(familylist.getUserProfile().getLastName());
-        myViewHolder.dateOfBirth.setText(familylist.getUserProfile().getDob());
 
 
         myViewHolder.edit.setOnClickListener(new View.OnClickListener() {

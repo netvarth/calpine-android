@@ -191,6 +191,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     HashMap<String, List<SearchListModel>> departmentMap;
     LinearLayout L_layout;
+    String account_type;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -1077,10 +1078,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ApiFavList(mSearchRespPass, claimable);
                         APIServiceDepartments(mProvoderId);
                         ApiSearchViewLocation(uniqueID);
-                        listDoctorsByDepartment();
                         listProviders();
-
-
+                        if(mBusinessDataList.getAccountType().equals("BRANCH")){
+                            listDoctorsByDepartment();
+                        }
                     }
 
 
@@ -3651,7 +3652,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         isLoading = false;
 
 
-                                        mSearchListModel.clear();
+                                        mSearchList.clear();
                                         for (int i = 0; i < mSearchRespPass.size(); i++) {
                                             SearchListModel searchList = new SearchListModel();
                                             searchList.setId(mSearchRespPass.get(i).getId());
@@ -3848,7 +3849,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                                         Config.logV("Response--Sucess-------------------------" + new Gson().toJson(mSearchListModel));
-                                        List<SearchListModel> results = mSearchListModel;
+                                        List<SearchListModel> results = mSearchList;
 //                                    pageadapter.addAll(results);
 //                                    pageadapter.notifyDataSetChanged();
 
@@ -3860,7 +3861,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     } else {
 
 
-                                        mSearchListModel.clear();
+                                        mSearchList.clear();
                                         for (int i = 0; i < mSearchRespPass.size(); i++) {
                                             SearchListModel searchList = new SearchListModel();
                                             searchList.setId(mSearchRespPass.get(i).getId());
@@ -4047,11 +4048,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                        }
 
 
-                                            mSearchListModel.add(searchList);
+                                            mSearchList.add(searchList);
                                         }
 
 
-                                        final List<SearchListModel> results = mSearchListModel;
+                                        final List<SearchListModel> results = mSearchList;
 
 //                                    pageadapter.addAll(results);
 //                                    pageadapter.notifyDataSetChanged();
@@ -4069,7 +4070,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                        isLastPage = true;
 //                                    }
                                     }
-                                    groupByDepartmentCode(mSearchListModel);
+                                    groupByDepartmentCode(mSearchList);
                                     ApiDepartment(mProvoderId);
                                     ApiDepartmentServices(uniqueID);
                                 }

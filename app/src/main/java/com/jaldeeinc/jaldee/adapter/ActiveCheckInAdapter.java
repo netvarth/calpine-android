@@ -351,6 +351,30 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 try {
                     Date date2 = format.parse(checkinTime);
                     long diff = (time.getTime() - date2.getTime());
+                    if(diff < 0){
+                        Date date3 = subtractDays(date2,1);
+                        long diff1 = (time.getTime() - date3.getTime());
+
+                        final long diffMins = diff1/60000;
+
+                        if (diffMins <= 15 ) {
+                            new CountDownTimer(diff1, 60000) {
+
+                                public void onTick(long millisUntilFinished) {
+                                    long mins = 15 - diffMins;
+                                    myViewHolder.tv_makepay.setText("Click PRE-PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                    myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
+                                    mins--;
+
+                                }
+
+                                public void onFinish() {
+                                    myViewHolder.tv_makepay.setVisibility(View.GONE);
+                                }
+                            }.start();
+                        }
+
+                    }
                     final long diffMins = diff/60000;
 
                     if (diffMins <= 15 ) {
@@ -359,8 +383,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                                     public void onTick(long millisUntilFinished) {
                                         long mins = 15 - diffMins;
                                         myViewHolder.tv_makepay.setText("Click PRE-PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
-                                        myViewHolder.tv_makepay.setVisibility(View.VISIBLE
-                                        );
+                                        myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
                                         mins--;
 
                                     }
@@ -377,12 +400,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                     e.printStackTrace();
                 }
 
-
-
-
-
-
-               // myViewHolder.tv_makepay.setText("Click PRE-PAY button in 15 minutes to complete your check-in");
+                // myViewHolder.tv_makepay.setText("Click PRE-PAY button in 15 minutes to complete your check-in");
                 if(activelist.getAmountDue()>0) {
                     myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
                     myViewHolder.tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
@@ -640,7 +658,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
 
-                         spannable = new SpannableString(firstWord + secondWord + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                        spannable = new SpannableString(firstWord + secondWord + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1140,6 +1158,14 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         }*/
 
 
+    }
+
+    public Date subtractDays(Date date, int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, -days);
+
+        return cal.getTime();
     }
 
 

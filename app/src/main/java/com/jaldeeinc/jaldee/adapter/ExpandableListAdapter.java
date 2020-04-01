@@ -741,7 +741,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                     tv_status.setVisibility(View.VISIBLE);
-                    tv_status.setText(secondWord + " - Cancelled ");
+                    tv_status.setText(secondWord + "Cancelled at " + activelist.getStatusUpdatedTime());
                     tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                 }
 
@@ -810,7 +810,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                     tv_status.setVisibility(View.VISIBLE);
-                    tv_status.setText(secondWord + " - Cancelled ");
+                    tv_status.setText(secondWord + "Cancelled at " + activelist.getStatusUpdatedTime());
                     tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     tv_estTime.setText(spannable);
                 }
@@ -927,7 +927,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 //                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             tv_status.setVisibility(View.VISIBLE);
-                            tv_status.setText(" Cancelled ");
+                            tv_status.setText("Cancelled at " + activelist.getStatusUpdatedTime());
                             tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                     } else {
@@ -1339,6 +1339,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             if (activelist.getToken() != -1 && activelist.getToken() > 0) {
                 tv_token.setVisibility(View.VISIBLE);
                 tv_time_queue.setVisibility(View.VISIBLE);
+//                tv_queueTime.setVisibility(View.VISIBLE);
+//                tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                 layout_token.setVisibility(View.VISIBLE);
                 String firstWord = "Token # ";
                 Config.logV("Token------------" + activelist.getToken());
@@ -1348,7 +1350,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                  queStart = String.valueOf(activelist.getQueue().getQueueStartTime());
                  queEnd = String.valueOf(activelist.getQueue().getQueueEndTime());
                  queueWindow = String.valueOf(activelist.getQueue().getName());
-                tv_time_queue.setVisibility(View.VISIBLE);}
+                tv_time_queue.setVisibility(View.VISIBLE);
+//                tv_queueTime.setVisibility(View.VISIBLE);
+//                tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+              }
                 else{
                     tv_time_queue.setVisibility(View.GONE);
                 }
@@ -1361,9 +1366,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_token.setText(spannable);
                 tv_time_queue.setText(queueWindow + " " + "[" + " " + queStart + " " + "-" + " " + queEnd + " " + "]");
+                tv_queueTime.setVisibility(View.VISIBLE);
+                tv_queueTime.setText("Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
             } else {
                 tv_token.setVisibility(View.GONE);
                 tv_time_queue.setVisibility(View.GONE);
+                tv_queueTime.setVisibility(View.GONE);
             }
             if (String.valueOf(activelist.getPartySize()) != null) {
                 if (activelist.getPartySize() > 1) {
@@ -1410,7 +1418,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 tv_personahead.setText(spannable1);}
 
                 else{
-                    tv_personahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                    tv_personahead.setText(spannable1 );
                 }
             } else if (activelist.getPersonsAhead() == 1) {
 
@@ -1421,7 +1429,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     tv_personahead.setText(spannable1);}
 
                 else{
-                    tv_personahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                    tv_personahead.setText(spannable1 );
                 }
             } else {
 
@@ -1432,7 +1440,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     tv_personahead.setText(spannable1);}
 
                 else{
-                    tv_personahead.setText(spannable1 + "\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                    tv_personahead.setText(spannable1);
                 }
 
             }

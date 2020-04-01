@@ -48,6 +48,10 @@ public class SearchViewDetail {
     String displayName;
     String domain;
     String branchId;
+
+
+
+    String accountType;
     String businessDesc;
     String experience;
 
@@ -240,6 +244,14 @@ public class SearchViewDetail {
 
     public void setBranchId(String branchId) {
         this.branchId = branchId;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
     }
 
 
