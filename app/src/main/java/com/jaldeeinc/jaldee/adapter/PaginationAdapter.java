@@ -659,12 +659,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.L_checkin.setVisibility(View.VISIBLE);
                     myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                 }
-//                myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Toast.makeText(activity, "Use jaldee.com in web Browser to Claim your Business", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+                myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
 
 //                myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
 //                    @Override
@@ -1475,7 +1475,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         Button btncheckin, btnappointment;
         LinearLayout layout_row;
-        TextView mImageViewText;
+        TextView mImageViewText,tv_useWeb;
         LinearLayout layout_type;
         ImageView jdn_icon;
 
@@ -1515,7 +1515,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             tv_dep2 = view.findViewById(R.id.txtdep2);
             tv_dep22 = view.findViewById(R.id.txtdep22);
             tv_dep_more = view.findViewById(R.id.txtdep_more);
-            //tv_useWeb = view.findViewById(R.id.useWeb);
+            tv_useWeb = view.findViewById(R.id.useWeb);
             profile1 = view.findViewById(R.id.iprofile1);
             profile2 = view.findViewById(R.id.iprofile2);
             vsep = view.findViewById(R.id.separator);
