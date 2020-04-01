@@ -1223,26 +1223,27 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 //                                e.printStackTrace();
 //                            }
 
+                        if(!mSearachAwsResponse.getHits().getHit().isEmpty()) {
+                            if (mSearachAwsResponse.getHits().getHit().get(i).getFields() != null && mSearachAwsResponse.getHits().getHit().get(i).getFields().getFuture_checkins() != null) {
+                                if (mSearachAwsResponse.getHits().getHit().get(i).getFields().getFuture_checkins().equals("1")) {
+                                    if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
+                                        myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
+                                        myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                        myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
 
-                        if (mSearachAwsResponse.getHits().getHit().get(i).getFields() !=null && mSearachAwsResponse.getHits().getHit().get(i).getFields().getFuture_checkins()!=null) {
-                            if(mSearachAwsResponse.getHits().getHit().get(i).getFields().getFuture_checkins().equals("1")){
-                                if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
-                                    myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
-                                    myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
-                                    myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
-
+                                    } else {
+                                        myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
+                                        myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                        myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+                                    }
                                 } else {
-                                    myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
-                                    myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
-                                    myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+                                    myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                                    myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                                 }
-                            }else {
+                            } else {
                                 myViewHolder.txt_diffdate.setVisibility(View.GONE);
                                 myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                             }
-                        } else {
-                            myViewHolder.txt_diffdate.setVisibility(View.GONE);
-                            myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                         }
 
                         if ((formattedDate.trim().equalsIgnoreCase(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()))) { // if Today
