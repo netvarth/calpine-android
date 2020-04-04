@@ -396,4 +396,14 @@ public class ActiveCheckIn {
     @SerializedName("jaldeeWaitlistDistanceTime")
     private JaldeeWaitlistDistanceTime jaldeeWaitlistDistanceTime;
 
+    public String getBatchName() {
+        return batchName;
+    }
+
+    public void setBatchName(String batchName) {
+        this.batchName = batchName;
+    }
+
+    String batchName;
+
 }
