@@ -42,7 +42,7 @@
     <string name="err_msg_password">Confirm Password</string>
     <string name="err_pwd_valid">Must have atleast one uppercase letter,atleast one number and min 8 characters</string>
     <string name="tab1">Home</string>
-    <string name="tab2">Checkins</string>
+    <string name="tab2">My Jaldee</string>
     <string name="tab3">Favourites</string>
     <string name="tab4">Inbox</string>
     <string name="tab5">Account</string>

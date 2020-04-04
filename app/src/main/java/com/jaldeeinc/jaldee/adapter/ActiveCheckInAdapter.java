@@ -339,7 +339,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                 myViewHolder.btn_pay.setVisibility(View.VISIBLE);
                 myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
-                myViewHolder.btn_pay.setText("PRE-PAY");
+                myViewHolder.btn_pay.setText("PAY");
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 Date time = new Date();
@@ -443,6 +443,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 }
             }
         });
+
 
 
         if(activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid")){

@@ -15,6 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.text.Spannable;
@@ -25,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -34,6 +36,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
+import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.service.LocationUpdatesService;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
@@ -75,6 +78,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     private HashMap<String, ArrayList<ActiveCheckIn>> child;
     Activity activity;
     HistoryAdapterCallback callback;
+    ActiveAdapterOnCallback callbacks;
     String header;
     ArrayList<FavouriteModel> FavList;
     boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
@@ -118,12 +122,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 //    };
 
 
-    public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData, boolean mTodayFlag, boolean mFutureFlag, boolean mOldFlag, LocationManager locationManager) {
+    public ExpandableListAdapter(ArrayList<FavouriteModel> mFavList, Context mContext, Activity mActivity, HistoryAdapterCallback callback, List<String> listDataHeader, HashMap<String, ArrayList<ActiveCheckIn>> listChildData, boolean mTodayFlag, boolean mFutureFlag, boolean mOldFlag, LocationManager locationManager,ActiveAdapterOnCallback callbacks) {
         this.mContext = mContext;
         this.headerData = listDataHeader;
         this.child = listChildData;
         this.activity = mActivity;
         this.callback = callback;
+        this.callbacks = callbacks;
+
 
         this.FavList = mFavList;
         this.mFutureFlag = mFutureFlag;
@@ -306,6 +312,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         TextView icon_rate = (TextView) view.findViewById(R.id.icon_rate);
         LinearLayout layout_token = (LinearLayout) view.findViewById(R.id.layout_token);
         TextView tv_status = (TextView) view.findViewById(R.id.txt_status);
+        Button   btn_pay = (Button) view.findViewById(R.id.btn_pay);
+      TextView  tv_prepaid = (TextView) view.findViewById(R.id.txt_prepaid);
+      final TextView  tv_makepay = (TextView) view.findViewById(R.id.txtmakepay);
         TextView tv_date = (TextView) view.findViewById(R.id.txt_date);
         TextView tv_partysize = (TextView) view.findViewById(R.id.txt_partysizevalue);
         TextView tv_check_in = (TextView) view.findViewById(R.id.txt_check_in_list);
@@ -1471,46 +1480,160 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_status.setTypeface(tyface1);
-        if (activelist.getWaitlistStatus().
-
-                equalsIgnoreCase("done")) {
+        if (activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
             tv_check_in.setVisibility(View.GONE);
             tv_status.setText("Complete");
             tv_status.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
         }
-        if (activelist.getWaitlistStatus().
-
-                equalsIgnoreCase("arrived")) {
+        if (activelist.getWaitlistStatus().equalsIgnoreCase("arrived")) {
             tv_status.setText("Arrived");
             tv_status.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
         }
-        if (activelist.getWaitlistStatus().
-
-                equalsIgnoreCase("checkedIn")) {
+        if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
             tv_status.setText("checked in");
             tv_status.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.purple));
             tv_check_in.setVisibility(View.GONE);
         }
 
-        if (activelist.getWaitlistStatus().
-
-                equalsIgnoreCase("started")) {
+        if (activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
             tv_check_in.setVisibility(View.GONE);
             tv_status.setText("Started");
             tv_status.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
         }
 
-        if (activelist.getWaitlistStatus().
-
-                equalsIgnoreCase("prepaymentPending")) {
+        if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
             tv_status.setText("Prepayment Pending");
             tv_status.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.gray));
         }
+
+
+        if (!(activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid"))&&(activelist.getBillViewStatus()!=null) || activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+            if(activelist.getAmountDue()!=0) {
+
+                if (activelist.getBillViewStatus()!=null && activelist.getBillViewStatus().equalsIgnoreCase("Show") && activelist.getAmountDue() > 0 &&  !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                    btn_pay.setVisibility(View.VISIBLE);
+                    btn_pay.setText("PAY");
+
+                    if(activelist.getAmountDue()>0 ) {
+                        tv_prepaid.setVisibility(View.VISIBLE);
+                        tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
+                    }else{
+                        tv_prepaid.setVisibility(View.GONE);
+                    }
+                }
+                else{
+                    btn_pay.setVisibility(View.GONE);
+                }
+            }
+            if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                btn_pay.setVisibility(View.VISIBLE);
+                tv_makepay.setVisibility(View.VISIBLE);
+                btn_pay.setText("PAY");
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                Date time = new Date();
+                Log.i("shankar",simpleDateFormat.format(time));
+
+                String checkinTime = activelist.getDate() + " " + activelist.getCheckInTime();
+
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+                try {
+                    Date date2 = format.parse(checkinTime);
+                    long diff = (time.getTime() - date2.getTime());
+                    if(diff < 0){
+                        Date date3 = subtractDays(date2,1);
+                        long diff1 = (time.getTime() - date3.getTime());
+
+                        final long diffMins = diff1/60000;
+
+                        if (diffMins <= 15 ) {
+                            new CountDownTimer(diff1, 60000) {
+
+                                public void onTick(long millisUntilFinished) {
+                                    long mins = 15 - diffMins;
+                                    tv_makepay.setText("Click PRE-PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                    tv_makepay.setVisibility(View.VISIBLE);
+                                    mins--;
+
+                                }
+
+                                public void onFinish() {
+                                    tv_makepay.setVisibility(View.GONE);
+                                }
+                            }.start();
+                        }
+
+                    }
+                    final long diffMins = diff/60000;
+
+                    if (diffMins <= 15 ) {
+                        new CountDownTimer(diff, 60000) {
+
+                            public void onTick(long millisUntilFinished) {
+                                long mins = 15 - diffMins;
+                                tv_makepay.setText("Click PRE-PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                tv_makepay.setVisibility(View.VISIBLE);
+                                mins--;
+
+                            }
+
+                            public void onFinish() {
+                                tv_makepay.setVisibility(View.GONE);
+                            }
+                        }.start();
+                    }
+                    else{
+                        tv_makepay.setVisibility(View.GONE);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                // myViewHolder.tv_makepay.setText("Click PRE-PAY button in 15 minutes to complete your check-in");
+                if(activelist.getAmountDue()>0) {
+                    tv_prepaid.setVisibility(View.VISIBLE);
+                    tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
+                }else{
+                    tv_prepaid.setVisibility(View.GONE);
+                }
+
+            }
+
+
+        } else {
+
+            btn_pay.setVisibility(View.GONE);
+            tv_makepay.setVisibility(View.GONE);
+            tv_prepaid.setVisibility(View.GONE);
+        }
+
+
+//        if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+//            tv_prepaid.setVisibility(View.GONE);
+//            btn_pay.setVisibility(View.GONE);
+//            tv_status.setVisibility(View.GONE);
+//        }
+
+
+        btn_pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Config.logV("Button Pay@@@@@@@@@@@@@@@@@"+activelist.getWaitlistStatus());
+                // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
+                String consumer = Config.toTitleCase(activelist.getFirstName() )+ " " + Config.toTitleCase(activelist.getLastName());
+                if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                    callbacks.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()),activelist.getAmountDue());
+                }else {
+                    callbacks.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()),consumer);
+                }
+            }
+        });
+
 
         /*if(header.equalsIgnoreCase("old")) {*/
         if (activelist.getWaitlistStatus().
@@ -1553,6 +1676,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         return view;
     }
 
+    public Date subtractDays(Date date, int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, -days);
+
+        return cal.getTime();
+    }
 //    private void enableTrack(String source) {
 //        int a = 0;
 //        if(a==1){
