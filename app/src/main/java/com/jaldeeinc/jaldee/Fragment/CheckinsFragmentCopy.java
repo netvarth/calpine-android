@@ -52,8 +52,10 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
 import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.PaymentActivity;
 import com.jaldeeinc.jaldee.adapter.DetailFileAdapter;
 import com.jaldeeinc.jaldee.adapter.ExpandableListAdapter;
+import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -105,7 +107,7 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapterCallback {
+public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapterCallback,ActiveAdapterOnCallback {
 
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
@@ -133,6 +135,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
 
     HistoryAdapterCallback mInterface;
+    ActiveAdapterOnCallback mCallback;
     ExpandableListView expandlist;
     /*TextView  tv_notodaychekcin, tv_nofuturecheckin, tv_nocheckold;*/
 
@@ -159,6 +162,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         mContext = getActivity();
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
+        mCallback = (ActiveAdapterOnCallback) this;
 
         Home.doubleBackToExitPressedOnce = false;
 
@@ -173,7 +177,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
-        tv_title.setText("My Check-ins");
+        tv_title.setText("My Jaldee");
         tv_title.setTypeface(tyface);
 
         Config.logV("MY CHECK INS@@@@@@@@@@@@@@@@@");
@@ -866,7 +870,30 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
 
+    @Override
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer) {
+        Log.i("Purpose: ", "billPayment");
+        Intent iBill = new Intent(mContext, BillActivity.class);
+        iBill.putExtra("ynwUUID", value);
+        iBill.putExtra("provider", provider);
+        iBill.putExtra("accountID", accountID);
+        iBill.putExtra("payStatus", payStatus);
+        iBill.putExtra("consumer", consumer);
+        iBill.putExtra("purpose",Constants.PURPOSE_BILLPAYMENT);
+        startActivity(iBill);
+    }
 
+    @Override
+    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue) {
+        Log.i("Purpose: ", "prePayment");
+        // APIPayment(accountID, ynwUUID, amountDue);
+        Intent i = new Intent(mContext, PaymentActivity.class);
+        i.putExtra("ynwUUID", value);
+        i.putExtra("accountID", accountID);
+        i.putExtra("amountDue", amountDue);
+        i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
+        startActivity(i);
+    }
 
 
     @Override
@@ -1505,7 +1532,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         LocationManager mgr =
                 (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr);
+        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr,mCallback);
         // Setting adpater over expandablelistview
         expandlist.setAdapter(adapter);
         expandlist.setVerticalScrollBarEnabled(false);

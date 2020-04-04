@@ -109,8 +109,7 @@
                     android:text="Your Queue Time:"
                     android:textColor="@color/sec_title_grey"
                     android:textSize="@dimen/txtsize_12"
-                    android:visibility="gone"/>
-
+                    android:visibility="gone" />
 
 
                 <TextView
@@ -122,7 +121,7 @@
                     android:text="Your service Time:"
                     android:textColor="@color/sec_title_grey"
                     android:textSize="@dimen/txtsize_12"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
@@ -221,42 +220,73 @@
                 android:textSize="@dimen/txtsize_12"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/txt_prepaid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:textColor="#4DE2FF"
+                android:textSize="@dimen/txtsize_12" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/txt_amtdue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12" />
+
+
             <LinearLayout
+                android:weightSum="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding5"
                 android:background="@color/app_background"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="visible">
+
+
 
                 <TextView
-                    android:id="@+id/txt_prepaid"
-                    android:layout_width="0dp"
+                    android:layout_weight="0.9"
+                    android:id="@+id/txtmakepay"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:textColor="#4DE2FF"
-                    android:textSize="@dimen/txtsize_12" />
-
-                <TextView
-                    android:id="@+id/txt_amtdue"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_margin="@dimen/padding2"
                     android:textColor="@color/title_grey"
-                    android:textSize="@dimen/txtsize_12" />
+                    android:textSize="@dimen/txtsize_12"
+                    android:visibility="visible" />
+
+
+                <Button
+                    android:layout_weight="0.1"
+                    android:id="@+id/btn_pay"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_gravity="right"
+                    android:background="@drawable/rect_blue"
+                    android:paddingLeft="@dimen/padding2"
+                    android:paddingRight="@dimen/padding2"
+                    android:text="@string/pay"
+                    android:textAllCaps="true"
+                    android:textColor="@color/app_background"
+                    android:textSize="@dimen/txtsize_10"
+                    android:visibility="visible" />
 
 
             </LinearLayout>
 
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/travelDetailsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding5"
                 android:background="@color/app_background"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -276,23 +306,23 @@
                         android:textSize="@dimen/txtsize_12" />
 
                     <Switch
-                        android:layout_marginLeft="@dimen/dimen_5dp"
                         android:id="@+id/switch1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/dimen_5dp" />
+
                     <TextView
-                        android:visibility="gone"
                         android:id="@+id/txt_travelmode_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="left"
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12" />
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="gone" />
 
                     <TextView
-                        android:visibility="gone"
                         android:id="@+id/travelCar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -301,10 +331,10 @@
                         android:paddingLeft="@dimen/dimen_10dp"
                         android:paddingRight="@dimen/dimen_10dp"
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12" />
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="gone" />
 
                     <TextView
-                        android:visibility="gone"
                         android:id="@+id/traveWalf"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -313,7 +343,8 @@
                         android:paddingLeft="@dimen/dimen_10dp"
                         android:paddingRight="@dimen/dimen_10dp"
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12" />
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/travelmddeEdit"
@@ -331,106 +362,106 @@
             </LinearLayout>
 
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="@dimen/padding5"-->
-<!--                android:background="@color/app_background"-->
-<!--                android:orientation="vertical">-->
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="@dimen/padding5"-->
+            <!--                android:background="@color/app_background"-->
+            <!--                android:orientation="vertical">-->
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="@dimen/padding5"-->
-<!--                    android:background="@color/app_background"-->
-<!--                    android:orientation="horizontal">-->
-
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/txt_travelmode"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="left"-->
-<!--                        android:text="Mode of transport   "-->
-<!--                        android:textColor="@color/title_grey"-->
-<!--                        android:textSize="@dimen/txtsize_12" />-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/txt_travelmode_value"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="left"-->
-<!--                        android:textColor="@color/title_grey"-->
-<!--                        android:textSize="@dimen/txtsize_12" />-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/travelMessage"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="left"-->
-<!--                        android:textColor="@color/title_grey"-->
-<!--                        android:textSize="@dimen/txtsize_12" />-->
-
-<!--                    <TextView-->
-
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
-<!--                        android:drawableLeft="@drawable/icon_edit"-->
-<!--                        android:textColor="@color/title_grey"-->
-<!--                        android:textSize="@dimen/txtsize_12" />-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
-<!--                        android:drawableLeft="@drawable/car"-->
-<!--                        android:textColor="@color/title_grey"-->
-<!--                        android:textSize="@dimen/txtsize_12"-->
-<!--                        android:visibility="gone" />-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
-<!--                        android:drawableLeft="@drawable/walk"-->
-<!--                        android:textColor="@color/title_grey"-->
-<!--                        android:textSize="@dimen/txtsize_12"-->
-<!--                        android:visibility="gone" />-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/travelCycle"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
-<!--                        android:drawableLeft="@drawable/icon_cycle"-->
-<!--                        android:textColor="@color/title_grey"-->
-<!--                        android:textSize="@dimen/txtsize_12"-->
-<!--                        android:visibility="gone" />-->
-
-<!--                </LinearLayout>-->
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginTop="@dimen/padding5"-->
+            <!--                    android:background="@color/app_background"-->
+            <!--                    android:orientation="horizontal">-->
 
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:background="@color/app_background"-->
-<!--                    android:orientation="horizontal">-->
+            <!--                    <TextView-->
+            <!--                        android:id="@+id/txt_travelmode"-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:gravity="left"-->
+            <!--                        android:text="Mode of transport   "-->
+            <!--                        android:textColor="@color/title_grey"-->
+            <!--                        android:textSize="@dimen/txtsize_12" />-->
+
+            <!--                    <TextView-->
+            <!--                        android:id="@+id/txt_travelmode_value"-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:gravity="left"-->
+            <!--                        android:textColor="@color/title_grey"-->
+            <!--                        android:textSize="@dimen/txtsize_12" />-->
+
+            <!--                    <TextView-->
+            <!--                        android:id="@+id/travelMessage"-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:gravity="left"-->
+            <!--                        android:textColor="@color/title_grey"-->
+            <!--                        android:textSize="@dimen/txtsize_12" />-->
+
+            <!--                    <TextView-->
+
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
+            <!--                        android:drawableLeft="@drawable/icon_edit"-->
+            <!--                        android:textColor="@color/title_grey"-->
+            <!--                        android:textSize="@dimen/txtsize_12" />-->
+
+            <!--                    <TextView-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
+            <!--                        android:drawableLeft="@drawable/car"-->
+            <!--                        android:textColor="@color/title_grey"-->
+            <!--                        android:textSize="@dimen/txtsize_12"-->
+            <!--                        android:visibility="gone" />-->
+
+            <!--                    <TextView-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
+            <!--                        android:drawableLeft="@drawable/walk"-->
+            <!--                        android:textColor="@color/title_grey"-->
+            <!--                        android:textSize="@dimen/txtsize_12"-->
+            <!--                        android:visibility="gone" />-->
+
+            <!--                    <TextView-->
+            <!--                        android:id="@+id/travelCycle"-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginLeft="@dimen/dimen_5dp"-->
+            <!--                        android:drawableLeft="@drawable/icon_cycle"-->
+            <!--                        android:textColor="@color/title_grey"-->
+            <!--                        android:textSize="@dimen/txtsize_12"-->
+            <!--                        android:visibility="gone" />-->
+
+            <!--                </LinearLayout>-->
 
 
-<!--                    <TextView-->
-<!--                        android:id="@+id/distanceTravel"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:gravity="left"-->
-<!--                        android:textColor="@color/sec_title_grey"-->
-<!--                        android:textSize="@dimen/txtsize_12" />-->
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:background="@color/app_background"-->
+            <!--                    android:orientation="horizontal">-->
 
 
-<!--                </LinearLayout>-->
-<!--                -->
-<!--                -->
-<!--            </LinearLayout>-->
+            <!--                    <TextView-->
+            <!--                        android:id="@+id/distanceTravel"-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:gravity="left"-->
+            <!--                        android:textColor="@color/sec_title_grey"-->
+            <!--                        android:textSize="@dimen/txtsize_12" />-->
+
+
+            <!--                </LinearLayout>-->
+            <!--                -->
+            <!--                -->
+            <!--            </LinearLayout>-->
 
             <View
                 android:layout_width="match_parent"
