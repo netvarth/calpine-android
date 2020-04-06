@@ -227,13 +227,14 @@
 
 
             <LinearLayout
+                android:id="@+id/paymentLayout"
                 android:weightSum="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding5"
                 android:background="@color/app_background"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
 
 
@@ -245,7 +246,7 @@
                     android:layout_margin="@dimen/padding2"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_12"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
 
                 <Button
@@ -262,7 +263,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/app_background"
                     android:textSize="@dimen/txtsize_10"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
 
             </LinearLayout>

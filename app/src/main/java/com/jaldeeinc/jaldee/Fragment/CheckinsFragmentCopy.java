@@ -356,10 +356,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-       /* Map<String, String> query = new HashMap<>();
 
-        query.put("from", "0");
-        query.put("count", "10");*/
         Call<ArrayList<ActiveCheckIn>> call = apiService.getFutureCheckInList();
 
 
@@ -1529,8 +1526,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         hashMap.put(header.get(1), mCheckFutureList);
         hashMap.put(header.get(2), mCheckOldList);
 
-        LocationManager mgr =
-                (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager mgr = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr,mCallback);
         // Setting adpater over expandablelistview

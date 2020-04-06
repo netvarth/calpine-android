@@ -315,6 +315,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         Button   btn_pay = (Button) view.findViewById(R.id.btn_pay);
       TextView  tv_prepaid = (TextView) view.findViewById(R.id.txt_prepaid);
       final TextView  tv_makepay = (TextView) view.findViewById(R.id.txtmakepay);
+      final LinearLayout  paymentLayout = (LinearLayout) view.findViewById(R.id.paymentLayout);
         TextView tv_date = (TextView) view.findViewById(R.id.txt_date);
         TextView tv_partysize = (TextView) view.findViewById(R.id.txt_partysizevalue);
         TextView tv_check_in = (TextView) view.findViewById(R.id.txt_check_in_list);
@@ -1454,7 +1455,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
             }
         } else {
-            tv_personahead.setVisibility(View.INVISIBLE);
+            tv_personahead.setVisibility(View.GONE);
         }
         icon_message.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1533,6 +1534,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                 btn_pay.setVisibility(View.VISIBLE);
                 tv_makepay.setVisibility(View.VISIBLE);
+                paymentLayout.setVisibility(View.VISIBLE);
                 btn_pay.setText("PAY");
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
@@ -1556,8 +1558,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                                 public void onTick(long millisUntilFinished) {
                                     long mins = 15 - diffMins;
-                                    tv_makepay.setText("Click PRE-PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
-                                    tv_makepay.setVisibility(View.VISIBLE);
+                                    tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
                                     mins--;
 
                                 }
@@ -1576,8 +1577,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                             public void onTick(long millisUntilFinished) {
                                 long mins = 15 - diffMins;
-                                tv_makepay.setText("Click PRE-PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
-                                tv_makepay.setVisibility(View.VISIBLE);
+                                tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
                                 mins--;
 
                             }
@@ -1602,6 +1602,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     tv_prepaid.setVisibility(View.GONE);
                 }
 
+            } else {
+                btn_pay.setVisibility(View.GONE);
+                tv_makepay.setVisibility(View.GONE);
+                paymentLayout.setVisibility(View.GONE);
             }
 
 
@@ -1610,6 +1614,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             btn_pay.setVisibility(View.GONE);
             tv_makepay.setVisibility(View.GONE);
             tv_prepaid.setVisibility(View.GONE);
+            paymentLayout.setVisibility(View.GONE);
         }
 
 

@@ -362,7 +362,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                                 public void onTick(long millisUntilFinished) {
                                     long mins = 15 - diffMins;
-                                    myViewHolder.tv_makepay.setText("Click PRE-PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                    myViewHolder.tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
                                     myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
                                     mins--;
 
@@ -382,7 +382,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                                     public void onTick(long millisUntilFinished) {
                                         long mins = 15 - diffMins;
-                                        myViewHolder.tv_makepay.setText("Click PRE-PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                        myViewHolder.tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
                                         myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
                                         mins--;
 
