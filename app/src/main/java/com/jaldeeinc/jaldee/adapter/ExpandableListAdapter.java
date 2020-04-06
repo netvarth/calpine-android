@@ -1348,7 +1348,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 equalsIgnoreCase("done"))) {
             Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
-            if (activelist.getToken() != -1 && activelist.getToken() > 0 && activelist.getBatchName()!= null) {
+      //      if (activelist.getToken() != -1 && activelist.getToken() > 0)
+            if (activelist.getBatchName()!= null) {
                 tv_token.setVisibility(View.GONE);
                 tv_time_queue.setVisibility(View.VISIBLE);
                 tv_batchName.setVisibility(View.VISIBLE);
@@ -1386,6 +1387,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             } else {
                 tv_token.setVisibility(View.GONE);
                 tv_time_queue.setVisibility(View.GONE);
+                tv_batchName.setVisibility(View.GONE);
 
              //   tv_queueTime.setVisibility(View.GONE);
             }

@@ -301,6 +301,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
         txtfirstname.setText(getProfile.getFirstName());
         txtlastname.setText(getProfile.getLastName());
         tv_phone.setText(getProfile.getPrimaryMobileNo());
+        tv_email.setText(getProfile.getEmail());
 
         String selectedDate = getProfile.getDob();
         if (selectedDate != null) {
@@ -405,6 +406,7 @@ Config.logV("FINAL DATE @@@@@@@@@@@@@@"+finalDate);
 
                             SharedPreference.getInstance(mContext).setValue("firstname", txtfirstname.getText().toString());
                             SharedPreference.getInstance(mContext).setValue("lastname", txtlastname.getText().toString());
+                            SharedPreference.getInstance(mContext).setValue("email",tv_email.getText().toString());
 
                             Toast.makeText(mContext, "Profile has been updated successfully ", Toast.LENGTH_LONG).show();
                             getFragmentManager().popBackStackImmediate();

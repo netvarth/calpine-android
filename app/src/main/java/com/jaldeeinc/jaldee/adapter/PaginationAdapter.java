@@ -48,6 +48,7 @@ import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
+import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -95,9 +96,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     SearchViewDetail mBusinessDataList;
     ArrayList<SearchViewDetail> mSearchGallery;
     String uniqueID;
+    List<QueueList> mQueueList;
 
 
-    public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID) {
+    public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList) {
         this.context = context;
         searchResults = new ArrayList<>();
         this.mFragment = mFragment;
@@ -105,6 +107,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mAdapterCallback = callback;
         this.activity = activity;
         this.uniqueID = uniqueID;
+        this.mQueueList = mQueueList;
     }
 
     private static Date parseDate(String date) {
@@ -852,7 +855,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     }
                                 }
                             }
-                            setFutureDateCheckin(searchdetailList, myViewHolder);
+                            setFutureDateCheckin(searchdetailList, myViewHolder,position);
                         }
                     } else {
                         disableCheckinButton(myViewHolder);
@@ -1238,7 +1241,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         myViewHolder.btncheckin.setVisibility(View.VISIBLE);
     }
 
-    public void setFutureDateCheckin(SearchListModel searchdetailList, MyViewHolder myViewHolder) {
+    public void setFutureDateCheckin(SearchListModel searchdetailList, MyViewHolder myViewHolder,int position) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Date date = format.parse(searchdetailList.getAvail_date());
@@ -1249,7 +1252,24 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String firstWord = "Next Available Time ";
             String secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
-            myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+            if(searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")){
+
+                    if (mQueueList.get(position).getNextAvailableQueue()!=null && mQueueList.get(position).getNextAvailableQueue().isOpenNow()) {
+                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                    }
+                    else{
+                        if(searchdetailList.isShowToken()) {
+                            myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                        }else{
+                            myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                        }
+                    }
+
+            }
+            else{
+                myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+            }
+
             myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
             myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
             disableCheckinButton(myViewHolder);

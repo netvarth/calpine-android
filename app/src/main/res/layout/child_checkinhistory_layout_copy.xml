@@ -179,7 +179,9 @@
                         android:gravity="left"
                         android:text="Batch"
                         android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12" />
+                        android:textSize="@dimen/txtsize_12"
+                        android:visibility="gone"
+                        />
 
 
 
