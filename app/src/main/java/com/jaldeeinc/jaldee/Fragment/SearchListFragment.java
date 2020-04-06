@@ -368,7 +368,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
 
 
-        pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this, uniqueID);
+        pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this, uniqueID,mQueueList);
 
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecySearchDetail.setLayoutManager(linearLayoutManager);

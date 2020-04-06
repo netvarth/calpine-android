@@ -327,6 +327,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         final LinearLayout travelDetailsLayout = view.findViewById(R.id.travelDetailsLayout);
         final Switch liveTrackSwitch = (Switch) view.findViewById(R.id.switch1);
         TextView tv_queueTime = (TextView) view.findViewById(R.id.txt_queuetime);
+        TextView tv_batchName = (TextView) view.findViewById(R.id.txt_batchName);
 
         if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn") && header.equals("today")) {
 
@@ -732,6 +733,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
 
         //  tv_estTime.setVisibility(View.VISIBLE);
+        tv_queueTime.setText( "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+        tv_queueTime.setVisibility(View.VISIBLE);
 
         if (activelist.getServiceTime() != null) {
 
@@ -744,7 +747,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 firstWord = "Checked in for ";
 
                 String secondWord = "Today" + "," + " " + activelist.getServiceTime();
-                Spannable spannable = new SpannableString(firstWord + secondWord );
+                Spannable spannable = new SpannableString(firstWord + secondWord);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -813,7 +816,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 String secondWord = yourDate + ", " + activelist.getServiceTime();
 
 
-                Spannable spannable = new SpannableString(firstWord + secondWord +"\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                Spannable spannable = new SpannableString(firstWord + secondWord);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -846,7 +849,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                             "fonts/Montserrat_Bold.otf");
                     String firstWord = "Est Time ";
                     String secondWord = "Now";
-                    Spannable spannable = new SpannableString(firstWord + secondWord +"\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                    Spannable spannable = new SpannableString(firstWord + secondWord );
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -909,7 +912,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         secondWord = yourDate + ", " + timeFORAMT;
-                        spannable = new SpannableString(firstWord + secondWord +"\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                        spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -954,7 +957,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         }
 
                         String secondWord = Config.getTimeinHourMinutes(activelist.getAppxWaitingTime());
-                        Spannable spannable = new SpannableString(firstWord + secondWord );
+                        Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1016,7 +1019,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             secondWord = yourDate + ", " + timeFORAMT;
-                            spannable = new SpannableString(firstWord + secondWord +"\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                            spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1099,7 +1102,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                     String yourDate = format.format(dateParse);
                     String secondWord = activelist.getDate() + ", " + activelist.getQueueStartTime();
-                    Spannable spannable = new SpannableString(firstWord + secondWord +"\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                    Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1159,7 +1162,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         secondWord = yourDate + ", " + timeFORAMT;
-                        spannable = new SpannableString(firstWord + secondWord +"\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                        spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1247,7 +1250,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                         String yourDate = format.format(dateParse);
                         String secondWord = yourDate + ", " + sTime;
-                        Spannable spannable = new SpannableString(firstWord + secondWord +"\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                        Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1306,7 +1309,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             secondWord = yourDate + ", " + timeFORAMT;
-                            spannable = new SpannableString(firstWord + secondWord +"\n" + "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+                            spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1346,9 +1349,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 equalsIgnoreCase("done"))) {
             Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
-            if (activelist.getToken() != -1 && activelist.getToken() > 0) {
-                tv_token.setVisibility(View.VISIBLE);
+      //      if (activelist.getToken() != -1 && activelist.getToken() > 0)
+            if (activelist.getBatchName()!= null) {
+                tv_token.setVisibility(View.GONE);
                 tv_time_queue.setVisibility(View.VISIBLE);
+                tv_batchName.setVisibility(View.VISIBLE);
 //                tv_queueTime.setVisibility(View.VISIBLE);
 //                tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                 layout_token.setVisibility(View.VISIBLE);
@@ -1375,13 +1380,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                         firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_token.setText(spannable);
+                String firstword = "Batch :";
+                tv_batchName.setText(firstword +" " + activelist.getBatchName());
                 tv_time_queue.setText(queueWindow + " " + "[" + " " + queStart + " " + "-" + " " + queEnd + " " + "]");
                 tv_queueTime.setVisibility(View.VISIBLE);
                 tv_queueTime.setText("Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
             } else {
                 tv_token.setVisibility(View.GONE);
                 tv_time_queue.setVisibility(View.GONE);
-                tv_queueTime.setVisibility(View.GONE);
+                tv_batchName.setVisibility(View.GONE);
+
+             //   tv_queueTime.setVisibility(View.GONE);
             }
             if (String.valueOf(activelist.getPartySize()) != null) {
                 if (activelist.getPartySize() > 1) {
@@ -1431,29 +1440,28 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     tv_personahead.setText(spannable1 );
                 }
             } else if (activelist.getPersonsAhead() == 1) {
+                if(activelist.getAppxWaitingTime()==0 ){
 
+                Spannable spannable1 = new SpannableString(one_person_ahead );
+                    spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                            0, one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_personahead.setText(spannable1);}
+                else{
                 Spannable spannable1 = new SpannableString(one_person_ahead);
                 spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                         0, one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                if(activelist.getAppxWaitingTime()==0){
-                    tv_personahead.setText(spannable1);}
-
-                else{
-                    tv_personahead.setText(spannable1 );
-                }
+                tv_personahead.setText(spannable1);}
             } else {
 
                 Spannable spannable1 = new SpannableString(secondWord1 + " " + firstWord1);
                 spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
                         0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                if(activelist.getAppxWaitingTime()==0){
-                    tv_personahead.setText(spannable1);}
-
-                else{
+                if(activelist.getAppxWaitingTime() == 0){
                     tv_personahead.setText(spannable1);
                 }
-
-            }
+                else{
+                tv_personahead.setText(spannable1 );
+            }}
         } else {
             tv_personahead.setVisibility(View.GONE);
         }
