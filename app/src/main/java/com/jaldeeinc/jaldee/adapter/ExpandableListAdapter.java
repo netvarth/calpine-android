@@ -90,6 +90,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     ActiveCheckIn activelistLatest;
     boolean liveTrackSwitchLatest;
     double dist;
+    long mins;
 
 
 //    // Used in checking for runtime permissions.
@@ -1531,8 +1532,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     if(activelist.getAmountDue()>0 ) {
                         tv_prepaid.setVisibility(View.VISIBLE);
                         tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
+                        tv_makepay.setVisibility(View.VISIBLE);
                     }else{
                         tv_prepaid.setVisibility(View.GONE);
+                        tv_makepay.setVisibility(View.GONE);
                     }
                 }
                 else{
@@ -1584,7 +1587,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         new CountDownTimer(diff, 60000) {
 
                             public void onTick(long millisUntilFinished) {
-                                long mins = 15 - diffMins;
+                                 mins = 15 - diffMins;
                                 tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
                                 mins--;
 
@@ -1605,9 +1608,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 // myViewHolder.tv_makepay.setText("Click PRE-PAY button in 15 minutes to complete your check-in");
                 if(activelist.getAmountDue()>0) {
                     tv_prepaid.setVisibility(View.VISIBLE);
+                    tv_makepay.setVisibility(View.VISIBLE);
                     tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
+                    tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
                 }else{
                     tv_prepaid.setVisibility(View.GONE);
+                    tv_makepay.setVisibility(View.GONE);
                 }
 
             } else {
