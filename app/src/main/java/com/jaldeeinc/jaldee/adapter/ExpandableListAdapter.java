@@ -90,7 +90,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     ActiveCheckIn activelistLatest;
     boolean liveTrackSwitchLatest;
     double dist;
-    long mins;
 
 
 //    // Used in checking for runtime permissions.
@@ -924,6 +923,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         tv_status.setText("Cancelled at " + activelist.getStatusUpdatedTime());
                         tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
+                    else{
+                        tv_check_in.setVisibility(View.GONE);
+                        tv_status.setVisibility(View.GONE);
+                    }
                     if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                         tv_estTime.setVisibility(View.VISIBLE);
                         tv_estTime.setText(spannable);
@@ -1102,7 +1105,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         format = new SimpleDateFormat("EE, MMM d'th' yyyy");
 
                     String yourDate = format.format(dateParse);
-                    String secondWord = activelist.getDate() + ", " + activelist.getQueueStartTime();
+                    String secondWord = yourDate + ", " + activelist.getQueueStartTime();
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -1173,6 +1176,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         tv_status.setVisibility(View.VISIBLE);
                         tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                         tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
+                    }
+                    else{
+                        tv_check_in.setVisibility(View.GONE);
+                        tv_status.setVisibility(View.GONE);
                     }
                     if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                         tv_estTime.setVisibility(View.VISIBLE);
@@ -1320,6 +1327,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                             tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                             tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
+                        else{
+                            tv_check_in.setVisibility(View.GONE);
+                            tv_status.setVisibility(View.GONE);
+                        }
                         if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                             tv_estTime.setVisibility(View.VISIBLE);
                             tv_estTime.setText(spannable);
@@ -1353,7 +1364,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
       //      if (activelist.getToken() != -1 && activelist.getToken() > 0)
             if (activelist.getBatchName()!= null) {
                 tv_token.setVisibility(View.GONE);
-                tv_time_queue.setVisibility(View.VISIBLE);
+              //  tv_time_queue.setVisibility(View.VISIBLE);
                 tv_batchName.setVisibility(View.VISIBLE);
 //                tv_queueTime.setVisibility(View.VISIBLE);
 //                tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
@@ -1366,12 +1377,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                  queStart = String.valueOf(activelist.getQueue().getQueueStartTime());
                  queEnd = String.valueOf(activelist.getQueue().getQueueEndTime());
                  queueWindow = String.valueOf(activelist.getQueue().getName());
-                tv_time_queue.setVisibility(View.VISIBLE);
+             //   tv_time_queue.setVisibility(View.VISIBLE);
 //                tv_queueTime.setVisibility(View.VISIBLE);
 //                tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
               }
                 else{
-                    tv_time_queue.setVisibility(View.GONE);
+                 //   tv_time_queue.setVisibility(View.GONE);
                 }
                 Spannable spannable = new SpannableString(firstWord + secondWord);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
@@ -1383,12 +1394,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 tv_token.setText(spannable);
                 String firstword = "Batch :";
                 tv_batchName.setText(firstword +" " + activelist.getBatchName());
-                tv_time_queue.setText(queueWindow + " " + "[" + " " + queStart + " " + "-" + " " + queEnd + " " + "]");
-                tv_queueTime.setVisibility(View.VISIBLE);
-                tv_queueTime.setText("Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
+            //    tv_time_queue.setText(queueWindow + " " + "[" + " " + queStart + " " + "-" + " " + queEnd + " " + "]");
+//                tv_queueTime.setVisibility(View.VISIBLE);
+//                tv_queueTime.setText("Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
             } else {
                 tv_token.setVisibility(View.GONE);
-                tv_time_queue.setVisibility(View.GONE);
+             //   tv_time_queue.setVisibility(View.GONE);
                 tv_batchName.setVisibility(View.GONE);
 
              //   tv_queueTime.setVisibility(View.GONE);
@@ -1532,10 +1543,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     if(activelist.getAmountDue()>0 ) {
                         tv_prepaid.setVisibility(View.VISIBLE);
                         tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
-                        tv_makepay.setVisibility(View.VISIBLE);
                     }else{
                         tv_prepaid.setVisibility(View.GONE);
-                        tv_makepay.setVisibility(View.GONE);
                     }
                 }
                 else{
@@ -1570,6 +1579,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                                 public void onTick(long millisUntilFinished) {
                                     long mins = 15 - diffMins;
                                     tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                    tv_makepay.setVisibility(View.VISIBLE);
                                     mins--;
 
                                 }
@@ -1587,8 +1597,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         new CountDownTimer(diff, 60000) {
 
                             public void onTick(long millisUntilFinished) {
-                                 mins = 15 - diffMins;
+                                long mins = 15 - diffMins;
                                 tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                tv_makepay.setVisibility(View.VISIBLE);
                                 mins--;
 
                             }
@@ -1608,12 +1619,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 // myViewHolder.tv_makepay.setText("Click PRE-PAY button in 15 minutes to complete your check-in");
                 if(activelist.getAmountDue()>0) {
                     tv_prepaid.setVisibility(View.VISIBLE);
-                    tv_makepay.setVisibility(View.VISIBLE);
                     tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
-                    tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
                 }else{
                     tv_prepaid.setVisibility(View.GONE);
-                    tv_makepay.setVisibility(View.GONE);
                 }
 
             } else {
