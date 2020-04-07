@@ -1569,6 +1569,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                                 public void onTick(long millisUntilFinished) {
                                     long mins = 15 - diffMins;
+                                    tv_makepay.setVisibility(View.VISIBLE);
                                     tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
                                     mins--;
 
@@ -1588,6 +1589,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                             public void onTick(long millisUntilFinished) {
                                  mins = 15 - diffMins;
+                                tv_makepay.setVisibility(View.VISIBLE);
                                 tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
                                 mins--;
 
