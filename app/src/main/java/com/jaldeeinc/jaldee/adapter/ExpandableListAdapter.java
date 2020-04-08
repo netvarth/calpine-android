@@ -90,7 +90,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     ActiveCheckIn activelistLatest;
     boolean liveTrackSwitchLatest;
     double dist;
-    long mins;
+    long  mins;
 
 
 //    // Used in checking for runtime permissions.
@@ -736,6 +736,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         //  tv_estTime.setVisibility(View.VISIBLE);
         tv_queueTime.setText( "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
         tv_queueTime.setVisibility(View.VISIBLE);
+        if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")){
+           // tv_check_in.setText("Checked in for " + activelist.getDate());
+            tv_check_in.setVisibility(View.VISIBLE);
+        }
+        else{
+          tv_check_in.setVisibility(View.GONE);
+        }
 
         if (activelist.getServiceTime() != null) {
 
@@ -826,7 +833,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     tv_status.setVisibility(View.VISIBLE);
                     tv_status.setText(secondWord + "Cancelled at " + activelist.getStatusUpdatedTime());
                     tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
-                    tv_estTime.setText(spannable);
+                   //tv_estTime.setText(spannable);
                 }
                 if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                     tv_estTime.setVisibility(View.VISIBLE);
@@ -918,7 +925,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                        tv_check_in.setVisibility(View.VISIBLE);
+                     //   tv_check_in.setVisibility(View.VISIBLE);
                         tv_check_in.setText(spannable);
                         tv_status.setVisibility(View.VISIBLE);
                         tv_status.setText("Cancelled at " + activelist.getStatusUpdatedTime());
@@ -941,6 +948,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 } else {
                     if (activelist.getAppxWaitingTime() == -1) {
                         tv_estTime.setVisibility(View.GONE);
+                        tv_check_in.setVisibility(View.GONE);
 //                        tv_queueTime.setVisibility(View.VISIBLE);
 //                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
@@ -1172,7 +1180,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                        tv_check_in.setVisibility(View.VISIBLE);
+                     //   tv_check_in.setVisibility(View.VISIBLE);
                         tv_check_in.setText(spannable);
                         tv_status.setVisibility(View.VISIBLE);
                         tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
@@ -1322,7 +1330,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            tv_check_in.setVisibility(View.VISIBLE);
+                         //   tv_check_in.setVisibility(View.VISIBLE);
                             tv_check_in.setText(spannable);
                             tv_status.setVisibility(View.VISIBLE);
                             tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
@@ -1395,12 +1403,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 tv_token.setText(spannable);
                 String firstword = "Batch :";
                 tv_batchName.setText(firstword +" " + activelist.getBatchName());
-            //    tv_time_queue.setText(queueWindow + " " + "[" + " " + queStart + " " + "-" + " " + queEnd + " " + "]");
+//                tv_time_queue.setText(queueWindow + " " + "[" + " " + queStart + " " + "-" + " " + queEnd + " " + "]");
 //                tv_queueTime.setVisibility(View.VISIBLE);
 //                tv_queueTime.setText("Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
             } else {
                 tv_token.setVisibility(View.GONE);
-             //   tv_time_queue.setVisibility(View.GONE);
+//                tv_time_queue.setVisibility(View.GONE);
                 tv_batchName.setVisibility(View.GONE);
 
              //   tv_queueTime.setVisibility(View.GONE);
@@ -1581,7 +1589,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
                                 public void onTick(long millisUntilFinished) {
                                     long mins = 15 - diffMins;
-                                    tv_makepay.setVisibility(View.VISIBLE);
                                     tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
                                     mins--;
 
@@ -1600,10 +1607,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         new CountDownTimer(diff, 60000) {
 
                             public void onTick(long millisUntilFinished) {
-                                 mins = 15 - diffMins;
-                                tv_makepay.setVisibility(View.VISIBLE);
+                             long  mins = 15 - diffMins;
                                 tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
-                                tv_makepay.setVisibility(View.VISIBLE);
                                 mins--;
 
                             }
