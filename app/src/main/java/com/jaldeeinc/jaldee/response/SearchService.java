@@ -27,6 +27,16 @@ public class SearchService implements Serializable {
     String thumbUrl;
     int department;
 
+    public boolean isLivetrack() {
+        return livetrack;
+    }
+
+    public void setLivetrack(boolean livetrack) {
+        this.livetrack = livetrack;
+    }
+
+    boolean livetrack;
+
     public int getDepartment() {
         return department;
     }

@@ -112,6 +112,7 @@ public class CheckIn extends AppCompatActivity {
     TextView tv_addmember, tv_editphone;
     String accountID;
     static int mSpinnertext;
+    boolean livetrack;
     static int deptSpinnertext;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
@@ -145,6 +146,7 @@ public class CheckIn extends AppCompatActivity {
     EditText couponEdit, phoneNumberValue;
     Button applycouponbtn;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
+    TextView coupon_link;
     String couponEntered;
     TextView mtermsandCond;
     TextView mtxtTermsandCondition;
@@ -161,7 +163,7 @@ public class CheckIn extends AppCompatActivity {
     String txt_message = "";
     String googlemap;
     String sector, subsector;
-    LinearLayout layout_party, LservicePrepay;
+    LinearLayout layout_party, LservicePrepay, LcouponCheckin;
     EditText editpartysize;
     int maxPartysize;
     static RecyclerView recycle_family;
@@ -199,6 +201,7 @@ public class CheckIn extends AppCompatActivity {
         mtermsandCond = findViewById(R.id.termsandCond);
         mtxtTermsandCondition = findViewById(R.id.txtTermsandCondition);
         mtxtDele = findViewById(R.id.txtDele);
+        coupon_link = findViewById(R.id.coupon_link);
         mtxtTermsandCondition = findViewById(R.id.txtTermsandCondition);
         mtxtDele.setVisibility(View.INVISIBLE);
         mtermsandCond.setVisibility(View.INVISIBLE);
@@ -206,6 +209,7 @@ public class CheckIn extends AppCompatActivity {
         couponEdit = findViewById(R.id.coupon_edit);
         phoneNumberValue = findViewById(R.id.phoneNumberValue);
         applycouponbtn = findViewById(R.id.applybtn);
+        LcouponCheckin = findViewById(R.id.couponCheckin);
         mActivity = this;
         recycle_family = findViewById(R.id.recycle_family);
         btn_checkin = findViewById(R.id.btn_checkin);
@@ -599,7 +603,9 @@ public class CheckIn extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                livetrack = (((SearchService) mSpinnerService.getSelectedItem()).isLivetrack());
                 Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
+                Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
 
                 serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
@@ -689,6 +695,7 @@ public class CheckIn extends AppCompatActivity {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerService.setAdapter(adapter);
                     mSpinnertext = ((SearchService) LServicesList.get(0)).getId();
+                    livetrack = LServicesList.get(0).isLivetrack();
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
                     btn_checkin.setVisibility(View.VISIBLE);
@@ -740,6 +747,16 @@ public class CheckIn extends AppCompatActivity {
             uniqueID = extras.getString("uniqueID");
             ApiJaldeegetS3Coupons(uniqueID);
         }
+
+
+
+
+        coupon_link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    LcouponCheckin.setVisibility(View.VISIBLE);
+            }
+        });
 
 
         applycouponbtn.setOnClickListener(new View.OnClickListener() {
@@ -2179,6 +2196,7 @@ public class CheckIn extends AppCompatActivity {
                             mService.setName(response.body().get(i).getName());
                             mService.setLocid(id);
                             mService.setId(response.body().get(i).getId());
+                            mService.setLivetrack(response.body().get(i).isLivetrack());
                             mService.setPrePayment(response.body().get(i).isPrePayment());
                             mService.setTotalAmount(response.body().get(i).getTotalAmount());
                             mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
@@ -2231,6 +2249,7 @@ public class CheckIn extends AppCompatActivity {
                                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                             mSpinnerService.setAdapter(adapter);
                                             mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                                            livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
                                         } else if (LServicesList.size() <= 1 && depResponse.isFilterByDept()) {
                                             mSpinnerService.setVisibility(View.VISIBLE);
                                             txt_chooseservice.setVisibility(View.VISIBLE);
@@ -2239,6 +2258,7 @@ public class CheckIn extends AppCompatActivity {
                                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                             mSpinnerService.setAdapter(adapter);
                                             mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                                            livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
                                         } else {
 
                                             mSpinnerService.setVisibility(View.GONE);
@@ -2257,6 +2277,7 @@ public class CheckIn extends AppCompatActivity {
                                                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                                 tv_checkin_service.setText(spannable);
                                                 mSpinnertext = LServicesList.get(0).getId();
+                                                livetrack = LServicesList.get(0).isLivetrack();
                                                 serviceSelected = LServicesList.get(0).getName();
                                                 selectedService = LServicesList.get(0).getId();
 
@@ -2710,15 +2731,18 @@ public class CheckIn extends AppCompatActivity {
                             finish();
                         }
 
-                        Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
-                        checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-                        checkinShareLocations.putExtra("uuid", value);
-                        checkinShareLocations.putExtra("accountID", modifyAccountID);
-                        checkinShareLocations.putExtra("title", title);
-                        checkinShareLocations.putExtra("terminology", terminology);
-                        checkinShareLocations.putExtra("calcMode", calcMode);
-                        checkinShareLocations.putExtra("calcMode", isShow);
-                        startActivity(checkinShareLocations);
+                        if(livetrack){
+                            Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
+                            checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+                            checkinShareLocations.putExtra("uuid", value);
+                            checkinShareLocations.putExtra("accountID", modifyAccountID);
+                            checkinShareLocations.putExtra("title", title);
+                            checkinShareLocations.putExtra("terminology", terminology);
+                            checkinShareLocations.putExtra("calcMode", calcMode);
+                            checkinShareLocations.putExtra("calcMode", isShow);
+                            startActivity(checkinShareLocations);
+                        }
+
 
                     } else {
                         txt_message = "";
@@ -2992,6 +3016,12 @@ public class CheckIn extends AppCompatActivity {
                         s3couponList.clear();
                         s3couponList = response.body();
                         Log.i("CouponResponse", s3couponList.toString());
+
+                        if(s3couponList.size()!=0){
+                            coupon_link.setVisibility(View.VISIBLE);
+                        }else {
+                            coupon_link.setVisibility(View.GONE);
+                        }
 
                     }
 

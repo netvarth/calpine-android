@@ -1281,7 +1281,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                                 }
                                             }
                                         }
-                                        noCalcShowToken(mQueueList, myViewHolder,i);
+                                        noCalcShowToken(mQueueList, myViewHolder, i);
 
 
                                     }
@@ -1336,7 +1336,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                                         myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead().toString() + " People waiting in line");
                                                     }
                                                 }
-                                                noCalcShowToken(mQueueList, myViewHolder,i);
+                                                noCalcShowToken(mQueueList, myViewHolder, i);
                                             }
                                         } else {
                                             myViewHolder.tv_waittime.setVisibility(View.GONE);
@@ -1358,7 +1358,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     e.printStackTrace();
                                 }
 
-                                setFutureDateCheckin(mQueueList, myViewHolder,i);
+                                setFutureDateCheckin(mQueueList, myViewHolder, i);
                             }
                         } else {
                             disableCheckinButton(myViewHolder);
@@ -1598,25 +1598,23 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         //    String secondWord = "\n" + monthString + " " + day + ", " + mQueueList.get(0).getNextAvailableQueue().getServiceTime();
         myViewHolder.tv_waittime.setText(firstWord + secondWord);
         myViewHolder.txtwaittime_expand.setText(firstWord + secondWord);
-        if(mQueueList.get(i).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")){
-            if(mQueueList.get(i).getNextAvailableQueue()!=null &&  mQueueList.get(i).getNextAvailableQueue().isOpenNow()){
+        if (mQueueList.get(i).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) {
+            if (mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().isOpenNow()) {
                 myViewHolder.tv_waittime.setVisibility(View.GONE);
                 myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
-            }
-            else{
-                if(mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
+            } else {
+                if (mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
                     myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                     myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     myViewHolder.tv_waittime.setVisibility(View.GONE);
                     myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
                 }
             }
 
-        }
-        else{
-        myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
-        myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+        } else {
+            myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+            myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
         }
         myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
         disableCheckinButton(myViewHolder);
@@ -1662,14 +1660,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
                 if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() == 0) {
                     String firstWord = "Next Available Time ";
-                    String secondWord = "\nToday, " +  mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                    String secondWord = "\nToday, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                     myViewHolder.tv_waittime.setText(firstWord + secondWord);
                     myViewHolder.txtwaittime_expand.setText(firstWord + secondWord);
-                    if(mQueueList.get(i).getNextAvailableQueue().getServiceTime()!=null){
+                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                         myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                         myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                    }
-                    else{
+                    } else {
                         myViewHolder.tv_waittime.setVisibility(View.GONE);
                         myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
                     }
@@ -1686,18 +1683,17 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                  //   String firstWord = String.valueOf(mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
                 //    String secondWord = " People waiting in line";
                     String firstWord = "Next Available Time ";
-                    String secondWord = "\nToday, " +  mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                    String secondWord = "\nToday, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                             "fonts/Montserrat_Bold.otf");
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     myViewHolder.tv_waittime.setText(spannable);
                     myViewHolder.txtwaittime_expand.setText(spannable);
-                    if(mQueueList.get(i).getNextAvailableQueue().getServiceTime()!=null){
+                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                         myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                         myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                    }
-                    else{
+                    } else {
                         myViewHolder.tv_waittime.setVisibility(View.GONE);
                         myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
                     }

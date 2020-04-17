@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission
         android:name="android.permission.RECEIVE_SMS"
         tools:node="remove" />
@@ -26,23 +26,31 @@
     <application
         android:name=".common.MyApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ynw_logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:allowBackup"
-        android:hardwareAccelerated="false"
-        android:largeHeap="true">
+        tools:replace="android:allowBackup">
         <activity
             android:name=".activities.Splash"
             android:screenOrientation="unspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"
+                    android:host="test.jaldee.com" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.Register"
@@ -59,9 +67,9 @@
         <activity
             android:name=".activities.Home"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
             android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustPan"
-            android:hardwareAccelerated="true">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="FCM_PLUGIN_ACTIVITY" />
 
@@ -92,7 +100,7 @@
         <activity
             android:name=".activities.CheckIn"
             android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.CheckinShareLocation"
             android:screenOrientation="unspecified" />
@@ -114,8 +122,8 @@
         <activity
             android:name=".activities.DetailInboxList"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="unspecified" />
+            android:screenOrientation="unspecified"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".activities.AddMemberChekin"
@@ -128,15 +136,13 @@
             android:screenOrientation="unspecified" />
 
 
-
         <service android:name=".service.FirebaseService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".service.LocationUpdatesService"/>
-        <service
-            android:name=".service.LiveTrackService"/>
+        <service android:name=".service.LocationUpdatesService" />
+        <service android:name=".service.LiveTrackService" />
 
     </application>
 
