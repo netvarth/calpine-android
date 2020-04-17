@@ -75,7 +75,6 @@ public class CheckinFamilyMember extends AppCompatActivity {
         if (extras != null) {
 
             multiple = extras.getBoolean("multiple");
-
             firstname = extras.getString("firstname");
             lastname = extras.getString("lastname");
             consumerID = extras.getInt("consumerID");

@@ -248,7 +248,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
         if (searchLoclist.getParkingType() != null) {
-            if (searchLoclist.getParkingType().equalsIgnoreCase("free") || searchLoclist.getParkingType().equalsIgnoreCase("none")) {
+            if (searchLoclist.getParkingType().equalsIgnoreCase("free") || searchLoclist.getParkingType().equalsIgnoreCase("valet") || searchLoclist.getParkingType().equalsIgnoreCase("street") || searchLoclist.getParkingType().equalsIgnoreCase("privatelot") || searchLoclist.getParkingType().equalsIgnoreCase("paid")) {
                 ParkingModel mType = new ParkingModel();
                 mType.setId("1");
                 // mType.setTypeicon(R.drawable.icon_24hours);
@@ -1223,26 +1223,34 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 //                                e.printStackTrace();
 //                            }
 
-                        if(!mSearachAwsResponse.getHits().getHit().isEmpty()) {
-                            if (mSearachAwsResponse.getHits().getHit().get(i).getFields() != null && mSearachAwsResponse.getHits().getHit().get(i).getFields().getFuture_checkins() != null) {
-                                if (mSearachAwsResponse.getHits().getHit().get(i).getFields().getFuture_checkins().equals("1")) {
-                                    if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
-                                        myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
-                                        myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
-                                        myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+                        if (mSearachAwsResponse != null) {
+                            if (mSearachAwsResponse.getHits() != null) {
+                                if (mSearachAwsResponse.getHits().getHit() != null) {
+                                    for(int k = 0;k < mSearachAwsResponse.getHits().getHit().size();k++) {
+                                        if (!mSearachAwsResponse.getHits().getHit().isEmpty()) {
+                                            if (mSearachAwsResponse.getHits().getHit().get(k).getFields() != null && mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins() != null) {
+                                                if (mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins().equals("1")) {
+                                                    if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
+                                                        myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
+                                                        myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                                        myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
 
-                                    } else {
-                                        myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
-                                        myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
-                                        myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+                                                    } else {
+                                                        myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
+                                                        myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+                                                        myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+                                                    }
+                                                } else {
+                                                    myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                                                    myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
+                                                }
+                                            } else {
+                                                myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                                                myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
+                                            }
+                                        }
                                     }
-                                } else {
-                                    myViewHolder.txt_diffdate.setVisibility(View.GONE);
-                                    myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                                 }
-                            } else {
-                                myViewHolder.txt_diffdate.setVisibility(View.GONE);
-                                myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                             }
                         }
 
@@ -1295,7 +1303,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                             }
                                             if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != null) {
                                                 myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead().toString() + " People waiting in line");
-                                                setCurrentDateCheckin(mQueueList, myViewHolder);
+                                                setCurrentDateCheckin(mQueueList, myViewHolder,i);
                                             }
 
                                         } else {
@@ -1618,9 +1626,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 //        }
     }
 
-    public void setCurrentDateCheckin(List<QueueList> mQueueList, MyViewHolder myViewHolder) {
+    public void setCurrentDateCheckin(List<QueueList> mQueueList, MyViewHolder myViewHolder,int i) {
 
-        if (mQueueList != null && mQueueList.get(0).getNextAvailableQueue().getServiceTime() != null) {
+        if (mQueueList != null && mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             String firstWord = "Next Available Time ";

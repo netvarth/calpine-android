@@ -299,5 +299,15 @@ public class SearchViewDetail {
         this.businessName = businessName;
     }
 
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    String caption;
+
 
 }

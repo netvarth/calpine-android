@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckIn;
@@ -32,13 +33,14 @@ public class CouponlistAdapter extends RecyclerView.Adapter<CouponlistAdapter.My
 
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView mcouponCode;
+        TextView mcouponCode,readTerms;
         ImageView delete;
 
         public MyViewHolder(View view) {
             super(view);
              mcouponCode = (TextView) view.findViewById(R.id.name);
              delete = (ImageView) view.findViewById(R.id.deletecoupon);
+             readTerms =(TextView) view.findViewById(R.id.ReadTC);
         }
     }
     @Override
@@ -50,11 +52,20 @@ public class CouponlistAdapter extends RecyclerView.Adapter<CouponlistAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(CouponlistAdapter.MyViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final CouponlistAdapter.MyViewHolder myViewHolder, final int position) {
         final String  coupan = mcouponArraylist.get(position);
 
         Config.logV("Coupan NAme-------------------" + mcouponArraylist.get(position));
         myViewHolder.mcouponCode.setText(coupan);
+        myViewHolder.readTerms.setText("Read T & C");
+        myViewHolder.readTerms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(int i=0;i<m3couponList.size();i++){
+                if(coupan.equalsIgnoreCase(m3couponList.get(i).getJaldeeCouponCode())) {
+                    Toast.makeText(mContext, m3couponList.get(i).getConsumerTermsAndconditions(), Toast.LENGTH_SHORT).show();
+                }}}
+        });
 
         myViewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -66,7 +66,11 @@ public class AddMemberChekin extends AppCompatActivity {
                 if (!tv_firstName.getText().toString().isEmpty() && !tv_Lastname.getText().toString().isEmpty()) {
                     ApiAddFamilyMember();
                 } else {
-                    Toast.makeText(mActivity, "Please enter name", Toast.LENGTH_SHORT).show();
+                    if(tv_firstName.getText().toString().isEmpty()){
+                    Toast.makeText(mActivity, "Please enter first name", Toast.LENGTH_SHORT).show();}
+                    else{
+                        Toast.makeText(mActivity, "Please enter last name", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

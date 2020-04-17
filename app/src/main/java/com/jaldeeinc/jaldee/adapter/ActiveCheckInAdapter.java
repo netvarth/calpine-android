@@ -325,7 +325,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 if (activelist.getBillViewStatus()!=null && activelist.getBillViewStatus().equalsIgnoreCase("Show") && activelist.getAmountDue() > 0 &&  !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                     myViewHolder.btn_pay.setVisibility(View.VISIBLE);
                     myViewHolder.btn_pay.setText("PAY");
-                    if(activelist.getAmountDue()>0 ) {
+                    if(activelist.getAmountDue()>0) {
                         myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
                         myViewHolder.tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
                     }else{
@@ -363,9 +363,14 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                                 public void onTick(long millisUntilFinished) {
                                     long mins = 15 - diffMins;
-                                    myViewHolder.tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
-                                    myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
-                                    mins--;
+                                    if(activelist.getParentUuid()!=null){
+                                        myViewHolder.tv_makepay.setVisibility(View.GONE);
+                                    }
+                                    else {
+                                        myViewHolder.tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                        myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
+                                        mins--;
+                                    }
 
                                 }
 
@@ -383,9 +388,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
                             public void onTick(long millisUntilFinished) {
                                 long mins = 15 - diffMins;
+                                if(activelist.getParentUuid()!=null){
+                                    myViewHolder.tv_makepay.setVisibility(View.GONE);
+                                }
+                                else{
                                 myViewHolder.tv_makepay.setText("Click PAY button in " + mins + " minutes to complete your check-in");
                                 myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
-                                mins--;
+                                mins--;}
 
                             }
 
@@ -467,13 +476,69 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
         //   myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
        myViewHolder.tv_queueTime.setText( "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
-       myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
         if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")){
-            // tv_check_in.setText("Checked in for " + activelist.getDate());
+            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+            String inputDateStr = activelist.getDate();
+            Date datechange = null;
+            try {
+                datechange = inputFormat.parse(inputDateStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String outputDateStr = outputFormat.format(datechange);
+
+
+            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            String firstWord = "";
+            firstWord = "Checked in for ";
+
+            String dtStart = outputDateStr;
+            Date dateParse = null;
+            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+            try {
+                dateParse = format1.parse(dtStart);
+                System.out.println(dateParse);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            SimpleDateFormat format = new SimpleDateFormat("d");
+            String date1 = format.format(dateParse);
+
+            if (date1.endsWith("1") && !date1.endsWith("11"))
+                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+            else if (date1.endsWith("2") && !date1.endsWith("12"))
+                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+            else if (date1.endsWith("3") && !date1.endsWith("13"))
+                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+            else
+                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+
+            String yourDate = format.format(dateParse);
+            firstWord = "Checked in for ";
+            String secondWord = yourDate + ","+'\n' + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime();
+            Spannable spannable = new SpannableString(firstWord + secondWord );
+            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            myViewHolder.tv_check_in.setText(spannable);
+
+            myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+            myViewHolder.tv_queueTime.setVisibility(View.GONE);
             myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
         }
         else{
             myViewHolder.tv_check_in.setVisibility(View.GONE);
+            myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
+        }
+
+        if(activelist.getParentUuid()!= null){
+            myViewHolder.tv_prepaid.setVisibility(View.GONE);
+            myViewHolder.btn_pay.setVisibility(View.GONE);
+            myViewHolder.tv_makepay.setVisibility(View.GONE);
         }
 
         if (activelist.getServiceTime() != null) {
@@ -673,13 +738,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                       //  myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_check_in.setText(spannable);
+                      //  myViewHolder.tv_check_in.setText(spannable);
                         myViewHolder.tv_status.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_status.setText("Cancelled at  " + activelist.getStatusUpdatedTime());
+                        myViewHolder.tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
                     else{
-                        myViewHolder.tv_check_in.setVisibility(View.GONE);
+                     //   myViewHolder.tv_check_in.setVisibility(View.GONE);
                         myViewHolder.tv_status.setVisibility(View.GONE);
                     }
 
@@ -755,13 +820,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                         //    myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_check_in.setText(spannable);
+                        //    myViewHolder.tv_check_in.setText(spannable);
                             myViewHolder.tv_status.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_status.setText(" Cancelled ");
+                            myViewHolder.tv_status.setText(" Cancelled at" + " "+activelist.getStatusUpdatedTime());
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                         else{
-                            myViewHolder.tv_check_in.setVisibility(View.GONE);
+                         //   myViewHolder.tv_check_in.setVisibility(View.GONE);
                             myViewHolder.tv_status.setVisibility(View.GONE);
                         }
 
@@ -831,13 +896,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                          //   myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_check_in.setText(spannable);
+                        //    myViewHolder.tv_check_in.setText(spannable);
                             myViewHolder.tv_status.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_status.setText("Cancelled at " + " " + activelist.getStatusUpdatedTime());
+                            myViewHolder.tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                         else{
-                            myViewHolder.tv_check_in.setVisibility(View.GONE);
+                          //  myViewHolder.tv_check_in.setVisibility(View.GONE);
                             myViewHolder.tv_status.setVisibility(View.GONE);
                         }
 
@@ -998,13 +1063,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                    //     myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_check_in.setText(spannable);
+                   //     myViewHolder.tv_check_in.setText(spannable);
                         myViewHolder.tv_status.setVisibility(View.VISIBLE);
                         myViewHolder.tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
                         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     }
                     else{
-                        myViewHolder.tv_check_in.setVisibility(View.GONE);
+                     //   myViewHolder.tv_check_in.setVisibility(View.GONE);
                         myViewHolder.tv_status.setVisibility(View.GONE);
                     }
 
@@ -1156,7 +1221,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                         else{
-                            myViewHolder.tv_check_in.setVisibility(View.GONE);
+                         //   myViewHolder.tv_check_in.setVisibility(View.GONE);
                             myViewHolder.tv_status.setVisibility(View.GONE);
                         }
 

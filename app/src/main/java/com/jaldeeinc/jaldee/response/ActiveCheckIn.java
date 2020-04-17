@@ -406,4 +406,14 @@ public class ActiveCheckIn {
 
     String batchName;
 
+    public String getParentUuid() {
+        return parentUuid;
+    }
+
+    public void setParentUuid(String parentUuid) {
+        this.parentUuid = parentUuid;
+    }
+
+    String parentUuid;
+
 }

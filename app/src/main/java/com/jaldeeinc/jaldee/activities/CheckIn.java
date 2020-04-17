@@ -544,8 +544,7 @@ public class CheckIn extends AppCompatActivity {
             public void onClick(View v) {
                 // ApiGenerateHash();
                 if (phoneNumberValue.length() < 10) {
-                    Toast.makeText(mContext, "Mobile number should have 10 digits" +
-                            "",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Mobile number should have 10 digits" + "",Toast.LENGTH_SHORT).show();
                 } else {
 
                     if (enableparty) {
