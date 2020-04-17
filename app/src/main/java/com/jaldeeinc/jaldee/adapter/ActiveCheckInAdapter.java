@@ -468,7 +468,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         //   myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
        myViewHolder.tv_queueTime.setText( "Time Window" + " (" + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime() + " )");
        myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
-
+        if(activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")){
+            // tv_check_in.setText("Checked in for " + activelist.getDate());
+            myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+        }
+        else{
+            myViewHolder.tv_check_in.setVisibility(View.GONE);
+        }
 
         if (activelist.getServiceTime() != null) {
             Config.logV("Provider cancelled------@@@@@---%%%%-"+activelist.getBusinessName()+"status "+activelist.getWaitlistStatus());
@@ -666,7 +672,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                        myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+                      //  myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
                         myViewHolder.tv_check_in.setText(spannable);
                         myViewHolder.tv_status.setVisibility(View.VISIBLE);
                         myViewHolder.tv_status.setText("Cancelled at  " + activelist.getStatusUpdatedTime());
@@ -748,8 +754,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-
-                            myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+                        //    myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
                             myViewHolder.tv_check_in.setText(spannable);
                             myViewHolder.tv_status.setVisibility(View.VISIBLE);
                             myViewHolder.tv_status.setText(" Cancelled ");
@@ -825,7 +830,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                            myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+                         //   myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
                             myViewHolder.tv_check_in.setText(spannable);
                             myViewHolder.tv_status.setVisibility(View.VISIBLE);
                             myViewHolder.tv_status.setText("Cancelled at " + " " + activelist.getStatusUpdatedTime());
@@ -992,7 +997,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                        myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
+                   //     myViewHolder.tv_check_in.setVisibility(View.VISIBLE);
                         myViewHolder.tv_check_in.setText(spannable);
                         myViewHolder.tv_status.setVisibility(View.VISIBLE);
                         myViewHolder.tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
