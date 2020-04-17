@@ -2732,15 +2732,18 @@ public class CheckIn extends AppCompatActivity {
                             finish();
                         }
 
-                        Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
-                        checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-                        checkinShareLocations.putExtra("uuid", value);
-                        checkinShareLocations.putExtra("accountID", modifyAccountID);
-                        checkinShareLocations.putExtra("title", title);
-                        checkinShareLocations.putExtra("terminology", terminology);
-                        checkinShareLocations.putExtra("calcMode", calcMode);
-                        checkinShareLocations.putExtra("calcMode", isShow);
-                        startActivity(checkinShareLocations);
+                        if(livetrack){
+                            Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
+                            checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+                            checkinShareLocations.putExtra("uuid", value);
+                            checkinShareLocations.putExtra("accountID", modifyAccountID);
+                            checkinShareLocations.putExtra("title", title);
+                            checkinShareLocations.putExtra("terminology", terminology);
+                            checkinShareLocations.putExtra("calcMode", calcMode);
+                            checkinShareLocations.putExtra("calcMode", isShow);
+                            startActivity(checkinShareLocations);
+                        }
+
 
                     } else {
                         txt_message = "";
