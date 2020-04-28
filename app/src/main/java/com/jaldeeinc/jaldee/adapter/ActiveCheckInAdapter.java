@@ -327,7 +327,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                     myViewHolder.btn_pay.setText("PAY");
                     if(activelist.getAmountDue()>0) {
                         myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
+                        myViewHolder.tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
                     }else{
                         myViewHolder.tv_prepaid.setVisibility(View.GONE);
                     }
@@ -413,7 +413,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 // myViewHolder.tv_makepay.setText("Click PRE-PAY button in 15 minutes to complete your check-in");
                 if(activelist.getAmountDue()>0) {
                     myViewHolder.tv_prepaid.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_prepaid.setText("Amount Due: ₹" + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
+                    myViewHolder.tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
                 }else{
                     myViewHolder.tv_prepaid.setVisibility(View.GONE);
                 }

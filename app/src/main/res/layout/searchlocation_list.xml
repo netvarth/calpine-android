@@ -2,22 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding2"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/spinnerbg"
         android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/layout_exapnd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/spinnerbg"
-            android:paddingBottom="@dimen/padding5"
-            android:paddingLeft="@dimen/padding7"
-            android:paddingRight="@dimen/padding7"
-            android:paddingTop="@dimen/padding5">
+            android:background="@color/spinnerbg">
 
             <LinearLayout
                 android:id="@+id/subLayout"
@@ -29,41 +27,96 @@
                     android:id="@+id/locationlayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginBottom="@dimen/dimen_5dp"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dimen_5dp">
 
-                    <TextView
-                        android:id="@+id/txtLoc"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/customfont"
-                        android:padding="2dp"
-                        android:text="location"
-                        android:layout_weight="0.8"
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_hint"
-                        android:textStyle="bold" />
 
                     <LinearLayout
-                        android:id="@+id/Ldirectionlayout"
+                        android:layout_marginLeft="@dimen/dimen_2dp"
+                        android:id="@+id/locationName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtLoc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.8"
+                            android:fontFamily="@font/customfont"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
+                            android:padding="2dp"
+                            android:text="location"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/txtsize_hint"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:id="@+id/Ldirectionlayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dimen_5dp"
+                            android:layout_weight="0.5"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingLeft="2dp">
+
+                            <TextView
+                                android:id="@+id/txtdirection"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:justificationMode="inter_word"
+                                android:letterSpacing="0.03"
+                                android:lineSpacingExtra="@dimen/padding3"
+                                android:text="Directions"
+                                android:textColor="@color/title_consu"
+                                android:textSize="@dimen/txtsize_title_term_small"
+                                android:textStyle="bold" />
+
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/icon_location_blue" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtcheckin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="@dimen/padding2"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
+                            android:padding="2dp"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="@dimen/txtsize_title_term_small"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="right|center"
+                        android:layout_marginRight="@dimen/dimen_5dp"
                         android:layout_weight="0.5"
+                        android:gravity="right|center"
                         android:orientation="horizontal">
 
 
                         <ImageView
+                            android:id="@+id/img_arrow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/icon_location_blue" />
-                        <TextView
-                            android:id="@+id/txtdirection"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Get Direction"
-                            android:layout_marginLeft="-4dp"
-                            android:textSize="@dimen/txtsize_title_small"
-                            android:textColor="@color/title_consu" />
+                            android:layout_marginRight="@dimen/dimen_5dp"
+                            android:src="@drawable/icon_angle_down" />
 
 
                     </LinearLayout>
@@ -73,6 +126,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:orientation="horizontal">
 
                     <TextView
@@ -86,101 +140,97 @@
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/txtopen"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/customfont"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="Open Now"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/txtsize_12"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/txtopen"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:fontFamily="@font/customfont"-->
+                    <!--                        android:gravity="center"-->
+                    <!--                        android:padding="2dp"-->
+                    <!--                        android:text="Open Now"-->
+                    <!--                        android:textColor="@color/colorAccent"-->
+                    <!--                        android:textSize="@dimen/txtsize_12"-->
+                    <!--                        android:textStyle="bold"-->
+                    <!--                        android:visibility="gone" />-->
                     <!-- android:paddingLeft="@dimen/padding7"-->
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtcheckin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/icon_tick_green"
-                    android:drawablePadding="@dimen/padding2"
-                    android:padding="2dp"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/txtsize_title_term_small"
-                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/LexpandCheckin"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/padding3"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginRight="@dimen/dimen_5dp"
                     android:orientation="vertical"
                     android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:gravity="left"
-                        android:orientation="horizontal">
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
-
-                        <Button
-                            android:visibility="gone"
-                            android:id="@+id/btn_checkin_expand"
-                            style="?android:attr/borderlessButtonStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="25dp"
+                        <TextView
+                            android:id="@+id/txtwaittime_expand"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:background="@color/title_consu"
+                            android:layout_weight="1"
+                            android:background="@color/blue"
                             android:fontFamily="@font/customfont"
-                            android:text="Check-In"
-                            android:textAllCaps="true"
+                            android:gravity="center"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:textColor="@color/app_background"
                             android:textSize="@dimen/txtsize_10"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/txtwaittime_expand"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <Button
+                            android:id="@+id/btn_checkin_expand"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="@dimen/default_padding"
-                            android:gravity="left"
-                            android:paddingRight="@dimen/default_padding"
-                            android:textColor="@color/title_grey"
-                            android:textSize="@dimen/txtsize_10" />
+                            android:layout_weight="1"
+                            android:background="@color/title_consu"
+                            android:fontFamily="@font/customfont"
+                            android:justificationMode="inter_word"
+                            android:letterSpacing="0.03"
+                            android:lineSpacingExtra="@dimen/padding3"
+                            android:text="Check-In"
+                            android:textAllCaps="true"
+                            android:textColor="@color/app_background"
+                            android:textSize="@dimen/txtsize_10"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+
                     </LinearLayout>
 
                     <TextView
                         android:id="@+id/txt_diffdate_expand"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/padding2"
                         android:layout_marginTop="@dimen/padding2"
-                        android:gravity="left"
-                        android:paddingRight="@dimen/padding5"
+                        android:layout_marginBottom="@dimen/padding2"
+                        android:gravity="center"
+                        android:justificationMode="inter_word"
+                        android:letterSpacing="0.03"
+                        android:lineSpacingExtra="@dimen/padding3"
+                        android:padding="@dimen/dimen_5dp"
                         android:text="@string/diff_date"
                         android:textColor="@color/title_consu"
                         android:textSize="@dimen/txtsize_10"
-                        android:visibility="gone" />
+                        android:textStyle="bold"
+                        android:visibility="visible" />
                 </LinearLayout>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/img_arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="@dimen/default_padding"
-                android:padding="5dp"
-                android:src="@drawable/icon_angle_down" />
         </RelativeLayout>
         <!--<TextView
             android:id="@+id/txtworking"
@@ -190,15 +240,16 @@
             android:text="mWorking" />-->
 
         <LinearLayout
+
             android:id="@+id/mLayouthide"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginRight="@dimen/dimen_5dp"
             android:background="@color/app_background"
             android:orientation="vertical"
+            android:paddingTop="@dimen/padding2"
             android:paddingBottom="@dimen/padding7"
-            android:paddingLeft="@dimen/default_padding"
-            android:paddingRight="@dimen/default_padding"
-            android:paddingTop="@dimen/padding7"
             android:visibility="visible">
 
             <!-- <TextView
@@ -220,22 +271,145 @@
 
 
              </LinearLayout>-->
+
+            <LinearLayout
+                android:id="@+id/mLayoutWorking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="@dimen/padding7"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/txtworking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
+                    android:text="Working Hours"
+                    android:textColor="@color/title_grey_light"
+                    android:textSize="@dimen/txtsize_hint_11"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txtopen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_marginLeft="@dimen/padding3"
+                    android:fontFamily="@font/customfont"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
+                    android:text="Open Now"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/txtsize_title_term_small"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/LWorkinHrs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/txtdayofweek"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:justificationMode="inter_word"
+                        android:letterSpacing="0.03"
+                        android:lineSpacingExtra="@dimen/padding3"
+                        android:text="Monday - "
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txtsize_12"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtwork1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding5"
+                        android:gravity="left"
+                        android:justificationMode="inter_word"
+                        android:letterSpacing="0.03"
+                        android:lineSpacingExtra="@dimen/padding3"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/txtsize_12"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/txtworkSeeAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:gravity="left"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
+                    android:text="See All"
+                    android:textColor="@color/title_consu"
+                    android:textSize="@dimen/txtsize_title_term_small"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
             <TextView
                 android:id="@+id/txtservices"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding7"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
                 android:text="Services"
-                android:textColor="@color/title_grey"
-                android:textSize="@dimen/txtsize_hint"
+                android:textColor="@color/title_grey_light"
+                android:textSize="@dimen/txtsize_hint_11"
+                android:textStyle="bold"
                 android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/lServicelayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding3"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:background="@color/white"
                 android:orientation="vertical"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
                 android:visibility="gone">
 
             </LinearLayout>
@@ -244,8 +418,13 @@
                 android:id="@+id/LDepartment_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding3"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:background="@color/white"
                 android:orientation="vertical"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
                 android:visibility="gone">
 
                 <TextView
@@ -253,37 +432,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
                     android:text="Service1"
-                    android:textColor="@color/title_grey"
-                    android:textSize="@dimen/txtsize_12" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold" />
 
-                <!--<TextView-->
-                    <!--android:id="@+id/txtdepartment2"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginTop="@dimen/padding3"-->
-                    <!--android:gravity="left"-->
-                    <!--android:text="Service2"-->
-                    <!--android:textColor="@color/title_grey"-->
-                    <!--android:textSize="@dimen/txtsize_12" />-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/txtDSeeAll"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginTop="@dimen/padding3"-->
-                    <!--android:gravity="left"-->
-                    <!--android:text="See All"-->
-                    <!--android:textColor="@color/title_consu"-->
-                    <!--android:textSize="@dimen/txtsize_12" />-->
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/LService_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding3"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:background="@color/white"
                 android:orientation="vertical"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
                 android:visibility="gone">
 
                 <TextView
@@ -291,268 +459,124 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
                     android:text="Service1"
-                    android:textColor="@color/title_grey"
-                    android:textSize="@dimen/txtsize_12" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txtservice2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding3"
+                    android:layout_marginTop="1dp"
                     android:gravity="left"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
                     android:text="Service2"
-                    android:textColor="@color/title_grey"
-                    android:textSize="@dimen/txtsize_12" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txtSeeAll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding3"
+                    android:layout_marginTop="1dp"
                     android:gravity="left"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
                     android:text="See All"
                     android:textColor="@color/title_consu"
-                    android:textSize="@dimen/txtsize_12" />
+                    android:textSize="@dimen/txtsize_title_term_small"
+                    android:textStyle="bold" />
             </LinearLayout>
-
-            <!-- <TextView
-                 android:id="@+id/txtworking"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="@dimen/padding7"
-                 android:drawableLeft="@drawable/icon_time"
-                 android:drawablePadding="2dp"
-                 android:gravity="center"
-                 android:padding="2dp"
-                 android:text="Working Hours"
-                 android:textColor="@color/title_consu"
-                 android:textSize="@dimen/txtsize_12" />-->
-
-            <TextView
-                android:id="@+id/txtworking"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding7"
-                android:text="Working Hours"
-                android:textColor="@color/title_grey"
-                android:textSize="@dimen/txtsize_hint"
-                android:visibility="gone" />
-
-
-            <LinearLayout
-                android:id="@+id/LWorkinHrs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding3"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding3"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/txtdayofweek"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="Monday - "
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12" />
-
-                    <TextView
-                        android:id="@+id/txtwork1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/padding5"
-                        android:gravity="left"
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12" />
-                </LinearLayout>
-
-                <!--<LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding3"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="Tuesday - "
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12" />
-
-                    <TextView
-                        android:id="@+id/txtwork2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/padding5"
-                        android:gravity="left"
-                        android:textColor="@color/title_grey"
-                        android:textSize="@dimen/txtsize_12" />
-
-
-                </LinearLayout>-->
-
-                <TextView
-                    android:id="@+id/txtworkSeeAll"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding3"
-                    android:gravity="left"
-                    android:text="See All"
-                    android:textColor="@color/title_consu"
-                    android:textSize="@dimen/txtsize_12" />
-            </LinearLayout>
-<!--            <TextView-->
-<!--                android:id="@+id/txtdeps"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:gravity="center"-->
-<!--                android:maxLines="1"-->
-<!--                android:text="Departments"-->
-<!--                android:textColor="@color/title_grey"-->
-<!--                android:textSize="@dimen/txtsize_12"-->
-<!--                android:textStyle="bold"-->
-<!--                /> android:visibility="gone"-->
-
-<!--            />-->
-
-<!--            <LinearLayout-->
-<!--                android:id="@+id/departments"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="@dimen/padding5"-->
-<!--                android:layout_marginRight="@dimen/padding5"-->
-<!--                android:gravity="left"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:textColor="@color/title_consu"-->
-<!--                android:textSize="@dimen/txtsize_12"-->
-<!--                android:visibility="gone">-->
-
-
-
-<!--                <TextView-->
-<!--                    android:id="@+id/txtdeps1"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:maxLines="1"-->
-<!--                    android:text="Spec1"-->
-<!--                    android:textColor="@color/title_grey"-->
-<!--                    android:textSize="@dimen/txtsize_12"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:visibility="gone"-->
-
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/txtdeps2"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:maxLines="1"-->
-<!--                    android:paddingLeft="@dimen/padding2"-->
-<!--                    android:text="SPEC2"-->
-<!--                    android:textColor="@color/title_grey"-->
-<!--                    android:textSize="@dimen/txtsize_12"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:visibility="gone"-->
-
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/txtdeps22"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:maxLines="1"-->
-<!--                    android:paddingLeft="@dimen/padding2"-->
-<!--                    android:text="SPEC2"-->
-<!--                    android:textColor="@color/title_grey"-->
-<!--                    android:textSize="@dimen/txtsize_12"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:visibility="gone"-->
-
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/txtdeps_more"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="@dimen/padding5"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="..."-->
-<!--                    android:textColor="@color/title_grey"-->
-<!--                    android:textSize="@dimen/txtsize_12"-->
-<!--                    android:textStyle="bold"-->
-<!--                    android:visibility="gone"-->
-
-<!--                    />-->
-<!--            </LinearLayout>-->
-<!--            <TextView-->
-<!--                android:id="@+id/txtdoctors"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="@dimen/padding5"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Doctors:"-->
-<!--                android:textColor="@color/title_grey"-->
-<!--                android:textSize="@dimen/txtsize_12"-->
-<!--                android:textStyle="bold"-->
-<!--                />-->
 
 
             <TextView
                 android:id="@+id/txtlocation_amentites"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding7"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
                 android:text="Location Amenities"
-                android:textColor="@color/title_grey"
-                android:textSize="@dimen/txtsize_hint" />
+                android:textColor="@color/title_grey_light"
+                android:textSize="@dimen/txtsize_hint_11"
+                android:textStyle="bold" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycle_parking"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"></android.support.v7.widget.RecyclerView>
 
             <TextView
                 android:id="@+id/txtparkingSeeAll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding3"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
                 android:text="See All"
                 android:textColor="@color/title_consu"
-                android:textSize="@dimen/txtsize_12" />
+                android:textSize="@dimen/txtsize_title_term_small"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/txt_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding2"
+                android:layout_marginLeft="@dimen/dimen_2dp"
                 android:layout_marginTop="@dimen/padding5"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:layout_marginBottom="@dimen/padding2"
                 android:gravity="center"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
                 android:text=""
                 android:textColor="@color/red"
                 android:textSize="@dimen/dimen_12sp"
+                android:textStyle="bold"
                 android:visibility="gone" />
+
             <TextView
-                android:layout_marginLeft="@dimen/dimen_5dp"
                 android:id="@+id/txt_PeopleAhead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding2"
-                android:layout_marginBottom="@dimen/padding2"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginBottom="1dp"
                 android:gravity="left"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
                 android:text=""
-                android:textColor="@color/title_grey"
+                android:textColor="@color/violet"
                 android:textSize="@dimen/txtsize_12"
-                />
+                android:textStyle="bold" />
 
 
             <!--<View
@@ -566,7 +590,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/default_padding"
                 android:orientation="horizontal">
 
                 <TextView
@@ -577,15 +600,18 @@
                     android:layout_weight="1"
                     android:background="@color/blue"
                     android:gravity="center"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
                     android:paddingLeft="@dimen/padding3"
                     android:paddingRight="@dimen/padding3"
                     android:text="Est WaitTime"
                     android:textColor="@color/white"
                     android:textSize="@dimen/txtsize_12"
-                    android:visibility="gone" />
+                    android:textStyle="bold"
+                    android:visibility="visible" />
 
                 <Button
-                    android:visibility="gone"
                     android:id="@+id/btn_checkin"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
@@ -594,12 +620,17 @@
                     android:layout_weight="1"
                     android:background="@color/green"
                     android:gravity="center"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
                     android:paddingLeft="@dimen/padding3"
                     android:paddingRight="@dimen/padding3"
                     android:text="Check-In"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/txtsize_12" />
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
 
                 <!--  android:textSize="@dimen/txtsize_subtitle" />-->
             </LinearLayout>
@@ -609,15 +640,18 @@
                 android:id="@+id/txt_diffdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding2"
+                android:layout_marginLeft="@dimen/dimen_2dp"
                 android:layout_marginTop="@dimen/padding5"
+                android:layout_marginRight="@dimen/dimen_2dp"
                 android:gravity="center"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
                 android:text="@string/diff_date"
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_title_term_small"
+                android:textStyle="bold"
                 android:visibility="gone" />
-
-
 
 
         </LinearLayout>

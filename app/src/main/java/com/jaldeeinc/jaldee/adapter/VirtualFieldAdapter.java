@@ -67,9 +67,9 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
                 myViewHolder.tv_head.setVisibility(View.VISIBLE);
                 myViewHolder.tv_head.setText(name);
             }
-            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            myViewHolder.tv_head.setTypeface(tyface);
+//            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                    "fonts/Montserrat_Bold.otf");
+//            myViewHolder.tv_head.setTypeface(tyface);
 
             if (dataType != null) {
                 if (dataType.equalsIgnoreCase("Enum") || dataType.equalsIgnoreCase("EnumList") || dataType.equalsIgnoreCase("DataGrid")) {

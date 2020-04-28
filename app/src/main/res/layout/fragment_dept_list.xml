@@ -5,7 +5,8 @@ android:id="@+id/layout_frame_specialization"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context="com.jaldeeinc.jaldee.Fragment.SpecializationFragment"
-android:background="@drawable/app_bg_gradient_home">
+    android:background="@color/spinnerbg"
+>
 
 <!-- TODO: Update blank fragment layout -->
 <LinearLayout
