@@ -14,56 +14,70 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding7"
         android:background="@color/app_background"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <TextView
+            android:textColor="@color/black"
+            android:letterSpacing="0.03"
+            android:textStyle="bold"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="@dimen/padding3"
             android:id="@+id/txtsendmsg"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_padding"
             android:text=" Reply to"
-            android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
-        <RelativeLayout
-            android:layout_width="match_parent"
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/display_images">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="310dp"
-                android:drawableBottom="@drawable/icon_attach"
-                android:visibility="gone"/>
+            android:id="@+id/btn"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="200dp"
+            android:drawableBottom="@drawable/icon_attach"
+            android:visibility="visible"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/camera"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="270dp"
-                android:drawableBottom="@drawable/camera_icon"
-                android:visibility="gone"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/camera"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:drawableBottom="@drawable/camera_icon"
+            android:visibility="visible"/>
+    </LinearLayout>
 
-
-<!--            <ImageView-->
-<!--                android:layout_width="100dp"-->
-<!--                android:layout_height="100dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:scaleType="fitXY"-->
-<!--                android:src="@mipmap/ic_launcher"-->
-<!--                android:id="@+id/iv"/>-->
+<!--        <RelativeLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/display_images">-->
 
 
+<!--&lt;!&ndash;            <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="100dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="100dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_gravity="center"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_marginTop="20dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:scaleType="fitXY"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:src="@mipmap/ic_launcher"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/iv"/>&ndash;&gt;-->
 
 
-        </RelativeLayout>
+
+
+<!--        </RelativeLayout>-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <EditText
+            android:textColor="@color/black"
+            android:letterSpacing="0.03"
+            android:textStyle="bold"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="@dimen/padding3"
             android:id="@+id/edt_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,22 +87,18 @@
             android:hint="@string/hint_message"
             android:minHeight="150dp"
             android:padding="@dimen/padding5"
-            android:textColor="@color/title_grey"
             android:textColorHint="@color/title_grey_light"
             android:textSize="@dimen/txtsize_12" />
+        </LinearLayout>
 
-    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/padding7"
         android:background="@color/app_background"
         android:orientation="horizontal">
-
-
-
 
         <Button
             android:id="@+id/btn_cancel"
@@ -96,7 +106,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:background="@drawable/roundedrect_grey"
+            android:background="@color/sec_title_grey"
             android:text="@string/cancel"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />
@@ -107,11 +117,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:background="@drawable/btn_checkin_grey"
+            android:background="#333E4A59"
             android:text="@string/send"
             android:clickable="false"
             android:enabled="false"
-            android:layout_marginLeft="@dimen/default_padding"
             android:textAllCaps="true"
             android:textColor="@color/app_background"
             android:textSize="@dimen/txtsize_hint" />
@@ -121,7 +130,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/padding7"
         android:background="@color/app_background"
         android:orientation="horizontal">
 

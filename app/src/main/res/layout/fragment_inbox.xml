@@ -32,6 +32,11 @@
     </android.support.v7.widget.RecyclerView>
     </LinearLayout>
     <TextView
+        android:textColor="@color/black"
+        android:letterSpacing="0.03"
+        android:textStyle="bold"
+        android:justificationMode="inter_word"
+        android:lineSpacingExtra="@dimen/padding3"
         android:id="@+id/txt_noinbox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,6 +44,5 @@
         android:gravity="center"
         android:padding="@dimen/padding5"
         android:text=" No Messages Available "
-        android:textColor="@color/title_grey"
         android:visibility="gone" />
 </FrameLayout>

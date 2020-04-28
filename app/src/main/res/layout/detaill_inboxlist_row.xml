@@ -24,26 +24,38 @@
                 android:src="@drawable/icon_sent" />
 
             <TextView
+                android:textColor="@color/black"
+                android:letterSpacing="0.03"
+                android:textStyle="bold"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="@dimen/padding3"
                 android:id="@+id/txt_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:paddingLeft="@dimen/default_padding"
                 android:text="Date"
-                android:textColor="@color/title_grey_light"
-                android:textSize="@dimen/txtsize_12" />
+                android:textSize="@dimen/txtsize_title_term_small" />
 
         </LinearLayout>
 
         <TextView
+            android:textColor="@color/black"
+            android:letterSpacing="0.03"
+            android:textStyle="bold"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="@dimen/padding3"
             android:id="@+id/txt_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding3"
             android:text="message"
-            android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_12" />
         <TextView
+            android:letterSpacing="0.03"
+            android:textStyle="bold"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="@dimen/padding3"
             android:id="@+id/txt_attachments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,30 +89,6 @@
 
             </LinearLayout>
 
-
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/padding7"
-            android:orientation="vertical">
-
-
-            <!--        <ImageView-->
-            <!--            android:layout_width="@dimen/dimen_scrlimg_dp"-->
-            <!--            android:layout_height="@dimen/dimen_scrlimg_dp"-->
-            <!--            android:layout_gravity="center"-->
-            <!--            android:layout_marginTop="@dimen/dimen_10dp"-->
-            <!--            android:scaleType="fitXY"-->
-            <!--            android:src="@mipmap/ic_launcher"-->
-            <!--            android:adjustViewBounds="true"-->
-            <!--            android:id="@+id/file_attach_detail"/>-->
-
-
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,6 +99,10 @@
 
 
             <TextView
+                android:letterSpacing="0.03"
+                android:textStyle="bold"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="@dimen/padding3"
                 android:id="@+id/tv_seemore"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -135,12 +127,15 @@
             <!--                android:textSize="@dimen/txtsize_12" />-->
 
             <TextView
+                android:letterSpacing="0.03"
+                android:textStyle="bold"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="@dimen/padding3"
                 android:id="@+id/txtreply"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_weight="0.2"
-                android:background="@drawable/input_border_rectblue_bg"
                 android:gravity="center"
                 android:padding="@dimen/padding2"
                 android:text="Reply"

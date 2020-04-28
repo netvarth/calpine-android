@@ -58,6 +58,12 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:textColor="@color/black"
+                            android:letterSpacing="0.03"
+                            android:textStyle="bold"
+                            android:justificationMode="inter_word"
+                            android:lineSpacingExtra="@dimen/padding3"
+
                             android:drawablePadding="10dp"
                             android:drawableLeft="@drawable/icon_updateprofile"
                             android:id="@+id/name"
@@ -67,7 +73,6 @@
                             android:layout_weight="1"
                             android:gravity="left"
                             android:text="@string/updateprofile"
-                            android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
                         <ImageView
@@ -101,6 +106,11 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:textColor="@color/black"
+                            android:letterSpacing="0.03"
+                            android:textStyle="bold"
+                            android:justificationMode="inter_word"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:drawablePadding="10dp"
                             android:drawableLeft="@drawable/icon_addmember"
                             android:layout_width="0dp"
@@ -109,7 +119,6 @@
                             android:layout_weight="1"
                             android:gravity="left"
                             android:text="@string/member"
-                            android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
                         <ImageView
@@ -144,6 +153,11 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:textColor="@color/black"
+                            android:letterSpacing="0.03"
+                            android:textStyle="bold"
+                            android:justificationMode="inter_word"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:drawablePadding="10dp"
                             android:drawableLeft="@drawable/icon_password"
                             android:layout_width="0dp"
@@ -152,7 +166,6 @@
                             android:layout_weight="1"
                             android:gravity="left"
                             android:text="@string/changepwd"
-                            android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
                         <ImageView
@@ -224,6 +237,11 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:textColor="@color/black"
+                            android:letterSpacing="0.03"
+                            android:textStyle="bold"
+                            android:justificationMode="inter_word"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:drawablePadding="10dp"
                             android:drawableLeft="@drawable/icon_change_number"
                             android:layout_width="0dp"
@@ -232,7 +250,6 @@
                             android:layout_weight="1"
                             android:gravity="left"
                             android:text="@string/changePh"
-                            android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
                         <ImageView
@@ -264,6 +281,11 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:textColor="@color/black"
+                            android:letterSpacing="0.03"
+                            android:textStyle="bold"
+                            android:justificationMode="inter_word"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:drawablePadding="10dp"
                             android:drawableLeft="@drawable/icon_aboutus"
                             android:layout_width="0dp"
@@ -272,7 +294,6 @@
                             android:layout_weight="1"
                             android:gravity="left"
                             android:text="@string/aboutus"
-                            android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
                         <ImageView
@@ -305,6 +326,11 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:textColor="@color/black"
+                            android:letterSpacing="0.03"
+                            android:textStyle="bold"
+                            android:justificationMode="inter_word"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:drawablePadding="10dp"
                             android:drawableLeft="@drawable/icon_contactus"
                             android:layout_width="0dp"
@@ -313,7 +339,6 @@
                             android:layout_weight="1"
                             android:gravity="left"
                             android:text="@string/contactus"
-                            android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
                         <ImageView
@@ -348,6 +373,11 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:textColor="@color/black"
+                            android:letterSpacing="0.03"
+                            android:textStyle="bold"
+                            android:justificationMode="inter_word"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:drawablePadding="10dp"
                             android:drawableLeft="@drawable/icon_feedback"
                             android:layout_width="0dp"
@@ -356,7 +386,6 @@
                             android:layout_weight="1"
                             android:gravity="left"
                             android:text="@string/sendappfeed"
-                            android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
                         <ImageView
@@ -390,6 +419,11 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:textColor="@color/black"
+                            android:letterSpacing="0.03"
+                            android:textStyle="bold"
+                            android:justificationMode="inter_word"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:drawablePadding="10dp"
                             android:drawableLeft="@drawable/icon_share"
                             android:layout_width="0dp"
@@ -398,7 +432,6 @@
                             android:layout_weight="1"
                             android:gravity="left"
                             android:text="@string/shareynw"
-                            android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
                         <ImageView
@@ -436,6 +469,11 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:textColor="@color/black"
+                            android:letterSpacing="0.03"
+                            android:textStyle="bold"
+                            android:justificationMode="inter_word"
+                            android:lineSpacingExtra="@dimen/padding3"
                             android:drawablePadding="10dp"
                             android:drawableLeft="@drawable/icon_logout"
                             android:layout_width="0dp"
@@ -444,7 +482,6 @@
                             android:layout_weight="1"
                             android:gravity="left"
                             android:text="@string/logout"
-                            android:textColor="@color/title_grey"
                             android:textSize="@dimen/txtsize_hint" />
 
                         <ImageView

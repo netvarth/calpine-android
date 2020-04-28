@@ -1511,7 +1511,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             if (activelist.getPersonsAhead() == 0) {
 
                 Spannable spannable1 = new SpannableString(nobody_ahead);
-                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                         0, nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if(activelist.getAppxWaitingTime()==0 ){
                 tv_personahead.setText(spannable1);}
@@ -1523,18 +1523,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 if(activelist.getAppxWaitingTime()==0 ){
 
                 Spannable spannable1 = new SpannableString(one_person_ahead );
-                    spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                    spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                             0, one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_personahead.setText(spannable1);}
                 else{
                 Spannable spannable1 = new SpannableString(one_person_ahead);
-                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                         0, one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_personahead.setText(spannable1);}
             } else {
 
                 Spannable spannable1 = new SpannableString(secondWord1 + " " + firstWord1);
-                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                         0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if(activelist.getAppxWaitingTime() == 0){
                     tv_personahead.setText(spannable1);
