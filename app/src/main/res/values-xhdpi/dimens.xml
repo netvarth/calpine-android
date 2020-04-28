@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding30">30dp</dimen>
-    <dimen name="default_padding">10dp</dimen>
+    <dimen name="default_padding">12dp</dimen>
     <dimen name="padding5">5dp</dimen>
     <dimen name="padding3">3dp</dimen>
     <dimen name="layout_alert_dialog_width">190dp</dimen>
@@ -15,6 +15,7 @@
     <dimen name="txtsize_title_small">15dp</dimen>
     <dimen name="txtsize_title_term_small">12sp</dimen>
     <dimen name="txtsize_hint">14sp</dimen>
+    <dimen name="txtsize_hint_11">12sp</dimen>
     <dimen name="padding50">45dp</dimen>
     <dimen name="padding45">39dp</dimen>
     <dimen name="txtsize_subtitle">16dp</dimen>

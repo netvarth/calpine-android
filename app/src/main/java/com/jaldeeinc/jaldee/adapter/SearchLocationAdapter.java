@@ -184,10 +184,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
 
 
-        Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        myViewHolder.txtservices.setTypeface(tyface3);
-        myViewHolder.txtworking.setTypeface(tyface3);
+//        Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+//                "fonts/Montserrat_Bold.otf");
+//        myViewHolder.txtservices.setTypeface(tyface3);
+//        myViewHolder.txtworking.setTypeface(tyface3);
         for (int i = 0; i < mCheckInMessage.size(); i++) {
             if (searchLoclist.getId() == mCheckInMessage.get(i).getLocid()) {
 
@@ -324,10 +324,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         }
 
         if (listType.size() > 0) {
-            Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-
-            myViewHolder.txtlocation_amentites.setTypeface(tyface2);
+//            Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
+//                    "fonts/Montserrat_Bold.otf");
+//
+//            myViewHolder.txtlocation_amentites.setTypeface(tyface2);
             Config.logV("Location Ament---------------" + listType.size());
             if (listType.size() > 2) {
                 myViewHolder.txtparkingSeeAll.setVisibility(View.VISIBLE);
@@ -384,11 +384,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
         if (searchLoclist.getAddress() != null && searchLoclist.getAddress().contains(searchLoclist.getPlace())) {
-            myViewHolder.tv_place.setText(searchLoclist.getAddress());
-            Config.logV("Place-------------" + searchLoclist.getAddress());
+            myViewHolder.tv_place.setText(searchLoclist.getPlace());
         } else {
             myViewHolder.tv_place.setText(searchLoclist.getPlace() + " " + "," + " " + searchLoclist.getAddress());
-            Config.logV("Place-------------" + searchLoclist.getPlace() + " " + "," + " " + searchLoclist.getAddress());
         }
 
         if (searchLoclist.getbSchedule() != null) {

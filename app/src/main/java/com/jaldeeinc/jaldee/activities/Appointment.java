@@ -1103,7 +1103,7 @@ public class Appointment extends AppCompatActivity {
                             txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
                             String firstWord="Prepayment Amount: ";
-                            String secondWord="₹"+sAmountPay;
+                            String secondWord="₹ "+sAmountPay;
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -11,6 +11,7 @@
     <dimen name="txtsize_title_small">11dp</dimen>
     <dimen name="txtsize_title_term_small">11sp</dimen>
     <dimen name="txtsize_hint">12sp</dimen>
+    <dimen name="txtsize_hint_11">10sp</dimen>
     <dimen name="padding50">38dp</dimen>
     <dimen name="padding25">20dp</dimen>
     <dimen name="padding15">10dp</dimen>

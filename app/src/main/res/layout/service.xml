@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:local="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/input_border_cyan_bg"
-
+    android:layout_height="match_parent"
+    android:background="@color/spinnerbg"
     android:orientation="vertical">
 
     <LinearLayout
@@ -27,30 +26,34 @@
             android:id="@+id/txt_toolbartitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center|left"
-            android:textColor="@color/app_background"
             android:fontFamily="@font/customfont"
+            android:gravity="center|left"
             android:minHeight="?attr/actionBarSize"
-            android:textSize="@dimen/txtsize_subtitle"
             android:paddingLeft="@dimen/padding20"
             android:text="Title"
+            android:textColor="@color/app_background"
+            android:textSize="@dimen/txtsize_subtitle"
             android:textStyle="bold" />
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding15"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/padding5"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_5dp">
 
         <ImageView
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:background="@color/white"
             android:id="@+id/img_service"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/icon_noimage"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_noimage" />
 
         <!-- <ImageView
              android:id="@+id/img_servicesmall"
@@ -60,6 +63,8 @@
              android:layout_height="50dp" />-->
 
         <TextView
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginRight="@dimen/dimen_5dp"
             android:id="@+id/txtservice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,35 +76,12 @@
             android:textStyle="bold" />
 
         <LinearLayout
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginRight="@dimen/dimen_5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_padding"
             android:orientation="horizontal">
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="0.5"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Duration"-->
-<!--                    android:textSize="@dimen/txtsize_hint"-->
-<!--                    android:textColor="@color/opaque_title_grey" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/txtduration"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="@dimen/padding5"-->
-<!--                    android:fontFamily="@font/customfont"-->
-<!--                    android:text="30Mins"-->
-<!--                    android:textColor="@color/title_grey"-->
-<!--                    android:textSize="@dimen/txtsize_12"-->
-<!--                    android:textStyle="bold" />-->
-<!--            </LinearLayout>-->
 
 
             <LinearLayout
@@ -110,17 +92,19 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Price (Rs)"
-                    android:textSize="@dimen/txtsize_hint"
-                    android:textColor="@color/opaque_title_grey" />
+                    android:text="Price "
+                    android:textColor="#3D3C44"
+                    android:textSize="@dimen/txtsize_hint" />
 
                 <TextView
+                    android:layout_marginTop="@dimen/dimen_2dp"
+
                     android:id="@+id/txtprice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding5"
                     android:fontFamily="@font/customfont"
                     android:text="200"
                     android:textColor="@color/title_grey"
@@ -128,20 +112,23 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginRight="@dimen/dimen_5dp"
             android:id="@+id/Lprepayment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_padding"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Prepayment Amount"
-                android:textSize="@dimen/txtsize_hint"
-                android:textColor="@color/opaque_title_grey" />
+                android:textColor="@color/opaque_title_grey"
+                android:textSize="@dimen/txtsize_hint" />
 
             <TextView
                 android:id="@+id/txtpreVal"
@@ -154,23 +141,35 @@
                 android:textSize="@dimen/txtsize_12"
                 android:textStyle="bold" />
         </LinearLayout>
+
         <TextView
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginRight="@dimen/dimen_5dp"
             android:id="@+id/txtdesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_padding"
             android:text="Description"
-            android:textSize="@dimen/txtsize_hint"
-            android:textColor="@color/opaque_title_grey"
-          />
+            android:textColor="#AAAAAA"
+            android:textSize="@dimen/txtsize_hint" />
+
         <TextView
+            android:textColor="@color/black"
+            android:letterSpacing="0.03"
+            android:textStyle="bold"
+            android:justificationMode="inter_word"
+            android:lineSpacingExtra="@dimen/padding3"
+            android:layout_marginTop="@dimen/padding2"
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginRight="@dimen/dimen_5dp"
             android:id="@+id/txtdescVal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding7"
             android:text="Description"
-            android:textColor="@color/title_grey"
+            android:layout_marginBottom="@dimen/dimen_5dp"
             android:textSize="@dimen/txtsize_12" />
+
 
 
     </LinearLayout>

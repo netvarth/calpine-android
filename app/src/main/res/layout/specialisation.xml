@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_type"
+<LinearLayout
+    android:layout_marginTop="@dimen/dimen_2dp"
     android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:gravity="center"
-    android:layout_marginTop="1dp"
     android:layout_height="wrap_content">
 
     <TextView
@@ -13,12 +12,9 @@
         android:textStyle="bold"
         android:justificationMode="inter_word"
         android:lineSpacingExtra="@dimen/padding3"
-        android:layout_marginTop="1dp"
-        android:id="@+id/txt_type"
+        android:text="specialisation"
+        android:id="@+id/special"
+        android:textSize="@dimen/txtsize_12"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Emergency Services"
-        android:gravity="center"
-        android:textSize="@dimen/txtsize_12"/>
-
+        android:layout_height="wrap_content"/>
 </LinearLayout>

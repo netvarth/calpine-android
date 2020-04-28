@@ -96,9 +96,9 @@ public class SearchServiceActivity extends AppCompatActivity {
                 tv_price.setVisibility(View.VISIBLE);
                 LserviceLayout.setVisibility(View.VISIBLE);
                 if (isTaxable) {
-                    tv_price.setText("₹" + price + " (Tax Applicable)");
+                    tv_price.setText("₹ " + price + " (Tax Applicable)");
                 } else {
-                    tv_price.setText("₹" + price);
+                    tv_price.setText("₹ " + price);
                 }
             } else {
                 tv_price.setVisibility(View.GONE);
@@ -119,16 +119,16 @@ public class SearchServiceActivity extends AppCompatActivity {
         }
         if (isPrepayment) {
             Lprepayment.setVisibility(View.VISIBLE);
-            txtpreVal.setText("₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(MinPrePaymentAmount)));
+            txtpreVal.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(MinPrePaymentAmount)));
         } else {
             Lprepayment.setVisibility(View.GONE);
         }
         if (desc != null && desc.length() > 0 && !desc.equalsIgnoreCase("")) {
             tv_desc.setVisibility(View.VISIBLE);
             tv_descVal.setVisibility(View.VISIBLE);
-            Typeface tyfacedesc = Typeface.createFromAsset(getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            tv_descVal.setTypeface(tyfacedesc);
+//            Typeface tyfacedesc = Typeface.createFromAsset(getAssets(),
+//                    "fonts/Montserrat_Bold.otf");
+//            tv_descVal.setTypeface(tyfacedesc);
             tv_descVal.setText(desc);
         } else {
             tv_desc.setVisibility(View.GONE);
@@ -166,7 +166,7 @@ public class SearchServiceActivity extends AppCompatActivity {
                 }
             });
         } else {
-            i_servicegallery.setVisibility(View.GONE);
+            i_servicegallery.setVisibility(View.VISIBLE);
         }
     }
 }

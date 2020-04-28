@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    android:background="@drawable/app_bg_gradient_home"
+    android:background="@color/spinnerbg"
     android:orientation="vertical">
 
     <LinearLayout
@@ -34,7 +34,7 @@
             android:layout_marginLeft="@dimen/padding20"
             android:layout_marginRight="@dimen/padding20"
             android:layout_marginTop="@dimen/padding20"
-            android:background="@drawable/app_bg_gradient_home"
+            android:background="@color/spinnerbg"
             android:orientation="vertical">
 
 

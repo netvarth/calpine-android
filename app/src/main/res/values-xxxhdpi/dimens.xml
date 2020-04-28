@@ -7,6 +7,7 @@
     <dimen name="txtsize_title_small">17dp</dimen>
     <dimen name="txtsize_title_term_small">14sp</dimen>
     <dimen name="txtsize_hint">15sp</dimen>
+    <dimen name="txtsize_hint_11">13sp</dimen>
 
     <dimen name="padding30">37dp</dimen>
     <dimen name="default_padding">15dp</dimen>

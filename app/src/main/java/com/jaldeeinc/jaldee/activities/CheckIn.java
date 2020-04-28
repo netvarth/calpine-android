@@ -1409,7 +1409,7 @@ public class CheckIn extends AppCompatActivity {
                             txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
                             String firstWord = "Prepayment Amount: ";
-                            String secondWord = "₹" + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
+                            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

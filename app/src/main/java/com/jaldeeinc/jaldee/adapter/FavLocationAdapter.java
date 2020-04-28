@@ -311,7 +311,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         String secondWord="Today, "+queueList.getNextAvailableQueue().getServiceTime();
                         Spannable spannable = new SpannableString(firstWord+secondWord);
                         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.white)),
                                 firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                         myViewHolder.tv_waittime.setText(spannable);
@@ -323,7 +323,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         String secondWord= queueList.getNextAvailableQueue().getQueueWaitingTime() + " Minutes";
                         Spannable spannable = new SpannableString(firstWord+secondWord);
                         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.white)),
                                 firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                         myViewHolder.tv_waittime.setText(spannable);
@@ -344,7 +344,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         String secondWord=  monthString + " " + day + ", " +queueList.getNextAvailableQueue().getServiceTime();
                         Spannable spannable = new SpannableString(firstWord+secondWord);
                         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface1), firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
+                        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.white)),
                                 firstWord.length(), firstWord.length()+secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                         myViewHolder.tv_waittime.setText(spannable);
