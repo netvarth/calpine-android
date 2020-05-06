@@ -16,6 +16,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -46,6 +47,7 @@ public class Register extends AppCompatActivity {
     Button btn_reg_submit;
     TextView tv_terms, tv_provider, tv_download;
     String sforceupdate = "";
+    String detail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,11 @@ public class Register extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             sforceupdate = extras.getString("forceupdate", "");
+            detail = extras.getString("detail_id", "");
+        }
+
+        if(detail!=null){
+            Log.i("detailsofVivek",detail);
         }
 
         if (sforceupdate != null) {
@@ -210,12 +217,18 @@ public class Register extends AppCompatActivity {
                         if (response.body().string().equalsIgnoreCase("false")) {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Signup.class);
+                            if(detail!=null){
+                                iReg.putExtra("detail_id", (detail));
+                            }
                             startActivity(iReg);
                             //  finish();
 
                         } else {
                             SharedPreference.getInstance(mContext).setValue("mobno", mEdtMobno.getText().toString());
                             Intent iReg = new Intent(mContext, Login.class);
+                            if(detail!=null){
+                                iReg.putExtra("detail_id", (detail));
+                            }
                             startActivity(iReg);
                             // finish();
                         }

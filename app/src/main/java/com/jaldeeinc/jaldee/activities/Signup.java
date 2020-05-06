@@ -47,11 +47,19 @@ public class Signup extends AppCompatActivity {
     Context mContext;
     Button btn_signup;
     TextView tv_terms;
+    String detail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+
+            detail = extras.getString("detail_id");
+
+        }
 
         mContext = this;
         tv_terms = findViewById(R.id.txt_terms);
@@ -187,6 +195,9 @@ public class Signup extends AppCompatActivity {
                             SharedPreference.getInstance(mContext).setValue("firstName", firstname);
                             SharedPreference.getInstance(mContext).setValue("LastName", lastname);
                             Intent iReg = new Intent(mContext, VerifyOtp.class);
+                            if(detail!=null){
+                                iReg.putExtra("detail_id", (detail));
+                            }
                             startActivity(iReg);
                             finish();
 

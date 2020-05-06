@@ -16,8 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/loc_new"
-            android:drawablePadding="@dimen/padding5"
+            android:drawableRight="@drawable/loc_new"
+            android:drawablePadding="@dimen/padding3"
             android:layout_gravity="center"
             android:padding="3dp"
             android:text="Fort Kochi "
@@ -38,11 +38,13 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:padding="@dimen/padding7"
+        android:paddingLeft="@dimen/padding7"
+        android:paddingRight="@dimen/padding7"
+        android:paddingBottom="@dimen/padding7"
         android:id="@+id/recycleview_contact"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        ></android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
 
 
     <TextView

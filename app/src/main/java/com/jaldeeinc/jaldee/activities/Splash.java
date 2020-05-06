@@ -2,9 +2,11 @@ package com.jaldeeinc.jaldee.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
@@ -50,15 +52,68 @@ public class Splash extends AppCompatActivity {
         if (!isFinishing()) {
             String check = SharedPreference.getInstance(this).getStringValue("register", "");
             if (check.equalsIgnoreCase("success")) {
-                Intent iLogin = new Intent(this, Home.class);
-                iLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(iLogin);
-                finish();
+                checkDeepLink();
+//                Intent iLogin = new Intent(this, Home.class);
+//                iLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                startActivity(iLogin);
+//                finish();
             } else {
+                checkDeepLinkRegister();
+            }
+        }
+    }
+
+    private void checkDeepLink() {
+        if (getIntent() != null && getIntent().getData() != null) {
+            Uri data = getIntent().getData();
+            String scheme = data.getScheme();
+            String host = data.getHost();
+            String path = data.getPath();
+            String param = data.getEncodedFragment();
+            Log.i("DeepLink", "Schema : " + data);
+            Log.i("DeepLink", "Host : " + host);
+            Log.i("DeepLink", "param : " + host);
+            Log.i("DeepLink", "param : " + param);
+
+            if (host.equals("scale.jaldee.com")) {
+                Intent intent = new Intent(this, Home.class);
+                intent.putExtra("detail_id", (param));  // URL query values as string, you need to parse string to long.
+                startActivity(intent);
+            }
+
+        } else {
+            Intent iLogin = new Intent(this, Home.class);
+            iLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(iLogin);
+            finish();
+        }
+    }
+
+
+    private void checkDeepLinkRegister() {
+        if (getIntent() != null && getIntent().getData() != null) {
+            Uri data = getIntent().getData();
+            String scheme = data.getScheme();
+            String host = data.getHost();
+            String path = data.getPath();
+            String param = data.getEncodedFragment();
+            Log.i("DeepLink", "Schema : " + data);
+            Log.i("DeepLink", "Host : " + host);
+            Log.i("DeepLink", "param : " + host);
+            Log.i("DeepLink", "param : " + param);
+
+            if (host.equals("scale.jaldee.com")) {
+
                 Intent iLogin = new Intent(this, Register.class);
+                iLogin.putExtra("detail_id", (param));
                 startActivity(iLogin);
                 finish();
             }
+
+        } else {
+            Intent iLogin = new Intent(this, Register.class);
+            startActivity(iLogin);
+            finish();
         }
     }
 

@@ -65,16 +65,19 @@ public class Password extends AppCompatActivity {
     TextView txt_ynw, tv_password_title;
     Button btn_pwd_submit;
     ImageView img_indicator;
+    String detail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.password);
 
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             otp = extras.getString("otp");
             from = extras.getString("from");
+            detail = extras.getString("detail_id");
         }
 
 
@@ -504,6 +507,9 @@ public class Password extends AppCompatActivity {
 
                         Intent iReg = new Intent(mContext, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        if(detail!=null){
+                            iReg.putExtra("detail_id", (detail));
+                        }
                         startActivity(iReg);
                         finish();
 
