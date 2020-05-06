@@ -55,10 +55,20 @@ public class VerifyOtp extends AppCompatActivity {
     TextView txt_ynw;
     Button btn_verify;
     TextView txt_enterotp,txtproceed;
+    String detail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.verifyotp);
+
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+
+            detail = extras.getString("detail_id");
+
+        }
+
 
         btn_verify=(Button)findViewById(R.id.btn_verify) ;
         txt_enterotp=(TextView) findViewById(R.id.txt_enterotp);
@@ -262,6 +272,9 @@ public class VerifyOtp extends AppCompatActivity {
                             Intent iPass = new Intent(mContext, Password.class);
                             iPass.putExtra("otp", editotp.getText().toString());
                             iPass.putExtra("from", "signup");
+                            if(detail!=null){
+                                iPass.putExtra("detail_id", (detail));
+                            }
                             startActivity(iPass);
                             finish();
                         }else{

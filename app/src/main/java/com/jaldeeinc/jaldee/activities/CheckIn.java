@@ -134,7 +134,7 @@ public class CheckIn extends AppCompatActivity {
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
     static TextView tv_queuetime;
-    static TextView tv_queuename;
+//    static TextView tv_queuename;
     static LinearLayout queuelayout;
     String toastMessage;
     TextView txt_chooseservice, txt_choosedepartment;
@@ -237,7 +237,7 @@ public class CheckIn extends AppCompatActivity {
         tv_titlename = findViewById(R.id.txt_title);
         tv_checkin_service = findViewById(R.id.txt_checkin_service);
         tv_queuetime = findViewById(R.id.txt_queuetime);
-        tv_queuename = findViewById(R.id.txt_queuename);
+//        tv_queuename = findViewById(R.id.txt_queuename);
         tv_addnote = findViewById(R.id.txtaddnote);
         mSpinnerService = findViewById(R.id.spinnerservice);
         mSpinnerDepartment = findViewById(R.id.spinnerdepartment);
@@ -456,7 +456,7 @@ public class CheckIn extends AppCompatActivity {
         tv_titlename.setTypeface(tyface);
         tv_name.setTypeface(tyface);
         btn_checkin.setTypeface(tyface);
-        tv_queuename.setTypeface(tyface);
+//        tv_queuename.setTypeface(tyface);
         txt_date.setTypeface(tyface);
 
         mContext = this;
@@ -1476,10 +1476,10 @@ public class CheckIn extends AppCompatActivity {
                                 tv_personahead.setVisibility(View.VISIBLE);
 
 
-                                String firstWord = "People ahead of you ";
-                                String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize());
+                                String firstWord = "ahead of you ";
+                                String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()+ " People");
 
-                                Spannable spannable = new SpannableString(secondWord + " " + firstWord);
+                                Spannable spannable = new SpannableString(secondWord + '\n' + firstWord);
                                 tv_personahead.setText(spannable);
 
                             }
@@ -1502,7 +1502,7 @@ public class CheckIn extends AppCompatActivity {
 
                         if (mQueueTimeSlotList.size() > 0) {
                             Lbottomlayout.setVisibility(View.VISIBLE);
-                            tv_queuename.setVisibility(View.GONE);
+//                            tv_queuename.setVisibility(View.GONE);
                             tv_queuetime.setVisibility(View.VISIBLE);
                             tv_waittime.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
@@ -1515,7 +1515,7 @@ public class CheckIn extends AppCompatActivity {
                             queuelayout.setVisibility(View.VISIBLE);
 
 
-                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
+//                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
                             tv_queuetime.setText(mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
                             String firstWord = null;
@@ -1644,7 +1644,7 @@ public class CheckIn extends AppCompatActivity {
                                 Config.logV("Second WORD---------------" + secondWord);
                             }
 
-                            Spannable spannable = new SpannableString(firstWord + secondWord);
+                            Spannable spannable = new SpannableString(firstWord + '\n' + secondWord);
                             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1693,7 +1693,7 @@ public class CheckIn extends AppCompatActivity {
                             Config.logV("No Checkins-------------------" + mQueueTimeSlotList.size());
                             tv_queue.setVisibility(View.GONE);
                             queuelayout.setVisibility(View.GONE);
-                            tv_queuename.setVisibility(View.GONE);
+//                            tv_queuename.setVisibility(View.GONE);
                             tv_queuetime.setVisibility(View.GONE);
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
@@ -1732,7 +1732,7 @@ public class CheckIn extends AppCompatActivity {
                                 Config.logV("Left Click------------------**" + i);
                                 if (i >= 0) {
 
-                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
+//                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
                                     String firstWord = null;
@@ -1868,7 +1868,7 @@ public class CheckIn extends AppCompatActivity {
                                         }
                                     }
 
-                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    Spannable spannable = new SpannableString(firstWord +'\n' + secondWord);
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1941,7 +1941,7 @@ public class CheckIn extends AppCompatActivity {
                                 Config.logV("Right Click----1111--------------" + i);
                                 if (i < mQueueTimeSlotList.size()) {
 
-                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
+//                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
 
 
@@ -2080,7 +2080,7 @@ public class CheckIn extends AppCompatActivity {
                                         }
                                     }
 
-                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    Spannable spannable = new SpannableString(firstWord + '\n' + secondWord);
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -2241,16 +2241,7 @@ public class CheckIn extends AppCompatActivity {
                                             LServicesList.addAll(serviceList);
 
                                         }
-                                        if (LServicesList.size() > 1) {
-                                            mSpinnerService.setVisibility(View.VISIBLE);
-                                            txt_chooseservice.setVisibility(View.VISIBLE);
-                                            Config.logV("mServicesList" + LServicesList.size());
-                                            ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                            mSpinnerService.setAdapter(adapter);
-                                            mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
-                                            livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
-                                        } else if (LServicesList.size() <= 1 && depResponse.isFilterByDept()) {
+                                        if (LServicesList.size() > 0) {
                                             mSpinnerService.setVisibility(View.VISIBLE);
                                             txt_chooseservice.setVisibility(View.VISIBLE);
                                             Config.logV("mServicesList" + LServicesList.size());

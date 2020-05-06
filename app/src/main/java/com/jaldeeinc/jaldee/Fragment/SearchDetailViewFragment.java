@@ -159,6 +159,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     int mProvoderId;
     ArrayList<String> ids;
     String uniqueID;
+    String home,homeUniqueId;
     String claimable;
 
     TextView tv_ImageViewText, tv_Moredetails, tv_specializtion, tv_SocialMedia, tv_Gallery, tv_mImageViewTextnew,locationHeading;
@@ -201,19 +202,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         mDepartmentAdapter = new DepartmentAdapter(this);
-
         View row = inflater.inflate(R.layout.searchdetails, container, false);
-
         mContext = getActivity();
         mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
         mRecycleDepartment = (RecyclerView) row.findViewById(R.id.mDepartmentView);
-
         mRecycle_virtualfield = (RecyclerView) row.findViewById(R.id.mrecycle_virtualfield);
         mrecycle_specialisation = (RecyclerView) row.findViewById(R.id.mrecycle_specialisation);
-
         rating = (RatingBar) row.findViewById(R.id.mRatingBar);
         // tv_contactdetails = (TextView) row.findViewById(R.id.txt_contactdetails);
         tv_specializtion = (TextView) row.findViewById(R.id.txt_specializtion);
@@ -231,7 +226,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         List<CoupnResponse> couponResponse;
-
         mSearchGallery = new ArrayList<>();
         mSearchLocList = new ArrayList<>();
         mSearchDepartments = new ArrayList<>();
@@ -249,7 +243,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         Config.logV("Refresh @@@@@@@@@@@@@@@@@@");
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         tv_title.setVisibility(View.INVISIBLE);
-
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,12 +251,25 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 getFragmentManager().popBackStack();
             }
         });
-
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             Log.i("Bundle.............", bundle.toString());
-            uniqueID = bundle.getString("uniqueID");
-            claimable = bundle.getString("claimable");
+            home = bundle.getString("home");
+            homeUniqueId = bundle.getString("homeUniqueId");
+            if(home != null && home.equals("home")){
+                if(homeUniqueId!=null){
+
+                    ApiSearchViewDetail(homeUniqueId, mSearchResp);
+
+
+                    uniqueID = homeUniqueId;
+                }
+
+            }else{
+                uniqueID = bundle.getString("uniqueID");
+            }
+
+            claimable = "0";
 
         }
         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
@@ -1128,6 +1134,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                         mBusinessDataList = response.body();
+                        if(homeUniqueId!=null){
+                            ApiAddFavo(mBusinessDataList.getId());
+                        }
+                        Log.i("plplplp",mBusinessDataList.toString());
+                        Log.i("plplplp",new Gson().toJson(mBusinessDataList));
                         mbranchId = mBusinessDataList.getBranchId();
                         lat_long = mBusinessDataList.getBaseLocation().getLattitude() + "," + mBusinessDataList.getBaseLocation().getLongitude();
                         Config.logV("Provider------------" + new Gson().toJson(mBusinessDataList));

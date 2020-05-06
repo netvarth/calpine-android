@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
+import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.service.LiveTrackService;
@@ -23,7 +24,9 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 public class Home extends AppCompatActivity {
 
     HomeTabFragment mHomeTab;
+    SearchDetailViewFragment searchDetailViewFragment;
     Context mContext;
+    String detail;
 
 
     Intent mLiveTrackClient;
@@ -44,14 +47,26 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+             detail = extras.getString("detail_id", "");
+            Log.i("detailsofDetail",detail);
+        }
+
+        if(detail!=null){
+            searchDetailViewFragment = new SearchDetailViewFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("homeUniqueId", detail);
+            bundle.putString("home", "home");
+            searchDetailViewFragment.setArguments(bundle);
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
+        }
 
         Config.logV("Home Screen@@@@@@@@@@@@@@@@@@@");
-
         mContext = this;
-
         liveTrackService = new LiveTrackService();
         mLiveTrackClient = new Intent(Home.this, liveTrackService.getClass());
-
         if (!isMyServiceRunning(liveTrackService.getClass())) {
             Log.i("OnCreateHome?", true + "");
             startService(mLiveTrackClient);
@@ -110,33 +125,38 @@ public class Home extends AppCompatActivity {
     }
 
 
+
     private void initScreen() {
         // Creating the ViewPager container fragment once
         mHomeTab = new HomeTabFragment();
 
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, mHomeTab)
-                .commit();
-
+        if(detail!=null){
+            searchDetailViewFragment = new SearchDetailViewFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("homeUniqueId", detail);
+            bundle.putString("home", "home");
+            searchDetailViewFragment.setArguments(bundle);
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
+        }else{
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, mHomeTab)
+                    .commit();
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-
         String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
         Config.logV("Push Notification Foreground @@@@@@@@@@@@@@@@@@@@@" + loginId);
         if (!loginId.equalsIgnoreCase("")) {
             mHomeTab = new HomeTabFragment();
-
             Bundle bundle = new Bundle();
-
-
             bundle.putString("tab", "1");
             mHomeTab.setArguments(bundle);
-
             final FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, mHomeTab)
@@ -152,14 +172,12 @@ public class Home extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
         if (!mHomeTab.onBackPressed()) {
             Config.logV("Home Back Presss-------------");
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 return;
             }
-
             this.doubleBackToExitPressedOnce = true;
             Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
         } else {
@@ -174,7 +192,6 @@ public class Home extends AppCompatActivity {
         super.onDestroy();
     }
 
-
     @Override
     protected void onStart() {
         Log.i("onStartHomeBefore", true + "");
@@ -182,7 +199,6 @@ public class Home extends AppCompatActivity {
             Log.i("OnStartHomeAter", true + "");
             startService(mLiveTrackClient);
         }
-
         super.onStart();
     }
 
@@ -198,20 +214,6 @@ public class Home extends AppCompatActivity {
         }
 
     }
-
-//    @Override
-//    protected void onPause() {
-//        Log.i("onStopHome", true + "");
-//        stopService(mLiveTrackClient);
-//
-//        super.onPause();
-//    }
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Log.i("onResumeHome", true + "");
-//        startService(mLiveTrackClient);
-//    }
 }
 
 

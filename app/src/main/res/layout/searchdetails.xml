@@ -122,7 +122,6 @@
                                             android:drawablePadding="@dimen/default_padding"
                                             android:fontFamily="@font/customfont"
                                             android:gravity="left"
-                                            android:justificationMode="inter_word"
                                             android:letterSpacing="0.03"
                                             android:lineSpacingExtra="@dimen/padding3"
                                             android:textColor="@color/black"

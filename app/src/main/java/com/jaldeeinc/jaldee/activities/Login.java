@@ -63,11 +63,21 @@ public class Login extends AppCompatActivity {
     TextInputLayout txt_InputPwd;
     TextView tv_account;
     Button btn_login;
+    String detail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+
+            detail = extras.getString("detail_id");
+
+        }
+
 
         mContext = this;
         txt_InputPwd = findViewById(R.id.text_input_layout_pwd);
@@ -269,6 +279,9 @@ public class Login extends AppCompatActivity {
 
                         SharedPreference.getInstance(mContext).setValue("mobile", response.body().getPrimaryPhoneNumber());
                         Intent iReg = new Intent(mContext, Home.class);
+                        if(detail!=null){
+                            iReg.putExtra("detail_id", (detail));
+                        }
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(iReg);
                         finish();
