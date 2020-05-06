@@ -135,7 +135,7 @@ public class LocationCheckinAdapter extends RecyclerView.Adapter<LocationCheckin
                         myViewHolder.tv_waittime.setText("Today");
 
                     } else {
-                        myViewHolder.tv_waittime.setText(checklist.getAppxWaitingTime() + " Mins ");
+                        myViewHolder.tv_waittime.setText(Config.getTimeinHourMinutes(checklist.getAppxWaitingTime()));
                     }
                 } else {
 

@@ -364,10 +364,10 @@ public class CheckIn extends AppCompatActivity {
                             btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
                         } else {
-                            btn_send.setEnabled(false);
-                            btn_send.setClickable(false);
-
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                            btn_send.setEnabled(true);
+                            btn_send.setClickable(true);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                          //  btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
                     }
 

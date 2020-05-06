@@ -30,45 +30,52 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="0.3"
                         android:orientation="vertical">
 
                         <TextView
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
                             android:id="@+id/txt_businessname"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="left"
                             android:text="Sony Latest"
                             android:textColor="@color/title_consu"
                             android:textSize="@dimen/txtsize_hint" />
 
                         <TextView
-                            android:textColor="@color/black"
-                            android:letterSpacing="0.03"
-                            android:textStyle="bold"
-                            android:justificationMode="inter_word"
-                            android:lineSpacingExtra="@dimen/padding3"
                             android:id="@+id/txt_location"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_marginTop="3dp"
                             android:drawableLeft="@drawable/icon_location_lightgray"
                             android:drawablePadding="3dp"
+                            android:textColor="@color/sec_title_grey"
                             android:textSize="@dimen/txtsize_title_term_small"
                             android:visibility="gone" />
 
 
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txt_status_small"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="0.7"
+                        android:gravity="right"
+                        android:textSize="@dimen/txtsize_10"
+                        android:visibility="visible" />
                 </LinearLayout>
 
                 <!-- <LinearLayout
@@ -93,214 +100,235 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical"
+                android:layout_marginTop="9dp"
+                android:orientation="vertical">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/view_border">
 
-                >
+                </View>
 
                 <TextView
-                    android:textColor="@color/black"
-                    android:letterSpacing="0.03"
-                    android:textStyle="bold"
-                    android:justificationMode="inter_word"
-                    android:lineSpacingExtra="@dimen/padding3"
                     android:id="@+id/txt_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="9dp"
                     android:gravity="left"
+                    android:layout_weight="0.5"
                     android:text="Root Canal for Melvin"
+                    android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_12" />
 
+
+                </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+
                 <TextView
-                    android:textColor="@color/black"
-                    android:letterSpacing="0.03"
-                    android:textStyle="bold"
-                    android:justificationMode="inter_word"
-                    android:lineSpacingExtra="@dimen/padding3"
                     android:id="@+id/txt_queuetime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="9dp"
                     android:gravity="left"
                     android:text="Your Queue Time:"
-                    android:textSize="@dimen/txtsize_12"
-                    android:visibility="gone" />
+                    android:textColor="@color/sec_title_grey"
+                    android:textSize="@dimen/txtsize_10"
+                    android:textStyle="bold"
+                    android:visibility="visible"
+                    android:layout_weight="0.5"
+                    />
 
 
                 <TextView
-                    android:textColor="@color/black"
-                    android:letterSpacing="0.03"
-                    android:textStyle="bold"
-                    android:justificationMode="inter_word"
-                    android:lineSpacingExtra="@dimen/padding3"
                     android:id="@+id/txt_esttime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:gravity="left"
+                    android:layout_marginTop="9dp"
+                    android:gravity="center"
                     android:text="Your service Time:"
-                    android:textSize="@dimen/txtsize_12"
-                    android:visibility="gone" />
+                    android:textColor="@color/sec_title_grey"
+                    android:textSize="@dimen/txtsize_10"
+                    android:visibility="gone"
+                    android:textStyle="bold"
+                    android:layout_weight="0.5"/>
+
+
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layout_token"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/app_background"
-                android:orientation="vertical">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/layout_token"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="@dimen/padding5"-->
+<!--                android:background="@color/app_background"-->
+<!--                android:orientation="vertical">-->
 
-                <TextView
-                    android:textColor="@color/black"
-                    android:letterSpacing="0.03"
-                    android:textStyle="bold"
-                    android:justificationMode="inter_word"
-                    android:lineSpacingExtra="@dimen/padding3"
-                    android:id="@+id/time_queue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:gravity="left"
-                    android:text="Queue"
-                    android:textSize="@dimen/txtsize_12"
-                    android:visibility="gone"/>
+<!--                <TextView-->
+<!--                    android:id="@+id/time_queue"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="0.5"-->
+<!--                    android:gravity="left"-->
+<!--                    android:text="Queue"-->
+<!--                    android:textColor="@color/title_grey"-->
+<!--                    android:textSize="@dimen/txtsize_12"-->
+<!--                    android:visibility="gone"/>-->
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
                     android:background="@color/app_background"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                        android:id="@+id/partySize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
 
                     <TextView
-                        android:textColor="@color/black"
-                        android:letterSpacing="0.03"
-                        android:textStyle="bold"
-                        android:justificationMode="inter_word"
-                        android:lineSpacingExtra="@dimen/padding3"
                         android:id="@+id/txt_token"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
                         android:gravity="left"
+                        android:layout_marginTop="9dp"
                         android:text="TOken"
-                        android:textSize="@dimen/txtsize_12"
-                        android:visibility="gone"/>
-
-                    <TextView
-                        android:textColor="@color/black"
-                        android:letterSpacing="0.03"
-                        android:textStyle="bold"
-                        android:justificationMode="inter_word"
-                        android:lineSpacingExtra="@dimen/padding3"
-                        android:id="@+id/txt_personahead"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:gravity="left"
-                        android:text="person"
-                        android:textSize="@dimen/txtsize_12" />
+                        android:textStyle="bold"
+                        android:textColor="@color/title_grey"
+                        android:textSize="11sp" />
+
+
+                        <TextView
+                            android:id="@+id/txt_partysizevalue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:text="Party size"
+                            android:layout_marginTop="9dp"
+                            android:layout_weight="0.5"
+                            android:textColor="@color/title_grey"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"/>
+
+
+                    </LinearLayout>
+
 
                     <TextView
-                        android:textColor="@color/black"
-                        android:letterSpacing="0.03"
-                        android:textStyle="bold"
-                        android:justificationMode="inter_word"
-                        android:lineSpacingExtra="@dimen/padding3"
                         android:id="@+id/txt_batchName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
                         android:gravity="left"
                         android:text="Batch"
-                        android:textSize="@dimen/txtsize_12"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="9dp"
+                        android:textColor="@color/title_grey"
+                        android:textSize="11sp"
                         android:visibility="gone"
                         />
 
 
 
+
+
+                    <LinearLayout
+                        android:id="@+id/amountDue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="1"
+                        android:layout_marginTop="9dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:id="@+id/txt_prepaid"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:textColor="#4DE2FF"
+                            android:textSize="11sp"
+                            android:layout_gravity="left"
+                            android:visibility="gone"
+                            />
+
+                        <TextView
+                            android:visibility="gone"
+                            android:id="@+id/txt_amtdue"
+                            android:layout_width="0dp"
+                            android:layout_marginTop="9dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/title_grey"
+                            android:textSize="11sp"
+                            android:layout_weight="0.5"
+                            android:layout_gravity="right"/>
+
+                    </LinearLayout>
+
+<!--                    <View-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="1dp"-->
+<!--                        android:layout_marginTop="@dimen/padding5"-->
+<!--                        android:background="@color/view_border">-->
+
+<!--                    </View>-->
+
                     <TextView
-                        android:textColor="@color/black"
-                        android:letterSpacing="0.03"
-                        android:textStyle="bold"
-                        android:justificationMode="inter_word"
-                        android:lineSpacingExtra="@dimen/padding3"
-                        android:id="@+id/txt_partysizevalue"
+                        android:id="@+id/txt_personahead"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:gravity="left"
-                        android:text="Party size"
+                        android:layout_gravity="left"
+                        android:layout_marginTop="9dp"
+                        android:text="person"
+                        android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="gone"/>
                 </LinearLayout>
-            </LinearLayout>
+<!--            </LinearLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="9dp"
+                android:id="@+id/dateCheckin"
+                android:visibility="gone"
+                android:weightSum="1">
 
             <TextView
-                android:textColor="@color/black"
-                android:letterSpacing="0.03"
-                android:textStyle="bold"
-                android:justificationMode="inter_word"
-                android:lineSpacingExtra="@dimen/padding3"
                 android:id="@+id/txt_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textSize="@dimen/txtsize_12"
-                android:visibility="gone" />
+                android:layout_gravity="left"
+                android:textColor="@color/title_grey"
+                android:textSize="11sp"
+                android:visibility="visible"
+                android:layout_weight="0.5"/>
 
             <TextView
-                android:textColor="@color/black"
-                android:letterSpacing="0.03"
-                android:textStyle="bold"
-                android:justificationMode="inter_word"
-                android:lineSpacingExtra="@dimen/padding3"
                 android:id="@+id/txt_check_in_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textSize="@dimen/txtsize_12"
-                android:visibility="gone" />
-
-            <TextView
-                android:textColor="@color/black"
-                android:letterSpacing="0.03"
+                android:layout_marginTop="9dp"
+                android:layout_gravity="right"
+                android:textSize="11sp"
+                android:visibility="visible"
                 android:textStyle="bold"
-                android:justificationMode="inter_word"
-                android:lineSpacingExtra="@dimen/padding3"
+                android:layout_weight="0.5"/>
+            </LinearLayout>
+            <TextView
                 android:id="@+id/txt_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textSize="@dimen/txtsize_12"
-                android:visibility="gone" />
-
-            <TextView
-                android:letterSpacing="0.03"
-                android:textStyle="bold"
-                android:justificationMode="inter_word"
-                android:lineSpacingExtra="@dimen/padding3"
-                android:id="@+id/txt_prepaid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:textColor="#4DE2FF"
-                android:textSize="@dimen/txtsize_12" />
+                android:layout_marginTop="9dp"
+                android:textSize="11sp"
+                android:visibility="gone" />
 
-            <TextView
-                android:textColor="@color/black"
-                android:letterSpacing="0.03"
-                android:textStyle="bold"
-                android:justificationMode="inter_word"
-                android:lineSpacingExtra="@dimen/padding3"
-                android:visibility="gone"
-                android:id="@+id/txt_amtdue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/txtsize_12" />
 
 
             <LinearLayout
@@ -308,26 +336,24 @@
                 android:weightSum="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="9dp"
                 android:background="@color/app_background"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="gone"
+                >
 
 
 
                 <TextView
-                    android:textColor="@color/black"
-                    android:letterSpacing="0.03"
-                    android:textStyle="bold"
-                    android:justificationMode="inter_word"
-                    android:lineSpacingExtra="@dimen/padding3"
                     android:layout_weight="0.9"
                     android:id="@+id/txtmakepay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/padding2"
-                    android:textSize="@dimen/txtsize_12"
-                    android:visibility="gone" />
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_10"
+                    android:visibility="gone"
+                    android:layout_gravity="left"/>
 
 
                 <Button
@@ -343,7 +369,7 @@
                     android:text="@string/pay"
                     android:textAllCaps="true"
                     android:textColor="@color/app_background"
-                    android:textSize="@dimen/txtsize_10"
+                    android:textSize="9sp"
                     android:visibility="gone" />
 
 
@@ -354,7 +380,7 @@
                 android:id="@+id/travelDetailsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="9dp"
                 android:background="@color/app_background"
                 android:orientation="horizontal"
                 android:visibility="gone">
@@ -368,16 +394,12 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:textColor="@color/black"
-                        android:letterSpacing="0.03"
-                        android:textStyle="bold"
-                        android:justificationMode="inter_word"
-                        android:lineSpacingExtra="@dimen/padding3"
                         android:id="@+id/trackinLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="left"
+                        android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12" />
 
                     <Switch
@@ -388,25 +410,16 @@
                         android:layout_marginLeft="@dimen/dimen_5dp" />
 
                     <TextView
-                        android:textColor="@color/black"
-                        android:letterSpacing="0.03"
-                        android:textStyle="bold"
-                        android:justificationMode="inter_word"
-                        android:lineSpacingExtra="@dimen/padding3"
                         android:id="@+id/txt_travelmode_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="left"
+                        android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="gone" />
 
                     <TextView
-                        android:textColor="@color/black"
-                        android:letterSpacing="0.03"
-                        android:textStyle="bold"
-                        android:justificationMode="inter_word"
-                        android:lineSpacingExtra="@dimen/padding3"
                         android:id="@+id/travelCar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -414,15 +427,11 @@
                         android:drawableLeft="@drawable/ic_directions_car_black_24dp"
                         android:paddingLeft="@dimen/dimen_10dp"
                         android:paddingRight="@dimen/dimen_10dp"
+                        android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="gone" />
 
                     <TextView
-                        android:textColor="@color/black"
-                        android:letterSpacing="0.03"
-                        android:textStyle="bold"
-                        android:justificationMode="inter_word"
-                        android:lineSpacingExtra="@dimen/padding3"
                         android:id="@+id/traveWalf"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -430,15 +439,11 @@
                         android:drawableLeft="@drawable/ic_directions_walk_black_24dp"
                         android:paddingLeft="@dimen/dimen_10dp"
                         android:paddingRight="@dimen/dimen_10dp"
+                        android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12"
                         android:visibility="gone" />
 
                     <TextView
-                        android:textColor="@color/black"
-                        android:letterSpacing="0.03"
-                        android:textStyle="bold"
-                        android:justificationMode="inter_word"
-                        android:lineSpacingExtra="@dimen/padding3"
                         android:id="@+id/travelmddeEdit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -446,6 +451,7 @@
                         android:layout_weight="0.1"
                         android:drawableLeft="@drawable/icon_edit"
                         android:paddingLeft="@dimen/dimen_10dp"
+                        android:textColor="@color/title_grey"
                         android:textSize="@dimen/txtsize_12" />
 
                 </LinearLayout>
@@ -557,10 +563,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginTop="@dimen/padding7"
-                android:layout_marginRight="@dimen/padding5"
-                android:layout_marginBottom="@dimen/padding5"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="7dp"
                 android:background="@color/view_border" />
 
             <LinearLayout
@@ -572,11 +576,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:textColor="@color/black"
-                    android:letterSpacing="0.03"
-                    android:textStyle="bold"
-                    android:justificationMode="inter_word"
-                    android:lineSpacingExtra="@dimen/padding3"
                     android:id="@+id/icon_fav"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -584,15 +583,11 @@
                     android:drawablePadding="2dp"
                     android:gravity="center"
                     android:minWidth="@dimen/dimen_60dp"
+                    android:layout_marginLeft="@dimen/padding5"
                     android:text="Favourite"
                     android:textSize="@dimen/txtsize_12" />
 
                 <TextView
-                    android:textColor="@color/black"
-                    android:letterSpacing="0.03"
-                    android:textStyle="bold"
-                    android:justificationMode="inter_word"
-                    android:lineSpacingExtra="@dimen/padding3"
                     android:id="@+id/icon_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -605,11 +600,6 @@
                     android:textSize="@dimen/txtsize_12" />
 
                 <TextView
-                    android:textColor="@color/black"
-                    android:letterSpacing="0.03"
-                    android:textStyle="bold"
-                    android:justificationMode="inter_word"
-                    android:lineSpacingExtra="@dimen/padding3"
                     android:id="@+id/icon_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -622,11 +612,6 @@
                     android:textSize="@dimen/txtsize_12" />
 
                 <TextView
-                    android:textColor="@color/black"
-                    android:letterSpacing="0.03"
-                    android:textStyle="bold"
-                    android:justificationMode="inter_word"
-                    android:lineSpacingExtra="@dimen/padding3"
                     android:id="@+id/icon_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -639,11 +624,6 @@
                     android:textSize="@dimen/txtsize_12" />
 
                 <TextView
-                    android:textColor="@color/black"
-                    android:letterSpacing="0.03"
-                    android:textStyle="bold"
-                    android:justificationMode="inter_word"
-                    android:lineSpacingExtra="@dimen/padding3"
                     android:id="@+id/icon_bill"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -246,7 +246,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.tv_open.setTypeface(tyface);
         myViewHolder.btn_checkin.setTypeface(tyface);
 
-
+        listType.clear();
         if (searchLoclist.getParkingType() != null) {
             if (searchLoclist.getParkingType().equalsIgnoreCase("free") || searchLoclist.getParkingType().equalsIgnoreCase("valet") || searchLoclist.getParkingType().equalsIgnoreCase("street") || searchLoclist.getParkingType().equalsIgnoreCase("privatelot") || searchLoclist.getParkingType().equalsIgnoreCase("paid")) {
                 ParkingModel mType = new ParkingModel();

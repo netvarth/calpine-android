@@ -152,6 +152,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     ArrayList<String> imagePathList = new ArrayList<>();
     private Uri mImageUri;
     String filePath;
+    TextView txtCheckins;
 
 
     @Override
@@ -169,11 +170,74 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //expList = (ExpandableListView) row.findViewById(R.id.exp_list);
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        final TextView txtCheckins = (TextView) row.findViewById(R.id.checkins);
+        final TextView txtAppointments = (TextView) row.findViewById(R.id.appointments);
+        final TextView txtDonations = (TextView) row.findViewById(R.id.donations);
+        TextView txtPaylog = (TextView) row.findViewById(R.id.paylog);
+        final TextView txtnoappointments =(TextView) row.findViewById(R.id.txtnoappointments);
+        final TextView txtnodonations =(TextView) row.findViewById(R.id.txtnodonations);
+        final TextView txtnopaylog =(TextView) row.findViewById(R.id.txtnopaylog);
 
         expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
 
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setVisibility(View.GONE);
+
+        txtCheckins.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(expandlist.getVisibility() == View.GONE)
+                {
+                    expandlist.setVisibility(View.VISIBLE);
+                    txtCheckins.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                }
+                else
+                {
+                    expandlist.setVisibility(View.GONE);
+                    txtCheckins.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
+                }
+            }
+        });
+        txtAppointments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(txtnoappointments.getVisibility() == View.GONE)
+                {
+                    txtnoappointments.setVisibility(View.VISIBLE);
+                    txtAppointments.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                }
+                else
+                {
+                    txtnoappointments.setVisibility(View.GONE);
+                    txtAppointments.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
+                }
+            }
+        });
+
+        txtDonations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(txtnodonations.getVisibility() == View.GONE)
+                {
+                    txtnodonations.setVisibility(View.VISIBLE);
+                    txtDonations.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+                }
+                else
+                {
+                    txtnodonations.setVisibility(View.GONE);
+                    txtDonations.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
+                }
+
+            }
+        });
+
+//        txtPaylog.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                txtnopaylog.setVisibility(View.VISIBLE);
+//            }
+//        });
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
