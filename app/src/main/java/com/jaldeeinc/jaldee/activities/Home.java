@@ -173,18 +173,22 @@ public class Home extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!mHomeTab.onBackPressed()) {
-            Config.logV("Home Back Presss-------------");
-            if (doubleBackToExitPressedOnce) {
-                super.onBackPressed();
-                return;
+        if(mHomeTab!=null){
+            if (!mHomeTab.onBackPressed()) {
+                Config.logV("Home Back Presss-------------");
+                if (doubleBackToExitPressedOnce) {
+                    super.onBackPressed();
+                    return;
+                }
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
+            } else {
             }
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
-        } else {
-            Intent intent = new Intent(mContext, Home.class);
+        }else{
+            Intent intent = new Intent(this,Home.class);
             startActivity(intent);
         }
+
     }
 
     @Override
