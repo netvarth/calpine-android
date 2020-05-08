@@ -128,7 +128,7 @@ public class Home extends AppCompatActivity {
 
     private void initScreen() {
         // Creating the ViewPager container fragment once
-        mHomeTab = new HomeTabFragment();
+
 
         if(detail!=null){
             searchDetailViewFragment = new SearchDetailViewFragment();
@@ -139,6 +139,7 @@ public class Home extends AppCompatActivity {
             final FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
         }else{
+            mHomeTab = new HomeTabFragment();
             final FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, mHomeTab)
@@ -181,6 +182,8 @@ public class Home extends AppCompatActivity {
             this.doubleBackToExitPressedOnce = true;
             Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
         } else {
+            Intent intent = new Intent(mContext, Home.class);
+            startActivity(intent);
         }
     }
 

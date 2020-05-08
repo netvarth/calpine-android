@@ -206,6 +206,10 @@ public interface ApiInterface {
     Call<ArrayList<QueueList>> getSearchID(@Path("id") String id);
 
 
+    @GET("provider/business/{id}")
+    Call<ResponseBody> getUniqueID(@Path("id") String id);
+
+
     @GET(" provider/waitlist/queues/waitingTime/{queueId}")
     Call<List<QueueList>> getQueueCheckReponse(@Path("queueId") String id);
 

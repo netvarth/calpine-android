@@ -55,6 +55,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
             LinkedTreeMap<Object, Object> t = (LinkedTreeMap) getrow;
 
             String name = t.get("displayName").toString();
+            Log.i("cvbcvb",name);
 
             String dataType = null;
             if (t.containsKey("dataType")) {
@@ -218,6 +219,7 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
             super(view);
             tv_head = view.findViewById(R.id.tv_heading);
             tv_value = view.findViewById(R.id.tv_value);
+
 
 
         }
