@@ -42,8 +42,8 @@ public class ParkingTypesAdapter extends RecyclerView.Adapter<ParkingTypesAdapte
     public void onBindViewHolder(ParkingTypesAdapter.ParkingTypesAdapterViewHolder holder, final int position) {
 
 
-
-        holder.tv_type.setText(horizontaltypeList.get(position).getTypename());
+        if(horizontaltypeList.size()>0){
+        holder.tv_type.setText(horizontaltypeList.get(position).getTypename());}
 
 
     }

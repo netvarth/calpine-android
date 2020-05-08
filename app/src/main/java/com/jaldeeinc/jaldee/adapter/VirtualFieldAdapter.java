@@ -176,6 +176,11 @@ public class VirtualFieldAdapter extends RecyclerView.Adapter<VirtualFieldAdapte
                     } else {
                         myViewHolder.tv_value.setVisibility(View.VISIBLE);
                         myViewHolder.tv_value.setText(value);
+                        if(value.equalsIgnoreCase("")){
+                            if(dataType.equalsIgnoreCase("URL") || dataType.equalsIgnoreCase("Enum") || dataType.equalsIgnoreCase("EnumList")){
+                                myViewHolder.tv_head.setVisibility(View.GONE);
+                            }
+                        }
                     }
 
                 }
