@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.jaldeeinc.jaldee.R;
 
+import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.adapter.ViewPagerAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.utils.BottomNavigationViewHelper;
@@ -244,6 +245,9 @@ public class HomeTabFragment extends Fragment {
             // lets see if the currentFragment or any of its childFragment can handle onBackPressed
 
             return currentFragment.onBackPressed();
+        }else{
+            Intent intent = new Intent(mContext, Home.class);
+            startActivity(intent);
         }
 
         // this Fragment couldn't handle the onBackPressed call

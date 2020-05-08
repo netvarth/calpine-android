@@ -43,6 +43,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.adapter.ContactDetailAdapter;
@@ -159,10 +160,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     int mProvoderId;
     ArrayList<String> ids;
     String uniqueID;
-    String home,homeUniqueId;
+    String customUniqueID;
+
+    String home, homeUniqueId,uniID;
     String claimable;
 
-    TextView tv_ImageViewText, tv_Moredetails, tv_specializtion, tv_SocialMedia, tv_Gallery, tv_mImageViewTextnew,locationHeading;
+    TextView tv_ImageViewText, tv_Moredetails, tv_specializtion, tv_SocialMedia, tv_Gallery, tv_mImageViewTextnew, locationHeading;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
     ContactAdapterCallback mInterfaceContact;
@@ -177,7 +180,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
     RelativeLayout layout_exapnd_moreDetails;
-    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon, tv_first_ccoupon,specialSeeAll;
+    TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon, tv_first_ccoupon, specialSeeAll;
     ImageView tv_jdn;
     List<SearchDepartment> departmentList;
     private String departmentCode;
@@ -244,25 +247,23 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         tv_title.setVisibility(View.INVISIBLE);
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
-        iBackPress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // what do you want here
-                getFragmentManager().popBackStack();
-            }
-        });
+
+
+
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            Log.i("Bundle.............", bundle.toString());
+
             home = bundle.getString("home");
             homeUniqueId = bundle.getString("homeUniqueId");
-            if(home != null && home.equals("home")){
-                if(homeUniqueId!=null){
-
-                    ApiSearchViewDetail(homeUniqueId, mSearchResp);
 
 
+            if (home != null && home.equals("home")) {
+                if (homeUniqueId != null) {
+                    ApiUniqueID(homeUniqueId);
                     uniqueID = homeUniqueId;
+
+                    Log.i("uniqueCutomIdSecond",uniqueID);
+
                 }
 
             }else{
@@ -272,10 +273,24 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             claimable = "0";
 
         }
+
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(homeUniqueId==null){
+                    getFragmentManager().popBackStack();
+                }else{
+                    Intent intent = new Intent(mContext, Home.class);
+                    startActivity(intent);
+                }
+                // what do you want here
+
+            }
+        });
+
         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mRecyLocDetail.setNestedScrollingEnabled(false);
-
-        Config.logV("UNIUE ID---------1111-------" + uniqueID);
         tv_busName = (TextView) row.findViewById(R.id.txtbus_name);
         tv_msg = (TextView) row.findViewById(R.id.txtmsg);
         tv_domain = (TextView) row.findViewById(R.id.txt_domain);
@@ -312,12 +327,15 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_mImageViewTextnew.setTypeface(tyface);
         L_layout = row.findViewById(R.id.layout_type);
         //tv_contactdetails.setTypeface(tyface);
-        ApiJaldeeCoupan(uniqueID);
-        ApiJDN(uniqueID);
-        ApiSearchViewTerminology(uniqueID);
-        ApiSearchViewDetail(uniqueID, mSearchResp);
-        ApiSearchGallery(uniqueID);
-        ApiSearchVirtualFields(uniqueID);
+        if(homeUniqueId==null){
+            ApiJaldeeCoupan(uniqueID);
+            ApiJDN(uniqueID);
+            ApiSearchViewTerminology(uniqueID);
+            ApiSearchViewDetail(uniqueID, mSearchResp);
+            ApiSearchGallery(uniqueID);
+            ApiSearchVirtualFields(uniqueID);
+        }
+
 
 
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
@@ -361,9 +379,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     mRecycle_virtualfield.setVisibility(View.VISIBLE);
                     img_arrow.setImageResource(R.drawable.icon_angle_up);
                     int size = domainVirtual.size();
-                    if(size>2){
+                    if (size > 2) {
                         tv_Moredetails.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         tv_Moredetails.setVisibility(View.GONE);
                     }
 
@@ -380,13 +398,23 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_jdn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onMethodJdn(uniqueID);
+                if(homeUniqueId==null){
+                    onMethodJdn(uniqueID);
+                }else{
+                    onMethodJdn(homeUniqueId);
+                }
+
             }
         });
         tv_coupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onMethodCoupn(uniqueID);
+
+                if(homeUniqueId==null){
+                    onMethodCoupn(uniqueID);
+                }else{
+                    onMethodCoupn(homeUniqueId);
+                }
             }
         });
 
@@ -394,7 +422,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_first_ccoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onMethodFirstCoupn(uniqueID);
+
+                if(homeUniqueId==null){
+                    onMethodFirstCoupn(uniqueID);
+                }else{
+                    onMethodFirstCoupn(homeUniqueId);
+                }
             }
         });
         mInterface = (SearchLocationAdpterCallback) this;
@@ -699,7 +732,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         tv_spec1.setVisibility(View.VISIBLE);
                         tv_spec2.setVisibility(View.VISIBLE);
                         tv_seeAll.setVisibility(View.VISIBLE);
-                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString()+", ");
+                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString() + ", ");
                         tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
 
                         tv_seeAll.setOnClickListener(new View.OnClickListener() {
@@ -725,13 +758,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         tv_spec1.setVisibility(View.VISIBLE);
                                         tv_spec2.setVisibility(View.VISIBLE);
                                         tv_seeAll.setVisibility(View.VISIBLE);
-                                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString()+", ");
+                                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString() + ", ");
                                         tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
                                         mrecycle_specialisation.setVisibility(View.GONE);
                                         specialSeeAll.setVisibility(View.GONE);
                                     }
                                 });
-                                
+
                                 LinearLayout parent1 = new LinearLayout(mContext);
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 parent1.setOrientation(LinearLayout.VERTICAL);
@@ -789,7 +822,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         tv_spec1.setVisibility(View.VISIBLE);
                                         tv_spec2.setVisibility(View.VISIBLE);
                                         tv_seeAll.setVisibility(View.VISIBLE);
-                                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString()+", ");
+                                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString() + ", ");
                                         tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
 
                                     }
@@ -841,9 +874,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         });
                     }
-
-
-
 
 
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("googleplus")) {
@@ -1134,11 +1164,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                         mBusinessDataList = response.body();
-                        if(homeUniqueId!=null){
+                        if (homeUniqueId != null) {
                             ApiAddFavo(mBusinessDataList.getId());
                         }
-                        Log.i("plplplp",mBusinessDataList.toString());
-                        Log.i("plplplp",new Gson().toJson(mBusinessDataList));
+                        Log.i("plplplp", mBusinessDataList.toString());
+                        Log.i("plplplp", new Gson().toJson(mBusinessDataList));
                         mbranchId = mBusinessDataList.getBranchId();
                         lat_long = mBusinessDataList.getBaseLocation().getLattitude() + "," + mBusinessDataList.getBaseLocation().getLongitude();
                         Config.logV("Provider------------" + new Gson().toJson(mBusinessDataList));
@@ -1150,16 +1180,28 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                    mProvoderId = response.body().getId();}
 //                            }
 //                        }, 1000);
-                        if(response.body().getId()!=0){
-                            mProvoderId = response.body().getId();}
+                        if (response.body().getId() != 0) {
+                            mProvoderId = response.body().getId();
+                        }
 
 
                         UpdateMainUI(mBusinessDataList);
-                        ApiSearchGallery(uniqueID);
+                        if(homeUniqueId==null){
+                            ApiSearchGallery(uniqueID);
+                        }else{
+                            ApiSearchGallery(homeUniqueId);
+                        }
+
                         ApiFavList(mSearchRespPass, claimable);
                         APIServiceDepartments(mProvoderId);
-                        ApiSearchViewLocation(uniqueID);
-                        listProviders(uniqueID);
+                        if(homeUniqueId==null){
+                            ApiSearchViewLocation(uniqueID);
+                            listProviders(uniqueID);
+                        }else{
+                            ApiSearchViewLocation(homeUniqueId);
+                            listProviders(homeUniqueId);
+                        }
+
                         listDoctorsByDepartment();
 
 
@@ -1292,16 +1334,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         mSearchLocList = response.body();
 
-                        if(mSearchLocList!=null){
+                        if (mSearchLocList != null) {
                             locationHeading.setVisibility(View.VISIBLE);
 
-                            if(mSearchLocList.size()==1){
+                            if (mSearchLocList.size() == 1) {
                                 locationHeading.setText("Location (1)");
-                            }else if(mSearchLocList.size()>1){
-                                locationHeading.setText("Location "+"("+mSearchLocList.size()+")");
+                            } else if (mSearchLocList.size() > 1) {
+                                locationHeading.setText("Location " + "(" + mSearchLocList.size() + ")");
                             }
 
-                        }else {
+                        } else {
                             locationHeading.setVisibility(View.GONE);
                         }
 
@@ -1642,17 +1684,17 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         mSearchDepartmentServices.addAll(response.body());
 
-                        if(mSearchDepartmentServices!=null){
+                        if (mSearchDepartmentServices != null) {
 
-                            if(mSearchDepartmentServices.size()==1){
+                            if (mSearchDepartmentServices.size() == 1) {
                                 departmentHeading.setVisibility(View.VISIBLE);
                                 departmentHeading.setText("Department (1)");
 
-                            }else if(mSearchDepartmentServices.size()>1){
+                            } else if (mSearchDepartmentServices.size() > 1) {
                                 departmentHeading.setVisibility(View.VISIBLE);
-                                departmentHeading.setText("Departments "+"("+mSearchDepartmentServices.size()+")");
+                                departmentHeading.setText("Departments " + "(" + mSearchDepartmentServices.size() + ")");
                             }
-                        }else {
+                        } else {
                             departmentHeading.setVisibility(View.GONE);
                         }
 
@@ -1837,7 +1879,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             idPass += mProviderid + "-" + ids.get(i) + ",";
         }
 
-        if (!idPass.equals("") && idPass!= null) {
+        if (!idPass.equals("") && idPass != null) {
             Config.logV("IDS_--------------------" + idPass);
 
             Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
@@ -1858,7 +1900,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         if (response.code() == 200) {
 
                             mSearchQueueList = response.body();
-                            ApiSearchViewSetting(uniqueID);
+                            if(homeUniqueId==null){
+                            ApiSearchViewSetting(uniqueID);}
+                            else {
+                                ApiSearchViewSetting(homeUniqueId);
+                            }
 
                         }
 
@@ -1878,6 +1924,36 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         }
     }
+
+
+    private void ApiUniqueID(String customID) {
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ResponseBody> call = apiService.getUniqueID(customID);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    if (response.code() == 200) {
+                        homeUniqueId = response.body().string();
+                        Log.i("sadf",homeUniqueId);
+                        ApiJaldeeCoupan(homeUniqueId);
+                        ApiJDN(homeUniqueId);
+                        ApiSearchViewTerminology(homeUniqueId);
+                        ApiSearchViewDetail(homeUniqueId, mSearchResp);
+                        ApiSearchGallery(homeUniqueId);
+                        ApiSearchVirtualFields(homeUniqueId);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            }
+        });
+
+    }
+
 
     private void ApiSearchViewSetting(String muniqueID) {
 
@@ -1926,7 +2002,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 } finally {
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                     mRecyLocDetail.setLayoutManager(mLayoutManager);
-                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniqueID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(),mSearchDepartments,mSearchRespDetail,mSearchAWSResponse);
+                    if(homeUniqueId==null){
+                         uniID = uniqueID;
+                    }else{
+                        uniID = homeUniqueId;
+                    }
+
+                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse);
                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
                     mSearchLocAdapter.notifyDataSetChanged();
                 }
@@ -2017,7 +2099,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 int size = domainVirtual.size();
 
 
-
                                 if (size == 1) {
                                     size = 1;
                                 } else {
@@ -2028,7 +2109,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
                                 mRecycle_virtualfield.setAdapter(mAdapter);
                                 mAdapter.notifyDataSetChanged();
-                            }else{
+                            } else {
                                 layout_exapnd_moreDetails.setVisibility(View.GONE);
                             }
 
@@ -2248,6 +2329,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
+        Log.i("lkjjkl",uniqueID);
         Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
         call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
             @Override
@@ -2276,13 +2358,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         if (firstCouponAvailable) {
                             tv_first_ccoupon.setVisibility(View.VISIBLE);
-                        }else{
+                        } else {
                             tv_first_ccoupon.setVisibility(View.GONE);
                         }
 
                         if (couponAvailable) {
                             tv_coupon.setVisibility(View.VISIBLE);
-                        }else{
+                        } else {
                             tv_coupon.setVisibility(View.GONE);
                         }
 
@@ -2484,9 +2566,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
         contactDetail = new ArrayList<>();
-        ApiSearchViewDetail(uniqueID, mSearchResp);
+        if(homeUniqueId==null){
+            ApiSearchViewDetail(uniqueID, mSearchResp);
+        }else{
+            ApiSearchViewDetail(homeUniqueId, mSearchResp);
+        }
+
         //ApiSearchGallery(uniqueID);
-        ApiSearchViewTerminology(uniqueID);
+        if(homeUniqueId==null){
+            ApiSearchViewTerminology(uniqueID);
+        }else{
+            ApiSearchViewTerminology(homeUniqueId);
+        }
+
 
     }
 
@@ -3429,7 +3521,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     }
                                     groupByDepartmentCode(mSearchListModel);
                                     ApiDepartment(mProvoderId);
-                                    ApiDepartmentServices(uniqueID);
+                                    if(homeUniqueId==null){
+                                        ApiDepartmentServices(uniqueID);
+                                    }else{
+                                        ApiDepartmentServices(homeUniqueId);
+                                    }
+
                                 }
 
 
@@ -3462,7 +3559,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
     }
-
 
 
     private void listProviders(final String muniqueID) {
