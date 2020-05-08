@@ -1618,8 +1618,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 "fonts/Montserrat_Bold.otf");
       //  tv_status.setTypeface(tyface1);
         if (activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
-            layout_partySize.setVisibility(View.VISIBLE);
-            tv_batchName.setVisibility(View.VISIBLE);
             tv_check_in.setVisibility(View.GONE);
             tv_status.setText("Complete");
             tv_statusSmall.setText("Complete");
@@ -1647,8 +1645,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         }
 
         if (activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
-            layout_partySize.setVisibility(View.VISIBLE);
-            tv_batchName.setVisibility(View.VISIBLE);
             tv_check_in.setVisibility(View.GONE);
             tv_status.setText("Started");
             tv_statusSmall.setText("Started");

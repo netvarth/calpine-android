@@ -1230,11 +1230,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                                 if (mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins().equals("1")) {
                                                     if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
                                                         myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
+                                                        myViewHolder.txt_diffdate_expand.setText("Do you want to Get Token for another day?");
                                                         myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
                                                         myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
 
                                                     } else {
                                                         myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
+                                                        myViewHolder.txt_diffdate_expand.setText("Do you want to " + " " + terminology + " for another day?");
                                                         myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
                                                         myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
                                                     }
@@ -1268,6 +1270,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             if (mSearchSetting.getCalculationMode() != null) { //   Token/No Token
                                 if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
                                     myViewHolder.btn_checkin.setText("GET TOKEN");
+                                    myViewHolder.btn_checkin_expand.setText("GET TOKEN");
                                     if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != null) {
                                         if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != -1) {
                                             if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() == 0) {
@@ -1289,6 +1292,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     if (mShowWaitTime) { // ML/Fixed
                                         myViewHolder.btn_checkin.setText("Check-in".toUpperCase());
+                                        myViewHolder.btn_checkin_expand.setText("Check-in".toUpperCase());
                                         if (mShowWaitTime && mQueueList != null) {
                                             if (mQueueList != null && mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                                                 secondWord = "\nToday, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
@@ -1318,12 +1322,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             // ML/Fixed
                             if (mShowWaitTime) {
                                 myViewHolder.btn_checkin.setText("Check-in".toUpperCase());
+                                myViewHolder.btn_checkin_expand.setText("Check-in".toUpperCase());
                                 // For ML/Fixed
                                 if (mShowWaitTime && isShowTokenId == false) {
                                 } else {
                                     if (mSearchSetting.getCalculationMode() != null) {
                                         if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
                                             myViewHolder.btn_checkin.setText("GET TOKEN");
+                                            myViewHolder.btn_checkin_expand.setText("GET TOKEN");
                                             if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != null) {
                                                 if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != -1) {
                                                     Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
@@ -1361,8 +1367,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         } else {
                             disableCheckinButton(myViewHolder);
                             myViewHolder.btn_checkin.setVisibility(View.GONE);
+                            myViewHolder.btn_checkin_expand.setVisibility(View.GONE);
                             myViewHolder.tv_waittime.setVisibility(View.GONE);
                             myViewHolder.txt_diffdate.setVisibility(View.GONE);
+                            myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                             myViewHolder.txt_peopleahead.setVisibility(View.GONE);
                         }
 
