@@ -158,6 +158,7 @@
     <string name="title_activity_attach_files">AttachFiles</string>
     <string name="jdnDetails">JDN Info</string>
     <string name="jdn">JDN</string>
+    <string name="make_sure_you_never_miss_your_turn">Make sure you never miss your turn ! Let your provider know your arrival time</string>
 
 
 </resources>

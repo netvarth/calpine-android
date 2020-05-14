@@ -70,17 +70,16 @@ public class CheckinShareLocation extends AppCompatActivity implements
     private boolean mBound = false;
 
 
-
-    Switch shareSwitch, automaticTrackSwitch;
-    TextView bicycleIcon, trackLabel, modeLabel, checkinMessage, tv_title;
+    Switch shareSwitch;
+    TextView bicycleIcon, modeLabel, checkinMessage, tv_title,trackingText,shareText;
     static Context mContext;
     Boolean locationStatus;
     String waitlistPhonenumber, travelMode, startTime, uuid, accountID, title;
     Drawable highlight, border;
     double latitudes, longitudes;
-    LinearLayout Lterms, transportLayout, saveAndClose,Laboutus;
+    LinearLayout transportLayout, saveAndClose, Laboutus;
     ShareLocation shareLocation;
-    View view1, view2, view3;
+    View view1, view3;
     Button btn_send, btn_cancel;
     ActiveCheckIn a;
     TextView drivingIcon, walkingIcon;
@@ -88,7 +87,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
     boolean isWalk = false;
     boolean firstCall = true;
     LocationManager locationManager;
-    String latValues,longValues,terminology,calcMode;
+    String latValues, longValues, terminology, calcMode;
     Boolean isShow;
 
 
@@ -122,12 +121,13 @@ public class CheckinShareLocation extends AppCompatActivity implements
 
         shareSwitch = findViewById(R.id.shareSwitch);
         checkinMessage = findViewById(R.id.checkinMessage);
-        Lterms = findViewById(R.id.Lterms);
+        trackingText = findViewById(R.id.trackingText);
+        shareText = findViewById(R.id.shareText);
+
         transportLayout = findViewById(R.id.transportLayout);
         Laboutus = findViewById(R.id.Laboutus);
         saveAndClose = findViewById(R.id.saveAndClose);
-        automaticTrackSwitch = findViewById(R.id.automaticTrackSwitch);
-        trackLabel = findViewById(R.id.trackLabel);
+
         modeLabel = findViewById(R.id.modeLabel);
         drivingIcon = findViewById(R.id.drivingIcon);
         walkingIcon = findViewById(R.id.walkingIcon);
@@ -135,7 +135,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
         btn_send = findViewById(R.id.btn_send);
         btn_cancel = findViewById(R.id.btn_cancel);
         view1 = findViewById(R.id.view1);
-        view2 = findViewById(R.id.view2);
+
         view3 = findViewById(R.id.view3);
         highlight = getResources().getDrawable(R.drawable.highlight);
         border = getResources().getDrawable(R.drawable.border_image);
@@ -203,16 +203,25 @@ public class CheckinShareLocation extends AppCompatActivity implements
             terminology = extras.getString("terminology");
             calcMode = extras.getString("calcMode");
             isShow = extras.getBoolean("isShow");
+            Log.i("calcmode",calcMode);
         }
+        locationStatus = true;
+
+
+        modeLabel.setVisibility(View.VISIBLE);
         ApiActiveCheckIn();
-        if(shareSwitch.isChecked()){
-            Lterms.setVisibility(View.VISIBLE);
+        if (shareSwitch.isChecked()) {
+            trackingText.setVisibility(View.GONE);
+            shareText.setVisibility(View.GONE);
+
             transportLayout.setVisibility(View.VISIBLE);
             saveAndClose.setVisibility(View.VISIBLE);
             btn_send.setVisibility(View.VISIBLE);
             btn_cancel.setVisibility(View.VISIBLE);
-        }else{
-            Lterms.setVisibility(View.GONE);
+        } else {
+            trackingText.setVisibility(View.VISIBLE);
+            shareText.setVisibility(View.VISIBLE);
+
             transportLayout.setVisibility(View.GONE);
             btn_send.setVisibility(View.GONE);
             btn_cancel.setVisibility(View.VISIBLE);
@@ -220,11 +229,6 @@ public class CheckinShareLocation extends AppCompatActivity implements
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(automaticTrackSwitch.isChecked()){
-                    Toast.makeText(CheckinShareLocation.this, "Automatic live tracking enabled", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(CheckinShareLocation.this, "Automatic live tracking disabled", Toast.LENGTH_SHORT).show();
-                }
                 UpdateShareLiveLocation();
                 mService.removeLocationUpdates();
                 finish();
@@ -254,37 +258,23 @@ public class CheckinShareLocation extends AppCompatActivity implements
 
                 } else {
                     locationStatus = false;
-                    Lterms.setVisibility(View.GONE);
                     transportLayout.setVisibility(View.GONE);
                     btn_send.setVisibility(View.GONE);
                     btn_cancel.setVisibility(View.VISIBLE);
-                    trackLabel.setVisibility(View.GONE);
-                    modeLabel.setVisibility(View.GONE);
+
+
+
+
+
                     view1.setVisibility(View.GONE);
-                    view2.setVisibility(View.GONE);
+
                     view3.setVisibility(View.GONE);
                     UpdateShareLiveLocation();
                     mService.removeLocationUpdates();
                 }
             }
         });
-        if (automaticTrackSwitch.isChecked()) {
-            trackLabel.setText("In \"Automatic tracking\" Jaldee will start tracking 1 hour prior to your turn");
-        } else {
-            trackLabel.setText("If \"Automatic tracking\" is turned off, you will have to enable tracking manually from your check-in");
-        }
-        automaticTrackSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    startTime = "ONEHOUR";
-                    trackLabel.setText("In \"Automatic tracking\" Jaldee will start tracking 1 hour prior to your turn");
-                } else {
-                    startTime = "AFTERSTART";
-                    trackLabel.setText("If \"Automatic tracking\" is turned off you will have to enable tracking manually");
-                }
-            }
-        });
+
 
 
     }
@@ -426,26 +416,27 @@ public class CheckinShareLocation extends AppCompatActivity implements
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
                         a = response.body();
-                        Log.i("fghffghfgh",response.body().toString());
-                        shareSwitch.setText("Allow "+response.body().getProvider().getBusinessName()+" to track your ETA");
+                        Log.i("fghffghfgh", response.body().toString());
+                        Log.i("fghffghfgh", new Gson().toJson(response.body()));
+                        shareSwitch.setText("Allow " + response.body().getProvider().getBusinessName() + " to track your ETA");
+
+                        trackingText.setText(response.body().getProvider().getBusinessName() + " won't know where you are and you can miss your turn. So Jaldee recommends to turn on sharing");
+                        shareText.setText("Jaldee will not show your exact location, it will only share your arrival time with "+response.body().getProvider().getBusinessName());
 
                         if (calcMode.equalsIgnoreCase("NoCalc")) {
-                            checkinMessage.setText("Your token for "+response.body().getService().getName()+" is successful !!");
-                        }
-                        else if(terminology.equalsIgnoreCase("Check-in")){
-                            checkinMessage.setText("Your check-in for "+response.body().getService().getName()+" is successful !!");
-                        }
-                            else{
-                            checkinMessage.setText("Your order for "+response.body().getService().getName()+" is successful !!");
+                            checkinMessage.setText("Your token for " + response.body().getService().getName() + " with "+ response.body().getProvider().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
+                        } else if (terminology.equalsIgnoreCase("Check-in")) {
+                            checkinMessage.setText("Your check-in for " + response.body().getService().getName() + " with "+ response.body().getProvider().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
+                        } else {
+                            checkinMessage.setText("Your order for " + response.body().getService().getName() + " with "+ response.body().getProvider().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
                         }
 
-                        checkinMessage.setText("Your check-in for "+response.body().getService().getName()+" is successful !!");
+                        checkinMessage.setText("Your check-in for " + response.body().getService().getName() + " with "+ response.body().getProvider().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
 
-                        if(a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")){
+                        if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                             Laboutus.setVisibility(View.GONE);
                             checkinMessage.setVisibility(View.GONE);
-                        }
-                        else {
+                        } else {
                             Laboutus.setVisibility(View.VISIBLE);
                             checkinMessage.setVisibility(View.VISIBLE);
 
@@ -486,14 +477,16 @@ public class CheckinShareLocation extends AppCompatActivity implements
             public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
                 try {
                     if (response.code() == 200) {
-                        Lterms.setVisibility(View.VISIBLE);
+
                         transportLayout.setVisibility(View.VISIBLE);
                         btn_send.setVisibility(View.VISIBLE);
                         btn_cancel.setVisibility(View.VISIBLE);
-                        trackLabel.setVisibility(View.VISIBLE);
-                        modeLabel.setVisibility(View.VISIBLE);
-                        view2.setVisibility(View.VISIBLE);
-                        view2.setVisibility(View.VISIBLE);
+
+
+
+
+
+
                         view3.setVisibility(View.VISIBLE);
                         firstCall = false;
                         if(response.body().getJaldeeDistanceTime()!= null) {
@@ -549,14 +542,16 @@ public class CheckinShareLocation extends AppCompatActivity implements
             public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
                 try {
                     if (response.code() == 200) {
-                        Lterms.setVisibility(View.VISIBLE);
+
                         transportLayout.setVisibility(View.VISIBLE);
                         btn_send.setVisibility(View.VISIBLE);
                         btn_cancel.setVisibility(View.VISIBLE);
-                        trackLabel.setVisibility(View.VISIBLE);
-                        modeLabel.setVisibility(View.VISIBLE);
-                        view2.setVisibility(View.VISIBLE);
-                        view2.setVisibility(View.VISIBLE);
+
+
+
+
+
+
                         view3.setVisibility(View.VISIBLE);
                         if (response.body().getJaldeeDistanceTime() != null) {
 

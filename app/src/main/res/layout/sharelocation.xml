@@ -52,6 +52,33 @@
             android:layout_height="1dp"
             android:background="@color/light_background" />
 
+
+
+        <TextView
+            android:id="@+id/modeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/app_background"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingTop="@dimen/default_padding"
+            android:paddingBottom="@dimen/default_padding"
+            android:textColor="@color/title_grey_light"
+            android:textSize="@dimen/twelveScaled"
+            android:textStyle="italic" />
+
+        <TextView
+            android:paddingRight="@dimen/dimen_10dp"
+            android:id="@+id/trackingText"
+            android:paddingLeft="@dimen/dimen_10dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/make_sure_you_never_miss_your_turn"
+            android:textColor="#AAA"
+            android:textSize="@dimen/txtsize_hint_11"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,9 +94,16 @@
                 android:padding="@dimen/dimen_10dp"
                 android:text="Track your ETA"
                 android:textStyle="bold" />
-
         </LinearLayout>
-
+        <TextView
+            android:padding="@dimen/dimen_10dp"
+            android:visibility="visible"
+            android:id="@+id/shareText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#AAA"
+            android:textSize="@dimen/txtsize_hint_11"
+            android:textStyle="bold" />
 
         <View
             android:id="@+id/view1"
@@ -77,53 +111,6 @@
             android:layout_height="1dp"
             android:background="@color/light_background" />
 
-
-        <LinearLayout
-            android:id="@+id/Lterms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/app_background"
-                android:orientation="horizontal">
-
-
-                <Switch
-                    android:id="@+id/automaticTrackSwitch"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:checked="true"
-                    android:padding="@dimen/dimen_10dp"
-                    android:text="Automatically track your ETA"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/trackLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/app_background"
-                android:paddingLeft="@dimen/default_padding"
-                android:paddingBottom="@dimen/default_padding"
-                android:textColor="@color/title_grey_light"
-                android:textSize="@dimen/twelveScaled"
-                android:textStyle="italic" />
-
-
-            <View
-                android:id="@+id/view2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/light_background" />
-
-        </LinearLayout>
 
 
         <LinearLayout
@@ -136,7 +123,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:background="@color/app_background"
                 android:orientation="horizontal">
 
@@ -186,17 +172,17 @@
             </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/modeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/app_background"
-                android:paddingLeft="@dimen/default_padding"
-                android:paddingTop="@dimen/default_padding"
-                android:paddingBottom="@dimen/default_padding"
-                android:textColor="@color/title_grey_light"
-                android:textSize="@dimen/twelveScaled"
-                android:textStyle="italic" />
+<!--            <TextView-->
+<!--                android:id="@+id/modeLabel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@color/app_background"-->
+<!--                android:paddingLeft="@dimen/default_padding"-->
+<!--                android:paddingTop="@dimen/default_padding"-->
+<!--                android:paddingBottom="@dimen/default_padding"-->
+<!--                android:textColor="@color/title_grey_light"-->
+<!--                android:textSize="@dimen/twelveScaled"-->
+<!--                android:textStyle="italic" />-->
 
             <View
                 android:layout_width="match_parent"

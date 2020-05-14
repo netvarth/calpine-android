@@ -53,15 +53,15 @@ public class Home extends AppCompatActivity {
             Log.i("detailsofDetail",detail);
         }
 
-        if(detail!=null){
-            searchDetailViewFragment = new SearchDetailViewFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("homeUniqueId", detail);
-            bundle.putString("home", "home");
-            searchDetailViewFragment.setArguments(bundle);
-            final FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
-        }
+//        if(detail!=null){
+//            searchDetailViewFragment = new SearchDetailViewFragment();
+//            Bundle bundle = new Bundle();
+//            bundle.putString("homeUniqueId", detail);
+//            bundle.putString("home", "home");
+//            searchDetailViewFragment.setArguments(bundle);
+//            final FragmentManager fragmentManager = getSupportFragmentManager();
+//            fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
+//        }
 
         Config.logV("Home Screen@@@@@@@@@@@@@@@@@@@");
         mContext = this;
@@ -177,16 +177,20 @@ public class Home extends AppCompatActivity {
             if (!mHomeTab.onBackPressed()) {
                 Config.logV("Home Back Presss-------------");
                 if (doubleBackToExitPressedOnce) {
-                    super.onBackPressed();
-                    return;
+//                    super.onBackPressed();
+                    System.exit(0);
                 }
                 this.doubleBackToExitPressedOnce = true;
                 Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
             } else {
             }
         }else{
-            Intent intent = new Intent(this,Home.class);
-            startActivity(intent);
+            if (doubleBackToExitPressedOnce) {
+//                    super.onBackPressed();
+                System.exit(0);
+            }
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
         }
 
     }

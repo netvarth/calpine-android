@@ -2730,7 +2730,7 @@ public class CheckIn extends AppCompatActivity {
                             checkinShareLocations.putExtra("title", title);
                             checkinShareLocations.putExtra("terminology", terminology);
                             checkinShareLocations.putExtra("calcMode", calcMode);
-                            checkinShareLocations.putExtra("calcMode", isShow);
+                            checkinShareLocations.putExtra("isShow", isShow);
                             startActivity(checkinShareLocations);
                         }
 
