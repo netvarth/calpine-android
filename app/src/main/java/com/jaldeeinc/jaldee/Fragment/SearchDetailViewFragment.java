@@ -26,6 +26,10 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -724,27 +728,43 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         tv_spec1.setVisibility(View.VISIBLE);
                         tv_spec2.setVisibility(View.GONE);
                         tv_seeAll.setVisibility(View.GONE);
+                        if(getBussinessData.getSpecialization().get(0).toString()!=null){
                         tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString());
+                    }
 
                     } else {
                         mrecycle_specialisation.setVisibility(View.GONE);
                         specialSeeAll.setVisibility(View.GONE);
                         LSpecialization_2.setVisibility(View.VISIBLE);
                         tv_spec1.setVisibility(View.VISIBLE);
+                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
+                            tv_spec2.setVisibility(View.GONE);
+                        }
+                       else{
+                            tv_spec2.setVisibility(View.VISIBLE);
+                        }
 //                        tv_spec1.setMaxEms(6);
 //                        tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
 //                        tv_spec1.setMaxLines(1);
-                        tv_spec2.setVisibility(View.VISIBLE);
+                     //   tv_spec2.setVisibility(View.VISIBLE);
 //                        tv_spec2.setMaxEms(6);
 //                        tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
 //                        tv_spec2.setMaxLines(1);
                         tv_seeAll.setVisibility(View.VISIBLE);
-                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString() + ", ");
-                        tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
+                        String specialization = getBussinessData.getSpecialization().get(0).toString() + ", " + getBussinessData.getSpecialization().get(1).toString() +", ";
+                        String more =  tv_seeAll.getText().toString();
+                        final Spannable spannable1 = new SpannableString(specialization + " " +  more);
+                        spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
+                                0, more.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                        tv_seeAll.setOnClickListener(new View.OnClickListener() {
+
+                     //   tv_spec1.setText(spannable1);
+                      //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
+                    final Spannable seeAll = new SpannableString(spannable1);
+
+                        ClickableSpan clickableSpan = new ClickableSpan() {
                             @Override
-                            public void onClick(View v) {
+                            public void onClick(@NonNull View widget) {
                                 LSpecialization_2.setVisibility(View.GONE);
                                 mrecycle_specialisation.setVisibility(View.VISIBLE);
                                 specialSeeAll.setVisibility(View.VISIBLE);
@@ -757,16 +777,29 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mrecycle_specialisation.setAdapter(sAdapter);
                                 sAdapter.notifyDataSetChanged();
 
+
+                                SpannableString spanStr = new SpannableString("See less");
+                                spanStr.setSpan(new UnderlineSpan(), 0, spanStr.length(), 0);
+
+                                specialSeeAll.setText(spanStr);
+
+
+
                                 specialSeeAll.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         LSpecialization_2.setVisibility(View.VISIBLE);
                                         LSpecialization.setVisibility(View.GONE);
                                         tv_spec1.setVisibility(View.VISIBLE);
-                                        tv_spec2.setVisibility(View.VISIBLE);
+                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
+                                            tv_spec2.setVisibility(View.GONE);
+                                        }
+                                        else{
+                                            tv_spec2.setVisibility(View.VISIBLE);
+                                        }
                                         tv_seeAll.setVisibility(View.VISIBLE);
-                                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString() + ", ");
-                                        tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
+                                        tv_spec1.setText(seeAll);
+                                        //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
                                         mrecycle_specialisation.setVisibility(View.GONE);
                                         specialSeeAll.setVisibility(View.GONE);
                                     }
@@ -802,6 +835,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         "fonts/Montserrat_Regular.otf");
                                 dynaText.setTypeface(tyface);
                                 dynaText.setText("See Less");
+
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     dynaText.getJustificationMode();
                                 }
@@ -836,8 +870,120 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 });
 
                                 LSpecialization.addView(parent1);
+
                             }
-                        });
+                        };
+
+                       seeAll.setSpan(clickableSpan,specialization.length(),specialization.length() + more.length() + 1,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                       seeAll.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)),
+                                specialization.length(), specialization.length() + more.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                       tv_spec1.setText(seeAll);
+                       tv_spec1.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+
+
+//                        tv_seeAll.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                LSpecialization_2.setVisibility(View.GONE);
+//                                mrecycle_specialisation.setVisibility(View.VISIBLE);
+//                                specialSeeAll.setVisibility(View.VISIBLE);
+//                                LSpecialization.removeAllViews();
+//
+//
+//                                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+//                                mrecycle_specialisation.setLayoutManager(mLayoutManager);
+//                                sAdapter = new SpecialisationAdapter(getBussinessData);
+//                                mrecycle_specialisation.setAdapter(sAdapter);
+//                                sAdapter.notifyDataSetChanged();
+//
+//                                specialSeeAll.setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        LSpecialization_2.setVisibility(View.VISIBLE);
+//                                        LSpecialization.setVisibility(View.GONE);
+//                                        tv_spec1.setVisibility(View.VISIBLE);
+//                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
+//                                            tv_spec2.setVisibility(View.GONE);
+//                                        }
+//                                        else{
+//                                            tv_spec2.setVisibility(View.VISIBLE);
+//                                        }
+//                                        tv_seeAll.setVisibility(View.VISIBLE);
+//                                        tv_spec1.setText(spannable1);
+//                                      //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
+//                                        mrecycle_specialisation.setVisibility(View.GONE);
+//                                        specialSeeAll.setVisibility(View.GONE);
+//                                    }
+//                                });
+//
+//                                LinearLayout parent1 = new LinearLayout(mContext);
+//                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                                parent1.setOrientation(LinearLayout.VERTICAL);
+//                                parent1.setLayoutParams(params);
+//                                for (int i = 0; i < getBussinessData.getSpecialization().size(); i++) {
+//
+//                                    TextView dynaText = new TextView(mContext);
+//                                    dynaText.setText(getBussinessData.getSpecialization().get(i).toString());
+//                                    dynaText.getLineSpacingExtra();
+//                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                                        dynaText.getJustificationMode();
+//                                    }
+//                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                                        dynaText.getLetterSpacing();
+//                                    }
+//                                    dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+//                                    dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+//                                    //  dynaText.setPadding(5, 5, 5, 5);
+//                                    dynaText.setMaxLines(1);
+//                                    dynaText.setLayoutParams(params);
+//                                    params.setMargins(0, 10, 0, 0);
+//                                    dynaText.setGravity(Gravity.LEFT);
+//                                    parent1.addView(dynaText);
+//
+//                                }
+//                                TextView dynaText = new TextView(mContext);
+//                                Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+//                                        "fonts/Montserrat_Regular.otf");
+//                                dynaText.setTypeface(tyface);
+//                                dynaText.setText("See Less");
+//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                                    dynaText.getJustificationMode();
+//                                }
+//                                dynaText.getLineSpacingExtra();
+//                                dynaText.getLineSpacingExtra();
+//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                                    dynaText.getLetterSpacing();
+//                                }
+//
+//                                dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+//                                dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
+//                                // dynaText.setPadding(5, 5, 5, 5);
+//                                dynaText.setMaxLines(1);
+//                                dynaText.setLayoutParams(params);
+//
+//
+//                                params.setMargins(0, 10, 0, 0);
+//                                dynaText.setGravity(Gravity.LEFT);
+//                                parent1.addView(dynaText);
+//                                dynaText.setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        LSpecialization_2.setVisibility(View.VISIBLE);
+//                                        LSpecialization.setVisibility(View.GONE);
+//                                        tv_spec1.setVisibility(View.VISIBLE);
+//                                        tv_spec2.setVisibility(View.VISIBLE);
+//                                        tv_seeAll.setVisibility(View.VISIBLE);
+//                                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString() + ", ");
+//                                        tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
+//
+//                                    }
+//                                });
+//
+//                                LSpecialization.addView(parent1);
+//                            }
+//                        });
 
 
                     }

@@ -281,6 +281,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         return convertView;
     }
 
+
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View view, ViewGroup parent) {
         // Getting child text
@@ -333,6 +334,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         LinearLayout layout_dateCheckin = (LinearLayout) view.findViewById(R.id.dateCheckin);
         LinearLayout layout_amountDue = (LinearLayout) view.findViewById(R.id.amountDue);
         LinearLayout layout_partySize = (LinearLayout) view.findViewById(R.id.partySize);
+        TextView tv_enable_loc = (TextView) view.findViewById(R.id.notEnableLoc);
+        TextView tv_recom_loc = (TextView) view.findViewById(R.id.recomEnableLoc);
+        TextView tv_recom_liveloc = (TextView) view.findViewById(R.id.recomShareLiveLoc);
+        TextView tv_icon_refresh = (TextView) view.findViewById(R.id.icon_refresh);
 
         if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn") && header.equals("today")) {
 
@@ -479,7 +484,45 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             locationManager.removeUpdates(ExpandableListAdapter.this);
         }
 
+        LocationManager lm = (LocationManager)mContext.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
 
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(!gps_enabled && !network_enabled) {
+            tv_enable_loc.setText("Oops, your location is not enabled");
+            tv_recom_loc.setText("Jaldee recommends you enable location");
+            tv_recom_loc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            tv_recom_liveloc.setVisibility(View.GONE);
+        }
+        else if(activelist.getJaldeeWaitlistDistanceTime()!=null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
+            tv_enable_loc.setText("Time to reach by CAR - 22 min");
+            tv_recom_liveloc.setText("You are sharing live location with " + activelist.getBusinessName());
+            tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_tickmark, 0);
+            tv_recom_loc.setVisibility(View.GONE);
+        }
+        else{
+            tv_enable_loc.setText("Time to reach by CAR -22 min");
+            tv_recom_loc.setText("Oops you are NOT sharing live location with " + activelist.getBusinessName());
+            tv_recom_liveloc.setText("Jaldee recommends you always share live location with provider");
+            tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        }
+        tv_icon_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext,CheckinShareLocation.class);
+                mContext.startActivity(intent);
+            }
+        });
         tv_travelmddeEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1619,8 +1662,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
       //  tv_status.setTypeface(tyface1);
         if (activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
             tv_check_in.setVisibility(View.GONE);
-            tv_status.setText("Complete");
-            tv_statusSmall.setText("Complete");
+            tv_status.setText("Completed");
+            tv_statusSmall.setText("Completed");
             tv_status.setVisibility(View.GONE);
             tv_statusSmall.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.green));

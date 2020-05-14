@@ -458,6 +458,77 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/input_border_top_diffcolor"
+                android:layout_marginTop="9dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/notEnableLoc"
+                    android:text="Jaldee"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="11sp"
+                    android:layout_weight="0.6"
+                    />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/icon_refresh"
+                        android:text=""
+                        android:drawableLeft="@drawable/icon_refresh"
+                        android:layout_weight="0.4"
+                        />
+                </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/recomEnableLoc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:drawablePadding="5dp"
+                        android:drawableRight="@drawable/cancel_icon"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:text="PSK"
+                        android:textColor="@color/black"
+                        android:textSize="11sp"
+
+                        />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/recomShareLiveLoc"
+                    android:text="Netvarth"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:drawableRight="@drawable/icon_tickmark"
+                    android:drawablePadding="5dp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="11sp"
+                    />
+
+            </LinearLayout>
+
 
             <!--            <LinearLayout-->
             <!--                android:layout_width="match_parent"-->
