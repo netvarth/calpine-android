@@ -165,7 +165,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
         myViewHolder.tv_status.setText(activelist.getWaitlistStatus());
         if (activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
-            myViewHolder.tv_status.setText("Complete");
+            myViewHolder.tv_status.setText("Completed");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
             myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.green));
         }

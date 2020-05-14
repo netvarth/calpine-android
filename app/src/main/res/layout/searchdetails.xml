@@ -429,7 +429,7 @@
 
                                 <TextView
                                     android:id="@+id/txtspec1"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="1dp"
                                     android:gravity="left"
@@ -439,7 +439,8 @@
                                     android:text="Specialization1"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/txtsize_12"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:maxLines="2"/>
 
                                 <TextView
                                     android:id="@+id/txtspec2"
@@ -464,10 +465,11 @@
                                     android:justificationMode="inter_word"
                                     android:letterSpacing="0.03"
                                     android:lineSpacingExtra="@dimen/padding3"
-                                    android:text=" ..See All"
+                                    android:text="See All"
                                     android:textColor="@color/title_consu"
                                     android:textSize="@dimen/txtsize_title_term_small"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:maxLines="1"/>
                             </LinearLayout>
 
 

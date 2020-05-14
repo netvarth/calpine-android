@@ -179,7 +179,7 @@
                     android:layout_weight="0.9"
                     android:background="@color/app_background"
                     android:padding="@dimen/default_padding"
-                    android:text="Version  1.2.5"
+                    android:text="Version  1.2.7"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -191,7 +191,7 @@
                     android:layout_weight="1.5"
                     android:background="@color/app_background"
                     android:padding="@dimen/default_padding"
-                    android:text="Last Updated on 29/02/2020"
+                    android:text="Last Updated on 24/04/2020"
                     android:textColor="@color/title_grey"
                     android:textSize="12sp"
                     android:textStyle="italic" />

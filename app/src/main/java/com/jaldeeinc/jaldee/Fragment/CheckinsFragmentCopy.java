@@ -1,17 +1,24 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 
+import android.Manifest;
 import android.Manifest.permission;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.location.LocationManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -20,6 +27,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
@@ -47,6 +55,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
@@ -103,6 +121,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.support.v4.content.ContextCompat.getSystemService;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -153,6 +173,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     private Uri mImageUri;
     String filePath;
     TextView txtCheckins;
+    private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
+    static double latitude;
+    static double longitude;
+    private Location mylocation;
+    private GoogleApiClient googleApiClient;
+    public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
 
 
     @Override
@@ -174,26 +200,60 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         final TextView txtAppointments = (TextView) row.findViewById(R.id.appointments);
         final TextView txtDonations = (TextView) row.findViewById(R.id.donations);
         TextView txtPaylog = (TextView) row.findViewById(R.id.paylog);
-        final TextView txtnoappointments =(TextView) row.findViewById(R.id.txtnoappointments);
-        final TextView txtnodonations =(TextView) row.findViewById(R.id.txtnodonations);
-        final TextView txtnopaylog =(TextView) row.findViewById(R.id.txtnopaylog);
+        final TextView txtnoappointments = (TextView) row.findViewById(R.id.txtnoappointments);
+        final TextView txtnodonations = (TextView) row.findViewById(R.id.txtnodonations);
+        final TextView txtnopaylog = (TextView) row.findViewById(R.id.txtnopaylog);
 
         expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
 
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setVisibility(View.GONE);
 
+        checkPermissions();
+        LocationManager lm = (LocationManager)mContext.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(!gps_enabled && !network_enabled) {
+            // notify user
+            showSettingsAlert();
+//            android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+//            alertDialog.setTitle("Jaldee update required ");
+//            alertDialog.setMessage(" This version of Jaldee is no longer supported. Please update to the latest version.");
+//            alertDialog.setPositiveButton("UPDATE NOW", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int which) {
+//                    final String appPackageName = mContext.getPackageName();
+//                    try {
+//                        mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+//                    } catch (android.content.ActivityNotFoundException anfe) {
+//                        mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+//                    }
+//                }
+//            });
+//            alertDialog.show();
+        }
+
+
+
+
         txtCheckins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(expandlist.getVisibility() == View.GONE)
-                {
+                if (expandlist.getVisibility() == View.GONE) {
                     expandlist.setVisibility(View.VISIBLE);
                     txtCheckins.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                }
-                else
-                {
+                } else {
                     expandlist.setVisibility(View.GONE);
                     txtCheckins.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
                 }
@@ -202,13 +262,10 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         txtAppointments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(txtnoappointments.getVisibility() == View.GONE)
-                {
+                if (txtnoappointments.getVisibility() == View.GONE) {
                     txtnoappointments.setVisibility(View.VISIBLE);
                     txtAppointments.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                }
-                else
-                {
+                } else {
                     txtnoappointments.setVisibility(View.GONE);
                     txtAppointments.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
                 }
@@ -218,13 +275,10 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         txtDonations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(txtnodonations.getVisibility() == View.GONE)
-                {
+                if (txtnodonations.getVisibility() == View.GONE) {
                     txtnodonations.setVisibility(View.VISIBLE);
                     txtDonations.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                }
-                else
-                {
+                } else {
                     txtnodonations.setVisibility(View.GONE);
                     txtDonations.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
                 }
@@ -272,7 +326,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
 
-
     private void ApiTodayChekInList() {
 
         Config.logV("API TODAY Call");
@@ -302,8 +355,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                     if (response.code() == 200) {
                         mCheckTodayFutureList.clear();
                         mCheckTodayList.clear();
-
-
 
 
                         mCheckTodayFutureList = response.body();
@@ -496,7 +547,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         tv_camera = dialog.findViewById(R.id.camera);
         recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
         //  imageview = dialog.findViewById(R.id.iv);
-       // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
+        // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
 
 
         if (ynwuuid != null) {
@@ -511,7 +562,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if ((ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
 
 
                                 requestPermissions(new String[]{
@@ -545,7 +595,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (ContextCompat.checkSelfPermission(mContext, permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
 
 
                                 requestPermissions(new String[]{
@@ -661,8 +710,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             e.printStackTrace();
         }
     }
+
     public String getRealPathFromURI(Uri contentURI, Activity context) {
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
         @SuppressWarnings("deprecation")
         Cursor cursor = context.managedQuery(contentURI, projection, null,
                 null, null);
@@ -678,6 +728,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         // cursor.close();
         return null;
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -702,18 +753,17 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         }
 
 
-
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
                         if (Arrays.asList(fileExtsSupported).contains(extension)) {
-                            if(orgFilePath == null) {
+                            if (orgFilePath == null) {
                                 orgFilePath = getFilePathFromURI(mContext, uri, extension);
-                           }
-                       } else {
-                           Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-                        return;
-                     }
+                            }
+                        } else {
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
 //
                         imagePathList.add(orgFilePath);
@@ -940,7 +990,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         iBill.putExtra("accountID", accountID);
         iBill.putExtra("payStatus", payStatus);
         iBill.putExtra("consumer", consumer);
-        iBill.putExtra("purpose",Constants.PURPOSE_BILLPAYMENT);
+        iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
         startActivity(iBill);
     }
 
@@ -1555,7 +1605,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     void setItems() {
 
 
-
         mCheckTodayList.clear();
         mCheckOldList.clear();
         mCheckFutureList.clear();
@@ -1590,9 +1639,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         hashMap.put(header.get(1), mCheckFutureList);
         hashMap.put(header.get(2), mCheckOldList);
 
-        LocationManager mgr = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr,mCallback);
+        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
         // Setting adpater over expandablelistview
         expandlist.setAdapter(adapter);
         expandlist.setVerticalScrollBarEnabled(false);
@@ -1611,4 +1660,136 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
 
+    private void checkPermissions() {
+        int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+            Config.logV("Google Not Granted" + permissionLocation);
+            listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+            if (!listPermissionsNeeded.isEmpty()) {
+               /*requestPermissions(getActivity(),
+                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);*/
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ID_MULTIPLE_PERMISSIONS);
+
+                Config.logV("GoogleNot Granted" + permissionLocation);
+            }
+
+        } else {
+            getMyLocation();
+        }
+    }
+
+    private void getMyLocation() {
+        if (googleApiClient != null) {
+
+            if (googleApiClient.isConnected()) {
+
+                Config.logV("Google api connected granted");
+                int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION);
+                if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+
+                    Config.logV("Google api connected granted@2@@@");
+                    mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+                    LocationRequest locationRequest = new LocationRequest();
+                    locationRequest.setInterval(0);        // 10 seconds, in milliseconds
+                    locationRequest.setFastestInterval(0); // 1 second, in milliseconds
+
+                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                            .addLocationRequest(locationRequest);
+                    builder.setAlwaysShow(true);
+                    LocationServices.FusedLocationApi
+                            .requestLocationUpdates(googleApiClient, locationRequest, (LocationListener) this);
+                    //DefaultLocation();
+
+                    PendingResult<LocationSettingsResult> result =
+                            LocationServices.SettingsApi
+                                    .checkLocationSettings(googleApiClient, builder.build());
+                    result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+
+                        @Override
+                        public void onResult(LocationSettingsResult result) {
+                            final Status status = result.getStatus();
+                            switch (status.getStatusCode()) {
+                                case LocationSettingsStatusCodes.SUCCESS:
+                                    // All location settings are satisfied.
+                                    // You can initialize location requests here.
+                                    int permissionLocation = ContextCompat
+                                            .checkSelfPermission(getActivity(),
+                                                    Manifest.permission.ACCESS_FINE_LOCATION);
+                                    if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
+                                        mylocation = LocationServices.FusedLocationApi
+                                                .getLastLocation(googleApiClient);
+                                    }
+
+                                    Config.logV("Google apiClient LocationSettingsStatusCodes.SUCCESS");
+                                    break;
+                                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                    // Location settings are not satisfied.
+                                    // But could be fixed by showing the user a dialog.
+                                    try {
+                                        // Show the dialog by calling startResolutionForResult(),
+                                        // and check the result in onActivityResult().
+                                        // Ask to turn on GPS automatically
+
+                                        Config.logV("Google Ask to turn on GPS automatically");
+                                        /*status.startResolutionForResult(getActivity(),
+                                                REQUEST_CHECK_SETTINGS_GPS);*/
+                                        startIntentSenderForResult(status.getResolution().getIntentSender(), REQUEST_CHECK_SETTINGS_GPS, null, 0, 0, 0, null);
+                                    } catch (IntentSender.SendIntentException e) {
+                                        // Ignore the error.
+                                        e.printStackTrace();
+                                    }
+
+
+                                    break;
+                                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                    // Location settings are not satisfied.
+                                    // However, we have no way
+                                    // to fix the
+                                    // settings so we won't show the dialog.
+                                    // finish();
+                                    Config.logV("Google Location settings are not satisfied");
+                                    break;
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+
+        //Setting Dialog Title
+     //   alertDialog.setTitle("GPSAlertDialogTitle");
+
+        //Setting Dialog Message
+        alertDialog.setMessage("To continue, turn on device location");
+
+        //On Pressing Setting button
+        alertDialog.setPositiveButton("action_settings", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                mContext.startActivity(intent);
+            }
+        });
+
+        //On pressing cancel button
+        alertDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        alertDialog.show();
+    }
 }
