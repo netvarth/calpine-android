@@ -254,7 +254,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 //        getActivity().startService(new Intent(getContext(), LiveTrackService.class));
 
 
-        // Inflate the layout for this fragment
         View row = inflater.inflate(R.layout.fragment_myhome, container, false);
         mRecycleActive = (RecyclerView) row.findViewById(R.id.recycleActive);
         Lhome_mainlayout = (LinearLayout) row.findViewById(R.id.homemainlayout);
@@ -1256,10 +1255,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         if (response.body().size() > 0) {
                             txt_sorry.setVisibility(View.GONE);
                             MActiveList.clear();
-                            for (int i = 0; i < response.body().size(); i++) {
-
                                 MActiveList = response.body();
-                            }
+                                Log.i("fghhgf",new Gson().toJson(MActiveList));
                             Config.logV("MActiveList----------------------" + MActiveList.size());
                             if (MActiveList.size() > 0) {
                                 db = new DatabaseHandler(mContext);
@@ -1535,6 +1532,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             longitude = mylocation.getLongitude();
             SharedPreference.getInstance(mContext).setValue("latitudes", latitude);
             SharedPreference.getInstance(mContext).setValue("longitudes", longitude);
+            Log.i("latlatlat",String.valueOf(latitude));
+            Log.i("latlatlat",String.valueOf(longitude));
             Config.logV("Update Location Changed Connected---------------------11111------" + location.getLatitude());
             Config.logV("Latitude-------------" + latitude);
 
@@ -1576,6 +1575,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     locationRequest.setFastestInterval(0); // 1 second, in milliseconds
 
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+
                     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                             .addLocationRequest(locationRequest);
                     builder.setAlwaysShow(true);

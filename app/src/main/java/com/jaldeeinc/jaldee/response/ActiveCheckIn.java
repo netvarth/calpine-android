@@ -304,11 +304,23 @@ public class ActiveCheckIn {
 
     String businessName;
 
+
+    public String getLivetrack() {
+        return livetrack;
+    }
+
+    public void setLivetrack(String livetrack) {
+        this.livetrack = livetrack;
+    }
+
+    String livetrack;
+
+
     public String getDate() {
         return date;
     }
 
-    String date;
+        String date;
 
     public int getAppxWaitingTime() {
         return appxWaitingTime;
@@ -416,4 +428,44 @@ public class ActiveCheckIn {
 
     String parentUuid;
 
+
+    public String getLattitude() {
+        return lattitude;
+    }
+
+    public void setLattitude(String lattitude) {
+        this.lattitude = lattitude;
+    }
+
+    String lattitude;
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    String longitude;
+
+    public String getPrimaryMobileNo() {
+        return primaryMobileNo;
+    }
+
+    public void setPrimaryMobileNo(String primaryMobileNo) {
+        this.primaryMobileNo = primaryMobileNo;
+    }
+
+    String primaryMobileNo;
+
+    public String getCalculationMode() {
+        return calculationMode;
+    }
+
+    public void setCalculationMode(String calculationMode) {
+        this.calculationMode = calculationMode;
+    }
+
+    String calculationMode;
 }

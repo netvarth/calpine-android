@@ -60,8 +60,8 @@
             android:layout_height="wrap_content"
             android:background="@color/app_background"
             android:paddingLeft="@dimen/default_padding"
-            android:paddingTop="@dimen/default_padding"
-            android:paddingBottom="@dimen/default_padding"
+            android:paddingTop="@dimen/padding3"
+            android:paddingBottom="@dimen/padding3"
             android:textColor="@color/title_grey_light"
             android:textSize="@dimen/twelveScaled"
             android:textStyle="italic" />
@@ -106,6 +106,7 @@
             android:textStyle="bold" />
 
         <View
+            android:layout_marginBottom="@dimen/padding5"
             android:id="@+id/view1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -132,7 +133,6 @@
                     android:layout_height="wrap_content"
                     android:background="@color/app_background"
                     android:paddingLeft="@dimen/default_padding"
-                    android:paddingTop="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
                     android:text="Mode of Transport"
                     android:textColor="@color/title_grey"
@@ -149,7 +149,6 @@
                     android:layout_height="30dp"
                     android:clickable="true"
                     android:paddingLeft="@dimen/default_padding"
-                    android:paddingTop="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint" />
@@ -163,7 +162,6 @@
                     android:layout_height="30dp"
                     android:clickable="true"
                     android:paddingLeft="@dimen/default_padding"
-                    android:paddingTop="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint" />
@@ -171,20 +169,8 @@
 
             </LinearLayout>
 
-
-<!--            <TextView-->
-<!--                android:id="@+id/modeLabel"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/app_background"-->
-<!--                android:paddingLeft="@dimen/default_padding"-->
-<!--                android:paddingTop="@dimen/default_padding"-->
-<!--                android:paddingBottom="@dimen/default_padding"-->
-<!--                android:textColor="@color/title_grey_light"-->
-<!--                android:textSize="@dimen/twelveScaled"-->
-<!--                android:textStyle="italic" />-->
-
             <View
+                android:layout_marginTop="@dimen/padding5"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/light_background" />

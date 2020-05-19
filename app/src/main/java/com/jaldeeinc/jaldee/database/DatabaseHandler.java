@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.Gson;
@@ -383,7 +384,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "checkInTime TEXT,"
                 + "token INTEGER,"
                 + "batchName TEXT,"
-                + "parentUuid TEXT)";
+                + "parentUuid TEXT,"
+                + "lattitude TEXT,"
+                + "longitude TEXT,"
+                + "primaryMobileNo TEXT,"
+                + "calculationMode TEXT,"
+                + "livetrack TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_checkin) + tblFields;
@@ -422,7 +428,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "checkInTime TEXT,"
                 + "token INTEGER,"
                 + "batchName TEXT,"
-                + "parentUuid TEXT)";
+                + "parentUuid TEXT,"
+                + "lattitude TEXT,"
+                + "longitude TEXT,"
+                + "primaryMobileNo TEXT,"
+                + "calculationMode TEXT,"
+                + "livetrack TEXT)";
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_mycheckin) + tblFields;
         db.execSQL(tblCreateStr);
@@ -450,7 +461,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("queueEndTime", activeCheckIn.getQueue().getQueueEndTime());
                 values.put("firstName", activeCheckIn.getWaitlistingFor().get(0).getFirstName());
                 values.put("lastName", activeCheckIn.getWaitlistingFor().get(0).getLastName());
-
                 values.put("ynwUuid", activeCheckIn.getYnwUuid());
                 values.put("paymentStatus", activeCheckIn.getPaymentStatus());
                 values.put("billViewStatus", activeCheckIn.getBillViewStatus());
@@ -464,6 +474,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("token",activeCheckIn.getToken());
                 values.put("batchName",activeCheckIn.getBatchName());
                 values.put("parentUUid",activeCheckIn.getParentUuid());
+                values.put("lattitude",activeCheckIn.getQueue().getLocation().getLattitude());
+                values.put("longitude",activeCheckIn.getQueue().getLocation().getLongitude());
+                values.put("primaryMobileNo",activeCheckIn.getWaitlistingFor().get(0).getPrimaryMobileNo());
+                values.put("calculationMode",activeCheckIn.getCalculationMode());
+                values.put("livetrack",activeCheckIn.getService().getLivetrack());
+
 
                 db.insert(mContext.getString(R.string.db_table_checkin), null, values);
             }
@@ -487,7 +503,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_checkin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating","checkInTime", "token", "batchName", "parentUuid"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating","checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack"};
 
         db.beginTransaction();
 
@@ -530,6 +546,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setToken(cursor.getInt(27));
                 activeModel.setBatchName(cursor.getString(28));
                 activeModel.setParentUuid(cursor.getString(29));
+                activeModel.setLattitude(cursor.getString(30));
+                activeModel.setLongitude(cursor.getString(31));
+                activeModel.setPrimaryMobileNo(cursor.getString(32));
+                activeModel.setCalculationMode(cursor.getString(33));
+                activeModel.setLivetrack((cursor.getString(34)));
 
 
 
@@ -565,7 +586,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("queueStartTime", activeCheckIn.getQueue().getQueueStartTime());
                 values.put("firstName", activeCheckIn.getWaitlistingFor().get(0).getFirstName());
                 values.put("lastName", activeCheckIn.getWaitlistingFor().get(0).getLastName());
-
                 values.put("ynwUuid", activeCheckIn.getYnwUuid());
                 values.put("paymentStatus", activeCheckIn.getPaymentStatus());
                 values.put("billViewStatus", activeCheckIn.getBillViewStatus());
@@ -583,8 +603,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("token",activeCheckIn.getToken());
                 values.put("batchName",activeCheckIn.getBatchName());
                 values.put("parentUuid",activeCheckIn.getParentUuid());
-
-
+                values.put("lattitude",activeCheckIn.getQueue().getLocation().getLattitude());
+                values.put("longitude",activeCheckIn.getQueue().getLocation().getLongitude());
+                values.put("primaryMobileNo",activeCheckIn.getWaitlistingFor().get(0).getPrimaryMobileNo());
+                values.put("calculationMode",activeCheckIn.getCalculationMode());
+                values.put("livetrack",activeCheckIn.getService().getLivetrack());
                 db.insert(mContext.getString(R.string.db_table_mycheckin), null, values);
             }
 
@@ -607,7 +630,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_mycheckin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack"};
         String selection = "";
         String[] selectionArgs = null;
         selectionArgs = new String[]{Config.getTodaysDateString()};
@@ -634,23 +657,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setName(cursor.getString(5));
                 activeModel.setPartySize(cursor.getInt(6));
                 activeModel.setAppxWaitingTime(cursor.getInt(7));
-
                 activeModel.setPlace(cursor.getString(8));
                 activeModel.setGoogleMapUrl(cursor.getString(9));
                 activeModel.setQueueStartTime(cursor.getString(10));
-
                 activeModel.setFirstName(cursor.getString(11));
                 activeModel.setLastName(cursor.getString(12));
                 activeModel.setYnwUuid(cursor.getString(13));
                 activeModel.setPaymentStatus(cursor.getString(14));
-
                 activeModel.setBillViewStatus(cursor.getString(15));
                 activeModel.setBillStatus(cursor.getString(16));
                 activeModel.setAmountPaid(cursor.getDouble(17));
                 activeModel.setAmountDue(cursor.getDouble(18));
-
                 activeModel.setPersonsAhead(cursor.getInt(19));
-
                 activeModel.setServiceTime(cursor.getString(20));
                 activeModel.setStatusUpdatedTime(cursor.getString(21));
                 activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(22), JaldeeWaitlistDistanceTime.class));
@@ -661,6 +679,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setToken(cursor.getInt(27));
                 activeModel.setBatchName(cursor.getString(28));
                 activeModel.setParentUuid(cursor.getString(29));
+                activeModel.setLattitude(cursor.getString(30));
+                activeModel.setLongitude(cursor.getString(31));
+                activeModel.setPrimaryMobileNo(cursor.getString(32));
+                activeModel.setCalculationMode(cursor.getString(33));
+                activeModel.setLivetrack((cursor.getString(34)));
 
                 checkin.add(activeModel);
             } while (cursor.moveToNext());

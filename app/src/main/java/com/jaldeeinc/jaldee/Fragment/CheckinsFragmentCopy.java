@@ -64,6 +64,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
@@ -90,6 +91,7 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.payumoney.sdkui.ui.utils.ToastUtils;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
@@ -209,42 +211,31 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setVisibility(View.GONE);
 
-        checkPermissions();
-        LocationManager lm = (LocationManager)mContext.getSystemService(Context.LOCATION_SERVICE);
-        boolean gps_enabled = false;
-        boolean network_enabled = false;
 
-        try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {}
+        LocationManager service = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        try {
-            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        }  catch (Exception e) {
-            e.printStackTrace();
+        // Check if enabled and if not send user to the GPS settings
+        if (!enabled) {
+            android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+            alertDialog.setMessage("To continue, turn on device location, which uses Google location service");
+
+            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            alertDialog.setPositiveButton("Turn On GPS", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+
+            alertDialog.show();
         }
-
-        if(!gps_enabled && !network_enabled) {
-            // notify user
-            showSettingsAlert();
-//            android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-//            alertDialog.setTitle("Jaldee update required ");
-//            alertDialog.setMessage(" This version of Jaldee is no longer supported. Please update to the latest version.");
-//            alertDialog.setPositiveButton("UPDATE NOW", new DialogInterface.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int which) {
-//                    final String appPackageName = mContext.getPackageName();
-//                    try {
-//                        mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-//                    } catch (android.content.ActivityNotFoundException anfe) {
-//                        mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-//                    }
-//                }
-//            });
-//            alertDialog.show();
-        }
-
-
-
 
         txtCheckins.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -326,6 +317,8 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
 
+
+
     private void ApiTodayChekInList() {
 
         Config.logV("API TODAY Call");
@@ -358,12 +351,14 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
 
                         mCheckTodayFutureList = response.body();
+                        Log.i("hgfhrty",new Gson().toJson(mCheckTodayFutureList));
 
 
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mCheckTodayFutureList.size(); i++) {
                             if (date.equalsIgnoreCase(mCheckTodayFutureList.get(i).getDate())) {
                                 mCheckTodayList.add(response.body().get(i));
+                                Log.i("hgfhrty22",new Gson().toJson(mCheckTodayList));
                             }
 
                         }
@@ -1657,28 +1652,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         }
 
 
-    }
-
-
-    private void checkPermissions() {
-        int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION);
-        List<String> listPermissionsNeeded = new ArrayList<>();
-        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
-            Config.logV("Google Not Granted" + permissionLocation);
-            listPermissionsNeeded.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
-            if (!listPermissionsNeeded.isEmpty()) {
-               /*requestPermissions(getActivity(),
-                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);*/
-                requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ID_MULTIPLE_PERMISSIONS);
-
-                Config.logV("GoogleNot Granted" + permissionLocation);
-            }
-
-        } else {
-            getMyLocation();
-        }
     }
 
     private void getMyLocation() {

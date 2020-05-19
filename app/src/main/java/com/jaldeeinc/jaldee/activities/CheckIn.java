@@ -2730,7 +2730,8 @@ public class CheckIn extends AppCompatActivity {
                             checkinShareLocations.putExtra("title", title);
                             checkinShareLocations.putExtra("terminology", terminology);
                             checkinShareLocations.putExtra("calcMode", calcMode);
-                            checkinShareLocations.putExtra("isShow", isShow);
+                            checkinShareLocations.putExtra("queueStartTime",mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
+                            checkinShareLocations.putExtra("queueEndTime",mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
                             startActivity(checkinShareLocations);
                         }
 
