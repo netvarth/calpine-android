@@ -519,6 +519,14 @@ public class Appointment extends AppCompatActivity {
             }
         });
 
+
+        Date currentTimes = new Date();
+        final SimpleDateFormat sdfs = new SimpleDateFormat(
+                "dd-MM-yyyy", Locale.US);
+        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdfs.format(currentTimes));
+        txtWaitTime.setText("Today\n"+sdfs.format(currentTimes));
+
         txtWaitTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2398,8 +2406,6 @@ public class Appointment extends AppCompatActivity {
                         if(timeslots!=null){
                             earliestAvailable.setText("Earliest available\n"+timeslots.get(0));
                         }
-
-
                         Log.i("timeslots",timeslots.toString());
 
                     }
