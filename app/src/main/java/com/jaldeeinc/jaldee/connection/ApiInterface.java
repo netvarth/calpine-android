@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.connection;
 
 
+import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
@@ -8,6 +9,7 @@ import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.TestModel;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
@@ -22,7 +24,9 @@ import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
+import com.jaldeeinc.jaldee.response.ScheduleId;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
+import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
@@ -192,8 +196,18 @@ public interface ApiInterface {
     Call<SearchTerminology> getSearchViewTerminology(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
 
-    @GET("consumer/waitlist/services/{id}")
+    @GET("consumer/waitlist/service/{id}")
     Call<ArrayList<SearchService>> getSearchService(@Path("id") int id);
+
+    @GET("consumer/appointment/service/{id}")
+    Call<ArrayList<SearchAppoinment>> getSearchAppointment(@Path("id") int id);
+
+    @GET("consumer/appointment/schedule/location/{locid}/service/{servid}/date/{dd}")
+    Call<ArrayList<AppointmentSchedule>> getAppointmentSchedule(@Path("locid") String locid, @Path("servid") String servid, @Path("dd") String dd, @Query("account") String account);
+
+
+    @GET("consumer/appointment/schedule/{id}/{dd}")
+    Call<ScheduleId> getAppointmentScheduleId(@Path("id") String id, @Path("dd") String dd, @Query("account") String account);
 
     @GET("consumer/waitlist/department/services")
     Call<SearchDepartment> getDepartment(@Query("account") int id);

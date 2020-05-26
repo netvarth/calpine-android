@@ -1,10 +1,8 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,8 +10,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Spannable;
@@ -33,8 +29,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.jaldeeinc.jaldee.Fragment.LogouFragment;
+
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
@@ -50,7 +45,6 @@ import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
-import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -703,6 +697,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                    }
 //                });
 
+                if(searchdetailList.getToday_appt()!=null){
+                    if(searchdetailList.getToday_appt().equals("1")){
+                        myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
+                    }else{
+                        myViewHolder.L_appoinment.setVisibility(View.GONE);
+                    }
+                }
+
+
 
                 if (searchdetailList.getClaimable().equals("0")) {
                     myViewHolder.vsep.setVisibility(View.GONE);
@@ -886,20 +889,25 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         context.startActivity(iCheckIn);
                     }
                 });
-                myViewHolder.btnappointment.setOnClickListener(new View.OnClickListener() {
+
+
+                myViewHolder.btnappointments.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent iAppointment = new Intent(v.getContext(), Appointment.class);
-                        iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
-                        iAppointment.putExtra("uniqueID", searchdetailList.getUniqueid());
-                        iAppointment.putExtra("accountID", searchdetailList.getId());
-                        iAppointment.putExtra("googlemap", searchdetailList.getLocation1());
-                        iAppointment.putExtra("from", "checkin");
-                        iAppointment.putExtra("title", searchdetailList.getTitle());
-                        iAppointment.putExtra("place", searchdetailList.getPlace1());
-                        iAppointment.putExtra("sector", searchdetailList.getSectorname());
-                        iAppointment.putExtra("subsector", searchdetailList.getSub_sector());
-                        context.startActivity(iAppointment);
+                        Intent iAppoinment = new Intent(v.getContext(), Appointment.class);
+                        iAppoinment.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
+                        iAppoinment.putExtra("uniqueID", searchdetailList.getUniqueid());
+                        iAppoinment.putExtra("accountID", searchdetailList.getId());
+                        iAppoinment.putExtra("googlemap", searchdetailList.getLocation1());
+                        iAppoinment.putExtra("from", "checkin");
+                        iAppoinment.putExtra("title", searchdetailList.getTitle());
+                        iAppoinment.putExtra("place", searchdetailList.getPlace1());
+                        iAppoinment.putExtra("sector", searchdetailList.getSectorname());
+                        iAppoinment.putExtra("subsector", searchdetailList.getSub_sector());
+                        iAppoinment.putExtra("terminology", termilogy);
+                        iAppoinment.putExtra("isshowtoken", searchdetailList.isShowToken());
+                        iAppoinment.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                        context.startActivity(iAppoinment);
                     }
                 });
                 /////////////////////////////////////////////////////////
@@ -1485,15 +1493,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec_more, tv_spec22, tv_count, tv_qmessage, tv_dept, tv_services, tv_dep1, tv_dep2, tv_dep22, tv_dep_more, tv_peopleahead;
-        LinearLayout L_specialization, L_services, L_layout_type, L_checkin, L_departments;
+        LinearLayout L_specialization, L_services, L_layout_type, L_checkin, L_departments,L_appoinment;
         View vsep;
 
         ImageView ic_jaldeeverifiedIcon;
         ImageView profile, profile1, profile2;
         RatingBar rating;
-        TextView tv_claimable, tv_distance, tv_branch_name;
+        TextView tv_claimable, tv_distance, tv_branch_name,nextAppoinments;
 
-        Button btncheckin, btnappointment;
+        Button btncheckin,btnappointments;
         LinearLayout layout_row;
         TextView mImageViewText,tv_useWeb;
         LinearLayout layout_type;
@@ -1503,12 +1511,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         public MyViewHolder(View view) {
             super(view);
             L_checkin = view.findViewById(R.id.checkinlayout);
+            L_appoinment = view.findViewById(R.id.appoinmentLayouts);
             ic_jaldeeverifiedIcon = view.findViewById(R.id.ic_jaldeeverifiedIcon);
             tv_name = view.findViewById(R.id.name);
             tv_count = view.findViewById(R.id.count_doctors);
             tv_qmessage = view.findViewById(R.id.qmessage);
             tv_claimable = view.findViewById(R.id.claimable);
             tv_branch_name = view.findViewById(R.id.branch_name);
+            nextAppoinments = view.findViewById(R.id.nextAppoinments);
             tv_location = view.findViewById(R.id.location);
             tv_domain = view.findViewById(R.id.domain);
             profile = view.findViewById(R.id.profile);
@@ -1517,7 +1527,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             L_services = view.findViewById(R.id.service);
             tv_distance = view.findViewById(R.id.distance);
             btncheckin = view.findViewById(R.id.btncheckin);
-            btnappointment = view.findViewById(R.id.btnappointment);
+
+            btnappointments = view.findViewById(R.id.btnappointments);
             tv_Futuredate = view.findViewById(R.id.txt_diffdate);
             tv_WaitTime = view.findViewById(R.id.txtWaitTime);
             L_specialization = view.findViewById(R.id.Lspec);

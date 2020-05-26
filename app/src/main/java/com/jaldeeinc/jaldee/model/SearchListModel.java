@@ -36,6 +36,8 @@ public class SearchListModel implements Serializable {
 
     private String jdn;
     private int coupon_enabled;
+    String today_appt;
+    String future_appt;
     private String department_code;
     ArrayList gallery_thumb_nails;
     String parking_location1;
@@ -147,6 +149,22 @@ public class SearchListModel implements Serializable {
 
     public void setCoupon_enabled(int coupon_enabled) {
         this.coupon_enabled = coupon_enabled;
+    }
+
+    public String getToday_appt() {
+        return today_appt;
+    }
+
+    public void setToday_appt(String today_appt) {
+        this.today_appt = today_appt;
+    }
+
+    public String getFuture_appt() {
+        return future_appt;
+    }
+
+    public void setFuture_appt(String future_appt) {
+        this.future_appt = future_appt;
     }
 
     public String getSub_sector() {

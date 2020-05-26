@@ -95,8 +95,8 @@
     <string name="searchhint">Eg: Dentist, Restaurants, Car Wash...</string>
     <string name="activecheckin">Active Check-in</string>
     <string name="typecity">Type a City or neighborhood...</string>
-    <string name="selectservice">Choose the service you want</string>
-    <string name="selectDepartment">Choose the Department you want</string>
+    <string name="selectservice">Service</string>
+    <string name="selectDepartment">Department</string>
 
 
     <string name="permission_alert_dialog_title">Requesting SMS permission</string>
@@ -159,6 +159,7 @@
     <string name="jdnDetails">JDN Info</string>
     <string name="jdn">JDN</string>
     <string name="make_sure_you_never_miss_your_turn">Make sure you never miss your turn ! Let your provider know your arrival time</string>
+    <string name="_09_15_09_45_am">Earliest available \n 09:15 - 09:45 AM</string>
 
 
 </resources>

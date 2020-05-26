@@ -1250,6 +1250,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
+                                search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
+                                search.setFuture_appt(response.body().getHits().getHit().get(i).getFields().getFuture_appt());
 
 
                                 search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
@@ -1511,6 +1513,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
+                                search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
+                                search.setFuture_appt(response.body().getHits().getHit().get(i).getFields().getFuture_appt());
 
                                 if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
                                     search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
@@ -1749,6 +1753,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
                                     searchList.setSectorname(mSearchRespPass.get(i).getSector());
                                     searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
+                                    searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
+                                    searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
 
 
                                     searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
@@ -1959,6 +1965,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
                                     searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
                                     searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
+                                    searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
+                                    searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
                                     searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
 //                                String spec = "";
 //                                if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
