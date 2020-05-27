@@ -57,6 +57,7 @@ import com.jaldeeinc.jaldee.response.SearchDepartment;
 
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
+import com.jaldeeinc.jaldee.response.SearchUsers;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -630,7 +631,7 @@ public class Appointment extends AppCompatActivity {
 
                 departmentSelected = depResponse.getDepartments().get(position).getDepartmentName();
                 selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
-
+                ApiSearchUsers(selectedDepartment);
                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
                 ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
@@ -2434,6 +2435,40 @@ public class Appointment extends AppCompatActivity {
 
 
     }
+
+    private void ApiSearchUsers(int deptId) {
+
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(deptId,Integer.parseInt(accountID.split("-")[0]));
+        call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchUsers>> call, Response<ArrayList<SearchUsers>> response) {
+                try {
+                    if (response.code() == 200) {
+
+                        Log.i("getUser123",new Gson().toJson(response.body()));
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchUsers>> call, Throwable t) {
+
+            }
+
+
+
+        });
+
+        // Department Ends Here
+
+    }
+
 
 
     SearchTerminology mSearchTerminology;

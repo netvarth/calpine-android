@@ -2359,14 +2359,14 @@ public class CheckIn extends AppCompatActivity {
 
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<SearchUsers> call1 = apiService.getUsers(deptId,Integer.parseInt(accountID.split("-")[0]));
-        call1.enqueue(new Callback<SearchUsers>() {
+        Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(deptId,Integer.parseInt(accountID.split("-")[0]));
+        call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
             @Override
-            public void onResponse(Call<SearchUsers> call, Response<SearchUsers> response) {
+            public void onResponse(Call<ArrayList<SearchUsers>> call, Response<ArrayList<SearchUsers>> response) {
                 try {
                     if (response.code() == 200) {
 
-                        Config.logV("URL123---------------" + response.raw().request().url().toString().trim());
+                        Log.i("getUser123",new Gson().toJson(response.body()));
 
 
                     }
@@ -2376,7 +2376,7 @@ public class CheckIn extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<SearchUsers> call, Throwable t) {
+            public void onFailure(Call<ArrayList<SearchUsers>> call, Throwable t) {
 
             }
 

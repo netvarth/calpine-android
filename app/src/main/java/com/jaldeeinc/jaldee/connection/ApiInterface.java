@@ -364,5 +364,5 @@ public interface ApiInterface {
     Call<RefinedFilters> getSubDomainMoreFilters(@Path("subdomain") String subdomain,@Path("domain") String domain);
 
     @GET("consumer/waitlist/providerByDepartmentId/{departmentId}")
-    Call<SearchUsers> getUsers(@Path("departmentId")  int departmentId, @Query("account") int account);
+    Call<ArrayList<SearchUsers>> getUsers(@Path("departmentId")  int departmentId, @Query("account") int account);
 }
