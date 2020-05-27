@@ -194,6 +194,7 @@ public class Appointment extends AppCompatActivity {
     Bitmap bitmap;
     Boolean isShow;
     TextView txtWaitTime, earliestAvailable;
+    String selectDate;
 
 
     @Override
@@ -784,6 +785,10 @@ public class Appointment extends AppCompatActivity {
                 mtermsAndConditionDetail.setVisibility(mtermsAndConditionDetail.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             }
         });
+        Bundle extrass = getIntent().getExtras();
+        if (extrass != null) {
+            selectDate = extras.getString("selectedDate");
+        }
     }
 
 
