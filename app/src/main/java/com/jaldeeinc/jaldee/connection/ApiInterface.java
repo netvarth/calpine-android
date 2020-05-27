@@ -1,7 +1,6 @@
 package com.jaldeeinc.jaldee.connection;
 
 
-import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
@@ -34,6 +33,7 @@ import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
+import com.jaldeeinc.jaldee.response.SearchUsers;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
@@ -362,4 +362,7 @@ public interface ApiInterface {
 
     @GET("ynwConf/refinedFilters/{domain}/{subdomain}")
     Call<RefinedFilters> getSubDomainMoreFilters(@Path("subdomain") String subdomain,@Path("domain") String domain);
+
+    @GET("consumer/waitlist/providerByDepartmentId/{departmentId}")
+    Call<SearchUsers> getUsers(@Path("departmentId")  int departmentId, @Query("account") int account);
 }

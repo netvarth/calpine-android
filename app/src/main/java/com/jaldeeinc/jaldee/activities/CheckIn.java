@@ -54,6 +54,7 @@ import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
+import com.jaldeeinc.jaldee.response.SearchUsers;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -188,6 +189,7 @@ public class CheckIn extends AppCompatActivity {
     String path;
     Bitmap bitmap;
     Boolean isShow;
+    String deptId;
 
 
     @Override
@@ -563,8 +565,6 @@ public class CheckIn extends AppCompatActivity {
                 }
             }
         });
-
-
         ApiSearchViewSetting(uniqueID);
         ApiSearchViewTerminology(uniqueID);
         ApiGetProfileDetail();
@@ -670,7 +670,7 @@ public class CheckIn extends AppCompatActivity {
 
                 departmentSelected = depResponse.getDepartments().get(position).getDepartmentName();
                 selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
-
+                ApiSearchUsers(selectedDepartment);
                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
                 ArrayList<SearchService> serviceList = new ArrayList<>();
                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
@@ -2355,6 +2355,44 @@ public class CheckIn extends AppCompatActivity {
 
     }
 
+    private void ApiSearchUsers(int deptId) {
+
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<SearchUsers> call1 = apiService.getUsers(deptId,Integer.parseInt(accountID.split("-")[0]));
+        call1.enqueue(new Callback<SearchUsers>() {
+            @Override
+            public void onResponse(Call<SearchUsers> call, Response<SearchUsers> response) {
+                try {
+                    if (response.code() == 200) {
+
+                        Config.logV("URL123---------------" + response.raw().request().url().toString().trim());
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchUsers> call, Throwable t) {
+
+            }
+
+
+
+        });
+
+        // Department Ends Here
+
+    }
+
+
+
+
+
+
     SearchTerminology mSearchTerminology;
 
     private void ApiSearchViewTerminology(String muniqueID) {
@@ -2441,7 +2479,6 @@ public class CheckIn extends AppCompatActivity {
                         phoneNumber = phoneNumberValue.getText().toString();
                         Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
                         Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
-
                     } else {
                     }
                 } catch (Exception e) {
