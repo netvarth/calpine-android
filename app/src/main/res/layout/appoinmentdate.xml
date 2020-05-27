@@ -5,13 +5,85 @@
     android:padding="8dp"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Time Slots Available"
+        android:textSize="@dimen/dimen_18sp"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Date"
+        android:textColor="@color/black"
+        android:layout_marginLeft="@dimen/padding5"
+        android:layout_marginTop="@dimen/padding5"
+        android:textSize="@dimen/dimen_16sp"/>
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="-12dp"/>
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Time Slot"
+        android:layout_marginLeft="@dimen/padding5"
+        android:textColor="@color/black"
+        android:layout_marginTop="@dimen/padding5"
+        android:textSize="@dimen/dimen_16sp"/>
+
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_time_slot"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="4dp"
-        android:id="@+id/recycler_time_slot">
+        android:layout_height="160dp"
+        android:layout_marginTop="@dimen/padding5">
+
     </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/padding5"
+       >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dimen_16sp"
+            android:id="@+id/selected_date_time"
+            android:textColor="@color/black"
+            android:text="Selected Date and Time Slot is"
+            android:layout_marginLeft="@dimen/padding5"/>
+
+        <Button
+        android:id="@+id/btn_confirm"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="@dimen/padding5"
+        android:background="@color/blue"
+        android:fontFamily="@font/customfont"
+        android:gravity="center"
+        android:text="Confirm"
+        android:textAllCaps="true"
+        android:textColor="@color/app_background"
+        android:textSize="@dimen/txtsize_subtitle"
+        android:textStyle="bold" />
+    </LinearLayout>
 
 
 </LinearLayout>
