@@ -419,20 +419,20 @@ public class CheckinShareLocation extends AppCompatActivity implements
                         a = response.body();
                         Log.i("fghffghfgh", response.body().toString());
                         Log.i("fghffghfgh", new Gson().toJson(response.body()));
-                        shareSwitch.setText("Allow " + response.body().getProvider().getBusinessName() + " to track your ETA");
+                        shareSwitch.setText("Allow " + response.body().getProviderAccount().getBusinessName() + " to track your ETA");
 
-                        trackingText.setText(response.body().getProvider().getBusinessName() + " won't know where you are and you can miss your turn. So Jaldee recommends to turn on sharing");
-                        shareText.setText("Jaldee will not show your exact location, it will only share your arrival time with "+response.body().getProvider().getBusinessName());
+                        trackingText.setText(response.body().getProviderAccount().getBusinessName() + " won't know where you are and you can miss your turn. So Jaldee recommends to turn on sharing");
+                        shareText.setText("Jaldee will not show your exact location, it will only share your arrival time with "+response.body().getProviderAccount().getBusinessName());
 
                         if (calcMode.equalsIgnoreCase("NoCalc")) {
-                            checkinMessage.setText("Your token for " + response.body().getService().getName() + "( " + queueStartTime + "-"+queueEndTime+ " )" +" with "+ response.body().getProvider().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your token for " + response.body().getService().getName() + "( " + queueStartTime + "-"+queueEndTime+ " )" +" with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
                         } else if (terminology.equalsIgnoreCase("Check-in")) {
-                            checkinMessage.setText("Your check-in for " + response.body().getService().getName() +"( " + queueStartTime + "-"+queueEndTime+ " )" + " with "+ response.body().getProvider().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your check-in for " + response.body().getService().getName() +"( " + queueStartTime + "-"+queueEndTime+ " )" + " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
                         } else {
-                            checkinMessage.setText("Your order for " + response.body().getService().getName() +"( " + queueStartTime + "-"+queueEndTime+ " )" + " with "+ response.body().getProvider().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your order for " + response.body().getService().getName() +"( " + queueStartTime + "-"+queueEndTime+ " )" + " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
                         }
 
-                        checkinMessage.setText("Your check-in for " + response.body().getService().getName() + " with "+ "( " + queueStartTime + "-"+queueEndTime+ " )" + response.body().getProvider().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
+                        checkinMessage.setText("Your check-in for " + response.body().getService().getName() + " with "+ "( " + queueStartTime + "-"+queueEndTime+ " )" + response.body().getProviderAccount().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
 
                         if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                             Laboutus.setVisibility(View.GONE);
@@ -505,7 +505,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
                                     modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
                                 }
                             } else {
-                                modeLabel.setText("You are close to " + a.getProvider().getBusinessName());
+                                modeLabel.setText("You are close to " + a.getProviderAccount().getBusinessName());
                             }
                         }
                     }
@@ -565,7 +565,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
                                     modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
                                 }
                             } else {
-                                modeLabel.setText("You are close to " + a.getProvider().getBusinessName());
+                                modeLabel.setText("You are close to " + a.getProviderAccount().getBusinessName());
                             }
                         }
                     }
@@ -620,7 +620,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
 
                                     }
                                 } else {
-                                    modeLabel.setText("You are close to " + a.getProvider().getBusinessName());
+                                    modeLabel.setText("You are close to " + a.getProviderAccount().getBusinessName());
                                 }
                             }
                         }

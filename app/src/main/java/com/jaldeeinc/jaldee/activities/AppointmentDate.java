@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
      CalendarView cv;
      Button btn_confirm;
      String selectedDate;
+     TextView tv_title;
 
 
 
@@ -45,10 +47,19 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.appoinmentdate);
         recycle_timeslots = (RecyclerView) findViewById(R.id.recycler_time_slot);
-        tv_date_slot = (TextView) findViewById(R.id.selected_date_time);
+//        tv_date_slot = (TextView) findViewById(R.id.selected_date_time);
         cv = (CalendarView) findViewById(R.id.calendarView);
         btn_confirm = (Button) findViewById(R.id.btn_confirm);
-
+        tv_title = findViewById(R.id.toolbartitle);
+        tv_title.setText("Time Slots");
+        ImageView iBackPress = findViewById(R.id.backpress);
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // what do you want here
+                finish();
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

@@ -108,7 +108,7 @@ public class Appointment extends AppCompatActivity {
     static TextView tv_personahead;
     static Context mContext;
     static Activity mActivity;
-    Spinner mSpinnerService, mSpinnerDepartment;
+    Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
     static int serviceId;
     ArrayList<SearchAppoinment> LServicesList = new ArrayList<>();
     ArrayList<SearchAppoinment> gServiceList = new ArrayList<>();
@@ -117,6 +117,8 @@ public class Appointment extends AppCompatActivity {
     TextView tv_addmember, tv_editphone;
     String accountID;
     static int mSpinnertext;
+    static String mServiceType;
+    static String mAaptTime ="17:10-17:20";
     String livetrack;
     static int deptSpinnertext;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
@@ -143,7 +145,7 @@ public class Appointment extends AppCompatActivity {
     //    static TextView tv_queuename;
     static LinearLayout queuelayout;
     String toastMessage;
-    TextView txt_chooseservice, txt_choosedepartment;
+    TextView txt_chooseservice, txt_choosedepartment, txt_choosedoctor;
     static int i = 0;
     static ImageView ic_cal_minus;
     ImageView ic_cal_add;
@@ -159,6 +161,7 @@ public class Appointment extends AppCompatActivity {
     TextView mtxtDele;
     TextView mtermsAndConditionDetail;
     int selectedService;
+    String selectedServiceType;
     int selectedDepartment;
     static String selectedDateFormat;
     String serviceSelected;
@@ -196,6 +199,8 @@ public class Appointment extends AppCompatActivity {
     Boolean isShow;
     TextView txtWaitTime, earliestAvailable;
     String selectDate;
+    ArrayList<SearchUsers> doctResponse = new ArrayList<>();
+    ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
 
 
     @Override
@@ -251,6 +256,9 @@ public class Appointment extends AppCompatActivity {
         mSpinnerDepartment = findViewById(R.id.spinnerdepartment);
         txtWaitTime = findViewById(R.id.txtWaitTime);
         earliestAvailable = findViewById(R.id.earliestAvailable);
+        txt_choosedoctor = findViewById(R.id.txt_choosedoctor);
+        mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
+
 
         tv_addnote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -488,10 +496,10 @@ public class Appointment extends AppCompatActivity {
                         if (Integer.parseInt(editpartysize.getText().toString()) > maxPartysize) {
                             Toast.makeText(mContext, "Sorry, Max party size allowed is " + maxPartysize, Toast.LENGTH_LONG).show();
                         } else {
-                            ApiCheckin(txt_message);
+                            ApiAppointment(txt_message);
                         }
                     } else {
-                        ApiCheckin(txt_message);
+                        ApiAppointment(txt_message);
                     }
                 }
             }
@@ -570,6 +578,7 @@ public class Appointment extends AppCompatActivity {
 
                 serviceSelected = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                selectedServiceType =((SearchAppoinment)  mSpinnerService.getSelectedItem()).getServiceType();
 
                 // String firstWord = "Check-in for ";
                 String firstWord = Word_Change;
@@ -2215,6 +2224,7 @@ public class Appointment extends AppCompatActivity {
                                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                             mSpinnerService.setAdapter(adapter);
                                             mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                                            mServiceType = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getServiceType();
                                             livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
                                         } else {
 
@@ -2237,6 +2247,7 @@ public class Appointment extends AppCompatActivity {
                                                 livetrack = LServicesList.get(0).getLivetrack();
                                                 serviceSelected = LServicesList.get(0).getName();
                                                 selectedService = LServicesList.get(0).getId();
+                                                selectedServiceType = LServicesList.get(0).getServiceType();
 
 
                                                 Date currentTime = new Date();
@@ -2352,6 +2363,7 @@ public class Appointment extends AppCompatActivity {
 
 
                     if (response.code() == 200) {
+                        schedResponse = response.body();
 
                         Log.i("responseeee", new Gson().toJson(response.body()));
                         Log.i("responseeee", String.valueOf(response.body().get(0).getId()));
@@ -2438,7 +2450,6 @@ public class Appointment extends AppCompatActivity {
 
     private void ApiSearchUsers(int deptId) {
 
-
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(deptId,Integer.parseInt(accountID.split("-")[0]));
         call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
@@ -2446,6 +2457,7 @@ public class Appointment extends AppCompatActivity {
             public void onResponse(Call<ArrayList<SearchUsers>> call, Response<ArrayList<SearchUsers>> response) {
                 try {
                     if (response.code() == 200) {
+                        doctResponse = response.body();
 
                         Log.i("getUser123",new Gson().toJson(response.body()));
 
@@ -2645,7 +2657,7 @@ public class Appointment extends AppCompatActivity {
         });
     }
 
-    private void ApiCheckin(String txt_addnote) {
+    private void ApiAppointment(String txt_addnote) {
 
         phoneNumber = phoneNumberValue.getText().toString();
         uuid = UUID.randomUUID().toString();
@@ -2656,7 +2668,7 @@ public class Appointment extends AppCompatActivity {
 
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
+      //  mDialog.show();
 
         String uniqueID = UUID.randomUUID().toString();
         Date c = Calendar.getInstance().getTime();
@@ -2674,14 +2686,23 @@ public class Appointment extends AppCompatActivity {
         JSONObject qjsonObj = new JSONObject();
         JSONObject queueobj = new JSONObject();
         JSONObject waitobj = new JSONObject();
-        JSONObject service = new JSONObject();
+        JSONObject waitobj1 = new JSONObject();
+        JSONObject waitobj2 = new JSONObject();
+        JSONObject waitobj3= new JSONObject();
+        JSONObject waitobj4= new JSONObject();
+        JSONObject sejsonobj = new JSONObject();
         JSONArray waitlistArray = new JSONArray();
+        JSONObject sjsonobj = new JSONObject();
+
+
         try {
 
-            qjsonObj.put("id", queueId);
-            queueobj.put("date", formattedDate);
+         //   qjsonObj.put("id", queueId);
+            queueobj.put("appmtDate", formattedDate);
             queueobj.put("consumerNote", txt_addnote);
-            queueobj.put("waitlistPhonenumber", phoneNumber);
+            queueobj.put("phonenumber", phoneNumber);
+            sjsonobj.put("id",schedResponse.get(i).getId());
+            sejsonobj.put("id",serviceId);
 
 
             JSONArray couponList = new JSONArray();
@@ -2699,7 +2720,8 @@ public class Appointment extends AppCompatActivity {
 
             Log.i("couponList", couponList.toString());
 
-            service.put("id", serviceId);
+          //  service.put("id", serviceId);
+           // service.putOpt("serviceType",mServiceType);
             if (enableparty) {
                 queueobj.put("partySize", editpartysize.getText().toString());
             }
@@ -2710,19 +2732,45 @@ public class Appointment extends AppCompatActivity {
 
             if (MultiplefamilyList.size() > 0) {
                 for (int i = 0; i < MultiplefamilyList.size(); i++) {
-                    JSONObject waitobj1 = new JSONObject();
+
                     waitobj1.put("id", MultiplefamilyList.get(i).getId());
+
+
+                    waitobj2.put("firstName", MultiplefamilyList.get(i).getFirstName());
+
+
+                    waitobj3.put("lastName", MultiplefamilyList.get(i).getLastName());
+
+                    waitobj4.put("apptTime",mAaptTime);
+
+
                     waitlistArray.put(waitobj1);
+                    waitlistArray.put(waitobj2);
+                    waitlistArray.put(waitobj3);
+                    waitlistArray.put(waitobj4);
                 }
             } else {
                 waitobj.put("id", familyMEmID);
+                waitobj1.put("firstName",mFirstName);
+                waitobj2.put("lastName",mLastName);
+                waitobj3.put("apptTime",mAaptTime);
                 waitlistArray.put(waitobj);
+                waitlistArray.put(waitobj1);
+                waitlistArray.put(waitobj2);
+                waitlistArray.put(waitobj3);
+
+
             }
 
 
-            queueobj.putOpt("service", selectedService);
-            queueobj.putOpt("queue", qjsonObj);
-            queueobj.putOpt("waitlistingFor", waitlistArray);
+            queueobj.putOpt("service", sejsonobj);
+           // queueobj.putOpt("queue", qjsonObj);
+            queueobj.putOpt("appmtFor", waitlistArray);
+            queueobj.putOpt("schedule",sjsonobj);
+           // queueobj.putOpt("service",selectedServiceType);
+
+
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -2730,7 +2778,7 @@ public class Appointment extends AppCompatActivity {
 
         Log.i("QueueObj Checkin", queueobj.toString());
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
-        Call<ResponseBody> call = apiService.Checkin(modifyAccountID, body);
+        Call<ResponseBody> call = apiService.Appointment(modifyAccountID, body);
         Config.logV("JSON--------------" + new Gson().toJson(queueobj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override

@@ -104,10 +104,11 @@ public class CheckIn extends AppCompatActivity {
     static TextView tv_personahead;
     static Context mContext;
     static Activity mActivity;
-    Spinner mSpinnerService, mSpinnerDepartment;
+    Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
     static int serviceId;
     ArrayList<SearchService> LServicesList = new ArrayList<>();
     ArrayList<SearchService> gServiceList = new ArrayList<>();
+    ArrayList<SearchUsers>   doctResponse = new ArrayList<>();
     String uniqueID;
     String uuid;
     TextView tv_addmember, tv_editphone;
@@ -138,7 +139,7 @@ public class CheckIn extends AppCompatActivity {
 //    static TextView tv_queuename;
     static LinearLayout queuelayout;
     String toastMessage;
-    TextView txt_chooseservice, txt_choosedepartment;
+    TextView txt_chooseservice, txt_choosedepartment,txt_choosedoctor;
     static int i = 0;
     static ImageView ic_cal_minus;
     ImageView ic_cal_add;
@@ -243,6 +244,9 @@ public class CheckIn extends AppCompatActivity {
         tv_addnote = findViewById(R.id.txtaddnote);
         mSpinnerService = findViewById(R.id.spinnerservice);
         mSpinnerDepartment = findViewById(R.id.spinnerdepartment);
+        txt_choosedoctor = findViewById(R.id.txt_choosedoctor);
+        mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
+
 
         tv_addnote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2365,7 +2369,7 @@ public class CheckIn extends AppCompatActivity {
             public void onResponse(Call<ArrayList<SearchUsers>> call, Response<ArrayList<SearchUsers>> response) {
                 try {
                     if (response.code() == 200) {
-
+                        doctResponse = response.body();
                         Log.i("getUser123",new Gson().toJson(response.body()));
 
 

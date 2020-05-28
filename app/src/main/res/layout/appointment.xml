@@ -236,6 +236,29 @@
                                 android:visibility="visible">
 
                             </Spinner>
+                            <TextView
+                                android:textStyle="bold"
+                                android:id="@+id/txt_choosedoctor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dimen_8dp"
+                                android:gravity="center"
+                                android:text="Doctor"
+                                android:textColor="#AAA"
+                                android:textSize="@dimen/txtsize_12"
+                                android:visibility="gone" />
+                            <Spinner
+                                android:id="@+id/spinnerdoctor"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_marginLeft="@dimen/default_padding"
+                                android:layout_marginTop="@dimen/dimen_8dp"
+                                android:layout_marginRight="@dimen/default_padding"
+                                android:layout_marginBottom="@dimen/padding5"
+                                android:background="@drawable/gridview_bg"
+                                android:visibility="gone">
+
+                            </Spinner>
 
                             <TextView
                                 android:textStyle="bold"

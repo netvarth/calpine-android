@@ -278,6 +278,10 @@ public interface ApiInterface {
     Call<ResponseBody> Checkin(@Query("account") String account, @Body RequestBody jsonObj);
 
 
+    @POST("consumer/appointment")
+    Call<ResponseBody> Appointment(@Query("account") String account, @Body RequestBody jsonObj);
+
+
     @GET("consumer/bill/{ynwuuid}")
     Call<BillModel> getBill(@Path("ynwuuid") String uuid);
 

@@ -445,11 +445,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             for (ActiveCheckIn activeCheckIn : activeCheckInModel) {
-                Config.logV("InsertCheckinDetails"+activeCheckIn.getProvider().getId());
+                Config.logV("InsertCheckinDetails"+activeCheckIn.getProviderAccount().getId());
                 ContentValues values = new ContentValues();
-                values.put("id", activeCheckIn.getProvider().getId());
-                values.put("businessName", activeCheckIn.getProvider().getBusinessName());
-                values.put("uniqueId", activeCheckIn.getProvider().getUniqueId());
+                values.put("id", activeCheckIn.getProviderAccount().getId());
+                values.put("businessName", activeCheckIn.getProviderAccount().getBusinessName());
+                values.put("uniqueId", activeCheckIn.getProviderAccount().getUniqueId());
                 values.put("date", activeCheckIn.getDate());
                 values.put("waitlistStatus", activeCheckIn.getWaitlistStatus());
                 values.put("servicename", activeCheckIn.getService().getName());
@@ -573,9 +573,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         try {
             for (ActiveCheckIn activeCheckIn : activeCheckInModel) {
                 ContentValues values = new ContentValues();
-                values.put("id", activeCheckIn.getProvider().getId());
-                values.put("businessName", activeCheckIn.getProvider().getBusinessName());
-                values.put("uniqueId", activeCheckIn.getProvider().getUniqueId());
+                values.put("id", activeCheckIn.getProviderAccount().getId());
+                values.put("businessName", activeCheckIn.getProviderAccount().getBusinessName());
+                values.put("uniqueId", activeCheckIn.getProviderAccount().getUniqueId());
                 values.put("date", activeCheckIn.getDate());
                 values.put("waitlistStatus", activeCheckIn.getWaitlistStatus());
                 values.put("servicename", activeCheckIn.getService().getName());

@@ -110,6 +110,29 @@
                                 android:visibility="gone">
 
                             </Spinner>
+                            <TextView
+                                android:id="@+id/txt_choosedoctor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/default_padding"
+                                android:gravity="center"
+                                android:text="@string/selectDepartment"
+                                android:textColor="@color/sec_title_grey"
+                                android:textSize="@dimen/txtsize_hint"
+                                android:visibility="gone" />
+
+                            <Spinner
+                                android:id="@+id/spinnerdoctor"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_marginLeft="@dimen/default_padding"
+                                android:layout_marginTop="@dimen/default_padding"
+                                android:layout_marginRight="@dimen/default_padding"
+                                android:layout_marginBottom="@dimen/padding5"
+                                android:background="@drawable/gridview_bg"
+                                android:visibility="gone">
+
+                            </Spinner>
 
                             <TextView
                                 android:id="@+id/txt_chooseservice"
