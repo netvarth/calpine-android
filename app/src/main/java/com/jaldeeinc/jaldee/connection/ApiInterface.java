@@ -196,7 +196,7 @@ public interface ApiInterface {
     Call<SearchTerminology> getSearchViewTerminology(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
 
-    @GET("consumer/waitlist/service/{id}")
+    @GET("consumer/waitlist/services/{id}")
     Call<ArrayList<SearchService>> getSearchService(@Path("id") int id);
 
     @GET("consumer/appointment/service/{id}")

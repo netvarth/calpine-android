@@ -124,6 +124,9 @@
             android:name=".activities.CheckinFamilyMember"
             android:screenOrientation="unspecified" />
         <activity
+            android:name=".activities.CheckinFamilyMemberAppointment"
+            android:screenOrientation="unspecified" />
+        <activity
             android:name=".activities.MessageActivity"
             android:screenOrientation="unspecified" />
         <activity

@@ -136,9 +136,6 @@ public class ActiveCheckIn {
         this.googleMapUrl = googleMapUrl;
     }
 
-    public void setProvider(ActiveCheckIn provider) {
-        this.provider = provider;
-    }
 
     public void setWaitlistingFor(ArrayList<ActiveCheckIn> waitlistingFor) {
         this.waitlistingFor = waitlistingFor;
@@ -194,10 +191,6 @@ public class ActiveCheckIn {
     String firstName;
     String lastName;
 
-    public ActiveCheckIn getProvider() {
-        return provider;
-    }
-
     public String getStars() {
         return stars;
     }
@@ -215,8 +208,16 @@ public class ActiveCheckIn {
     ActiveCheckIn rating;
 
 
-    @SerializedName("provider")
-    private ActiveCheckIn provider;
+    public ActiveCheckIn getProviderAccount() {
+        return providerAccount;
+    }
+
+    public void setProviderAccount(ActiveCheckIn providerAccount) {
+        this.providerAccount = providerAccount;
+    }
+
+    @SerializedName("providerAccount")
+    private ActiveCheckIn providerAccount;
 
     public ArrayList<ActiveCheckIn> getWaitlistingFor() {
         return waitlistingFor;
