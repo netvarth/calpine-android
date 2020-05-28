@@ -549,7 +549,7 @@ public class Appointment extends AppCompatActivity {
         tv_addmember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iFamily = new Intent(v.getContext(), CheckinFamilyMember.class);
+                Intent iFamily = new Intent(v.getContext(), CheckinFamilyMemberAppointment.class);
                 iFamily.putExtra("firstname", mFirstName);
                 iFamily.putExtra("lastname", mLastName);
                 iFamily.putExtra("consumerID", consumerID);
