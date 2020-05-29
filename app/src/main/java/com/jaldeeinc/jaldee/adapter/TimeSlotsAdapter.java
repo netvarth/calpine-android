@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. Ti
                 notifyDataSetChanged();
                 String selectTime = timeSlots.get(selectedPosition).toString();
                 Toast.makeText(context, selectTime, Toast.LENGTH_SHORT).show();
+                Appointment.timeslotdate(selectTime);
             }
         });
 

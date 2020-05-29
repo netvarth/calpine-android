@@ -119,7 +119,7 @@ public class Appointment extends AppCompatActivity {
     String accountID;
     static int mSpinnertext;
     static String mServiceType;
-    static String mAaptTime ="17:10-17:20";
+    static String mAaptTime ="09:10-09:20";
     boolean livetrack;
     static int deptSpinnertext;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
@@ -177,6 +177,8 @@ public class Appointment extends AppCompatActivity {
     EditText editpartysize;
     int maxPartysize;
     static RecyclerView recycle_family;
+    static String dateTime;
+
     static LinearLayout LSinglemember, Lbottomlayout;
     RecyclerView list;
     private CouponlistAdapter mAdapter;
@@ -198,7 +200,8 @@ public class Appointment extends AppCompatActivity {
     String path;
     Bitmap bitmap;
     Boolean isShow;
-    TextView txtWaitTime, earliestAvailable;
+    static TextView  earliestAvailable;
+    static TextView txtWaitTime;
     String selectDate;
     ArrayList<SearchUsers> doctResponse = new ArrayList<>();
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
@@ -510,7 +513,6 @@ public class Appointment extends AppCompatActivity {
         ApiSearchViewSetting(uniqueID);
         ApiSearchViewTerminology(uniqueID);
         ApiGetProfileDetail();
-        ApiGetProfileDetail();
         mFirstName = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         mLastName = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
         consumerID = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
@@ -686,7 +688,7 @@ public class Appointment extends AppCompatActivity {
         });
 
 
-        LcheckinDatepicker.setVisibility(View.VISIBLE);
+        LcheckinDatepicker.setVisibility(View.GONE);
 
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy");
@@ -1484,8 +1486,8 @@ public class Appointment extends AppCompatActivity {
                             }
 
                             Config.logV("mQueueTimeSlotList-------------------------" + mQueueTimeSlotList.size());
-                            tv_queue.setVisibility(View.VISIBLE);
-                            queuelayout.setVisibility(View.VISIBLE);
+                            tv_queue.setVisibility(View.GONE);
+                            queuelayout.setVisibility(View.GONE);
 
 
 //                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
@@ -3272,6 +3274,16 @@ public class Appointment extends AppCompatActivity {
         recycle_family.setAdapter(mFamilyAdpater);
         mFamilyAdpater.notifyDataSetChanged();
         LSinglemember.setVisibility(View.GONE);
+    }
+
+
+    public static void timeslotdate(String timeDate) {
+        dateTime = timeDate;
+        txtWaitTime.setText(dateTime);
+    }
+
+    public static void timeslotdates(String timeDates) {
+        earliestAvailable.setText(timeDates);
     }
 
     SearchViewDetail mBusinessDataList;

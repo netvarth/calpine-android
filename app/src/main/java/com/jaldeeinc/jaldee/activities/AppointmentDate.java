@@ -83,6 +83,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                 month= month + 1;
                 Toast.makeText(getApplicationContext(),date+ "/"+ month  +"/"+year,Toast.LENGTH_LONG).show();
                 selectedDate = date+ "/"+ month  +"/"+year;
+                Appointment.timeslotdates(selectedDate);
             }
         });
 
