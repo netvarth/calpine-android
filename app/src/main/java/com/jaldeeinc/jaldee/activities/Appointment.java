@@ -121,6 +121,8 @@ public class Appointment extends AppCompatActivity {
     static String mServiceType;
     static String mAaptTime ="09:10-09:20";
     boolean livetrack;
+    String serviceType;
+    ArrayList virtualCallingModes;
     static int deptSpinnertext;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
@@ -576,8 +578,14 @@ public class Appointment extends AppCompatActivity {
                                        int position, long id) {
                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
                 livetrack = (((SearchService) mSpinnerService.getSelectedItem()).isLivetrack());
+//                serviceType = (((SearchService) mSpinnerService.getSelectedItem()).getServiceType());
+//                virtualCallingModes = (((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes());
                 Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
-                Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
+//                if(serviceType.equals("virtualService")){
+//
+//                    Log.i("virtualCallingModes",virtualCallingModes.toString());
+//
+//                }
 
                 serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
@@ -672,6 +680,8 @@ public class Appointment extends AppCompatActivity {
                     mSpinnerService.setAdapter(adapter);
                     mSpinnertext = ((SearchService) LServicesList.get(0)).getId();
                     livetrack = LServicesList.get(0).isLivetrack();
+//                    serviceType = LServicesList.get(0).getServiceType();
+//                    virtualCallingModes = LServicesList.get(0).getVirtualCallingModes();
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
                     btn_checkin.setVisibility(View.VISIBLE);
@@ -2173,9 +2183,15 @@ public class Appointment extends AppCompatActivity {
                             mService.setPrePayment(response.body().get(i).isPrePayment());
                             mService.setTotalAmount(response.body().get(i).getTotalAmount());
                             mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
+//                            mService.setServiceType(response.body().get(i).getServiceType());
+//                            mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
+//                            mService.setCallingMode(response.body().get(i).getVirtualCallingModes().get(0).getCallingMode());
+//                            mService.setValue(response.body().get(i).getVirtualCallingModes().get(0).getValue());
+//                            mService.setInstructions(response.body().get(i).getVirtualCallingModes().get(0).getInstructions());
                             LServicesList.add(mService);
                         }
                         gServiceList.addAll(LServicesList);
+//                        Log.i("hkjhj",gServiceList.toString());
                         // Department Section Starts
 
                         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -2223,6 +2239,10 @@ public class Appointment extends AppCompatActivity {
                                             mSpinnerService.setAdapter(adapter);
                                             mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
                                             livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
+//                                            serviceType = ((SearchService) mSpinnerService.getSelectedItem()).getServiceType();
+//                                            virtualCallingModes = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes();
+//                                            selectedService = LServicesList.get(0).getId();
+//                                            Log.i("poiioppoi",LServicesList.get(0).getServiceType());
                                         } else {
 
                                             mSpinnerService.setVisibility(View.GONE);
@@ -2242,8 +2262,11 @@ public class Appointment extends AppCompatActivity {
                                                 tv_checkin_service.setText(spannable);
                                                 mSpinnertext = LServicesList.get(0).getId();
                                                 livetrack = LServicesList.get(0).isLivetrack();
+//                                                serviceType = LServicesList.get(0).getServiceType();
+//                                                virtualCallingModes = LServicesList.get(0).getVirtualCallingModes();
                                                 serviceSelected = LServicesList.get(0).getName();
                                                 selectedService = LServicesList.get(0).getId();
+//                                                Log.i("poiioppoi",LServicesList.get(0).getServiceType());
 
 
                                                 Date currentTime = new Date();
@@ -3093,6 +3116,13 @@ public class Appointment extends AppCompatActivity {
                             checkinShareLocations.putExtra("queueEndTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
                             startActivity(checkinShareLocations);
                         }
+
+//                        if(serviceType.equals("virtualService")){
+//
+//                            Log.i("virtualCallingModes",virtualCallingModes.toString());
+//
+//                        }
+
 
 
                     } else {

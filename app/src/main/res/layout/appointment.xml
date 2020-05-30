@@ -222,7 +222,7 @@
                                 android:text="@string/selectDepartment"
                                 android:textColor="#AAA"
                                 android:textSize="@dimen/txtsize_12"
-                                android:visibility="visible" />
+                                android:visibility="gone" />
 
                             <Spinner
                                 android:id="@+id/spinnerdepartment"
@@ -233,7 +233,7 @@
                                 android:layout_marginRight="@dimen/default_padding"
                                 android:layout_marginBottom="@dimen/padding5"
                                 android:background="@drawable/gridview_bg"
-                                android:visibility="visible">
+                                android:visibility="gone">
 
                             </Spinner>
                             <TextView
@@ -270,7 +270,7 @@
                                 android:text="@string/selectservice"
                                 android:textColor="#AAA"
                                 android:textSize="@dimen/txtsize_12"
-                                android:visibility="visible" />
+                                android:visibility="gone" />
 
                             <Spinner
                                 android:id="@+id/spinnerservice"
@@ -281,7 +281,7 @@
                                 android:layout_marginRight="@dimen/default_padding"
                                 android:layout_marginBottom="@dimen/default_padding"
                                 android:background="@drawable/gridview_bg"
-                                android:visibility="visible">
+                                android:visibility="gone">
 
                             </Spinner>
 
