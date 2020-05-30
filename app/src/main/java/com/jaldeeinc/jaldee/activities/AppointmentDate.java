@@ -61,6 +61,14 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
             }
         });
 
+        btn_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(AppointmentDate.this, "Selected Date and Time Slot Successfully", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             timeslot = extras.getStringArrayList("timeslots");
@@ -91,11 +99,11 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        Log.d("CDA", "onBackPressed Called");
-        Intent iAppointment = new Intent(this,Appointment.class);
-        iAppointment.putExtra("selectedDate",selectedDate);
-        startActivity(iAppointment);
-    }
+//    @Override
+//    public void onBackPressed() {
+//        Log.d("CDA", "onBackPressed Called");
+//        Intent iAppointment = new Intent(this,Appointment.class);
+//        iAppointment.putExtra("selectedDate",selectedDate);
+//        startActivity(iAppointment);
+//    }
 }

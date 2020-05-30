@@ -71,6 +71,8 @@ public class CheckinFamilyMemberAppointment extends AppCompatActivity {
             }
         });
 
+        btn_changemem.setText("Back to Appointment");
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
 
