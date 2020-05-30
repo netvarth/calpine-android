@@ -18,45 +18,20 @@ public class SearchService implements Serializable {
     String totalAmount;
     String bType;
     String status;
-//    String serviceType;
-//    String callingMode;
-//    String value;
-//    String instructions;
     ArrayList<SearchService> servicegallery;
-//    ArrayList<SearchService> virtualCallingModes;
     String name;
     int locid;
     String description;
     ArrayList<SearchService> mAllService;
     String url;
     String thumbUrl;
-//
-//    public String getCallingMode() {
-//        return callingMode;
-//    }
-//
-//    public void setCallingMode(String callingMode) {
-//        this.callingMode = callingMode;
-//    }
-//
-//    public String getValue() {
-//        return value;
-//    }
-//
-//    public void setValue(String value) {
-//        this.value = value;
-//    }
-//
-//    public String getInstructions() {
-//        return instructions;
-//    }
-//
-//    public void setInstructions(String instructions) {
-//        this.instructions = instructions;
-//    }
-//
-
     int department;
+    String serviceType;
+    String virtualServiceType;
+    ArrayList<SearchService> virtualCallingModes;
+
+
+
 
     public boolean isLivetrack() {
         return livetrack;
@@ -199,14 +174,6 @@ public class SearchService implements Serializable {
         this.servicegallery = servicegallery;
     }
 
-//    public ArrayList<SearchService> getVirtualCallingModes() {
-//        return virtualCallingModes;
-//    }
-//
-//    public void setVirtualCallingModes(ArrayList<SearchService> virtualCallingModes) {
-//        this.virtualCallingModes = virtualCallingModes;
-//    }
-
     public ArrayList<SearchService> getmAllService() {
         return mAllService;
     }
@@ -225,14 +192,29 @@ public class SearchService implements Serializable {
 
     boolean taxable;
 
-//    public String getServiceType() {
-//        return serviceType;
-//    }
-//
-//    public void setServiceType(String serviceType) {
-//        this.serviceType = serviceType;
-//    }
+    public String getServiceType() {
+        return serviceType;
+    }
 
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+
+    public String getVirtualServiceType() {
+        return virtualServiceType;
+    }
+
+    public void setVirtualServiceType(String virtualServiceType) {
+        this.virtualServiceType = virtualServiceType;
+    }
+    public ArrayList<SearchService> getVirtualCallingModes() {
+        return virtualCallingModes;
+    }
+
+    public void setVirtualCallingModes(ArrayList<SearchService> virtualCallingModes) {
+        this.virtualCallingModes = virtualCallingModes;
+    }
 
 
 }
