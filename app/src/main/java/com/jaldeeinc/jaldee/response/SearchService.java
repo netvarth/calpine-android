@@ -29,6 +29,7 @@ public class SearchService implements Serializable {
     String serviceType;
     String virtualServiceType;
     ArrayList<SearchService> virtualCallingModes;
+    String instructions;
 
 
 
@@ -216,5 +217,11 @@ public class SearchService implements Serializable {
         this.virtualCallingModes = virtualCallingModes;
     }
 
+    public String getInstructions() {
+        return instructions;
+    }
 
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
 }
