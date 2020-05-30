@@ -287,7 +287,7 @@
                             <TextView
                                 android:textStyle="bold"
                                 android:id="@+id/txt_enterinstructions"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dimen_7dp"
                                 android:gravity="center"
@@ -301,6 +301,7 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/virtual_id"
                                 android:gravity="center"
+                                android:textSize="@dimen/txtsize_12"
                                 android:visibility="gone"/>
 
                             <android.support.v7.widget.RecyclerView

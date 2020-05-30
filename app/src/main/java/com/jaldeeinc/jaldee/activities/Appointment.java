@@ -587,9 +587,11 @@ public class Appointment extends AppCompatActivity {
 
                 serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+
                 if(selectedServiceType.equalsIgnoreCase("virtualService")){
+                    serviceInstructions =((SearchService)  mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
                     tv_enterInstructions.setVisibility(View.VISIBLE);
-                    tv_enterInstructions.setText("Enter your Zoom Id");
+                    tv_enterInstructions.setText(serviceInstructions);
                     et_vitualId.setVisibility(View.VISIBLE);
                 }
                 else{
@@ -2191,6 +2193,7 @@ public class Appointment extends AppCompatActivity {
                             mService.setServiceType(response.body().get(i).getServiceType());
                             mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
                             mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
+                            mService.setInstructions(response.body().get(i).getInstructions());
                             LServicesList.add(mService);
                         }
                         gServiceList.addAll(LServicesList);
