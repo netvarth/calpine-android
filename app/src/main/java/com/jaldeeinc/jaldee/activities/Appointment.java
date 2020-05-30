@@ -119,7 +119,7 @@ public class Appointment extends AppCompatActivity {
     String accountID;
     static int mSpinnertext;
     static String mServiceType;
-    static String mAaptTime ="09:10-09:20";
+    static String mAaptTime;
     boolean livetrack;
     static int deptSpinnertext;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
@@ -617,11 +617,11 @@ public class Appointment extends AppCompatActivity {
                 }
 
 
-//                isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
+                isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
                 Config.logV("Payment------------" + isPrepayment);
                 if (isPrepayment) {
 
-//                    sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
+                   sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
 
                     Config.logV("Payment----sAmountPay--------" + sAmountPay);
                     APIPayment(modifyAccountID);
@@ -1247,7 +1247,7 @@ public class Appointment extends AppCompatActivity {
                                     tv_title.setText("Check-in");
                                     Word_Change = "Check-in for ";
                                     btn_checkin.setText("CONFIRM");
-                                    toastMessage = "CAppointment saved successfully ";
+                                    toastMessage = "Appointment saved successfully ";
                                 }
 
 
@@ -2947,6 +2947,9 @@ public class Appointment extends AppCompatActivity {
                     waitlistArray.put(waitobj4);
                 }
             } else {
+                if(familyMEmID == consumerID){
+                    familyMEmID = 0;
+                }
                 waitobj.put("id", familyMEmID);
                 waitobj.put("firstName",mFirstName);
                 waitobj.put("lastName",mLastName);
@@ -3279,11 +3282,22 @@ public class Appointment extends AppCompatActivity {
 
     public static void timeslotdate(String timeDate) {
         dateTime = timeDate;
-        txtWaitTime.setText(dateTime);
+        earliestAvailable.setText(dateTime);
+        mAaptTime = dateTime;
     }
 
     public static void timeslotdates(String timeDates) {
-        earliestAvailable.setText(timeDates);
+
+        txtWaitTime.setText(timeDates);
+        if(timeDates.equalsIgnoreCase("")){
+            Date currentTimes = new Date();
+            final SimpleDateFormat sdfs = new SimpleDateFormat(
+                    "dd-MM-yyyy", Locale.US);
+            sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
+            System.out.println("UTC time: " + sdfs.format(currentTimes));
+            txtWaitTime.setText("Today\n"+sdfs.format(currentTimes));
+        }
+
     }
 
     SearchViewDetail mBusinessDataList;
