@@ -26,6 +26,12 @@ public class SearchService implements Serializable {
     String url;
     String thumbUrl;
     int department;
+    String serviceType;
+    String virtualServiceType;
+    ArrayList<SearchService> virtualCallingModes;
+
+
+
 
     public boolean isLivetrack() {
         return livetrack;
@@ -186,8 +192,29 @@ public class SearchService implements Serializable {
 
     boolean taxable;
 
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
 
 
+    public String getVirtualServiceType() {
+        return virtualServiceType;
+    }
+
+    public void setVirtualServiceType(String virtualServiceType) {
+        this.virtualServiceType = virtualServiceType;
+    }
+    public ArrayList<SearchService> getVirtualCallingModes() {
+        return virtualCallingModes;
+    }
+
+    public void setVirtualCallingModes(ArrayList<SearchService> virtualCallingModes) {
+        this.virtualCallingModes = virtualCallingModes;
+    }
 
 
 }

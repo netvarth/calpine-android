@@ -163,6 +163,7 @@ public class Appointment extends AppCompatActivity {
     TextView mtermsAndConditionDetail;
     int selectedService;
     String selectedServiceType;
+    String serviceInstructions;
     int selectedDepartment;
     static String selectedDateFormat;
     String serviceSelected;
@@ -205,6 +206,8 @@ public class Appointment extends AppCompatActivity {
     String selectDate;
     ArrayList<SearchUsers> doctResponse = new ArrayList<>();
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
+    TextView tv_enterInstructions;
+    EditText et_vitualId;
 
 
     @Override
@@ -262,6 +265,8 @@ public class Appointment extends AppCompatActivity {
         earliestAvailable = findViewById(R.id.earliestAvailable);
         txt_choosedoctor = findViewById(R.id.txt_choosedoctor);
         mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
+        tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
+        et_vitualId = findViewById(R.id.virtual_id);
 
 
         tv_addnote.setOnClickListener(new View.OnClickListener() {
@@ -576,11 +581,21 @@ public class Appointment extends AppCompatActivity {
                                        int position, long id) {
                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
                 livetrack = (((SearchService) mSpinnerService.getSelectedItem()).isLivetrack());
+                selectedServiceType =(((SearchService)  mSpinnerService.getSelectedItem()).getServiceType());
                 Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
                 Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
 
                 serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                if(selectedServiceType.equalsIgnoreCase("virtualService")){
+                    tv_enterInstructions.setVisibility(View.VISIBLE);
+                    tv_enterInstructions.setText("Enter your Zoom Id");
+                    et_vitualId.setVisibility(View.VISIBLE);
+                }
+                else{
+                    tv_enterInstructions.setVisibility(View.GONE);
+                    et_vitualId.setVisibility(View.GONE);
+                }
               //  selectedServiceType =((SearchAppoinment)  mSpinnerService.getSelectedItem()).getServiceType();
 
                 // String firstWord = "Check-in for ";
@@ -2173,6 +2188,9 @@ public class Appointment extends AppCompatActivity {
                             mService.setPrePayment(response.body().get(i).isPrePayment());
                             mService.setTotalAmount(response.body().get(i).getTotalAmount());
                             mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
+                            mService.setServiceType(response.body().get(i).getServiceType());
+                            mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
+                            mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
                             LServicesList.add(mService);
                         }
                         gServiceList.addAll(LServicesList);

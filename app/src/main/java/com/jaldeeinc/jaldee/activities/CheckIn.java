@@ -2204,6 +2204,10 @@ public class CheckIn extends AppCompatActivity {
                             mService.setPrePayment(response.body().get(i).isPrePayment());
                             mService.setTotalAmount(response.body().get(i).getTotalAmount());
                             mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
+                            mService.setServiceType(response.body().get(i).getServiceType());
+                            mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
+                            mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
+
                             LServicesList.add(mService);
                         }
                         gServiceList.addAll(LServicesList);
