@@ -2920,6 +2920,7 @@ public class Appointment extends AppCompatActivity {
         JSONObject sejsonobj = new JSONObject();
         JSONArray waitlistArray = new JSONArray();
         JSONObject sjsonobj = new JSONObject();
+        JSONObject virtualService = new JSONObject();
 
 
         try {
@@ -2929,6 +2930,14 @@ public class Appointment extends AppCompatActivity {
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("phonenumber", phoneNumber);
             sjsonobj.put("id",schedResponse.get(i).getId());
+
+            if(callingMode!=null && callingMode.equalsIgnoreCase("whatsapp")){
+                virtualService.put("WhatsApp", et_vitualId.getText());
+            }else{
+                virtualService.put("", "");
+            }
+
+            virtualService.put("id",schedResponse.get(i).getId());
             sejsonobj.put("id",selectedService);
 
 
@@ -2995,6 +3004,10 @@ public class Appointment extends AppCompatActivity {
            // queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("appmtFor", waitlistArray);
             queueobj.putOpt("schedule",sjsonobj);
+            if(selectedServiceType.equalsIgnoreCase("virtualService")){
+                queueobj.putOpt("virtualService",virtualService);
+            }
+
            // queueobj.putOpt("service",selectedServiceType);
 
 
