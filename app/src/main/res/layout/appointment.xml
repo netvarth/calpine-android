@@ -299,7 +299,6 @@
                                 android:visibility="gone" />
 
                             <EditText
-                                android:drawableRight="4dp"
                                 android:drawablePadding="@dimen/dimen_4dp"
                                 android:layout_marginLeft="@dimen/default_padding"
                                 android:layout_marginRight="@dimen/default_padding"

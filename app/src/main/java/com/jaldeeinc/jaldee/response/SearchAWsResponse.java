@@ -17,6 +17,7 @@ public class SearchAWsResponse {
     String always_open_location1;
     String physiciansemergencyservices_location1;
     String dentistemergencyservices_location1;
+    String name;
 
     public String getDepartment_code() {
         return department_code;

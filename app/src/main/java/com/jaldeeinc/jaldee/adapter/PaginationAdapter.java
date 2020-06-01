@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
@@ -91,6 +92,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     ArrayList<SearchViewDetail> mSearchGallery;
     String uniqueID;
     List<QueueList> mQueueList;
+    ArrayList serviceNames = new ArrayList();
 
 
     public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList) {
@@ -1067,14 +1069,33 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                }
 
                 if (searchdetailList.getServices() != null) {
-                    if (searchdetailList.getServices().size() > 0) {
+                    try {
+                        String serviceName = searchdetailList.getServices().toString();
+                        try {
+                            JSONArray jsonArray = new JSONArray(serviceName);
+                            String jsonArry = jsonArray.getString(0);
+                            JSONArray jsonArray1 = new JSONArray(jsonArry);
+                            for(int i =0;i<jsonArray1.length();i++){
+                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                                String name = jsonObject.optString("name");
+                                serviceNames.add(i,name);
+                                Log.i("sar",serviceNames.toString());
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (serviceNames.size() > 0) {
                         myViewHolder.L_services.removeAllViews();
                         myViewHolder.L_services.setVisibility(View.VISIBLE);
                         int size = 0;
-                        if (searchdetailList.getServices().size() == 1) {
+                        if (serviceNames.size() == 1) {
                             size = 1;
                         } else {
-                            if (searchdetailList.getServices().size() == 2)
+                            if (serviceNames.size() == 2)
                                 size = 2;
                             else
                                 size = 3;
@@ -1084,7 +1105,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                                     "fonts/Montserrat_Regular.otf");
                             dynaText.setTypeface(tyface);
-                            dynaText.setText(searchdetailList.getServices().get(i).toString());
+                            dynaText.setText(serviceNames.get(i).toString());
                             dynaText.setTextSize(13);
                             dynaText.setPadding(5, 0, 5, 0);
                             dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
@@ -1101,7 +1122,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             dynaText.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ApiService(searchdetailList.getUniqueid(), searchdetailList.getServices().get(finalI).toString(), searchdetailList.getTitle());
+                                    ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
                                 }
                             });
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -1115,7 +1136,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             dynaText.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    mAdapterCallback.onMethodServiceCallback(searchdetailList.getServices(), searchdetailList.getTitle(), searchdetailList.getUniqueid());
+                                    mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid());
                                 }
                             });
                             dynaText.setGravity(Gravity.CENTER);
