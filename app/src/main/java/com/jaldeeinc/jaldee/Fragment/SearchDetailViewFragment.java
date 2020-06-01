@@ -737,12 +737,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         specialSeeAll.setVisibility(View.GONE);
                         LSpecialization_2.setVisibility(View.VISIBLE);
                         tv_spec1.setVisibility(View.VISIBLE);
-                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
-                            tv_spec2.setVisibility(View.GONE);
-                        }
-                       else{
-                            tv_spec2.setVisibility(View.VISIBLE);
-                        }
+//                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
+//                            tv_spec2.setVisibility(View.GONE);
+//                        }
+//                       else{
+//                            tv_spec2.setVisibility(View.VISIBLE);
+//                        }
 //                        tv_spec1.setMaxEms(6);
 //                        tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
 //                        tv_spec1.setMaxLines(1);
@@ -791,12 +791,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         LSpecialization_2.setVisibility(View.VISIBLE);
                                         LSpecialization.setVisibility(View.GONE);
                                         tv_spec1.setVisibility(View.VISIBLE);
-                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
-                                            tv_spec2.setVisibility(View.GONE);
-                                        }
-                                        else{
-                                            tv_spec2.setVisibility(View.VISIBLE);
-                                        }
+//                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
+//                                            tv_spec2.setVisibility(View.GONE);
+//                                        }
+//                                        else{
+//                                            tv_spec2.setVisibility(View.VISIBLE);
+//                                        }
                                         tv_seeAll.setVisibility(View.VISIBLE);
                                         tv_spec1.setText(seeAll);
                                         //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
