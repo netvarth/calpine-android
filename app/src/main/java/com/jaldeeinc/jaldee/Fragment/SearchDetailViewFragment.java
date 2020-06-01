@@ -3115,6 +3115,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     search.setServices(response.body().getHits().getHit().get(i).getFields().getServices());
                                 }
 
+                                if (response.body().getHits().getHit().get(i).getFields().getAppt_services() != null) {
+                                    search.setAppt_services(response.body().getHits().getHit().get(i).getFields().getAppt_services());
+                                }
+
                                 if (response.body().getHits().getHit().get(i).getFields().getBusiness_hours1() != null) {
                                     search.setBusiness_hours1(response.body().getHits().getHit().get(i).getFields().getBusiness_hours1());
                                 }
@@ -3319,6 +3323,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                             if (mSearchRespPass.get(i).getServices() != null) {
                                                 searchList.setServices(mSearchRespPass.get(i).getServices());
+                                            }
+
+                                            if (mSearchRespPass.get(i).getAppt_services() != null) {
+                                                searchList.setAppt_services(mSearchRespPass.get(i).getAppt_services());
                                             }
 
                                             if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
@@ -3532,6 +3540,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                             if (mSearchRespPass.get(i).getServices() != null) {
                                                 searchList.setServices(mSearchRespPass.get(i).getServices());
+                                            }
+                                            if (mSearchRespPass.get(i).getAppt_services() != null) {
+                                                searchList.setAppt_services(mSearchRespPass.get(i).getAppt_services());
                                             }
 
                                             if (mSearchRespPass.get(i).getBusiness_hours1() != null) {

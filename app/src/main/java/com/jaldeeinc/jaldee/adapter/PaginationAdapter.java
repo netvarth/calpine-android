@@ -1155,6 +1155,100 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
+
+
+                if (searchdetailList.getAppt_services() != null) {
+                    try {
+                        String serviceName = searchdetailList.getAppt_services().toString();
+                        try {
+                            JSONArray jsonArray = new JSONArray(serviceName);
+                            String jsonArry = jsonArray.getString(0);
+                            JSONArray jsonArray1 = new JSONArray(jsonArry);
+                            for(int i =0;i<jsonArray1.length();i++){
+                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                                String name = jsonObject.optString("name");
+                                serviceNames.add(i,name);
+                                Log.i("sar",serviceNames.toString());
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (serviceNames.size() > 0) {
+                        myViewHolder.L_appointments.removeAllViews();
+                        myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+                        int size = 0;
+                        if (serviceNames.size() == 1) {
+                            size = 1;
+                        } else {
+                            if (serviceNames.size() == 2)
+                                size = 2;
+                            else
+                                size = 3;
+                        }
+                        for (int i = 0; i < size; i++) {
+                            TextView dynaText = new TextView(context);
+                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                    "fonts/Montserrat_Regular.otf");
+                            dynaText.setTypeface(tyface);
+                            dynaText.setText(serviceNames.get(i).toString());
+                            dynaText.setTextSize(13);
+                            dynaText.setPadding(5, 0, 5, 0);
+                            dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+                            // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
+
+                            dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+                            dynaText.setMaxLines(1);
+                            if (size > 2) {
+                                dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                dynaText.setMaxEms(10);
+                            }
+                            final int finalI = i;
+                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+                                }
+                            });
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            params.setMargins(0, 0, 20, 0);
+
+                            dynaText.setLayoutParams(params);
+                            myViewHolder.L_appointments.addView(dynaText);
+                        }
+                        if (size > 3) {
+                            TextView dynaText = new TextView(context);
+                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid());
+                                }
+                            });
+                            dynaText.setGravity(Gravity.CENTER);
+                            dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+                            dynaText.setText(" ... ");
+                            myViewHolder.L_appointments.addView(dynaText);
+                        }
+                    } else {
+                        myViewHolder.L_appointments.setVisibility(View.GONE);
+
+                    }
+
+                } else {
+                    myViewHolder.L_appointments.setVisibility(View.GONE);
+
+                }
+
+
+
+
+
+
+
                 if (searchdetailList.getRating() != null) {
                     myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
                 }
@@ -1514,7 +1608,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec_more, tv_spec22, tv_count, tv_qmessage, tv_dept, tv_services, tv_dep1, tv_dep2, tv_dep22, tv_dep_more, tv_peopleahead;
-        LinearLayout L_specialization, L_services, L_layout_type, L_checkin, L_departments,L_appoinment;
+        LinearLayout L_specialization, L_services, L_layout_type, L_checkin, L_departments,L_appoinment,L_appointments;
         View vsep;
 
         ImageView ic_jaldeeverifiedIcon;
@@ -1546,6 +1640,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             rating = view.findViewById(R.id.mRatingBar);
             L_departments = view.findViewById(R.id.department);
             L_services = view.findViewById(R.id.service);
+            L_appointments = view.findViewById(R.id.appointmentList);
             tv_distance = view.findViewById(R.id.distance);
             btncheckin = view.findViewById(R.id.btncheckin);
 
