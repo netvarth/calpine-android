@@ -208,6 +208,7 @@ public class Appointment extends AppCompatActivity {
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
     TextView tv_enterInstructions;
     EditText et_vitualId;
+    String callingMode;
 
 
     @Override
@@ -588,13 +589,20 @@ public class Appointment extends AppCompatActivity {
                 serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
 
-                if(selectedServiceType.equalsIgnoreCase("virtualService")){
-                    serviceInstructions =((SearchService)  mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                    tv_enterInstructions.setVisibility(View.VISIBLE);
-                    tv_enterInstructions.setText(serviceInstructions);
-                    et_vitualId.setVisibility(View.VISIBLE);
-                }
-                else{
+
+
+                if(selectedServiceType.equalsIgnoreCase("virtualService")) {
+                    callingMode = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
+                    if (callingMode.equalsIgnoreCase("WhatsApp")) {
+                        serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                        tv_enterInstructions.setVisibility(View.VISIBLE);
+                        tv_enterInstructions.setText(serviceInstructions);
+                        et_vitualId.setVisibility(View.VISIBLE);
+                    } else {
+                        tv_enterInstructions.setVisibility(View.GONE);
+                        et_vitualId.setVisibility(View.GONE);
+                    }
+                }else{
                     tv_enterInstructions.setVisibility(View.GONE);
                     et_vitualId.setVisibility(View.GONE);
                 }
@@ -2194,6 +2202,7 @@ public class Appointment extends AppCompatActivity {
                             mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
                             mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
                             mService.setInstructions(response.body().get(i).getInstructions());
+                            mService.setCallingMode(response.body().get(i).getCallingMode());
                             LServicesList.add(mService);
                         }
                         gServiceList.addAll(LServicesList);
