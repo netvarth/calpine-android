@@ -208,7 +208,7 @@ public class Appointment extends AppCompatActivity {
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
     TextView tv_enterInstructions;
     EditText et_vitualId;
-    String callingMode;
+    String callingMode,valueNumber;
 
 
     @Override
@@ -593,10 +593,12 @@ public class Appointment extends AppCompatActivity {
 
                 if(selectedServiceType.equalsIgnoreCase("virtualService")) {
                     callingMode = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
+                    valueNumber = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
                     if (callingMode.equalsIgnoreCase("WhatsApp")) {
                         serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
                         tv_enterInstructions.setVisibility(View.VISIBLE);
                         tv_enterInstructions.setText(serviceInstructions);
+                        et_vitualId.setText(valueNumber);
                         et_vitualId.setVisibility(View.VISIBLE);
                     } else {
                         tv_enterInstructions.setVisibility(View.GONE);
@@ -2203,6 +2205,7 @@ public class Appointment extends AppCompatActivity {
                             mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
                             mService.setInstructions(response.body().get(i).getInstructions());
                             mService.setCallingMode(response.body().get(i).getCallingMode());
+                            mService.setValue(response.body().get(i).getValue());
                             LServicesList.add(mService);
                         }
                         gServiceList.addAll(LServicesList);

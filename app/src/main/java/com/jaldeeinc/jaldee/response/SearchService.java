@@ -31,9 +31,7 @@ public class SearchService implements Serializable {
     ArrayList<SearchService> virtualCallingModes;
     String instructions;
     String callingMode;
-
-
-
+    String value;
 
     public boolean isLivetrack() {
         return livetrack;
@@ -231,6 +229,14 @@ public class SearchService implements Serializable {
 
     public void setCallingMode(String callingMode) {
         this.callingMode = callingMode;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }
