@@ -72,6 +72,16 @@ public class SearchListModel implements Serializable {
     ArrayList terminologies;
     boolean isopen;
     private ArrayList services;
+    private ArrayList appt_services;
+
+    public ArrayList getAppt_services() {
+        return appt_services;
+    }
+
+    public void setAppt_services(ArrayList appt_services) {
+        this.appt_services = appt_services;
+    }
+
     private ArrayList Departments;
 
     public String getUrl() {

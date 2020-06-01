@@ -582,6 +582,23 @@
             android:visibility="gone" />
 
 
+
+        <LinearLayout
+            android:id="@+id/appointmentList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding5"
+            android:layout_marginTop="@dimen/default_padding"
+            android:layout_marginRight="@dimen/padding5"
+            android:gravity="left"
+            android:orientation="horizontal"
+            android:textColor="@color/title_consu"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone">
+
+        </LinearLayout>
+
+
         <LinearLayout
             android:visibility="gone"
             android:id="@+id/appoinmentLayouts"

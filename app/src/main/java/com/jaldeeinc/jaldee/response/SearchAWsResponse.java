@@ -340,6 +340,17 @@ public class SearchAWsResponse {
     @SerializedName("services")
     private ArrayList services;
 
+    public ArrayList getAppt_services() {
+        return appt_services;
+    }
+
+    public void setAppt_services(ArrayList appt_services) {
+        this.appt_services = appt_services;
+    }
+
+    @SerializedName("appt_services")
+    private ArrayList appt_services;
+
     public ArrayList getDepartments() {
         return departments;
     }
