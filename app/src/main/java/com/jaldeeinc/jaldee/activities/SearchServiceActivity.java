@@ -22,7 +22,7 @@ import java.util.ArrayList;
  */
 
 public class SearchServiceActivity extends AppCompatActivity {
-    TextView tv_price, tv_service, tv_desc;// tv_duration
+    TextView tv_price, tv_service, tv_desc, tv_duration;
 
     String name, duration, price, desc = "";
     Toolbar toolbar;
@@ -40,7 +40,7 @@ public class SearchServiceActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.service);
-      //  tv_duration = findViewById(R.id.txtduration);
+        tv_duration = findViewById(R.id.txtduration);
         tv_price = findViewById(R.id.txtprice);
         tv_service = findViewById(R.id.txtservice);
         tv_desc = findViewById(R.id.txtdesc);
@@ -79,7 +79,7 @@ public class SearchServiceActivity extends AppCompatActivity {
                 "fonts/Montserrat_Bold.otf");
         tv_toolbartitle.setTypeface(tyface);
         tv_service.setTypeface(tyface);
-      //  tv_duration.setTypeface(tyface);
+        tv_duration.setTypeface(tyface);
         tv_price.setTypeface(tyface);
 
 
@@ -111,10 +111,10 @@ public class SearchServiceActivity extends AppCompatActivity {
 
 
         if (duration != null) {
-//            tv_duration.setVisibility(View.VISIBLE);
-//            tv_duration.setText(duration + " mins");
+            tv_duration.setVisibility(View.VISIBLE);
+            tv_duration.setText(duration + " mins");
         } else {
-        //    tv_duration.setVisibility(View.GONE);
+            tv_duration.setVisibility(View.GONE);
 
         }
         if (isPrepayment) {

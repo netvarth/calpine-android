@@ -175,7 +175,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     private Uri mImageUri;
     String filePath;
     TextView txtCheckins;
-    private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
+    public final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
     static double latitude;
     static double longitude;
     private Location mylocation;

@@ -81,7 +81,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_padding"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
 
             <LinearLayout
@@ -101,7 +102,6 @@
 
                 <TextView
                     android:layout_marginTop="@dimen/dimen_2dp"
-
                     android:id="@+id/txtprice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -110,6 +110,35 @@
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_12"
                     android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Lduration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Duration "
+                    android:textColor="#3D3C44"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:layout_marginTop="@dimen/dimen_2dp"
+                    android:id="@+id/txtduration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/customfont"
+                    android:text="200"
+                    android:textColor="@color/title_grey"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
             </LinearLayout>
         </LinearLayout>
 

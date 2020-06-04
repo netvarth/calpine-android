@@ -26,6 +26,7 @@ public class SearchLocation {
     SearchLocation locationVirtualFields;
     private String traumacentre;
     private String physiciansemergencyservices;
+    private String hosemergencyservices;
     @SerializedName("bSchedule")
     SearchLocation bSchedule;
     @SerializedName("timespec")
@@ -170,6 +171,14 @@ public class SearchLocation {
 
     public void setPhysiciansemergencyservices(String physiciansemergencyservices) {
         this.physiciansemergencyservices = physiciansemergencyservices;
+    }
+
+    public String getHosemergencyservices() {
+        return hosemergencyservices;
+    }
+
+    public void setHosemergencyservices(String hosemergencyservices) {
+        this.hosemergencyservices = hosemergencyservices;
     }
 
     public SearchLocation getbSchedule() {

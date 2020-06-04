@@ -99,6 +99,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
     SearchViewDetail mBusinessDataList;
     String latitude,longitude;
+    boolean isChecked = true;
 
 
 //    // Used in checking for runtime permissions.
@@ -523,14 +524,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
             liveTrackLayout.setVisibility(View.VISIBLE);
             if (!gps_enabled && !network_enabled) {
-                tv_enable_loc.setText("Oops, your location is not enabled");
-                tv_recom_loc.setText("Jaldee recommends you enable location");
+                tv_enable_loc.setText("          Oops, your location is not enabled");
+                tv_recom_loc.setText("          Jaldee recommends you enable location");
                 tv_recom_loc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 tv_recom_liveloc.setVisibility(View.GONE);
             } else if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
                 tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getBusinessName() );
                 tv_recom_liveloc.setText("You are sharing your arrival time with " + activelist.getBusinessName());
-                tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_tickmark, 0);
+                tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_tick_markgreen, 0);
                 tv_recom_loc.setVisibility(View.GONE);
             } else {
                 tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getBusinessName() );
@@ -557,6 +558,26 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 intent.putExtra("calcMode", activelist.getCalculationMode());
                 intent.putExtra("queueStartTime",activelist.getQueueStartTime());
                 intent.putExtra("queueEndTime",activelist.getQueueEndTime());
+                if(activelist.getJaldeeWaitlistDistanceTime()!=null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime()!=null){
+                intent.putExtra("jaldeeDistance",activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().toString());}
+                mContext.startActivity(intent);
+            }
+        });
+
+        tv_recom_liveloc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, CheckinShareLocation.class);
+                intent.putExtra("waitlistPhonenumber", activelist.getPrimaryMobileNo());
+                intent.putExtra("uuid", activelist.getYnwUuid());
+                intent.putExtra("accountID", String.valueOf(activelist.getId()));
+                intent.putExtra("title", activelist.getBusinessName());
+                intent.putExtra("terminology", "Check-in");
+                intent.putExtra("calcMode", activelist.getCalculationMode());
+                intent.putExtra("queueStartTime",activelist.getQueueStartTime());
+                intent.putExtra("queueEndTime",activelist.getQueueEndTime());
+                if(activelist.getJaldeeWaitlistDistanceTime()!=null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime()!=null){
+                    intent.putExtra("jaldeeDistance",activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().toString());}
                 mContext.startActivity(intent);
             }
         });
@@ -826,10 +847,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         spannable2.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                 Word1.length(), Word1.length() + Word2.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_queueTime.setText(spannable2);
-        if (activelist.getBatchName() != null) {
-            tv_token.setVisibility(View.GONE);
-            tv_batchName.setVisibility(View.VISIBLE);
-            layout_partySize.setVisibility(View.VISIBLE);
+//        if (activelist.getBatchName() != null) {
+//            tv_token.setVisibility(View.GONE);
+//            tv_batchName.setVisibility(View.VISIBLE);
+//            layout_partySize.setVisibility(View.VISIBLE);
 
 //                String queStart = "",queEnd = "",queueWindow = "";
 //                if(activelist.getQueue()!= null ){
@@ -841,10 +862,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 //                else{
 //                    //   tv_time_queue.setVisibility(View.GONE);
 //                }
-            String firstword = "Batch :";
-            tv_batchName.setText(firstword + " " + activelist.getBatchName());
+//            String firstword = "Batch :";
+//            tv_batchName.setText(firstword + " " + activelist.getBatchName());
 
-        } else if (activelist.getToken() != -1 && activelist.getToken() > 0) {
+ //       } else
+          if (activelist.getToken() != -1 && activelist.getToken() > 0) {
             layout_partySize.setVisibility(View.VISIBLE);
             tv_token.setVisibility(View.VISIBLE);
             String firstWord = "Token # ";
@@ -1710,8 +1732,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.arrived_green));
         }
         if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
-            tv_status.setText("Checked in");
-            tv_statusSmall.setText("Checked in");
+            tv_status.setText("Checked-in");
+            tv_statusSmall.setText("Checked-in");
             tv_status.setVisibility(View.GONE);
             tv_statusSmall.setVisibility(View.VISIBLE);
             tv_status.setTextColor(mContext.getResources().getColor(R.color.purple));

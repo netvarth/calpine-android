@@ -49,6 +49,7 @@ public class SearchListModel implements Serializable {
     String ynw_verified_level;
     String physiciansemergencyservices_location1;
     String dentistemergencyservices_location1;
+    String hosemergencyservices_location1;
     String qualification;
     ArrayList specialization_displayname;
     String show_waiting_time;
@@ -243,6 +244,14 @@ public class SearchListModel implements Serializable {
 
     public void setDentistemergencyservices_location1(String dentistemergencyservices_location1) {
         this.dentistemergencyservices_location1 = dentistemergencyservices_location1;
+    }
+
+    public String getHosemergencyservices_location1() {
+        return hosemergencyservices_location1;
+    }
+
+    public void setHosemergencyservices_location1(String hosemergencyservices_location1) {
+        this.hosemergencyservices_location1 = hosemergencyservices_location1;
     }
 
     public String getQualification() {

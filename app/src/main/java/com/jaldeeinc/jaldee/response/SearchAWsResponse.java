@@ -17,6 +17,7 @@ public class SearchAWsResponse {
     String always_open_location1;
     String physiciansemergencyservices_location1;
     String dentistemergencyservices_location1;
+    String hosemergencyservices_location1;
 
     public String getDepartment_code() {
         return department_code;
@@ -207,7 +208,13 @@ public class SearchAWsResponse {
     public void setDentistemergencyservices_location1(String dentistemergencyservices_location1) {
         this.dentistemergencyservices_location1 = dentistemergencyservices_location1;
     }
+    public String getHosemergencyservices_location1() {
+        return hosemergencyservices_location1;
+    }
 
+    public void setHosemergencyservices_location1(String hosemergencyservices_location1) {
+        this.hosemergencyservices_location1 = hosemergencyservices_location1;
+    }
     public void setStatus(SearchAWsResponse status) {
         this.status = status;
     }

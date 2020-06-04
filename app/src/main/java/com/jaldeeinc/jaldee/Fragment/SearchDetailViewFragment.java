@@ -737,12 +737,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         specialSeeAll.setVisibility(View.GONE);
                         LSpecialization_2.setVisibility(View.VISIBLE);
                         tv_spec1.setVisibility(View.VISIBLE);
-                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
-                            tv_spec2.setVisibility(View.GONE);
-                        }
-                       else{
-                            tv_spec2.setVisibility(View.VISIBLE);
-                        }
+//                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
+//                            tv_spec2.setVisibility(View.GONE);
+//                        }
+//                       else{
+//                            tv_spec2.setVisibility(View.VISIBLE);
+//                        }
 //                        tv_spec1.setMaxEms(6);
 //                        tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
 //                        tv_spec1.setMaxLines(1);
@@ -750,7 +750,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                        tv_spec2.setMaxEms(6);
 //                        tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
 //                        tv_spec2.setMaxLines(1);
-                        tv_seeAll.setVisibility(View.VISIBLE);
+                     //   tv_seeAll.setVisibility(View.VISIBLE);
                         String specialization = getBussinessData.getSpecialization().get(0).toString() + ", " + getBussinessData.getSpecialization().get(1).toString() +", ";
                         String more =  tv_seeAll.getText().toString();
                         final Spannable spannable1 = new SpannableString(specialization + " " +  more);
@@ -791,13 +791,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         LSpecialization_2.setVisibility(View.VISIBLE);
                                         LSpecialization.setVisibility(View.GONE);
                                         tv_spec1.setVisibility(View.VISIBLE);
-                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
-                                            tv_spec2.setVisibility(View.GONE);
-                                        }
-                                        else{
-                                            tv_spec2.setVisibility(View.VISIBLE);
-                                        }
-                                        tv_seeAll.setVisibility(View.VISIBLE);
+//                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
+//                                            tv_spec2.setVisibility(View.GONE);
+//                                        }
+//                                        else{
+//                                            tv_spec2.setVisibility(View.VISIBLE);
+//                                        }
+                                      //  tv_seeAll.setVisibility(View.VISIBLE);
                                         tv_spec1.setText(seeAll);
                                         //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
                                         mrecycle_specialisation.setVisibility(View.GONE);
@@ -3162,6 +3162,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 if (response.body().getHits().getHit().get(i).getFields().getPhysiciansemergencyservices_location1() != null) {
                                     search.setPhysiciansemergencyservices_location1(response.body().getHits().getHit().get(i).getFields().getPhysiciansemergencyservices_location1());
                                 }
+                                if(response.body().getHits().getHit().get(i).getFields().getHosemergencyservices_location1() != null){
+                                    search.setHosemergencyservices_location1(response.body().getHits().getHit().get(i).getHosemergencyservices_location1());
+                                }
                                 if (response.body().getHits().getHit().get(i).getFields().getFirstaid_location1() != null) {
                                     search.setFirstaid_location1(response.body().getHits().getHit().get(i).getFields().getFirstaid_location1());
                                 }
@@ -3374,6 +3377,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                             if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
                                                 searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
                                             }
+                                            if(mSearchRespPass.get(i).getHosemergencyservices_location1() != null){
+                                                searchList.setHosemergencyservices_location1(mSearchRespPass.get(i).getHosemergencyservices_location1());
+                                            }
                                             if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
                                                 searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
                                             }
@@ -3580,6 +3586,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                             }
                                             if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
                                                 searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
+                                            }
+                                            if(mSearchRespPass.get(i).getHosemergencyservices_location1() != null){
+                                                searchList.setHosemergencyservices_location1(mSearchRespPass.get(i).getHosemergencyservices_location1());
                                             }
                                             if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
                                                 searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());

@@ -1539,7 +1539,7 @@ public class CheckIn extends AppCompatActivity {
                                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
                                     if (h > 0) {
-                                        firstWord = "Checked in for Today," + " " + "Est Wait Time ";
+                                        firstWord = /*"Checked in for Today,"*/ " " + "Est Wait Time ";
                                     } else {
                                         firstWord = "Est Wait Time ";
 

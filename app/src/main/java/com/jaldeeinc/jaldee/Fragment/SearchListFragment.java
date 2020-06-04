@@ -1344,6 +1344,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (response.body().getHits().getHit().get(i).getFields().getPhysiciansemergencyservices_location1() != null) {
                                     search.setPhysiciansemergencyservices_location1(response.body().getHits().getHit().get(i).getFields().getPhysiciansemergencyservices_location1());
                                 }
+                                if(response.body().getHits().getHit().get(i).getHosemergencyservices_location1() != null){
+                                    search.setHosemergencyservices_location1(response.body().getHits().getHit().get(i).getFields().getHosemergencyservices_location1());
+                                }
+
                                 if (response.body().getHits().getHit().get(i).getFields().getFirstaid_location1() != null) {
                                     search.setFirstaid_location1(response.body().getHits().getHit().get(i).getFields().getFirstaid_location1());
                                 }
@@ -1607,6 +1611,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (response.body().getHits().getHit().get(i).getFields().getPhysiciansemergencyservices_location1() != null) {
                                     search.setPhysiciansemergencyservices_location1(response.body().getHits().getHit().get(i).getFields().getPhysiciansemergencyservices_location1());
                                 }
+                                if(response.body().getHits().getHit().get(i).getFields().getHosemergencyservices_location1() != null){
+                                    search.setHosemergencyservices_location1(response.body().getHits().getHit().get(i).getFields().getHosemergencyservices_location1());
+                                }
                                 if (response.body().getHits().getHit().get(i).getFields().getFirstaid_location1() != null) {
                                     search.setFirstaid_location1(response.body().getHits().getHit().get(i).getFields().getFirstaid_location1());
                                 }
@@ -1856,6 +1863,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
                                         searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
                                     }
+                                    if(mSearchRespPass.get(i).getHosemergencyservices_location1() != null){
+                                        searchList.setHosemergencyservices_location1(mSearchRespPass.get(i).getHosemergencyservices_location1());
+                                    }
                                     if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
                                         searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
                                     }
@@ -2058,6 +2068,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     }
                                     if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
                                         searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
+                                    }
+                                    if (mSearchRespPass.get(i).getHosemergencyservices_location1() != null) {
+                                        searchList.setHosemergencyservices_location1(mSearchRespPass.get(i).getHosemergencyservices_location1());
                                     }
                                     if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
                                         searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());

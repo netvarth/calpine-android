@@ -296,6 +296,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     listType.add(mType);
                 }
             }
+            if (searchLoclist.getLocationVirtualFields().getHosemergencyservices() != null) {
+                if (searchLoclist.getLocationVirtualFields().getHosemergencyservices().equalsIgnoreCase("true")) {
+                    ParkingModel mType = new ParkingModel();
+                    // mType.setTypeicon(R.drawable.icon_24hours);
+                    mType.setId("3");
+                    mType.setTypename("Emergency");
+                    listType.add(mType);
+                }
+            }
             if (searchLoclist.getLocationVirtualFields().getDentistemergencyservices() != null) {
                 if (searchLoclist.getLocationVirtualFields().getDentistemergencyservices().equalsIgnoreCase("true")) {
                     ParkingModel mType = new ParkingModel();
