@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
@@ -56,7 +57,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate, txt_msg, txt_peopleahead;
         Button btn_checkin;
-        LinearLayout mLSeriveLayout, mLayouthide, LexpandCheckin, Ldirectionlayout, LService_2, LWorkinHrs, LDepartment_2;
+        LinearLayout mLSeriveLayout, mLayouthide, LexpandCheckin, Ldirectionlayout, LService_2, LWorkinHrs, LDepartment_2, LAppointment;
         ImageView img_arrow;
         RecyclerView recycle_parking;
         RelativeLayout layout_exapnd;
@@ -64,6 +65,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         Button btn_checkin_expand;
         TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices, txtdayofweek;
         TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
+        TextView txt_earliestAvailable;
+        Button btn_appointments;
 
         ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
         String txtdataMon = "";
@@ -110,6 +113,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             LDepartment_2 = (LinearLayout) view.findViewById(R.id.LDepartment_2);
             txt_msg = (TextView) view.findViewById(R.id.txt_msg);
             txt_peopleahead = (TextView) view.findViewById(R.id.txt_PeopleAhead);
+            LAppointment = view.findViewById(R.id.appoinmentLayouts);
+            txt_earliestAvailable = view.findViewById(R.id.nextAppoinments);
+            btn_appointments = view.findViewById(R.id.btnappointments);
         }
     }
 
@@ -508,6 +514,23 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
                 mContext.startActivity(iCheckIn);
+            }
+        });
+        myViewHolder.btn_appointments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iAppointment = new Intent(v.getContext(), Appointment.class);
+                iAppointment.putExtra("serviceId", searchLoclist.getId());
+                iAppointment.putExtra("uniqueID", mUniqueID);
+                iAppointment.putExtra("accountID", accountID);
+                iAppointment.putExtra("from", "searchdetail_checkin");
+                iAppointment.putExtra("title", mTitle);
+                iAppointment.putExtra("place", searchLoclist.getPlace());
+                iAppointment.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
+                iAppointment.putExtra("sector", sector);
+                iAppointment.putExtra("subsector", subsector);
+                iAppointment.putExtra("terminology", terminology);
+                mContext.startActivity(iAppointment);
             }
         });
 
@@ -1147,8 +1170,21 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
             }
         }
-
-
+        if (mSearachAwsResponse != null) {
+            if (mSearachAwsResponse.getHits() != null) {
+                if (mSearachAwsResponse.getHits().getHit() != null) {
+                    for (int l = 0; l < mSearachAwsResponse.getHits().getHit().size(); l++) {
+                        if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt() != null) {
+                            if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt().equals("1")) {
+                                myViewHolder.LAppointment.setVisibility(View.VISIBLE);
+                            } else {
+                                myViewHolder.LAppointment.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 //Queue---- for button check-in,waittime checking
 
         Date c = Calendar.getInstance().getTime();

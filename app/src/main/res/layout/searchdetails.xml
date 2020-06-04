@@ -454,7 +454,8 @@
                                     android:text="Specialization1"
                                     android:textColor="@color/black"
                                     android:textSize="@dimen/txtsize_12"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:visibility="gone"/>
 
                                 <TextView
                                     android:id="@+id/txtSeeAll"
@@ -469,7 +470,8 @@
                                     android:textColor="@color/title_consu"
                                     android:textSize="@dimen/txtsize_title_term_small"
                                     android:textStyle="bold"
-                                    android:maxLines="1"/>
+                                    android:maxLines="1"
+                                    android:visibility="gone"/>
                             </LinearLayout>
 
 
