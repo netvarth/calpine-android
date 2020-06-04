@@ -311,11 +311,11 @@ public class Appointment extends AppCompatActivity {
                         if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
                         } else {
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
                             //  btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
                     }
@@ -534,6 +534,9 @@ public class Appointment extends AppCompatActivity {
             public void onClick(View v) {
                 Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
                 appDate.putExtra("timeslots", timeslots);
+                appDate.putExtra("serviceId",serviceId);
+                appDate.putExtra("mSpinnertext",mSpinnertext);
+                appDate.putExtra("accountId",modifyAccountID);
                 startActivity(appDate);
             }
         });
@@ -598,7 +601,7 @@ public class Appointment extends AppCompatActivity {
                         serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
                         tv_enterInstructions.setVisibility(View.VISIBLE);
                         tv_enterInstructions.setText(serviceInstructions);
-                        et_vitualId.setText(valueNumber);
+                        et_vitualId.setText(phoneNumber);
                         et_vitualId.setVisibility(View.VISIBLE);
                     } else {
                         tv_enterInstructions.setVisibility(View.GONE);
@@ -1258,10 +1261,10 @@ public class Appointment extends AppCompatActivity {
 
                             if (response.body().getCalculationMode().equalsIgnoreCase("NoCalc") && response.body().isShowTokenId()) {
                                 isShowToken = String.valueOf(response.body().isShowTokenId());
-                                tv_title.setText("Get Token");
+                                tv_title.setText("Appointment");
                                 Word_Change = "Token for ";
                                 btn_checkin.setText("CONFIRM");
-                                toastMessage = "Token has been generated successfully";
+                                toastMessage = "Appointment has been generated successfully";
                             } else {
 
                                 if (terminology.equals("order")) {
@@ -1271,7 +1274,7 @@ public class Appointment extends AppCompatActivity {
                                     toastMessage = "You have ordered successfully";
 
                                 } else {
-                                    tv_title.setText("Check-in");
+                                    tv_title.setText("Appointment");
                                     Word_Change = "Check-in for ";
                                     btn_checkin.setText("CONFIRM");
                                     toastMessage = "Appointment saved successfully ";
@@ -2647,8 +2650,12 @@ public class Appointment extends AppCompatActivity {
                     if (response.code() == 200) {
 
                         int availableslots = response.body().getAvailableSlots().size();
+                        timeslots.clear();
                         for (int i = 0; i< availableslots; i ++){
-                            timeslots.add(i,response.body().getAvailableSlots().get(i).getTime());
+                            if(response.body().getAvailableSlots().get(i).getActive().equalsIgnoreCase("true") && !response.body().getAvailableSlots().get(i).getNoOfAvailbleSlots().equalsIgnoreCase("0")){
+                            timeslots.add(response.body().getAvailableSlots().get(i).getTime());}
+
+
                         }
 
                         if(timeslots!=null){
@@ -2929,7 +2936,11 @@ public class Appointment extends AppCompatActivity {
         try {
 
          //   qjsonObj.put("id", queueId);
-            queueobj.put("appmtDate", formattedDate);
+            if(txtWaitTime.getText().toString().contains("Today")){
+                queueobj.put("appmtDate", formattedDate);
+            }
+            else{
+            queueobj.put("appmtDate", txtWaitTime.getText().toString());}
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("phonenumber", phoneNumber);
             sjsonobj.put("id",schedResponse.get(i).getId());

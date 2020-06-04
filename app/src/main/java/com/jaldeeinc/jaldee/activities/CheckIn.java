@@ -191,6 +191,10 @@ public class CheckIn extends AppCompatActivity {
     Bitmap bitmap;
     Boolean isShow;
     String deptId;
+    TextView tv_enterInstructions;
+    EditText et_virtualId;
+    String selectedServiceType;
+    String callingMode,valueNumber,serviceInstructions;
 
 
     @Override
@@ -246,6 +250,8 @@ public class CheckIn extends AppCompatActivity {
         mSpinnerDepartment = findViewById(R.id.spinnerdepartment);
         txt_choosedoctor = findViewById(R.id.txt_choosedoctor);
         mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
+        tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
+        et_virtualId = findViewById(R.id.virtual_id);
 
 
         tv_addnote.setOnClickListener(new View.OnClickListener() {
@@ -368,11 +374,11 @@ public class CheckIn extends AppCompatActivity {
                         if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
                         } else {
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
                           //  btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
                     }
@@ -608,11 +614,30 @@ public class CheckIn extends AppCompatActivity {
                                        int position, long id) {
                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
                 livetrack = (((SearchService) mSpinnerService.getSelectedItem()).isLivetrack());
+                selectedServiceType =(((SearchService)  mSpinnerService.getSelectedItem()).getServiceType());
                 Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
                 Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
 
                 serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+
+                if(selectedServiceType.equalsIgnoreCase("virtualService")) {
+                    callingMode = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
+                    valueNumber = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
+                    if (callingMode.equalsIgnoreCase("WhatsApp")) {
+                        serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                        tv_enterInstructions.setVisibility(View.VISIBLE);
+                        tv_enterInstructions.setText(serviceInstructions);
+                        et_virtualId.setText(phoneNumber);
+                        et_virtualId.setVisibility(View.VISIBLE);
+                    } else {
+                        tv_enterInstructions.setVisibility(View.GONE);
+                        et_virtualId.setVisibility(View.GONE);
+                    }
+                }else{
+                    tv_enterInstructions.setVisibility(View.GONE);
+                    et_virtualId.setVisibility(View.GONE);
+                }
 
                 // String firstWord = "Check-in for ";
                 String firstWord = Word_Change;
@@ -2605,12 +2630,18 @@ public class CheckIn extends AppCompatActivity {
         JSONObject waitobj = new JSONObject();
         JSONObject service = new JSONObject();
         JSONArray waitlistArray = new JSONArray();
+        JSONObject virtualService = new JSONObject();
         try {
 
             qjsonObj.put("id", queueId);
             queueobj.put("date", formattedDate);
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("waitlistPhonenumber", phoneNumber);
+            if(callingMode!=null && callingMode.equalsIgnoreCase("whatsapp")){
+                virtualService.put("WhatsApp", et_virtualId.getText());
+            }else{
+                virtualService.put("", "");
+            }
 
 
             JSONArray couponList = new JSONArray();
@@ -2644,6 +2675,9 @@ public class CheckIn extends AppCompatActivity {
                     waitlistArray.put(waitobj1);
                 }
             } else {
+                if(familyMEmID == consumerID){
+                    familyMEmID = 0;
+                }
                 waitobj.put("id", familyMEmID);
                 waitlistArray.put(waitobj);
             }
@@ -2652,6 +2686,9 @@ public class CheckIn extends AppCompatActivity {
             queueobj.putOpt("service", selectedService);
             queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("waitlistingFor", waitlistArray);
+            if(selectedServiceType.equalsIgnoreCase("virtualService")){
+                queueobj.putOpt("virtualService",virtualService);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

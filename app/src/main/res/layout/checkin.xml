@@ -157,6 +157,31 @@
                                 android:visibility="gone">
 
                             </Spinner>
+                            <TextView
+                                android:layout_marginLeft="@dimen/default_padding"
+                                android:layout_marginRight="@dimen/default_padding"
+                                android:textStyle="bold"
+                                android:id="@+id/txt_enterinstructions"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dimen_7dp"
+                                android:gravity="left"
+                                android:text="@string/selectservice"
+                                android:textColor="#AAA"
+                                android:textSize="@dimen/txtsize_12"
+                                android:visibility="gone" />
+
+                            <EditText
+                                android:drawablePadding="@dimen/dimen_4dp"
+                                android:layout_marginLeft="@dimen/default_padding"
+                                android:layout_marginRight="@dimen/default_padding"
+                                android:drawableLeft="@drawable/whatsappicon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/virtual_id"
+                                android:gravity="center"
+                                android:textSize="@dimen/txtsize_12"
+                                android:visibility="visible"/>
 
                             <LinearLayout
                                 android:id="@+id/familymember"

@@ -801,6 +801,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
                         myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                         disableCheckinButton(myViewHolder);
+                        myViewHolder.L_appoinment.setVisibility(View.GONE);
                     }
 
                     if (searchdetailList.getFuture_checkins() != null && searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {

@@ -183,4 +183,14 @@ public class InboxModel {
     @SerializedName("attachements")
     public List<FileAttachment> attachments;
 
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    String accountName;
+
 }

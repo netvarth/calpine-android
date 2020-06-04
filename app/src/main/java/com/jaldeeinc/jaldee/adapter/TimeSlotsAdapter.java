@@ -13,9 +13,12 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. TimeSlotsAdapterViewHolder> {
     ArrayList timeSlots = new ArrayList();
@@ -42,7 +45,10 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. Ti
         final String timeSlot = timeSlots.get(position).toString();
         myViewHolder.mSpecial.setText(timeSlot);
         if(selectedPosition==position){
-            myViewHolder.itemView.setBackgroundColor(Color.parseColor("#000000"));}
+            myViewHolder.itemView.setBackgroundResource(R.drawable.rounded_popularsearch_green);}
+        else{
+            myViewHolder.itemView.setBackgroundResource(R.drawable.rounded_popularsearch);
+        }
 
         myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +56,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. Ti
                 selectedPosition = position;
                 notifyDataSetChanged();
                 String selectTime = timeSlots.get(selectedPosition).toString();
-                Toast.makeText(context, selectTime, Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(context, selectTime, Toast.LENGTH_SHORT).show();
                 Appointment.timeslotdate(selectTime);
             }
         });

@@ -393,7 +393,7 @@
                 android:lineSpacingExtra="@dimen/padding3"
                 android:paddingLeft="@dimen/dimen_5dp"
                 android:paddingRight="@dimen/dimen_5dp"
-                android:text="Services"
+                android:text="Check-In Services"
                 android:textColor="@color/title_grey_light"
                 android:textSize="@dimen/txtsize_hint_11"
                 android:textStyle="bold"
@@ -656,6 +656,37 @@
 
         </LinearLayout>
     </LinearLayout>
+    <TextView
+        android:id="@+id/txtapptservices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding5"
+        android:layout_marginTop="@dimen/padding2"
+        android:layout_marginRight="@dimen/dimen_2dp"
+        android:justificationMode="inter_word"
+        android:letterSpacing="0.03"
+        android:lineSpacingExtra="@dimen/padding3"
+        android:paddingLeft="@dimen/dimen_5dp"
+        android:paddingRight="@dimen/dimen_5dp"
+        android:text="Appointment Services"
+        android:textColor="@color/black"
+        android:textSize="@dimen/txtsize_hint_11"
+        android:textStyle="bold"
+        android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/appointmentList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding5"
+        android:layout_marginTop="@dimen/padding2"
+        android:layout_marginRight="@dimen/padding5"
+        android:gravity="left"
+        android:orientation="vertical"
+        android:textColor="@color/title_consu"
+        android:textSize="@dimen/txtsize_12"
+        android:visibility="gone">
+
+    </LinearLayout>
     <LinearLayout
         android:visibility="gone"
         android:id="@+id/appoinmentLayouts"
@@ -664,7 +695,7 @@
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/padding5"
         android:layout_marginRight="@dimen/padding5"
-        android:layout_marginTop="@dimen/default_padding"
+        android:layout_marginTop="@dimen/padding5"
         android:orientation="horizontal">
 
         <TextView
