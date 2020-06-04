@@ -80,6 +80,17 @@
                 android:padding="@dimen/padding5"
                 android:text="Appointments"
                 android:textSize="@dimen/txtsize_hint" />
+
+
+            <ExpandableListView
+                android:id="@+id/appointmentView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:groupIndicator="@null"
+                >
+            </ExpandableListView>
+
             <TextView
                 android:id="@+id/txtnoappointments"
                 android:layout_width="match_parent"

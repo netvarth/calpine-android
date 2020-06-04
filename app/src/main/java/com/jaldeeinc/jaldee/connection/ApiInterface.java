@@ -7,6 +7,7 @@ import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.TestModel;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
@@ -138,6 +139,31 @@ public interface ApiInterface {
     @GET("consumer/waitlist/status/mytracking/{uuid}")
     Call<ResponseBody> StatusTracking(@Path("uuid") String uuid,@Query("account") Integer account);
 
+
+    @POST("consumer/appointment/saveMyLoc/{uuid}")
+    Call<ShareLocation> ShareLiveLocationAppointment(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/updateMyLoc/{uuid}")
+    Call<ShareLocation> UpdateShareLiveLocationAppointment(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/update/travelmode/{uuid}")
+    Call<ResponseBody> PutTravelModeAppointment(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/update/travelmode/{uuid}")
+    Call<ShareLocation> PutTravelModesAppointment(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/update/latlong/{uuid}")
+    Call<ResponseBody> UpdateLatLongAppointment(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/start/mytracking/{uuid}")
+    Call<ResponseBody> StartTrackingAppointment(@Path("uuid") String uuid,@Query("account") Integer account);
+
+    @DELETE("consumer/appointment/stop/mytracking/{uuid}")
+    Call<ResponseBody> StopTrackingAppointment(@Path("uuid") String uuid,@Query("account") Integer account);
+
+    @GET("consumer/appointment/status/mytracking/{uuid}")
+    Call<ResponseBody> StatusTrackingAppointment(@Path("uuid") String uuid,@Query("account") Integer account);
+
     @PUT("consumer/login/{otp}/verifyLogin")
     Call<ResponseBody> ChngeEmailOtp(@Path("otp") String otp, @Body RequestBody jsonObj);
 
@@ -160,6 +186,9 @@ public interface ApiInterface {
 
     @GET("consumer/waitlist")
     Call<ArrayList<ActiveCheckIn>> getActiveCheckIn();
+
+    @GET("consumer/appointment")
+    Call<ArrayList<ActiveAppointment>> getActiveAppointment();
 
 
     @GET("consumer/waitlist/{uuid}")
@@ -242,8 +271,14 @@ public interface ApiInterface {
     @GET("consumer/waitlist/history")
     Call<ArrayList<ActiveCheckIn>> getCheckInList(/*@QueryMap(encoded = true) Map<String, String>   query*/);
 
+    @GET("consumer/appointment/history")
+    Call<ArrayList<ActiveAppointment>> getAppointmentList(/*@QueryMap(encoded = true) Map<String, String>   query*/);
+
     @GET("consumer/waitlist/future")
     Call<ArrayList<ActiveCheckIn>> getFutureCheckInList();
+
+    @GET("consumer/appointment/future")
+    Call<ArrayList<ActiveAppointment>> getFutureAppointmentList();
 
 
     @POST("consumer/communications")
@@ -283,7 +318,7 @@ public interface ApiInterface {
 
 
     @GET("consumer/bill/{ynwuuid}")
-    Call<BillModel> getBill(@Path("ynwuuid") String uuid);
+    Call<BillModel> getBill(@Path("ynwuuid") String uuid, @Query("account") String account);
 
 
     @POST("consumer/jaldee/coupons/{coupon}/{ynwuuid}")
@@ -292,6 +327,10 @@ public interface ApiInterface {
 
     @DELETE("consumer/waitlist/{ynwuuid}")
     Call<ResponseBody> deleteActiveCheckIn(@Path("ynwuuid") String uuid, @Query("account") String account);
+
+
+    @PUT("consumer/appointment/cancel/{ynwuuid}")
+    Call<ResponseBody> deleteAppointment(@Path("ynwuuid") String uuid, @Query("account") String account);
 
     @GET("consumer/waitlist/{ynwuuid}")
     Call<List<ResponseBody>> waitlist(@Path("ynwuuid") String uuid, @Query("account") String account);
