@@ -445,11 +445,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.beginTransaction();
         try {
             for (ActiveCheckIn activeCheckIn : activeCheckInModel) {
-                Config.logV("InsertCheckinDetails"+activeCheckIn.getProvider().getId());
+                Config.logV("InsertCheckinDetails"+activeCheckIn.getProviderAccount().getId());
                 ContentValues values = new ContentValues();
-                values.put("id", activeCheckIn.getProvider().getId());
-                values.put("businessName", activeCheckIn.getProvider().getBusinessName());
-                values.put("uniqueId", activeCheckIn.getProvider().getUniqueId());
+                values.put("id", activeCheckIn.getProviderAccount().getId());
+                values.put("businessName", activeCheckIn.getProviderAccount().getBusinessName());
+                values.put("uniqueId", activeCheckIn.getProviderAccount().getUniqueId());
                 values.put("date", activeCheckIn.getDate());
                 values.put("waitlistStatus", activeCheckIn.getWaitlistStatus());
                 values.put("servicename", activeCheckIn.getService().getName());
@@ -573,9 +573,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         try {
             for (ActiveCheckIn activeCheckIn : activeCheckInModel) {
                 ContentValues values = new ContentValues();
-                values.put("id", activeCheckIn.getProvider().getId());
-                values.put("businessName", activeCheckIn.getProvider().getBusinessName());
-                values.put("uniqueId", activeCheckIn.getProvider().getUniqueId());
+                values.put("id", activeCheckIn.getProviderAccount().getId());
+                values.put("businessName", activeCheckIn.getProviderAccount().getBusinessName());
+                values.put("uniqueId", activeCheckIn.getProviderAccount().getUniqueId());
                 values.put("date", activeCheckIn.getDate());
                 values.put("waitlistStatus", activeCheckIn.getWaitlistStatus());
                 values.put("servicename", activeCheckIn.getService().getName());
@@ -902,13 +902,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         try {
             for (InboxModel inbox : inboxModel) {
                 ContentValues values = new ContentValues();
-                values.put("provider", inbox.getOwner().getUserName());
+                values.put("provider", inbox.getAccountName());
                 values.put("service", inbox.getService());
                 values.put("id", inbox.getOwner().getId());
                 values.put("timestamp", inbox.getTimeStamp());
                 values.put("message", inbox.getMsg());
                 values.put("uniqueID", inbox.getUniqueID());
                 values.put("waitlistId", inbox.getWaitlistId());
+
 
 
               /*  values.put("receiverID", inbox.getReceiver().getReceiverId());
@@ -939,13 +940,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         try {
 
             ContentValues values = new ContentValues();
-            values.put("provider", inbox.getUserName());
+            values.put("provider", inbox.getAccountName());
             values.put("service", inbox.getService());
             values.put("id", inbox.getId());
             values.put("timestamp", inbox.getTimeStamp());
             values.put("message", inbox.getMsg());
             values.put("uniqueID", inbox.getUniqueID());
             values.put("waitlistId", inbox.getWaitlistId());
+
 
                /* values.put("receiverID", inbox.getReceiver().getReceiverId());
                 values.put("receiverName", inbox.getReceiver().getReceiverName());*/
@@ -1038,7 +1040,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         try {
             for (InboxModel inbox : inboxModel) {
                 ContentValues values = new ContentValues();
-                values.put("provider", inbox.getOwner().getUserName());
+                values.put("provider", inbox.getAccountName());
                 values.put("service", inbox.getService());
                 values.put("id", inbox.getOwner().getId());
                 values.put("timestamp", inbox.getTimeStamp());
@@ -1049,6 +1051,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("receiverName", inbox.getReceiver().getReceiverName());*/
                 values.put("messageStatus", inbox.getMessageStatus());
                 values.put("attachements", new Gson().toJson(inbox.getAttachments()));
+
 
                 db.update(mContext.getString(R.string.db_table_inbox), values, "timestamp=" + inbox.getTimeStamp(), null);
 
@@ -1082,7 +1085,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 InboxModel inbox = new InboxModel();
-                inbox.setUserName(cursor.getString(0));
+                inbox.setAccountName(cursor.getString(0));
                 inbox.setService(cursor.getString(1));
                 inbox.setId(cursor.getInt(2));
                 inbox.setTimeStamp(cursor.getLong(3));
@@ -1133,7 +1136,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 InboxModel inboxModel = new InboxModel();
-                inboxModel.setUserName(cursor.getString(0));
+                inboxModel.setAccountName(cursor.getString(0));
                 inboxModel.setService(cursor.getString(1));
                 inboxModel.setId(cursor.getInt(2));
                 inboxModel.setTimeStamp(cursor.getLong(3));

@@ -160,9 +160,6 @@ public class BillActivity extends AppCompatActivity {
             payStatus = extras.getString("payStatus");
             consumer = extras.getString("consumer");
             purpose = extras.getString("purpose");
-
-
-
         }
 
 
@@ -443,7 +440,7 @@ public class BillActivity extends AppCompatActivity {
         final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
-        Call<BillModel> call = apiService.getBill(ynwuuid);
+        Call<BillModel> call = apiService.getBill(ynwuuid,accountID);
 
         Config.logV("Request--ynwuuid1-------------------------" + ynwuuid);
 
@@ -460,7 +457,7 @@ public class BillActivity extends AppCompatActivity {
                     Config.logV("Response--code12-------------------------" + new Gson().toJson(response.body()));
 
                     if (response.code() == 200) {
-                        Config.logV("Response--Array size--Active-----------------------" + new Gson().toJson(response.body().toString()));
+
                         mBillData = response.body();
 
                         String firstName = SharedPreference.getInstance(mCOntext).getStringValue("firstname", "");

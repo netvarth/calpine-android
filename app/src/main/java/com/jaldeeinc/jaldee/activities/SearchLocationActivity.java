@@ -230,7 +230,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
                 JSONObject jsonObj1Metro = ja_statesMetro.getJSONObject(i);
                 locationResponseMetro.setName(jsonObj1Metro.getString("name") + " " + "( Metro )");
                 locationResponseMetro.setLatitude(jsonObj1Metro.getDouble("latitude"));
-                locationResponseMetro.setLatitude(jsonObj1Metro.getDouble("longitude"));
+                locationResponseMetro.setLongitude(jsonObj1Metro.getDouble("longitude"));
                 locationResponseMetro.setTyp("metro");
                 locationResponseMetro.setRank("1");
                 arrayList.add(locationResponseMetro);

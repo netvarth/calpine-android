@@ -2,11 +2,9 @@ package com.jaldeeinc.jaldee.activities;
 
 
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -14,21 +12,14 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.BuildConfig;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -36,6 +27,7 @@ import android.net.Uri;
 import android.provider.Settings;
 
 import com.google.gson.Gson;
+import com.jaldeeinc.jaldee.BuildConfig;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -55,21 +47,15 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy.REQUEST_ID_MULTIPLE_PERMISSIONS;
 
-
-public class CheckinShareLocation extends AppCompatActivity implements
+public class CheckinShareLocationAppointment extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String TAG = CheckinShareLocation.class.getSimpleName();
+    private static final String TAG = CheckinShareLocationAppointment.class.getSimpleName();
 
     // Used in checking for runtime permissions.
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
@@ -102,7 +88,6 @@ public class CheckinShareLocation extends AppCompatActivity implements
     boolean firstCall = true;
     LocationManager locationManager;
     String latValues, longValues, terminology, calcMode,queueStartTime,queueEndTime;
-    String jaldeeDistance;
 
 
 
@@ -126,7 +111,6 @@ public class CheckinShareLocation extends AppCompatActivity implements
             mBound = false;
         }
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,38 +145,12 @@ public class CheckinShareLocation extends AppCompatActivity implements
         startTime = "ONEHOUR";
 
         // Check that the user hasn't revoked permissions by going to Settings.
-        if (Utilss.requestingLocationUpdates(CheckinShareLocation.this)) {
+        if (Utilss.requestingLocationUpdates(CheckinShareLocationAppointment.this)) {
             if (!checkPermissions()) {
                 requestPermissions();
             }
         }
-        LocationManager service = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        // Check if enabled and if not send user to the GPS settings
-        if (!enabled) {
-            android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-            alertDialog.setMessage("To continue, turn on device location, which uses Google location service");
-
-            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(CheckinShareLocation.this, "Please enable the location to track your ETA", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            alertDialog.setPositiveButton("Turn On GPS", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-
-            alertDialog.show();
-        }
-       if(!enabled){
-           Toast.makeText(CheckinShareLocation.this, "Please enable the location to track your ETA", Toast.LENGTH_SHORT).show();
-       }
 
         if(!isCar){
             drivingIcon.setBackgroundResource(R.drawable.icon_driving);
@@ -246,7 +204,6 @@ public class CheckinShareLocation extends AppCompatActivity implements
             calcMode = extras.getString("calcMode");
             queueStartTime = extras.getString("queueStartTime");
             queueEndTime = extras.getString("queueEndTime");
-            jaldeeDistance = extras.getString("jaldeeDistance");
             Log.i("calcmode",calcMode);
         }
         locationStatus = true;
@@ -284,22 +241,11 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 shareSwitch.setChecked(false);
                 locationStatus = false;
                 UpdateShareLiveLocation();
-                Toast.makeText(CheckinShareLocation.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CheckinShareLocationAppointment.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
                 mService.removeLocationUpdates();
                 finish();
             }
         });
-        if(jaldeeDistance!=null){
-            shareSwitch.setChecked(true);
-            UpdateShareLiveLocation();
-//            trackingText.setVisibility(View.GONE);
-//            shareText.setVisibility(View.GONE);
-        }
-        else{
-            shareSwitch.setChecked(false);
-            trackingText.setVisibility(View.VISIBLE);
-            shareText.setVisibility(View.VISIBLE);
-        }
         shareSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -384,53 +330,36 @@ public class CheckinShareLocation extends AppCompatActivity implements
     }
 
     private void requestPermissions() {
-//        boolean shouldProvideRationale =
-//                ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                        Manifest.permission.ACCESS_FINE_LOCATION);
-//
-//        // Provide an additional rationale to the user. This would happen if the user denied the
-//        // request previously, but didn't check the "Don't ask again" checkbox.
-//        if (shouldProvideRationale) {
-//            Log.i(TAG, "Displaying permission rationale to provide additional context.");
-//            Snackbar.make(
-//                    findViewById(R.id.activity_main),
-//                    R.string.permission_rationale,
-//                    Snackbar.LENGTH_INDEFINITE)
-//                    .setAction(R.string.ok, new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            // Request permission
-//                            ActivityCompat.requestPermissions(CheckinShareLocation.this,
-//                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                                    REQUEST_PERMISSIONS_REQUEST_CODE);
-//                        }
-//                    })
-//                    .show();
-//        } else {
-//            Log.i(TAG, "Requesting permission");
-//            // Request permission. It's possible this can be auto answered if device policy
-//            // sets the permission in a given state or the user denied the permission
-//            // previously and checked "Never ask again".
-//            ActivityCompat.requestPermissions(CheckinShareLocation.this,
-//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                    REQUEST_PERMISSIONS_REQUEST_CODE);
-//        }
-        int permissionLocation = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        List<String> listPermissionsNeeded = new ArrayList<>();
-        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
-            Config.logV("Google Not Granted" + permissionLocation);
-            listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (!listPermissionsNeeded.isEmpty()) {
-               /*requestPermissions(getActivity(),
-                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);*/
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    requestPermissions(new String[]{
-                            Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ID_MULTIPLE_PERMISSIONS);
-                }
+        boolean shouldProvideRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION);
 
-                Config.logV("GoogleNot Granted" + permissionLocation);
-            }
+        // Provide an additional rationale to the user. This would happen if the user denied the
+        // request previously, but didn't check the "Don't ask again" checkbox.
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+            Snackbar.make(
+                    findViewById(R.id.activity_main),
+                    R.string.permission_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // Request permission
+                            ActivityCompat.requestPermissions(CheckinShareLocationAppointment.this,
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    REQUEST_PERMISSIONS_REQUEST_CODE);
+                        }
+                    })
+                    .show();
+        } else {
+            Log.i(TAG, "Requesting permission");
+            // Request permission. It's possible this can be auto answered if device policy
+            // sets the permission in a given state or the user denied the permission
+            // previously and checked "Never ask again".
+            ActivityCompat.requestPermissions(CheckinShareLocationAppointment.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
         }
     }
 
@@ -542,8 +471,8 @@ public class CheckinShareLocation extends AppCompatActivity implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ShareLocation> call = apiService.ShareLiveLocation(uuid, accountID, body);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ShareLocation> call = apiService.ShareLiveLocationAppointment(uuid, accountID, body);
         call.enqueue(new Callback<ShareLocation>() {
             @Override
             public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
@@ -570,10 +499,10 @@ public class CheckinShareLocation extends AppCompatActivity implements
 
 
                                 if (hours < 1) {
-                                    modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance()+ "</b>" +" " +"<b>Km</b>" + " " + "away and will take around " +"<b>" +" " + minutes +"</b>" + "<b> mins</b>" + " to reach"));
+                                    modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes + " mins" + " to reach");
 
                                 } else {
-                                    modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() +"</b>"+" " +"<b>Km</b>" + " "+ "away and will take around " + "<b>" +  hours +"</b>"+ "<b> hours</b>" +" " + "<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
+                                    modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
                                 }
                             } else {
                                 modeLabel.setText("You are close to " + a.getProviderAccount().getBusinessName());
@@ -607,8 +536,8 @@ public class CheckinShareLocation extends AppCompatActivity implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<ShareLocation> call = apiService.UpdateShareLiveLocation(uuid, accountID, body);
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ShareLocation> call = apiService.UpdateShareLiveLocationAppointment(uuid, accountID, body);
         call.enqueue(new Callback<ShareLocation>() {
             @Override
             public void onResponse(Call<ShareLocation> call, Response<ShareLocation> response) {
@@ -631,11 +560,9 @@ public class CheckinShareLocation extends AppCompatActivity implements
                             int minutes = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
                             if (response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() > 0) {
                                 if (hours < 1) {
-
-                                    modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "</b>" +" " + "<b>Km</b>" + " " + "away and will take around " +"<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
+                                    modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes + " mins" + " to reach");
                                 } else {
-
-                                    modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance()+"</b>"+ " "+ "<b>Km</b>" + " "+ "away and will take around " + "<b>" +  hours+ "</b> "+ "<b>hours</b>" +" " + "<b>" + minutes + "</b>" + "<b> mins</b>" + " to reach"));
+                                    modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
                                 }
                             } else {
                                 modeLabel.setText("You are close to " + a.getProviderAccount().getBusinessName());
@@ -664,11 +591,11 @@ public class CheckinShareLocation extends AppCompatActivity implements
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
 
             Call<ShareLocation> call;
 
-            call = apiService.PutTravelModes(uuid, Integer.parseInt(accountID), body);
+            call = apiService.PutTravelModesAppointment(uuid, Integer.parseInt(accountID), body);
 
 
             Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
@@ -687,9 +614,9 @@ public class CheckinShareLocation extends AppCompatActivity implements
 
 
                                     if (hours < 1) {
-                                        modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() +"</b>" +" " +"<b>Km</b>" + " " + "away and will take around " +"<b>" + minutes + "</b>" + "<b> mins</b>" + " to reach"));
+                                        modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes + " mins" + " to reach");
                                     } else {
-                                        modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "</b>"+" " +"<b>Km</b>" + " "+ "away and will take around " + "<b> hours </b> "+ "<b>hours</b>" +" " + "<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
+                                        modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
 
                                     }
                                 } else {
@@ -734,7 +661,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         // Update the buttons state depending on whether location updates are being requested.
-        }
     }
+}
 
 

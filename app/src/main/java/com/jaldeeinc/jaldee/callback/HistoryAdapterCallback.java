@@ -10,7 +10,7 @@ HistoryAdapterCallback {
     void onMethodMessageCallback(String ynwuuid,String accountID,String provider);
     void onMethodBillIconCallback(String payStatus,String value,String provider,String accountID,String CustomerName);
 
-    void onMethodDelecteCheckinCallback(String ynwuuid,int accountID,boolean todayflag,boolean futflag,boolean oldflag);
+    void onMethodDelecteCheckinCallback(String ynwuuid,int accountID,boolean todayflag,boolean futflag,boolean oldflag,String from);
     void onMethodActiveCallback(String value);
     void onMethodAddFavourite(int value,boolean todayflag,boolean futflag,boolean oldflag);
     void onMethodDeleteFavourite(int value,boolean todayflag,boolean futflag,boolean oldflag);

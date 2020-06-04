@@ -7,7 +7,9 @@ import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.TestModel;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
+import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
@@ -22,7 +24,9 @@ import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
+import com.jaldeeinc.jaldee.response.ScheduleId;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
+import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
@@ -30,6 +34,7 @@ import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
+import com.jaldeeinc.jaldee.response.SearchUsers;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
@@ -134,6 +139,31 @@ public interface ApiInterface {
     @GET("consumer/waitlist/status/mytracking/{uuid}")
     Call<ResponseBody> StatusTracking(@Path("uuid") String uuid,@Query("account") Integer account);
 
+
+    @POST("consumer/appointment/saveMyLoc/{uuid}")
+    Call<ShareLocation> ShareLiveLocationAppointment(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/updateMyLoc/{uuid}")
+    Call<ShareLocation> UpdateShareLiveLocationAppointment(@Path("uuid") String uuid, @Query("account") String account, @Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/update/travelmode/{uuid}")
+    Call<ResponseBody> PutTravelModeAppointment(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/update/travelmode/{uuid}")
+    Call<ShareLocation> PutTravelModesAppointment(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/update/latlong/{uuid}")
+    Call<ResponseBody> UpdateLatLongAppointment(@Path("uuid") String uuid,@Query("account") Integer account,@Body RequestBody jsonObj);
+
+    @PUT("consumer/appointment/start/mytracking/{uuid}")
+    Call<ResponseBody> StartTrackingAppointment(@Path("uuid") String uuid,@Query("account") Integer account);
+
+    @DELETE("consumer/appointment/stop/mytracking/{uuid}")
+    Call<ResponseBody> StopTrackingAppointment(@Path("uuid") String uuid,@Query("account") Integer account);
+
+    @GET("consumer/appointment/status/mytracking/{uuid}")
+    Call<ResponseBody> StatusTrackingAppointment(@Path("uuid") String uuid,@Query("account") Integer account);
+
     @PUT("consumer/login/{otp}/verifyLogin")
     Call<ResponseBody> ChngeEmailOtp(@Path("otp") String otp, @Body RequestBody jsonObj);
 
@@ -156,6 +186,9 @@ public interface ApiInterface {
 
     @GET("consumer/waitlist")
     Call<ArrayList<ActiveCheckIn>> getActiveCheckIn();
+
+    @GET("consumer/appointment")
+    Call<ArrayList<ActiveAppointment>> getActiveAppointment();
 
 
     @GET("consumer/waitlist/{uuid}")
@@ -195,6 +228,16 @@ public interface ApiInterface {
     @GET("consumer/waitlist/services/{id}")
     Call<ArrayList<SearchService>> getSearchService(@Path("id") int id);
 
+    @GET("consumer/appointment/service/{id}")
+    Call<ArrayList<SearchAppoinment>> getSearchAppointment(@Path("id") int id);
+
+    @GET("consumer/appointment/schedule/location/{locid}/service/{servid}/date/{dd}")
+    Call<ArrayList<AppointmentSchedule>> getAppointmentSchedule(@Path("locid") String locid, @Path("servid") String servid, @Path("dd") String dd, @Query("account") String account);
+
+
+    @GET("consumer/appointment/schedule/{id}/{dd}")
+    Call<ScheduleId> getAppointmentScheduleId(@Path("id") String id, @Path("dd") String dd, @Query("account") String account);
+
     @GET("consumer/waitlist/department/services")
     Call<SearchDepartment> getDepartment(@Query("account") int id);
 
@@ -228,8 +271,14 @@ public interface ApiInterface {
     @GET("consumer/waitlist/history")
     Call<ArrayList<ActiveCheckIn>> getCheckInList(/*@QueryMap(encoded = true) Map<String, String>   query*/);
 
+    @GET("consumer/appointment/history")
+    Call<ArrayList<ActiveAppointment>> getAppointmentList(/*@QueryMap(encoded = true) Map<String, String>   query*/);
+
     @GET("consumer/waitlist/future")
     Call<ArrayList<ActiveCheckIn>> getFutureCheckInList();
+
+    @GET("consumer/appointment/future")
+    Call<ArrayList<ActiveAppointment>> getFutureAppointmentList();
 
 
     @POST("consumer/communications")
@@ -264,8 +313,12 @@ public interface ApiInterface {
     Call<ResponseBody> Checkin(@Query("account") String account, @Body RequestBody jsonObj);
 
 
+    @POST("consumer/appointment")
+    Call<ResponseBody> Appointment(@Query("account") String account, @Body RequestBody jsonObj);
+
+
     @GET("consumer/bill/{ynwuuid}")
-    Call<BillModel> getBill(@Path("ynwuuid") String uuid);
+    Call<BillModel> getBill(@Path("ynwuuid") String uuid, @Query("account") String account);
 
 
     @POST("consumer/jaldee/coupons/{coupon}/{ynwuuid}")
@@ -274,6 +327,10 @@ public interface ApiInterface {
 
     @DELETE("consumer/waitlist/{ynwuuid}")
     Call<ResponseBody> deleteActiveCheckIn(@Path("ynwuuid") String uuid, @Query("account") String account);
+
+
+    @PUT("consumer/appointment/cancel/{ynwuuid}")
+    Call<ResponseBody> deleteAppointment(@Path("ynwuuid") String uuid, @Query("account") String account);
 
     @GET("consumer/waitlist/{ynwuuid}")
     Call<List<ResponseBody>> waitlist(@Path("ynwuuid") String uuid, @Query("account") String account);
@@ -348,4 +405,7 @@ public interface ApiInterface {
 
     @GET("ynwConf/refinedFilters/{domain}/{subdomain}")
     Call<RefinedFilters> getSubDomainMoreFilters(@Path("subdomain") String subdomain,@Path("domain") String domain);
+
+    @GET("consumer/waitlist/providerByDepartmentId/{departmentId}")
+    Call<ArrayList<SearchUsers>> getUsers(@Path("departmentId")  int departmentId, @Query("account") int account);
 }

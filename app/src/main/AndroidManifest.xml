@@ -57,6 +57,9 @@
             android:name=".activities.Register"
             android:screenOrientation="unspecified" />
         <activity
+            android:name=".activities.AppointmentDate"
+            android:screenOrientation="unspecified" />
+        <activity
             android:name=".activities.Signup"
             android:screenOrientation="unspecified" />
         <activity
@@ -102,12 +105,19 @@
             android:name=".activities.CheckIn"
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".activities.Appointment"
+            android:screenOrientation="unspecified"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".activities.CheckinShareLocation"
             android:screenOrientation="unspecified" />
         <activity
-            android:name=".activities.Appointment"
+            android:name=".activities.CheckinShareLocationAppointment"
             android:screenOrientation="unspecified" />
+
         <activity
             android:name=".activities.CheckInCopy"
             android:screenOrientation="unspecified" />
@@ -116,6 +126,9 @@
             android:screenOrientation="unspecified" />
         <activity
             android:name=".activities.CheckinFamilyMember"
+            android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.CheckinFamilyMemberAppointment"
             android:screenOrientation="unspecified" />
         <activity
             android:name=".activities.MessageActivity"

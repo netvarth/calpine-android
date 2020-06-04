@@ -54,6 +54,7 @@ import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
+import com.jaldeeinc.jaldee.response.SearchUsers;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -103,10 +104,11 @@ public class CheckIn extends AppCompatActivity {
     static TextView tv_personahead;
     static Context mContext;
     static Activity mActivity;
-    Spinner mSpinnerService, mSpinnerDepartment;
+    Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
     static int serviceId;
     ArrayList<SearchService> LServicesList = new ArrayList<>();
     ArrayList<SearchService> gServiceList = new ArrayList<>();
+    ArrayList<SearchUsers>   doctResponse = new ArrayList<>();
     String uniqueID;
     String uuid;
     TextView tv_addmember, tv_editphone;
@@ -137,7 +139,7 @@ public class CheckIn extends AppCompatActivity {
 //    static TextView tv_queuename;
     static LinearLayout queuelayout;
     String toastMessage;
-    TextView txt_chooseservice, txt_choosedepartment;
+    TextView txt_chooseservice, txt_choosedepartment,txt_choosedoctor;
     static int i = 0;
     static ImageView ic_cal_minus;
     ImageView ic_cal_add;
@@ -188,6 +190,11 @@ public class CheckIn extends AppCompatActivity {
     String path;
     Bitmap bitmap;
     Boolean isShow;
+    String deptId;
+    TextView tv_enterInstructions;
+    EditText et_virtualId;
+    String selectedServiceType;
+    String callingMode,valueNumber,serviceInstructions;
 
 
     @Override
@@ -241,6 +248,11 @@ public class CheckIn extends AppCompatActivity {
         tv_addnote = findViewById(R.id.txtaddnote);
         mSpinnerService = findViewById(R.id.spinnerservice);
         mSpinnerDepartment = findViewById(R.id.spinnerdepartment);
+        txt_choosedoctor = findViewById(R.id.txt_choosedoctor);
+        mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
+        tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
+        et_virtualId = findViewById(R.id.virtual_id);
+
 
         tv_addnote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -362,11 +374,11 @@ public class CheckIn extends AppCompatActivity {
                         if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
                         } else {
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
                           //  btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
                     }
@@ -563,8 +575,6 @@ public class CheckIn extends AppCompatActivity {
                 }
             }
         });
-
-
         ApiSearchViewSetting(uniqueID);
         ApiSearchViewTerminology(uniqueID);
         ApiGetProfileDetail();
@@ -604,11 +614,30 @@ public class CheckIn extends AppCompatActivity {
                                        int position, long id) {
                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
                 livetrack = (((SearchService) mSpinnerService.getSelectedItem()).isLivetrack());
+                selectedServiceType =(((SearchService)  mSpinnerService.getSelectedItem()).getServiceType());
                 Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
                 Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
 
                 serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+
+                if(selectedServiceType.equalsIgnoreCase("virtualService")) {
+                    callingMode = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
+                    valueNumber = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
+                    if (callingMode.equalsIgnoreCase("WhatsApp")) {
+                        serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                        tv_enterInstructions.setVisibility(View.VISIBLE);
+                        tv_enterInstructions.setText(serviceInstructions);
+                        et_virtualId.setText(phoneNumber);
+                        et_virtualId.setVisibility(View.VISIBLE);
+                    } else {
+                        tv_enterInstructions.setVisibility(View.GONE);
+                        et_virtualId.setVisibility(View.GONE);
+                    }
+                }else{
+                    tv_enterInstructions.setVisibility(View.GONE);
+                    et_virtualId.setVisibility(View.GONE);
+                }
 
                 // String firstWord = "Check-in for ";
                 String firstWord = Word_Change;
@@ -670,7 +699,7 @@ public class CheckIn extends AppCompatActivity {
 
                 departmentSelected = depResponse.getDepartments().get(position).getDepartmentName();
                 selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
-
+                ApiSearchUsers(selectedDepartment);
                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
                 ArrayList<SearchService> serviceList = new ArrayList<>();
                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
@@ -2200,6 +2229,10 @@ public class CheckIn extends AppCompatActivity {
                             mService.setPrePayment(response.body().get(i).isPrePayment());
                             mService.setTotalAmount(response.body().get(i).getTotalAmount());
                             mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
+                            mService.setServiceType(response.body().get(i).getServiceType());
+                            mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
+                            mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
+
                             LServicesList.add(mService);
                         }
                         gServiceList.addAll(LServicesList);
@@ -2355,6 +2388,44 @@ public class CheckIn extends AppCompatActivity {
 
     }
 
+    private void ApiSearchUsers(int deptId) {
+
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(deptId,Integer.parseInt(accountID.split("-")[0]));
+        call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchUsers>> call, Response<ArrayList<SearchUsers>> response) {
+                try {
+                    if (response.code() == 200) {
+                        doctResponse = response.body();
+                        Log.i("getUser123",new Gson().toJson(response.body()));
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchUsers>> call, Throwable t) {
+
+            }
+
+
+
+        });
+
+        // Department Ends Here
+
+    }
+
+
+
+
+
+
     SearchTerminology mSearchTerminology;
 
     private void ApiSearchViewTerminology(String muniqueID) {
@@ -2441,7 +2512,6 @@ public class CheckIn extends AppCompatActivity {
                         phoneNumber = phoneNumberValue.getText().toString();
                         Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
                         Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
-
                     } else {
                     }
                 } catch (Exception e) {
@@ -2560,12 +2630,18 @@ public class CheckIn extends AppCompatActivity {
         JSONObject waitobj = new JSONObject();
         JSONObject service = new JSONObject();
         JSONArray waitlistArray = new JSONArray();
+        JSONObject virtualService = new JSONObject();
         try {
 
             qjsonObj.put("id", queueId);
             queueobj.put("date", formattedDate);
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("waitlistPhonenumber", phoneNumber);
+            if(callingMode!=null && callingMode.equalsIgnoreCase("whatsapp")){
+                virtualService.put("WhatsApp", et_virtualId.getText());
+            }else{
+                virtualService.put("", "");
+            }
 
 
             JSONArray couponList = new JSONArray();
@@ -2599,6 +2675,9 @@ public class CheckIn extends AppCompatActivity {
                     waitlistArray.put(waitobj1);
                 }
             } else {
+                if(familyMEmID == consumerID){
+                    familyMEmID = 0;
+                }
                 waitobj.put("id", familyMEmID);
                 waitlistArray.put(waitobj);
             }
@@ -2607,6 +2686,9 @@ public class CheckIn extends AppCompatActivity {
             queueobj.putOpt("service", selectedService);
             queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("waitlistingFor", waitlistArray);
+            if(selectedServiceType.equalsIgnoreCase("virtualService")){
+                queueobj.putOpt("virtualService",virtualService);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -123,7 +123,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
 
        // String cap_Provider = inboxList.getUserName().substring(0, 1).toUpperCase() + inboxList.getUserName().substring(1);
-        myViewHolder.tv_provider.setText(toTitleCase(inboxList.getUserName()));
+        myViewHolder.tv_provider.setText(toTitleCase(inboxList.getAccountName()));
         myViewHolder.linear_inbox_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,7 +184,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
 
                {
                    Intent iInbox = new Intent(v.getContext(), DetailInboxList.class);
-                   iInbox.putExtra("provider",inboxList.getUserName());
+                   iInbox.putExtra("provider",inboxList.getAccountName());
                    mContext.startActivity(iInbox);
                }
 

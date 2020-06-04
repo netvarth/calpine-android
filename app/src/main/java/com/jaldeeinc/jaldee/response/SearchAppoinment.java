@@ -1,0 +1,141 @@
+package com.jaldeeinc.jaldee.response;
+
+public class SearchAppoinment {
+
+    int id;
+    String name;
+    String description;
+    int serviceDuration;
+    String notificationType;
+    String notification;
+    String isPrePayment;
+    String totalAmount;
+    String bType;
+    String status;
+    String taxable;
+    int department;
+    String serviceType;
+    int multiples;
+    String livetrack;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getServiceDuration() {
+        return serviceDuration;
+    }
+
+    public void setServiceDuration(int serviceDuration) {
+        this.serviceDuration = serviceDuration;
+    }
+
+    public String getNotificationType() {
+        return notificationType;
+    }
+
+    public void setNotificationType(String notificationType) {
+        this.notificationType = notificationType;
+    }
+
+    public String getNotification() {
+        return notification;
+    }
+
+    public void setNotification(String notification) {
+        this.notification = notification;
+    }
+
+    public String getIsPrePayment() {
+        return isPrePayment;
+    }
+
+    public void setIsPrePayment(String isPrePayment) {
+        this.isPrePayment = isPrePayment;
+    }
+
+    public String getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(String totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public String getbType() {
+        return bType;
+    }
+
+    public void setbType(String bType) {
+        this.bType = bType;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTaxable() {
+        return taxable;
+    }
+
+    public void setTaxable(String taxable) {
+        this.taxable = taxable;
+    }
+
+    public int getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(int department) {
+        this.department = department;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    public int getMultiples() {
+        return multiples;
+    }
+
+    public void setMultiples(int multiples) {
+        this.multiples = multiples;
+    }
+
+    public String getLivetrack() {
+        return livetrack;
+    }
+
+    public void setLivetrack(String livetrack) {
+        this.livetrack = livetrack;
+    }
+}

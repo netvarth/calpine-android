@@ -798,6 +798,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                            tv_spec2.setVisibility(View.VISIBLE);
 //                                        }
                                       //  tv_seeAll.setVisibility(View.VISIBLE);
+//                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
+//                                            tv_spec2.setVisibility(View.GONE);
+//                                        }
+//                                        else{
+//                                            tv_spec2.setVisibility(View.VISIBLE);
+//                                        }
+                                        tv_seeAll.setVisibility(View.VISIBLE);
                                         tv_spec1.setText(seeAll);
                                         //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
                                         mrecycle_specialisation.setVisibility(View.GONE);
@@ -3071,6 +3078,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
+                                search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
+                                search.setFuture_appt(response.body().getHits().getHit().get(i).getFields().getFuture_appt());
 
 
                                 search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
@@ -3111,6 +3120,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 //search.setFound(response.body().getHits().getFound());
                                 if (response.body().getHits().getHit().get(i).getFields().getServices() != null) {
                                     search.setServices(response.body().getHits().getHit().get(i).getFields().getServices());
+                                }
+
+                                if (response.body().getHits().getHit().get(i).getFields().getAppt_services() != null) {
+                                    search.setAppt_services(response.body().getHits().getHit().get(i).getFields().getAppt_services());
                                 }
 
                                 if (response.body().getHits().getHit().get(i).getFields().getBusiness_hours1() != null) {
@@ -3274,6 +3287,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                             searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
                                             searchList.setSectorname(mSearchRespPass.get(i).getSector());
                                             searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
+                                            searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
+                                            searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
 
 
                                             searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
@@ -3318,6 +3333,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                             if (mSearchRespPass.get(i).getServices() != null) {
                                                 searchList.setServices(mSearchRespPass.get(i).getServices());
+                                            }
+
+                                            if (mSearchRespPass.get(i).getAppt_services() != null) {
+                                                searchList.setAppt_services(mSearchRespPass.get(i).getAppt_services());
                                             }
 
                                             if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
@@ -3487,6 +3506,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                             searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
                                             searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
                                             searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
+                                            searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
+                                            searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
                                             searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
 
 //                                        String spec = "";
@@ -3532,6 +3553,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                                             if (mSearchRespPass.get(i).getServices() != null) {
                                                 searchList.setServices(mSearchRespPass.get(i).getServices());
+                                            }
+                                            if (mSearchRespPass.get(i).getAppt_services() != null) {
+                                                searchList.setAppt_services(mSearchRespPass.get(i).getAppt_services());
                                             }
 
                                             if (mSearchRespPass.get(i).getBusiness_hours1() != null) {

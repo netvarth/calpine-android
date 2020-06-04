@@ -18,6 +18,7 @@ public class SearchAWsResponse {
     String physiciansemergencyservices_location1;
     String dentistemergencyservices_location1;
     String hosemergencyservices_location1;
+    String name;
 
     public String getDepartment_code() {
         return department_code;
@@ -38,6 +39,8 @@ public class SearchAWsResponse {
     }
 
     int coupon_enabled;
+    String today_appt;
+    String future_appt;
 
     public int getCoupon_enabled() {
         return coupon_enabled;
@@ -45,6 +48,22 @@ public class SearchAWsResponse {
 
     public void setCoupon_enabled(int coupon_enabled) {
         this.coupon_enabled = coupon_enabled;
+    }
+
+    public String getToday_appt() {
+        return today_appt;
+    }
+
+    public void setToday_appt(String today_appt) {
+        this.today_appt = today_appt;
+    }
+
+    public String getFuture_appt() {
+        return future_appt;
+    }
+
+    public void setFuture_appt(String future_appt) {
+        this.future_appt = future_appt;
     }
 
 
@@ -327,6 +346,17 @@ public class SearchAWsResponse {
 
     @SerializedName("services")
     private ArrayList services;
+
+    public ArrayList getAppt_services() {
+        return appt_services;
+    }
+
+    public void setAppt_services(ArrayList appt_services) {
+        this.appt_services = appt_services;
+    }
+
+    @SerializedName("appt_services")
+    private ArrayList appt_services;
 
     public ArrayList getDepartments() {
         return departments;

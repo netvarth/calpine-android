@@ -176,7 +176,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                                 int activeConsumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
 
 
-                                String senderName = String.valueOf(mInboxList.get(i).getOwner().getUserName()).toLowerCase().trim();
+                                String senderName = String.valueOf(mInboxList.get(i).getAccountName()).toLowerCase().trim();
 
                                 int senderId = mInboxList.get(i).getOwner().getId();
                                 String messageStatus = "in";
@@ -202,6 +202,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                                 inbox.setAttachments(mInboxList.get(i).getAttachments());
                                 //Config.logV("AccountID--------------"+mInboxList.get(i).getAccountId());
                                 inbox.setUniqueID(mInboxList.get(i).getAccountId());
+                                inbox.setAccountName(mInboxList.get(i).getAccountName());
                                 // mDBInboxList.add(inbox);
 
                                 db.insertInboxModel(inbox);
