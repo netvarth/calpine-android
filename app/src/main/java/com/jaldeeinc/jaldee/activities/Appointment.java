@@ -138,7 +138,7 @@ public class Appointment extends AppCompatActivity {
     LinearLayout LcheckinDatepicker;
     static String mFrom;
     String title, place, terminology, calcMode;
-    ArrayList<String> timeslots= new ArrayList<>();;
+    ArrayList<String> timeslots= new ArrayList<>();
     static String isShowToken;
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
