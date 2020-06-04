@@ -698,7 +698,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         icon_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag);
+                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag,"checkin");
             }
         });
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -1793,7 +1793,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                                     if (activelist.getParentUuid() != null) {
                                         tv_makepay.setVisibility(View.GONE);
                                     } else {
-                                        tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                        tv_makepay.setText("");
                                         mins--;
                                     }
 
@@ -1816,7 +1816,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                                 if (activelist.getParentUuid() != null) {
                                     tv_makepay.setVisibility(View.GONE);
                                 } else {
-                                    tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                    tv_makepay.setText("");
                                     mins--;
                                 }
 
@@ -1843,7 +1843,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         tv_prepaid.setVisibility(View.VISIBLE);
                         tv_makepay.setVisibility(View.VISIBLE);
                         tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
-                        tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                        tv_makepay.setText("");
                     }
                 } else {
                     tv_prepaid.setVisibility(View.GONE);

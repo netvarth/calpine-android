@@ -367,7 +367,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                                         myViewHolder.tv_makepay.setVisibility(View.GONE);
                                     }
                                     else {
-                                        myViewHolder.tv_makepay.setText("Click PAY button in " + String.valueOf(mins) + " minutes to complete your check-in");
+                                        myViewHolder.tv_makepay.setText("");
                                         myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
                                         mins--;
                                     }
@@ -392,7 +392,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                                     myViewHolder.tv_makepay.setVisibility(View.GONE);
                                 }
                                 else{
-                                myViewHolder.tv_makepay.setText("Click PAY button in " + mins + " minutes to complete your check-in");
+                                myViewHolder.tv_makepay.setText("");
                                 myViewHolder.tv_makepay.setVisibility(View.VISIBLE);
                                 mins--;}
 
