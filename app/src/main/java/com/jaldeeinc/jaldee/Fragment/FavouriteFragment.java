@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.adapter.FavLocationAdapter;
@@ -38,6 +39,7 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.QueueList;
+import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
@@ -78,6 +80,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
     Activity mActivity;
     FavAdapterOnCallback callback;
     ArrayList<QueueList> mSearchQueueList = new ArrayList<>();
+    ArrayList<ScheduleList> mSearchScheduleList = new ArrayList<>();
 
     ArrayList<FavouriteModel> mFavModelList = new ArrayList<>();
     TextView tv_nofav;
@@ -244,6 +247,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
         uniQueID = uniqueID;
         mTitle = title;
         ApiSearchViewTerminology(String.valueOf(uniQueID));
+        ApiSearchScheduleViewID(mProviderid, ids);
         ApiSearchViewID(mProviderid, ids, rfavlocRecycleview);
 
     }
@@ -324,13 +328,13 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
 
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,terminology,contactcallback);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,terminology,contactcallback,mSearchScheduleList);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
                     } else {
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mrRecylce_favloc.setLayoutManager(mLayoutManager);
-                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,terminology,contactcallback);
+                        FavLocationAdapter mFavAdapter = new FavLocationAdapter(mSearchQueueList, mContext, mFavModelList, mSearchSettings, String.valueOf(uniQueID), mTitle,terminology,contactcallback,mSearchScheduleList);
                         mrRecylce_favloc.setAdapter(mFavAdapter);
                         mFavAdapter.notifyDataSetChanged();
 
@@ -357,12 +361,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
     }
 
     private void ApiSearchViewTerminology(String muniqueID) {
-
-
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
+        ApiInterface apiService = ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
@@ -474,6 +473,64 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                 }
             });
 
+
+        }
+    }
+
+
+    private void ApiSearchScheduleViewID(int mProviderid, ArrayList<String> ids) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        String idPass = "";
+        for (int i = 0; i < ids.size(); i++) {
+            idPass += mProviderid + "-" + ids.get(i) + ",";
+        }
+
+        if (!idPass.equals("") && idPass != null) {
+            Config.logV("IDS_--------------------" + idPass);
+
+            Call<ArrayList<ScheduleList>> call = apiService.getSchedule(idPass);
+
+            call.enqueue(new Callback<ArrayList<ScheduleList>>() {
+                @Override
+                public void onResponse(Call<ArrayList<ScheduleList>> call, Response<ArrayList<ScheduleList>> response) {
+
+                    try {
+
+                        if (mDialog.isShowing())
+                            Config.closeDialog(getActivity(), mDialog);
+
+                        Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
+                        Config.logV("Response--code-----SearchViewID--------------------" + response.code());
+                        Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
+
+                        if (response.code() == 200) {
+
+                            mSearchScheduleList = response.body();
+
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<ScheduleList>> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Fail---------------" + t.toString());
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+                }
+            });
 
         }
     }

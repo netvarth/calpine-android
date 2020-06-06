@@ -16,15 +16,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.QueueList;
+import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 
 import java.text.ParseException;
@@ -42,15 +45,17 @@ import java.util.Locale;
 public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.MyViewHolder> {
 
     private List<QueueList> mQueueList;
+    private List<ScheduleList> mScheduleList;
     private List<FavouriteModel> mFavList;
     Context mContext;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_loc,tv_date,tv_waittime,tv_Open,tv_qmessage;
-        Button btn_checkin;
+        Button btn_checkin,btnappointments;
         View divider;
         RecyclerView recycleview_contact;
+        LinearLayout appoinmentLayouts;
         public MyViewHolder(View view) {
             super(view);
 
@@ -59,9 +64,11 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             tv_waittime=(TextView)view.findViewById(R.id.txt_time);
             tv_Open=(TextView)view.findViewById(R.id.txtOpen);
             btn_checkin=(Button) view.findViewById(R.id.btn_checkin);
+            btnappointments=(Button) view.findViewById(R.id.btnappointments);
             divider=(View)view.findViewById(R.id.divider);
             recycleview_contact=(RecyclerView)view.findViewById(R.id.recycleview_contact);
             tv_qmessage = view.findViewById(R.id.qmessage);
+            appoinmentLayouts = view.findViewById(R.id.appoinmentLayouts);
         }
     }
 
@@ -70,7 +77,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     SearchSetting searchSetting;
     String uniqueId,title,terminologys;
     ContactAdapterCallback contactAdapterCallback;
-    public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting,String uniqueID,String title,String terminology, ContactAdapterCallback contactAdapterCallback) {
+    public FavLocationAdapter(List<QueueList> mQueueList, Context mContext, List<FavouriteModel> mFavList, SearchSetting mSearchSetting,String uniqueID,String title,String terminology, ContactAdapterCallback contactAdapterCallback,List<ScheduleList> mScheduleList ) {
         this.mContext = mContext;
         this.mQueueList = mQueueList;
         this.mFavList=mFavList;
@@ -79,6 +86,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         this.title=title;
         this.terminologys=terminology;
         this.contactAdapterCallback=contactAdapterCallback;
+        this.mScheduleList = mScheduleList;
 
     }
 
@@ -103,6 +111,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     @Override
     public void onBindViewHolder(final FavLocationAdapter.MyViewHolder myViewHolder, final int position) {
         final QueueList queueList = mQueueList.get(position);
+        final ScheduleList scheduleList = mScheduleList.get(position);
 
         if(position==mQueueList.size()-1){
             myViewHolder.divider.setVisibility(View.GONE);
@@ -199,33 +208,53 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 if(queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().isAvailableToday() && queueList.getNextAvailableQueue().isAvailableToday()){
                     myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
                     if (queueList.getNextAvailableQueue().getAvailableDate() != null) {
-
                         if ((formattedDate.trim().equalsIgnoreCase(queueList.getNextAvailableQueue().getAvailableDate()))) {
-
                             myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
                             myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.button_gradient_checkin));
-
                         } else if (date1.compareTo(date2) < 0) {
                             myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
                             // myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
                             myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                             myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
                             myViewHolder.btn_checkin.setEnabled(false);
-
                         }
-
-
-
-
-
                     } else {
-
                         myViewHolder.btn_checkin.setVisibility(View.GONE);
-
                     }
                 }else{
                     myViewHolder.btn_checkin.setVisibility(View.GONE);
                 }
+
+                if(scheduleList.isCheckinAllowed()){
+                    myViewHolder.appoinmentLayouts.setVisibility(View.VISIBLE);
+                }else{
+                    myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
+                }
+
+
+                myViewHolder.btnappointments.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent iAppoinment = new Intent(v.getContext(), Appointment.class);
+                        if(queueList.getNextAvailableQueue()!=null){
+                            iAppoinment.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
+                        }
+                        iAppoinment.putExtra("uniqueID", uniqueId);
+                        iAppoinment.putExtra("accountID",queueList.getProvider().getId());
+                        iAppoinment.putExtra("from", "favourites");
+                        iAppoinment.putExtra("title", title);
+                        iAppoinment.putExtra("terminology",terminologys);
+                        iAppoinment.putExtra("place", myViewHolder.tv_loc.getText().toString());
+                        if(queueList.getNextAvailableQueue()!=null){
+                            iAppoinment.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
+                        }
+                        mContext.startActivity(iAppoinment);
+
+
+
+                    }
+                });
+
 
                 if(mFavList.get(i).isFutureCheckin()){
                     myViewHolder.tv_date.setVisibility(View.VISIBLE);
