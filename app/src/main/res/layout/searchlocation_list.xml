@@ -609,7 +609,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/txtsize_12"
                     android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/btn_checkin"
@@ -630,7 +630,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/txtsize_12"
                     android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <!--  android:textSize="@dimen/txtsize_subtitle" />-->
             </LinearLayout>
