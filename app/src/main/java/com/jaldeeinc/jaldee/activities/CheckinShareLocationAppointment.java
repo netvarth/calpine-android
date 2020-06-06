@@ -408,7 +408,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
     public void ApiActiveCheckIn() {
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ActiveCheckIn> call = apiService.getActiveCheckInUUID(uuid,accountID);
+        Call<ActiveCheckIn> call = apiService.getActiveAppointmentUUID(uuid,accountID);
         call.enqueue(new Callback<ActiveCheckIn>() {
             @Override
             public void onResponse(Call<ActiveCheckIn> call, Response<ActiveCheckIn> response) {
@@ -425,14 +425,14 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                         shareText.setText("Jaldee will not show your exact location, it will only share your arrival time with "+response.body().getProviderAccount().getBusinessName());
 
                         if (calcMode.equalsIgnoreCase("NoCalc")) {
-                            checkinMessage.setText("Your token for " + response.body().getService().getName() + "( " + queueStartTime + "-"+queueEndTime+ " )" +" with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your token for " + response.body().getService().getName() + "( " + queueStartTime + "-"+queueEndTime+ " )" +" with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
                         } else if (terminology.equalsIgnoreCase("Check-in")) {
-                            checkinMessage.setText("Your check-in for " + response.body().getService().getName() +"( " + queueStartTime + "-"+queueEndTime+ " )" + " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your check-in for " + response.body().getService().getName() +"( " + queueStartTime + "-"+queueEndTime+ " )" + " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
                         } else {
-                            checkinMessage.setText("Your order for " + response.body().getService().getName() +"( " + queueStartTime + "-"+queueEndTime+ " )" + " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your order for " + response.body().getService().getName() +"( " + queueStartTime + "-"+queueEndTime+ " )" + " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
                         }
 
-                        checkinMessage.setText("Your check-in for " + response.body().getService().getName() + " with "+ "( " + queueStartTime + "-"+queueEndTime+ " )" + response.body().getProviderAccount().getBusinessName() +", "+response.body().getQueue().getLocation().getPlace() + " is successful !!");
+                        checkinMessage.setText("Your check-in for " + response.body().getService().getName() + " with "+ "( " + queueStartTime + "-"+queueEndTime+ " )" + response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
 
                         if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                             Laboutus.setVisibility(View.GONE);

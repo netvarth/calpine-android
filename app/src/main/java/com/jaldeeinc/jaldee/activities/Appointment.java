@@ -3334,7 +3334,7 @@ public class Appointment extends AppCompatActivity {
                         }
 
                         if (livetrack == true) {
-                            Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
+                            Intent checkinShareLocations = new Intent(mContext, CheckinShareLocationAppointment.class);
                             checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
                             checkinShareLocations.putExtra("uuid", value);
                             checkinShareLocations.putExtra("accountID", modifyAccountID);

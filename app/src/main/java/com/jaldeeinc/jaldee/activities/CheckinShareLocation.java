@@ -689,7 +689,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
                                     if (hours < 1) {
                                         modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() +"</b>" +" " +"<b>Km</b>" + " " + "away and will take around " +"<b>" + minutes + "</b>" + "<b> mins</b>" + " to reach"));
                                     } else {
-                                        modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "</b>"+" " +"<b>Km</b>" + " "+ "away and will take around " + "<b> hours </b> "+ "<b>hours</b>" +" " + "<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
+                                        modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "</b>"+" " +"<b>Km</b>" + " "+ "away and will take around " + "<b>" + hours + "</b> "+ "<b>hours</b>" +" " + "<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
 
                                     }
                                 } else {

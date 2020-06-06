@@ -228,6 +228,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             }
 
         }
+        else{
+            LpopularSearch.setVisibility(View.GONE);
+            LinearPopularSearch.setVisibility(View.GONE);
+        }
     }
 
     TextView txt_sorry;

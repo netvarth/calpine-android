@@ -374,7 +374,7 @@
                                     android:drawableTop="@drawable/ic_access_time_black_24dp"
                                     android:drawablePadding="@dimen/padding3"
                                     android:padding="@dimen/padding3"
-                                    android:text="@string/_09_15_09_45_am"
+                                    android:text=""
                                     android:textAlignment="center"
                                     android:textColor="@color/white"
                                     android:textSize="@dimen/txtsize_hint_11"
