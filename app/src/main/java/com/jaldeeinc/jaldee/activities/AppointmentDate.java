@@ -59,7 +59,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
      static int serviceId;
      static int mSpinnertext;
      static String accountId;
-    static Context mContext;
+     static String schdId;
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
     ArrayList<String> timeslots= new ArrayList<>();
     Date last_date =new Date();
@@ -99,6 +99,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
             serviceId = extras.getInt("serviceId");
             mSpinnertext = extras.getInt("mSpinnertext");
             accountId = extras.getString("accountId");
+            schdId = extras.getString("id");
         }
         Log.i("cvbbvcbvc",timeslot.toString());
 
@@ -130,7 +131,8 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(last_date), accountId);
+              //  ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(last_date), accountId);
+                ApiScheduleId(schdId, sdf.format(last_date), accountId);
                 Appointment.timeslotdates(sdf.format(last_date));
             }
         });
@@ -150,57 +152,57 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 //        iAppointment.putExtra("selectedDate",selectedDate);
 //        startActivity(iAppointment);
 //    }
-private void ApiSchedule(String serviceId, String spinnerText, final String mDate, final String accountIDs) {
-
-
-    ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
-
-
-//    final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-  //  mDialog.show();
-
-
-    Call<ArrayList<AppointmentSchedule>> call = apiService.getAppointmentSchedule(serviceId, spinnerText, mDate, accountIDs);
-
-    call.enqueue(new Callback<ArrayList<AppointmentSchedule>>() {
-        @Override
-        public void onResponse(Call<ArrayList<AppointmentSchedule>> call, Response<ArrayList<AppointmentSchedule>> response) {
-
-            try {
-
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getParent(), mDialog);
-
-
-                if (response.code() == 200) {
-                    schedResponse = response.body();
-
-                    Log.i("responseeee", new Gson().toJson(response.body()));
-                    Log.i("responseeee", String.valueOf(response.body().get(0).getId()));
-                    String id = String.valueOf(response.body().get(0).getId());
-                    ApiScheduleId(id, mDate, accountIDs);
-
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        @Override
-        public void onFailure(Call<ArrayList<AppointmentSchedule>> call, Throwable t) {
-            // Log error here since request failed
-            Config.logV("Fail---------------" + t.toString());
-//            if (mDialog.isShowing())
-//                Config.closeDialog(getParent(), mDialog);
-
-        }
-    });
-
-
-}
+//private void ApiSchedule(String serviceId, String spinnerText, final String mDate, final String accountIDs) {
+//
+//
+//    ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
+//
+//
+////    final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//  //  mDialog.show();
+//
+//
+//    Call<ArrayList<AppointmentSchedule>> call = apiService.getAppointmentSchedule(serviceId, spinnerText, mDate, accountIDs);
+//
+//    call.enqueue(new Callback<ArrayList<AppointmentSchedule>>() {
+//        @Override
+//        public void onResponse(Call<ArrayList<AppointmentSchedule>> call, Response<ArrayList<AppointmentSchedule>> response) {
+//
+//            try {
+//
+////                if (mDialog.isShowing())
+////                    Config.closeDialog(getParent(), mDialog);
+//
+//
+//                if (response.code() == 200) {
+//                    schedResponse = response.body();
+//
+//                    Log.i("responseeee", new Gson().toJson(response.body()));
+//                    Log.i("responseeee", String.valueOf(response.body().get(0).getId()));
+//                    String id = String.valueOf(response.body().get(0).getId());
+//                    ApiScheduleId(id, mDate, accountIDs);
+//
+//                }
+//
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//
+//        @Override
+//        public void onFailure(Call<ArrayList<AppointmentSchedule>> call, Throwable t) {
+//            // Log error here since request failed
+//            Config.logV("Fail---------------" + t.toString());
+////            if (mDialog.isShowing())
+////                Config.closeDialog(getParent(), mDialog);
+//
+//        }
+//    });
+//
+//
+//}
     private void ApiScheduleId(String id, final String mDate, final String accountIDs) {
 
 
@@ -224,26 +226,36 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
 
 
                     if (response.code() == 200) {
-
-                        int availableslots = response.body().getAvailableSlots().size();
                         timeslots.clear();
-                        for (int i = 0; i< availableslots; i ++){
-                            if(response.body().getAvailableSlots().get(i).getActive().equalsIgnoreCase("true") && !response.body().getAvailableSlots().get(i).getNoOfAvailbleSlots().equalsIgnoreCase("0")){
-                                timeslots.add(response.body().getAvailableSlots().get(i).getTime());}
+                        if(response.body().getAvailableSlots()!=null){
+                        int availableslots = response.body().getAvailableSlots().size();
 
+                            for (int i = 0; i < availableslots; i++) {
+                                if (response.body().getAvailableSlots().get(i).getActive().equalsIgnoreCase("true") && !response.body().getAvailableSlots().get(i).getNoOfAvailbleSlots().equalsIgnoreCase("0")) {
+                                    timeslots.add(response.body().getAvailableSlots().get(i).getTime());
+                                }
+
+
+                            }
+                            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
+                            recycle_timeslots.setLayoutManager(mLayoutManager);
+                            sAdapter = new TimeSlotsAdapter(timeslots);
+                            recycle_timeslots.setAdapter(sAdapter);
+                            sAdapter.notifyDataSetChanged();
+                            recycle_timeslots.setAlpha(1);
+                            if (timeslots != null) {
+                                earliestAvailable.setText("Earliest available\n" + timeslots.get(0));
+                            }
+
+                            Log.i("timeslots", timeslots.toString());
 
                         }
-                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
-                        recycle_timeslots.setLayoutManager(mLayoutManager);
-                        sAdapter = new TimeSlotsAdapter(timeslots);
-                        recycle_timeslots.setAdapter(sAdapter);
-                        sAdapter.notifyDataSetChanged();
-                        if(timeslots!=null){
-                            earliestAvailable.setText("Earliest available\n"+timeslots.get(0));
+                        else{
+                            recycle_timeslots.setAlpha(0);
+                            Toast.makeText(AppointmentDate.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
                         }
-                        Log.i("timeslots",timeslots.toString());
-
                     }
+
 
 
                 } catch (Exception e) {

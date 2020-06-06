@@ -102,7 +102,7 @@ import retrofit2.Response;
 
 public class Appointment extends AppCompatActivity {
 
-    ArrayList<String> couponArraylist = new ArrayList<String>();
+    ArrayList<String> couponArraylist = new ArrayList<>();
 
     String phoneNumber;
     int providerId;
@@ -210,6 +210,7 @@ public class Appointment extends AppCompatActivity {
     TextView tv_enterInstructions;
     EditText et_vitualId;
     String callingMode,valueNumber;
+    String id = " ";
 
 
     @Override
@@ -538,6 +539,7 @@ public class Appointment extends AppCompatActivity {
                 appDate.putExtra("serviceId",serviceId);
                 appDate.putExtra("mSpinnertext",mSpinnertext);
                 appDate.putExtra("accountId",modifyAccountID);
+                appDate.putExtra("id",id);
                 startActivity(appDate);
             }
         });
@@ -2624,23 +2626,23 @@ public class Appointment extends AppCompatActivity {
                             tv_waittime.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
                             if (schedResponse.get(i).getId() != 0) {
-                                String id=String.valueOf(schedResponse.get(i).getId());
-                                ApiScheduleId(id, mDate, accountIDs);
+                                id = String.valueOf(schedResponse.get(i).getId());
+
                             }
 
-                            Config.logV("mQueueTimeSlotList-------------------------" + mQueueTimeSlotList.size());
+
                             tv_queue.setVisibility(View.VISIBLE);
                             queuelayout.setVisibility(View.VISIBLE);
 
 
 //                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
-                            tv_queuetime.setText(schedResponse.get(0).getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(0).getTimeSlots().get(0).geteTime());
+                            tv_queuetime.setText(schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
 
 
                             if (schedResponse.get(i).getId() != 0) {
-                               String id = String.valueOf(schedResponse.get(i).getId());
+                                id = String.valueOf(schedResponse.get(i).getId());
                                 ApiScheduleId(id, mDate, accountIDs);
                             }
 
@@ -2650,7 +2652,7 @@ public class Appointment extends AppCompatActivity {
 
                         } else {
 
-                            Config.logV("No Checkins-------------------" + mQueueTimeSlotList.size());
+
                             tv_queue.setVisibility(View.GONE);
                             queuelayout.setVisibility(View.GONE);
 //                            tv_queuename.setVisibility(View.GONE);
@@ -2693,15 +2695,16 @@ public class Appointment extends AppCompatActivity {
                                 if (i >= 0) {
 
 //                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
-                                    tv_queuetime.setText(schedResponse.get(i).getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getTimeSlots().get(0).geteTime());
+                                    tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
 
 
 
                                     if (schedResponse.get(i).getId() != 0) {
-                                     String id = String.valueOf(schedResponse.get(i).getId());
-                                        ApiScheduleId(id, mDate, accountIDs);
+                                      id = String.valueOf(schedResponse.get(i).getId());
+                                      ApiScheduleId(id, mDate, accountIDs);
+
                                     }
 
                                 }
@@ -2739,12 +2742,13 @@ public class Appointment extends AppCompatActivity {
                                 if (i < schedResponse.size()) {
 
 //                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
-                                    tv_queuetime.setText(schedResponse.get(i).getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getTimeSlots().get(0).geteTime());
+                                    tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
                                     if (schedResponse.get(i).getId() != 0) {
-                                        String id =String.valueOf(schedResponse.get(i).getId());
-                                        ApiScheduleId(id, mDate, accountIDs);
+                                         id =String.valueOf(schedResponse.get(i).getId());
+                                         ApiScheduleId(id, mDate, accountIDs);
+
                                     }
 
                                 }
@@ -2757,7 +2761,7 @@ public class Appointment extends AppCompatActivity {
                                     ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
                                 }
 
-                                Config.logV("Queuesize---------------" + mQueueTimeSlotList.size() + "position" + i);
+
                                 if (i == schedResponse.size() - 1) {
 
                                     ic_right.setEnabled(false);
@@ -2766,6 +2770,7 @@ public class Appointment extends AppCompatActivity {
                                     ic_right.setEnabled(true);
                                     ic_right.setImageResource(R.drawable.icon_right_angle_active);
                                 }
+
                             }
                         });
 
@@ -2825,20 +2830,26 @@ public class Appointment extends AppCompatActivity {
 
 
                     if (response.code() == 200) {
-
-                        int availableslots = response.body().getAvailableSlots().size();
                         timeslots.clear();
-                        for (int i = 0; i< availableslots; i ++){
-                            if(response.body().getAvailableSlots().get(i).getActive().equalsIgnoreCase("true") && !response.body().getAvailableSlots().get(i).getNoOfAvailbleSlots().equalsIgnoreCase("0")){
-                            timeslots.add(response.body().getAvailableSlots().get(i).getTime());}
+                        if (response.body().getAvailableSlots() != null) {
+                            int availableslots = response.body().getAvailableSlots().size();
+                            for (int i = 0; i < availableslots; i++) {
+                                if (response.body().getAvailableSlots().get(i).getActive().equalsIgnoreCase("true") && !response.body().getAvailableSlots().get(i).getNoOfAvailbleSlots().equalsIgnoreCase("0")) {
+                                    timeslots.add(response.body().getAvailableSlots().get(i).getTime());
+                                }
 
+
+                            }
+
+                            if (timeslots != null) {
+                                earliestAvailable.setText("Earliest available\n" + timeslots.get(0));
+                            }
+                            Log.i("timeslots", timeslots.toString());
 
                         }
-
-                        if(timeslots!=null){
-                            earliestAvailable.setText("Earliest available\n"+timeslots.get(0));
+                        else{
+                            Toast.makeText(Appointment.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
                         }
-                        Log.i("timeslots",timeslots.toString());
 
                     }
 
