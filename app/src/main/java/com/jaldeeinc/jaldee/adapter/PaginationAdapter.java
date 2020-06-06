@@ -46,6 +46,7 @@ import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
+import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -93,9 +94,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     String uniqueID;
     List<QueueList> mQueueList;
     ArrayList serviceNames = new ArrayList();
+    List<ScheduleList> mScheduleList;
 
 
-    public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList) {
+    public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList, List<ScheduleList> mScheduleList) {
         this.context = context;
         searchResults = new ArrayList<>();
         this.mFragment = mFragment;
@@ -104,6 +106,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.activity = activity;
         this.uniqueID = uniqueID;
         this.mQueueList = mQueueList;
+        this.mScheduleList = mScheduleList;
     }
 
     private static Date parseDate(String date) {
@@ -725,14 +728,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                    }
 //                });
 
-                if(searchdetailList.getToday_appt()!=null){
-                    if(searchdetailList.getToday_appt().equals("1")){
-                        myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
-                    }else{
-                        myViewHolder.L_appoinment.setVisibility(View.GONE);
-                    }
-                }
-
 
 
                 if (searchdetailList.getClaimable().equals("0")) {
@@ -827,7 +822,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
                         myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                         disableCheckinButton(myViewHolder);
-                        myViewHolder.L_appoinment.setVisibility(View.GONE);
+
                     }
 
                     if (searchdetailList.getFuture_checkins() != null && searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
@@ -1270,8 +1265,27 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 }
 
-
-
+                if(searchdetailList.getToday_appt()!=null){
+                    if(searchdetailList.getToday_appt().equals("1")){
+                        myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
+                        myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+                    }else{
+                        myViewHolder.L_appoinment.setVisibility(View.GONE);
+                        myViewHolder.L_appointments.setVisibility(View.GONE);
+                    }
+                }
+              if(mScheduleList.size()!=0) {
+                if (mScheduleList.get(0).isCheckinAllowed()) {
+                    myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
+                    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+                } else if (searchdetailList.getMessage() != null && searchdetailList.getClaimable().equals("0")) {
+                    myViewHolder.L_appoinment.setVisibility(View.GONE);
+                    myViewHolder.L_appointments.setVisibility(View.GONE);
+                }
+                else{
+                    myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
+                    }
+            }
 
 
 

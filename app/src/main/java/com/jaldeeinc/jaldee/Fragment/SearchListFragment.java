@@ -66,6 +66,7 @@ import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
+import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -114,6 +115,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     // SearchDetailAdapter adapter;
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
     List<QueueList> mQueueList = new ArrayList<>();
+    List<ScheduleList> mScheduleList = new ArrayList<>();
+
     List<SearchListModel> mSearchListModel = new ArrayList<>();
     ProgressBar progressBar;
     LinearLayoutManager linearLayoutManager;
@@ -368,7 +371,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
 
 
-        pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this, uniqueID,mQueueList);
+        pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this, uniqueID,mQueueList,mScheduleList);
 
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecySearchDetail.setLayoutManager(linearLayoutManager);
@@ -1390,6 +1393,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             }*/
 
                             ApiQueueList(ids, mSearchResp, "next");
+                            ApiSheduleList(ids, mSearchResp, "next");
                         }
 
                     }
@@ -1655,6 +1659,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             }*/
 
                             ApiQueueList(ids, mSearchResp, "first");
+                            ApiSheduleList(ids, mSearchResp, "first");
 
 
                             //   waitlist/queues/waitingTime/2-1%2C2-2%2C141-388%2C141-2563
@@ -2173,6 +2178,69 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 @Override
                 public void onFailure(Call<List<QueueList>> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Fail---------------" + t.toString());
+               /* if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+*/
+                }
+            });
+        }
+    }
+    private void ApiSheduleList(ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(getActivity()).create(ApiInterface.class);
+
+        Config.logV("QUEUELIST @@@@@@@@@@@@@@@@@@@@@@");
+       /* final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog.show();*/
+        StringBuilder csvBuilder = new StringBuilder();
+        for (String data : queuelist) {
+            csvBuilder.append(data);
+            csvBuilder.append(",");
+        }
+        String csv = csvBuilder.toString();
+        System.out.println(csv);
+
+
+
+        if(csv!= "" && csv!= null) {
+
+            Call<List<ScheduleList>> call = apiService.getScheduleCheckReponse(csv);
+
+            call.enqueue(new Callback<List<ScheduleList>>() {
+                @Override
+                public void onResponse(Call<List<ScheduleList>> call, Response<List<ScheduleList>> response) {
+
+                    try {
+
+                   /* if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);*/
+
+                        Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                        Config.logV("code---------------" + response.code());
+                        mScheduleList.clear();
+                        if (response.code() == 200) {
+                            Config.logV("Sucess ----------" + response.body());
+
+
+                            for (int i = 0; i < response.body().size(); i++) {
+                                mScheduleList.add(response.body().get(i));
+                            }
+
+
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<List<ScheduleList>> call, Throwable t) {
                     // Log error here since request failed
                     Config.logV("Fail---------------" + t.toString());
                /* if (mDialog.isShowing())

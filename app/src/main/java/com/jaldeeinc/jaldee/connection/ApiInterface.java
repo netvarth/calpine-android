@@ -25,6 +25,7 @@ import com.jaldeeinc.jaldee.response.QueueTimeSlotModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
 import com.jaldeeinc.jaldee.response.ScheduleId;
+import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
@@ -248,6 +249,9 @@ public interface ApiInterface {
     @GET("provider/waitlist/queues/waitingTime/{id}")
     Call<ArrayList<QueueList>> getSearchID(@Path("id") String id);
 
+    @GET("provider/appointment/schedule/nextAvailableSchedule/{id}")
+    Call<ArrayList<ScheduleList>> getSchedule(@Path("id") String id);
+
 
     @GET("provider/business/{id}")
     Call<ResponseBody> getUniqueID(@Path("id") String id);
@@ -255,6 +259,9 @@ public interface ApiInterface {
 
     @GET(" provider/waitlist/queues/waitingTime/{queueId}")
     Call<List<QueueList>> getQueueCheckReponse(@Path("queueId") String id);
+
+    @GET(" provider/appointment/schedule/nextAvailableSchedule/{queueId}")
+    Call<List<ScheduleList>> getScheduleCheckReponse(@Path("queueId") String id);
 
 
     @GET("provider/search/suggester/location")

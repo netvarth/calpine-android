@@ -76,6 +76,7 @@ import com.jaldeeinc.jaldee.response.CoupnResponse;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.QueueList;
+import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
@@ -140,6 +141,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     SearchTerminology mSearchTerminology;
 
     ArrayList<QueueList> mSearchQueueList;
+    ArrayList<ScheduleList> mSearchScheduleList;
 
     ArrayList<SearchService> mServicesList;
 
@@ -1763,6 +1765,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                             if (ids.size() > 0) {
                                 ApiSearchViewID(mProvoderId, ids);
+                                ApiSearchScheduleViewID(mProvoderId, ids);
                             }
 
 
@@ -2084,6 +2087,66 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         }
     }
+    private void ApiSearchScheduleViewID(int mProviderid, ArrayList<String> ids) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        String idPass = "";
+        for (int i = 0; i < ids.size(); i++) {
+            idPass += mProviderid + "-" + ids.get(i) + ",";
+        }
+
+        if (!idPass.equals("") && idPass != null) {
+            Config.logV("IDS_--------------------" + idPass);
+
+            Call<ArrayList<ScheduleList>> call = apiService.getSchedule(idPass);
+
+            call.enqueue(new Callback<ArrayList<ScheduleList>>() {
+                @Override
+                public void onResponse(Call<ArrayList<ScheduleList>> call, Response<ArrayList<ScheduleList>> response) {
+
+                    try {
+
+                        if (mDialog.isShowing())
+                            Config.closeDialog(getActivity(), mDialog);
+
+                        Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
+                        Config.logV("Response--code-----SearchViewID--------------------" + response.code());
+                        Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
+
+                        if (response.code() == 200) {
+
+                            mSearchScheduleList = response.body();
+//                            if(homeUniqueId==null){
+//                                ApiSearchViewSetting(uniqueID);}
+//                            else {
+//                                ApiSearchViewSetting(homeUniqueId);
+//                            }
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ArrayList<ScheduleList>> call, Throwable t) {
+                    // Log error here since request failed
+                    Config.logV("Fail---------------" + t.toString());
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+                }
+            });
+
+        }
+    }
 
 
     private void ApiUniqueID(String customID) {
@@ -2168,7 +2231,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         uniID = homeUniqueId;
                     }
 
-                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse);
+                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList);
                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
                     mSearchLocAdapter.notifyDataSetChanged();
                 }

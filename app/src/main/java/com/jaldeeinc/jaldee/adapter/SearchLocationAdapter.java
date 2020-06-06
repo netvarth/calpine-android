@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -32,6 +33,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
+import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
@@ -133,6 +135,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     List<SearchService> mSearchServiceList;
     List<QueueList> mQueueList;
     SearchSetting mSearchSetting;
+    List<ScheduleList> mScheduleList;
 
     SearchAWsResponse mSearachAwsResponse;
     String mTitle;
@@ -147,7 +150,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments,List<SearchAWsResponse> mSearchRespDetails,SearchAWsResponse mSearchAWSResponse) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments,List<SearchAWsResponse> mSearchRespDetails,SearchAWsResponse mSearchAWSResponse,  List<ScheduleList> SearchScheduleList) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchRespDetail = mSearchRespDetails;
@@ -167,6 +170,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         this.terminology = terminology;
         this.isShowTokenId = isShowTokenId;
         this.mSearchDepartmentList = mSearchDepartments;
+        this.mScheduleList = SearchScheduleList;
 
     }
 
@@ -196,6 +200,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
     ArrayList<ParkingModel> listType = new ArrayList<>();
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(final SearchLocationAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchLocation searchLoclist = mSearchLocationList.get(position);
@@ -1195,11 +1200,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 if (mSearachAwsResponse.getHits().getHit() != null) {
                     for (int l = 0; l < mSearachAwsResponse.getHits().getHit().size(); l++) {
                         if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt() != null) {
-                            if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt().equals("1")) {
-                                myViewHolder.LAppointment.setVisibility(View.VISIBLE);
-                            } else {
-                                myViewHolder.LAppointment.setVisibility(View.GONE);
-                            }
+
                             if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services() != null) {
                                 myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
                                 try {
@@ -1287,12 +1288,29 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 myViewHolder.txt_apptservices.setVisibility(View.GONE);
 
                             }
+                            if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt().equals("1")) {
+                                myViewHolder.LAppointment.setVisibility(View.VISIBLE);
+                                myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+                            } else {
+                                myViewHolder.LAppointment.setVisibility(View.GONE);
+                                myViewHolder.LApp_Services.setVisibility(View.GONE);
+                                myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                            }
                         }
                     }
                 }
             }
         }
+    if(mScheduleList.get(0).isCheckinAllowed()){
+        myViewHolder.LAppointment.setVisibility(View.VISIBLE);
+        myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
 
+        }
+    else{
+        myViewHolder.LAppointment.setVisibility(View.GONE);
+        myViewHolder.LApp_Services.setVisibility(View.GONE);
+        myViewHolder.txt_apptservices.setVisibility(View.GONE);
+    }
 
 //Queue---- for button check-in,waittime checking
 
