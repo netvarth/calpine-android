@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -56,6 +57,7 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.FilterActivity;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.PaymentActivity;
+import com.jaldeeinc.jaldee.adapter.ActiveAppointmentAdapter;
 import com.jaldeeinc.jaldee.adapter.ActiveCheckInAdapter;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
@@ -69,12 +71,15 @@ import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.LanLong;
 import com.jaldeeinc.jaldee.model.ListCell;
 import com.jaldeeinc.jaldee.model.SearchModel;
+import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 //import com.jaldeeinc.jaldee.service.LiveTrackService;
 import com.jaldeeinc.jaldee.utils.EmptySubmitSearchView;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -98,7 +103,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     static Context mContext;
-    RecyclerView mRecycleActive;
+    RecyclerView mRecycleActive,mRecycleAppointment;
     Fragment active;
     TextView txtUsername;
     Toolbar toolbar;
@@ -138,8 +143,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
     static double latitude;
     static double longitude;
-    TextView tv_activechkin, tv_popular;
-    LinearLayout LpopularSearch, LActiveCheckin, LinearPopularSearch,LMore,LinearMorePopularSearch;
+    TextView tv_activechkin,tv_activeappt, tv_popular;
+    LinearLayout LpopularSearch, LActiveCheckin,LActiveAppointment, LinearPopularSearch,LMore,LinearMorePopularSearch;
     TextView tv_More;
     boolean is_MoreClick = false;
     LinearLayout Lhome_mainlayout;
@@ -231,6 +236,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     TextView txt_sorry;
+    TextView txt_sorry_appointment;
     boolean activeCheckin = false;
     ImageView ic_refinedFilter;
     static Activity mActivity;
@@ -256,6 +262,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         View row = inflater.inflate(R.layout.fragment_myhome, container, false);
         mRecycleActive = (RecyclerView) row.findViewById(R.id.recycleActive);
+        mRecycleAppointment = (RecyclerView) row.findViewById(R.id.recycleActiveAppointment);
         Lhome_mainlayout = (LinearLayout) row.findViewById(R.id.homemainlayout);
         LMore = (LinearLayout) row.findViewById(R.id.LMore);
         img_arrow = (ImageView) row.findViewById(R.id.img_arrow);
@@ -264,6 +271,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         mActivity = getActivity();
 
         txt_sorry = (TextView) row.findViewById(R.id.txt_sorry);
+        txt_sorry_appointment = (TextView) row.findViewById(R.id.txt_sorry_appointment);
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
         mCurrentLoc = (TextView) row.findViewById(R.id.currentloc);
 
@@ -336,9 +344,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         mSpinnerDomain = (Spinner) row.findViewById(R.id.spinnerdomain);
         tv_activechkin = (TextView) row.findViewById(R.id.txt_activechkin);
+        tv_activeappt = (TextView) row.findViewById(R.id.txt_activeappointment);
         tv_popular = (TextView) row.findViewById(R.id.txt_popular);
         LpopularSearch = (LinearLayout) row.findViewById(R.id.LpopularSearch);
         LActiveCheckin = (LinearLayout) row.findViewById(R.id.LActiveCheckin);
+        LActiveAppointment = (LinearLayout) row.findViewById(R.id.LActiveAppointment);
         LinearPopularSearch = (LinearLayout) row.findViewById(R.id.LinearPopularSearch);
         LinearMorePopularSearch = (LinearLayout) row.findViewById(R.id.LinearMorePopularSearch);
         tv_More = (TextView) row.findViewById(R.id.txtMore);
@@ -348,6 +358,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 "fonts/Montserrat_Bold.otf");
 
         tv_activechkin.setTypeface(tyface);
+        tv_activeappt.setTypeface(tyface);
         mCurrentLoc.setTypeface(tyface);
         tv_popular.setTypeface(tyface);
 
@@ -387,6 +398,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 ApiActiveCheckIn();
 
             }
+            ApiTodayAppointmentList();
             ApiAWSearchDomain();
 
         } else {
@@ -1173,7 +1185,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
 
     List<ActiveCheckIn> MActiveList = new ArrayList<>();
+    List<ActiveAppointment> MActiveListAppointment = new ArrayList<>();
     ActiveCheckInAdapter activeAdapter;
+    ActiveAppointmentAdapter activeAdapterAppointment;
 
 
     private void ApiAWSearchDomain() {
@@ -1298,6 +1312,63 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
+
+    private void ApiTodayAppointmentList() {
+        Config.logV("API TODAY Call");
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<ArrayList<ActiveAppointment>> call = apiService.getActiveAppointment();
+        call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
+                try {
+
+                    if (response.code() == 200) {
+
+                        if (response.body().size() > 0) {
+                            txt_sorry_appointment.setVisibility(View.GONE);
+
+                            MActiveListAppointment = response.body();
+                            if (MActiveListAppointment.size() > 0) {
+
+                                tv_activeappt.setText("Active Appointments " + "(" + MActiveListAppointment.size() + ")");
+                                LActiveAppointment.setVisibility(View.VISIBLE);
+
+                                RecyclerView.LayoutManager mLayoutManagers = new LinearLayoutManager(mContext);
+                                mRecycleAppointment.setLayoutManager(mLayoutManagers);
+                                activeAdapterAppointment = new ActiveAppointmentAdapter(MActiveListAppointment, mContext, getActivity(), active, mInterface);
+                                mRecycleAppointment.setAdapter(activeAdapterAppointment);
+                                activeAdapterAppointment.notifyDataSetChanged();
+                            } else {
+                                LActiveAppointment.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            tv_activeappt.setText("Active Appointments ");
+                            txt_sorry_appointment.setVisibility(View.VISIBLE);
+                            LActiveAppointment.setVisibility(View.VISIBLE);
+                        }
+
+                    } else {
+                        if (response.code() != 419) {
+
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
+                // Log error here since request failed
 
             }
         });
@@ -1459,6 +1530,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 activeCheckin = true;
                 ApiActiveCheckIn();
             }
+
+            ApiTodayAppointmentList();
 
         } else {
             MActiveList.clear();
