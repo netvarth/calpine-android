@@ -239,7 +239,7 @@
                     android:background="@drawable/gradient_home_active"
                     android:elevation="4dp"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/txt_activechkin"
@@ -266,6 +266,44 @@
 
                     </android.support.v7.widget.RecyclerView>
                 </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/LActiveAppointment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_padding"
+                    android:background="@drawable/gradient_home_active"
+                    android:elevation="4dp"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/txt_activeappointment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#F2F2F2"
+                        android:padding="@dimen/padding5"
+                        android:text="Active Appointments"
+                        android:textColor="#1E4079" />
+
+                    <TextView
+                        android:id="@+id/txt_sorry_appointment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding5"
+                        android:text=" No Active Appointment "
+                        android:textColor="@color/title_grey"
+                        android:visibility="gone" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycleActiveAppointment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+
                 <!-- </android.support.v4.widget.NestedScrollView>-->
             </LinearLayout>
             <!--   </android.support.v4.widget.NestedScrollView>-->
