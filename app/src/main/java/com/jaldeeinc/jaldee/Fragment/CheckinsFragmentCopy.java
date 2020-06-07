@@ -406,6 +406,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
                     if (response.code() == 200) {
 
+                        mAppointmentFutureList.clear();
+                        mAppointmentTodayList.clear();
+
                         mAppointmentFutureList = response.body();
                         Log.i("appointment123today",new Gson().toJson(mAppointmentFutureList));
 
@@ -1696,6 +1699,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         db.insertFavIDInfo(response.body());
                         mFavList = db.getFavouriteID();
                         ApiTodayChekInList();
+                        ApiTodayAppointmentList();
 
 
                     }
@@ -1851,7 +1855,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
 
         hashMap.put(header.get(0), mAppointmentTodayList);
-        hashMap.put(header.get(1), mAppointmentFutureList);
+        hashMap.put(header.get(1), mCheckFutureListAppointment);
         hashMap.put(header.get(2), mAppointmentOldList);
 
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -1863,9 +1867,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
         if (mAppointmentTodayList.size() > 0 || mTodayFlag)
             expandlistAppointment.expandGroup(0);
-        if (mAppointmentFutureList.size() > 0 || mFutureFlag)
+        if (mCheckFutureListAppointment.size() > 0 || mFutureFlag)
             expandlistAppointment.expandGroup(1);
-        if ((mAppointmentTodayList.size() == 0 && mAppointmentFutureList.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
+        if ((mAppointmentTodayList.size() == 0 && mCheckFutureListAppointment.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
             expandlistAppointment.expandGroup(2);
         }
 

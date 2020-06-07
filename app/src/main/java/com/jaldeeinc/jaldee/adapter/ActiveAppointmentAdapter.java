@@ -149,7 +149,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         myViewHolder.tv_businessname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodActiveCallback(activelist.getUniqueId());
+                callback.onMethodActiveCallback(activelist.getProviderAccount().getUniqueId());
             }
         });
 

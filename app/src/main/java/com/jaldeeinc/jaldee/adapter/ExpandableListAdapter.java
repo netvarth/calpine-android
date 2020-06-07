@@ -515,7 +515,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
         latitude = SharedPreference.getInstance(mContext).getStringValue("latitudes", "");
         longitude = SharedPreference.getInstance(mContext).getStringValue("longitudes", "");
-        if (header.equals("today") && activelist.getLivetrack().equals("true")) {
+        if (header.equals("today") && activelist.getLivetrack()!=null && activelist.getLivetrack().equals("true")) {
             if(!latitude.equals("") && !longitude.equals("")){
                 distance(Double.parseDouble(activelist.getLattitude()),Double.parseDouble(activelist.getLongitude()),Double.parseDouble(latitude),Double.parseDouble(longitude));
             }else{
