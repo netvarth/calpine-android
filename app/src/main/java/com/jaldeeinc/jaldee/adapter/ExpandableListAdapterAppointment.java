@@ -1604,7 +1604,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         icon_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodMessageCallback(activelist.getUid(), String.valueOf(activelist.getProviderAccount().getId()), activelist.getProviderAccount().getBusinessName());
+                callback.onMethodMessageCallback(activelist.getUid(), String.valueOf(activelist.getProviderAccount().getId()), activelist.getProviderAccount().getBusinessName(),"appt");
             }
         });
         if (header.equalsIgnoreCase("old")) {
