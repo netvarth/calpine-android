@@ -158,7 +158,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         txtprovider.setTypeface(tyface);
         txtprovider.setText(provider);
         mInterface = (DetailInboxAdapterCallback) this;
-        Config.logV("mDetailInboxList SIZE #############" + mDetailInboxList.size());
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recylce_inbox_detail.setLayoutManager(mLayoutManager);
         Collections.sort(mDetailInboxList, new Comparator<InboxModel>() {
@@ -177,12 +177,11 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
     public static boolean setInboxList(ArrayList<InboxModel> data) {
         mDetailInboxList = data;
-        Config.logV("mDetailInboxList SIZE" + mDetailInboxList.size());
         return true;
     }
 
     @Override
-    public void onMethodCallback(final String waitListId, final int accountID, final long timestamp) {
+    public void onMethodCallback(final String waitListId, final String accountID, final long timestamp) {
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();
@@ -301,37 +300,73 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("WAITLIST ID @@@@@@@@@@@" + waitListId);
-                if (waitListId != null) {
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                    String dateString = formatter.format(new Date(timestamp));
+
+                if(waitListId.contains("_appt")){
 
 
-                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                    String currentformattedDate = df.format(new Date());
-                    Date currentdate = null;
-                    try {
-                        currentdate = df.parse(currentformattedDate);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        if (new SimpleDateFormat("dd/MM/yyyy").parse(dateString).before(currentdate)) {
-                            Config.logV("WAITLIST Past Date --------------------" + new Date());
-
-                            ApiCommunicate("h_" + waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
-                        } else {
-                            Config.logV("WAITLIST Today Date --------------------");
-                            ApiCommunicate(waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                    if (waitListId != null) {
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                        String dateString = formatter.format(new Date(timestamp));
+                        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                        String currentformattedDate = df.format(new Date());
+                        Date currentdate = null;
+                        try {
+                            currentdate = df.parse(currentformattedDate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+
+                        try {
+                            if (new SimpleDateFormat("dd/MM/yyyy").parse(dateString).before(currentdate)) {
+                                ApiCommunicateAppointment("h_" + waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                            } else {
+                                ApiCommunicateAppointment(waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        ApiCommunicateWithoutAppointmentID(String.valueOf(accountID), edt_message.getText().toString(), dialog);
                     }
 
-                } else {
-                    ApiCommunicateWithoutWaitListID(String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                }else{
+                    if (waitListId != null) {
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                        String dateString = formatter.format(new Date(timestamp));
+
+
+                        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                        String currentformattedDate = df.format(new Date());
+                        Date currentdate = null;
+                        try {
+                            currentdate = df.parse(currentformattedDate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            if (new SimpleDateFormat("dd/MM/yyyy").parse(dateString).before(currentdate)) {
+                                ApiCommunicate("h_" + waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                            } else {
+                                ApiCommunicate(waitListId, String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        ApiCommunicateWithoutWaitListID(String.valueOf(accountID), edt_message.getText().toString(), dialog);
+                    }
                 }
+
+
+
+
+
+
+
+
 
             }
         });
@@ -707,8 +742,74 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
     }
 
+    private void ApiCommunicateWithoutAppointmentID(String accountID, String message, final BottomSheetDialog dialog) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("communicationMessage", message);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+        Call<ResponseBody> call = apiService.PostMessage(accountID, body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        finish();
+
+                    } else {
+                        Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getParent(), mDialog);
+
+            }
+        });
+
+
+    }
+
 
     private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
+
+        Log.i("poiioppo",accountID);
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -794,4 +895,93 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             }
         });
     }
+
+
+    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        mBuilder.addFormDataPart("message", message);
+        for (int i = 0; i < imagePathList.size(); i++) {
+//            if(imagePathList.contains("content://")) {
+//                Uri imageUri = Uri.parse(imagePathList.get(i));
+//                File file = new File(String.valueOf(imageUri));
+//                mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+//            }
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            }
+//            else{
+//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
+//            }
+            else{
+                file = new File(imagePathList.get(i));}
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+        }
+        RequestBody requestBody = mBuilder.build();
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("communicationMessage", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+
+        Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID), requestBody);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(DetailInboxList.this, mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
+                        imagePathList.clear();
+                        dialog.dismiss();
+
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog( DetailInboxList.this, mDialog);
+
+            }
+        });
+    }
+
 }

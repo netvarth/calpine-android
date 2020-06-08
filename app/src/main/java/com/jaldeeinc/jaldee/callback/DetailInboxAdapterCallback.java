@@ -11,6 +11,6 @@ import java.util.ArrayList;
 
 public interface DetailInboxAdapterCallback {
 
-    void onMethodCallback(String waitlistId, int accountID, long timestamp);
+    void onMethodCallback(String waitlistId, String accountID, long timestamp);
 
 }
