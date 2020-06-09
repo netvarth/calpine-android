@@ -2,9 +2,11 @@ package com.jaldeeinc.jaldee.activities;
 
 
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -12,12 +14,14 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -47,10 +51,15 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy.REQUEST_ID_MULTIPLE_PERMISSIONS;
 
 
 public class CheckinShareLocationAppointment extends AppCompatActivity implements
@@ -88,6 +97,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
     boolean firstCall = true;
     LocationManager locationManager;
     String latValues, longValues, terminology, calcMode,queueStartTime,queueEndTime;
+    String jaldeeDistance,from;
 
 
 
@@ -150,6 +160,34 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                 requestPermissions();
             }
         }
+        LocationManager service = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        // Check if enabled and if not send user to the GPS settings
+        if (!enabled) {
+            android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setMessage("To continue, turn on device location, which uses Google location service");
+
+            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(CheckinShareLocationAppointment.this, "Please enable the location to track your ETA", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            alertDialog.setPositiveButton("Turn On GPS", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+
+            alertDialog.show();
+        }
+        if(!enabled){
+            Toast.makeText(CheckinShareLocationAppointment.this, "Please enable the location to track your ETA", Toast.LENGTH_SHORT).show();
+        }
+
 
 
         if(!isCar){
@@ -204,6 +242,8 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
             calcMode = extras.getString("calcMode");
             queueStartTime = extras.getString("queueStartTime");
             queueEndTime = extras.getString("queueEndTime");
+            jaldeeDistance = extras.getString("jaldeeDistance");
+            from = extras.getString("from");
             Log.i("calcmode",calcMode);
         }
         locationStatus = true;
@@ -211,6 +251,12 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
 
         modeLabel.setVisibility(View.VISIBLE);
         ApiActiveCheckIn();
+        if(from!=null && from.equalsIgnoreCase("appt") ){
+            checkinMessage.setVisibility(View.VISIBLE);
+        }
+        else{
+            checkinMessage.setVisibility(View.GONE);
+        }
         if (shareSwitch.isChecked()) {
             trackingText.setVisibility(View.GONE);
             shareText.setVisibility(View.GONE);
@@ -224,15 +270,24 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
             shareText.setVisibility(View.VISIBLE);
 
             transportLayout.setVisibility(View.GONE);
-            btn_send.setVisibility(View.GONE);
+          //  btn_send.setVisibility(View.GONE);
             btn_cancel.setVisibility(View.VISIBLE);
         }
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+         if(shareSwitch.isChecked()){
                 UpdateShareLiveLocation();
                 mService.removeLocationUpdates();
-                finish();
+                finish();}
+         else{
+             shareSwitch.setChecked(false);
+             locationStatus = false;
+             UpdateShareLiveLocation();
+             Toast.makeText(CheckinShareLocationAppointment.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
+             mService.removeLocationUpdates();
+             finish();
+         }
             }
         });
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -246,6 +301,19 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                 finish();
             }
         });
+        if(jaldeeDistance!=null){
+            shareSwitch.setChecked(true);
+            UpdateShareLiveLocation();
+//            trackingText.setVisibility(View.GONE);
+//            shareText.setVisibility(View.GONE);
+        }
+        else{
+            shareSwitch.setChecked(false);
+            trackingText.setVisibility(View.VISIBLE);
+            shareText.setVisibility(View.VISIBLE);
+        }
+
+
         shareSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -260,7 +328,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                 } else {
                     locationStatus = false;
                     transportLayout.setVisibility(View.GONE);
-                    btn_send.setVisibility(View.GONE);
+                   // btn_send.setVisibility(View.GONE);
                     btn_cancel.setVisibility(View.VISIBLE);
 
 
@@ -330,36 +398,53 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
     }
 
     private void requestPermissions() {
-        boolean shouldProvideRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION);
+//        boolean shouldProvideRationale =
+//                ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                        Manifest.permission.ACCESS_FINE_LOCATION);
+//
+//        // Provide an additional rationale to the user. This would happen if the user denied the
+//        // request previously, but didn't check the "Don't ask again" checkbox.
+//        if (shouldProvideRationale) {
+//            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+//            Snackbar.make(
+//                    findViewById(R.id.activity_main),
+//                    R.string.permission_rationale,
+//                    Snackbar.LENGTH_INDEFINITE)
+//                    .setAction(R.string.ok, new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            // Request permission
+//                            ActivityCompat.requestPermissions(CheckinShareLocationAppointment.this,
+//                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                                    REQUEST_PERMISSIONS_REQUEST_CODE);
+//                        }
+//                    })
+//                    .show();
+//        } else {
+//            Log.i(TAG, "Requesting permission");
+//            // Request permission. It's possible this can be auto answered if device policy
+//            // sets the permission in a given state or the user denied the permission
+//            // previously and checked "Never ask again".
+//            ActivityCompat.requestPermissions(CheckinShareLocationAppointment.this,
+//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                    REQUEST_PERMISSIONS_REQUEST_CODE);
+//        }
+        int permissionLocation = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+            Config.logV("Google Not Granted" + permissionLocation);
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (!listPermissionsNeeded.isEmpty()) {
+               /*requestPermissions(getActivity(),
+                        listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);*/
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ID_MULTIPLE_PERMISSIONS);
+                }
 
-        // Provide an additional rationale to the user. This would happen if the user denied the
-        // request previously, but didn't check the "Don't ask again" checkbox.
-        if (shouldProvideRationale) {
-            Log.i(TAG, "Displaying permission rationale to provide additional context.");
-            Snackbar.make(
-                    findViewById(R.id.activity_main),
-                    R.string.permission_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // Request permission
-                            ActivityCompat.requestPermissions(CheckinShareLocationAppointment.this,
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                    REQUEST_PERMISSIONS_REQUEST_CODE);
-                        }
-                    })
-                    .show();
-        } else {
-            Log.i(TAG, "Requesting permission");
-            // Request permission. It's possible this can be auto answered if device policy
-            // sets the permission in a given state or the user denied the permission
-            // previously and checked "Never ask again".
-            ActivityCompat.requestPermissions(CheckinShareLocationAppointment.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
+                Config.logV("GoogleNot Granted" + permissionLocation);
+            }
         }
     }
 
@@ -425,23 +510,28 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                         shareText.setText("Jaldee will not show your exact location, it will only share your arrival time with "+response.body().getProviderAccount().getBusinessName());
 
                         if (calcMode.equalsIgnoreCase("NoCalc")) {
-                            checkinMessage.setText("Your token for " + response.body().getService().getName() + "( " + queueStartTime + "-"+queueEndTime+ " )" +" with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your token for " + response.body().getService().getName() + /*"( " + queueStartTime + "-"+queueEndTime+ " )" +"*/" with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
                         } else if (terminology.equalsIgnoreCase("Check-in")) {
-                            checkinMessage.setText("Your check-in for " + response.body().getService().getName() +"( " + queueStartTime + "-"+queueEndTime+ " )" + " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your check-in for " + response.body().getService().getName() +/*"( " + queueStartTime + "-"+queueEndTime+ " )" +*/ " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
                         } else {
-                            checkinMessage.setText("Your order for " + response.body().getService().getName() +"( " + queueStartTime + "-"+queueEndTime+ " )" + " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your order for " + response.body().getService().getName() +/*"( " + queueStartTime + "-"+queueEndTime+ " )" + */" with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
                         }
 
-                        checkinMessage.setText("Your check-in for " + response.body().getService().getName() + " with "+ "( " + queueStartTime + "-"+queueEndTime+ " )" + response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
+                        checkinMessage.setText("Your check-in for " + response.body().getService().getName() + " with "+/* "( " + queueStartTime + "-"+queueEndTime+ " )" +*/ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
 
                         if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                             Laboutus.setVisibility(View.GONE);
                             checkinMessage.setVisibility(View.GONE);
                         } else {
+                            if(from!=null && from.equalsIgnoreCase("appt")){
                             Laboutus.setVisibility(View.VISIBLE);
-                            checkinMessage.setVisibility(View.VISIBLE);
+                            checkinMessage.setVisibility(View.VISIBLE);}
+                            else{
+                                checkinMessage.setVisibility(View.GONE);
+                            }
 
                         }
+
 
 
                     }

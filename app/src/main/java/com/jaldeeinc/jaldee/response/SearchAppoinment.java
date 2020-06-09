@@ -1,5 +1,7 @@
 package com.jaldeeinc.jaldee.response;
 
+import java.util.ArrayList;
+
 public class SearchAppoinment {
 
     int id;
@@ -17,6 +19,12 @@ public class SearchAppoinment {
     String serviceType;
     int multiples;
     String livetrack;
+    String virtualServiceType;
+    String minPrePaymentAmount;
+    ArrayList<SearchAppoinment> virtualCallingModes;
+    String instructions;
+    String callingMode;
+    String value;
 
 
     public int getId() {
@@ -138,4 +146,51 @@ public class SearchAppoinment {
     public void setLivetrack(String livetrack) {
         this.livetrack = livetrack;
     }
+    public String getMinPrePaymentAmount() {
+        return minPrePaymentAmount;
+    }
+
+    public void setMinPrePaymentAmount(String minPrePaymentAmount) {
+        this.minPrePaymentAmount = minPrePaymentAmount;
+    }
+    public String getVirtualServiceType() {
+        return virtualServiceType;
+    }
+
+    public void setVirtualServiceType(String virtualServiceType) {
+        this.virtualServiceType = virtualServiceType;
+    }
+    public ArrayList<SearchAppoinment> getVirtualCallingModes() {
+        return virtualCallingModes;
+    }
+
+    public void setVirtualCallingModes(ArrayList<SearchAppoinment> virtualCallingModes) {
+        this.virtualCallingModes = virtualCallingModes;
+    }
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+    public String getCallingMode() {
+        return callingMode;
+    }
+
+    public void setCallingMode(String callingMode) {
+        this.callingMode = callingMode;
+    }
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+    @Override
+    public String toString() {
+        return this.name; // Value to be displayed in the Spinner
+    }
+
 }

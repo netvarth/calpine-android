@@ -418,4 +418,7 @@ public interface ApiInterface {
 
     @GET("consumer/waitlist/providerByDepartmentId/{departmentId}")
     Call<ArrayList<SearchUsers>> getUsers(@Path("departmentId")  int departmentId, @Query("account") int account);
+
+    @POST("consumer/appointment/communicate/{waitlistid}")
+    Call<ResponseBody> AppointmentMessage(@Path("waitlistid") String otp, @Query("account") String account, @Body RequestBody jsonObj);
 }
