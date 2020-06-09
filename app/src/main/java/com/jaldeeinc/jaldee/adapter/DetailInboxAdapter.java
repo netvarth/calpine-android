@@ -243,7 +243,7 @@ public class DetailInboxAdapter extends RecyclerView.Adapter<DetailInboxAdapter.
         myViewHolder.tv_reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodCallback(inboxList.getWaitlistId(), inboxList.getId(), inboxList.getTimeStamp());
+                callback.onMethodCallback(inboxList.getWaitlistId(), String.valueOf(inboxList.getUniqueID()), inboxList.getTimeStamp());
 
 
             }

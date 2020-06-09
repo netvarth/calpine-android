@@ -306,6 +306,9 @@ public interface ApiInterface {
     @POST("consumer/waitlist/communicate/{waitlistid}")
     Call<ResponseBody> WaitListMessage(@Path("waitlistid") String otp, @Query("account") String account, @Body RequestBody jsonObj);
 
+    @POST("consumer/appointment/communicate/{waitlistid}")
+    Call<ResponseBody> AppointmentMessage(@Path("waitlistid") String otp, @Query("account") String account, @Body RequestBody jsonObj);
+
     @POST("consumer/waitlist/communicate/{waitlistid}")
     Call<ResponseBody> WaitListMessageWithAttachment(@Path("waitlistid") String waitlistId, @Query("account") String account, @Body RequestBody fBody);
 

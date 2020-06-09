@@ -1691,7 +1691,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         icon_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getId()), activelist.getBusinessName());
+                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getId()), activelist.getBusinessName(),"checkin");
             }
         });
         if (header.equalsIgnoreCase("old")) {
