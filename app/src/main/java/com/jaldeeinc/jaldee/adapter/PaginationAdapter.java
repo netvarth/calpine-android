@@ -94,6 +94,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     String uniqueID;
     List<QueueList> mQueueList;
     ArrayList serviceNames = new ArrayList();
+    ArrayList serviceNamesAppointments = new ArrayList();
     List<ScheduleList> mScheduleList;
 
 
@@ -1189,8 +1190,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             for(int i =0;i<jsonArray1.length();i++){
                                 JSONObject jsonObject = jsonArray1.getJSONObject(i);
                                 String name = jsonObject.optString("name");
-                                serviceNames.add(i,name);
-                                Log.i("sar",serviceNames.toString());
+                                serviceNamesAppointments.add(i,name);
+                                Log.i("sar",serviceNamesAppointments.toString());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -1199,14 +1200,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         e.printStackTrace();
                     }
 
-                    if (serviceNames.size() > 0) {
+                    if (serviceNamesAppointments.size() > 0) {
                         myViewHolder.L_appointments.removeAllViews();
                         myViewHolder.L_appointments.setVisibility(View.VISIBLE);
                         int size = 0;
-                        if (serviceNames.size() == 1) {
+                        if (serviceNamesAppointments.size() == 1) {
                             size = 1;
                         } else {
-                            if (serviceNames.size() == 2)
+                            if (serviceNamesAppointments.size() == 2)
                                 size = 2;
                             else
                                 size = 3;
@@ -1216,7 +1217,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                                     "fonts/Montserrat_Regular.otf");
                             dynaText.setTypeface(tyface);
-                            dynaText.setText(serviceNames.get(i).toString());
+                            dynaText.setText(serviceNamesAppointments.get(i).toString());
                             dynaText.setTextSize(13);
                             dynaText.setPadding(5, 0, 5, 0);
                             dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
@@ -1233,7 +1234,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             dynaText.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+                                    ApiService(searchdetailList.getUniqueid(), serviceNamesAppointments.get(finalI).toString(), searchdetailList.getTitle());
                                 }
                             });
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -1247,7 +1248,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             dynaText.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid());
+                                    mAdapterCallback.onMethodServiceCallback(serviceNamesAppointments, searchdetailList.getTitle(), searchdetailList.getUniqueid());
                                 }
                             });
                             dynaText.setGravity(Gravity.CENTER);
