@@ -158,7 +158,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_status.setTypeface(tyfacestatus);
 
-        myViewHolder.tv_status.setText(activelist.getApptStatus());
+        myViewHolder.tv_status.setText(activelist.getApptStatus() + " at " + activelist.getStatusUpdatedTime());
         if (activelist.getApptStatus().equalsIgnoreCase("done")) {
             myViewHolder.tv_status.setText("Completed");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);

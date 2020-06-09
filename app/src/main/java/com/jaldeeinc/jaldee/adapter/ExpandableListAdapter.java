@@ -530,13 +530,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 tv_recom_liveloc.setVisibility(View.GONE);
             } else if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
                 tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getBusinessName() );
+               // tv_enable_loc.setText("");
                 tv_recom_liveloc.setText("You are sharing your arrival time with " + activelist.getBusinessName());
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_tick_markgreen, 0);
                 tv_recom_loc.setVisibility(View.GONE);
             } else {
-                tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getBusinessName() );
-                tv_recom_loc.setText("Oops you are NOT sharing your arrival time with " + activelist.getBusinessName());
-                tv_recom_liveloc.setText("Jaldee recommends you always share live location with provider");
+             //   tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getBusinessName() );
+                tv_enable_loc.setText("");
+                tv_recom_loc.setText("Oops!! you are NOT sharing your live location with " + activelist.getBusinessName());
+                tv_recom_liveloc.setText("Jaldee recommends you to let the " + activelist.getBusinessName() + " know your arrival time so that you won't miss your turn");
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             }
 
@@ -944,10 +946,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_check_in.setVisibility(View.VISIBLE);
             layout_dateCheckin.setVisibility(View.VISIBLE);
             tv_queueTime.setVisibility(View.GONE);
+            liveTrackLayout.setVisibility(View.GONE);
+
 
         } else {
             tv_check_in.setVisibility(View.GONE);
             tv_queueTime.setVisibility(View.VISIBLE);
+
 
         }
 

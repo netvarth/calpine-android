@@ -491,9 +491,10 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_tickmark, 0);
                 tv_recom_loc.setVisibility(View.GONE);
             } else {
-                tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getProviderAccount().getBusinessName());
-                tv_recom_loc.setText("Oops you are NOT sharing your arrival time with " + activelist.getProviderAccount().getBusinessName());
-                tv_recom_liveloc.setText("Jaldee recommends you always share live location with provider");
+              //  tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getProviderAccount().getBusinessName());
+                tv_enable_loc.setText("");
+                tv_recom_loc.setText("Oops!! you are NOT sharing your live location with " + activelist.getProviderAccount().getBusinessName());
+                tv_recom_liveloc.setText("Jaldee recommends you to let the " + activelist.getProviderAccount().getBusinessName() + " know your arrival time so that you won't miss your turn");
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             }
 
@@ -515,6 +516,24 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 intent.putExtra("calcMode", "Check-in");
                 intent.putExtra("queueStartTime",activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).getsTime());
                 intent.putExtra("queueEndTime",activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).geteTime());
+                mContext.startActivity(intent);
+            }
+        });
+
+        tv_recom_liveloc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, CheckinShareLocationAppointment.class);
+                intent.putExtra("waitlistPhonenumber", activelist.getConsumer().getUserProfile().getPrimaryMobileNo());
+                intent.putExtra("uuid", activelist.getUid());
+                intent.putExtra("accountID", String.valueOf(activelist.getProviderAccount().getId()));
+                intent.putExtra("title",activelist.getProviderAccount().getBusinessName());
+                intent.putExtra("terminology", "Check-in");
+                intent.putExtra("calcMode", "Check-in");
+                intent.putExtra("queueStartTime",activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).getsTime());
+                intent.putExtra("queueEndTime",activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).geteTime());
+                if(activelist.getJaldeeApptDistanceTime()!=null && activelist.getJaldeeApptDistanceTime().getJaldeeDistanceTime()!=null){
+                    intent.putExtra("jaldeeDistance",activelist.getJaldeeApptDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance());}
                 mContext.startActivity(intent);
             }
         });
@@ -764,8 +783,8 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 
 
         //  tv_estTime.setVisibility(View.VISIBLE);
-        Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
+//        Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
+//                "fonts/Montserrat_Bold.otf");
         String Word1 = "Time Window";
         String Word2 = activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).getsTime() + " " + "-" + " " + activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).geteTime();
         Spannable spannable2 = new SpannableString(Word1 + '\n' + Word2);
@@ -857,14 +876,14 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 
             tv_check_in.setText(spannable);
 
-            tv_check_in.setVisibility(View.VISIBLE);
+          //  tv_check_in.setVisibility(View.VISIBLE);
             layout_dateCheckin.setVisibility(View.VISIBLE);
             tv_queueTime.setVisibility(View.GONE);
+            liveTrackLayout.setVisibility(View.GONE);
 
         } else {
             tv_check_in.setVisibility(View.GONE);
             tv_queueTime.setVisibility(View.VISIBLE);
-
         }
 
         if (activelist.getParentUuid() != null) {
@@ -902,7 +921,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 if (activelist.getApptStatus().equalsIgnoreCase("Cancelled") || activelist.getApptStatus().equalsIgnoreCase("Rejected") ) {
                     tv_status.setVisibility(View.VISIBLE);
                     tv_statusSmall.setVisibility(View.VISIBLE);
-                    tv_status.setText(secondWord + "Cancelled at " + activelist.getStatusUpdatedTime());
+                    tv_status.setText("Cancelled at " + activelist.getStatusUpdatedTime());
                     tv_statusSmall.setText("Cancelled ");
                     tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.red));
@@ -974,7 +993,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 if (activelist.getApptStatus().equalsIgnoreCase("Cancelled") || activelist.getApptStatus().equalsIgnoreCase("Rejected")) {
                     tv_status.setVisibility(View.VISIBLE);
                     tv_statusSmall.setVisibility(View.VISIBLE);
-                    tv_status.setText(secondWord + "Cancelled at " + activelist.getStatusUpdatedTime());
+                    tv_status.setText("Cancelled at " + activelist.getStatusUpdatedTime());
                     tv_statusSmall.setText("Cancelled ");
                     tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.red));

@@ -2814,6 +2814,7 @@ public class CheckIn extends AppCompatActivity {
                             checkinShareLocations.putExtra("calcMode", calcMode);
                             checkinShareLocations.putExtra("queueStartTime",mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
                             checkinShareLocations.putExtra("queueEndTime",mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
+                            checkinShareLocations.putExtra("from","checkin");
                             startActivity(checkinShareLocations);
                         }
 

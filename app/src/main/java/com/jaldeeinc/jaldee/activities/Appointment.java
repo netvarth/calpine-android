@@ -1,25 +1,38 @@
 package com.jaldeeinc.jaldee.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -38,6 +51,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
+import com.jaldeeinc.jaldee.adapter.DetailFileAdapter;
+import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -63,21 +78,34 @@ import com.jaldeeinc.jaldee.response.SearchUsers;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -90,6 +118,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -112,8 +142,8 @@ public class Appointment extends AppCompatActivity {
     static Activity mActivity;
     Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
     static int serviceId;
-    ArrayList<SearchService> LServicesList = new ArrayList<>();
-    ArrayList<SearchService> gServiceList = new ArrayList<>();
+    ArrayList<SearchAppoinment> LServicesList = new ArrayList<>();
+    ArrayList<SearchAppoinment> gServiceList = new ArrayList<>();
     String uniqueID;
     String uuid;
     TextView tv_addmember, tv_editphone;
@@ -121,12 +151,12 @@ public class Appointment extends AppCompatActivity {
     static int mSpinnertext;
     static String mServiceType;
     static String mAaptTime;
-    boolean livetrack;
+    String livetrack;
     static int deptSpinnertext;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     static String modifyAccountID;
-    boolean isPrepayment;
+    String isPrepayment;
     TextView tv_amount;
     String sAmountPay;
     static TextView tv_name;
@@ -139,7 +169,7 @@ public class Appointment extends AppCompatActivity {
     LinearLayout LcheckinDatepicker;
     static String mFrom;
     String title, place, terminology, calcMode;
-    ArrayList<String> timeslots= new ArrayList<>();
+    ArrayList<String> timeslots = new ArrayList<>();
     static String isShowToken;
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
@@ -173,6 +203,7 @@ public class Appointment extends AppCompatActivity {
     static TextView txtnocheckin;
     TextView tv_title;
     String txt_message = "";
+    String messageappt;
     String googlemap;
     String sector, subsector;
     LinearLayout layout_party, LservicePrepay, LcouponCheckin;
@@ -202,15 +233,18 @@ public class Appointment extends AppCompatActivity {
     String path;
     Bitmap bitmap;
     Boolean isShow;
-    static TextView  earliestAvailable;
+    static TextView earliestAvailable;
     static TextView txtWaitTime;
     String selectDate;
     ArrayList<SearchUsers> doctResponse = new ArrayList<>();
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
     TextView tv_enterInstructions;
     EditText et_vitualId;
-    String callingMode,valueNumber;
+    String callingMode, valueNumber;
     String id = " ";
+    TextView tv_fileAttach;
+    File file;
+    BottomSheetDialog dialog;
 
 
     @Override
@@ -272,10 +306,11 @@ public class Appointment extends AppCompatActivity {
         et_vitualId = findViewById(R.id.virtual_id);
 
 
+
         tv_addnote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
+                dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
                 dialog.setContentView(R.layout.reply);
                 dialog.show();
 
@@ -330,7 +365,127 @@ public class Appointment extends AppCompatActivity {
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                     }
                 });
-            }
+//                imagePathList.clear();
+//                tv_attach = dialog.findViewById(R.id.btn);
+//                tv_camera = dialog.findViewById(R.id.camera);
+//                recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
+//                //  imageview = dialog.findViewById(R.id.iv);
+//                // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
+//
+//
+//                requestMultiplePermissions();
+//                tv_attach.setVisibility(View.VISIBLE);
+//                tv_camera.setVisibility(View.VISIBLE);
+//
+//
+//                tv_attach.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        try {
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//
+//
+//                                    requestPermissions(new String[]{
+//                                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
+//
+//                                    return;
+//                                } else {
+//                                    Intent intent = new Intent();
+//                                    intent.setType("*/*");
+//                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+//                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+//                                }
+//                            } else {
+//
+//                                Intent intent = new Intent();
+//                                intent.setType("*/*");
+//                                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+//                            }
+//                        } catch (Exception ex) {
+//                            ex.printStackTrace();
+//                        }
+//                    }
+//
+//                });
+//
+//
+//                tv_camera.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        try {
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//
+//
+//                                    requestPermissions(new String[]{
+//                                            Manifest.permission.CAMERA}, CAMERA);
+//
+//                                    return;
+//                                } else {
+//                                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//                                    Intent cameraIntent = new Intent();
+//                                    cameraIntent.setType("image/*");
+//                                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//                                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+//                                    startActivityForResult(intent, CAMERA);
+//                                }
+//                            } else {
+//
+//                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//                                Intent cameraIntent = new Intent();
+//                                cameraIntent.setType("image/*");
+//                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+//                                startActivityForResult(intent, CAMERA);
+//                            }
+//                        } catch (Exception ex) {
+//                            ex.printStackTrace();
+//                        }
+//                    }
+//
+//                });
+//
+//
+//                btn_send.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        //
+//                    }
+//                });
+//
+//                btn_cancel.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        imagePathList.clear();
+//                        dialog.dismiss();
+//                    }
+//                });
+//
+//                edt_message.addTextChangedListener(new TextWatcher() {
+//                    @Override
+//                    public void afterTextChanged(Editable arg0) {
+//                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
+//                            btn_send.setEnabled(true);
+//                            btn_send.setClickable(true);
+//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
+//                        } else {
+//                            btn_send.setEnabled(false);
+//                            btn_send.setClickable(false);
+//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                    }
+//
+//                    @Override
+//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    }
+//                });
+           }
         });
 
 
@@ -529,17 +684,15 @@ public class Appointment extends AppCompatActivity {
         //  tv_editphone = findViewById(R.id.txteditphone);
 
 
-
-
         earliestAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
                 appDate.putExtra("timeslots", timeslots);
-                appDate.putExtra("serviceId",serviceId);
-                appDate.putExtra("mSpinnertext",mSpinnertext);
-                appDate.putExtra("accountId",modifyAccountID);
-                appDate.putExtra("id",id);
+                appDate.putExtra("serviceId", serviceId);
+                appDate.putExtra("mSpinnertext", mSpinnertext);
+                appDate.putExtra("accountId", modifyAccountID);
+                appDate.putExtra("id", id);
                 startActivity(appDate);
             }
         });
@@ -550,7 +703,7 @@ public class Appointment extends AppCompatActivity {
                 "dd-MM-yyyy", Locale.US);
         sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdfs.format(currentTimes));
-        txtWaitTime.setText("Today\n"+sdfs.format(currentTimes));
+        txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
 
         txtWaitTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -586,22 +739,21 @@ public class Appointment extends AppCompatActivity {
         mSpinnerService.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
-                livetrack = (((SearchService) mSpinnerService.getSelectedItem()).isLivetrack());
-                selectedServiceType =(((SearchService)  mSpinnerService.getSelectedItem()).getServiceType());
+                mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                livetrack = (((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack());
+                selectedServiceType = (((SearchAppoinment) mSpinnerService.getSelectedItem()).getServiceType());
                 Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
                 Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
 
-                serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
-                selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                serviceSelected = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
+                selectedService = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
 
 
-
-                if(selectedServiceType.equalsIgnoreCase("virtualService")) {
-                    callingMode = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
-                    valueNumber = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
+                if (selectedServiceType.equalsIgnoreCase("virtualService")) {
+                    callingMode = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
+                    valueNumber = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
                     if (callingMode.equalsIgnoreCase("WhatsApp")) {
-                        serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                        serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
                         tv_enterInstructions.setVisibility(View.VISIBLE);
                         tv_enterInstructions.setText(serviceInstructions);
                         et_vitualId.setText(phoneNumber);
@@ -610,15 +762,15 @@ public class Appointment extends AppCompatActivity {
                         tv_enterInstructions.setVisibility(View.GONE);
                         et_vitualId.setVisibility(View.GONE);
                     }
-                }else{
+                } else {
                     tv_enterInstructions.setVisibility(View.GONE);
                     et_vitualId.setVisibility(View.GONE);
                 }
-              //  selectedServiceType =((SearchAppoinment)  mSpinnerService.getSelectedItem()).getServiceType();
+                //  selectedServiceType =((SearchAppoinment)  mSpinnerService.getSelectedItem()).getServiceType();
 
                 // String firstWord = "Check-in for ";
                 String firstWord = Word_Change;
-                String secondWord = ((SearchService) mSpinnerService.getSelectedItem()).getName();
+                String secondWord = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
                 Spannable spannable = new SpannableString(firstWord + secondWord);
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
@@ -650,11 +802,11 @@ public class Appointment extends AppCompatActivity {
                 }
 
 
-                isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
+                isPrepayment = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getIsPrePayment();
                 Config.logV("Payment------------" + isPrepayment);
-                if (isPrepayment) {
+                if (isPrepayment.equalsIgnoreCase("true")) {
 
-                   sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
+                    sAmountPay = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
 
                     Config.logV("Payment----sAmountPay--------" + sAmountPay);
                     APIPayment(modifyAccountID);
@@ -681,7 +833,7 @@ public class Appointment extends AppCompatActivity {
                 selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
                 ApiSearchUsers(selectedDepartment);
                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
-                ArrayList<SearchService> serviceList = new ArrayList<>();
+                ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
 
                     for (int i = 0; i < gServiceList.size(); i++) {
@@ -700,11 +852,11 @@ public class Appointment extends AppCompatActivity {
                     txt_chooseservice.setVisibility(View.GONE);
                     Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                 } else {
-                    ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                    ArrayAdapter<SearchAppoinment> adapter = new ArrayAdapter<SearchAppoinment>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerService.setAdapter(adapter);
-                    mSpinnertext = ((SearchService) LServicesList.get(0)).getId();
-                    livetrack = LServicesList.get(0).isLivetrack();
+                    mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
+                    livetrack = LServicesList.get(0).getLivetrack();
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
                     btn_checkin.setVisibility(View.VISIBLE);
@@ -840,6 +992,256 @@ public class Appointment extends AppCompatActivity {
         }
     }
 
+    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
+        //copy file and send new file path
+        String fileName = getFileNameInfo(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            String ext = "";
+            if (fileName.contains(".")) {
+            } else {
+                ext = "." + extension;
+            }
+            File wallpaperDirectoryFile = new File(
+                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
+            copy(context, contentUri, wallpaperDirectoryFile);
+            return wallpaperDirectoryFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    protected static String getFileNameInfo(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public static void copy(Context context, Uri srcUri, File dstFile) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
+            if (inputStream == null) return;
+            FileOutputStream outputStream = new FileOutputStream(dstFile);
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
+    }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (resultCode == this.RESULT_CANCELED) {
+//            return;
+//        }
+//
+//        if (requestCode == GALLERY) {
+//            if (data != null) {
+//                try {
+//                    if (data.getData() != null) {
+//                        Uri uri = data.getData();
+//                        String orgFilePath = getRealPathFromURI(uri, this);
+//                        String filepath = "";//default fileName
+//
+//                        String mimeType = this.mContext.getContentResolver().getType(uri);
+//                        String uriString = uri.toString();
+//                        String extension = "";
+//                        if (uriString.contains(".")) {
+//                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+//                        }
+//
+//
+//                        if (mimeType != null) {
+//                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+//                        }
+//                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+//                            if (orgFilePath == null) {
+//                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+//                            }
+//                        } else {
+//                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//
+////
+//                        imagePathList.add(orgFilePath);
+////
+//
+//                        DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
+//                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+//                        recycle_image_attachment.setLayoutManager(mLayoutManager);
+//                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
+//                        mDetailFileAdapter.notifyDataSetChanged();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        } else if (requestCode == CAMERA) {
+//            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+//            //      imageview.setImageBitmap(bitmap);
+//            path = saveImage(bitmap);
+//            // imagePathList.add(bitmap.toString());
+//            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+////            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+//            if (path != null) {
+//                mImageUri = Uri.parse(path);
+//                imagePathList.add(mImageUri.toString());
+//            }
+//            try {
+//                bytes.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
+//            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+//            recycle_image_attachment.setLayoutManager(mLayoutManager);
+//            recycle_image_attachment.setAdapter(mDetailFileAdapter);
+//            mDetailFileAdapter.notifyDataSetChanged();
+//
+//        }
+//    }
+
+
+    public String saveImage(Bitmap myBitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        if (myBitmap != null) {
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        }
+        File wallpaperDirectory = new File(
+                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        // have the object build the directory structure, if needed.
+        if (!wallpaperDirectory.exists()) {
+            wallpaperDirectory.mkdirs();
+        }
+
+        try {
+            f = new File(wallpaperDirectory, Calendar.getInstance()
+                    .getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(mContext,
+                    new String[]{f.getPath()},
+                    new String[]{"image/jpeg"}, null);
+            fo.close();
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+
+            return f.getAbsolutePath();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return "";
+    }
+
+    private void requestMultiplePermissions() {
+        Dexter.withActivity((Activity) mContext)
+                .withPermissions(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            //openSettingsDialog();
+                            Toast.makeText(mContext, "You Denied the Permissions", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(mContext, "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public String getPDFPath(Uri uri) {
+
+        final String id = DocumentsContract.getDocumentId(uri);
+        final Uri contentUri = ContentUris.withAppendedId(
+                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = mActivity.getApplicationContext().getContentResolver().query(contentUri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    public String getFilePathFromURI(Uri contentUri, Context context) {
+        //copy file and send new file path
+        String fileName = getFileName(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
+            //copy(context, contentUri, copyFile);
+            return copyFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    public String getFileName(Uri uri) {
+        if (uri == null) return null;
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public String getRealFilePath(Uri uri) {
+        String path = uri.getPath();
+        String[] pathArray = path.split(":");
+        String fileName = pathArray[pathArray.length - 1];
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
+    }
 
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //
@@ -2169,6 +2571,7 @@ public class Appointment extends AppCompatActivity {
         });
 
     }
+
     private void ApiSearchViewServiceID(final int id) {
 
 
@@ -2180,11 +2583,11 @@ public class Appointment extends AppCompatActivity {
         mDialog.show();
 
 
-        Call<ArrayList<SearchService>> call = apiService.getSearchService(id);
+        Call<ArrayList<SearchAppoinment>> call = apiService.getSearchAppointment(id);
 
-        call.enqueue(new Callback<ArrayList<SearchService>>() {
+        call.enqueue(new Callback<ArrayList<SearchAppoinment>>() {
             @Override
-            public void onResponse(Call<ArrayList<SearchService>> call, Response<ArrayList<SearchService>> response) {
+            public void onResponse(Call<ArrayList<SearchAppoinment>> call, Response<ArrayList<SearchAppoinment>> response) {
 
                 try {
 
@@ -2198,12 +2601,12 @@ public class Appointment extends AppCompatActivity {
 
 
                         for (int i = 0; i < response.body().size(); i++) {
-                            SearchService mService = new SearchService();
+                            SearchAppoinment mService = new SearchAppoinment();
                             mService.setName(response.body().get(i).getName());
-                            mService.setLocid(id);
+                            mService.setId(id);
                             mService.setId(response.body().get(i).getId());
-                            mService.setLivetrack(response.body().get(i).isLivetrack());
-                            mService.setPrePayment(response.body().get(i).isPrePayment());
+                            mService.setLivetrack(response.body().get(i).getLivetrack());
+                            mService.setIsPrePayment(response.body().get(i).getIsPrePayment());
                             mService.setTotalAmount(response.body().get(i).getTotalAmount());
                             mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
                             mService.setServiceType(response.body().get(i).getServiceType());
@@ -2235,7 +2638,7 @@ public class Appointment extends AppCompatActivity {
                                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                             mSpinnerDepartment.setAdapter(adapter);
                                             deptSpinnertext = depResponse.getDepartmentId();
-                                            ArrayList<SearchService> serviceList = new ArrayList<>();
+                                            ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
                                             ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
                                             selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
                                             departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
@@ -2257,11 +2660,11 @@ public class Appointment extends AppCompatActivity {
                                             mSpinnerService.setVisibility(View.VISIBLE);
                                             txt_chooseservice.setVisibility(View.VISIBLE);
                                             Config.logV("mServicesList" + LServicesList.size());
-                                            ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                            ArrayAdapter<SearchAppoinment> adapter = new ArrayAdapter<SearchAppoinment>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                             mSpinnerService.setAdapter(adapter);
-                                            mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
-                                            livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
+                                            mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                                            livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
                                         } else {
 
                                             mSpinnerService.setVisibility(View.GONE);
@@ -2280,7 +2683,7 @@ public class Appointment extends AppCompatActivity {
                                                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                                 tv_checkin_service.setText(spannable);
                                                 mSpinnertext = LServicesList.get(0).getId();
-                                                livetrack = LServicesList.get(0).isLivetrack();
+                                                livetrack = LServicesList.get(0).getLivetrack();
                                                 serviceSelected = LServicesList.get(0).getName();
                                                 selectedService = LServicesList.get(0).getId();
 
@@ -2293,9 +2696,9 @@ public class Appointment extends AppCompatActivity {
                                                 //ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
 
 
-                                                isPrepayment = LServicesList.get(0).isPrePayment();
+                                                isPrepayment = LServicesList.get(0).getIsPrePayment();
                                                 Config.logV("Payment------------" + isPrepayment);
-                                                if (isPrepayment) {
+                                                if (isPrepayment.equalsIgnoreCase("true")) {
 
 
                                                     sAmountPay = LServicesList.get(0).getMinPrePaymentAmount();
@@ -2355,7 +2758,7 @@ public class Appointment extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<SearchService>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<SearchAppoinment>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -2639,15 +3042,10 @@ public class Appointment extends AppCompatActivity {
                             tv_queuetime.setText(schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
-
-
                             if (schedResponse.get(i).getId() != 0) {
                                 id = String.valueOf(schedResponse.get(i).getId());
                                 ApiScheduleId(id, mDate, accountIDs);
                             }
-
-
-
 
 
                         } else {
@@ -2698,12 +3096,9 @@ public class Appointment extends AppCompatActivity {
                                     tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
-
-
-
                                     if (schedResponse.get(i).getId() != 0) {
-                                      id = String.valueOf(schedResponse.get(i).getId());
-                                      ApiScheduleId(id, mDate, accountIDs);
+                                        id = String.valueOf(schedResponse.get(i).getId());
+                                        ApiScheduleId(id, mDate, accountIDs);
 
                                     }
 
@@ -2746,8 +3141,8 @@ public class Appointment extends AppCompatActivity {
 
 
                                     if (schedResponse.get(i).getId() != 0) {
-                                         id =String.valueOf(schedResponse.get(i).getId());
-                                         ApiScheduleId(id, mDate, accountIDs);
+                                        id = String.valueOf(schedResponse.get(i).getId());
+                                        ApiScheduleId(id, mDate, accountIDs);
 
                                     }
 
@@ -2783,9 +3178,6 @@ public class Appointment extends AppCompatActivity {
 //                        for(int i =0;i<response.body().size();i++) {
 //                            String id = String.valueOf(response.body().get(i).getId());
 //                            ApiScheduleId(id, mDate, accountIDs);
-
-
-
 
 
                 } catch (Exception e) {
@@ -2846,8 +3238,7 @@ public class Appointment extends AppCompatActivity {
                             }
                             Log.i("timeslots", timeslots.toString());
 
-                        }
-                        else{
+                        } else {
                             Toast.makeText(Appointment.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
                         }
 
@@ -2876,7 +3267,7 @@ public class Appointment extends AppCompatActivity {
     private void ApiSearchUsers(int deptId) {
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(deptId,Integer.parseInt(accountID.split("-")[0]));
+        Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(deptId, Integer.parseInt(accountID.split("-")[0]));
         call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchUsers>> call, Response<ArrayList<SearchUsers>> response) {
@@ -2884,7 +3275,7 @@ public class Appointment extends AppCompatActivity {
                     if (response.code() == 200) {
                         doctResponse = response.body();
 
-                        Log.i("getUser123",new Gson().toJson(response.body()));
+                        Log.i("getUser123", new Gson().toJson(response.body()));
 
 
                     }
@@ -2899,13 +3290,11 @@ public class Appointment extends AppCompatActivity {
             }
 
 
-
         });
 
         // Department Ends Here
 
     }
-
 
 
     SearchTerminology mSearchTerminology;
@@ -3093,7 +3482,7 @@ public class Appointment extends AppCompatActivity {
 
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-      //  mDialog.show();
+        //  mDialog.show();
 
         String uniqueID = UUID.randomUUID().toString();
         Date c = Calendar.getInstance().getTime();
@@ -3113,8 +3502,8 @@ public class Appointment extends AppCompatActivity {
         JSONObject waitobj = new JSONObject();
         JSONObject waitobj1 = new JSONObject();
         JSONObject waitobj2 = new JSONObject();
-        JSONObject waitobj3= new JSONObject();
-        JSONObject waitobj4= new JSONObject();
+        JSONObject waitobj3 = new JSONObject();
+        JSONObject waitobj4 = new JSONObject();
         JSONObject sejsonobj = new JSONObject();
         JSONArray waitlistArray = new JSONArray();
         JSONObject sjsonobj = new JSONObject();
@@ -3123,24 +3512,24 @@ public class Appointment extends AppCompatActivity {
 
         try {
 
-         //   qjsonObj.put("id", queueId);
-            if(txtWaitTime.getText().toString().contains("Today")){
+            //   qjsonObj.put("id", queueId);
+            if (txtWaitTime.getText().toString().contains("Today")) {
                 queueobj.put("appmtDate", formattedDate);
+            } else {
+                queueobj.put("appmtDate", txtWaitTime.getText().toString());
             }
-            else{
-            queueobj.put("appmtDate", txtWaitTime.getText().toString());}
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("phonenumber", phoneNumber);
-            sjsonobj.put("id",schedResponse.get(i).getId());
+            sjsonobj.put("id", schedResponse.get(i).getId());
 
-            if(callingMode!=null && callingMode.equalsIgnoreCase("whatsapp")){
+            if (callingMode != null && callingMode.equalsIgnoreCase("whatsapp")) {
                 virtualService.put("WhatsApp", et_vitualId.getText());
-            }else{
+            } else {
                 virtualService.put("", "");
             }
 
-            virtualService.put("id",schedResponse.get(i).getId());
-            sejsonobj.put("id",selectedService);
+            virtualService.put("id", schedResponse.get(i).getId());
+            sejsonobj.put("id", selectedService);
 
 
             JSONArray couponList = new JSONArray();
@@ -3158,8 +3547,8 @@ public class Appointment extends AppCompatActivity {
 
             Log.i("couponList", couponList.toString());
 
-          //  service.put("id", serviceId);
-           // service.putOpt("serviceType",mServiceType);
+            //  service.put("id", serviceId);
+            // service.putOpt("serviceType",mServiceType);
             if (enableparty) {
                 queueobj.put("partySize", editpartysize.getText().toString());
             }
@@ -3179,7 +3568,7 @@ public class Appointment extends AppCompatActivity {
 
                     waitobj3.put("lastName", MultiplefamilyList.get(i).getLastName());
 
-                    waitobj4.put("apptTime",mAaptTime);
+                    waitobj4.put("apptTime", mAaptTime);
 
 
                     waitlistArray.put(waitobj1);
@@ -3188,35 +3577,32 @@ public class Appointment extends AppCompatActivity {
                     waitlistArray.put(waitobj4);
                 }
             } else {
-                if(familyMEmID == consumerID){
+                if (familyMEmID == consumerID) {
                     familyMEmID = 0;
                 }
                 waitobj.put("id", familyMEmID);
                 waitobj.put("firstName", mFirstName);
                 waitobj.put("lastName", mLastName);
-                if(earliestAvailable.getText().toString().contains("Earliest available")){
-                   waitobj.put("apptTime", timeslots.get(0));
+                if (earliestAvailable.getText().toString().contains("Earliest available")) {
+                    waitobj.put("apptTime", timeslots.get(0));
+                } else {
+                    waitobj.put("apptTime", earliestAvailable.getText().toString());
                 }
-                else{
-                waitobj.put("apptTime", earliestAvailable.getText().toString());}
                 waitlistArray.put(waitobj);
-
 
 
             }
 
 
             queueobj.putOpt("service", sejsonobj);
-           // queueobj.putOpt("queue", qjsonObj);
+            // queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("appmtFor", waitlistArray);
-            queueobj.putOpt("schedule",sjsonobj);
-            if(selectedServiceType.equalsIgnoreCase("virtualService")){
-                queueobj.putOpt("virtualService",virtualService);
+            queueobj.putOpt("schedule", sjsonobj);
+            if (selectedServiceType.equalsIgnoreCase("virtualService")) {
+                queueobj.putOpt("virtualService", virtualService);
             }
 
-           // queueobj.putOpt("service",selectedServiceType);
-
-
+            // queueobj.putOpt("service",selectedServiceType);
 
 
         } catch (JSONException e) {
@@ -3262,7 +3648,7 @@ public class Appointment extends AppCompatActivity {
                         System.out.println("VALUE: " + "------>" + value);
                         // finish();
                         Config.logV("Response--isPrepayment------------------" + isPrepayment);
-                        if (isPrepayment) {
+                        if (isPrepayment.equalsIgnoreCase("true")) {
                             if (!showPaytmWallet && !showPayU) {
 
                                 //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
@@ -3332,8 +3718,9 @@ public class Appointment extends AppCompatActivity {
                             Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
                             finish();
                         }
+                    //    ApiCommunicateAppointment(value, String.valueOf(accountID), messageappt, dialog);
 
-                        if (livetrack == true) {
+                        if (livetrack.equalsIgnoreCase("true")) {
                             Intent checkinShareLocations = new Intent(mContext, CheckinShareLocationAppointment.class);
                             checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
                             checkinShareLocations.putExtra("uuid", value);
@@ -3343,6 +3730,7 @@ public class Appointment extends AppCompatActivity {
                             checkinShareLocations.putExtra("calcMode", calcMode);
                             checkinShareLocations.putExtra("queueStartTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
                             checkinShareLocations.putExtra("queueEndTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
+                            checkinShareLocations.putExtra("from", "appt");
                             startActivity(checkinShareLocations);
                         }
 
@@ -3494,7 +3882,75 @@ public class Appointment extends AppCompatActivity {
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
             showAlert("Payment Cancelled");
         }
+//        if (requestCode == GALLERY) {
+//            if (data != null) {
+//                try {
+//                    if (data.getData() != null) {
+//                        Uri uri = data.getData();
+//                        String orgFilePath = getRealPathFromURI(uri, this);
+//                        String filepath = "";//default fileName
+//
+//                        String mimeType = this.mContext.getContentResolver().getType(uri);
+//                        String uriString = uri.toString();
+//                        String extension = "";
+//                        if (uriString.contains(".")) {
+//                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+//                        }
+//
+//
+//                        if (mimeType != null) {
+//                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+//                        }
+//                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+//                            if (orgFilePath == null) {
+//                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+//                            }
+//                        } else {
+//                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//
+////
+//                        imagePathList.add(orgFilePath);
+////
+//
+//                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+//                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+//                        recycle_image_attachment.setLayoutManager(mLayoutManager);
+//                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
+//                        mDetailFileAdapter.notifyDataSetChanged();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        } else if (requestCode == CAMERA) {
+//            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+//            //      imageview.setImageBitmap(bitmap);
+//            path = saveImage(bitmap);
+//            // imagePathList.add(bitmap.toString());
+//            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+////            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+//            if (path != null) {
+//                mImageUri = Uri.parse(path);
+//                imagePathList.add(mImageUri.toString());
+//            }
+//            try {
+//                bytes.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+//            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+//            recycle_image_attachment.setLayoutManager(mLayoutManager);
+//            recycle_image_attachment.setAdapter(mDetailFileAdapter);
+//            mDetailFileAdapter.notifyDataSetChanged();
+//
+//        }
     }
+
 
     private static Double convertStringToDouble(String str) {
         return Double.parseDouble(str);
@@ -3538,13 +3994,13 @@ public class Appointment extends AppCompatActivity {
     public static void timeslotdates(String timeDates) {
 
         txtWaitTime.setText(timeDates);
-        if(timeDates.equalsIgnoreCase("")){
+        if (timeDates.equalsIgnoreCase("")) {
             Date currentTimes = new Date();
             final SimpleDateFormat sdfs = new SimpleDateFormat(
                     "dd-MM-yyyy", Locale.US);
             sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
             System.out.println("UTC time: " + sdfs.format(currentTimes));
-            txtWaitTime.setText("Today\n"+sdfs.format(currentTimes));
+            txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
         }
 
     }
@@ -3665,6 +4121,88 @@ public class Appointment extends AppCompatActivity {
         });
     }
 
+    //
+//    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
+//
+//
+//        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+//        MediaType type = MediaType.parse("*/*");
+//        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+//        mBuilder.setType(MultipartBody.FORM);
+//        mBuilder.addFormDataPart("message", message);
+//        for (int i = 0; i < imagePathList.size(); i++) {
+//
+//            try {
+//                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            if (bitmap != null) {
+//                path = saveImage(bitmap);
+//                file = new File(path);
+//            }
+////            else{
+////                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
+////            }
+//            else {
+//                file = new File(imagePathList.get(i));
+//            }
+//            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+//        }
+//        RequestBody requestBody = mBuilder.build();
+//
+//
+//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+//        JSONObject jsonObj = new JSONObject();
+//        try {
+//            jsonObj.put("message", message);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+//
+//        Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, "77992", requestBody);
+//
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//
+//                try {
+//
+//
+//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//
+//                    if (response.code() == 200) {
+//                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
+//                        imagePathList.clear();
+//                        dialog.dismiss();
+//
+//
+//                    } else {
+//                        if (response.code() == 422) {
+//                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                // Log error here since request failed
+//                Config.logV("Fail---------------" + t.toString());
+//            }
+//        });
+//
+//    }
+}
+
 
 //    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 //
@@ -3752,4 +4290,5 @@ public class Appointment extends AppCompatActivity {
 //        });
 //    }
 
-}
+
+

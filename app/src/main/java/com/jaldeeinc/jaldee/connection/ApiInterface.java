@@ -421,4 +421,6 @@ public interface ApiInterface {
 
     @GET("consumer/waitlist/providerByDepartmentId/{departmentId}")
     Call<ArrayList<SearchUsers>> getUsers(@Path("departmentId")  int departmentId, @Query("account") int account);
+
+
 }
