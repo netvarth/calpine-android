@@ -125,7 +125,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             txt_msg = (TextView) view.findViewById(R.id.txt_msg);
             txt_peopleahead = (TextView) view.findViewById(R.id.txt_PeopleAhead);
             LAppointment = view.findViewById(R.id.appoinmentLayouts);
-            txt_earliestAvailable = view.findViewById(R.id.nextAppoinments);
             btn_appointments = view.findViewById(R.id.btnappointments);
             LApp_Services = view.findViewById(R.id.appointmentList);
             txt_apptservices = view.findViewById(R.id.txtapptservices);
