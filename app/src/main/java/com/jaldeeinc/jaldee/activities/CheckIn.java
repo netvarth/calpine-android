@@ -2642,7 +2642,7 @@ public class CheckIn extends AppCompatActivity {
             if(callingMode!=null && callingMode.equalsIgnoreCase("whatsapp")){
                 virtualService.put("WhatsApp", et_virtualId.getText());
             }else{
-                virtualService.put("", "");
+              //  virtualService.put("", "");
             }
 
 
