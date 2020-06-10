@@ -1285,7 +1285,7 @@ public class CheckIn extends AppCompatActivity {
                             calcMode = response.body().getCalculationMode();
                             isShow = response.body().isShowTokenId();
 
-                            if (response.body().getCalculationMode().equalsIgnoreCase("NoCalc") && response.body().isShowTokenId()) {
+                            if ( response.body().isShowTokenId()) {
                                 isShowToken = String.valueOf(response.body().isShowTokenId());
                                 tv_title.setText("Get Token");
                                 Word_Change = "Token for ";
