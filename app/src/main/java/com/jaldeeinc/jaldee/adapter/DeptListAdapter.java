@@ -795,7 +795,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     }
                 } else { // No Waiting Time && Show/Hide Token
                     if (searchdetailList.getCalculationMode() != null) {
-                        if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc") && searchdetailList.isShowToken()) {
+                        if ( searchdetailList.isShowToken()) {
                             myViewHolder.btncheckin.setText("GET TOKEN");
                             myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
                             if (searchdetailList.getPersonAhead() != -1) {

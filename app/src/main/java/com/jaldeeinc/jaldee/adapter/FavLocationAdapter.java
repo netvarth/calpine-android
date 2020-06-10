@@ -111,7 +111,19 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     @Override
     public void onBindViewHolder(final FavLocationAdapter.MyViewHolder myViewHolder, final int position) {
         final QueueList queueList = mQueueList.get(position);
-        final ScheduleList scheduleList = mScheduleList.get(position);
+
+
+        if(mScheduleList.size()>0){
+
+            final ScheduleList scheduleList = mScheduleList.get(position);
+            if(scheduleList.isCheckinAllowed()){
+                myViewHolder.appoinmentLayouts.setVisibility(View.VISIBLE);
+            }else{
+                myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
+            }
+        }else{
+            myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
+        }
 
         if(position==mQueueList.size()-1){
             myViewHolder.divider.setVisibility(View.GONE);
@@ -225,11 +237,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                     myViewHolder.btn_checkin.setVisibility(View.GONE);
                 }
 
-                if(scheduleList.isCheckinAllowed()){
-                    myViewHolder.appoinmentLayouts.setVisibility(View.VISIBLE);
-                }else{
-                    myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
-                }
+
 
 
                 myViewHolder.btnappointments.setOnClickListener(new View.OnClickListener() {
@@ -391,7 +399,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             myViewHolder.btn_checkin.setText("GET TOKEN");
         }
         if (queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().getAvailableDate() != null) {
-            if (queueList.getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc") && queueList.getNextAvailableQueue().isShowToken()) {
+            if ( queueList.getNextAvailableQueue().isShowToken()) {
                 myViewHolder.btn_checkin.setText("GET TOKEN");
                 myViewHolder.tv_date.setText("Do you want to Get Token for another day?");
                 if (queueList.getNextAvailableQueue().getPersonAhead() != -1) {
