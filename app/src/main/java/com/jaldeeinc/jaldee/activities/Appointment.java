@@ -693,6 +693,7 @@ public class Appointment extends AppCompatActivity {
                 appDate.putExtra("mSpinnertext", mSpinnertext);
                 appDate.putExtra("accountId", modifyAccountID);
                 appDate.putExtra("id", id);
+                appDate.putExtra("selectDate",txtWaitTime.getText().toString());
                 startActivity(appDate);
             }
         });
@@ -714,6 +715,7 @@ public class Appointment extends AppCompatActivity {
                 appDate.putExtra("mSpinnertext", mSpinnertext);
                 appDate.putExtra("accountId", modifyAccountID);
                 appDate.putExtra("id", id);
+                appDate.putExtra("selectDate",txtWaitTime.getText().toString());
                 startActivity(appDate);
             }
         });

@@ -63,6 +63,8 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
     ArrayList<String> timeslots= new ArrayList<>();
     Date last_date =new Date();
+    static String selectDate;
+
 
 
 
@@ -100,9 +102,14 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
             mSpinnertext = extras.getInt("mSpinnertext");
             accountId = extras.getString("accountId");
             schdId = extras.getString("id");
+            selectDate = extras.getString("selectDate");
         }
-
-
+        try {
+            cv.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(selectDate).getTime(), true, true);
+            ApiScheduleId(schdId, selectDate, accountId);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         if(!timeslot.isEmpty()){
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
         recycle_timeslots.setLayoutManager(mLayoutManager);
@@ -249,7 +256,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                                 earliestAvailable.setText("Earliest available\n" + timeslots.get(0));
                             }
 
-                            Log.i("timeslots", timeslots.toString());
+
 
                         }
                         else{
