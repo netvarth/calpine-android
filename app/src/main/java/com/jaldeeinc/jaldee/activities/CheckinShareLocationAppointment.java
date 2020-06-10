@@ -293,12 +293,17 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(shareSwitch.isChecked()){
+                    UpdateShareLiveLocation();
+                    mService.removeLocationUpdates();
+                    finish();}
+                else{
                 shareSwitch.setChecked(false);
                 locationStatus = false;
                 UpdateShareLiveLocation();
                 Toast.makeText(CheckinShareLocationAppointment.this, "Live tracking has been disabled", Toast.LENGTH_SHORT).show();
                 mService.removeLocationUpdates();
-                finish();
+                finish();}
             }
         });
         if(jaldeeDistance!=null){

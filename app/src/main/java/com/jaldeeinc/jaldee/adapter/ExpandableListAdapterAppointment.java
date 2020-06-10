@@ -472,7 +472,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 
         latitude = SharedPreference.getInstance(mContext).getStringValue("latitudes", "");
         longitude = SharedPreference.getInstance(mContext).getStringValue("longitudes", "");
-        if (header.equals("today") && activelist.getService().getLivetrack().equals("true")) {
+        if (header.equals("today") && activelist.getService().getLivetrack().equals("true") || header.equals("future") && activelist.getService().getLivetrack().equals("true")) {
             if(!latitude.equals("") && !longitude.equals("")){
                 distance(Double.parseDouble(activelist.getLocation().getLattitude()),Double.parseDouble(activelist.getLocation().getLongitude()),Double.parseDouble(latitude),Double.parseDouble(longitude));
             }else{
@@ -516,6 +516,8 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 intent.putExtra("calcMode", "Check-in");
                 intent.putExtra("queueStartTime",activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).getsTime());
                 intent.putExtra("queueEndTime",activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).geteTime());
+                if(activelist.getJaldeeApptDistanceTime()!=null && activelist.getJaldeeApptDistanceTime().getJaldeeDistanceTime()!=null){
+                    intent.putExtra("jaldeeDistance",activelist.getJaldeeApptDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance());}
                 mContext.startActivity(intent);
             }
         });
