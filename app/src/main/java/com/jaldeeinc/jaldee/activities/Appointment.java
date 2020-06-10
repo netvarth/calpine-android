@@ -765,7 +765,9 @@ public class Appointment extends AppCompatActivity {
                         et_vitualId.setText(phoneNumber);
                         et_vitualId.setVisibility(View.VISIBLE);
                     } else {
-                        tv_enterInstructions.setVisibility(View.GONE);
+                        serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                        tv_enterInstructions.setVisibility(View.VISIBLE);
+                        tv_enterInstructions.setText(serviceInstructions);
                         et_vitualId.setVisibility(View.GONE);
                     }
                 } else {
