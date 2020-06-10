@@ -42,6 +42,16 @@ public class SearchListModel implements Serializable {
     ArrayList gallery_thumb_nails;
     String parking_location1;
     String sectorname;
+
+    public String getOnline_profile() {
+        return online_profile;
+    }
+
+    public void setOnline_profile(String online_profile) {
+        this.online_profile = online_profile;
+    }
+
+    String online_profile;
     String account_type;
     String branch_name;
     String sub_sector;

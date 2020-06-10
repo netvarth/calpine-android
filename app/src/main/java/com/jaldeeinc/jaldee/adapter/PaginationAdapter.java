@@ -1266,25 +1266,17 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 }
 
-                if(searchdetailList.getToday_appt()!=null){
-                    if(searchdetailList.getToday_appt().equals("1")){
+
+                if (mScheduleList.size() != 0 && searchdetailList.getOnline_profile() != null) {
+                    if (mScheduleList.get(0).isCheckinAllowed() && searchdetailList.getOnline_profile().equals(1)) {
                         myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
                         myViewHolder.L_appointments.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         myViewHolder.L_appoinment.setVisibility(View.GONE);
                         myViewHolder.L_appointments.setVisibility(View.GONE);
                     }
                 }
-              if(mScheduleList.size()!=0) {
-                if (mScheduleList.get(0).isCheckinAllowed()) {
-                    myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
-                    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
-                } else {
-                    myViewHolder.L_appoinment.setVisibility(View.GONE);
-                    myViewHolder.L_appointments.setVisibility(View.GONE);
-                }
 
-            }
                 if (searchdetailList.getMessage() != null && searchdetailList.getClaimable().equals("0")) {
                     myViewHolder.L_appoinment.setVisibility(View.GONE);
                 }

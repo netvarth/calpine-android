@@ -631,7 +631,9 @@ public class CheckIn extends AppCompatActivity {
                         et_virtualId.setText(phoneNumber);
                         et_virtualId.setVisibility(View.VISIBLE);
                     } else {
-                        tv_enterInstructions.setVisibility(View.GONE);
+                        serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                        tv_enterInstructions.setVisibility(View.VISIBLE);
+                        tv_enterInstructions.setText(serviceInstructions);
                         et_virtualId.setVisibility(View.GONE);
                     }
                 }else{

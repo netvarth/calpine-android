@@ -40,6 +40,16 @@ public class SearchAWsResponse {
 
     int coupon_enabled;
     String today_appt;
+    String online_profile;
+
+    public String getOnline_profile() {
+        return online_profile;
+    }
+
+    public void setOnline_profile(String online_profile) {
+        this.online_profile = online_profile;
+    }
+
     String future_appt;
 
     public int getCoupon_enabled() {

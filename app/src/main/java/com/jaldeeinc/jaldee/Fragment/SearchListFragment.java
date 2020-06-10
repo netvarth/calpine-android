@@ -1778,6 +1778,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setSectorname(mSearchRespPass.get(i).getSector());
                                     searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
                                     searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
+                                    searchList.setOnline_profile(mSearchRespPass.get(i).getOnline_profile());
                                     searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
 
 
@@ -1997,6 +1998,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
                                     searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
                                     searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
+                                    searchList.setOnline_profile(mSearchRespPass.get(i).getOnline_profile());
                                     searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
                                     searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
 //                                String spec = "";
