@@ -3229,14 +3229,14 @@ public class Appointment extends AppCompatActivity {
                                 if (response.body().getAvailableSlots().get(i).getActive().equalsIgnoreCase("true") && !response.body().getAvailableSlots().get(i).getNoOfAvailbleSlots().equalsIgnoreCase("0")) {
                                     timeslots.add(response.body().getAvailableSlots().get(i).getTime());
                                 }
-
-
                             }
 
-                            if (timeslots != null) {
+                            if (timeslots.size()>0) {
                                 earliestAvailable.setText("Earliest available\n" + timeslots.get(0));
+                            }else {
+                                earliestAvailable.setText("Timeslots not available");
                             }
-                            Log.i("timeslots", timeslots.toString());
+
 
                         } else {
                             Toast.makeText(Appointment.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();

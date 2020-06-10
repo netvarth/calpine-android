@@ -1658,7 +1658,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView ic_jaldeeverifiedIcon;
         ImageView profile, profile1, profile2;
         RatingBar rating;
-        TextView tv_claimable, tv_distance, tv_branch_name,nextAppoinments;
+        TextView tv_claimable, tv_distance, tv_branch_name;
 
         Button btncheckin,btnappointments;
         LinearLayout layout_row;
@@ -1677,7 +1677,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             tv_qmessage = view.findViewById(R.id.qmessage);
             tv_claimable = view.findViewById(R.id.claimable);
             tv_branch_name = view.findViewById(R.id.branch_name);
-            nextAppoinments = view.findViewById(R.id.nextAppoinments);
             tv_location = view.findViewById(R.id.location);
             tv_domain = view.findViewById(R.id.domain);
             profile = view.findViewById(R.id.profile);
