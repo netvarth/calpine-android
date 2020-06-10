@@ -266,6 +266,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.tv_place.setTypeface(tyface);
         myViewHolder.tv_open.setTypeface(tyface);
         myViewHolder.btn_checkin.setTypeface(tyface);
+        myViewHolder.btn_appointments.setTypeface(tyface);
 
         listType.clear();
         if (searchLoclist.getParkingType() != null) {
@@ -1198,6 +1199,38 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             if (mSearachAwsResponse.getHits() != null) {
                 if (mSearachAwsResponse.getHits().getHit() != null) {
                     for (int l = 0; l < mSearachAwsResponse.getHits().getHit().size(); l++) {
+
+                        if(mSearachAwsResponse.getHits().getHit().get(l).getFields().getOnline_profile()!=null) {
+                            if (mScheduleList!=null && mScheduleList.size() >0) {
+                                if (mScheduleList.get(0).isCheckinAllowed()) {
+
+                                    if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getOnline_profile().equals("1")) {
+                                        myViewHolder.LAppointment.setVisibility(View.VISIBLE);
+                                        myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+                                    } else {
+                                        myViewHolder.LAppointment.setVisibility(View.GONE);
+                                        myViewHolder.LApp_Services.setVisibility(View.GONE);
+                                        myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                                    }
+
+
+                                } else {
+                                    myViewHolder.LAppointment.setVisibility(View.GONE);
+                                    myViewHolder.LApp_Services.setVisibility(View.GONE);
+                                    myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                                }
+                            } else {
+                                myViewHolder.LAppointment.setVisibility(View.GONE);
+                                myViewHolder.LApp_Services.setVisibility(View.GONE);
+                                myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                            }
+                        }
+
+                        else {
+                            myViewHolder.LAppointment.setVisibility(View.GONE);
+                            myViewHolder.LApp_Services.setVisibility(View.GONE);
+                            myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                        }
                         if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt() != null) {
 
                             if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services() != null) {
@@ -1287,29 +1320,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 myViewHolder.txt_apptservices.setVisibility(View.GONE);
 
                             }
-                            if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt().equals("1")) {
-                                myViewHolder.LAppointment.setVisibility(View.VISIBLE);
-                                myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
-                            } else {
-                                myViewHolder.LAppointment.setVisibility(View.GONE);
-                                myViewHolder.LApp_Services.setVisibility(View.GONE);
-                                myViewHolder.txt_apptservices.setVisibility(View.GONE);
-                            }
                         }
                     }
                 }
             }
         }
-    if(mScheduleList.get(0).isCheckinAllowed()){
-        myViewHolder.LAppointment.setVisibility(View.VISIBLE);
-        myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
 
-        }
-    else{
-        myViewHolder.LAppointment.setVisibility(View.GONE);
-        myViewHolder.LApp_Services.setVisibility(View.GONE);
-        myViewHolder.txt_apptservices.setVisibility(View.GONE);
-    }
+
+
+
 
 //Queue---- for button check-in,waittime checking
 
@@ -1390,7 +1409,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         if (!mSearachAwsResponse.getHits().getHit().isEmpty()) {
                                             if (mSearachAwsResponse.getHits().getHit().get(k).getFields() != null && mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins() != null) {
                                                 if (mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins().equals("1")) {
-                                                    if (mSearchSetting.getCalculationMode() != null && mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
+                                                    if (isShowTokenId) {
                                                         myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
                                                         myViewHolder.txt_diffdate_expand.setText("Do you want to Get Token for another day?");
                                                         myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
@@ -1430,9 +1449,17 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                             }
                             if (mSearchSetting.getCalculationMode() != null) { //   Token/No Token
-                                if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
+                                if (isShowTokenId) {
                                     myViewHolder.btn_checkin.setText("GET TOKEN");
                                     myViewHolder.btn_checkin_expand.setText("GET TOKEN");
+
+                                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                                        myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                                        myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+                                    } else {
+                                        myViewHolder.tv_waittime.setVisibility(View.GONE);
+                                        myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
+                                    }
                                     if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != null) {
                                         if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != -1) {
                                             if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() == 0) {
@@ -1449,9 +1476,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                     }
                                 } else {
-                                    myViewHolder.tv_waittime.setVisibility(View.GONE);
-                                    myViewHolder.txt_peopleahead.setVisibility(View.GONE);
-
                                     if (mShowWaitTime) { // ML/Fixed
                                         myViewHolder.btn_checkin.setText("Check-in".toUpperCase());
                                         myViewHolder.btn_checkin_expand.setText("Check-in".toUpperCase());
@@ -1489,9 +1513,16 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 if (mShowWaitTime && isShowTokenId == false) {
                                 } else {
                                     if (mSearchSetting.getCalculationMode() != null) {
-                                        if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
+                                        if (isShowTokenId) {
                                             myViewHolder.btn_checkin.setText("GET TOKEN");
                                             myViewHolder.btn_checkin_expand.setText("GET TOKEN");
+                                            if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                                                myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                                                myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+                                            } else {
+                                                myViewHolder.tv_waittime.setVisibility(View.GONE);
+                                                myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
+                                            }
                                             if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != null) {
                                                 if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != -1) {
                                                     Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
@@ -1505,9 +1536,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                                 noCalcShowToken(mQueueList, myViewHolder, i);
                                             }
                                         } else {
-                                            myViewHolder.tv_waittime.setVisibility(View.GONE);
                                             myViewHolder.txt_peopleahead.setVisibility(View.GONE);
-
                                         }
                                     }
                                 }
