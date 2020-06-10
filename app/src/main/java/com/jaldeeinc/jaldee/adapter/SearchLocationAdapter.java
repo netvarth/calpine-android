@@ -266,6 +266,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.tv_place.setTypeface(tyface);
         myViewHolder.tv_open.setTypeface(tyface);
         myViewHolder.btn_checkin.setTypeface(tyface);
+        myViewHolder.btn_appointments.setTypeface(tyface);
 
         listType.clear();
         if (searchLoclist.getParkingType() != null) {

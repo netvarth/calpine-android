@@ -714,7 +714,8 @@
             android:text="Appointment"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/txtsize_12" />
+            android:textSize="@dimen/txtsize_12"
+            android:textStyle="bold"/>
 
         <!--  android:textSize="@dimen/txtsize_subtitle" />-->
     </LinearLayout>

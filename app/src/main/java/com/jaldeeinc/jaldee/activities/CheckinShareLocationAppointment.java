@@ -252,6 +252,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
         modeLabel.setVisibility(View.VISIBLE);
         ApiActiveCheckIn();
         if(from!=null && from.equalsIgnoreCase("appt") ){
+            checkinMessage.setText("Your appointment is successfull !!");
             checkinMessage.setVisibility(View.VISIBLE);
         }
         else{
@@ -515,14 +516,14 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                         shareText.setText("Jaldee will not show your exact location, it will only share your arrival time with "+response.body().getProviderAccount().getBusinessName());
 
                         if (calcMode.equalsIgnoreCase("NoCalc")) {
-                            checkinMessage.setText("Your token for " + response.body().getService().getName() + /*"( " + queueStartTime + "-"+queueEndTime+ " )" +"*/" with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your appointment for " + response.body().getService().getName() + /*"( " + queueStartTime + "-"+queueEndTime+ " )" +"*/" with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
                         } else if (terminology.equalsIgnoreCase("Check-in")) {
-                            checkinMessage.setText("Your check-in for " + response.body().getService().getName() +/*"( " + queueStartTime + "-"+queueEndTime+ " )" +*/ " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your appointment for " + response.body().getService().getName() +/*"( " + queueStartTime + "-"+queueEndTime+ " )" +*/ " with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
                         } else {
-                            checkinMessage.setText("Your order for " + response.body().getService().getName() +/*"( " + queueStartTime + "-"+queueEndTime+ " )" + */" with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
+                            checkinMessage.setText("Your appointment for " + response.body().getService().getName() +/*"( " + queueStartTime + "-"+queueEndTime+ " )" + */" with "+ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
                         }
 
-                        checkinMessage.setText("Your check-in for " + response.body().getService().getName() + " with "+/* "( " + queueStartTime + "-"+queueEndTime+ " )" +*/ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
+                        checkinMessage.setText("Your appointment for " + response.body().getService().getName() + " with "+/* "( " + queueStartTime + "-"+queueEndTime+ " )" +*/ response.body().getProviderAccount().getBusinessName() +", "+response.body().getLocation().getPlace() + " is successful !!");
 
                         if (a.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                             Laboutus.setVisibility(View.GONE);

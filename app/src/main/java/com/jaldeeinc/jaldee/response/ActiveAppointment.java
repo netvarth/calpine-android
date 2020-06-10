@@ -132,6 +132,7 @@ public class ActiveAppointment {
     String billId;
     String amountPaid;
     double amountDue;
+    String batchId;
 
     public String getParentUuid() {
         return parentUuid;
@@ -1006,7 +1007,13 @@ public class ActiveAppointment {
         this.apptTakenTime = apptTakenTime;
     }
 
+    public String getBatchId() {
+        return batchId;
+    }
 
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
+    }
 
 
 

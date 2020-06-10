@@ -3591,17 +3591,15 @@ public class Appointment extends AppCompatActivity {
                 waitobj.put("id", familyMEmID);
                 waitobj.put("firstName", mFirstName);
                 waitobj.put("lastName", mLastName);
-                if(timeslots.size()>0){
+
                     if (earliestAvailable.getText().toString().contains("Earliest available")) {
-                        waitobj.put("apptTime", timeslots.get(0));
+                        if(timeslots.size()>0){
+                        waitobj.put("apptTime", timeslots.get(0));}
                     } else {
                         waitobj.put("apptTime", earliestAvailable.getText().toString());
                     }
                 }
                 waitlistArray.put(waitobj);
-
-
-            }
 
 
             queueobj.putOpt("service", sejsonobj);
