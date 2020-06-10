@@ -710,6 +710,10 @@ public class Appointment extends AppCompatActivity {
             public void onClick(View v) {
                 Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
                 appDate.putExtra("timeslots", timeslots);
+                appDate.putExtra("serviceId", serviceId);
+                appDate.putExtra("mSpinnertext", mSpinnertext);
+                appDate.putExtra("accountId", modifyAccountID);
+                appDate.putExtra("id", id);
                 startActivity(appDate);
             }
         });

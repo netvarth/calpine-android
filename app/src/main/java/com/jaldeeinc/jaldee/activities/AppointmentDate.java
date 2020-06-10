@@ -101,16 +101,18 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
             accountId = extras.getString("accountId");
             schdId = extras.getString("id");
         }
-        Log.i("cvbbvcbvc",timeslot.toString());
+
 
         if(!timeslot.isEmpty()){
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
         recycle_timeslots.setLayoutManager(mLayoutManager);
         sAdapter = new TimeSlotsAdapter(timeslot);
         recycle_timeslots.setAdapter(sAdapter);
-        sAdapter.notifyDataSetChanged();}
-        else{
+        sAdapter.notifyDataSetChanged();
+        } else{
+            Appointment.timeslotdate("Time Slots not available");
             Toast.makeText(this, "Time Slots not available", Toast.LENGTH_SHORT).show();
+
         }
 
 
