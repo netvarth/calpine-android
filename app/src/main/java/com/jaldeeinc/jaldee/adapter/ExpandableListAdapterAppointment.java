@@ -795,12 +795,12 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 Word1.length(), Word1.length() + Word2.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_queueTime.setText(spannable2);
         //getbatch name itself
-        if (activelist.getBatchName() != null) {
+        if (activelist.getBatchId() != null) {
             tv_token.setVisibility(View.GONE);
             tv_batchName.setVisibility(View.VISIBLE);
             layout_partySize.setVisibility(View.VISIBLE);
             String firstword = "Batch :";
-            tv_batchName.setText(firstword + " " + activelist.getBatchName());
+            tv_batchName.setText(firstword + " " + activelist.getBatchId());
 
 
 //        } else if (activelist.getToken() != -1 && activelist.getToken() > 0) {

@@ -331,7 +331,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
                 } else {
                     locationStatus = false;
                     transportLayout.setVisibility(View.GONE);
-                    btn_send.setVisibility(View.GONE);
+                  //  btn_send.setVisibility(View.GONE);
                     btn_cancel.setVisibility(View.VISIBLE);
 
 
