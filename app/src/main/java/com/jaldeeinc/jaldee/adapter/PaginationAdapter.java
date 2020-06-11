@@ -823,7 +823,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.tv_qmessage.setTextColor(context.getResources().getColor(R.color.red));
                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
                         myViewHolder.tv_peopleahead.setVisibility(View.GONE);
-                        disableCheckinButton(myViewHolder);
+                        disableCheckinButton(myViewHolder,searchdetailList);
 
                     }
 
@@ -843,7 +843,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if (searchdetailList.isOnlineCheckIn()) {
                             enableCheckinButton(myViewHolder);
                         } else {
-                            disableCheckinButton(myViewHolder);
+                            disableCheckinButton(myViewHolder,searchdetailList);
                         }
                         if (searchdetailList.getShow_waiting_time() != null) { // ML/Fixed
                             if (searchdetailList.isShowToken()) {
@@ -870,7 +870,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             }
                         }
                     } else if (date2 != null && date1.compareTo(date2) < 0) {   // For Future
-                        disableCheckinButton(myViewHolder);
+                        disableCheckinButton(myViewHolder,searchdetailList);
                         // ML/Fixed
                         if (searchdetailList.getShow_waiting_time() != null) {
                             myViewHolder.btncheckin.setText(termilogy.toUpperCase());
@@ -891,7 +891,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             setFutureDateCheckin(searchdetailList, myViewHolder,position);
                         }
                     } else {
-                        disableCheckinButton(myViewHolder);
+                        disableCheckinButton(myViewHolder,searchdetailList);
                         myViewHolder.btncheckin.setVisibility(View.GONE);
                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
                         myViewHolder.tv_peopleahead.setVisibility(View.GONE);
@@ -1388,7 +1388,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public void disableCheckinButton(MyViewHolder myViewHolder) {
+    public void disableCheckinButton(MyViewHolder myViewHolder,SearchListModel searchdetailLists) {
+
+        if(searchdetailLists.isShowToken()){
+            myViewHolder.btncheckin.setText("GET TOKEN");
+        }else{
+            myViewHolder.btncheckin.setText("CHECK-IN");
+        }
         myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
         myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
         myViewHolder.btncheckin.setEnabled(false);
@@ -1433,7 +1439,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
             myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-            disableCheckinButton(myViewHolder);
+            disableCheckinButton(myViewHolder,searchdetailList);
         } catch (ParseException e) {
             e.printStackTrace();
         }
