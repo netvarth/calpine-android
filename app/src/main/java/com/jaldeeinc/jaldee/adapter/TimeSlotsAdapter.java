@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
+import com.jaldeeinc.jaldee.activities.AppointmentDate;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
 import java.text.DateFormat;
@@ -23,6 +24,7 @@ import java.util.Date;
 public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. TimeSlotsAdapterViewHolder> {
     ArrayList timeSlots = new ArrayList();
     int selectedPosition = -1;
+    String selectTime = "";
 
 
     public  TimeSlotsAdapter( ArrayList timeSlots) {
@@ -55,12 +57,13 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. Ti
             public void onClick(View v) {
                 selectedPosition = position;
                 notifyDataSetChanged();
-                String selectTime = timeSlots.get(selectedPosition).toString();
+                selectTime = timeSlots.get(selectedPosition).toString();
              //   Toast.makeText(context, selectTime, Toast.LENGTH_SHORT).show();
                 Appointment.timeslotdate(selectTime);
+
             }
         });
-
+        AppointmentDate.timeslot(selectTime);
     }
 
 

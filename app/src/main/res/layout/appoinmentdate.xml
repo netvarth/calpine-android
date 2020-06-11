@@ -101,6 +101,18 @@
         android:textColor="@color/black"
         android:layout_marginTop="@dimen/padding5"
         android:textSize="@dimen/dimen_16sp"/>
+    <TextView
+        android:id="@+id/noavailableslot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No available time slot for this queue"
+        android:layout_marginLeft="@dimen/padding5"
+        android:textColor="@color/gray"
+        android:layout_marginTop="@dimen/padding5"
+        android:textSize="@dimen/dimen_16sp"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:gravity="center"/>
 
 
     <android.support.v7.widget.RecyclerView
