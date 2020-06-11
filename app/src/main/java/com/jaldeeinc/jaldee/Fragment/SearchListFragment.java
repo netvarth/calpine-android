@@ -367,17 +367,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         Config.logV("Fragment Context--43343---" + searchDetail);
         progressBar = (ProgressBar) row.findViewById(R.id.main_progress);
-        //  Config.logV("Pass Fragment" + searchDetail);
         mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
-
-
         pageadapter = new PaginationAdapter(getActivity(), mSearchView, getActivity(), searchDetail, this, uniqueID,mQueueList,mScheduleList);
-
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecySearchDetail.setLayoutManager(linearLayoutManager);
-
         mRecySearchDetail.setItemAnimator(new DefaultItemAnimator());
-
         mRecySearchDetail.setAdapter(pageadapter);
 
 
@@ -1251,6 +1245,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setFirst_checkin_coupon_count(response.body().getHits().getHit().get(i).getFields().getFirst_checkin_coupon_count());
                                 search.setJdn(response.body().getHits().getHit().get(i).getFields().getJdn());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
+                                search.setOnline_profile(response.body().getHits().getHit().get(i).getFields().getOnline_profile());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
                                 search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
@@ -1527,6 +1522,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setFirst_checkin_coupon_count(response.body().getHits().getHit().get(i).getFields().getFirst_checkin_coupon_count());
                                 search.setJdn(response.body().getHits().getHit().get(i).getFields().getJdn());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
+                                search.setOnline_profile(response.body().getHits().getHit().get(i).getFields().getOnline_profile());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
                                 search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
@@ -2230,6 +2226,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             for (int i = 0; i < response.body().size(); i++) {
                                 mScheduleList.add(response.body().get(i));
                             }
+                            Log.i("ScheduleList",new Gson().toJson(mScheduleList));
 
 
                         }
