@@ -1312,6 +1312,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     }
                                 } else {
                                     myViewHolder.LApp_Services.setVisibility(View.GONE);
+                                    myViewHolder.txt_apptservices.setVisibility(View.GONE);
+
 
                                 }
 

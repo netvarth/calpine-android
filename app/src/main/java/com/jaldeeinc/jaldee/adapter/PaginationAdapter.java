@@ -843,7 +843,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if (searchdetailList.isOnlineCheckIn()) {
                             enableCheckinButton(myViewHolder);
                         } else {
-                            disableCheckinButton(myViewHolder,searchdetailList);
+                            disableCheckinButton(myViewHolder, searchdetailList);
                         }
                         if (searchdetailList.getShow_waiting_time() != null) { // ML/Fixed
                             if (searchdetailList.isShowToken()) {
@@ -1388,11 +1388,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public void disableCheckinButton(MyViewHolder myViewHolder,SearchListModel searchdetailLists) {
-
-        if(searchdetailLists.isShowToken()){
+    public void disableCheckinButton(MyViewHolder myViewHolder, SearchListModel searchdetailList) {
+        if(searchdetailList.isShowToken()){
             myViewHolder.btncheckin.setText("GET TOKEN");
-        }else{
+
+        }
+        else{
             myViewHolder.btncheckin.setText("CHECK-IN");
         }
         myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
