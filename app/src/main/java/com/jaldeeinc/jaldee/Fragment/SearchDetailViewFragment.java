@@ -3139,6 +3139,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 search.setUnique_id(response.body().getHits().getHit().get(i).getFields().getUnique_id());
                                 search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
+                                search.setOnline_profile(response.body().getHits().getHit().get(i).getFields().getOnline_profile());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
                                 search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
