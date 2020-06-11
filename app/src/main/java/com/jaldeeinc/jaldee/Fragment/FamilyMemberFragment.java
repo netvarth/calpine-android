@@ -313,6 +313,7 @@ public class FamilyMemberFragment extends RootFragment {
             }
             jsonObj.put("firstName", edtfirstname.getText().toString());
             jsonObj.put("lastName", lastname.getText().toString());
+            jsonObj.put("id",mUser);
 
             if (!radiogender.equalsIgnoreCase("") && radiogender != null) {
                 jsonObj.put("gender", radiogender);
@@ -326,7 +327,7 @@ public class FamilyMemberFragment extends RootFragment {
             }
 
             userProfile.putOpt("userProfile", jsonObj);
-            userProfile.put("user", mUser);
+           // userProfile.put("id", mUser);
         } catch (JSONException e) {
             e.printStackTrace();
         }
