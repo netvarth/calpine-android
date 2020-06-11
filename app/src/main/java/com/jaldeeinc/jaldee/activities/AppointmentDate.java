@@ -51,7 +51,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
      ArrayList timeslot = new ArrayList();
      RecyclerView recycle_timeslots;
      TimeSlotsAdapter sAdapter;
-     TextView tv_date_slot;
+     TextView  tv_noavail_slot;
      CalendarView cv;
      Button btn_confirm;
      String selectedDate;
@@ -61,7 +61,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
      static String accountId;
      static String schdId;
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
-    ArrayList<String> timeslots= new ArrayList<>();
+    static ArrayList<String> timeslots= new ArrayList<>();
     Date last_date =new Date();
     static String selectDate;
 
@@ -78,6 +78,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
         btn_confirm = (Button) findViewById(R.id.btn_confirm);
         tv_title = findViewById(R.id.toolbartitle);
         tv_title.setText("Time Slots");
+        tv_noavail_slot =findViewById(R.id.noavailableslot);
         ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,12 +112,14 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
             e.printStackTrace();
         }
         if(!timeslot.isEmpty()){
+            tv_noavail_slot.setVisibility(View.GONE);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
         recycle_timeslots.setLayoutManager(mLayoutManager);
         sAdapter = new TimeSlotsAdapter(timeslot);
         recycle_timeslots.setAdapter(sAdapter);
         sAdapter.notifyDataSetChanged();
         } else{
+            tv_noavail_slot.setVisibility(View.VISIBLE);
             Appointment.timeslotdate("Time Slots not available");
             Toast.makeText(this, "Time Slots not available", Toast.LENGTH_SHORT).show();
 
@@ -246,6 +249,11 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 
 
                             }
+                            if(timeslots.size()==0){
+                                tv_noavail_slot.setVisibility(View.VISIBLE);
+                            }
+                            else{
+                            tv_noavail_slot.setVisibility(View.GONE);}
                             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
                             recycle_timeslots.setLayoutManager(mLayoutManager);
                             sAdapter = new TimeSlotsAdapter(timeslots);
@@ -260,6 +268,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 
                         }
                         else{
+                            tv_noavail_slot.setVisibility(View.VISIBLE);
                             recycle_timeslots.setAlpha(0);
                             Toast.makeText(AppointmentDate.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
                         }
@@ -285,5 +294,11 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 
 
     }
+    public static void timeslot(String timeSlot) {
+        if(timeSlot.equalsIgnoreCase("") && timeslots.size()!=0){
+            earliestAvailable.setText("Timeslot not picked");
+        }
+    }
 
-}
+
+    }
