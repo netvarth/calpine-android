@@ -139,7 +139,7 @@
                     android:textColor="@color/sec_title_grey"
                     android:textSize="@dimen/txtsize_10"
                     android:textStyle="bold"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_weight="0.5"
                     />
 
@@ -194,7 +194,6 @@
                     android:weightSum="1">
 
                     <TextView
-                        android:visibility="gone"
                         android:id="@+id/txt_token"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -318,7 +317,7 @@
                     android:layout_marginTop="9dp"
                     android:layout_gravity="right"
                     android:textSize="11sp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:textStyle="bold"
                     android:layout_weight="0.5"/>
             </LinearLayout>
@@ -459,18 +458,19 @@
                 </LinearLayout>
 
             </LinearLayout>
+
             <LinearLayout
+                android:padding="@dimen/dimen_10dp"
                 android:id="@+id/liveTrackLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/input_border_top_diffcolor"
+                android:background="@drawable/active_checkin"
                 android:layout_marginTop="9dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
 
 
@@ -482,30 +482,18 @@
                         android:layout_margin="5dp"
                         android:textColor="@color/black"
                         android:textSize="11sp"
-                        android:layout_weight="0.6"
-                        />
+                        android:textStyle="bold"
+                        android:layout_weight="0.6" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/icon_refresh"
-                        android:text=""
-                        android:layout_marginTop="9dp"
-                        android:layout_marginRight="4dp"
-                        android:drawableRight="@drawable/icon_refresh"
-                        android:layout_weight="0.4"
-
-                        />
                 </LinearLayout>
 
                 <TextView
+                    android:textStyle="bold"
                     android:id="@+id/recomEnableLoc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:drawablePadding="5dp"
-                    android:drawableRight="@drawable/cancel_icon"
                     android:layout_marginBottom="5dp"
                     android:text="PSK"
                     android:textColor="@color/black"
@@ -513,6 +501,7 @@
 
                     />
                 <TextView
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/recomShareLiveLoc"
@@ -520,16 +509,12 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"
-                    android:drawableRight="@drawable/icon_tick_markgreen"
-                    android:drawablePadding="5dp"
                     android:textColor="@color/black"
 
                     android:textSize="11sp"
                     />
 
             </LinearLayout>
-
-
 
 
             <!--            <LinearLayout-->

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
@@ -346,7 +347,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         TextView tv_enable_loc = (TextView) view.findViewById(R.id.notEnableLoc);
         TextView tv_recom_loc = (TextView) view.findViewById(R.id.recomEnableLoc);
         TextView tv_recom_liveloc = (TextView) view.findViewById(R.id.recomShareLiveLoc);
-        TextView tv_icon_refresh = (TextView) view.findViewById(R.id.icon_refresh);
         LinearLayout liveTrackLayout = (LinearLayout) view.findViewById(R.id.liveTrackLayout);
 
         if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn") && header.equals("today")) {
@@ -522,23 +522,49 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 distance(Double.parseDouble(activelist.getLattitude()),Double.parseDouble(activelist.getLongitude()),12.971599,77.594563);
             }
 
+
+
+            String text = "Jaldee recommends you always";
+            String text3 = " share your arrival time";
+            String text4 = " with " + activelist.getBusinessName();
+
+            String text2 = text + text3 + text4;
+
+            Spannable spannable = new SpannableString(text2);
+
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), (text.length()), (text.length() + text3.length()) , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+            String text5 =  "You are sharing";
+            String text6 =  " your arrival time with ";
+            String text7 =  activelist.getBusinessName();
+
+            String text8 = text5 + text6 + text7;
+
+            Spannable spannables = new SpannableString(text8);
+
+            spannables.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), (text5.length()), (text5.length() + text6.length()) , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+
             liveTrackLayout.setVisibility(View.VISIBLE);
             if (!gps_enabled && !network_enabled) {
-                tv_enable_loc.setText("          Oops, your location is not enabled");
-                tv_recom_loc.setText("          Jaldee recommends you enable location");
+                tv_enable_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getBusinessName());
+                tv_recom_loc.setText("Jaldee recommends you to enable location");
                 tv_recom_loc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 tv_recom_liveloc.setVisibility(View.GONE);
-            } else if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
-                tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getBusinessName() );
-               // tv_enable_loc.setText("");
-                tv_recom_liveloc.setText("You are sharing your arrival time with " + activelist.getBusinessName());
-                tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_tick_markgreen, 0);
+            }
+
+            else if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
+                tv_enable_loc.setVisibility(View.GONE);
+                tv_recom_liveloc.setText(spannables, TextView.BufferType.SPANNABLE);
                 tv_recom_loc.setVisibility(View.GONE);
-            } else {
-             //   tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getBusinessName() );
-                tv_enable_loc.setText("");
-                tv_recom_loc.setText("Oops!! you are NOT sharing your live location with " + activelist.getBusinessName());
-                tv_recom_liveloc.setText("Jaldee recommends you to let the " + activelist.getBusinessName() + " know your arrival time so that you won't miss your turn");
+            }
+
+            else {
+                tv_enable_loc.setVisibility(View.GONE);
+                tv_recom_loc.setText("Oops!!, You are NOT sharing your live location with " + activelist.getBusinessName());
+                tv_recom_liveloc.setText(spannable, TextView.BufferType.SPANNABLE);
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             }
 
@@ -548,23 +574,23 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
 
 
-        tv_icon_refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, CheckinShareLocation.class);
-                intent.putExtra("waitlistPhonenumber", activelist.getPrimaryMobileNo());
-                intent.putExtra("uuid", activelist.getYnwUuid());
-                intent.putExtra("accountID", String.valueOf(activelist.getId()));
-                intent.putExtra("title", activelist.getBusinessName());
-                intent.putExtra("terminology", "Check-in");
-                intent.putExtra("calcMode", activelist.getCalculationMode());
-                intent.putExtra("queueStartTime",activelist.getQueueStartTime());
-                intent.putExtra("queueEndTime",activelist.getQueueEndTime());
-                if(activelist.getJaldeeWaitlistDistanceTime()!=null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime()!=null){
-                intent.putExtra("jaldeeDistance",activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().toString());}
-                mContext.startActivity(intent);
-            }
-        });
+//        tv_icon_refresh.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(mContext, CheckinShareLocation.class);
+//                intent.putExtra("waitlistPhonenumber", activelist.getPrimaryMobileNo());
+//                intent.putExtra("uuid", activelist.getYnwUuid());
+//                intent.putExtra("accountID", String.valueOf(activelist.getId()));
+//                intent.putExtra("title", activelist.getBusinessName());
+//                intent.putExtra("terminology", "Check-in");
+//                intent.putExtra("calcMode", activelist.getCalculationMode());
+//                intent.putExtra("queueStartTime",activelist.getQueueStartTime());
+//                intent.putExtra("queueEndTime",activelist.getQueueEndTime());
+//                if(activelist.getJaldeeWaitlistDistanceTime()!=null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime()!=null){
+//                intent.putExtra("jaldeeDistance",activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().toString());}
+//                mContext.startActivity(intent);
+//            }
+//        });
 
         tv_recom_liveloc.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -317,7 +317,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         TextView tv_enable_loc = (TextView) view.findViewById(R.id.notEnableLoc);
         TextView tv_recom_loc = (TextView) view.findViewById(R.id.recomEnableLoc);
         TextView tv_recom_liveloc = (TextView) view.findViewById(R.id.recomShareLiveLoc);
-        TextView tv_icon_refresh = (TextView) view.findViewById(R.id.icon_refresh);
+
         LinearLayout liveTrackLayout = (LinearLayout) view.findViewById(R.id.liveTrackLayout);
 
         if (activelist.getJaldeeApptDistanceTime() != null && activelist.getApptStatus().equalsIgnoreCase("Confirmed") && header.equalsIgnoreCase("today")) {
@@ -504,23 +504,23 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 
 
 
-        tv_icon_refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, CheckinShareLocationAppointment.class);
-                intent.putExtra("waitlistPhonenumber", activelist.getConsumer().getUserProfile().getPrimaryMobileNo());
-                intent.putExtra("uuid", activelist.getUid());
-                intent.putExtra("accountID", String.valueOf(activelist.getProviderAccount().getId()));
-                intent.putExtra("title", activelist.getProviderAccount().getBusinessName());
-                intent.putExtra("terminology", "Check-in");
-                intent.putExtra("calcMode", "Check-in");
-                intent.putExtra("queueStartTime",activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).getsTime());
-                intent.putExtra("queueEndTime",activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).geteTime());
-                if(activelist.getJaldeeApptDistanceTime()!=null && activelist.getJaldeeApptDistanceTime().getJaldeeDistanceTime()!=null){
-                    intent.putExtra("jaldeeDistance",activelist.getJaldeeApptDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance());}
-                mContext.startActivity(intent);
-            }
-        });
+//        tv_icon_refresh.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(mContext, CheckinShareLocationAppointment.class);
+//                intent.putExtra("waitlistPhonenumber", activelist.getConsumer().getUserProfile().getPrimaryMobileNo());
+//                intent.putExtra("uuid", activelist.getUid());
+//                intent.putExtra("accountID", String.valueOf(activelist.getProviderAccount().getId()));
+//                intent.putExtra("title", activelist.getProviderAccount().getBusinessName());
+//                intent.putExtra("terminology", "Check-in");
+//                intent.putExtra("calcMode", "Check-in");
+//                intent.putExtra("queueStartTime",activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).getsTime());
+//                intent.putExtra("queueEndTime",activelist.getSchedule().getApptSchedule().getTimeSlots().get(0).geteTime());
+//                if(activelist.getJaldeeApptDistanceTime()!=null && activelist.getJaldeeApptDistanceTime().getJaldeeDistanceTime()!=null){
+//                    intent.putExtra("jaldeeDistance",activelist.getJaldeeApptDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().getDistance());}
+//                mContext.startActivity(intent);
+//            }
+//        });
 
         tv_recom_liveloc.setOnClickListener(new View.OnClickListener() {
             @Override
