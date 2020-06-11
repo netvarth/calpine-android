@@ -69,10 +69,10 @@ public class Splash extends AppCompatActivity {
             String scheme = data.getScheme();
             String host = data.getHost();
             String path = data.getPath();
-            String param = data.getEncodedFragment();
+            String param = data.getLastPathSegment();
+
             Log.i("DeepLink", "Schema : " + data);
             Log.i("DeepLink", "Host : " + host);
-            Log.i("DeepLink", "param : " + host);
             Log.i("DeepLink", "param : " + param);
 
             if (host.equals("scale.jaldee.com")) {
