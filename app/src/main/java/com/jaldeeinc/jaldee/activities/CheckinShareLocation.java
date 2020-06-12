@@ -106,6 +106,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
 
 
 
+
     // UI elements.
 
 
@@ -159,6 +160,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
         travelMode ="DRIVING";
         locationStatus = true;
         startTime = "ONEHOUR";
+
 
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utilss.requestingLocationUpdates(CheckinShareLocation.this)) {
@@ -270,7 +272,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
             btn_send.setVisibility(View.VISIBLE);
             btn_cancel.setVisibility(View.VISIBLE);
         } else {
-            trackingText.setVisibility(View.VISIBLE);
+         //   trackingText.setVisibility(View.VISIBLE);
             shareText.setVisibility(View.VISIBLE);
 
             transportLayout.setVisibility(View.GONE);
@@ -314,7 +316,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
         }
         else{
             shareSwitch.setChecked(false);
-            trackingText.setVisibility(View.VISIBLE);
+         //   trackingText.setVisibility(View.VISIBLE);
             shareText.setVisibility(View.VISIBLE);
         }
         shareSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -507,9 +509,9 @@ public class CheckinShareLocation extends AppCompatActivity implements
                         a = response.body();
                         Log.i("fghffghfgh", response.body().toString());
                         Log.i("fghffghfgh", new Gson().toJson(response.body()));
-                        shareSwitch.setText("Allow " + response.body().getProviderAccount().getBusinessName() + " to track your ETA");
+                        shareSwitch.setText("Track me and share my arrival time with " + response.body().getProviderAccount().getBusinessName());
 
-                        trackingText.setText(response.body().getProviderAccount().getBusinessName() + " won't know where you are and you can miss your turn. So Jaldee recommends to turn on sharing");
+                      //  trackingText.setText(response.body().getProviderAccount().getBusinessName() + " won't know where you are and you can miss your turn. So Jaldee recommends to turn on sharing");
                         shareText.setText("Jaldee will not show your exact location, it will only share your arrival time with "+response.body().getProviderAccount().getBusinessName());
 
                         if (calcMode.equalsIgnoreCase("NoCalc")) {
@@ -593,10 +595,10 @@ public class CheckinShareLocation extends AppCompatActivity implements
 
 
                                 if (hours < 1) {
-                                    modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance()+ "</b>" +" " +"<b>Km</b>" + " " + "away and will take around " +"<b>" +" " + minutes +"</b>" + "<b> mins</b>" + " to reach"));
+                                    modeLabel.setText(Html.fromHtml(a.getProviderAccount().getBusinessName() + " is" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance()+ "</b>" +" " +"<b>Km</b>" + " " + "away and will take around " +"<b>" +" " + minutes +"</b>" + "<b> mins</b>" + " to reach"));
 
                                 } else {
-                                    modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() +"</b>"+" " +"<b>Km</b>" + " "+ "away and will take around " + "<b>" +  hours +"</b>"+ "<b> hours</b>" +" " + "<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
+                                    modeLabel.setText(Html.fromHtml(a.getProviderAccount().getBusinessName() + " is" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() +"</b>"+" " +"<b>Km</b>" + " "+ "away and will take around " + "<b>" +  hours +"</b>"+ "<b> hours</b>" +" " + "<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
                                 }
                             } else {
                                 modeLabel.setText("You are close to " + a.getProviderAccount().getBusinessName());
@@ -655,10 +657,10 @@ public class CheckinShareLocation extends AppCompatActivity implements
                             if (response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() > 0) {
                                 if (hours < 1) {
 
-                                    modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "</b>" +" " + "<b>Km</b>" + " " + "away and will take around " +"<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
+                                    modeLabel.setText(Html.fromHtml(a.getProviderAccount().getBusinessName() + " is" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "</b>" +" " + "<b>Km</b>" + " " + "away and will take around " +"<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
                                 } else {
 
-                                    modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance()+"</b>"+ " "+ "<b>Km</b>" + " "+ "away and will take around " + "<b>" +  hours+ "</b> "+ "<b>hours</b>" +" " + "<b>" + minutes + "</b>" + "<b> mins</b>" + " to reach"));
+                                    modeLabel.setText(Html.fromHtml(a.getProviderAccount().getBusinessName() + " is" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance()+"</b>"+ " "+ "<b>Km</b>" + " "+ "away and will take around " + "<b>" +  hours+ "</b> "+ "<b>hours</b>" +" " + "<b>" + minutes + "</b>" + "<b> mins</b>" + " to reach"));
                                 }
                             } else {
                                 modeLabel.setText("You are close to " + a.getProviderAccount().getBusinessName());
@@ -710,9 +712,9 @@ public class CheckinShareLocation extends AppCompatActivity implements
 
 
                                     if (hours < 1) {
-                                        modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() +"</b>" +" " +"<b>Km</b>" + " " + "away and will take around " +"<b>" + minutes + "</b>" + "<b> mins</b>" + " to reach"));
+                                        modeLabel.setText(Html.fromHtml(a.getProviderAccount().getBusinessName() + " is" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() +"</b>" +" " +"<b>Km</b>" + " " + "away and will take around " +"<b>" + minutes + "</b>" + "<b> mins</b>" + " to reach"));
                                     } else {
-                                        modeLabel.setText(Html.fromHtml("From your current location, you are" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "</b>"+" " +"<b>Km</b>" + " "+ "away and will take around " + "<b>" + hours + "</b> "+ "<b>hours</b>" +" " + "<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
+                                        modeLabel.setText(Html.fromHtml(a.getProviderAccount().getBusinessName() + " is" + " " + "<b>" + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "</b>"+" " +"<b>Km</b>" + " "+ "away and will take around " + "<b>" + hours + "</b> "+ "<b>hours</b>" +" " + "<b>" + minutes+ "</b>" + "<b> mins</b>" + " to reach"));
 
                                     }
                                 } else {

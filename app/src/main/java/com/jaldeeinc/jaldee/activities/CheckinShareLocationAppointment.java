@@ -267,7 +267,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
             btn_send.setVisibility(View.VISIBLE);
             btn_cancel.setVisibility(View.VISIBLE);
         } else {
-            trackingText.setVisibility(View.VISIBLE);
+         //   trackingText.setVisibility(View.VISIBLE);
             shareText.setVisibility(View.VISIBLE);
 
             transportLayout.setVisibility(View.GONE);
@@ -315,7 +315,7 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
         }
         else{
             shareSwitch.setChecked(false);
-            trackingText.setVisibility(View.VISIBLE);
+        //    trackingText.setVisibility(View.VISIBLE);
             shareText.setVisibility(View.VISIBLE);
         }
 
@@ -510,9 +510,9 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                         a = response.body();
                         Log.i("fghffghfgh", response.body().toString());
                         Log.i("fghffghfgh", new Gson().toJson(response.body()));
-                        shareSwitch.setText("Allow " + response.body().getProviderAccount().getBusinessName() + " to track your ETA");
+                        shareSwitch.setText("Track me and share my arrival time with "+ response.body().getProviderAccount().getBusinessName());
 
-                        trackingText.setText(response.body().getProviderAccount().getBusinessName() + " won't know where you are and you can miss your turn. So Jaldee recommends to turn on sharing");
+                       // trackingText.setText(response.body().getProviderAccount().getBusinessName() + " won't know where you are and you can miss your turn. So Jaldee recommends to turn on sharing");
                         shareText.setText("Jaldee will not show your exact location, it will only share your arrival time with "+response.body().getProviderAccount().getBusinessName());
 
                         if (calcMode.equalsIgnoreCase("NoCalc")) {
@@ -595,10 +595,10 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
 
 
                                 if (hours < 1) {
-                                    modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes + " mins" + " to reach");
+                                    modeLabel.setText(a.getProviderAccount().getBusinessName() + " is" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes + " mins" + " to reach");
 
                                 } else {
-                                    modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
+                                    modeLabel.setText(a.getProviderAccount().getBusinessName() + " is" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
                                 }
                             } else {
                                 modeLabel.setText("You are close to " + a.getProviderAccount().getBusinessName());
@@ -656,9 +656,9 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
                             int minutes = response.body().getJaldeeDistanceTime().getJaldeelTravelTime().getTravelTime() % 60;
                             if (response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() > 0) {
                                 if (hours < 1) {
-                                    modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes + " mins" + " to reach");
+                                    modeLabel.setText(a.getProviderAccount().getBusinessName() + " is" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes + " mins" + " to reach");
                                 } else {
-                                    modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
+                                    modeLabel.setText(a.getProviderAccount().getBusinessName() + " is" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
                                 }
                             } else {
                                 modeLabel.setText("You are close to " + a.getProviderAccount().getBusinessName());
@@ -710,9 +710,9 @@ public class CheckinShareLocationAppointment extends AppCompatActivity implement
 
 
                                     if (hours < 1) {
-                                        modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes + " mins" + " to reach");
+                                        modeLabel.setText(a.getProviderAccount().getBusinessName() + " is" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + minutes + " mins" + " to reach");
                                     } else {
-                                        modeLabel.setText("From your current location, you are" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
+                                        modeLabel.setText(a.getProviderAccount().getBusinessName() + " is" + " " + response.body().getJaldeeDistanceTime().getJaldeeDistance().getDistance() + "Km" + " " + "away and will take around " + hours + " hours " + minutes + " mins" + " to reach");
 
                                     }
                                 } else {

@@ -19,11 +19,25 @@
             layout="@layout/custom_toolbar_new" />
     </LinearLayout>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/jaldeelivetrack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:padding="@dimen/padding5"
+            android:text="Jaldee Live Track"
+            android:textColor="@color/black"
+            android:drawableRight="@drawable/icon_location_blue"
+            android:drawablePadding="3dp"
+            android:textSize="@dimen/dimen_16sp"
+            android:textStyle="bold"/>
 
         <LinearLayout
 
@@ -40,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".8"
                 android:gravity="center"
-                android:padding="@dimen/default_padding"
+                android:padding="@dimen/padding5"
                 android:text="Your checkIn is successfull !!"
                 android:textColor="@color/green"
                 android:textSize="@dimen/txtsize_hint" />
@@ -53,7 +67,6 @@
             android:background="@color/light_background" />
 
 
-
         <TextView
             android:id="@+id/modeLabel"
             android:layout_width="wrap_content"
@@ -62,22 +75,23 @@
             android:paddingLeft="@dimen/default_padding"
             android:paddingTop="@dimen/padding3"
             android:paddingBottom="@dimen/padding3"
-            android:textColor="@color/title_grey_light"
+            android:textColor="#AAA"
             android:textSize="@dimen/twelveScaled"
-            android:textStyle="italic" />
+            android:textStyle="bold" />
 
         <TextView
-            android:paddingRight="@dimen/dimen_10dp"
             android:id="@+id/trackingText"
-            android:paddingLeft="@dimen/dimen_10dp"
-            android:paddingTop="@dimen/dimen_10dp"
-            android:layout_marginTop="@dimen/dimen_5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:paddingLeft="@dimen/dimen_10dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:paddingRight="@dimen/dimen_10dp"
             android:text="@string/make_sure_you_never_miss_your_turn"
             android:textColor="#AAA"
             android:textSize="@dimen/txtsize_hint_11"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,26 +106,28 @@
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:padding="@dimen/dimen_10dp"
-                android:text="Track your ETA"
+                android:text="Track me and share my arrival time with Provider"
                 android:textStyle="bold" />
         </LinearLayout>
+
         <TextView
-            android:padding="@dimen/dimen_10dp"
-            android:visibility="visible"
             android:id="@+id/shareText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_10dp"
             android:textColor="#AAA"
             android:textSize="@dimen/txtsize_hint_11"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="visible"
+            android:drawableLeft="@drawable/icon_info"
+            android:drawablePadding="@dimen/padding2"/>
 
         <View
-            android:layout_marginBottom="@dimen/padding5"
             android:id="@+id/view1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/padding5"
             android:background="@color/light_background" />
-
 
 
         <LinearLayout
@@ -128,9 +144,9 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:background="@color/app_background"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
@@ -141,26 +157,26 @@
 
 
                 <TextView
-                    android:layout_marginTop="@dimen/dimen_5dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
                     android:id="@+id/drivingIcon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:clickable="true"
+                    android:gravity="center"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_hint" />
 
                 <TextView
-                    android:layout_marginTop="@dimen/dimen_5dp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
                     android:id="@+id/walkingIcon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:clickable="true"
+                    android:gravity="center"
                     android:paddingLeft="@dimen/default_padding"
                     android:paddingRight="@dimen/default_padding"
                     android:textColor="@color/title_grey"
@@ -170,15 +186,14 @@
             </LinearLayout>
 
             <View
-                android:layout_marginTop="@dimen/padding5"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginTop="@dimen/padding5"
                 android:background="@color/light_background" />
         </LinearLayout>
 
 
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/saveAndClose"
