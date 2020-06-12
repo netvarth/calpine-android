@@ -71,13 +71,16 @@ public class Splash extends AppCompatActivity {
             String path = data.getPath();
             String param = data.getLastPathSegment();
 
-            Log.i("DeepLink", "Schema : " + data);
+            Log.i("DeepLink", "data : " + data);
             Log.i("DeepLink", "Host : " + host);
             Log.i("DeepLink", "param : " + param);
+            Log.i("DeepLink", "path : " + path);
+            Log.i("DeepLink", "scheme : " + scheme);
 
             if (host.equals("scale.jaldee.com")) {
                 Intent intent = new Intent(this, Home.class);
                 intent.putExtra("detail_id", (param));  // URL query values as string, you need to parse string to long.
+                intent.putExtra("path", (path));  // URL query values as string, you need to parse string to long.
                 startActivity(intent);
             }
 

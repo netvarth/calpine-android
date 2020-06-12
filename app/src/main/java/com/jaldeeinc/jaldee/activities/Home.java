@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy;
 import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.R;
@@ -25,8 +26,10 @@ public class Home extends AppCompatActivity {
 
     HomeTabFragment mHomeTab;
     SearchDetailViewFragment searchDetailViewFragment;
+    CheckinsFragmentCopy checkinsFragmentCopy;
     Context mContext;
     String detail;
+    String path;
 
 
     Intent mLiveTrackClient;
@@ -50,18 +53,10 @@ public class Home extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
              detail = extras.getString("detail_id", "");
+             path = extras.getString("path", "");
             Log.i("detailsofDetail",detail);
+            Log.i("detailsofDetail",path);
         }
-
-//        if(detail!=null){
-//            searchDetailViewFragment = new SearchDetailViewFragment();
-//            Bundle bundle = new Bundle();
-//            bundle.putString("homeUniqueId", detail);
-//            bundle.putString("home", "home");
-//            searchDetailViewFragment.setArguments(bundle);
-//            final FragmentManager fragmentManager = getSupportFragmentManager();
-//            fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
-//        }
 
         Config.logV("Home Screen@@@@@@@@@@@@@@@@@@@");
         mContext = this;
@@ -131,13 +126,29 @@ public class Home extends AppCompatActivity {
 
 
         if(detail!=null){
-            searchDetailViewFragment = new SearchDetailViewFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("homeUniqueId", detail);
-            bundle.putString("home", "home");
-            searchDetailViewFragment.setArguments(bundle);
-            final FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
+            if(path.contains("status")){
+//                Log.i("ghjghjgj","pathhh");
+//                checkinsFragmentCopy = new CheckinsFragmentCopy();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("homeUniqueId", detail);
+//                checkinsFragmentCopy.setArguments(bundle);
+//                final FragmentManager fragmentManager = getSupportFragmentManager();
+//                fragmentManager.beginTransaction().replace(R.id.container, checkinsFragmentCopy).commit();
+                mHomeTab = new HomeTabFragment();
+                final FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, mHomeTab)
+                        .commit();
+            }else{
+                Log.i("ghjghjgj","detaillll");
+                searchDetailViewFragment = new SearchDetailViewFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("homeUniqueId", detail);
+                bundle.putString("home", "home");
+                searchDetailViewFragment.setArguments(bundle);
+                final FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
+            }
         }else{
             mHomeTab = new HomeTabFragment();
             final FragmentManager fragmentManager = getSupportFragmentManager();
