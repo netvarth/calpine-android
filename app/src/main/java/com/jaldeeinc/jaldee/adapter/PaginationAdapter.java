@@ -96,6 +96,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     ArrayList serviceNames = new ArrayList();
     ArrayList serviceNamesAppointments = new ArrayList();
     List<ScheduleList> mScheduleList;
+    ScheduleList scheduleList;
 
 
     public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList, List<ScheduleList> mScheduleList) {
@@ -155,7 +156,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final SearchListModel searchdetailList = searchResults.get(position);
-        final ScheduleList scheduleList = mScheduleList.get(position);
+        if( mScheduleList.get(position)!=null){
+            scheduleList = mScheduleList.get(position);
+        }
+
 
         switch (getItemViewType(position)) {
             case ITEM:
