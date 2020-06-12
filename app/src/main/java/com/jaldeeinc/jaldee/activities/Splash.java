@@ -77,7 +77,7 @@ public class Splash extends AppCompatActivity {
             Log.i("DeepLink", "path : " + path);
             Log.i("DeepLink", "scheme : " + scheme);
 
-            if (host.equals("scale.jaldee.com")) {
+            if (host.equals("www.jaldee.com")) {
                 Intent intent = new Intent(this, Home.class);
                 intent.putExtra("detail_id", (param));  // URL query values as string, you need to parse string to long.
                 intent.putExtra("path", (path));  // URL query values as string, you need to parse string to long.
@@ -105,7 +105,7 @@ public class Splash extends AppCompatActivity {
             Log.i("DeepLink", "param : " + host);
             Log.i("DeepLink", "param : " + param);
 
-            if (host.equals("scale.jaldee.com")) {
+            if (host.equals("www.jaldee.com")) {
 
                 Intent iLogin = new Intent(this, Register.class);
                 iLogin.putExtra("detail_id", (param));
