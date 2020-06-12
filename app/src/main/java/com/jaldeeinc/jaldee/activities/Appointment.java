@@ -1922,15 +1922,16 @@ public class Appointment extends AppCompatActivity {
                             Lbottomlayout.setVisibility(View.VISIBLE);
 //                            tv_queuename.setVisibility(View.GONE);
                             tv_queuetime.setVisibility(View.VISIBLE);
+                            tv_queue.setVisibility(View.VISIBLE);
+                            queuelayout.setVisibility(View.VISIBLE);
                             tv_waittime.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
                             if (mQueueTimeSlotList.get(i).getId() != 0) {
                                 queueId = mQueueTimeSlotList.get(i).getId();
                             }
 
-                            Config.logV("mQueueTimeSlotList-------------------------" + mQueueTimeSlotList.size());
-                            tv_queue.setVisibility(View.GONE);
-                            queuelayout.setVisibility(View.GONE);
+
+
 
 
 //                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
@@ -3034,16 +3035,16 @@ public class Appointment extends AppCompatActivity {
                             Lbottomlayout.setVisibility(View.VISIBLE);
 //                            tv_queuename.setVisibility(View.GONE);
                             tv_queuetime.setVisibility(View.VISIBLE);
+                            tv_queue.setVisibility(View.VISIBLE);
+                            queuelayout.setVisibility(View.VISIBLE);
                             tv_waittime.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
                             if (schedResponse.get(i).getId() != 0) {
                                 id = String.valueOf(schedResponse.get(i).getId());
-
                             }
 
 
-                            tv_queue.setVisibility(View.VISIBLE);
-                            queuelayout.setVisibility(View.VISIBLE);
+
 
 
 //                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
