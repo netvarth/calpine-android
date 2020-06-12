@@ -155,6 +155,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final SearchListModel searchdetailList = searchResults.get(position);
+        final ScheduleList scheduleList = mScheduleList.get(position);
 
         switch (getItemViewType(position)) {
             case ITEM:
@@ -1272,16 +1273,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
-                if (mScheduleList.size()>0 && searchdetailList.getOnline_profile() != null) {
-                    for(int i = 0 ; i < mScheduleList.size(); i ++){
-                        if (mScheduleList.get(i).isCheckinAllowed() && searchdetailList.getOnline_profile().equals("1")) {
+                if (scheduleList != null && searchdetailList.getOnline_profile() != null) {
+                        if (scheduleList.isCheckinAllowed() && searchdetailList.getOnline_profile().equals("1")) {
                             myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
                             myViewHolder.L_appointments.setVisibility(View.VISIBLE);
                         } else {
                             myViewHolder.L_appoinment.setVisibility(View.GONE);
                             myViewHolder.L_appointments.setVisibility(View.GONE);
                         }
-                    }
+
                 } else {
                     myViewHolder.L_appoinment.setVisibility(View.GONE);
                     myViewHolder.L_appointments.setVisibility(View.GONE);
