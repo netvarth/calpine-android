@@ -1199,11 +1199,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             if (mSearachAwsResponse.getHits() != null) {
                 if (mSearachAwsResponse.getHits().getHit() != null) {
                     for (int l = 0; l < mSearachAwsResponse.getHits().getHit().size(); l++) {
-
                         if(mSearachAwsResponse.getHits().getHit().get(l).getFields().getOnline_profile()!=null) {
                             if (mScheduleList!=null && mScheduleList.size() >0) {
-                                if (mScheduleList.get(0).isCheckinAllowed()) {
-
+                                if (mScheduleList.get(l).isCheckinAllowed()) {
                                     if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getOnline_profile().equals("1")) {
                                         myViewHolder.LAppointment.setVisibility(View.VISIBLE);
                                         myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
@@ -1212,8 +1210,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         myViewHolder.LApp_Services.setVisibility(View.GONE);
                                         myViewHolder.txt_apptservices.setVisibility(View.GONE);
                                     }
-
-
                                 } else {
                                     myViewHolder.LAppointment.setVisibility(View.GONE);
                                     myViewHolder.LApp_Services.setVisibility(View.GONE);
