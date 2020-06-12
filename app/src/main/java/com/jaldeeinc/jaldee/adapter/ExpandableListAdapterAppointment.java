@@ -181,13 +181,13 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         Config.logV("No Child" + getChildrenCount(groupPosition));
         if (getChildrenCount(groupPosition) == 0) {
             if (groupPosition == 0) {
-                txtnocheckold.setText("No Check-ins for today");
+                txtnocheckold.setText("No Appointments for today");
             }
             if (groupPosition == 1) {
-                txtnocheckold.setText("No Future Check-ins");
+                txtnocheckold.setText("No Future Appointments");
             }
             if (groupPosition == 2) {
-                txtnocheckold.setText("No Past Check-ins");
+                txtnocheckold.setText("No Past Appointments");
             }
             txtnocheckold.setVisibility(View.VISIBLE);
         } else {

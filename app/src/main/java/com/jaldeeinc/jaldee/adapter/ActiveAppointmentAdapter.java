@@ -1,5 +1,6 @@
 package com.jaldeeinc.jaldee.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -138,6 +139,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(final ActiveAppointmentAdapter.MyViewHolder myViewHolder, final int position) {
         final ActiveAppointment activelist = activeChekinList.get(position);
@@ -159,6 +161,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         myViewHolder.tv_status.setTypeface(tyfacestatus);
 
         myViewHolder.tv_status.setText(activelist.getApptStatus() + " at " + activelist.getStatusUpdatedTime());
+        myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
         if (activelist.getApptStatus().equalsIgnoreCase("done")) {
             myViewHolder.tv_status.setText("Completed");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);

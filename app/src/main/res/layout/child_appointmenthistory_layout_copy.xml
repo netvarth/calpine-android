@@ -203,7 +203,8 @@
                         android:layout_weight="0.5"
                         android:textStyle="bold"
                         android:textColor="@color/title_grey"
-                        android:textSize="11sp" />
+                        android:textSize="11sp"
+                        android:visibility="gone"/>
 
 
                     <TextView
@@ -317,7 +318,7 @@
                     android:layout_marginTop="9dp"
                     android:layout_gravity="right"
                     android:textSize="11sp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:textStyle="bold"
                     android:layout_weight="0.5"/>
             </LinearLayout>

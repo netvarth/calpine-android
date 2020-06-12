@@ -1234,7 +1234,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt() != null) {
 
                             if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services() != null) {
-                                myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
+                              //  myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
                                 try {
                                     String serviceName = mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services().toString();
                                     try {
@@ -1256,7 +1256,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                                 if (serviceNames.size() > 0) {
                                     myViewHolder.LApp_Services.removeAllViews();
-                                    myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+                                  //  myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
                                     int size = 0;
                                     if (serviceNames.size() == 1) {
                                         size = 1;
