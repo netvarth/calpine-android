@@ -156,7 +156,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final SearchListModel searchdetailList = searchResults.get(position);
-        if( mScheduleList.get(position)!=null){
+        if( mScheduleList.size()>0){
             scheduleList = mScheduleList.get(position);
         }
 
@@ -205,23 +205,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 parent.setOrientation(LinearLayout.HORIZONTAL);
                 parent.setLayoutParams(params1);
-//                TextView jdn = new TextView(context);
-//                Typeface tyface_4 = Typeface.createFromAsset(context.getAssets(),
-//                        "fonts/Montserrat_Regular.otf");
-//                jdn.setTypeface(tyface_4);
-//                jdn.setText("JDN");
-//                jdn.setText(context.getResources().getString(R.string.jdn));
-//                jdn.setTextSize(13);
-//                jdn.setTextColor(context.getResources().getColor(R.color.title_grey));
-//                jdn.setPadding(5, 5, 5, 5);
-//                jdn.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.jdn_icon, 0, 0);
-//                jdn.setVisibility(View.GONE);
-//                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-//                jdn.setMaxLines(2);
-//                jdn.setLayoutParams(params1);
-//                params1.setMargins(10, 7, 10, 7);
-//                jdn.setGravity(Gravity.CENTER);
-//                parent.addView(jdn);
+
 
                 if(searchdetailList.getJdn()!=null){
 
@@ -656,6 +640,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(), searchdetailList.getClaimable());
                     }
                 });
+
                 if (searchdetailList.getBranchSpCount() > 0) {
                     if (searchdetailList.getBranchSpCount() > 1) {
                         myViewHolder.tv_count.setText(" " + countTerminology + "s" + " " + ":" + " " + searchdetailList.getBranchSpCount());
@@ -680,20 +665,24 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     myViewHolder.tv_branch_name.setVisibility(View.GONE);
                 }
-                if (searchdetailList.getClaimable().equals("1")) {
-                    myViewHolder.tv_claimable.setVisibility(View.VISIBLE);
-                    // myViewHolder.tv_useWeb.setVisibility(View.VISIBLE);
-                    myViewHolder.L_layout_type.setVisibility(View.GONE);
-                    myViewHolder.L_checkin.setVisibility(View.GONE);
-                    myViewHolder.tv_qmessage.setVisibility(View.GONE);
 
-                } else {
-                    myViewHolder.tv_claimable.setVisibility(View.INVISIBLE);
-                    // myViewHolder.tv_useWeb.setVisibility(View.INVISIBLE);
-                    myViewHolder.L_layout_type.setVisibility(View.VISIBLE);
-                    myViewHolder.L_checkin.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                if(searchdetailList.getClaimable()!=null){
+                    if (searchdetailList.getClaimable().equals("1")) {
+                        myViewHolder.tv_claimable.setVisibility(View.VISIBLE);
+                        // myViewHolder.tv_useWeb.setVisibility(View.VISIBLE);
+                        myViewHolder.L_layout_type.setVisibility(View.GONE);
+                        myViewHolder.L_checkin.setVisibility(View.GONE);
+                        myViewHolder.tv_qmessage.setVisibility(View.GONE);
+
+                    } else {
+                        myViewHolder.tv_claimable.setVisibility(View.INVISIBLE);
+                        // myViewHolder.tv_useWeb.setVisibility(View.INVISIBLE);
+                        myViewHolder.L_layout_type.setVisibility(View.VISIBLE);
+                        myViewHolder.L_checkin.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                    }
                 }
+
                 myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -701,52 +690,24 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
 
-//                myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//
-//
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//                        builder.setTitle(searchdetailList.getTitle());
-//                        builder.setMessage("If you are the business owner, Claim it ");
-//                        builder.setCancelable(false);
-//                        builder.setPositiveButton("Claim it", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Intent intent = new Intent(Intent.ACTION_VIEW);
-//                                intent.setData(Uri.parse("https://www.jaldee.com/#/provider-home"));
-//                                context.startActivity(intent);
-//                            }
-//                        });
-//
-//                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//
-//                            }
-//                        });
-//
-//                        builder.show();
-////                        Intent intent = new Intent(Intent.ACTION_VIEW);
-////                        intent.setData(Uri.parse("https://www.jaldee.com"));
-////                        context.startActivity(intent);
-//
-//
-//                    }
-//                });
 
+                if(searchdetailList.getClaimable()!=null){
 
+                    if (searchdetailList.getClaimable().equals("0")) {
+                        myViewHolder.vsep.setVisibility(View.GONE);
+                    } else {
+                        myViewHolder.vsep.setVisibility(View.VISIBLE);
+                    }
 
-                if (searchdetailList.getClaimable().equals("0")) {
-                    myViewHolder.vsep.setVisibility(View.GONE);
-                } else {
-                    myViewHolder.vsep.setVisibility(View.VISIBLE);
                 }
+
+
                 if (searchdetailList.getQualification() != null) {
                     myViewHolder.tv_name.setText(searchdetailList.getTitle());
                 } else {
                     myViewHolder.tv_name.setText(searchdetailList.getTitle());
                 }
+
                 if (searchdetailList.getSector() != null) {
                     myViewHolder.tv_domain.setVisibility(View.VISIBLE);
                     myViewHolder.tv_domain.setText(searchdetailList.getSector());
@@ -766,6 +727,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     myViewHolder.tv_location.setVisibility(View.GONE);
                 }
+
                 if (searchdetailList.getFuture_checkins() != null) {
                     if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
                         myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
@@ -802,107 +764,120 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                 }
 //////////////////////////////////////////////////////////////////////////////////////////
-                if (searchdetailList.getId().equalsIgnoreCase(searchdetailList.getQId())) {
-                    Date c = Calendar.getInstance().getTime();
-                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                    String formattedDate = df.format(c);
-                    System.out.println("Current time => " + formattedDate);
-                    Date date1 = null, date2 = null;
-                    try {
-                        date1 = df.parse(formattedDate);
-                        if (searchdetailList.getAvail_date() != null)
-                            date2 = df.parse(searchdetailList.getAvail_date());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    if (searchdetailList.getMessage() != null && searchdetailList.getClaimable() == null) {
-                        myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
-                    } else {
-                        myViewHolder.tv_qmessage.setVisibility(View.GONE);
-                    }
 
-                    if (searchdetailList.getMessage() != null && searchdetailList.getClaimable().equals("0")) {
-                        myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
-                        myViewHolder.tv_qmessage.setTextColor(context.getResources().getColor(R.color.red));
-                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                        myViewHolder.tv_peopleahead.setVisibility(View.GONE);
-                        disableCheckinButton(myViewHolder,searchdetailList);
-
-                    }
-
-                    if (searchdetailList.getFuture_checkins() != null && searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
-                        if ( searchdetailList.isShowToken()) {
-                            myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
-                        } else {
-                            myViewHolder.tv_Futuredate.setText("Do you want to" + " " + termilogy + " for another day?");
+                if(searchdetailList.getId()!=null && searchdetailList.getQId()!=null){
+                    if (searchdetailList.getId().equalsIgnoreCase(searchdetailList.getQId())) {
+                        Date c = Calendar.getInstance().getTime();
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        String formattedDate = df.format(c);
+                        System.out.println("Current time => " + formattedDate);
+                        Date date1 = null, date2 = null;
+                        try {
+                            date1 = df.parse(formattedDate);
+                            if (searchdetailList.getAvail_date() != null)
+                                date2 = df.parse(searchdetailList.getAvail_date());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
-                    } else {
-                        myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                    }
-
-                    if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) { // if Today
-                        myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
-                        myViewHolder.tv_peopleahead.setVisibility(View.INVISIBLE);
-                        if (searchdetailList.isOnlineCheckIn()) {
-                            enableCheckinButton(myViewHolder);
+                        if (searchdetailList.getMessage() != null && searchdetailList.getClaimable() == null) {
+                            myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                         } else {
-                            disableCheckinButton(myViewHolder, searchdetailList);
+                            myViewHolder.tv_qmessage.setVisibility(View.GONE);
                         }
-                        if (searchdetailList.getShow_waiting_time() != null) { // ML/Fixed
-                            if (searchdetailList.isShowToken()) {
-                                myViewHolder.btncheckin.setText("GET TOKEN");
-                            }else{
-                                myViewHolder.btncheckin.setText(termilogy.toUpperCase());
+
+
+                        if(searchdetailList.getMessage() != null && searchdetailList.getClaimable()!=null){
+                            if (searchdetailList.getClaimable().equals("0")) {
+                                myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                                myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
+                                myViewHolder.tv_qmessage.setTextColor(context.getResources().getColor(R.color.red));
+                                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                                myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                                disableCheckinButton(myViewHolder,searchdetailList);
+
                             }
+                        }
 
-                            if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) {
-                                setCurrentDateCheckin(searchdetailList, myViewHolder);
+
+                        if (searchdetailList.getFuture_checkins() != null && searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
+                            if ( searchdetailList.isShowToken()) {
+                                myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
                             } else {
-                                enableCheckinButton(myViewHolder);
+                                myViewHolder.tv_Futuredate.setText("Do you want to" + " " + termilogy + " for another day?");
+                            }
+                        } else {
+                            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                        }
 
+
+                        if(searchdetailList.getAvail_date()!=null){
+                            if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) { // if Today
+                                myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
+                                myViewHolder.tv_peopleahead.setVisibility(View.INVISIBLE);
+
+                                if (searchdetailList.isOnlineCheckIn()) {
+                                    enableCheckinButton(myViewHolder);
+                                } else {
+                                    disableCheckinButton(myViewHolder, searchdetailList);
+                                }
+                                if (searchdetailList.getShow_waiting_time() != null) { // ML/Fixed
                                     if (searchdetailList.isShowToken()) {
                                         myViewHolder.btncheckin.setText("GET TOKEN");
-                                        myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-                                        noCalcShowToken(searchdetailList, myViewHolder);
-                                    } else {
-                                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                                        myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                                    }else{
+                                        myViewHolder.btncheckin.setText(termilogy.toUpperCase());
                                     }
 
+                                    if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) {
+                                        setCurrentDateCheckin(searchdetailList, myViewHolder);
+                                    } else {
+                                        enableCheckinButton(myViewHolder);
 
-                            }
-                        }
-                    } else if (date2 != null && date1.compareTo(date2) < 0) {   // For Future
-                        disableCheckinButton(myViewHolder,searchdetailList);
-                        // ML/Fixed
-                        if (searchdetailList.getShow_waiting_time() != null) {
-                            myViewHolder.btncheckin.setText(termilogy.toUpperCase());
-                            // For ML/Fixed
-                            if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) {
+                                        if (searchdetailList.isShowToken()) {
+                                            myViewHolder.btncheckin.setText("GET TOKEN");
+                                            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+                                            noCalcShowToken(searchdetailList, myViewHolder);
+                                        } else {
+                                            myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                                            myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                                        }
+
+
+                                    }
+                                }
+                            } else if (date2 != null && date1.compareTo(date2) < 0) {   // For Future
+                                disableCheckinButton(myViewHolder,searchdetailList);
+                                // ML/Fixed
+                                if (searchdetailList.getShow_waiting_time() != null) {
+                                    myViewHolder.btncheckin.setText(termilogy.toUpperCase());
+                                    // For ML/Fixed
+                                    if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) {
+                                    } else {
+
+                                        if (searchdetailList.isShowToken()) {
+                                            myViewHolder.btncheckin.setText("GET TOKEN");
+                                            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+                                            noCalcShowToken(searchdetailList, myViewHolder);
+                                        } else {
+                                            myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                                            myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                                        }
+
+                                    }
+                                    setFutureDateCheckin(searchdetailList, myViewHolder,position);
+                                }
                             } else {
-
-                                    if (searchdetailList.isShowToken()) {
-                                        myViewHolder.btncheckin.setText("GET TOKEN");
-                                        myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-                                        noCalcShowToken(searchdetailList, myViewHolder);
-                                    } else {
-                                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                                        myViewHolder.tv_peopleahead.setVisibility(View.GONE);
-                                    }
-
+                                disableCheckinButton(myViewHolder,searchdetailList);
+                                myViewHolder.btncheckin.setVisibility(View.GONE);
+                                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                                myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                             }
-                            setFutureDateCheckin(searchdetailList, myViewHolder,position);
                         }
-                    } else {
-                        disableCheckinButton(myViewHolder,searchdetailList);
-                        myViewHolder.btncheckin.setVisibility(View.GONE);
-                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                        myViewHolder.tv_peopleahead.setVisibility(View.GONE);
-                        myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+
                     }
                 }
+
                 myViewHolder.btncheckin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1067,39 +1042,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
-//                if(searchdetailList.getDepartments()!= null) {
-//                    if (searchdetailList.getDepartments().size() > 0) {
-//                        myViewHolder.L_departments.removeAllViews();
-//                        myViewHolder.L_departments.setVisibility(View.VISIBLE);
-//                        int size = searchdetailList.getDepartments().size();
-//                        for (int i = 0; i < size; i++) {
-//                            TextView tv_department = new TextView(context);
-//                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-//                                    "fonts/Montserrat_Regular.otf");
-//                            tv_department.setTypeface(tyface);
-//                            tv_department.setText(searchdetailList.getDepartments().get(i).toString());
-//                            tv_department.setBackground(context.getResources().getDrawable(R.color.department_search_results));
-//                            tv_department.setTextSize(12);
-//                            tv_department.setTextColor(context.getResources().getColor(R.color.active_text));
-//                            tv_department.setPadding(15, 10, 15, 10);
-//                            //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-//                            tv_department.setMaxLines(1);
-//                            // dynaText.setMaxEms(8);
-//                            tv_department.setGravity(Gravity.CENTER);
-//                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                            params.setMargins(0, 0, 20, 0);
-//                            tv_department.setLayoutParams(params);
-//                            myViewHolder.L_departments.addView(tv_department);
-//                        }
-//                    }else{
-//                        searchdetailList.getDepartments().clear();
-//                        myViewHolder.L_departments.setVisibility(View.GONE);
-//                    }
-//
-//                } else {
-//                    myViewHolder.L_departments.removeAllViews();
-//                    myViewHolder.L_departments.setVisibility(View.GONE);
-//                }
 
                 if (searchdetailList.getServices() != null) {
                     try {
@@ -1434,22 +1376,25 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String firstWord = "Next Available Time ";
             String secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
-            if(searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")){
-                for(int i = 0;i<mQueueList.size();i++) {
-                    if (mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().isOpenNow()) {
-                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                    } else {
-                        if (searchdetailList.isShowToken()) {
-                            myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                        } else {
-                            myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+            if(searchdetailList.getCalculationMode()!=null){
+                if(searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                    if(mQueueList!=null){
+                        for(int i = 0;i<mQueueList.size();i++) {
+                            if (mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().isOpenNow()) {
+                                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                            } else {
+                                if (searchdetailList.isShowToken()) {
+                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                                } else {
+                                    myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                                }
+                            }
                         }
                     }
                 }
-
-            }
-            else{
-                myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                else{
+                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                }
             }
 
             myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
