@@ -156,8 +156,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final SearchListModel searchdetailList = searchResults.get(position);
-        if( mScheduleList.size()>0){
-            scheduleList = mScheduleList.get(position);
+
+
+
+        if(mScheduleList!= null && mScheduleList.size()>0){
+            for(int i = 0; i < mScheduleList.size(); i++){
+                scheduleList = mScheduleList.get(i);
+            }
         }
 
 
@@ -1241,8 +1246,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.L_appoinment.setVisibility(View.GONE);
                 myViewHolder.L_appointments.setVisibility(View.GONE);
             }
-
-
                 if (searchdetailList.getRating() != null) {
                     myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
                 }
