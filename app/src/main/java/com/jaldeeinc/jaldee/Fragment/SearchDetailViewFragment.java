@@ -130,6 +130,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchDepartment> mSearchDepartments;
     ArrayList<SearchDepartmentServices> mSearchDepartmentServices;
     String mbranchId, latitude, longitude, lat_long;
+    boolean online_presence;
     Boolean firstCouponAvailable, couponAvailable;
     JdnResponse jdnList;
     String jdnDiscount, jdnMaxvalue;
@@ -1332,6 +1333,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Log.i("plplplp", mBusinessDataList.toString());
                         Log.i("plplplp", new Gson().toJson(mBusinessDataList));
                         mbranchId = mBusinessDataList.getBranchId();
+                        online_presence = mBusinessDataList.isOnlinePresence();
                         lat_long = mBusinessDataList.getBaseLocation().getLattitude() + "," + mBusinessDataList.getBaseLocation().getLongitude();
                         Config.logV("Provider------------" + new Gson().toJson(mBusinessDataList));
 //                        Handler handler = new Handler();
@@ -2231,7 +2233,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         uniID = homeUniqueId;
                     }
 
-                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList);
+                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence);
                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
                     mSearchLocAdapter.notifyDataSetChanged();
                 }

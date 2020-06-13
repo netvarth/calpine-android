@@ -48,8 +48,15 @@ public class SearchViewDetail {
     String displayName;
     String domain;
     String branchId;
+    boolean onlinePresence;
 
+    public boolean isOnlinePresence() {
+        return onlinePresence;
+    }
 
+    public void setOnlinePresence(boolean onlinePresence) {
+        this.onlinePresence = onlinePresence;
+    }
 
     String accountType;
     String businessDesc;

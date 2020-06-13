@@ -25,6 +25,15 @@ public class SearchListModel implements Serializable {
     private String docambulance_location1;
     private String always_open_location1;
     private String claimable;
+    boolean isCheckinAllowed;
+
+    public boolean isCheckinAllowed() {
+        return isCheckinAllowed;
+    }
+
+    public void setCheckinAllowed(boolean checkinAllowed) {
+        isCheckinAllowed = checkinAllowed;
+    }
 
     public String getJdn() {
         return jdn;

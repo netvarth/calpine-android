@@ -76,7 +76,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         Button btn_checkin_expand;
         TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices, txtdayofweek;
         TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
-        TextView txt_earliestAvailable,txt_apptservices;
+        TextView txt_earliestAvailable, txt_apptservices;
         Button btn_appointments;
 
         ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
@@ -145,11 +145,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     String calcMode;
     String terminology;
     boolean isShowTokenId;
+    boolean online_presence;
     ArrayList<SearchDepartment> mSearchDepartmentList;
 
 
-
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments,List<SearchAWsResponse> mSearchRespDetails,SearchAWsResponse mSearchAWSResponse,  List<ScheduleList> SearchScheduleList) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments, List<SearchAWsResponse> mSearchRespDetails, SearchAWsResponse mSearchAWSResponse, List<ScheduleList> SearchScheduleList, boolean online_presence) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchRespDetail = mSearchRespDetails;
@@ -170,6 +170,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         this.isShowTokenId = isShowTokenId;
         this.mSearchDepartmentList = mSearchDepartments;
         this.mScheduleList = SearchScheduleList;
+        this.online_presence = online_presence;
 
     }
 
@@ -1195,137 +1196,120 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
             }
         }
-        if (mSearachAwsResponse != null) {
-            if (mSearachAwsResponse.getHits() != null) {
-                if (mSearachAwsResponse.getHits().getHit() != null) {
-                    for (int l = 0; l < mSearachAwsResponse.getHits().getHit().size(); l++) {
-                        if(mSearachAwsResponse.getHits().getHit().get(l).getFields().getOnline_profile()!=null) {
-                            if (mScheduleList!=null && mScheduleList.size() >0) {
-                                if (mScheduleList.get(l).isCheckinAllowed()) {
-                                    if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getOnline_profile().equals("1")) {
-                                        myViewHolder.LAppointment.setVisibility(View.VISIBLE);
-                                        myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
-                                    } else {
-                                        myViewHolder.LAppointment.setVisibility(View.GONE);
-                                        myViewHolder.LApp_Services.setVisibility(View.GONE);
-                                        myViewHolder.txt_apptservices.setVisibility(View.GONE);
-                                    }
-                                } else {
-                                    myViewHolder.LAppointment.setVisibility(View.GONE);
-                                    myViewHolder.LApp_Services.setVisibility(View.GONE);
-                                    myViewHolder.txt_apptservices.setVisibility(View.GONE);
-                                }
-                            } else {
-                                myViewHolder.LAppointment.setVisibility(View.GONE);
-                                myViewHolder.LApp_Services.setVisibility(View.GONE);
-                                myViewHolder.txt_apptservices.setVisibility(View.GONE);
+        if (mScheduleList != null) {
+
+            if (online_presence) {
+                if (mScheduleList.get(position).isCheckinAllowed()) {
+                    myViewHolder.LAppointment.setVisibility(View.VISIBLE);
+                    myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+                    myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
+                } else {
+                    myViewHolder.LAppointment.setVisibility(View.GONE);
+                    myViewHolder.LApp_Services.setVisibility(View.GONE);
+                    myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                }
+            } else {
+                myViewHolder.LAppointment.setVisibility(View.GONE);
+                myViewHolder.LApp_Services.setVisibility(View.GONE);
+                myViewHolder.txt_apptservices.setVisibility(View.GONE);
+            }
+
+            for (int l = 0; l < mSearachAwsResponse.getHits().getHit().size(); l++) {
+            if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt() != null) {
+
+                if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services() != null) {
+                    //  myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
+                    try {
+                        String serviceName = mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services().toString();
+                        try {
+                            JSONArray jsonArray = new JSONArray(serviceName);
+                            String jsonArry = jsonArray.getString(0);
+                            JSONArray jsonArray1 = new JSONArray(jsonArry);
+                            for (int i = 0; i < jsonArray1.length(); i++) {
+                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                                String name = jsonObject.optString("name");
+                                serviceNames.add(i, name);
+                                Log.i("sar", serviceNames.toString());
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-
-                        else {
-                            myViewHolder.LAppointment.setVisibility(View.GONE);
-                            myViewHolder.LApp_Services.setVisibility(View.GONE);
-                            myViewHolder.txt_apptservices.setVisibility(View.GONE);
-                        }
-                        if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt() != null) {
-
-                            if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services() != null) {
-                              //  myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
-                                try {
-                                    String serviceName = mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services().toString();
-                                    try {
-                                        JSONArray jsonArray = new JSONArray(serviceName);
-                                        String jsonArry = jsonArray.getString(0);
-                                        JSONArray jsonArray1 = new JSONArray(jsonArry);
-                                        for(int i =0;i<jsonArray1.length();i++){
-                                            JSONObject jsonObject = jsonArray1.getJSONObject(i);
-                                            String name = jsonObject.optString("name");
-                                            serviceNames.add(i,name);
-                                            Log.i("sar",serviceNames.toString());
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                if (serviceNames.size() > 0) {
-                                    myViewHolder.LApp_Services.removeAllViews();
-                                  //  myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
-                                    int size = 0;
-                                    if (serviceNames.size() == 1) {
-                                        size = 1;
-                                    } else {
-                                        if (serviceNames.size() == 2)
-                                            size = 2;
-                                        else
-                                            size = 3;
-                                    }
-                                    for (int i = 0; i < size; i++) {
-                                        TextView dynaText = new TextView(mContext);
-                                         tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                                "fonts/Montserrat_Regular.otf");
-                                        dynaText.setTypeface(tyface);
-                                        dynaText.setText(serviceNames.get(i).toString());
-                                        dynaText.setTextSize(13);
-                                        dynaText.setPadding(5, 0, 5, 0);
-                                        dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
-                                        // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
-
-                                      //  dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
-                                        dynaText.setMaxLines(1);
-                                        if (size > 2) {
-                                            dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                            dynaText.setMaxEms(10);
-                                        }
-                                        final int finalI = i;
-                                        dynaText.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                              //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
-                                            }
-                                        });
-                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                                        params.setMargins(0, 0, 20, 0);
-
-                                        dynaText.setLayoutParams(params);
-                                        myViewHolder.LApp_Services.addView(dynaText);
-                                    }
-                                    if (size > 3) {
-                                        TextView dynaText = new TextView(mContext);
-                                        dynaText.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                               // mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid());
-                                            }
-                                        });
-                                        dynaText.setGravity(Gravity.CENTER);
-                                        dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
-                                        dynaText.setText(" ... ");
-                                        myViewHolder.LApp_Services.addView(dynaText);
-                                    }
-                                } else {
-                                    myViewHolder.LApp_Services.setVisibility(View.GONE);
-                                    myViewHolder.txt_apptservices.setVisibility(View.GONE);
-
-
-                                }
-
-                            } else {
-                                myViewHolder.LApp_Services.setVisibility(View.GONE);
-                                myViewHolder.txt_apptservices.setVisibility(View.GONE);
-
-                            }
-                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
+                    if (serviceNames.size() > 0) {
+                        myViewHolder.LApp_Services.removeAllViews();
+                        //  myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+                        int size = 0;
+                        if (serviceNames.size() == 1) {
+                            size = 1;
+                        } else {
+                            if (serviceNames.size() == 2)
+                                size = 2;
+                            else
+                                size = 3;
+                        }
+                        for (int i = 0; i < size; i++) {
+                            TextView dynaText = new TextView(mContext);
+                            tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                    "fonts/Montserrat_Regular.otf");
+                            dynaText.setTypeface(tyface);
+                            dynaText.setText(serviceNames.get(i).toString());
+                            dynaText.setTextSize(13);
+                            dynaText.setPadding(5, 0, 5, 0);
+                            dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+                            // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
+
+                            //  dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+                            dynaText.setMaxLines(1);
+                            if (size > 2) {
+                                dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                dynaText.setMaxEms(10);
+                            }
+                            final int finalI = i;
+                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+                                }
+                            });
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            params.setMargins(0, 0, 20, 0);
+
+                            dynaText.setLayoutParams(params);
+                            myViewHolder.LApp_Services.addView(dynaText);
+                        }
+                        if (size > 3) {
+                            TextView dynaText = new TextView(mContext);
+                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid());
+                                }
+                            });
+                            dynaText.setGravity(Gravity.CENTER);
+                            dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+                            dynaText.setText(" ... ");
+                            myViewHolder.LApp_Services.addView(dynaText);
+                        }
+                    } else {
+                        myViewHolder.LApp_Services.setVisibility(View.GONE);
+                        myViewHolder.txt_apptservices.setVisibility(View.GONE);
+
+
+                    }
+
+                } else {
+                    myViewHolder.LApp_Services.setVisibility(View.GONE);
+                    myViewHolder.txt_apptservices.setVisibility(View.GONE);
+
                 }
             }
         }
 
-
-
+        }
 
 
 //Queue---- for button check-in,waittime checking
@@ -1403,7 +1387,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         if (mSearachAwsResponse != null) {
                             if (mSearachAwsResponse.getHits() != null) {
                                 if (mSearachAwsResponse.getHits().getHit() != null) {
-                                    for(int k = 0;k < mSearachAwsResponse.getHits().getHit().size();k++) {
+                                    for (int k = 0; k < mSearachAwsResponse.getHits().getHit().size(); k++) {
                                         if (!mSearachAwsResponse.getHits().getHit().isEmpty()) {
                                             if (mSearachAwsResponse.getHits().getHit().get(k).getFields() != null && mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins() != null) {
                                                 if (mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins().equals("1")) {
@@ -1489,7 +1473,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                             }
                                             if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != null) {
                                                 myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead().toString() + " People waiting in line");
-                                                setCurrentDateCheckin(mQueueList, myViewHolder,i);
+                                                setCurrentDateCheckin(mQueueList, myViewHolder, i);
                                             }
 
                                         } else {
@@ -1819,7 +1803,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 //        }
     }
 
-    public void setCurrentDateCheckin(List<QueueList> mQueueList, MyViewHolder myViewHolder,int i) {
+    public void setCurrentDateCheckin(List<QueueList> mQueueList, MyViewHolder myViewHolder, int i) {
 
         if (mQueueList != null && mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
@@ -1866,17 +1850,17 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
                     }
 
-                 //   myViewHolder.tv_waittime.setText(" Be the first in line");
+                    //   myViewHolder.tv_waittime.setText(" Be the first in line");
 
-                //    myViewHolder.txtwaittime_expand.setText(" Be the first in line");
+                    //    myViewHolder.txtwaittime_expand.setText(" Be the first in line");
                     myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " " + " People waiting in line");
                     myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
 
                 } else {
                     myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                     myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                 //   String firstWord = String.valueOf(mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
-                //    String secondWord = " People waiting in line";
+                    //   String firstWord = String.valueOf(mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
+                    //    String secondWord = " People waiting in line";
                     String firstWord = "Next Available Time ";
                     String secondWord = "\nToday, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),

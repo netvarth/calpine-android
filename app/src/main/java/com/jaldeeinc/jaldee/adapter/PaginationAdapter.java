@@ -95,11 +95,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     List<QueueList> mQueueList;
     ArrayList serviceNames = new ArrayList();
     ArrayList serviceNamesAppointments = new ArrayList();
-    List<ScheduleList> mScheduleList;
-    ScheduleList scheduleList;
 
 
-    public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList, List<ScheduleList> mScheduleList) {
+
+    public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList) {
         this.context = context;
         searchResults = new ArrayList<>();
         this.mFragment = mFragment;
@@ -108,7 +107,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.activity = activity;
         this.uniqueID = uniqueID;
         this.mQueueList = mQueueList;
-        this.mScheduleList = mScheduleList;
     }
 
     private static Date parseDate(String date) {
@@ -158,12 +156,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final SearchListModel searchdetailList = searchResults.get(position);
 
 
-
-        if(mScheduleList!= null && mScheduleList.size()>0){
-            for(int i = 0; i < mScheduleList.size(); i++){
-                scheduleList = mScheduleList.get(i);
-            }
-        }
 
 
         switch (getItemViewType(position)) {
@@ -1224,8 +1216,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
-                if (scheduleList != null && searchdetailList.getOnline_profile() != null) {
-                        if (scheduleList.isCheckinAllowed() && searchdetailList.getOnline_profile().equals("1")) {
+                if (searchdetailList.getOnline_profile() != null) {
+                        if (searchdetailList.isCheckinAllowed() && searchdetailList.getOnline_profile().equals("1")) {
                             myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
                             myViewHolder.L_appointments.setVisibility(View.VISIBLE);
                         } else {
