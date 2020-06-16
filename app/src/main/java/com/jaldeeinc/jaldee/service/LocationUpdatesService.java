@@ -88,7 +88,7 @@ public class LocationUpdatesService extends Service {
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 5000;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 1800000;
 
     /**
      * The fastest rate for active location updates. Updates will never be more frequent
@@ -218,9 +218,8 @@ public class LocationUpdatesService extends Service {
         // service. If this method is called due to a configuration change in MainActivity, we
         // do nothing. Otherwise, we make this service a foreground service.
         if (!mChangingConfiguration && Utilss.requestingLocationUpdates(this)) {
-            Log.i(TAG, "Starting foreground service");
-
-            startForeground(NOTIFICATION_ID, getNotification());
+            stopForeground(true);
+            mChangingConfiguration = false;
         }
         return true; // Ensures onRebind() is called when a client re-binds.
     }
