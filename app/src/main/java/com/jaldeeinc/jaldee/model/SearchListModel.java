@@ -27,6 +27,16 @@ public class SearchListModel implements Serializable {
     private String claimable;
     boolean isCheckinAllowed;
 
+    public String getaLoc() {
+        return aLoc;
+    }
+
+    public void setaLoc(String aLoc) {
+        this.aLoc = aLoc;
+    }
+
+    private String aLoc;
+
     public boolean isCheckinAllowed() {
         return isCheckinAllowed;
     }

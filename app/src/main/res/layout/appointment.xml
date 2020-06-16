@@ -508,7 +508,7 @@
                                 android:orientation="vertical"
                                 android:paddingLeft="@dimen/default_padding"
                                 android:paddingRight="@dimen/default_padding"
-                                android:visibility="visible">
+                                android:visibility="gone">
 
 
                                 <LinearLayout

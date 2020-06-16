@@ -902,7 +902,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         Intent iAppoinment = new Intent(v.getContext(), Appointment.class);
-                        iAppoinment.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
+                        iAppoinment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
                         iAppoinment.putExtra("uniqueID", searchdetailList.getUniqueid());
                         iAppoinment.putExtra("accountID", searchdetailList.getId());
                         iAppoinment.putExtra("googlemap", searchdetailList.getLocation1());
@@ -1230,14 +1230,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.L_appointments.setVisibility(View.GONE);
                 }
 
-                if (searchdetailList.getMessage() != null && searchdetailList.getClaimable().equals("0")){
-                    myViewHolder.L_appoinment.setVisibility(View.GONE);
-                    myViewHolder.L_appointments.setVisibility(View.GONE);
-                }
-                else if(searchdetailList.getClaimable().equals("1")){
-                myViewHolder.L_appoinment.setVisibility(View.GONE);
-                myViewHolder.L_appointments.setVisibility(View.GONE);
-            }
+//                if (searchdetailList.getMessage() != null && searchdetailList.getClaimable().equals("0")){
+//                    myViewHolder.L_appoinment.setVisibility(View.GONE);
+//                    myViewHolder.L_appointments.setVisibility(View.GONE);
+//                }
+//                else if(searchdetailList.getClaimable().equals("1")){
+//                myViewHolder.L_appoinment.setVisibility(View.GONE);
+//                myViewHolder.L_appointments.setVisibility(View.GONE);
+//            }
                 if (searchdetailList.getRating() != null) {
                     myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
                 }

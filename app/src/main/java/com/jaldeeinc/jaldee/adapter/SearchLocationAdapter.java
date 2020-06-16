@@ -1213,104 +1213,107 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 myViewHolder.LApp_Services.setVisibility(View.GONE);
                 myViewHolder.txt_apptservices.setVisibility(View.GONE);
             }
+            if (mSearachAwsResponse != null) {
+                if (mSearachAwsResponse.getHits() != null) {
+                    if (mSearachAwsResponse.getHits().getHit() != null) {
+                        for (int l = 0; l < mSearachAwsResponse.getHits().getHit().size(); l++) {
+                            if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt() != null) {
 
-            for (int l = 0; l < mSearachAwsResponse.getHits().getHit().size(); l++) {
-            if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt() != null) {
+                                if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services() != null) {
+                                    //  myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
+                                    try {
+                                        String serviceName = mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services().toString();
+                                        try {
+                                            JSONArray jsonArray = new JSONArray(serviceName);
+                                            String jsonArry = jsonArray.getString(0);
+                                            JSONArray jsonArray1 = new JSONArray(jsonArry);
+                                            for (int i = 0; i < jsonArray1.length(); i++) {
+                                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                                                String name = jsonObject.optString("name");
+                                                serviceNames.add(i, name);
+                                                Log.i("sar", serviceNames.toString());
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
 
-                if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services() != null) {
-                    //  myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
-                    try {
-                        String serviceName = mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services().toString();
-                        try {
-                            JSONArray jsonArray = new JSONArray(serviceName);
-                            String jsonArry = jsonArray.getString(0);
-                            JSONArray jsonArray1 = new JSONArray(jsonArry);
-                            for (int i = 0; i < jsonArray1.length(); i++) {
-                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
-                                String name = jsonObject.optString("name");
-                                serviceNames.add(i, name);
-                                Log.i("sar", serviceNames.toString());
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                                    if (serviceNames.size() > 0) {
+                                        myViewHolder.LApp_Services.removeAllViews();
+                                        //  myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+                                        int size = 0;
+                                        if (serviceNames.size() == 1) {
+                                            size = 1;
+                                        } else {
+                                            if (serviceNames.size() == 2)
+                                                size = 2;
+                                            else
+                                                size = 3;
+                                        }
+                                        for (int i = 0; i < size; i++) {
+                                            TextView dynaText = new TextView(mContext);
+                                            tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                                    "fonts/Montserrat_Regular.otf");
+                                            dynaText.setTypeface(tyface);
+                                            dynaText.setText(serviceNames.get(i).toString());
+                                            dynaText.setTextSize(13);
+                                            dynaText.setPadding(5, 0, 5, 0);
+                                            dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+                                            // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
 
-                    if (serviceNames.size() > 0) {
-                        myViewHolder.LApp_Services.removeAllViews();
-                        //  myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
-                        int size = 0;
-                        if (serviceNames.size() == 1) {
-                            size = 1;
-                        } else {
-                            if (serviceNames.size() == 2)
-                                size = 2;
-                            else
-                                size = 3;
-                        }
-                        for (int i = 0; i < size; i++) {
-                            TextView dynaText = new TextView(mContext);
-                            tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                    "fonts/Montserrat_Regular.otf");
-                            dynaText.setTypeface(tyface);
-                            dynaText.setText(serviceNames.get(i).toString());
-                            dynaText.setTextSize(13);
-                            dynaText.setPadding(5, 0, 5, 0);
-                            dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
-                            // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
+                                            //  dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-                            //  dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                                            dynaText.setMaxLines(1);
+                                            if (size > 2) {
+                                                dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                                dynaText.setMaxEms(10);
+                                            }
+                                            final int finalI = i;
+                                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+                                                }
+                                            });
+                                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                            params.setMargins(0, 0, 20, 0);
 
-                            dynaText.setMaxLines(1);
-                            if (size > 2) {
-                                dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                dynaText.setMaxEms(10);
-                            }
-                            final int finalI = i;
-                            dynaText.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+                                            dynaText.setLayoutParams(params);
+                                            myViewHolder.LApp_Services.addView(dynaText);
+                                        }
+                                        if (size > 3) {
+                                            TextView dynaText = new TextView(mContext);
+                                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    // mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid());
+                                                }
+                                            });
+                                            dynaText.setGravity(Gravity.CENTER);
+                                            dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+                                            dynaText.setText(" ... ");
+                                            myViewHolder.LApp_Services.addView(dynaText);
+                                        }
+                                    } else {
+                                        myViewHolder.LApp_Services.setVisibility(View.GONE);
+                                        myViewHolder.txt_apptservices.setVisibility(View.GONE);
+
+
+                                    }
+
+                                } else {
+                                    myViewHolder.LApp_Services.setVisibility(View.GONE);
+                                    myViewHolder.txt_apptservices.setVisibility(View.GONE);
+
                                 }
-                            });
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            params.setMargins(0, 0, 20, 0);
-
-                            dynaText.setLayoutParams(params);
-                            myViewHolder.LApp_Services.addView(dynaText);
+                            }
                         }
-                        if (size > 3) {
-                            TextView dynaText = new TextView(mContext);
-                            dynaText.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    // mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid());
-                                }
-                            });
-                            dynaText.setGravity(Gravity.CENTER);
-                            dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
-                            dynaText.setText(" ... ");
-                            myViewHolder.LApp_Services.addView(dynaText);
-                        }
-                    } else {
-                        myViewHolder.LApp_Services.setVisibility(View.GONE);
-                        myViewHolder.txt_apptservices.setVisibility(View.GONE);
-
-
                     }
-
-                } else {
-                    myViewHolder.LApp_Services.setVisibility(View.GONE);
-                    myViewHolder.txt_apptservices.setVisibility(View.GONE);
-
                 }
             }
         }
-
-        }
-
 
 //Queue---- for button check-in,waittime checking
 
