@@ -763,12 +763,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
 
         try {
-            String geoUri = activelist.getGoogleMapUrl();
+            if(activelist.getLocation().getGoogleMapUrl()!=null){
+            String geoUri = activelist.getLocation().getGoogleMapUrl();
             if (activelist.getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
                 tv_place.setVisibility(View.VISIBLE);
                 tv_place.setText(activelist.getPlace());
 
-            }
+            } }
         } catch (
                 Exception e) {
             e.printStackTrace();
@@ -809,9 +810,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             @Override
             public void onClick(View v) {
                 Config.logV("googlemap url--------" + activelist.getGoogleMapUrl());
+                if(activelist.getGoogleMapUrl()!=null){
                 String geoUri = activelist.getGoogleMapUrl();
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                mContext.startActivity(intent);
+                mContext.startActivity(intent);}
             }
         });
 

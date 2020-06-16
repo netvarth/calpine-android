@@ -48,7 +48,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="https"
-                    android:host="www.jaldee.com"/>
+                    android:host="scale.jaldee.com"/>
             </intent-filter>
 
         </activity>
