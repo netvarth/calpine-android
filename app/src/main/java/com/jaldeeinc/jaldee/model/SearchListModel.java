@@ -88,6 +88,7 @@ public class SearchListModel implements Serializable {
     private String message;
     boolean showToken;
     boolean onlineCheckIn;
+    boolean waitlistEnabled;
     boolean futureWaitlist;
     boolean isAvailableToday;
     int branchSpCount;
@@ -373,6 +374,14 @@ public class SearchListModel implements Serializable {
 
     public void setOnlineCheckIn(boolean onlineCheckIn) {
         this.onlineCheckIn = onlineCheckIn;
+    }
+
+    public boolean isWaitlistEnabled() {
+        return waitlistEnabled;
+    }
+
+    public void setWaitlistEnabled(boolean waitlistEnabled) {
+        this.waitlistEnabled = waitlistEnabled;
     }
 
     public boolean isFutureWaitlist() {

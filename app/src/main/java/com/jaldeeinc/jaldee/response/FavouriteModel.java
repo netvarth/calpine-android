@@ -18,6 +18,15 @@ public class FavouriteModel {
     boolean FutureCheckin;
     String businessDesc;
     String status;
+    String onlinePresence;
+
+    public String getOnlinePresence() {
+        return onlinePresence;
+    }
+
+    public void setOnlinePresence(String onlinePresence) {
+        this.onlinePresence = onlinePresence;
+    }
 
     public int getUniqueId() {
         return uniqueId;

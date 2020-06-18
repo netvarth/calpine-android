@@ -1675,20 +1675,20 @@ public class Appointment extends AppCompatActivity {
                             if (response.body().getCalculationMode().equalsIgnoreCase("NoCalc") && response.body().isShowTokenId()) {
                                 isShowToken = String.valueOf(response.body().isShowTokenId());
                                 tv_title.setText("Appointment");
-                                Word_Change = "Token for ";
+                                Word_Change = "Appointment for ";
                                 btn_checkin.setText("CONFIRM");
                                 toastMessage = "Appointment has been generated successfully";
                             } else {
 
                                 if (terminology.equals("order")) {
                                     tv_title.setText("Order");
-                                    Word_Change = "Order for ";
+                                    Word_Change = "Appointment for ";
                                     btn_checkin.setText("CONFIRM");
                                     toastMessage = "You have ordered successfully";
 
                                 } else {
-                                    tv_title.setText("Appointment");
-                                    Word_Change = "Check-in for ";
+                                    tv_title.setText("Appointment for ");
+                                    Word_Change = "Appointment";
                                     btn_checkin.setText("CONFIRM");
                                     toastMessage = "Appointment saved successfully ";
                                 }

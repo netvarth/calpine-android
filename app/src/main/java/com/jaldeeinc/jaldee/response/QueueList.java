@@ -9,6 +9,16 @@ import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 
 public class QueueList  {
 
+    boolean waitlistEnabled;
+
+    public boolean isWaitlistEnabled() {
+        return waitlistEnabled;
+    }
+
+    public void setWaitlistEnabled(boolean waitlistEnabled) {
+        this.waitlistEnabled = waitlistEnabled;
+    }
+
     public String getMessage() {
         return message;
     }
