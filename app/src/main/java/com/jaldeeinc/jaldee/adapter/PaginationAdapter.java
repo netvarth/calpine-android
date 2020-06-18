@@ -1039,7 +1039,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
-
+                serviceNames.clear();
                 if (searchdetailList.getServices() != null) {
                     try {
                         String serviceName = searchdetailList.getServices().toString();
@@ -1128,7 +1128,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
 
-
+                serviceNamesAppointments.clear();
                 if (searchdetailList.getAppt_services() != null) {
                     try {
                         String serviceName = searchdetailList.getAppt_services().toString();

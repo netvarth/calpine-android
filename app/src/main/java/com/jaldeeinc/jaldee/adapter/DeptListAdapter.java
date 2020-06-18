@@ -896,7 +896,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 Intent iAppointment = new Intent(v.getContext(), Appointment.class);
-                iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
+                iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
                 iAppointment.putExtra("uniqueID", searchdetailList.getUniqueid());
                 iAppointment.putExtra("accountID", searchdetailList.getId());
                 iAppointment.putExtra("googlemap", searchdetailList.getLocation1());
