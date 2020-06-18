@@ -693,12 +693,13 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 
 
         try {
+            if(activelist.getLocation().getGoogleMapUrl()!=null){
             String geoUri = activelist.getLocation().getGoogleMapUrl();
             if (activelist.getLocation().getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
                 tv_place.setVisibility(View.VISIBLE);
                 tv_place.setText(activelist.getLocation().getPlace());
 
-            }
+            } }
         } catch (
                 Exception e) {
             e.printStackTrace();
@@ -732,9 +733,10 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         tv_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               if(activelist.getLocation().getGoogleMapUrl()!=null){
                 String geoUri = activelist.getLocation().getGoogleMapUrl();
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                mContext.startActivity(intent);
+                mContext.startActivity(intent);}
             }
         });
 
