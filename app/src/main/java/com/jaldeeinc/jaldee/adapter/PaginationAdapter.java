@@ -725,58 +725,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
 
-                if(searchdetailList.getOnline_profile()!=null) {
-                    if (searchdetailList.getOnline_profile().equals("1") && searchdetailList.isWaitlistEnabled()) {
-                        if (searchdetailList.getFuture_checkins() != null && mQueueList.get(position).getNextAvailableQueue()!=null) {
-                            if(mQueueList.get(position).getNextAvailableQueue().getAvailableDate()!=null){
-                                if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
-                                    myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
-                                    myViewHolder.L_services.setVisibility(View.VISIBLE);
-                                    myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                                            if (searchdetailList.getmLoc() != null) {
-                                                iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
-                                            }
-                                            iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
-                                            iCheckIn.putExtra("accountID", searchdetailList.getId());
 
-                                            iCheckIn.putExtra("googlemap", searchdetailList.getLocation1());
-                                            // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
-                                            iCheckIn.putExtra("from", "future_date");
-                                            iCheckIn.putExtra("title", searchdetailList.getTitle());
-                                            iCheckIn.putExtra("place", searchdetailList.getPlace1());
-                                            Config.logV("sector%%%%%%-------------" + searchdetailList.getSectorname());
-                                            iCheckIn.putExtra("sector", searchdetailList.getSectorname());
-                                            iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
-                                            iCheckIn.putExtra("terminology", termilogy);
-                                            iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
-                                            iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
-                                            context.startActivity(iCheckIn);
-                                        }
-                                    });
-                                } else {
-                                    myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                                    myViewHolder.L_services.setVisibility(View.GONE);
-                                }
-                            }else {
-                                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                                myViewHolder.L_services.setVisibility(View.GONE);
-                            }
-                        } else {
-                            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                            myViewHolder.L_services.setVisibility(View.GONE);
-                        }
-
-                    }else {
-                        myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                        myViewHolder.L_services.setVisibility(View.GONE);
-                    }
-                }else {
-                    myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                    myViewHolder.L_services.setVisibility(View.GONE);
-                }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1379,7 +1328,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         myViewHolder.btncheckin.setVisibility(View.VISIBLE);
     }
 
-    public void setFutureDateCheckin(SearchListModel searchdetailList, MyViewHolder myViewHolder,int position) {
+    public void setFutureDateCheckin(final SearchListModel searchdetailList, MyViewHolder myViewHolder, int position) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Date date = format.parse(searchdetailList.getAvail_date());
@@ -1402,7 +1351,62 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 } else {
                                     myViewHolder.tv_WaitTime.setVisibility(View.GONE);
                                 }
+
                             }
+
+                            if(searchdetailList.getOnline_profile()!=null) {
+                                if (searchdetailList.getOnline_profile().equals("1") && searchdetailList.isWaitlistEnabled()) {
+                                    if (searchdetailList.getFuture_checkins() != null && mQueueList.get(i).getNextAvailableQueue()!=null) {
+                                        if(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()!=null){
+                                            if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
+                                                myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
+                                                myViewHolder.L_services.setVisibility(View.VISIBLE);
+                                                myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                                                        if (searchdetailList.getmLoc() != null) {
+                                                            iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
+                                                        }
+                                                        iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
+                                                        iCheckIn.putExtra("accountID", searchdetailList.getId());
+
+                                                        iCheckIn.putExtra("googlemap", searchdetailList.getLocation1());
+                                                        // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
+                                                        iCheckIn.putExtra("from", "future_date");
+                                                        iCheckIn.putExtra("title", searchdetailList.getTitle());
+                                                        iCheckIn.putExtra("place", searchdetailList.getPlace1());
+                                                        Config.logV("sector%%%%%%-------------" + searchdetailList.getSectorname());
+                                                        iCheckIn.putExtra("sector", searchdetailList.getSectorname());
+                                                        iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
+                                                        iCheckIn.putExtra("terminology", termilogy);
+                                                        iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
+                                                        iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                                                        context.startActivity(iCheckIn);
+                                                    }
+                                                });
+                                            } else {
+                                                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                                                myViewHolder.L_services.setVisibility(View.GONE);
+                                            }
+                                        }else {
+                                            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                                            myViewHolder.L_services.setVisibility(View.GONE);
+                                        }
+                                    } else {
+                                        myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                                        myViewHolder.L_services.setVisibility(View.GONE);
+                                    }
+
+                                }else {
+                                    myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                                    myViewHolder.L_services.setVisibility(View.GONE);
+                                }
+                            }else {
+                                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                                myViewHolder.L_services.setVisibility(View.GONE);
+                            }
+
                         }
                     }
                 }

@@ -114,7 +114,6 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
 
 
 
-
         if(position==mQueueList.size()-1){
             myViewHolder.divider.setVisibility(View.GONE);
         }else{
@@ -207,25 +206,46 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                         }
                     }
                 }
-                if(queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().isAvailableToday() && queueList.getNextAvailableQueue().isAvailableToday()){
-                    myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
-                    if (queueList.getNextAvailableQueue().getAvailableDate() != null) {
-                        if ((formattedDate.trim().equalsIgnoreCase(queueList.getNextAvailableQueue().getAvailableDate()))) {
-                            myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
-                            myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.button_gradient_checkin));
-                        } else if (date1.compareTo(date2) < 0) {
-                            myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
-                            // myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                            myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                            myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
-                            myViewHolder.btn_checkin.setEnabled(false);
+
+                if(queueList.isWaitlistEnabled()){
+                    if(mFavList.get(i).getOnlinePresence()!=null){
+                        if(mFavList.get(i).getOnlinePresence().equals("true")){
+                            if(queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().isAvailableToday()){
+                                if (queueList.getNextAvailableQueue().getAvailableDate() != null) {
+                                    if ((formattedDate.trim().equalsIgnoreCase(queueList.getNextAvailableQueue().getAvailableDate()))) {
+                                        if(mFavList.get(i).isOnlineCheckin()){
+                                            myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
+                                            myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.button_gradient_checkin));
+                                        }else {
+                                            myViewHolder.btn_checkin.setVisibility(View.GONE);
+                                        }
+                                    } else if (date1.compareTo(date2) < 0) {
+                                        myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
+                                        // myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+                                        myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                                        myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
+                                        myViewHolder.btn_checkin.setEnabled(false);
+                                    }
+                                } else {
+                                    myViewHolder.btn_checkin.setVisibility(View.GONE);
+                                }
+                            }else{
+                                myViewHolder.btn_checkin.setVisibility(View.GONE);
+                            }
+
+                        }  else{
+                            myViewHolder.btn_checkin.setVisibility(View.GONE);
                         }
-                    } else {
+                    }else{
                         myViewHolder.btn_checkin.setVisibility(View.GONE);
                     }
                 }else{
                     myViewHolder.btn_checkin.setVisibility(View.GONE);
                 }
+
+
+
+
 
                 if(mScheduleList.size()>0){
                     final ScheduleList scheduleList = mScheduleList.get(position);
