@@ -2241,137 +2241,138 @@ public class CheckIn extends AppCompatActivity {
                         // Department Section Starts
 
                         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-                        Call<SearchDepartment> call1 = apiService.getDepartment(Integer.parseInt(accountID.split("-")[0]));
-                        call1.enqueue(new Callback<SearchDepartment>() {
-                            @Override
-                            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
-                                try {
-                                    if (response.code() == 200) {
+                        if (!accountID.equals("")) {
+                            Call<SearchDepartment> call1 = apiService.getDepartment(Integer.parseInt(accountID.split("-")[0]));
+                            call1.enqueue(new Callback<SearchDepartment>() {
+                                @Override
+                                public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
+                                    try {
+                                        if (response.code() == 200) {
 
-                                        Config.logV("URL123---------------" + response.raw().request().url().toString().trim());
+                                            Config.logV("URL123---------------" + response.raw().request().url().toString().trim());
 
-                                        depResponse = response.body();
-                                        if (depResponse.isFilterByDept() && depResponse.getDepartments().size() > 0) {
-                                            mSpinnerDepartment.setVisibility(View.VISIBLE);
-                                            txt_choosedepartment.setVisibility(View.VISIBLE);
-                                            ArrayAdapter<SearchDepartment> adapter = new ArrayAdapter<SearchDepartment>(mActivity, android.R.layout.simple_spinner_dropdown_item, depResponse.getDepartments());
-                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                            mSpinnerDepartment.setAdapter(adapter);
-                                            deptSpinnertext = depResponse.getDepartmentId();
-                                            ArrayList<SearchService> serviceList = new ArrayList<>();
-                                            ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
-                                            selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
-                                            departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
-                                            for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
+                                            depResponse = response.body();
+                                            if (depResponse.isFilterByDept() && depResponse.getDepartments().size() > 0) {
+                                                mSpinnerDepartment.setVisibility(View.VISIBLE);
+                                                txt_choosedepartment.setVisibility(View.VISIBLE);
+                                                ArrayAdapter<SearchDepartment> adapter = new ArrayAdapter<SearchDepartment>(mActivity, android.R.layout.simple_spinner_dropdown_item, depResponse.getDepartments());
+                                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                mSpinnerDepartment.setAdapter(adapter);
+                                                deptSpinnertext = depResponse.getDepartmentId();
+                                                ArrayList<SearchService> serviceList = new ArrayList<>();
+                                                ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
+                                                selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
+                                                departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
+                                                for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
 
-                                                for (int i = 0; i < gServiceList.size(); i++) {
-                                                    if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
-                                                        serviceList.add(gServiceList.get(i));
-                                                        break;
+                                                    for (int i = 0; i < gServiceList.size(); i++) {
+                                                        if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
+                                                            serviceList.add(gServiceList.get(i));
+                                                            break;
+                                                        }
                                                     }
+
                                                 }
+                                                LServicesList.clear();
+                                                LServicesList.addAll(serviceList);
 
                                             }
-                                            LServicesList.clear();
-                                            LServicesList.addAll(serviceList);
-
-                                        }
-                                        if (LServicesList.size() > 0) {
-                                            mSpinnerService.setVisibility(View.VISIBLE);
-                                            txt_chooseservice.setVisibility(View.VISIBLE);
-                                            Config.logV("mServicesList" + LServicesList.size());
-                                            ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                            mSpinnerService.setAdapter(adapter);
-                                            mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
-                                            livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
-                                        } else {
-
-                                            mSpinnerService.setVisibility(View.GONE);
-                                            txt_chooseservice.setVisibility(View.GONE);
-
-                                            if (LServicesList.size() == 1) {
-                                                // String firstWord = "Check-in for ";
-                                                String firstWord = Word_Change;
-                                                String secondWord = LServicesList.get(0).getName();
-
-                                                Spannable spannable = new SpannableString(firstWord + secondWord);
-                                                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                                        "fonts/Montserrat_Bold.otf");
-                                                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                                tv_checkin_service.setText(spannable);
-                                                mSpinnertext = LServicesList.get(0).getId();
-                                                livetrack = LServicesList.get(0).isLivetrack();
-                                                serviceSelected = LServicesList.get(0).getName();
-                                                selectedService = LServicesList.get(0).getId();
-
-
-                                                Date currentTime = new Date();
-                                                final SimpleDateFormat sdf = new SimpleDateFormat(
-                                                        "yyyy-MM-dd", Locale.US);
-                                                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                                System.out.println("UTC time: " + sdf.format(currentTime));
-                                                //ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
-
-
-                                                isPrepayment = LServicesList.get(0).isPrePayment();
-                                                Config.logV("Payment------------" + isPrepayment);
-                                                if (isPrepayment) {
-
-
-                                                    sAmountPay = LServicesList.get(0).getMinPrePaymentAmount();
-                                                    APIPayment(modifyAccountID);
-
-                                                    Config.logV("Payment----sAmountPay--------" + sAmountPay);
-
-                                                } else {
-                                                    LservicePrepay.setVisibility(View.GONE);
-                                                }
-
-                                            }
-                                        }
-
-                                        Date currentTime = new Date();
-                                        final SimpleDateFormat sdf = new SimpleDateFormat(
-                                                "yyyy-MM-dd", Locale.US);
-                                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                        System.out.println("UTC time: " + sdf.format(currentTime));
-                                        Config.logV("SELECTED &&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-
-                                        //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
-
-                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                            ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                                        } else {
-                                            if (selectedDateFormat != null) {
-
-                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                                            if (LServicesList.size() > 0) {
+                                                mSpinnerService.setVisibility(View.VISIBLE);
+                                                txt_chooseservice.setVisibility(View.VISIBLE);
+                                                Config.logV("mServicesList" + LServicesList.size());
+                                                ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                mSpinnerService.setAdapter(adapter);
+                                                mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                                                livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
                                             } else {
 
+                                                mSpinnerService.setVisibility(View.GONE);
+                                                txt_chooseservice.setVisibility(View.GONE);
+
+                                                if (LServicesList.size() == 1) {
+                                                    // String firstWord = "Check-in for ";
+                                                    String firstWord = Word_Change;
+                                                    String secondWord = LServicesList.get(0).getName();
+
+                                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                                            "fonts/Montserrat_Bold.otf");
+                                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                    tv_checkin_service.setText(spannable);
+                                                    mSpinnertext = LServicesList.get(0).getId();
+                                                    livetrack = LServicesList.get(0).isLivetrack();
+                                                    serviceSelected = LServicesList.get(0).getName();
+                                                    selectedService = LServicesList.get(0).getId();
+
+
+                                                    Date currentTime = new Date();
+                                                    final SimpleDateFormat sdf = new SimpleDateFormat(
+                                                            "yyyy-MM-dd", Locale.US);
+                                                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                                    System.out.println("UTC time: " + sdf.format(currentTime));
+                                                    //ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+
+
+                                                    isPrepayment = LServicesList.get(0).isPrePayment();
+                                                    Config.logV("Payment------------" + isPrepayment);
+                                                    if (isPrepayment) {
+
+
+                                                        sAmountPay = LServicesList.get(0).getMinPrePaymentAmount();
+                                                        APIPayment(modifyAccountID);
+
+                                                        Config.logV("Payment----sAmountPay--------" + sAmountPay);
+
+                                                    } else {
+                                                        LservicePrepay.setVisibility(View.GONE);
+                                                    }
+
+                                                }
+                                            }
+
+                                            Date currentTime = new Date();
+                                            final SimpleDateFormat sdf = new SimpleDateFormat(
+                                                    "yyyy-MM-dd", Locale.US);
+                                            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                            System.out.println("UTC time: " + sdf.format(currentTime));
+                                            Config.logV("SELECTED &&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+                                            //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+
+                                            if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+
                                                 ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                            } else {
+                                                if (selectedDateFormat != null) {
+
+                                                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                                                } else {
+
+                                                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                                }
                                             }
                                         }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
                                 }
-                            }
 
-                            @Override
-                            public void onFailure(Call<SearchDepartment> call, Throwable t) {
-                                Config.logV("Fail---------------" + t.toString());
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<SearchDepartment> call, Throwable t) {
+                                    Config.logV("Fail---------------" + t.toString());
+                                }
+                            });
 
-                        // Department Ends Here
+                            // Department Ends Here
 
-                    }
+                        }
 
 
-                } catch (Exception e) {
+                    }  } catch (Exception e) {
                     e.printStackTrace();
                 }
 
