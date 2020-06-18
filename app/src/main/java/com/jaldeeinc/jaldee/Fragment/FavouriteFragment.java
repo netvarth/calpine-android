@@ -176,6 +176,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                                 fav.setId(mFavList.get(i).getId());
                                 fav.setUniqueId(mFavList.get(i).getUniqueId());
                                 fav.setBusinessName(mFavList.get(i).getBusinessName());
+                                fav.setOnlinePresence(mFavList.get(i).getOnlinePresence());
                                 Config.logV("Revel Phone--@@@------------"+mFavList.get(i).isRevealPhoneNumber()+"Title"+mFavList.get(i).getBusinessName());
                                 String locid = "";
                                 String place = "";
@@ -247,7 +248,6 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
         uniQueID = uniqueID;
         mTitle = title;
         ApiSearchViewTerminology(String.valueOf(uniQueID));
-        ApiSearchScheduleViewID(mProviderid, ids);
         ApiSearchViewID(mProviderid, ids, rfavlocRecycleview);
 
     }
@@ -412,7 +412,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
 
     }
 
-    private void ApiSearchViewID(int mProviderid, ArrayList<String> ids, final RecyclerView rfavlocRecycleview) {
+    private void ApiSearchViewID(final int mProviderid, final ArrayList<String> ids, final RecyclerView rfavlocRecycleview) {
 
 
         ApiInterface apiService =
@@ -452,7 +452,8 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                         if (response.code() == 200) {
 
                             mSearchQueueList = response.body();
-                            ApiSearchViewSetting(rfavlocRecycleview);
+                            ApiSearchScheduleViewID(mProviderid, ids,rfavlocRecycleview);
+
 
                         }
 
@@ -478,7 +479,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
     }
 
 
-    private void ApiSearchScheduleViewID(int mProviderid, ArrayList<String> ids) {
+    private void ApiSearchScheduleViewID(int mProviderid, ArrayList<String> ids, final RecyclerView rfavlocRecycleview) {
 
 
         ApiInterface apiService =
@@ -514,6 +515,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                         if (response.code() == 200) {
 
                             mSearchScheduleList = response.body();
+                            ApiSearchViewSetting(rfavlocRecycleview);
 
 
                         }

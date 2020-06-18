@@ -1349,24 +1349,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             }
 
 
+                            ApiSheduleList(ids, mSearchResp, "next", mScheduleList);
 
-
-                           /* Config.logV("TOTAL PAGES_--------------" + TOTAL_PAGES);
-                            Config.logV("CURRENT PAGE**22222**555***********" + TOTAL_PAGES);
-                            Config.logV("CURRENT PAGE**333*****5555********" + currentPage);
-                            pageadapter.removeLoadingFooter();
-                            isLoading = false;
-
-                            List<SearchAWsResponse> results = mSearchResp;
-                            pageadapter.addAll(results);
-
-                            if (currentPage / 10 != TOTAL_PAGES) {
-                                pageadapter.addLoadingFooter();
-                            } else {
-                                isLastPage = true;
-                            }*/
-                            ApiSheduleList(ids);
-                            ApiQueueList(ids, mSearchResp, "next", mScheduleList);
 
                         }
 
@@ -1630,8 +1614,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             } else {
                                 isLastPage = true;
                             }*/
-                            ApiSheduleList(ids);
-                            ApiQueueList(ids, mSearchResp, "first", mScheduleList);
+                            ApiSheduleList(ids, mSearchResp, "first", mScheduleList);
+
 
 
                             //   waitlist/queues/waitingTime/2-1%2C2-2%2C141-388%2C141-2563
@@ -1878,6 +1862,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
                                             searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
                                             searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
+                                            searchList.setWaitlistEnabled(mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled());
                                             searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
                                             searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
                                             if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
@@ -1885,7 +1870,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             }
                                         }
                                     }
-                                    if (mScheduleList != null) {
+                                    if (mScheduleList != null && mScheduleList.size()>0) {
                                         if(mScheduleList.get(i).isCheckinAllowed()){
                                             searchList.setCheckinAllowed(true);
                                         }
@@ -2063,6 +2048,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
 
                                             searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
+                                            searchList.setWaitlistEnabled(mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled());
                                             searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
                                             searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
                                             if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
@@ -2070,7 +2056,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                             }
                                         }
                                     }
-                                    if (mScheduleList != null ) {
+
+
+                                    if (mScheduleList != null && mScheduleList.size()>0 ) {
                                         if(mScheduleList.get(i).isCheckinAllowed()){
                                             searchList.setCheckinAllowed(true);
                                         }
@@ -2131,7 +2119,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         }
     }
 
-    private void ApiSheduleList(ArrayList<String> queuelist) {
+    private void ApiSheduleList(final ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck, final List<ScheduleList> mScheduleList) {
 
         ApiInterface apiService = ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
@@ -2156,10 +2144,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                         mScheduleList.clear();
                         if (response.code() == 200) {
                             for (int i = 0; i < response.body().size(); i++) {
-//                                mScheduleList.add(i,response.body().get(i));
                                   mScheduleList.add(i,response.body().get(i));
                          }
 
+                            if(mCheck.equals("next")){
+                                ApiQueueList(queuelist, mSearchResp, "next", mScheduleList);
+                            }else if(mCheck.equals("first")){
+                                ApiQueueList(queuelist, mSearchResp, "first", mScheduleList);
+                            }
 
                         }
 

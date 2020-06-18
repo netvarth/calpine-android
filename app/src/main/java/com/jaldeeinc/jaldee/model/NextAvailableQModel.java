@@ -112,6 +112,14 @@ public class NextAvailableQModel {
         this.onlineCheckIn = onlineCheckIn;
     }
 
+    public boolean isWaitlistEnabled() {
+        return waitlistEnabled;
+    }
+
+    public void setWaitlistEnabled(boolean waitlistEnabled) {
+        this.waitlistEnabled = waitlistEnabled;
+    }
+
     public boolean isFutureWaitlist() {
         return futureWaitlist;
     }
@@ -154,6 +162,7 @@ public class NextAvailableQModel {
 
     private String calculationMode;
     private boolean onlineCheckIn;
+    private boolean waitlistEnabled;
     private boolean futureWaitlist;
     private boolean openNow;
     private boolean isAvailableToday;

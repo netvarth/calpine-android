@@ -113,17 +113,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
         final QueueList queueList = mQueueList.get(position);
 
 
-        if(mScheduleList.size()>0){
 
-            final ScheduleList scheduleList = mScheduleList.get(position);
-            if(scheduleList.isCheckinAllowed()){
-                myViewHolder.appoinmentLayouts.setVisibility(View.VISIBLE);
-            }else{
-                myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
-            }
-        }else{
-            myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
-        }
 
         if(position==mQueueList.size()-1){
             myViewHolder.divider.setVisibility(View.GONE);
@@ -235,6 +225,21 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                     }
                 }else{
                     myViewHolder.btn_checkin.setVisibility(View.GONE);
+                }
+
+                if(mScheduleList.size()>0){
+                    final ScheduleList scheduleList = mScheduleList.get(position);
+                    if(mFavList.get(i).getOnlinePresence().equals("true")){
+                        if(scheduleList.isCheckinAllowed()){
+                            myViewHolder.appoinmentLayouts.setVisibility(View.VISIBLE);
+                        }else{
+                            myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
+                        }
+                    }else{
+                        myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
+                    }
+                }else{
+                    myViewHolder.appoinmentLayouts.setVisibility(View.GONE);
                 }
 
 
