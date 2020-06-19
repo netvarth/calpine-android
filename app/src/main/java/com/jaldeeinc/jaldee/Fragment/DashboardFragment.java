@@ -855,6 +855,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 Config.logV("Popular Text__________@@@Dele111");
                 mSearchView.setQuery("", false);
 
+                if(mtyp==null){
+                    mtyp = "city";
+                }
                 LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
                 double upperLeftLat = Lanlong.getUpperLeftLat();
                 double upperLeftLon = Lanlong.getUpperLeftLon();
@@ -1389,7 +1392,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     public LanLong getLocationNearBy(double lant, double longt,String typ) {
 
 
-
         if(typ.equalsIgnoreCase("state")){
             distance = 300;
         }else if(typ.equalsIgnoreCase("city")){
@@ -1426,6 +1428,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     public void FunPopularSearch(String sector, String category, String name) {
         String mSector;
+        if(mtyp==null){
+            mtyp = "city";
+        }
         LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
@@ -1872,7 +1877,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     public void QuerySubmitCLick(String query) {
 
         mSearchView.setQuery("", false);
-
+        if(mtyp==null){
+            mtyp = "city";
+        }
         LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
@@ -1965,6 +1972,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     public void SpinnerItemCLick() {
 
         mSearchView.setQuery("", false);
+
+        if(mtyp==null){
+            mtyp = "city";
+        }
 
         LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();

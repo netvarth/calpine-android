@@ -999,6 +999,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 Config.logV("show_subdomain---------------" + show_subdomain);
                 //  mSearchView.setQuery("", false);
                 String mSector;
+                if(mtyp==null){
+                    mtyp = "city";
+                }
                 LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude),mtyp);
                 double upperLeftLat = Lanlong.getUpperLeftLat();
                 double upperLeftLon = Lanlong.getUpperLeftLon();
@@ -2268,6 +2271,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Log.i("querypass", querypass);
 
         //  mSearchView.setQuery("", false);
+        if(mtyp==null){
+            mtyp = "city";
+        }
         LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude),mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
@@ -2410,6 +2416,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         show_subdomain = false;
         //  mSearchView.setQuery("", false);
+        if(mtyp==null){
+            mtyp = "city";
+        }
         LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude),mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
@@ -3666,6 +3675,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     public void SortBy(String sort) {
         Config.logV("zeo" + sort);
+        if(mtyp==null){
+            mtyp = "city";
+        }
         LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude),mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
@@ -3707,6 +3719,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     public void MoreItemClick(String pass_formula, String query) {
 
         //  mSearchView.setQuery("", false);
+        if(mtyp==null){
+            mtyp = "city";
+        }
         LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude),mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
