@@ -764,7 +764,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         } else {
             icon_bill.setText("Bill");
         }
-        if (activelist.getBillViewStatus() != null) {
+        if (activelist.getBillViewStatus() != null && !activelist.getApptStatus().equalsIgnoreCase("cancelled")) {
             if (activelist.getBillViewStatus().equalsIgnoreCase("Show")) {
                 icon_bill.setVisibility(View.VISIBLE);
             } else {

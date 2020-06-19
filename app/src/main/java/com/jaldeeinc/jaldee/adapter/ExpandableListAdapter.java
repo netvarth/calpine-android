@@ -845,7 +845,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         }
 
         Config.logV("Bill------------" + activelist.getWaitlistStatus());
-        if (activelist.getBillViewStatus() != null) {
+        if (activelist.getBillViewStatus() != null && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
             if (activelist.getBillViewStatus().equalsIgnoreCase("Show")) {
                 icon_bill.setVisibility(View.VISIBLE);
             } else {
