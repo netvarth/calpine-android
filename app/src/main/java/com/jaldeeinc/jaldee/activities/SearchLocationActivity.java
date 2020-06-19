@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.Fragment.DashboardFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchListFragment;
 import com.jaldeeinc.jaldee.R;
@@ -37,11 +36,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -323,20 +320,20 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
     }
 
     @Override
-    public void onMethodCallback(String value, Double lat, Double longtitude, String locName) {
+    public void onMethodCallback(String value, Double lat, Double longtitude, String locName, String typ) {
         Config.logV("UpdateLocation 555----" + lat);
         if (from.equalsIgnoreCase("dashboard")) {
-            if (DashboardFragment.UpdateLocation(lat, longtitude, locName)) {
+            if (DashboardFragment.UpdateLocation(lat, longtitude, locName,typ)) {
                 SharedPreference.getInstance(this).setValue("current_loc", "no");
                 finish();
             }
         } else {
-            if (DashboardFragment.UpdateLocation(lat, longtitude, locName)) {
+            if (DashboardFragment.UpdateLocation(lat, longtitude, locName,typ)) {
                 SharedPreference.getInstance(this).setValue("current_loc", "no");
 
             }
 
-            if (SearchListFragment.UpdateLocationSearch(String.valueOf(lat), String.valueOf(longtitude), locName)) {
+            if (SearchListFragment.UpdateLocationSearch(String.valueOf(lat), String.valueOf(longtitude), locName,typ)) {
                 finish();
             }
         }

@@ -204,6 +204,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 parent.setLayoutParams(params1);
 
 
+                myViewHolder.tv_WaitTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
                 if(searchdetailList.getJdn()!=null){
 
                     if (searchdetailList.getJdn().equals("1")) {
