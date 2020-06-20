@@ -1036,7 +1036,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     if (mSearachAwsResponse.getHits().getHit() != null) {
                         for (int l = 0; l < mSearachAwsResponse.getHits().getHit().size(); l++) {
                             if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt() != null) {
-
+                                serviceNames.clear();
                                 if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services() != null) {
                                     //  myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
                                     try {
