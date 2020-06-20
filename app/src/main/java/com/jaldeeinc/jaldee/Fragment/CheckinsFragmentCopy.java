@@ -206,11 +206,11 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         final TextView txtCheckins = (TextView) row.findViewById(R.id.checkins);
         final TextView txtAppointments = (TextView) row.findViewById(R.id.appointments);
-        final TextView txtDonations = (TextView) row.findViewById(R.id.donations);
-        TextView txtPaylog = (TextView) row.findViewById(R.id.paylog);
+//        final TextView txtDonations = (TextView) row.findViewById(R.id.donations);
+//        TextView txtPaylog = (TextView) row.findViewById(R.id.paylog);
         final TextView txtnoappointments = (TextView) row.findViewById(R.id.txtnoappointments);
-        final TextView txtnodonations = (TextView) row.findViewById(R.id.txtnodonations);
-        final TextView txtnopaylog = (TextView) row.findViewById(R.id.txtnopaylog);
+//        final TextView txtnodonations = (TextView) row.findViewById(R.id.txtnodonations);
+//        final TextView txtnopaylog = (TextView) row.findViewById(R.id.txtnopaylog);
 
         expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
         expandlistAppointment = (ExpandableListView) row.findViewById(R.id.appointmentView);
@@ -270,19 +270,19 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             }
         });
 
-        txtDonations.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (txtnodonations.getVisibility() == View.GONE) {
-                    txtnodonations.setVisibility(View.VISIBLE);
-                    txtDonations.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                } else {
-                    txtnodonations.setVisibility(View.GONE);
-                    txtDonations.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                }
-
-            }
-        });
+//        txtDonations.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (txtnodonations.getVisibility() == View.GONE) {
+//                    txtnodonations.setVisibility(View.VISIBLE);
+//                    txtDonations.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
+//                } else {
+//                    txtnodonations.setVisibility(View.GONE);
+//                    txtDonations.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
+//                }
+//
+//            }
+//        });
 
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
