@@ -535,9 +535,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), (text.length()), (text.length() + text3.length()) , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-            String text5 =  "You are sharing";
-            String text6 =  " your arrival time with ";
-            String text7 =  activelist.getBusinessName();
+            String text5 =  "You are ";
+            String text6 =  "sharing your arrival time ";
+            String text7 =  "with "+activelist.getBusinessName();
 
             String text8 = text5 + text6 + text7;
 
