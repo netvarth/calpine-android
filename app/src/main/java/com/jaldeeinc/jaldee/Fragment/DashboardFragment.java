@@ -2073,7 +2073,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer, int customerId) {
         Log.i("Purpose: ", "billPayment");
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
@@ -2082,13 +2082,18 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         iBill.putExtra("payStatus", payStatus);
         iBill.putExtra("consumer", consumer);
         iBill.putExtra("purpose",Constants.PURPOSE_BILLPAYMENT);
+        if(MActiveList!=null) {
+            for (int i = 0; i < MActiveList.size(); i++) {
+                iBill.putExtra("customerId", MActiveList.get(i).getConsumer().getId());
+            }
+        }
         startActivity(iBill);
 
     }
 
 
     @Override
-    public void onMethodActivePayIconCallback(String payStatus, final String ynwUUID, String provider, final String accountID, final double amountDue) {
+    public void onMethodActivePayIconCallback(String payStatus, final String ynwUUID, String provider, final String accountID, final double amountDue, int customerId) {
         Log.i("Purpose: ", "prePayment");
         // APIPayment(accountID, ynwUUID, amountDue);
         Intent i = new Intent(mContext, PaymentActivity.class);
@@ -2096,6 +2101,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         i.putExtra("accountID", accountID);
         i.putExtra("amountDue", amountDue);
         i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
+        if(MActiveList!=null){
+        for(int j =0;j<MActiveList.size();j++){
+        i.putExtra("customerId",MActiveList.get(j).getConsumer().getId());
+        }
+        }
         startActivity(i);
     }
 

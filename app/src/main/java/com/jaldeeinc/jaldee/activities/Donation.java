@@ -71,6 +71,7 @@ import com.jaldeeinc.jaldee.response.ScheduleId;
 import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 
+import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchTerminology;
@@ -130,7 +131,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class Appointment extends AppCompatActivity {
+public class Donation extends AppCompatActivity {
 
     ArrayList<String> couponArraylist = new ArrayList<>();
 
@@ -142,8 +143,8 @@ public class Appointment extends AppCompatActivity {
     static Activity mActivity;
     Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
     static int serviceId;
-    ArrayList<SearchAppoinment> LServicesList = new ArrayList<>();
-    ArrayList<SearchAppoinment> gServiceList = new ArrayList<>();
+    ArrayList<SearchDonation> LServicesList = new ArrayList<>();
+    ArrayList<SearchDonation> gServiceList = new ArrayList<>();
     String uniqueID;
     String uuid;
     TextView tv_addmember, tv_editphone;
@@ -159,7 +160,7 @@ public class Appointment extends AppCompatActivity {
     String isPrepayment;
     TextView tv_amount;
     String sAmountPay;
-    static TextView tv_name;
+    static EditText tv_name;
     String mFirstName, mLastName;
     int consumerID;
     static TextView tv_waittime;
@@ -245,51 +246,52 @@ public class Appointment extends AppCompatActivity {
     TextView tv_fileAttach;
     File file;
     BottomSheetDialog dialog;
+    static TextView tv_don_amount;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.appointment);
+        setContentView(R.layout.donation);
 
         list = findViewById(R.id.list);
-        tv_personahead = findViewById(R.id.txt_personahead);
-        mtermsAndConditionDetail = findViewById(R.id.termsAndConditionDetail);
-        mtermsandCond = findViewById(R.id.termsandCond);
-        mtxtTermsandCondition = findViewById(R.id.txtTermsandCondition);
-        mtxtDele = findViewById(R.id.txtDele);
-        coupon_link = findViewById(R.id.coupon_link);
-        mtxtTermsandCondition = findViewById(R.id.txtTermsandCondition);
-        mtxtDele.setVisibility(View.INVISIBLE);
-        mtermsandCond.setVisibility(View.INVISIBLE);
-        mtxtTermsandCondition.setVisibility(View.INVISIBLE);
-        couponEdit = findViewById(R.id.coupon_edit);
+//        tv_personahead = findViewById(R.id.txt_personahead);
+//        mtermsAndConditionDetail = findViewById(R.id.termsAndConditionDetail);
+//        mtermsandCond = findViewById(R.id.termsandCond);
+//        mtxtTermsandCondition = findViewById(R.id.txtTermsandCondition);
+//        mtxtDele = findViewById(R.id.txtDele);
+//        coupon_link = findViewById(R.id.coupon_link);
+//        mtxtTermsandCondition = findViewById(R.id.txtTermsandCondition);
+//        mtxtDele.setVisibility(View.INVISIBLE);
+//        mtermsandCond.setVisibility(View.INVISIBLE);
+//        mtxtTermsandCondition.setVisibility(View.INVISIBLE);
+//        couponEdit = findViewById(R.id.coupon_edit);
         phoneNumberValue = findViewById(R.id.phoneNumberValue);
-        applycouponbtn = findViewById(R.id.applybtn);
-        LcouponCheckin = findViewById(R.id.couponCheckin);
+//        applycouponbtn = findViewById(R.id.applybtn);
+//        LcouponCheckin = findViewById(R.id.couponCheckin);
         mActivity = this;
         recycle_family = findViewById(R.id.recycle_family);
         btn_checkin = findViewById(R.id.btn_checkin);
-        editpartysize = findViewById(R.id.editpartysize);
+//        editpartysize = findViewById(R.id.editpartysize);
         LSinglemember = findViewById(R.id.familymember);
-        LservicePrepay = findViewById(R.id.LservicePrepay);
+//        LservicePrepay = findViewById(R.id.LservicePrepay);
         txtprepayamount = findViewById(R.id.txtprepayamount);
         txtprepay = findViewById(R.id.txtprepay);
         LSinglemember.setVisibility(View.VISIBLE);
         recycle_family.setVisibility(View.GONE);
-        queuelayout = findViewById(R.id.queuelayout);
+//        queuelayout = findViewById(R.id.queuelayout);
         txt_chooseservice = findViewById(R.id.txt_chooseservice);
         txt_choosedepartment = findViewById(R.id.txt_choosedepartment);
-        layout_party = findViewById(R.id.layout_party);
+//        layout_party = findViewById(R.id.layout_party);
         Lbottomlayout = findViewById(R.id.bottomlayout);
         tv_amount = findViewById(R.id.txtamount);
         txtnocheckin = findViewById(R.id.txtnocheckin);
         tv_name = findViewById(R.id.txtname);
         tv_waittime = findViewById(R.id.txt_waittime);
-        txt_date = findViewById(R.id.txt_date);
-        img_calender_checkin = findViewById(R.id.calender_checkin);
-        LcheckinDatepicker = findViewById(R.id.checkinDatepicker);
-        tv_queue = findViewById(R.id.txt_queue);
+//        txt_date = findViewById(R.id.txt_date);
+//        img_calender_checkin = findViewById(R.id.calender_checkin);
+//        LcheckinDatepicker = findViewById(R.id.checkinDatepicker);
+//        tv_queue = findViewById(R.id.txt_queue);
         tv_place = findViewById(R.id.txt_place);
         tv_titlename = findViewById(R.id.txt_title);
         tv_checkin_service = findViewById(R.id.txt_checkin_service);
@@ -298,167 +300,47 @@ public class Appointment extends AppCompatActivity {
         tv_addnote = findViewById(R.id.txtaddnote);
         mSpinnerService = findViewById(R.id.spinnerservice);
         mSpinnerDepartment = findViewById(R.id.spinnerdepartment);
-        txtWaitTime = findViewById(R.id.txtWaitTime);
-        earliestAvailable = findViewById(R.id.earliestAvailable);
+        tv_don_amount = findViewById(R.id.donation_amount);
+//        txtWaitTime = findViewById(R.id.txtWaitTime);
+//        earliestAvailable = findViewById(R.id.earliestAvailable);
         txt_choosedoctor = findViewById(R.id.txt_choosedoctor);
         mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
-        tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
-        et_vitualId = findViewById(R.id.virtual_id);
+//        tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
+//        et_vitualId = findViewById(R.id.virtual_id);
 
 
 
-        tv_addnote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
-                dialog.setContentView(R.layout.reply);
-                dialog.show();
-
-                final Button btn_send = dialog.findViewById(R.id.btn_send);
-                Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
-                final EditText edt_message = dialog.findViewById(R.id.edt_message);
-                TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
-                txtsendmsg.setVisibility(View.GONE);
-                btn_send.setText("ADD");
-
-                if (!txtsendmsg.equals("")) {
-                    edt_message.setText(txt_message);
-                }
-
-
-                btn_send.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        txt_message = edt_message.getText().toString();
-                        dialog.dismiss();
-
-                    }
-                });
-
-                btn_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                edt_message.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable arg0) {
-                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
-                            btn_send.setEnabled(true);
-                            btn_send.setClickable(true);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-                        } else {
-                            btn_send.setEnabled(true);
-                            btn_send.setClickable(true);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-                            //  btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                        }
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-                });
-//                imagePathList.clear();
-//                tv_attach = dialog.findViewById(R.id.btn);
-//                tv_camera = dialog.findViewById(R.id.camera);
-//                recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
-//                //  imageview = dialog.findViewById(R.id.iv);
-//                // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
+//        tv_addnote.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
+//                dialog.setContentView(R.layout.reply);
+//                dialog.show();
 //
+//                final Button btn_send = dialog.findViewById(R.id.btn_send);
+//                Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
+//                final EditText edt_message = dialog.findViewById(R.id.edt_message);
+//                TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
+//                txtsendmsg.setVisibility(View.GONE);
+//                btn_send.setText("ADD");
 //
-//                requestMultiplePermissions();
-//                tv_attach.setVisibility(View.VISIBLE);
-//                tv_camera.setVisibility(View.VISIBLE);
-//
-//
-//                tv_attach.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        try {
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//
-//
-//                                    requestPermissions(new String[]{
-//                                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
-//
-//                                    return;
-//                                } else {
-//                                    Intent intent = new Intent();
-//                                    intent.setType("*/*");
-//                                    intent.setAction(Intent.ACTION_GET_CONTENT);
-//                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
-//                                }
-//                            } else {
-//
-//                                Intent intent = new Intent();
-//                                intent.setType("*/*");
-//                                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
-//                            }
-//                        } catch (Exception ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    }
-//
-//                });
-//
-//
-//                tv_camera.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        try {
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//
-//
-//                                    requestPermissions(new String[]{
-//                                            Manifest.permission.CAMERA}, CAMERA);
-//
-//                                    return;
-//                                } else {
-//                                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                                    Intent cameraIntent = new Intent();
-//                                    cameraIntent.setType("image/*");
-//                                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//                                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
-//                                    startActivityForResult(intent, CAMERA);
-//                                }
-//                            } else {
-//
-//                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                                Intent cameraIntent = new Intent();
-//                                cameraIntent.setType("image/*");
-//                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
-//                                startActivityForResult(intent, CAMERA);
-//                            }
-//                        } catch (Exception ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    }
-//
-//                });
+//                if (!txtsendmsg.equals("")) {
+//                    edt_message.setText(txt_message);
+//                }
 //
 //
 //                btn_send.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        //
+//                        txt_message = edt_message.getText().toString();
+//                        dialog.dismiss();
+//
 //                    }
 //                });
 //
 //                btn_cancel.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        imagePathList.clear();
 //                        dialog.dismiss();
 //                    }
 //                });
@@ -471,9 +353,10 @@ public class Appointment extends AppCompatActivity {
 //                            btn_send.setClickable(true);
 //                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
 //                        } else {
-//                            btn_send.setEnabled(false);
-//                            btn_send.setClickable(false);
-//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
+//                            btn_send.setEnabled(true);
+//                            btn_send.setClickable(true);
+//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
+//                            //  btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
 //                        }
 //                    }
 //
@@ -485,66 +368,186 @@ public class Appointment extends AppCompatActivity {
 //                    public void onTextChanged(CharSequence s, int start, int before, int count) {
 //                    }
 //                });
-           }
-        });
+////                imagePathList.clear();
+////                tv_attach = dialog.findViewById(R.id.btn);
+////                tv_camera = dialog.findViewById(R.id.camera);
+////                recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
+////                //  imageview = dialog.findViewById(R.id.iv);
+////                // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
+////
+////
+////                requestMultiplePermissions();
+////                tv_attach.setVisibility(View.VISIBLE);
+////                tv_camera.setVisibility(View.VISIBLE);
+////
+////
+////                tv_attach.setOnClickListener(new View.OnClickListener() {
+////                    @Override
+////                    public void onClick(View v) {
+////                        try {
+////                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+////                                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+////
+////
+////                                    requestPermissions(new String[]{
+////                                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
+////
+////                                    return;
+////                                } else {
+////                                    Intent intent = new Intent();
+////                                    intent.setType("*/*");
+////                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+////                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+////                                }
+////                            } else {
+////
+////                                Intent intent = new Intent();
+////                                intent.setType("*/*");
+////                                intent.setAction(Intent.ACTION_GET_CONTENT);
+////                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+////                            }
+////                        } catch (Exception ex) {
+////                            ex.printStackTrace();
+////                        }
+////                    }
+////
+////                });
+////
+////
+////                tv_camera.setOnClickListener(new View.OnClickListener() {
+////                    @Override
+////                    public void onClick(View v) {
+////                        try {
+////                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+////                                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+////
+////
+////                                    requestPermissions(new String[]{
+////                                            Manifest.permission.CAMERA}, CAMERA);
+////
+////                                    return;
+////                                } else {
+////                                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+////                                    Intent cameraIntent = new Intent();
+////                                    cameraIntent.setType("image/*");
+////                                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+////                                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+////                                    startActivityForResult(intent, CAMERA);
+////                                }
+////                            } else {
+////
+////                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+////                                Intent cameraIntent = new Intent();
+////                                cameraIntent.setType("image/*");
+////                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+////                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+////                                startActivityForResult(intent, CAMERA);
+////                            }
+////                        } catch (Exception ex) {
+////                            ex.printStackTrace();
+////                        }
+////                    }
+////
+////                });
+////
+////
+////                btn_send.setOnClickListener(new View.OnClickListener() {
+////                    @Override
+////                    public void onClick(View v) {
+////                        //
+////                    }
+////                });
+////
+////                btn_cancel.setOnClickListener(new View.OnClickListener() {
+////                    @Override
+////                    public void onClick(View v) {
+////                        imagePathList.clear();
+////                        dialog.dismiss();
+////                    }
+////                });
+////
+////                edt_message.addTextChangedListener(new TextWatcher() {
+////                    @Override
+////                    public void afterTextChanged(Editable arg0) {
+////                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
+////                            btn_send.setEnabled(true);
+////                            btn_send.setClickable(true);
+////                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
+////                        } else {
+////                            btn_send.setEnabled(false);
+////                            btn_send.setClickable(false);
+////                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
+////                        }
+////                    }
+////
+////                    @Override
+////                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+////                    }
+////
+////                    @Override
+////                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+////                    }
+////                });
+//            }
+//        });
 
 
 
-        ic_left = findViewById(R.id.ic_left);
-        ic_right = findViewById(R.id.ic_right);
-        ic_cal_minus = findViewById(R.id.ic_cal_minus);
-        ic_cal_add = findViewById(R.id.ic_cal_add);
-
-        ic_cal_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String dtStart = txt_date.getText().toString();
-                Config.logV("Date----------------" + dtStart);
-                Date date = null;
-                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                try {
-                    date = format.parse(dtStart);
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Date added_date = addDays(date, 1);
-                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                //to convert Date to String, use format method of SimpleDateFormat class.
-                String strDate = dateFormat.format(added_date);
-                txt_date.setText(strDate);
-
-                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-                selectedDateFormat = selecteddateParse.format(added_date);
-                UpdateDAte(selectedDateFormat);
-            }
-        });
-
-        ic_cal_minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String dtStart = txt_date.getText().toString();
-                Config.logV("Date----------------" + dtStart);
-                Date date = null;
-                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                try {
-                    date = format.parse(dtStart);
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                Date added_date = subtractDays(date, 1);
-                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-                //to convert Date to String, use format method of SimpleDateFormat class.
-                String strDate = dateFormat.format(added_date);
-                txt_date.setText(strDate);
-                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-                selectedDateFormat = selecteddateParse.format(added_date);
-                UpdateDAte(selectedDateFormat);
-                //  UpdateDAte(strDate);
-            }
-        });
+//        ic_left = findViewById(R.id.ic_left);
+//        ic_right = findViewById(R.id.ic_right);
+//        ic_cal_minus = findViewById(R.id.ic_cal_minus);
+//        ic_cal_add = findViewById(R.id.ic_cal_add);
+//
+//        ic_cal_add.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String dtStart = txt_date.getText().toString();
+//                Config.logV("Date----------------" + dtStart);
+//                Date date = null;
+//                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+//                try {
+//                    date = format.parse(dtStart);
+//
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
+//                Date added_date = addDays(date, 1);
+//                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+//                //to convert Date to String, use format method of SimpleDateFormat class.
+//                String strDate = dateFormat.format(added_date);
+//                txt_date.setText(strDate);
+//
+//                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+//                selectedDateFormat = selecteddateParse.format(added_date);
+//                UpdateDAte(selectedDateFormat);
+//            }
+//        });
+//
+//        ic_cal_minus.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String dtStart = txt_date.getText().toString();
+//                Config.logV("Date----------------" + dtStart);
+//                Date date = null;
+//                SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+//                try {
+//                    date = format.parse(dtStart);
+//
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                Date added_date = subtractDays(date, 1);
+//                DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+//                //to convert Date to String, use format method of SimpleDateFormat class.
+//                String strDate = dateFormat.format(added_date);
+//                txt_date.setText(strDate);
+//                DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+//                selectedDateFormat = selecteddateParse.format(added_date);
+//                UpdateDAte(selectedDateFormat);
+//                //  UpdateDAte(strDate);
+//            }
+//        });
 
         ImageView iBackPress = findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
@@ -555,7 +558,7 @@ public class Appointment extends AppCompatActivity {
             }
         });
         tv_title = findViewById(R.id.toolbartitle);
-        tv_title.setText("Appointment");
+        tv_title.setText("Donation");
 
         Typeface tyface = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -565,7 +568,7 @@ public class Appointment extends AppCompatActivity {
         tv_name.setTypeface(tyface);
         btn_checkin.setTypeface(tyface);
 //        tv_queuename.setTypeface(tyface);
-        txt_date.setTypeface(tyface);
+//        txt_date.setTypeface(tyface);
 
         mContext = this;
         mActivity = this;
@@ -663,11 +666,146 @@ public class Appointment extends AppCompatActivity {
                         if (Integer.parseInt(editpartysize.getText().toString()) > maxPartysize) {
                             Toast.makeText(mContext, "Sorry, Max party size allowed is " + maxPartysize, Toast.LENGTH_LONG).show();
                         } else {
-                            ApiAppointment(txt_message);
+                            APIPayment(modifyAccountID);
+                            ApiDonation(txt_message);
+
+                       //     if (!showPaytmWallet && !showPayU) {
+
+                                //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
+//                            } else {
+//                                try {
+//                                    final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+//                                    dialog.setContentView(R.layout.prepayment);
+//                                    dialog.show();
+//
+//                                    Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+//                                    Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+//                                    if (showPaytmWallet) {
+//                                        btn_paytm.setVisibility(View.VISIBLE);
+//                                    } else {
+//                                        btn_paytm.setVisibility(View.GONE);
+//                                    }
+//                                    if (showPayU) {
+//                                        btn_payu.setVisibility(View.VISIBLE);
+//                                    } else {
+//                                        btn_payu.setVisibility(View.GONE);
+//                                    }
+//                                    final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+//                                    TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+//
+//                                    TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
+//
+//                                    txtprepayment.setText("Donation Amount ");
+//
+////                                    DecimalFormat format = new DecimalFormat("0.00");
+//                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(tv_don_amount.getText().toString()))));
+//                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+//                                            "fonts/Montserrat_Bold.otf");
+//                                    txtamt.setTypeface(tyface1);
+//                                    btn_payu.setOnClickListener(new View.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(View v) {
+//                                            //ApiGenerateHash(value, sAmountPay, accountID);
+//                                            // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
+//
+//                                            Config.logV("Account ID --------------" + modifyAccountID);
+//                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin");
+//                                            dialog.dismiss();
+//                                        }
+//                                    });
+//
+//                                    btn_paytm.setOnClickListener(new View.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(View v) {
+//
+//
+//                                            Config.logV("Account ID --------Paytm------" + modifyAccountID);
+//                                            PaytmPayment payment = new PaytmPayment(mContext);
+//                                            payment.ApiGenerateHashPaytm(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "");
+//                                            //payment.generateCheckSum(sAmountPay);
+//                                            dialog.dismiss();
+//                                            //ApiGenerateHash(value, sAmountPay, accountID);
+//                                        }
+//                                    });
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+
                         }
                     } else {
-                        ApiAppointment(txt_message);
-                    }
+                        APIPayment(modifyAccountID);
+                        ApiDonation(txt_message);
+                      //  APIPayment(modifyAccountID);
+//                        try {
+//                            final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+//                            dialog.setContentView(R.layout.prepayment);
+//                            dialog.show();
+//
+//                            Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
+//                            Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+//                          //  if (showPaytmWallet) {
+//                                btn_paytm.setVisibility(View.VISIBLE);
+//                       //     } else {
+//                           //     btn_paytm.setVisibility(View.GONE);
+//                       //     }
+//                       //     if (showPayU) {
+//                                btn_payu.setVisibility(View.VISIBLE);
+//                       //     } else {
+//                            //    btn_payu.setVisibility(View.GONE);
+//                       //     }
+//                            final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+//                            TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+//
+//                            TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
+//
+//                            txtprepayment.setText("Donation Amount ");
+//
+////                                    DecimalFormat format = new DecimalFormat("0.00");
+//                            txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(tv_don_amount.getText().toString()))));
+//                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+//                                    "fonts/Montserrat_Bold.otf");
+//                            txtamt.setTypeface(tyface1);
+//                            JSONObject reader = new JSONObject(response.body().string());
+//                            Iterator iteratorObj = reader.keys();
+//
+//                            while (iteratorObj.hasNext()) {
+//                                String getJsonObj = (String) iteratorObj.next();
+//                                System.out.println("KEY: " + "------>" + getJsonObj);
+//                                value = reader.getString(getJsonObj);
+//
+//
+//                            }
+//                            btn_payu.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    //ApiGenerateHash(value, sAmountPay, accountID);
+//                                    // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
+//
+//                                    Config.logV("Account ID --------------" + modifyAccountID);
+//                                    new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin");
+//                                    dialog.dismiss();
+//                                }
+//                            });
+//
+//                            btn_paytm.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//
+//
+//                                    Config.logV("Account ID --------Paytm------" + modifyAccountID);
+//                                    PaytmPayment payment = new PaytmPayment(mContext);
+//                                    payment.ApiGenerateHashPaytm(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "");
+//                                    //payment.generateCheckSum(sAmountPay);
+//                                    dialog.dismiss();
+//                                    //ApiGenerateHash(value, sAmountPay, accountID);
+//                                }
+//                            });
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+                 }
+
                 }
             }
         });
@@ -684,46 +822,46 @@ public class Appointment extends AppCompatActivity {
         //  tv_editphone = findViewById(R.id.txteditphone);
 
 
-        earliestAvailable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
-                appDate.putExtra("timeslots", timeslots);
-                appDate.putExtra("serviceId", serviceId);
-                appDate.putExtra("mSpinnertext", mSpinnertext);
-                appDate.putExtra("accountId", modifyAccountID);
-                appDate.putExtra("id", id);
-                appDate.putExtra("selectDate",txtWaitTime.getText().toString());
-                startActivity(appDate);
-            }
-        });
+//        earliestAvailable.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
+//                appDate.putExtra("timeslots", timeslots);
+//                appDate.putExtra("serviceId", serviceId);
+//                appDate.putExtra("mSpinnertext", mSpinnertext);
+//                appDate.putExtra("accountId", modifyAccountID);
+//                appDate.putExtra("id", id);
+//                appDate.putExtra("selectDate",txtWaitTime.getText().toString());
+//                startActivity(appDate);
+//            }
+//        });
 
 
-        Date currentTimes = new Date();
-        final SimpleDateFormat sdfs = new SimpleDateFormat(
-                "dd-MM-yyyy", Locale.US);
-        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdfs.format(currentTimes));
-        txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
-
-        txtWaitTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
-                appDate.putExtra("timeslots", timeslots);
-                appDate.putExtra("serviceId", serviceId);
-                appDate.putExtra("mSpinnertext", mSpinnertext);
-                appDate.putExtra("accountId", modifyAccountID);
-                appDate.putExtra("id", id);
-                appDate.putExtra("selectDate",txtWaitTime.getText().toString());
-                startActivity(appDate);
-            }
-        });
+//        Date currentTimes = new Date();
+//        final SimpleDateFormat sdfs = new SimpleDateFormat(
+//                "dd-MM-yyyy", Locale.US);
+//        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        System.out.println("UTC time: " + sdfs.format(currentTimes));
+//        txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
+//
+//        txtWaitTime.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
+//                appDate.putExtra("timeslots", timeslots);
+//                appDate.putExtra("serviceId", serviceId);
+//                appDate.putExtra("mSpinnertext", mSpinnertext);
+//                appDate.putExtra("accountId", modifyAccountID);
+//                appDate.putExtra("id", id);
+//                appDate.putExtra("selectDate",txtWaitTime.getText().toString());
+//                startActivity(appDate);
+//            }
+//        });
 
         tv_addmember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iFamily = new Intent(v.getContext(), CheckinFamilyMemberAppointment.class);
+                Intent iFamily = new Intent(v.getContext(), CheckinFamilyMemberDonation.class);
                 iFamily.putExtra("firstname", mFirstName);
                 iFamily.putExtra("lastname", mLastName);
                 iFamily.putExtra("consumerID", consumerID);
@@ -745,40 +883,40 @@ public class Appointment extends AppCompatActivity {
         mSpinnerService.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
-                livetrack = (((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack());
-                selectedServiceType = (((SearchAppoinment) mSpinnerService.getSelectedItem()).getServiceType());
+                mSpinnertext = ((SearchDonation) mSpinnerService.getSelectedItem()).getId();
+                livetrack = (((SearchDonation) mSpinnerService.getSelectedItem()).getLivetrack());
+                selectedServiceType = (((SearchDonation) mSpinnerService.getSelectedItem()).getServiceType());
                 Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
                 Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
 
-                serviceSelected = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
-                selectedService = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                serviceSelected = ((SearchDonation) mSpinnerService.getSelectedItem()).getName();
+                selectedService = ((SearchDonation) mSpinnerService.getSelectedItem()).getId();
 
 
-                if (selectedServiceType.equalsIgnoreCase("virtualService")) {
-                    callingMode = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
-                    valueNumber = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
-                    if (callingMode.equalsIgnoreCase("WhatsApp")) {
-                        serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                        tv_enterInstructions.setVisibility(View.VISIBLE);
-                        tv_enterInstructions.setText(serviceInstructions);
-                        et_vitualId.setText(phoneNumber);
-                        et_vitualId.setVisibility(View.VISIBLE);
-                    } else {
-                        serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                        tv_enterInstructions.setVisibility(View.VISIBLE);
-                        tv_enterInstructions.setText(serviceInstructions);
-                        et_vitualId.setVisibility(View.GONE);
-                    }
-                } else {
-                    tv_enterInstructions.setVisibility(View.GONE);
-                    et_vitualId.setVisibility(View.GONE);
-                }
+//                if (selectedServiceType.equalsIgnoreCase("virtualService")) {
+//                    callingMode = ((SearchDonation) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
+//                    valueNumber = ((SearchDonation) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
+//                    if (callingMode.equalsIgnoreCase("WhatsApp")) {
+//                        serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+////                        tv_enterInstructions.setVisibility(View.VISIBLE);
+////                        tv_enterInstructions.setText(serviceInstructions);
+////                        et_vitualId.setText(phoneNumber);
+////                        et_vitualId.setVisibility(View.VISIBLE);
+//                    } else {
+//                        serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+////                        tv_enterInstructions.setVisibility(View.VISIBLE);
+////                        tv_enterInstructions.setText(serviceInstructions);
+////                        et_vitualId.setVisibility(View.GONE);
+//                    }
+//                } else {
+////                    tv_enterInstructions.setVisibility(View.GONE);
+////                    et_vitualId.setVisibility(View.GONE);
+//                }
                 //  selectedServiceType =((SearchAppoinment)  mSpinnerService.getSelectedItem()).getServiceType();
 
                 // String firstWord = "Check-in for ";
                 String firstWord = Word_Change;
-                String secondWord = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getName();
+                String secondWord = ((SearchDonation) mSpinnerService.getSelectedItem()).getName();
                 Spannable spannable = new SpannableString(firstWord + secondWord);
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
@@ -810,20 +948,20 @@ public class Appointment extends AppCompatActivity {
                 }
 
 
-                isPrepayment = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getIsPrePayment();
-                Config.logV("Payment------------" + isPrepayment);
-                if (isPrepayment.equalsIgnoreCase("true")) {
-
-                    sAmountPay = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
-
-                    Config.logV("Payment----sAmountPay--------" + sAmountPay);
-                    APIPayment(modifyAccountID);
-
-                } else {
-                    LservicePrepay.setVisibility(View.GONE);
-                }
-
-            }
+//                isPrepayment = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getIsPrePayment();
+//                Config.logV("Payment------------" + isPrepayment);
+//                if (isPrepayment.equalsIgnoreCase("true")) {
+//
+//                    sAmountPay = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
+//
+//                    Config.logV("Payment----sAmountPay--------" + sAmountPay);
+//                    APIPayment(modifyAccountID);
+//
+//                } else {
+//                 //   LservicePrepay.setVisibility(View.GONE);
+//                }
+//
+           }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -841,7 +979,7 @@ public class Appointment extends AppCompatActivity {
                 selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
                 ApiSearchUsers(selectedDepartment);
                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
-                ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
+                ArrayList<SearchDonation> serviceList = new ArrayList<>();
                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
 
                     for (int i = 0; i < gServiceList.size(); i++) {
@@ -858,12 +996,12 @@ public class Appointment extends AppCompatActivity {
                     mSpinnerService.setVisibility(View.GONE);
                     btn_checkin.setVisibility(View.GONE);
                     txt_chooseservice.setVisibility(View.GONE);
-                    Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Donation.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                 } else {
-                    ArrayAdapter<SearchAppoinment> adapter = new ArrayAdapter<SearchAppoinment>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                    ArrayAdapter<SearchDonation> adapter = new ArrayAdapter<SearchDonation>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerService.setAdapter(adapter);
-                    mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
+                    mSpinnertext = ((SearchDonation) LServicesList.get(0)).getId();
                     livetrack = LServicesList.get(0).getLivetrack();
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
@@ -881,124 +1019,124 @@ public class Appointment extends AppCompatActivity {
         });
 
 
-        LcheckinDatepicker.setVisibility(View.GONE);
+    //    LcheckinDatepicker.setVisibility(View.GONE);
 
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Date added_date = addDays(currentTime, 1);
-        DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+//        Date currentTime = new Date();
+//        final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy");
+//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        System.out.println("UTC time: " + sdf.format(currentTime));
+//        Date added_date = addDays(currentTime, 1);
+//        DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
         //to convert Date to String, use format method of SimpleDateFormat class.
 
 
-        String strDate = dateFormat.format(added_date);
+//        String strDate = dateFormat.format(added_date);
         /* txt_date.setText(sdf.format(currentTime));*/
-        txt_date.setText(strDate);
-        DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-        // selectedDateFormat = selecteddateParse.format(currentTime);
-        selectedDateFormat = selecteddateParse.format(added_date);
-        UpdateDAte(selectedDateFormat);
+   //     txt_date.setText(strDate);
+//        DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+//        // selectedDateFormat = selecteddateParse.format(currentTime);
+//        selectedDateFormat = selecteddateParse.format(added_date);
+//        UpdateDAte(selectedDateFormat);
 
 
-        img_calender_checkin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment newFragment = new MyDatePickerDialog();
-                newFragment.show(getSupportFragmentManager(), "date picker");
-            }
-        });
+//        img_calender_checkin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DialogFragment newFragment = new MyDatePickerDialog();
+//                newFragment.show(getSupportFragmentManager(), "date picker");
+//            }
+//        });
         Bundle extrasnew = getIntent().getExtras();
         if (extrasnew != null) {
             uniqueID = extras.getString("uniqueID");
-            ApiJaldeegetS3Coupons(uniqueID);
+           // ApiJaldeegetS3Coupons(uniqueID);
         }
 
 
-        coupon_link.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LcouponCheckin.setVisibility(View.VISIBLE);
-            }
-        });
+//        coupon_link.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                LcouponCheckin.setVisibility(View.VISIBLE);
+//            }
+//        });
 
 
-        applycouponbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                couponEntered = couponEdit.getEditableText().toString();
+//        applycouponbtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                couponEntered = couponEdit.getEditableText().toString();
+//
+//                boolean found = false;
+//                for (int index = 0; index < couponArraylist.size(); index++) {
+//                    if (couponArraylist.get(index).equals(couponEntered)) {
+//                        found = true;
+//                        break;
+//                    }
+//                }
+//                if (found) {
+//
+//                    Toast.makeText(Donation.this, "Coupon already added", Toast.LENGTH_SHORT).show();
+//
+//                    return;
+//                }
+//                found = false;
+//                for (int i = 0; i < s3couponList.size(); i++) {
+//                    if (s3couponList.get(i).getJaldeeCouponCode().equals(couponEntered)) {
+//                        found = true;
+//                        break;
+//                    }
+//                }
+//                if (found) {
+//
+//                    couponArraylist.add(couponEntered);
+//
+//                    couponEdit.setText("");
+//                    Toast.makeText(Donation.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
+//
+//
+//                } else {
+//                    if (couponEntered.equals("")) {
+//                        Toast.makeText(Donation.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(Donation.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//
+//                }
+//                Config.logV("couponArraylist--code-------------------------" + couponArraylist);
+//                list.setVisibility(View.VISIBLE);
+//                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+//                list.setLayoutManager(mLayoutManager);
+//                mAdapter = new CouponlistAdapter(mContext, s3couponList, couponEntered, couponArraylist);
+//                list.setAdapter(mAdapter);
+//                mAdapter.notifyDataSetChanged();
+//            }
+//        });
 
-                boolean found = false;
-                for (int index = 0; index < couponArraylist.size(); index++) {
-                    if (couponArraylist.get(index).equals(couponEntered)) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found) {
-
-                    Toast.makeText(Appointment.this, "Coupon already added", Toast.LENGTH_SHORT).show();
-
-                    return;
-                }
-                found = false;
-                for (int i = 0; i < s3couponList.size(); i++) {
-                    if (s3couponList.get(i).getJaldeeCouponCode().equals(couponEntered)) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found) {
-
-                    couponArraylist.add(couponEntered);
-
-                    couponEdit.setText("");
-                    Toast.makeText(Appointment.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
-
-
-                } else {
-                    if (couponEntered.equals("")) {
-                        Toast.makeText(Appointment.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(Appointment.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
-                    }
-
-
-                }
-                Config.logV("couponArraylist--code-------------------------" + couponArraylist);
-                list.setVisibility(View.VISIBLE);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                list.setLayoutManager(mLayoutManager);
-                mAdapter = new CouponlistAdapter(mContext, s3couponList, couponEntered, couponArraylist);
-                list.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
-            }
-        });
-
-        mtxtDele.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                mtermsandCond.setVisibility(View.INVISIBLE);
-                mtxtDele.setVisibility(View.INVISIBLE);
-                mtxtTermsandCondition.setVisibility(View.INVISIBLE);
-                couponEdit.setText("");
-                mtermsAndConditionDetail.setVisibility(View.INVISIBLE);
-
-            }
-        });
-        mtxtTermsandCondition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                mtermsAndConditionDetail.setVisibility(mtermsAndConditionDetail.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            }
-        });
-        Bundle extrass = getIntent().getExtras();
-        if (extrass != null) {
-            selectDate = extras.getString("selectedDate");
-        }
-    }
+//        mtxtDele.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                mtermsandCond.setVisibility(View.INVISIBLE);
+//                mtxtDele.setVisibility(View.INVISIBLE);
+//                mtxtTermsandCondition.setVisibility(View.INVISIBLE);
+//                couponEdit.setText("");
+//                mtermsAndConditionDetail.setVisibility(View.INVISIBLE);
+//
+//            }
+//        });
+//        mtxtTermsandCondition.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                mtermsAndConditionDetail.setVisibility(mtermsAndConditionDetail.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+//            }
+//        });
+//        Bundle extrass = getIntent().getExtras();
+//        if (extrass != null) {
+//            selectDate = extras.getString("selectedDate");
+//        }
+   }
 
     public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
         //copy file and send new file path
@@ -1542,88 +1680,88 @@ public class Appointment extends AppCompatActivity {
     static String mDate;
 
 
-    public static class MyDatePickerDialog extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Config.logV("Date selected----------------------Selected" + selectedDateFormat);
+//    public static class MyDatePickerDialog extends DialogFragment {
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            Config.logV("Date selected----------------------Selected" + selectedDateFormat);
+//
+//            final Calendar c = Calendar.getInstance();
+//            int year = c.get(Calendar.YEAR);
+//            int month = c.get(Calendar.MONTH);
+//            int day = c.get(Calendar.DAY_OF_MONTH);
+//            String tomorrowdate = year + "-" + month + "-" + day;
+//            DatePickerDialog da;
+//            if (selectedDateFormat.equalsIgnoreCase(tomorrowdate)) {
+//                da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
+//            } else {
+//                Date date = null;
+//                try {
+//                    DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+//                    date = selecteddateParse.parse(selectedDateFormat);
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(date);
+//                da = new DatePickerDialog(getActivity(), dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+//            }
+//
+//            Calendar cal = Calendar.getInstance();
+//            cal.add(Calendar.DAY_OF_YEAR, 1);
+//            // da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+//            da.getDatePicker().setMinDate(cal.getTimeInMillis());
+//
+//            return da;
+//        }
+//
+//        private DatePickerDialog.OnDateSetListener dateSetListener =
+//                new DatePickerDialog.OnDateSetListener() {
+//                    public void onDateSet(DatePicker view, int year, int month, int day) {
+//
+//                        SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
+//                        Date date = new Date(year, month, day - 1);
+//                        String dayOfWeek = simpledateformat.format(date);
+//                        Config.logV("Day-------------" + dayOfWeek);
+//
+//                        mDate = dayOfWeek + ", " + view.getDayOfMonth() +
+//                                "/" + (view.getMonth() + 1) +
+//                                "/" + view.getYear();
+//                        txt_date.setText(mDate);
+//
+//                        selectedDateFormat = view.getYear() + "-" + (view.getMonth() + 1) + "-" + view.getDayOfMonth();
+//                        UpdateDAte(selectedDateFormat);
+//
+//                    }
+//                };
+//    }
 
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            String tomorrowdate = year + "-" + month + "-" + day;
-            DatePickerDialog da;
-            if (selectedDateFormat.equalsIgnoreCase(tomorrowdate)) {
-                da = new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
-            } else {
-                Date date = null;
-                try {
-                    DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-                    date = selecteddateParse.parse(selectedDateFormat);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                da = new DatePickerDialog(getActivity(), dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-            }
-
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            // da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            da.getDatePicker().setMinDate(cal.getTimeInMillis());
-
-            return da;
-        }
-
-        private DatePickerDialog.OnDateSetListener dateSetListener =
-                new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker view, int year, int month, int day) {
-
-                        SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
-                        Date date = new Date(year, month, day - 1);
-                        String dayOfWeek = simpledateformat.format(date);
-                        Config.logV("Day-------------" + dayOfWeek);
-
-                        mDate = dayOfWeek + ", " + view.getDayOfMonth() +
-                                "/" + (view.getMonth() + 1) +
-                                "/" + view.getYear();
-                        txt_date.setText(mDate);
-
-                        selectedDateFormat = view.getYear() + "-" + (view.getMonth() + 1) + "-" + view.getDayOfMonth();
-                        UpdateDAte(selectedDateFormat);
-
-                    }
-                };
-    }
-
-    public static void UpdateDAte(String selectedDate) {
-        Date selecteddate = null;
-        String dtStart = txt_date.getText().toString();
-        SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
-        try {
-            selecteddate = format.parse(dtStart);
-            //  System.out.println(selecteddate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Config.logV("Selected Date---&&&&&&&&&&&#%%%%%%%-------------" + selectedDate);
-        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, String.valueOf(isShowToken));
-
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-        Date tomorow = cal.getTime();
-        if (tomorow.before(selecteddate)) {
-            Config.logV("Date Enabled---------------");
-            ic_cal_minus.setEnabled(true);
-            ic_cal_minus.setImageResource(R.drawable.icon_minus_active);
-
-        } else {
-            Config.logV("Date Disabled---------------");
-            ic_cal_minus.setEnabled(false);
-            ic_cal_minus.setImageResource(R.drawable.icon_minus_disabled);
-        }
-    }
+//    public static void UpdateDAte(String selectedDate) {
+//        Date selecteddate = null;
+////        String dtStart = txt_date.getText().toString();
+//        SimpleDateFormat format = new SimpleDateFormat("EEE, dd/MM/yyyy");
+//        try {
+//            selecteddate = format.parse(dtStart);
+//            //  System.out.println(selecteddate);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        Config.logV("Selected Date---&&&&&&&&&&&#%%%%%%%-------------" + selectedDate);
+//        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, String.valueOf(isShowToken));
+//
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.DAY_OF_YEAR, 1);
+//        Date tomorow = cal.getTime();
+//        if (tomorow.before(selecteddate)) {
+//            Config.logV("Date Enabled---------------");
+//            ic_cal_minus.setEnabled(true);
+//            ic_cal_minus.setImageResource(R.drawable.icon_minus_active);
+//
+//        } else {
+//            Config.logV("Date Disabled---------------");
+//            ic_cal_minus.setEnabled(false);
+//            ic_cal_minus.setImageResource(R.drawable.icon_minus_disabled);
+//        }
+//    }
 
     static int familyMEmID;
 
@@ -1674,29 +1812,29 @@ public class Appointment extends AppCompatActivity {
 
                             if (response.body().getCalculationMode().equalsIgnoreCase("NoCalc") && response.body().isShowTokenId()) {
                                 isShowToken = String.valueOf(response.body().isShowTokenId());
-                                tv_title.setText("Appointment");
-                                Word_Change = "Appointment for ";
-                                btn_checkin.setText("CONFIRM");
-                                toastMessage = "Appointment has been generated successfully";
+                                tv_title.setText("Donation");
+                                Word_Change = "Donation for ";
+                                btn_checkin.setText("Proceed to pay");
+                                toastMessage = "Donation has been generated successfully";
                             } else {
 
                                 if (terminology.equals("order")) {
                                     tv_title.setText("Order");
-                                    Word_Change = "Appointment for ";
-                                    btn_checkin.setText("CONFIRM");
+                                    Word_Change = "Donation for ";
+                                    btn_checkin.setText("Proceed to pay");
                                     toastMessage = "You have ordered successfully";
 
                                 } else {
-                                    tv_title.setText("Appointment for ");
-                                    Word_Change = "Appointment";
-                                    btn_checkin.setText("CONFIRM");
-                                    toastMessage = "Appointment saved successfully ";
+                                    tv_title.setText("Donation for ");
+                                    Word_Change = "Donation";
+                                    btn_checkin.setText("Proceed to pay");
+                                    toastMessage = "Donation saved successfully ";
                                 }
 
 
                             }
                             //ApiSearchViewAppointmentId(serviceId);
-                            ApiSearchViewServiceID(serviceId);
+                            ApiSearchViewServiceID(Integer.parseInt(accountID.split("-")[0]));
                         }
                     }
 
@@ -1822,13 +1960,13 @@ public class Appointment extends AppCompatActivity {
 
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
-                            LservicePrepay.setVisibility(View.VISIBLE);
+                        //   LservicePrepay.setVisibility(View.VISIBLE);
                             Typeface tyface = Typeface.createFromAsset(getAssets(),
                                     "fonts/Montserrat_Bold.otf");
-                            txtprepay.setTypeface(tyface);
+                         //   txtprepay.setTypeface(tyface);
                             txtprepayamount.setTypeface(tyface);
-                            String firstWord = "Prepayment Amount: ";
-                            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(sAmountPay));
+                            String firstWord = "Donation Amount: ";
+                            String secondWord = "₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(tv_don_amount.getText().toString()));
                             Spannable spannable = new SpannableString(firstWord + secondWord);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.colorAccent)),
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -2592,11 +2730,11 @@ public class Appointment extends AppCompatActivity {
         mDialog.show();
 
 
-        Call<ArrayList<SearchAppoinment>> call = apiService.getSearchAppointment(id);
+        Call<ArrayList<SearchDonation>> call = apiService.getSearchDonation(Integer.parseInt(accountID.split("-")[0]));
 
-        call.enqueue(new Callback<ArrayList<SearchAppoinment>>() {
+        call.enqueue(new Callback<ArrayList<SearchDonation>>() {
             @Override
-            public void onResponse(Call<ArrayList<SearchAppoinment>> call, Response<ArrayList<SearchAppoinment>> response) {
+            public void onResponse(Call<ArrayList<SearchDonation>> call, Response<ArrayList<SearchDonation>> response) {
 
                 try {
 
@@ -2610,7 +2748,7 @@ public class Appointment extends AppCompatActivity {
 
 
                         for (int i = 0; i < response.body().size(); i++) {
-                            SearchAppoinment mService = new SearchAppoinment();
+                            SearchDonation mService = new SearchDonation();
                             mService.setName(response.body().get(i).getName());
                             mService.setId(id);
                             mService.setId(response.body().get(i).getId());
@@ -2648,7 +2786,7 @@ public class Appointment extends AppCompatActivity {
                                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                                 mSpinnerDepartment.setAdapter(adapter);
                                                 deptSpinnertext = depResponse.getDepartmentId();
-                                                ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
+                                                ArrayList<SearchDonation> serviceList = new ArrayList<>();
                                                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
                                                 selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
                                                 departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
@@ -2670,11 +2808,11 @@ public class Appointment extends AppCompatActivity {
                                                 mSpinnerService.setVisibility(View.VISIBLE);
                                                 txt_chooseservice.setVisibility(View.VISIBLE);
                                                 Config.logV("mServicesList" + LServicesList.size());
-                                                ArrayAdapter<SearchAppoinment> adapter = new ArrayAdapter<SearchAppoinment>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                ArrayAdapter<SearchDonation> adapter = new ArrayAdapter<SearchDonation>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                                 mSpinnerService.setAdapter(adapter);
-                                                mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
-                                                livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
+                                                mSpinnertext = ((SearchDonation) mSpinnerService.getSelectedItem()).getId();
+                                                livetrack = ((SearchDonation) mSpinnerService.getSelectedItem()).getLivetrack();
                                             } else {
 
                                                 mSpinnerService.setVisibility(View.GONE);
@@ -2708,17 +2846,12 @@ public class Appointment extends AppCompatActivity {
 
                                                     isPrepayment = LServicesList.get(0).getIsPrePayment();
                                                     Config.logV("Payment------------" + isPrepayment);
-                                                    if (isPrepayment.equalsIgnoreCase("true")) {
 
-
-                                                        sAmountPay = LServicesList.get(0).getMinPrePaymentAmount();
                                                         APIPayment(modifyAccountID);
 
                                                         Config.logV("Payment----sAmountPay--------" + sAmountPay);
 
-                                                    } else {
-                                                        LservicePrepay.setVisibility(View.GONE);
-                                                    }
+
 
                                                 }
                                             }
@@ -2768,7 +2901,7 @@ public class Appointment extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<SearchAppoinment>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<SearchDonation>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -3242,14 +3375,14 @@ public class Appointment extends AppCompatActivity {
                             }
 
                             if (timeslots.size()>0) {
-                                earliestAvailable.setText("Earliest available\n" + timeslots.get(0));
+                               // earliestAvailable.setText("Earliest available\n" + timeslots.get(0));
                             }else {
-                                earliestAvailable.setText("Timeslots not available");
+                               // earliestAvailable.setText("Timeslots not available");
                             }
 
 
                         } else {
-                            Toast.makeText(Appointment.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Donation.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -3481,7 +3614,7 @@ public class Appointment extends AppCompatActivity {
         });
     }
 
-    private void ApiAppointment(String txt_addnote) {
+    private void ApiDonation(String txt_addnote) {
 
         phoneNumber = phoneNumberValue.getText().toString();
         uuid = UUID.randomUUID().toString();
@@ -3507,110 +3640,80 @@ public class Appointment extends AppCompatActivity {
         }
 
 
-        JSONObject qjsonObj = new JSONObject();
+
         JSONObject queueobj = new JSONObject();
-        JSONObject waitobj = new JSONObject();
-        JSONObject waitobj1 = new JSONObject();
-        JSONObject waitobj2 = new JSONObject();
-        JSONObject waitobj3 = new JSONObject();
-        JSONObject waitobj4 = new JSONObject();
-        JSONObject sejsonobj = new JSONObject();
-        JSONArray waitlistArray = new JSONArray();
-        JSONObject sjsonobj = new JSONObject();
-        JSONObject virtualService = new JSONObject();
+        JSONObject service = new JSONObject();
+        JSONObject donor = new JSONObject();
+        JSONObject consumer = new JSONObject();
+        JSONObject providerConsumer = new JSONObject();
+        JSONObject location = new JSONObject();
+
 
 
         try {
 
             //   qjsonObj.put("id", queueId);
-            if (txtWaitTime.getText().toString().contains("Today")) {
-                queueobj.put("appmtDate", formattedDate);
-            } else {
-                queueobj.put("appmtDate", txtWaitTime.getText().toString());
-            }
-            queueobj.put("consumerNote", txt_addnote);
-            queueobj.put("phonenumber", phoneNumber);
-            sjsonobj.put("id", schedResponse.get(i).getId());
 
-            if (callingMode != null && callingMode.equalsIgnoreCase("whatsapp")) {
-                virtualService.put("WhatsApp", et_vitualId.getText());
-            } else {
-                virtualService.put("", "");
-            }
-
-            virtualService.put("id", schedResponse.get(i).getId());
-            sejsonobj.put("id", selectedService);
+                queueobj.put("date", formattedDate);
+                queueobj.put("donationAmount", tv_don_amount.getText().toString());
 
 
-            JSONArray couponList = new JSONArray();
-
-            for (int i = 0; i < couponArraylist.size(); i++) {
-
-                couponList.put(couponArraylist.get(i));
-
-            }
-
-            Log.i("kooooooo", couponList.toString());
-
-            queueobj.put("coupons", couponList);
 
 
-            Log.i("couponList", couponList.toString());
 
-            //  service.put("id", serviceId);
+
+
+
+
+
+
+
+
+              service.put("id", selectedService);
+              location.put("id", serviceId);
+
             // service.putOpt("serviceType",mServiceType);
-            if (enableparty) {
-                queueobj.put("partySize", editpartysize.getText().toString());
-            }
 
-            if (familyMEmID == 0) {
-                familyMEmID = consumerID;
-            }
+
+
 
             if (MultiplefamilyList.size() > 0) {
                 for (int i = 0; i < MultiplefamilyList.size(); i++) {
 
-                    waitobj1.put("id", MultiplefamilyList.get(i).getId());
+                    consumer.put("id", MultiplefamilyList.get(i).getId());
+                    providerConsumer.put("id", MultiplefamilyList.get(i).getId());
 
 
-                    waitobj2.put("firstName", MultiplefamilyList.get(i).getFirstName());
+                    donor.put("firstName", MultiplefamilyList.get(i).getFirstName());
 
 
-                    waitobj3.put("lastName", MultiplefamilyList.get(i).getLastName());
-
-                    waitobj4.put("apptTime", mAaptTime);
 
 
-                    waitlistArray.put(waitobj1);
-                    waitlistArray.put(waitobj2);
-                    waitlistArray.put(waitobj3);
-                    waitlistArray.put(waitobj4);
+
+
                 }
             } else {
-                if (familyMEmID == consumerID) {
-                    familyMEmID = 0;
-                }
-                waitobj.put("id", familyMEmID);
-                waitobj.put("firstName", mFirstName);
-                waitobj.put("lastName", mLastName);
 
-                    if (earliestAvailable.getText().toString().contains("Earliest available")) {
-                        if(timeslots.size()>0){
-                        waitobj.put("apptTime", timeslots.get(0));}
-                    } else {
-                        waitobj.put("apptTime", earliestAvailable.getText().toString());
-                    }
-                }
-                waitlistArray.put(waitobj);
+                consumer.put("id", familyMEmID);
+                providerConsumer.put("id", familyMEmID);
+                donor.put("firstName", mFirstName);
 
 
-            queueobj.putOpt("service", sejsonobj);
-            // queueobj.putOpt("queue", qjsonObj);
-            queueobj.putOpt("appmtFor", waitlistArray);
-            queueobj.putOpt("schedule", sjsonobj);
-            if (selectedServiceType.equalsIgnoreCase("virtualService")) {
-                queueobj.putOpt("virtualService", virtualService);
+
             }
+
+
+
+            queueobj.putOpt("service", service);
+            queueobj.putOpt("consumer", consumer);
+            queueobj.putOpt("donor", donor);
+            queueobj.putOpt("providerConsumer", providerConsumer);
+            queueobj.putOpt("location", location);
+
+
+            // queueobj.putOpt("queue", qjsonObj);
+
+
 
             // queueobj.putOpt("service",selectedServiceType);
 
@@ -3621,7 +3724,7 @@ public class Appointment extends AppCompatActivity {
 
         Log.i("QueueObj Checkin", queueobj.toString());
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
-        Call<ResponseBody> call = apiService.Appointment(modifyAccountID, body);
+        Call<ResponseBody> call = apiService.Donation(modifyAccountID, body);
         Config.logV("JSON--------------" + new Gson().toJson(queueobj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -3658,7 +3761,7 @@ public class Appointment extends AppCompatActivity {
                         System.out.println("VALUE: " + "------>" + value);
                         // finish();
                         Config.logV("Response--isPrepayment------------------" + isPrepayment);
-                        if (isPrepayment.equalsIgnoreCase("true")) {
+
                             if (!showPaytmWallet && !showPayU) {
 
                                 //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
@@ -3686,10 +3789,10 @@ public class Appointment extends AppCompatActivity {
 
                                     TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
 
-                                    txtprepayment.setText("Prepayment Amount ");
+                                    txtprepayment.setText("Donation Amount ");
 
 //                                    DecimalFormat format = new DecimalFormat("0.00");
-                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(sAmountPay))));
+                                    txtamt.setText("Rs." + Config.getAmountinTwoDecimalPoints((Double.parseDouble(tv_don_amount.getText().toString()))));
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     txtamt.setTypeface(tyface1);
@@ -3700,7 +3803,7 @@ public class Appointment extends AppCompatActivity {
                                             // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
                                             Config.logV("Account ID --------------" + modifyAccountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin",familyMEmID);
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, "checkin",familyMEmID);
                                             dialog.dismiss();
                                         }
                                     });
@@ -3712,7 +3815,7 @@ public class Appointment extends AppCompatActivity {
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "",familyMEmID);
+                                            payment.ApiGenerateHashPaytm(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, mContext, mActivity, "",familyMEmID);
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
@@ -3724,25 +3827,22 @@ public class Appointment extends AppCompatActivity {
                             }
 
 
-                        } else {
-                            Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
-                            finish();
-                        }
-                    //    ApiCommunicateAppointment(value, String.valueOf(accountID), messageappt, dialog);
 
-                        if (livetrack.equalsIgnoreCase("true")) {
-                            Intent checkinShareLocations = new Intent(mContext, CheckinShareLocationAppointment.class);
-                            checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
-                            checkinShareLocations.putExtra("uuid", value);
-                            checkinShareLocations.putExtra("accountID", modifyAccountID);
-                            checkinShareLocations.putExtra("title", title);
-                            checkinShareLocations.putExtra("terminology", terminology);
-                            checkinShareLocations.putExtra("calcMode", calcMode);
-                            checkinShareLocations.putExtra("queueStartTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
-                            checkinShareLocations.putExtra("queueEndTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
-                            checkinShareLocations.putExtra("from", "appt");
-                            startActivity(checkinShareLocations);
-                        }
+                        //    ApiCommunicateAppointment(value, String.valueOf(accountID), messageappt, dialog);
+
+//                        if (livetrack.equalsIgnoreCase("true")) {
+//                            Intent checkinShareLocations = new Intent(mContext, CheckinShareLocationAppointment.class);
+//                            checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
+//                            checkinShareLocations.putExtra("uuid", value);
+//                            checkinShareLocations.putExtra("accountID", modifyAccountID);
+//                            checkinShareLocations.putExtra("title", title);
+//                            checkinShareLocations.putExtra("terminology", terminology);
+//                            checkinShareLocations.putExtra("calcMode", calcMode);
+//                            checkinShareLocations.putExtra("queueStartTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
+//                            checkinShareLocations.putExtra("queueEndTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
+//                            checkinShareLocations.putExtra("from", "appt");
+//                            startActivity(checkinShareLocations);
+//                        }
 
 
                     } else {
@@ -3995,25 +4095,25 @@ public class Appointment extends AppCompatActivity {
     }
 
 
-    public static void timeslotdate(String timeDate) {
-        dateTime = timeDate;
-        earliestAvailable.setText(dateTime);
-        mAaptTime = dateTime;
-    }
-
-    public static void timeslotdates(String timeDates) {
-
-        txtWaitTime.setText(timeDates);
-        if (timeDates.equalsIgnoreCase("")) {
-            Date currentTimes = new Date();
-            final SimpleDateFormat sdfs = new SimpleDateFormat(
-                    "dd-MM-yyyy", Locale.US);
-            sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
-            System.out.println("UTC time: " + sdfs.format(currentTimes));
-            txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
-        }
-
-    }
+//    public static void timeslotdate(String timeDate) {
+//        dateTime = timeDate;
+//        earliestAvailable.setText(dateTime);
+//        mAaptTime = dateTime;
+//    }
+//
+//    public static void timeslotdates(String timeDates) {
+//
+//        txtWaitTime.setText(timeDates);
+//        if (timeDates.equalsIgnoreCase("")) {
+//            Date currentTimes = new Date();
+//            final SimpleDateFormat sdfs = new SimpleDateFormat(
+//                    "dd-MM-yyyy", Locale.US);
+//            sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
+//            System.out.println("UTC time: " + sdfs.format(currentTimes));
+//            txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
+//        }
+//
+//    }
 
     SearchViewDetail mBusinessDataList;
 

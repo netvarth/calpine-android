@@ -52,10 +52,10 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_loc,tv_date,tv_waittime,tv_Open,tv_qmessage;
-        Button btn_checkin,btnappointments;
+        Button btn_checkin,btnappointments,btndonations;
         View divider;
         RecyclerView recycleview_contact;
-        LinearLayout appoinmentLayouts;
+        LinearLayout appoinmentLayouts, donationLayouts;
         public MyViewHolder(View view) {
             super(view);
 
@@ -65,10 +65,12 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
             tv_Open=(TextView)view.findViewById(R.id.txtOpen);
             btn_checkin=(Button) view.findViewById(R.id.btn_checkin);
             btnappointments=(Button) view.findViewById(R.id.btnappointments);
+            btndonations = (Button) view.findViewById(R.id.btndonations);
             divider=(View)view.findViewById(R.id.divider);
             recycleview_contact=(RecyclerView)view.findViewById(R.id.recycleview_contact);
             tv_qmessage = view.findViewById(R.id.qmessage);
             appoinmentLayouts = view.findViewById(R.id.appoinmentLayouts);
+            donationLayouts = view.findViewById(R.id.donationLayouts);
         }
     }
 

@@ -58,6 +58,7 @@ public class PaymentActivity extends AppCompatActivity {
     Button btn_paytm;
     Button btn_payu;
     String displayNotes;
+    int customerId;
 
 
     @Override
@@ -88,6 +89,7 @@ public class PaymentActivity extends AppCompatActivity {
             accountID = extras.getString("accountID");
             amountDue = extras.getDouble("amountDue");
             purpose = extras.getString("purpose");
+            customerId = extras.getInt("customerId");
 
 
         }
@@ -235,7 +237,7 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, purpose, "dashboard");
+               new PaymentGateway(mContext, mActivity).ApiGenerateHash1(ynwUUID, String.valueOf(amountDue), accountID, purpose, "dashboard",customerId);
 
             }
         });
@@ -245,7 +247,7 @@ public class PaymentActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 PaytmPayment payment = new PaytmPayment(mContext);
-                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose,  mContext, mActivity, "home");
+                payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, purpose,  mContext, mActivity, "home",customerId);
             }
         });
 

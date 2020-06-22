@@ -1225,6 +1225,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setJdn(response.body().getHits().getHit().get(i).getFields().getJdn());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
                                 search.setOnline_profile(response.body().getHits().getHit().get(i).getFields().getOnline_profile());
+                                search.setDonation_status(response.body().getHits().getHit().get(i).getFields().getDonation_status());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
                                 search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
@@ -1277,8 +1278,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     search.setAppt_services(response.body().getHits().getHit().get(i).getFields().getAppt_services());
                                 }
 
-                                if (response.body().getHits().getHit().get(i).getFields().getAppt_services() != null) {
-                                    search.setAppt_services(response.body().getHits().getHit().get(i).getFields().getAppt_services());
+                                if (response.body().getHits().getHit().get(i).getFields().getDonation_services() != null) {
+                                    search.setDonation_services(response.body().getHits().getHit().get(i).getFields().getDonation_services());
                                 }
 
                                 if (response.body().getHits().getHit().get(i).getFields().getDepartments() != null) {
@@ -1486,6 +1487,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setJdn(response.body().getHits().getHit().get(i).getFields().getJdn());
                                 search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
                                 search.setOnline_profile(response.body().getHits().getHit().get(i).getFields().getOnline_profile());
+                                search.setDonation_status(response.body().getHits().getHit().get(i).getFields().getDonation_status());
                                 search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
                                 search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
                                 search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
@@ -1533,6 +1535,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (response.body().getHits().getHit().get(i).getFields().getAppt_services() != null) {
                                     search.setAppt_services(response.body().getHits().getHit().get(i).getFields().getAppt_services());
                                 }
+
+                                if (response.body().getHits().getHit().get(i).getFields().getDonation_services() != null) {
+                                    search.setDonation_services(response.body().getHits().getHit().get(i).getFields().getDonation_services());
+                                }
+
                                 if (response.body().getHits().getHit().get(i).getFields().getDepartments() != null) {
                                     search.setDepartments(response.body().getHits().getHit().get(i).getFields().getDepartments());
                                 }
@@ -1734,6 +1741,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
                                     searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
                                     searchList.setOnline_profile(mSearchRespPass.get(i).getOnline_profile());
+                                    searchList.setDonation_status(mSearchRespPass.get(i).getDonation_status());
                                     searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
 
 
@@ -1772,6 +1780,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                     if (mSearchRespPass.get(i).getAppt_services() != null) {
                                         searchList.setAppt_services(mSearchRespPass.get(i).getAppt_services());
+                                    }
+                                    if (mSearchRespPass.get(i).getDonation_services() != null) {
+                                        searchList.setDonation_services(mSearchRespPass.get(i).getDonation_services());
                                     }
 
                                     if (mSearchRespPass.get(i).getDepartments() != null) {
@@ -1924,6 +1935,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
                                     searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
                                     searchList.setOnline_profile(mSearchRespPass.get(i).getOnline_profile());
+                                    searchList.setDonation_status(mSearchRespPass.get(i).getDonation_status());
                                     searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
                                     searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
 
@@ -1961,6 +1973,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                     if (mSearchRespPass.get(i).getAppt_services() != null) {
                                         searchList.setAppt_services(mSearchRespPass.get(i).getAppt_services());
+                                    }
+
+                                    if (mSearchRespPass.get(i).getDonation_services() != null) {
+                                        searchList.setDonation_services(mSearchRespPass.get(i).getDonation_services());
                                     }
 
                                     if (mSearchRespPass.get(i).getBusiness_hours1() != null) {

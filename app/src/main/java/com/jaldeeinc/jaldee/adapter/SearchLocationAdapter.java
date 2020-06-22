@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
+import com.jaldeeinc.jaldee.activities.Donation;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
@@ -64,11 +65,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     static Context mContext;
     String secondWord, firstWord;
     ArrayList serviceNames = new ArrayList();
+    ArrayList serviceDonationNames = new ArrayList();
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate, txt_msg, txt_peopleahead;
         Button btn_checkin;
-        LinearLayout mLSeriveLayout, mLayouthide, LexpandCheckin, Ldirectionlayout, LService_2, LWorkinHrs, LDepartment_2, LAppointment, LApp_Services;
+        LinearLayout mLSeriveLayout, mLayouthide, LexpandCheckin, Ldirectionlayout, LService_2, LWorkinHrs, LDepartment_2, LAppointment, LApp_Services, LDonation, LDont_Services;
         ImageView img_arrow;
         RecyclerView recycle_parking;
         RelativeLayout layout_exapnd;
@@ -76,8 +78,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         Button btn_checkin_expand;
         TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices, txtdayofweek;
         TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
-        TextView txt_earliestAvailable, txt_apptservices;
-        Button btn_appointments;
+        TextView txt_earliestAvailable, txt_apptservices, txt_dontservices;
+        Button btn_appointments, btn_donations;
 
         ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
         String txtdataMon = "";
@@ -128,6 +130,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             btn_appointments = view.findViewById(R.id.btnappointments);
             LApp_Services = view.findViewById(R.id.appointmentList);
             txt_apptservices = view.findViewById(R.id.txtapptservices);
+            LDonation = view.findViewById(R.id.donationLayouts);
+            btn_donations = view.findViewById(R.id.btndonations);
+            LDont_Services = view.findViewById(R.id.donationList);
+            txt_dontservices = view.findViewById(R.id.txtdontservices);
         }
     }
 
@@ -268,6 +274,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.tv_open.setTypeface(tyface);
         myViewHolder.btn_checkin.setTypeface(tyface);
         myViewHolder.btn_appointments.setTypeface(tyface);
+        myViewHolder.btn_donations.setTypeface(tyface);
 
         listType.clear();
         if (searchLoclist.getParkingType() != null) {
@@ -561,6 +568,23 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         });
 
+        myViewHolder.btn_donations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iAppointment = new Intent(v.getContext(), Donation.class);
+                iAppointment.putExtra("serviceId", searchLoclist.getId());
+                iAppointment.putExtra("uniqueID", mUniqueID);
+                iAppointment.putExtra("accountID", accountID);
+                iAppointment.putExtra("from", "searchdetail_checkin");
+                iAppointment.putExtra("title", mTitle);
+                iAppointment.putExtra("place", searchLoclist.getPlace());
+                iAppointment.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
+                iAppointment.putExtra("sector", sector);
+                iAppointment.putExtra("subsector", subsector);
+                iAppointment.putExtra("terminology", terminology);
+                mContext.startActivity(iAppointment);
+            }
+        });
 
         myViewHolder.layout_exapnd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1031,6 +1055,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 myViewHolder.LApp_Services.setVisibility(View.GONE);
                 myViewHolder.txt_apptservices.setVisibility(View.GONE);
             }
+
             if (mSearachAwsResponse != null) {
                 if (mSearachAwsResponse.getHits() != null) {
                     if (mSearachAwsResponse.getHits().getHit() != null) {
@@ -1133,6 +1158,122 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         }
 
+
+        if (mSearachAwsResponse != null) {
+            if (mSearachAwsResponse.getHits() != null) {
+                if (mSearachAwsResponse.getHits().getHit() != null) {
+
+                    for (int m = 0; m < mSearachAwsResponse.getHits().getHit().size(); m++) {
+                        if (online_presence) {
+                            if (mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_status()!=null && mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_status().equals("1")) {
+                                myViewHolder.LDonation.setVisibility(View.VISIBLE);
+                                myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
+                                myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
+                            } else {
+                                myViewHolder.LDonation.setVisibility(View.GONE);
+                                myViewHolder.LDont_Services.setVisibility(View.GONE);
+                                myViewHolder.txt_dontservices.setVisibility(View.GONE);
+                            }
+                        } else {
+                            myViewHolder.LDonation.setVisibility(View.GONE);
+                            myViewHolder.LDont_Services.setVisibility(View.GONE);
+                            myViewHolder.txt_dontservices.setVisibility(View.GONE);
+                        }
+
+                            if (mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_services() != null) {
+                                //  myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
+                                try {
+                                    String serviceName = mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_services().toString();
+                                    try {
+                                        JSONArray jsonArray = new JSONArray(serviceName);
+                                        String jsonArry = jsonArray.getString(0);
+                                        JSONArray jsonArray1 = new JSONArray(jsonArry);
+                                        for (int i = 0; i < jsonArray1.length(); i++) {
+                                            JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                                            String name = jsonObject.optString("name");
+                                            serviceDonationNames.add(i, name);
+
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                                if (serviceDonationNames.size() > 0) {
+                                    myViewHolder.LDont_Services.removeAllViews();
+                                    //  myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+                                    int size = 0;
+                                    if (serviceDonationNames.size() == 1) {
+                                        size = 1;
+                                    } else {
+                                        if (serviceDonationNames.size() == 2)
+                                            size = 2;
+                                        else
+                                            size = 3;
+                                    }
+                                    for (int i = 0; i < size; i++) {
+                                        TextView dynaText = new TextView(mContext);
+                                        tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                                "fonts/Montserrat_Regular.otf");
+                                        dynaText.setTypeface(tyface);
+                                        dynaText.setText(serviceDonationNames.get(i).toString());
+                                        dynaText.setTextSize(13);
+                                        dynaText.setPadding(5, 0, 5, 0);
+                                        dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+                                        // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
+
+                                        //  dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+                                        dynaText.setMaxLines(1);
+                                        if (size > 2) {
+                                            dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                            dynaText.setMaxEms(10);
+                                        }
+                                        final int finalI = i;
+                                        dynaText.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+                                            }
+                                        });
+                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                        params.setMargins(0, 0, 20, 0);
+
+                                        dynaText.setLayoutParams(params);
+                                        myViewHolder.LDont_Services.addView(dynaText);
+                                    }
+                                    if (size > 3) {
+                                        TextView dynaText = new TextView(mContext);
+                                        dynaText.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                // mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid());
+                                            }
+                                        });
+                                        dynaText.setGravity(Gravity.CENTER);
+                                        dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+                                        dynaText.setText(" ... ");
+                                        myViewHolder.LDont_Services.addView(dynaText);
+                                    }
+                                } else {
+                                    myViewHolder.LDont_Services.setVisibility(View.GONE);
+                                    myViewHolder.txt_dontservices.setVisibility(View.GONE);
+
+
+                                }
+
+                            } else {
+                                myViewHolder.LDont_Services.setVisibility(View.GONE);
+                                myViewHolder.txt_dontservices.setVisibility(View.GONE);
+
+                            }
+
+                    }
+                }
+            }
+        }
 //Queue---- for button check-in,waittime checking
 
         Date c = Calendar.getInstance().getTime();

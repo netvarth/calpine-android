@@ -91,6 +91,7 @@ public class BillActivity extends AppCompatActivity {
     String purpose;
     String displayNotes;
     TextView tv_billnotes, tv_notes;
+    int customerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +161,7 @@ public class BillActivity extends AppCompatActivity {
             payStatus = extras.getString("payStatus");
             consumer = extras.getString("consumer");
             purpose = extras.getString("purpose");
+            customerId = extras.getInt("customerId");
         }
 
 
@@ -241,7 +243,7 @@ public class BillActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
 
-                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill");
+                                new PaymentGateway(mCOntext, mActivity).ApiGenerateHash1(ynwUUID, sAmountPay, accountID, purpose, "bill",customerId);
 
                                 dialog.dismiss();
                             }
@@ -252,7 +254,7 @@ public class BillActivity extends AppCompatActivity {
                             public void onClick(View v) {
 
                                 PaytmPayment payment = new PaytmPayment(mCOntext);
-                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "");
+                                payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID, purpose, mCOntext, mActivity, "",customerId);
                                 dialog.dismiss();
                             }
                         });
