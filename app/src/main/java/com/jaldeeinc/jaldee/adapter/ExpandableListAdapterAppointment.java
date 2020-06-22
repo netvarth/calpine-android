@@ -479,23 +479,48 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 distance(Double.parseDouble(activelist.getLocation().getLattitude()),Double.parseDouble(activelist.getLocation().getLongitude()),12.971599,77.594563);
             }
 
+            String text = "Jaldee recommends you always";
+            String text3 = " share your arrival time";
+            String text4 = " with " + activelist.getProviderAccount().getBusinessName();
+
+            String text2 = text + text3 + text4;
+
+            Spannable spannable = new SpannableString(text2);
+
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), (text.length()), (text.length() + text3.length()) , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+            String text5 =  "You are";
+            String text6 =  " sharing your arrival time ";
+            String text7 =  "with " + activelist.getProviderAccount().getBusinessName();
+
+            String text8 = text5 + text6 + text7;
+
+            Spannable spannables = new SpannableString(text8);
+
+            spannables.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), (text5.length()), (text5.length() + text6.length()) , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+
+
             liveTrackLayout.setVisibility(View.VISIBLE);
             if (!gps_enabled && !network_enabled) {
-                tv_enable_loc.setText("Oops, your location is not enabled");
-                tv_recom_loc.setText("Jaldee recommends you enable location");
+                tv_enable_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getProviderAccount().getBusinessName());
+                tv_recom_loc.setText("Jaldee recommends you to enable location");
                 tv_recom_loc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 tv_recom_liveloc.setVisibility(View.GONE);
             } else if (activelist.getJaldeeApptDistanceTime() != null && activelist.getJaldeeApptDistanceTime().getJaldeeDistanceTime() != null) {
-                tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getProviderAccount().getBusinessName());
-                tv_recom_liveloc.setText("You are sharing your arrival time with " + activelist.getProviderAccount().getBusinessName());
-                tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_tickmark, 0);
+                tv_enable_loc.setVisibility(View.GONE);
+                tv_recom_liveloc.setText(spannables, TextView.BufferType.SPANNABLE);
                 tv_recom_loc.setVisibility(View.GONE);
+
             } else {
-              //  tv_enable_loc.setText("You are "+ String.format("%.2f", dist)+" km away from "+ activelist.getProviderAccount().getBusinessName());
-                tv_enable_loc.setText("");
-                tv_recom_loc.setText("Oops!! you are NOT sharing your live location with " + activelist.getProviderAccount().getBusinessName());
-                tv_recom_liveloc.setText("Jaldee recommends you to let the " + activelist.getProviderAccount().getBusinessName() + " know your arrival time so that you won't miss your turn");
+
+                tv_enable_loc.setVisibility(View.GONE);
+                tv_recom_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getProviderAccount().getBusinessName());
+                tv_recom_liveloc.setText(spannable, TextView.BufferType.SPANNABLE);
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+
             }
 
         } else {
@@ -764,7 +789,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         } else {
             icon_bill.setText("Bill");
         }
-        if (activelist.getBillViewStatus() != null) {
+        if (activelist.getBillViewStatus() != null && !activelist.getApptStatus().equalsIgnoreCase("cancelled")) {
             if (activelist.getBillViewStatus().equalsIgnoreCase("Show")) {
                 icon_bill.setVisibility(View.VISIBLE);
             } else {

@@ -5,5 +5,5 @@ package com.jaldeeinc.jaldee.callback;
  */
 
 public interface LocationSearchCallback {
-    void onMethodCallback(String value,Double lat,Double longtitude,String locName) ;
+    void onMethodCallback(String value, Double lat, Double longtitude, String locName, String typ) ;
 }

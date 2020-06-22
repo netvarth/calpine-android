@@ -146,6 +146,8 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     AdapterCallback mInterface;
     static String latitude;
     static String longitude;
+    static String mtyp;
+
     String searchTxt, spinnerTxt;
     String getQuery_previous = "";
 
@@ -167,6 +169,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     String selected = "";
     String querypass1 = "";
+    double distance;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -241,6 +244,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
             }
             latitude = bundle.getString("latitude", "");
             longitude = bundle.getString("longitude", "");
+            mtyp = bundle.getString("typ", "");
 
             s_LocName = bundle.getString("locName", "");
             passformula = bundle.getString("passformula", "");
@@ -995,7 +999,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 Config.logV("show_subdomain---------------" + show_subdomain);
                 //  mSearchView.setQuery("", false);
                 String mSector;
-                LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
+                if(mtyp==null){
+                    mtyp = "city";
+                }
+                LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude),mtyp);
                 double upperLeftLat = Lanlong.getUpperLeftLat();
                 double upperLeftLon = Lanlong.getUpperLeftLon();
                 double lowerRightLat = Lanlong.getLowerRightLat();
@@ -1105,10 +1112,19 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         return row;
     }
 
-    public LanLong getLocationNearBy(double lant, double longt) {
+    public LanLong getLocationNearBy(double lant, double longt,String typ) {
 
-        double distance = 40;/*;DISTANCE_AREA: 5, // in Km*/
-
+        if(typ.equalsIgnoreCase("state")){
+            distance = 300;
+        }else if(typ.equalsIgnoreCase("city")){
+            distance = 40;
+        }else if(typ.equalsIgnoreCase("area")){
+            distance = 5;
+        }else if(typ.equalsIgnoreCase("metro")){
+            distance = 10;
+        }else if(typ.equalsIgnoreCase("capital")){
+            distance = 20;
+        }
         double distInDegree = distance / 111;
         double upperLeftLat = lant - distInDegree;
         double upperLeftLon = longt + distInDegree;
@@ -2271,7 +2287,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Log.i("querypass", querypass);
 
         //  mSearchView.setQuery("", false);
-        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        if(mtyp==null){
+            mtyp = "city";
+        }
+        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude),mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();
@@ -2413,7 +2432,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
         show_subdomain = false;
         //  mSearchView.setQuery("", false);
-        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        if(mtyp==null){
+            mtyp = "city";
+        }
+        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude),mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();
@@ -2503,11 +2525,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     }
 
 
-    public static boolean UpdateLocationSearch(String mlatitude, String mlongitude, String locNme) {
+    public static boolean UpdateLocationSearch(String mlatitude, String mlongitude, String locNme,String typ) {
         Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude);
         try {
             latitude = mlatitude;
             longitude = mlongitude;
+            mtyp = typ;
 
             // mlocName = locNme;
             txt_toolbarlocation.setVisibility(View.VISIBLE);
@@ -3668,7 +3691,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
     public void SortBy(String sort) {
         Config.logV("zeo" + sort);
-        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        if(mtyp==null){
+            mtyp = "city";
+        }
+        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude),mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();
@@ -3709,7 +3735,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     public void MoreItemClick(String pass_formula, String query) {
 
         //  mSearchView.setQuery("", false);
-        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude));
+        if(mtyp==null){
+            mtyp = "city";
+        }
+        LanLong Lanlong = getLocationNearBy(Double.parseDouble(latitude), Double.parseDouble(longitude),mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();

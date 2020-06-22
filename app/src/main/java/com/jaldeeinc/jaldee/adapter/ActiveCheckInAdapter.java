@@ -428,7 +428,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         }
 
         if ((activelist.getBillViewStatus()!=null) ) {
-            if(activelist.getBillViewStatus().equalsIgnoreCase("Show")) {
+            if(activelist.getBillViewStatus().equalsIgnoreCase("Show") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
 
                 myViewHolder.icon_bill.setVisibility(View.VISIBLE);
             }else{

@@ -535,9 +535,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), (text.length()), (text.length() + text3.length()) , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-            String text5 =  "You are sharing";
-            String text6 =  " your arrival time with ";
-            String text7 =  activelist.getBusinessName();
+            String text5 =  "You are ";
+            String text6 =  "sharing your arrival time ";
+            String text7 =  "with "+activelist.getBusinessName();
 
             String text8 = text5 + text6 + text7;
 
@@ -563,7 +563,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
             else {
                 tv_enable_loc.setVisibility(View.GONE);
-                tv_recom_loc.setText("Oops!!, You are NOT sharing your live location with " + activelist.getBusinessName());
+                tv_recom_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getBusinessName());
                 tv_recom_liveloc.setText(spannable, TextView.BufferType.SPANNABLE);
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             }
@@ -845,7 +845,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         }
 
         Config.logV("Bill------------" + activelist.getWaitlistStatus());
-        if (activelist.getBillViewStatus() != null) {
+        if (activelist.getBillViewStatus() != null && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
             if (activelist.getBillViewStatus().equalsIgnoreCase("Show")) {
                 icon_bill.setVisibility(View.VISIBLE);
             } else {

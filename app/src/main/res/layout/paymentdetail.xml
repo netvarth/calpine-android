@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/contactLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="@color/spinnerbg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/hometopbar"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/custom_toolbar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:padding="@dimen/padding5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/input_border_gray_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_appname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="@dimen/txtsize_subtitle"
+                android:textColor="@color/title_consu"
+                android:layout_marginBottom="@dimen/padding20"
+                android:text="Payment Details" />
+
+
+            <LinearLayout
+                android:id="@+id/providerlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Provider : "
+                    android:textColor="#AAA"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/provider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pattupurakkal Devi Temple"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_hint" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dateandtimeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date and Time : "
+                    android:textColor="#AAA"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/dateandtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20/06/2020 20:49:22 PM"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_hint" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/modeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mode : "
+                    android:textColor="#AAA"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Self pay"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_hint" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/paymentModeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Payment Mode : "
+                    android:textColor="#AAA"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/paymentMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DC"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_hint" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/paymentGatewayLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Payment Gateway : "
+                    android:textColor="#AAA"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/paymentGateway"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PAYUMONEY"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_hint" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/amoutLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Amount : "
+                    android:textColor="#AAA"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹ 1.00"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_hint" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/statusLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status : "
+                    android:textColor="#AAA"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SUCCESS"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_hint" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/refundableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Refudable : "
+                    android:textColor="#AAA"
+                    android:textSize="@dimen/txtsize_hint" />
+
+                <TextView
+                    android:id="@+id/refundable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹ 0.00"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_hint" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

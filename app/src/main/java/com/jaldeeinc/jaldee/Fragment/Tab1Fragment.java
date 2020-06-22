@@ -131,25 +131,18 @@ import static android.support.v4.content.ContextCompat.getSystemService;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapterCallback,ActiveAdapterOnCallback {
+public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback,ActiveAdapterOnCallback {
 
-    String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
 
-    public CheckinsFragmentCopy() {
-        // Required empty public constructor
+    public Tab1Fragment() {
 
     }
 
-    String simpleFileName1 = "note1.txt";
-    String simpleFileName2 = "note2.txt";
-    String simpleFileName3 = "note3.txt";
     boolean firstTimeRating = false;
     Context mContext;
     Activity mActivity;
-    private int PICK_IMAGE_REQUEST = 1;
 
-    //  ArrayList<ArrayList<ActiveCheckIn>> mCheckList = new ArrayList<>();
     ArrayList<ActiveCheckIn> mCheckFutureList = new ArrayList<>();
     ArrayList<ActiveAppointment> mCheckFutureListAppointment = new ArrayList<>();
     ArrayList<ActiveCheckIn> mCheckTodayList = new ArrayList<>();
@@ -165,7 +158,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     ActiveAdapterOnCallback mCallback;
     ExpandableListView expandlist;
     ExpandableListView expandlistAppointment;
-    /*TextView  tv_notodaychekcin, tv_nofuturecheckin, tv_nocheckold;*/
 
     TextView tv_attach, tv_camera;
     private static final String IMAGE_DIRECTORY = "/demonuts";
@@ -193,7 +185,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View row = inflater.inflate(R.layout.fragment_checkins_copy, container, false);
+        View row = inflater.inflate(R.layout.fragment_tab1, container, false);
         mContext = getActivity();
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
@@ -215,8 +207,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
         expandlistAppointment = (ExpandableListView) row.findViewById(R.id.appointmentView);
 
-        ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
-        iBackPress.setVisibility(View.GONE);
 
 
         LocationManager service = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
@@ -247,48 +237,23 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         txtCheckins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (expandlist.getVisibility() == View.GONE) {
-                    expandlist.setVisibility(View.VISIBLE);
-                    txtCheckins.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                } else {
-                    expandlist.setVisibility(View.GONE);
-                    txtCheckins.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                }
+                CheckinsMyJaldee pfFragment = new CheckinsMyJaldee();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, pfFragment).commit();
             }
         });
         txtAppointments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (expandlistAppointment.getVisibility() == View.GONE) {
-                    expandlistAppointment.setVisibility(View.VISIBLE);
-                    txtAppointments.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                } else {
-                    expandlistAppointment.setVisibility(View.GONE);
-                    txtAppointments.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                }
+                AppointmentMyJaldee afFragment = new AppointmentMyJaldee();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, afFragment).commit();
             }
         });
 
-//        txtDonations.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (txtnodonations.getVisibility() == View.GONE) {
-//                    txtnodonations.setVisibility(View.VISIBLE);
-//                    txtDonations.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-//                } else {
-//                    txtnodonations.setVisibility(View.GONE);
-//                    txtDonations.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-//                }
-//
-//            }
-//        });
 
-
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_title.setText("My Jaldee");
-        tv_title.setTypeface(tyface);
 
 
         if (Config.isOnline(mContext)) {
@@ -314,7 +279,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         if (Config.isOnline(mContext)) {
             ApiTodayAppointmentList();
         }
-
 
         return row;
     }
@@ -1035,7 +999,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
 
     @Override
-    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName,int customerId) {
+    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
@@ -1104,7 +1068,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer,int customerId) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer) {
         Log.i("Purpose: ", "billPayment");
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
@@ -1117,7 +1081,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue,int customerID) {
+    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue) {
         Log.i("Purpose: ", "prePayment");
         // APIPayment(accountID, ynwUUID, amountDue);
         Intent i = new Intent(mContext, PaymentActivity.class);
@@ -2050,7 +2014,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         //Setting Dialog Title
-     //   alertDialog.setTitle("GPSAlertDialogTitle");
+        //   alertDialog.setTitle("GPSAlertDialogTitle");
 
         //Setting Dialog Message
         alertDialog.setMessage("To continue, turn on device location");

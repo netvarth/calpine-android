@@ -143,6 +143,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
     static double latitude;
     static double longitude;
+
     TextView tv_activechkin,tv_activeappt, tv_popular;
     LinearLayout LpopularSearch, LActiveCheckin,LActiveAppointment, LinearPopularSearch,LMore,LinearMorePopularSearch;
     TextView tv_More;
@@ -156,7 +157,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     String spinnerTxtPass;
     ActiveAdapterOnCallback mInterface;
     static String mlocName;
+    static String mtyp;
     ImageView img_arrow;
+    double distance;
 
     String subdomainquery, subdomainName;
 
@@ -314,7 +317,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             latitude = Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("lat", ""));
             longitude = Double.valueOf(SharedPreference.getInstance(mContext).getStringValue("longitu", ""));
             mlocName = SharedPreference.getInstance(mContext).getStringValue("locnme", "");
-            UpdateLocation(latitude, longitude, mlocName);
+            mtyp = SharedPreference.getInstance(mContext).getStringValue("typ", "");
+
+            UpdateLocation(latitude, longitude, mlocName,mtyp);
 
 
         } else {
@@ -850,7 +855,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 Config.logV("Popular Text__________@@@Dele111");
                 mSearchView.setQuery("", false);
 
-                LanLong Lanlong = getLocationNearBy(latitude, longitude);
+                if(mtyp==null){
+                    mtyp = "city";
+                }
+                LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
                 double upperLeftLat = Lanlong.getUpperLeftLat();
                 double upperLeftLon = Lanlong.getUpperLeftLon();
                 double lowerRightLat = Lanlong.getLowerRightLat();
@@ -933,6 +941,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     mSearchtxt = cell.getMdisplayname();
                     Config.logV("SEARCH TXT 99999" + mSearchtxt);
                     bundle.putString("searchtxt", mSearchtxt);
+                    bundle.putString("typ", mtyp);
                     pfFragment.setArguments(bundle);
 
 
@@ -1380,9 +1389,23 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     }
 
-    public LanLong getLocationNearBy(double lant, double longt) {
+    public LanLong getLocationNearBy(double lant, double longt,String typ) {
 
-        double distance = 40;/*;DISTANCE_AREA: 5, // in Km*/
+
+        if(typ.equalsIgnoreCase("state")){
+            distance = 300;
+        }else if(typ.equalsIgnoreCase("city")){
+            distance = 40;
+        }else if(typ.equalsIgnoreCase("area")){
+            distance = 5;
+        }else if(typ.equalsIgnoreCase("metro")){
+            distance = 10;
+        }else if(typ.equalsIgnoreCase("capital")){
+            distance = 20;
+        }
+
+
+
 
         double distInDegree = distance / 111;
         double upperLeftLat = lant - distInDegree;
@@ -1405,7 +1428,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     public void FunPopularSearch(String sector, String category, String name) {
         String mSector;
-        LanLong Lanlong = getLocationNearBy(latitude, longitude);
+        if(mtyp==null){
+            mtyp = "city";
+        }
+        LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();
@@ -1493,6 +1519,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             bundle.putString("subdomainName", subdomainName);
             Config.logV("Popular Text_______$$$$_______" + mPopularSearchtxt);
             bundle.putString("searchtxt", mPopularSearchtxt);
+            bundle.putString("typ", mtyp);
             pfFragment.setArguments(bundle);
             Config.logV("APi SUBDOMAIN DASHHHHHHH@@@@@@@@@@@@@@@@@" + subdomainName);
 
@@ -1620,7 +1647,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 mCurrentLoc.setVisibility(View.VISIBLE);
                 mCurrentLoc.setText(addresses.get(0).getLocality());
 
-                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude), String.valueOf(longitude), addresses.get(0).getLocality());
+                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude), String.valueOf(longitude), addresses.get(0).getLocality(),mtyp);
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
 
@@ -1850,8 +1877,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     public void QuerySubmitCLick(String query) {
 
         mSearchView.setQuery("", false);
-
-        LanLong Lanlong = getLocationNearBy(latitude, longitude);
+        if(mtyp==null){
+            mtyp = "city";
+        }
+        LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();
@@ -1919,6 +1948,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
             bundle.putString("spinnervalue", spinnerTxtPass);
+            bundle.putString("typ", mtyp);
             Config.logV("SEARCH TXT 99999" + mSearchtxt);
             if (!query.equalsIgnoreCase("")) {
                 bundle.putString("searchtxt", mSearchtxt);
@@ -1943,7 +1973,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         mSearchView.setQuery("", false);
 
-        LanLong Lanlong = getLocationNearBy(latitude, longitude);
+        if(mtyp==null){
+            mtyp = "city";
+        }
+
+        LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();
@@ -1984,6 +2018,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             bundle.putString("spinnervalue", spinnerTxtPass);
             Config.logV("SEARCH TXT 99999" + mSearchtxt);
             bundle.putString("searchtxt", mSearchtxt);
+            bundle.putString("typ", mtyp);
             bundle.putString("subdomain_select", "false");
             pfFragment.setArguments(bundle);
 
@@ -1999,17 +2034,19 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
 
-    public static boolean UpdateLocation(Double mlatitude, Double mlongitude, String locNme) {
+    public static boolean UpdateLocation(Double mlatitude, Double mlongitude, String locNme,String typ) {
         Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude + "" + locNme);
         try {
             latitude = mlatitude;
             longitude = mlongitude;
             mlocName = locNme;
+            mtyp = typ;
 
 
             SharedPreference.getInstance(mContext).setValue("lat", latitude);
             SharedPreference.getInstance(mContext).setValue("longitu", longitude);
             SharedPreference.getInstance(mContext).setValue("locnme", mlocName);
+            SharedPreference.getInstance(mContext).setValue("typ", mtyp);
 
 
             SharedPreference.getInstance(mContext).setValue("locnme", mlocName);
@@ -2020,6 +2057,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 Config.logV("UpdateLocation banglore");
                 latitude = 12.971599;
                 longitude = 77.594563;
+                mtyp = "state";
                 try {
                     Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
                     List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);

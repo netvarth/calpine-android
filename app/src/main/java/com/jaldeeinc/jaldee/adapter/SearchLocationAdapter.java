@@ -1061,7 +1061,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     if (mSearachAwsResponse.getHits().getHit() != null) {
                         for (int l = 0; l < mSearachAwsResponse.getHits().getHit().size(); l++) {
                             if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getToday_appt() != null) {
-
+                                serviceNames.clear();
                                 if (mSearachAwsResponse.getHits().getHit().get(l).getFields().getAppt_services() != null) {
                                     //  myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
                                     try {
@@ -1357,12 +1357,18 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.white));
                                     myViewHolder.btn_checkin.setEnabled(true);
                                     myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
+                                    myViewHolder.btn_checkin_expand.setBackgroundColor(mContext.getResources().getColor(R.color.green));
+                                    myViewHolder.btn_checkin_expand.setTextColor(mContext.getResources().getColor(R.color.white));
+                                    myViewHolder.btn_checkin_expand.setEnabled(true);
+                                    myViewHolder.btn_checkin_expand.setVisibility(View.VISIBLE);
+
                                     myViewHolder.LService_2.setVisibility(View.VISIBLE);
                                     myViewHolder.txtservices.setVisibility(View.VISIBLE);
 
 
                                 }else {
                                     myViewHolder.btn_checkin.setVisibility(View.GONE);
+                                    myViewHolder.btn_checkin_expand.setVisibility(View.GONE);
                                     myViewHolder.LService_2.setVisibility(View.GONE);
                                     myViewHolder.txtservices.setVisibility(View.GONE);
                                 }
@@ -1481,6 +1487,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             }
                         }else{
                             myViewHolder.btn_checkin.setVisibility(View.GONE);
+                            myViewHolder.btn_checkin_expand.setVisibility(View.GONE);
                             myViewHolder.LService_2.setVisibility(View.GONE);
                             myViewHolder.txtservices.setVisibility(View.GONE);
                         }

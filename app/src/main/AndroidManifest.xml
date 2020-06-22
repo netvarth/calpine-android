@@ -113,6 +113,11 @@
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".activities.PaymentDetail"
+            android:screenOrientation="unspecified"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".activities.CheckinShareLocation"
             android:screenOrientation="unspecified" />
         <activity

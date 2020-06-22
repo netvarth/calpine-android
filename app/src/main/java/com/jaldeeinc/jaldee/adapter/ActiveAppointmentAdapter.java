@@ -350,7 +350,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
             myViewHolder.tv_makepay.setVisibility(View.GONE);
         }
 
-        if ((activelist.getBillViewStatus()!=null) ) {
+        if ((activelist.getBillViewStatus()!=null && !activelist.getApptStatus().equalsIgnoreCase("cancelled")) ) {
             if(activelist.getBillViewStatus().equalsIgnoreCase("Show")) {
 
                 myViewHolder.icon_bill.setVisibility(View.VISIBLE);

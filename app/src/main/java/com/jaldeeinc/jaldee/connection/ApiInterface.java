@@ -17,6 +17,7 @@ import com.jaldeeinc.jaldee.response.InboxModel;
 import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.LocationResponse;
 import com.jaldeeinc.jaldee.response.LoginResponse;
+import com.jaldeeinc.jaldee.response.MyPayments;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.response.PaytmChecksum;
 import com.jaldeeinc.jaldee.response.ProfileModel;
@@ -188,6 +189,12 @@ public interface ApiInterface {
 
     @GET("consumer/waitlist")
     Call<ArrayList<ActiveCheckIn>> getActiveCheckIn();
+
+    @GET("consumer/payment")
+    Call<ArrayList<MyPayments>> getMyPayments();
+
+    @GET("consumer/payment/{id}")
+    Call<MyPayments> getMyPaymentsDetails(@Path("id") String id);
 
     @GET("consumer/appointment")
     Call<ArrayList<ActiveAppointment>> getActiveAppointment();

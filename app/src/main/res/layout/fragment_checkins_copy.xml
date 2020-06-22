@@ -101,67 +101,67 @@
                 android:textSize="@dimen/txtsize_hint"
                 android:visibility="gone" />
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding5">
-            <TextView
-                android:textColor="@color/black"
-                android:letterSpacing="0.03"
-                android:textStyle="bold"
-                android:justificationMode="inter_word"
-                android:lineSpacingExtra="@dimen/padding3"
-                android:id="@+id/donations"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/input_border_top_diffcolor"
-                android:drawableRight="@drawable/icon_down_light"
-                android:padding="@dimen/padding5"
-                android:text="Donations"
-                android:textSize="@dimen/txtsize_hint" />
-            <TextView
-                android:id="@+id/txtnodonations"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/input_border_bottom"
-                android:padding="@dimen/padding5"
-                android:text="No Current Donations Available"
-                android:textSize="@dimen/txtsize_hint"
-                android:visibility="gone" />
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:padding="@dimen/padding5">-->
+<!--            <TextView-->
+<!--                android:textColor="@color/black"-->
+<!--                android:letterSpacing="0.03"-->
+<!--                android:textStyle="bold"-->
+<!--                android:justificationMode="inter_word"-->
+<!--                android:lineSpacingExtra="@dimen/padding3"-->
+<!--                android:id="@+id/donations"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/input_border_top_diffcolor"-->
+<!--                android:drawableRight="@drawable/icon_down_light"-->
+<!--                android:padding="@dimen/padding5"-->
+<!--                android:text="Donations"-->
+<!--                android:textSize="@dimen/txtsize_hint" />-->
+<!--            <TextView-->
+<!--                android:id="@+id/txtnodonations"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/input_border_bottom"-->
+<!--                android:padding="@dimen/padding5"-->
+<!--                android:text="No Current Donations Available"-->
+<!--                android:textSize="@dimen/txtsize_hint"-->
+<!--                android:visibility="gone" />-->
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding5">
-            <TextView
-                android:textColor="@color/black"
-                android:letterSpacing="0.03"
-                android:textStyle="bold"
-                android:justificationMode="inter_word"
-                android:lineSpacingExtra="@dimen/padding3"
-                android:id="@+id/paylog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/input_border_top_diffcolor"
-                android:drawableRight="@drawable/icon_down_light"
-                android:padding="@dimen/padding5"
-                android:text="Pay log"
-                android:textSize="@dimen/txtsize_hint" />
-            <TextView
-                android:id="@+id/txtnopaylog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/input_border_bottom"
-                android:padding="@dimen/padding5"
-                android:text=""
-                android:textSize="@dimen/txtsize_hint"
-                android:visibility="gone" />
+<!--        </LinearLayout>-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:padding="@dimen/padding5">-->
+<!--            <TextView-->
+<!--                android:textColor="@color/black"-->
+<!--                android:letterSpacing="0.03"-->
+<!--                android:textStyle="bold"-->
+<!--                android:justificationMode="inter_word"-->
+<!--                android:lineSpacingExtra="@dimen/padding3"-->
+<!--                android:id="@+id/paylog"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/input_border_top_diffcolor"-->
+<!--                android:drawableRight="@drawable/icon_down_light"-->
+<!--                android:padding="@dimen/padding5"-->
+<!--                android:text="Pay log"-->
+<!--                android:textSize="@dimen/txtsize_hint" />-->
+<!--            <TextView-->
+<!--                android:id="@+id/txtnopaylog"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@drawable/input_border_bottom"-->
+<!--                android:padding="@dimen/padding5"-->
+<!--                android:text=""-->
+<!--                android:textSize="@dimen/txtsize_hint"-->
+<!--                android:visibility="gone" />-->
 
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
     </LinearLayout>
 </FrameLayout>

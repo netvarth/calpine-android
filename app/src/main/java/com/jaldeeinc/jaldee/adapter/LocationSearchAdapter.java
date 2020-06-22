@@ -89,13 +89,12 @@ public class LocationSearchAdapter extends RecyclerView.Adapter<LocationSearchAd
         if(items!=null){
             final LocationResponse searchdetailList = items.get(position);
 
-
             myViewHolder.tv_loc.setText(searchdetailList.getName());
             myViewHolder.l_searchlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    callback.onMethodCallback(searchdetailList.getName(), searchdetailList.getLatitude(), searchdetailList.getLongitude(), searchdetailList.getName());
+                    callback.onMethodCallback(searchdetailList.getName(), searchdetailList.getLatitude(), searchdetailList.getLongitude(), searchdetailList.getName(),searchdetailList.getTyp());
                 }
             });
         }
