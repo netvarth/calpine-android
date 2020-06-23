@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.DialogFragment;
@@ -365,126 +366,128 @@ public class Appointment extends AppCompatActivity {
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                     }
                 });
-//                imagePathList.clear();
-//                tv_attach = dialog.findViewById(R.id.btn);
-//                tv_camera = dialog.findViewById(R.id.camera);
-//                recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
-//                //  imageview = dialog.findViewById(R.id.iv);
-//                // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
+                imagePathList.clear();
+                tv_attach = dialog.findViewById(R.id.btn);
+                tv_camera = dialog.findViewById(R.id.camera);
+                recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
+                //  imageview = dialog.findViewById(R.id.iv);
+                // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
+
+
+                requestMultiplePermissions();
+                tv_attach.setVisibility(View.VISIBLE);
+                tv_camera.setVisibility(View.VISIBLE);
+
+
+                tv_attach.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+
+                                    requestPermissions(new String[]{
+                                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
+
+                                    return;
+                                } else {
+                                    Intent intent = new Intent();
+                                    intent.setType("*/*");
+                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                                }
+                            } else {
+
+                                Intent intent = new Intent();
+                                intent.setType("*/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                });
+
 //
+                tv_camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+
+                                    requestPermissions(new String[]{
+                                            Manifest.permission.CAMERA}, CAMERA);
+
+                                    return;
+                                } else {
+                                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                    Intent cameraIntent = new Intent();
+                                    cameraIntent.setType("image/*");
+                                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                                    startActivityForResult(intent, CAMERA);
+                                }
+                            } else {
+
+                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                Intent cameraIntent = new Intent();
+                                cameraIntent.setType("image/*");
+                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(intent, CAMERA);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                });
+
 //
-//                requestMultiplePermissions();
-//                tv_attach.setVisibility(View.VISIBLE);
-//                tv_camera.setVisibility(View.VISIBLE);
+                btn_send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //
+                        txt_message = edt_message.getText().toString();
+                        dialog.dismiss();
+                    }
+                });
+
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imagePathList.clear();
+                        dialog.dismiss();
+                    }
+                });
 //
-//
-//                tv_attach.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        try {
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//
-//
-//                                    requestPermissions(new String[]{
-//                                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
-//
-//                                    return;
-//                                } else {
-//                                    Intent intent = new Intent();
-//                                    intent.setType("*/*");
-//                                    intent.setAction(Intent.ACTION_GET_CONTENT);
-//                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
-//                                }
-//                            } else {
-//
-//                                Intent intent = new Intent();
-//                                intent.setType("*/*");
-//                                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
-//                            }
-//                        } catch (Exception ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    }
-//
-//                });
-//
-//
-//                tv_camera.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        try {
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//
-//
-//                                    requestPermissions(new String[]{
-//                                            Manifest.permission.CAMERA}, CAMERA);
-//
-//                                    return;
-//                                } else {
-//                                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                                    Intent cameraIntent = new Intent();
-//                                    cameraIntent.setType("image/*");
-//                                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//                                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
-//                                    startActivityForResult(intent, CAMERA);
-//                                }
-//                            } else {
-//
-//                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                                Intent cameraIntent = new Intent();
-//                                cameraIntent.setType("image/*");
-//                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
-//                                startActivityForResult(intent, CAMERA);
-//                            }
-//                        } catch (Exception ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    }
-//
-//                });
-//
-//
-//                btn_send.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        //
-//                    }
-//                });
-//
-//                btn_cancel.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        imagePathList.clear();
-//                        dialog.dismiss();
-//                    }
-//                });
-//
-//                edt_message.addTextChangedListener(new TextWatcher() {
-//                    @Override
-//                    public void afterTextChanged(Editable arg0) {
-//                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
-//                            btn_send.setEnabled(true);
-//                            btn_send.setClickable(true);
-//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-//                        } else {
-//                            btn_send.setEnabled(false);
-//                            btn_send.setClickable(false);
-//                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                    }
-//
-//                    @Override
-//                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                    }
-//                });
+                edt_message.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable arg0) {
+                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
+                            btn_send.setEnabled(true);
+                            btn_send.setClickable(true);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
+                        } else {
+                            btn_send.setEnabled(false);
+                            btn_send.setClickable(false);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
+                        }
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
            }
         });
 
@@ -1170,43 +1173,43 @@ public class Appointment extends AppCompatActivity {
         return "";
     }
 
-    private void requestMultiplePermissions() {
-        Dexter.withActivity((Activity) mContext)
-                .withPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // check if all permissions are granted
-                        if (report.areAllPermissionsGranted()) {
-                            Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
-                        }
-
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            // show alert dialog navigating to Settings
-                            //openSettingsDialog();
-                            Toast.makeText(mContext, "You Denied the Permissions", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).
-                withErrorListener(new PermissionRequestErrorListener() {
-                    @Override
-                    public void onError(DexterError error) {
-                        Toast.makeText(mContext, "Some Error! ", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .onSameThread()
-                .check();
-    }
+//    private void requestMultiplePermissions() {
+//        Dexter.withActivity((Activity) mContext)
+//                .withPermissions(
+//                        Manifest.permission.CAMERA,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        Manifest.permission.READ_EXTERNAL_STORAGE)
+//                .withListener(new MultiplePermissionsListener() {
+//                    @Override
+//                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+//                        // check if all permissions are granted
+//                        if (report.areAllPermissionsGranted()) {
+//                            Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        // check for permanent denial of any permission
+//                        if (report.isAnyPermissionPermanentlyDenied()) {
+//                            // show alert dialog navigating to Settings
+//                            //openSettingsDialog();
+//                            Toast.makeText(mContext, "You Denied the Permissions", Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+//                        token.continuePermissionRequest();
+//                    }
+//                }).
+//                withErrorListener(new PermissionRequestErrorListener() {
+//                    @Override
+//                    public void onError(DexterError error) {
+//                        Toast.makeText(mContext, "Some Error! ", Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .onSameThread()
+//                .check();
+//    }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public String getPDFPath(Uri uri) {
@@ -1418,54 +1421,54 @@ public class Appointment extends AppCompatActivity {
 //        return "";
 //    }
 //
-//    private void requestMultiplePermissions() {
-//        Dexter.withActivity(this)
-//                .withPermissions(
-//                        Manifest.permission.CAMERA,
-//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                        Manifest.permission.READ_EXTERNAL_STORAGE)
-//                .withListener(new MultiplePermissionsListener() {
-//                    @Override
-//                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-//                        // check if all permissions are granted
-//                        if (report.areAllPermissionsGranted()) {
-//                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
-//                        }
+    private void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            //openSettingsDialog();fc
+                            Toast.makeText(getApplicationContext(), "You Denied the Permission", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
 //
-//                        // check for permanent denial of any permission
-//                        if (report.isAnyPermissionPermanentlyDenied()) {
-//                            // show alert dialog navigating to Settings
-//                            //openSettingsDialog();fc
-//                            Toast.makeText(getApplicationContext(), "You Denied the Permission", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-//                        token.continuePermissionRequest();
-//                    }
-//                }).
-//                withErrorListener(new PermissionRequestErrorListener() {
-//                    @Override
-//                    public void onError(DexterError error) {
-//                        Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .onSameThread()
-//                .check();
-//    }
-//
-//    public static float getImageSize(Context context, Uri uri) {
-//        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-//        if (cursor != null) {
-//            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
-//            cursor.moveToFirst();
-//            float imageSize = cursor.getLong(sizeIndex);
-//            cursor.close();
-//            return imageSize / (1024f * 1024f); // returns size in bytes
-//        }
-//        return 0;
-//    }
+    public static float getImageSize(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        if (cursor != null) {
+            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+            cursor.moveToFirst();
+            float imageSize = cursor.getLong(sizeIndex);
+            cursor.close();
+            return imageSize / (1024f * 1024f); // returns size in bytes
+        }
+        return 0;
+    }
 //
 //    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
 //        //copy file and send new file path
@@ -3481,7 +3484,7 @@ public class Appointment extends AppCompatActivity {
         });
     }
 
-    private void ApiAppointment(String txt_addnote) {
+    private void ApiAppointment(final String txt_addnote) {
 
         phoneNumber = phoneNumberValue.getText().toString();
         uuid = UUID.randomUUID().toString();
@@ -3702,6 +3705,9 @@ public class Appointment extends AppCompatActivity {
                                             Config.logV("Account ID --------------" + modifyAccountID);
                                             new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin");
                                             dialog.dismiss();
+                                          //  txt_message ="Please find the attachment from Consumer with this message";
+                                            if(imagePathList.size()>0){
+                                            ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);}
                                         }
                                     });
 
@@ -3716,6 +3722,9 @@ public class Appointment extends AppCompatActivity {
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
+                                         //   txt_message ="Please find the attachment from Consumer with this message";
+                                            if(imagePathList.size()>0){
+                                            ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);}
                                         }
                                     });
                                 } catch (Exception e) {
@@ -3725,10 +3734,13 @@ public class Appointment extends AppCompatActivity {
 
 
                         } else {
+                          //  txt_message ="Please find the attachment from Consumer with this message";
+                            if(imagePathList.size()>0){
+                            ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);}
                             Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
                             finish();
                         }
-                    //    ApiCommunicateAppointment(value, String.valueOf(accountID), messageappt, dialog);
+
 
                         if (livetrack.equalsIgnoreCase("true")) {
                             Intent checkinShareLocations = new Intent(mContext, CheckinShareLocationAppointment.class);
@@ -3743,7 +3755,8 @@ public class Appointment extends AppCompatActivity {
                             checkinShareLocations.putExtra("from", "appt");
                             startActivity(checkinShareLocations);
                         }
-
+//                        txt_message ="Please find the attachment from Consumer with this message";
+//                        ApiCommunicateAppointment(value, String.valueOf(accountID), txt_message, dialog);
 
                     } else {
                         txt_message = "";
@@ -3892,73 +3905,73 @@ public class Appointment extends AppCompatActivity {
         } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
             showAlert("Payment Cancelled");
         }
-//        if (requestCode == GALLERY) {
-//            if (data != null) {
-//                try {
-//                    if (data.getData() != null) {
-//                        Uri uri = data.getData();
-//                        String orgFilePath = getRealPathFromURI(uri, this);
-//                        String filepath = "";//default fileName
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                try {
+                    if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        String orgFilePath = getRealPathFromURI(uri, this);
+                        String filepath = "";//default fileName
+
+                        String mimeType = this.mContext.getContentResolver().getType(uri);
+                        String uriString = uri.toString();
+                        String extension = "";
+                        if (uriString.contains(".")) {
+                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                        }
+
+
+                        if (mimeType != null) {
+                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                        }
+                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                            }
+                        } else {
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
 //
-//                        String mimeType = this.mContext.getContentResolver().getType(uri);
-//                        String uriString = uri.toString();
-//                        String extension = "";
-//                        if (uriString.contains(".")) {
-//                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
-//                        }
+                        imagePathList.add(orgFilePath);
 //
-//
-//                        if (mimeType != null) {
-//                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
-//                        }
-//                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
-//                            if (orgFilePath == null) {
-//                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
-//                            }
-//                        } else {
-//                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//
-////
-//                        imagePathList.add(orgFilePath);
-////
-//
-//                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-//                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-//                        recycle_image_attachment.setLayoutManager(mLayoutManager);
-//                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
-//                        mDetailFileAdapter.notifyDataSetChanged();
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//        } else if (requestCode == CAMERA) {
-//            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//            //      imageview.setImageBitmap(bitmap);
-//            path = saveImage(bitmap);
-//            // imagePathList.add(bitmap.toString());
-//            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-////            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
-//            if (path != null) {
-//                mImageUri = Uri.parse(path);
-//                imagePathList.add(mImageUri.toString());
-//            }
-//            try {
-//                bytes.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
-//            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-//            recycle_image_attachment.setLayoutManager(mLayoutManager);
-//            recycle_image_attachment.setAdapter(mDetailFileAdapter);
-//            mDetailFileAdapter.notifyDataSetChanged();
-//
-//        }
+
+                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                        recycle_image_attachment.setLayoutManager(mLayoutManager);
+                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
+                        mDetailFileAdapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else if (requestCode == CAMERA) {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            //      imageview.setImageBitmap(bitmap);
+            path = saveImage(bitmap);
+            // imagePathList.add(bitmap.toString());
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+            if (path != null) {
+                mImageUri = Uri.parse(path);
+                imagePathList.add(mImageUri.toString());
+            }
+            try {
+                bytes.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+            recycle_image_attachment.setLayoutManager(mLayoutManager);
+            recycle_image_attachment.setAdapter(mDetailFileAdapter);
+            mDetailFileAdapter.notifyDataSetChanged();
+
+        }
     }
 
 
@@ -4132,86 +4145,88 @@ public class Appointment extends AppCompatActivity {
     }
 
     //
-//    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-//
-//
-//        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-//        MediaType type = MediaType.parse("*/*");
-//        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
-//        mBuilder.setType(MultipartBody.FORM);
-//        mBuilder.addFormDataPart("message", message);
-//        for (int i = 0; i < imagePathList.size(); i++) {
-//
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
-//            } catch (IOException e) {
-//                e.printStackTrace();
+    private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
+
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        mBuilder.addFormDataPart("message", message);
+        for (int i = 0; i < imagePathList.size(); i++) {
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            }
+//            else{
+//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
 //            }
-//            if (bitmap != null) {
-//                path = saveImage(bitmap);
-//                file = new File(path);
-//            }
-////            else{
-////                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-////            }
-//            else {
-//                file = new File(imagePathList.get(i));
-//            }
-//            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
-//        }
-//        RequestBody requestBody = mBuilder.build();
-//
-//
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//        JSONObject jsonObj = new JSONObject();
-//        try {
-//            jsonObj.put("message", message);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-//
-//        Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, "77992", requestBody);
-//
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                try {
-//
-//
-//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//
-//                    if (response.code() == 200) {
-//                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
-//                        imagePathList.clear();
-//                        dialog.dismiss();
-//
-//
-//                    } else {
-//                        if (response.code() == 422) {
-//                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//            }
-//        });
-//
-//    }
+            else {
+                file = new File(imagePathList.get(i));
+            }
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+        }
+        RequestBody requestBody = mBuilder.build();
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("message", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+
+        Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID.split("-")[0]), requestBody);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
+                        imagePathList.clear();
+                        dialog.dismiss();
+
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+
+    }
 }
+
+
 
 
 //    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
@@ -4265,7 +4280,7 @@ public class Appointment extends AppCompatActivity {
 //                try {
 //
 //                    if (mDialog.isShowing())
-//                        Config.closeDialog(CheckIn.this, mDialog);
+//                        Config.closeDialog(Appointment.this, mDialog);
 //
 //                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
 //                    Config.logV("Response--code-------------------------" + response.code());
@@ -4294,11 +4309,11 @@ public class Appointment extends AppCompatActivity {
 //                // Log error here since request failed
 //                Config.logV("Fail---------------" + t.toString());
 //                if (mDialog.isShowing())
-//                    Config.closeDialog( CheckIn.this, mDialog);
+//                    Config.closeDialog( Appointment.this, mDialog);
 //
 //            }
 //        });
 //    }
-
+//}
 
 
