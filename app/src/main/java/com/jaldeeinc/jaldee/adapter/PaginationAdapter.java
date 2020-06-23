@@ -94,11 +94,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     ArrayList<SearchViewDetail> mSearchGallery;
     String uniqueID;
     List<QueueList> mQueueList;
-    ArrayList serviceNames = new ArrayList();
-    ArrayList serviceNamesAppointments = new ArrayList();
-    ArrayList serviceNamesDonations = new ArrayList();
-
-
 
     public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList) {
         this.context = context;
@@ -1139,8 +1134,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
-                serviceNames.clear();
+
                 if (searchdetailList.getServices() != null) {
+                    final ArrayList serviceNames = new ArrayList();
+                    serviceNames.clear();
                     try {
                         String serviceName = searchdetailList.getServices().toString();
                         try {
@@ -1194,6 +1191,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 @Override
                                 public void onClick(View v) {
                                     ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+
                                 }
                             });
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -1221,8 +1219,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
 
-                serviceNamesAppointments.clear();
+
                 if (searchdetailList.getAppt_services() != null) {
+                    final ArrayList serviceNamesAppointments = new ArrayList();
+                    serviceNamesAppointments.clear();
                     try {
                         String serviceName = searchdetailList.getAppt_services().toString();
                         try {
@@ -1318,6 +1318,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
                 if (searchdetailList.getDonation_services() != null) {
+                    final ArrayList serviceNamesDonations = new ArrayList();
+                    serviceNamesDonations.clear();
                     try {
                         String serviceName = searchdetailList.getDonation_services().toString();
                         try {

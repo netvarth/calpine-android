@@ -16,5 +16,6 @@ public class Constants {
     public static final  String PURPOSE_PREPAYMENT = "prePayment";
     public static final  String PURPOSE_BILLPAYMENT = "billPayment";
     public static final  String PURPOSE_DONATIONPAYMENT = "donation";
+    public static final  String SOURCE_PAYMENT = "Android";
 
 }

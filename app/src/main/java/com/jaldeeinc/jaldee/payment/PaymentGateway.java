@@ -34,7 +34,7 @@ public class PaymentGateway {
         mCOntext = mContext;
         mActivity = activity;
     }
-    public void ApiGenerateHash1(String ynwUUID, final String amount, String accountID, String purpose, final String from,int customerId) {
+    public void ApiGenerateHash1(String ynwUUID, final String amount, String accountID, String purpose, final String from,int customerId, String source) {
 
 
         ApiInterface apiService =
@@ -54,6 +54,7 @@ public class PaymentGateway {
             jsonObj.put("accountId", accountID);
             jsonObj.put("purpose", purpose);
             jsonObj.put("custId",customerId);
+            jsonObj.put("source",source);
 
 
         } catch (JSONException e) {

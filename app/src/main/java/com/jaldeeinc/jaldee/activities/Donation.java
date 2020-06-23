@@ -157,7 +157,7 @@ public class Donation extends AppCompatActivity {
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     static String modifyAccountID;
-    String isPrepayment;
+    boolean isPrepayment;
     TextView tv_amount;
     String sAmountPay;
     static EditText tv_name;
@@ -193,7 +193,7 @@ public class Donation extends AppCompatActivity {
     TextView mtxtTermsandCondition;
     TextView mtxtDele;
     TextView mtermsAndConditionDetail;
-    int selectedService;
+    int selectedService,maxDonationAmount,minDonationAmount,multiples;
     String selectedServiceType;
     String serviceInstructions;
     int selectedDepartment;
@@ -246,7 +246,7 @@ public class Donation extends AppCompatActivity {
     TextView tv_fileAttach;
     File file;
     BottomSheetDialog dialog;
-    static TextView tv_don_amount;
+    static TextView tv_don_amount, tv_don_instr;
 
 
     @Override
@@ -305,6 +305,7 @@ public class Donation extends AppCompatActivity {
 //        earliestAvailable = findViewById(R.id.earliestAvailable);
         txt_choosedoctor = findViewById(R.id.txt_choosedoctor);
         mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
+        tv_don_instr = findViewById(R.id.dnt_instructions);
 //        tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
 //        et_vitualId = findViewById(R.id.virtual_id);
 
@@ -891,6 +892,11 @@ public class Donation extends AppCompatActivity {
 
                 serviceSelected = ((SearchDonation) mSpinnerService.getSelectedItem()).getName();
                 selectedService = ((SearchDonation) mSpinnerService.getSelectedItem()).getId();
+                maxDonationAmount = ((SearchDonation) mSpinnerService.getSelectedItem()).getMaxDonationAmount();
+                minDonationAmount = ((SearchDonation) mSpinnerService.getSelectedItem()).getMinDonationAmount();
+                multiples = ((SearchDonation) mSpinnerService.getSelectedItem()).getMultiples();
+                tv_don_instr.setText("Amount must be in range between " + " ₹" + String.valueOf(minDonationAmount) +" and ₹" + String.valueOf(maxDonationAmount) + " (multiples of ₹" + String.valueOf(multiples) +")");
+
 
 
 //                if (selectedServiceType.equalsIgnoreCase("virtualService")) {
@@ -2753,7 +2759,7 @@ public class Donation extends AppCompatActivity {
                             mService.setId(id);
                             mService.setId(response.body().get(i).getId());
                             mService.setLivetrack(response.body().get(i).getLivetrack());
-                            mService.setIsPrePayment(response.body().get(i).getIsPrePayment());
+                            mService.setPrePayment(response.body().get(i).isPrePayment());
                             mService.setTotalAmount(response.body().get(i).getTotalAmount());
                             mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
                             mService.setServiceType(response.body().get(i).getServiceType());
@@ -2762,6 +2768,9 @@ public class Donation extends AppCompatActivity {
                             mService.setInstructions(response.body().get(i).getInstructions());
                             mService.setCallingMode(response.body().get(i).getCallingMode());
                             mService.setValue(response.body().get(i).getValue());
+                            mService.setMultiples(response.body().get(i).getMultiples());
+                            mService.setMinDonationAmount(response.body().get(i).getMinDonationAmount());
+                            mService.setMaxDonationAmount(response.body().get(i).getMaxDonationAmount());
                             LServicesList.add(mService);
                         }
                         gServiceList.addAll(LServicesList);
@@ -2780,8 +2789,8 @@ public class Donation extends AppCompatActivity {
 
                                             depResponse = response.body();
                                             if (depResponse.isFilterByDept() && depResponse.getDepartments().size() > 0) {
-                                                mSpinnerDepartment.setVisibility(View.VISIBLE);
-                                                txt_choosedepartment.setVisibility(View.VISIBLE);
+                                                mSpinnerDepartment.setVisibility(View.GONE);
+                                                txt_choosedepartment.setVisibility(View.GONE);
                                                 ArrayAdapter<SearchDepartment> adapter = new ArrayAdapter<SearchDepartment>(mActivity, android.R.layout.simple_spinner_dropdown_item, depResponse.getDepartments());
                                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                                 mSpinnerDepartment.setAdapter(adapter);
@@ -2844,7 +2853,7 @@ public class Donation extends AppCompatActivity {
                                                     //ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
 
 
-                                                    isPrepayment = LServicesList.get(0).getIsPrePayment();
+                                                    isPrepayment = LServicesList.get(0).isPrePayment();
                                                     Config.logV("Payment------------" + isPrepayment);
 
                                                         APIPayment(modifyAccountID);
@@ -3803,7 +3812,7 @@ public class Donation extends AppCompatActivity {
                                             // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
                                             Config.logV("Account ID --------------" + modifyAccountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, "checkin",familyMEmID);
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, tv_don_amount.getText().toString(), modifyAccountID, Constants.PURPOSE_DONATIONPAYMENT, "checkin",familyMEmID,Constants.SOURCE_PAYMENT);
                                             dialog.dismiss();
                                         }
                                     });

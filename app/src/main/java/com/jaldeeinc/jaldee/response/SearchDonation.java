@@ -10,7 +10,7 @@ public class SearchDonation {
     int serviceDuration;
     String notificationType;
     String notification;
-    String isPrePayment;
+    boolean isPrePayment;
     String totalAmount;
     String bType;
     String status;
@@ -25,6 +25,8 @@ public class SearchDonation {
     String instructions;
     String callingMode;
     String value;
+    int maxDonationAmount;
+    int minDonationAmount;
 
 
     public int getId() {
@@ -75,13 +77,6 @@ public class SearchDonation {
         this.notification = notification;
     }
 
-    public String getIsPrePayment() {
-        return isPrePayment;
-    }
-
-    public void setIsPrePayment(String isPrePayment) {
-        this.isPrePayment = isPrePayment;
-    }
 
     public String getTotalAmount() {
         return totalAmount;
@@ -191,6 +186,27 @@ public class SearchDonation {
     @Override
     public String toString() {
         return this.name; // Value to be displayed in the Spinner
+    }
+    public boolean isPrePayment() {
+        return isPrePayment;
+    }
+
+    public void setPrePayment(boolean prePayment) {
+        isPrePayment = prePayment;
+    }
+    public int getMaxDonationAmount() {
+        return maxDonationAmount;
+    }
+
+    public void setMaxDonationAmount(int maxDonationAmount) {
+        this.maxDonationAmount = maxDonationAmount;
+    }
+    public int getMinDonationAmount() {
+        return minDonationAmount;
+    }
+
+    public void setMinDonationAmount(int minDonationAmount) {
+        this.minDonationAmount = minDonationAmount;
     }
 
 }

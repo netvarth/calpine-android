@@ -274,7 +274,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/dimen_7dp"
                                 android:gravity="center"
-                                android:text="@string/selectservice"
+                                android:text="Cause"
                                 android:textColor="#AAA"
                                 android:textSize="@dimen/txtsize_12"
                                 android:visibility="gone" />
@@ -917,11 +917,21 @@
 <!--                                        android:visibility="gone" />-->
 
 <!--                                </LinearLayout>-->
+                                <TextView
+                                    android:id="@+id/dnt_instructions"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text=""
+                                    android:drawableLeft="@drawable/icon_info"
+                                    android:layout_marginLeft="@dimen/default_padding"
+                                    android:layout_marginTop="@dimen/dimen_7dp"
+                                    android:textSize="@dimen/txtsize_10"
+                                    />
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal"
-                                    android:layout_marginTop="@dimen/default_padding"
+                                    android:layout_marginTop="@dimen/padding5"
                                     android:weightSum="1">
 
                                     <TextView
