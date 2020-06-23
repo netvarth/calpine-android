@@ -35,14 +35,15 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+
         <activity
             android:name=".activities.Splash"
             android:screenOrientation="unspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -50,7 +51,6 @@
                 <data android:scheme="https"
                     android:host="scale.jaldee.com"/>
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activities.Register"
@@ -58,6 +58,10 @@
         <activity
             android:name=".activities.AppointmentDate"
             android:screenOrientation="unspecified" />
+        <activity
+            android:name=".activities.Donation"
+            android:screenOrientation="unspecified"
+             />
         <activity
             android:name=".activities.Signup"
             android:screenOrientation="unspecified" />
@@ -104,12 +108,10 @@
             android:name=".activities.CheckIn"
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.Appointment"
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.PaymentDetail"
             android:screenOrientation="unspecified"
@@ -121,7 +123,6 @@
         <activity
             android:name=".activities.CheckinShareLocationAppointment"
             android:screenOrientation="unspecified" />
-
         <activity
             android:name=".activities.CheckInCopy"
             android:screenOrientation="unspecified" />
@@ -135,6 +136,9 @@
             android:name=".activities.CheckinFamilyMemberAppointment"
             android:screenOrientation="unspecified" />
         <activity
+            android:name=".activities.CheckinFamilyMemberDonation"
+            android:screenOrientation="unspecified" />
+        <activity
             android:name=".activities.MessageActivity"
             android:screenOrientation="unspecified" />
         <activity
@@ -142,7 +146,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.AddMemberChekin"
             android:screenOrientation="unspecified" />
@@ -153,7 +156,6 @@
             android:name=".activities.BillActivity"
             android:screenOrientation="unspecified" />
 
-
         <service android:name=".service.FirebaseService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -161,7 +163,6 @@
         </service>
         <service android:name=".service.LocationUpdatesService" />
         <service android:name=".service.LiveTrackService" />
-
     </application>
 
 </manifest>

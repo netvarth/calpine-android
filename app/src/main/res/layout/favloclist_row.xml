@@ -148,6 +148,37 @@
         <!--  android:textSize="@dimen/txtsize_subtitle" />-->
     </LinearLayout>
 
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/donationLayouts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/default_padding"
+        android:orientation="horizontal">
+
+
+
+        <Button
+            android:id="@+id/btndonations"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/green"
+            android:gravity="center"
+            android:paddingLeft="@dimen/padding3"
+            android:paddingRight="@dimen/padding3"
+            android:text="Donate"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txtsize_12" />
+
+        <!--  android:textSize="@dimen/txtsize_subtitle" />-->
+    </LinearLayout>
+
+
 
     <View
         android:id="@+id/divider"
