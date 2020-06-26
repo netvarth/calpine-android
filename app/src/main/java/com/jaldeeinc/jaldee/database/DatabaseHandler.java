@@ -160,7 +160,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "uniqueid INTEGER,"
                 + "isRevelPhoneno boolean,"
                 + "place TEXT,"
-                + "onlinePresence TEXT)";
+                + "onlinePresence TEXT,"
+                + "donationServiceStatus TEXT)";
 
 
 
@@ -185,6 +186,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("isRevelPhoneno", favorite.isRevealPhoneNumber());
             values.put("place", favorite.getPlace());
             values.put("onlinePresence", favorite.getOnlinePresence());
+            values.put("donationServiceStatus",favorite.getDonationServiceStatus());
 
 
             db.insert(mContext.getString(R.string.db_table_fav), null, values);
@@ -283,7 +285,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<FavouriteModel> favData = new ArrayList<FavouriteModel>();
         String table = mContext.getString(R.string.db_table_fav);
         /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
-        String[] columns = {"id","businessname","locid","uniqueid","isRevelPhoneno","place","onlinePresence"};
+        String[] columns = {"id","businessname","locid","uniqueid","isRevelPhoneno","place","onlinePresence","donationServiceStatus"};
 
 
 
@@ -305,6 +307,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 fav.setRevealPhoneNumber(phone);
                 fav.setPlace(cursor.getString(5));
                 fav.setOnlinePresence(cursor.getString(6));
+                fav.setDonationServiceStatus(cursor.getString(7));
 
                 favData.add(fav);
             } while (cursor.moveToNext());

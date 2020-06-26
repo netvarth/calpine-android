@@ -34,7 +34,9 @@ public class SearchServiceActivity extends AppCompatActivity {
     boolean isTaxable, isPrepayment;
     LinearLayout Lprepayment, LserviceLayout;
     TextView txtpreVal;
-    String MinPrePaymentAmount;
+    String MinPrePaymentAmount, maxDonationAmount,minDonationAmount;
+    int multiples;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,9 @@ public class SearchServiceActivity extends AppCompatActivity {
 
             MinPrePaymentAmount = extras.getString("MinPrePaymentAmount");
             mGallery = (ArrayList<SearchService>) getIntent().getSerializableExtra("servicegallery");
+            minDonationAmount = extras.getString("minDonationAmount");
+            maxDonationAmount = extras.getString("maxDonationAmount");
+            multiples = extras.getInt("multiples");
         }
 
         tv_toolbartitle = (TextView) findViewById(R.id.txt_toolbartitle);

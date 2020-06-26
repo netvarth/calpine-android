@@ -20,6 +20,19 @@ public class FavouriteModel {
     String status;
     String onlinePresence;
 
+    public String getDonationServiceStatus() {
+        return donationServiceStatus;
+    }
+
+    public void setDonationServiceStatus(String donationServiceStatus) {
+        this.donationServiceStatus = donationServiceStatus;
+    }
+
+    String donationServiceStatus;
+
+
+
+
     public String getOnlinePresence() {
         return onlinePresence;
     }

@@ -116,6 +116,16 @@ public class SearchListModel implements Serializable {
     private ArrayList appt_services;
     private ArrayList donation_services;
 
+    public String getLocation_id1() {
+        return location_id1;
+    }
+
+    public void setLocation_id1(String location_id1) {
+        this.location_id1 = location_id1;
+    }
+
+    String location_id1;
+
     public ArrayList getAppt_services() {
         return appt_services;
     }

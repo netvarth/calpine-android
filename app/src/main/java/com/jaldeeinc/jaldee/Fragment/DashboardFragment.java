@@ -989,7 +989,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-------------------------" + response.code());
                         Config.logV("Response--BODY------Search-------------------" + new Gson().toJson(response.body()));
-                        Log.i("search1234",response.body().getPopularSearchLabels().toString());
+//                        Log.i("search1234",response.body().getPopularSearchLabels().toString());
                         Log.i("search1234",response.body().getPopularSearchLabels().get("all").toString());
                         mGLobalSearch.clear();
 

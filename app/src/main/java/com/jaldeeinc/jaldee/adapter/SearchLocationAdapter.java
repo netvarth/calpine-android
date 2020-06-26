@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,11 +14,13 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +34,8 @@ import com.jaldeeinc.jaldee.activities.Donation;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.connection.ApiClient;
+import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
@@ -38,6 +43,7 @@ import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
+import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
@@ -53,6 +59,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -66,6 +77,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     String secondWord, firstWord;
     ArrayList serviceNames = new ArrayList();
     ArrayList serviceDonationNames = new ArrayList();
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate, txt_msg, txt_peopleahead;
@@ -152,10 +164,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     String terminology;
     boolean isShowTokenId;
     boolean online_presence;
+    boolean donationFundRaising;
     ArrayList<SearchDepartment> mSearchDepartmentList;
+    ArrayList<SearchDonation> gServicesList;
 
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments, List<SearchAWsResponse> mSearchRespDetails, SearchAWsResponse mSearchAWSResponse, List<ScheduleList> SearchScheduleList, boolean online_presence) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments, List<SearchAWsResponse> mSearchRespDetails, SearchAWsResponse mSearchAWSResponse, List<ScheduleList> SearchScheduleList, boolean online_presence, boolean donationFundRaising,ArrayList<SearchDonation> gServicesList) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchRespDetail = mSearchRespDetails;
@@ -177,9 +191,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         this.mSearchDepartmentList = mSearchDepartments;
         this.mScheduleList = SearchScheduleList;
         this.online_presence = online_presence;
+        this.donationFundRaising = donationFundRaising;
+        this.gServicesList = gServicesList;
+
 
     }
-
     @Override
     public SearchLocationAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -458,15 +474,22 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     if (mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null && mSearchSetting.isFutureDateWaitlist()) {
                         myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
                         myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+
                     } else {
+                        myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
+                        myViewHolder.tv_waittime.setVisibility(View.GONE);
                         myViewHolder.txt_diffdate.setVisibility(View.GONE);
                         myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                     }
                 }else {
+                    myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
+                    myViewHolder.tv_waittime.setVisibility(View.GONE);
                     myViewHolder.txt_diffdate.setVisibility(View.GONE);
                     myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
                 }
             }else {
+                myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
+                myViewHolder.tv_waittime.setVisibility(View.GONE);
                 myViewHolder.txt_diffdate.setVisibility(View.GONE);
                 myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
             }
@@ -1056,6 +1079,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 myViewHolder.txt_apptservices.setVisibility(View.GONE);
             }
 
+
             if (mSearachAwsResponse != null) {
                 if (mSearachAwsResponse.getHits() != null) {
                     if (mSearachAwsResponse.getHits().getHit() != null) {
@@ -1158,57 +1182,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         }
 
-
-        if (mSearachAwsResponse != null) {
-            if (mSearachAwsResponse.getHits() != null) {
-                if (mSearachAwsResponse.getHits().getHit() != null) {
-
-                    for (int m = 0; m < mSearachAwsResponse.getHits().getHit().size(); m++) {
-                        if (online_presence) {
-                            if (mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_status()!=null && mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_status().equals("1")) {
-                                myViewHolder.LDonation.setVisibility(View.VISIBLE);
-                                myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
-                                myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
-                            } else {
-                                myViewHolder.LDonation.setVisibility(View.GONE);
-                                myViewHolder.LDont_Services.setVisibility(View.GONE);
-                                myViewHolder.txt_dontservices.setVisibility(View.GONE);
-                            }
-                        } else {
-                            myViewHolder.LDonation.setVisibility(View.GONE);
-                            myViewHolder.LDont_Services.setVisibility(View.GONE);
-                            myViewHolder.txt_dontservices.setVisibility(View.GONE);
-                        }
-
-                            if (mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_services() != null) {
-                                //  myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
-                                try {
-                                    String serviceName = mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_services().toString();
-                                    try {
-                                        JSONArray jsonArray = new JSONArray(serviceName);
-                                        String jsonArry = jsonArray.getString(0);
-                                        JSONArray jsonArray1 = new JSONArray(jsonArry);
-                                        for (int i = 0; i < jsonArray1.length(); i++) {
-                                            JSONObject jsonObject = jsonArray1.getJSONObject(i);
-                                            String name = jsonObject.optString("name");
-                                            serviceDonationNames.add(i, name);
-
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                if (serviceDonationNames.size() > 0) {
+                 if (gServicesList.size() > 0) {
                                     myViewHolder.LDont_Services.removeAllViews();
                                     //  myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
                                     int size = 0;
-                                    if (serviceDonationNames.size() == 1) {
+                                    if (gServicesList.size() == 1) {
                                         size = 1;
                                     } else {
-                                        if (serviceDonationNames.size() == 2)
+                                        if (gServicesList.size() == 2)
                                             size = 2;
                                         else
                                             size = 3;
@@ -1218,7 +1199,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         tyface = Typeface.createFromAsset(mContext.getAssets(),
                                                 "fonts/Montserrat_Regular.otf");
                                         dynaText.setTypeface(tyface);
-                                        dynaText.setText(serviceDonationNames.get(i).toString());
+                                        dynaText.setText(gServicesList.get(i).toString());
                                         dynaText.setTextSize(13);
                                         dynaText.setPadding(5, 0, 5, 0);
                                         dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
@@ -1263,17 +1244,137 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
                                 }
-
+        if (online_presence) {
+            if (donationFundRaising) {
+                                myViewHolder.LDonation.setVisibility(View.VISIBLE);
+                                myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
+                                myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
                             } else {
+                                myViewHolder.LDonation.setVisibility(View.GONE);
                                 myViewHolder.LDont_Services.setVisibility(View.GONE);
                                 myViewHolder.txt_dontservices.setVisibility(View.GONE);
-
                             }
+                        } else {
+                            myViewHolder.LDonation.setVisibility(View.GONE);
+                            myViewHolder.LDont_Services.setVisibility(View.GONE);
+                            myViewHolder.txt_dontservices.setVisibility(View.GONE);
+                        }
 
-                    }
-                }
-            }
-        }
+//        if (mSearachAwsResponse != null) {
+//            if (mSearachAwsResponse.getHits() != null) {
+//                if (mSearachAwsResponse.getHits().getHit() != null) {
+//
+//                    for (int m = 0; m < mSearachAwsResponse.getHits().getHit().size(); m++) {
+//                        if (online_presence) {
+//                            if (mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_status()!=null && mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_status().equals("1")) {
+//                                myViewHolder.LDonation.setVisibility(View.VISIBLE);
+//                                myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
+//                                myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
+//                            } else {
+//                                myViewHolder.LDonation.setVisibility(View.GONE);
+//                                myViewHolder.LDont_Services.setVisibility(View.GONE);
+//                                myViewHolder.txt_dontservices.setVisibility(View.GONE);
+//                            }
+//                        } else {
+//                            myViewHolder.LDonation.setVisibility(View.GONE);
+//                            myViewHolder.LDont_Services.setVisibility(View.GONE);
+//                            myViewHolder.txt_dontservices.setVisibility(View.GONE);
+//                        }
+//                            serviceDonationNames.clear();
+//                            if (mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_services() != null) {
+//                                //  myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
+//                                try {
+//                                    String serviceName = mSearachAwsResponse.getHits().getHit().get(m).getFields().getDonation_services().toString();
+//                                    try {
+//                                        JSONArray jsonArray = new JSONArray(serviceName);
+//                                        String jsonArry = jsonArray.getString(0);
+//                                        JSONArray jsonArray1 = new JSONArray(jsonArry);
+//                                        for (int i = 0; i < jsonArray1.length(); i++) {
+//                                            JSONObject jsonObject = jsonArray1.getJSONObject(i);
+//                                            String name = jsonObject.optString("name");
+//                                            serviceDonationNames.add(i, name);
+//
+//                                        }
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                                if (serviceDonationNames.size() > 0) {
+//                                    myViewHolder.LDont_Services.removeAllViews();
+//                                    //  myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+//                                    int size = 0;
+//                                    if (serviceDonationNames.size() == 1) {
+//                                        size = 1;
+//                                    } else {
+//                                        if (serviceDonationNames.size() == 2)
+//                                            size = 2;
+//                                        else
+//                                            size = 3;
+//                                    }
+//                                    for (int i = 0; i < size; i++) {
+//                                        TextView dynaText = new TextView(mContext);
+//                                        tyface = Typeface.createFromAsset(mContext.getAssets(),
+//                                                "fonts/Montserrat_Regular.otf");
+//                                        dynaText.setTypeface(tyface);
+//                                        dynaText.setText(serviceDonationNames.get(i).toString());
+//                                        dynaText.setTextSize(13);
+//                                        dynaText.setPadding(5, 0, 5, 0);
+//                                        dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+//                                        // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
+//
+//                                        //  dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+//
+//                                        dynaText.setMaxLines(1);
+//                                        if (size > 2) {
+//                                            dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//                                            dynaText.setMaxEms(10);
+//                                        }
+//                                        final int finalI = i;
+//                                        dynaText.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                                //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+//                                            }
+//                                        });
+//                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                                        params.setMargins(0, 0, 20, 0);
+//
+//                                        dynaText.setLayoutParams(params);
+//                                        myViewHolder.LDont_Services.addView(dynaText);
+//                                    }
+//                                    if (size > 3) {
+//                                        TextView dynaText = new TextView(mContext);
+//                                        dynaText.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                                // mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid());
+//                                            }
+//                                        });
+//                                        dynaText.setGravity(Gravity.CENTER);
+//                                        dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+//                                        dynaText.setText(" ... ");
+//                                        myViewHolder.LDont_Services.addView(dynaText);
+//                                    }
+//                                } else {
+//                                    myViewHolder.LDont_Services.setVisibility(View.GONE);
+//                                    myViewHolder.txt_dontservices.setVisibility(View.GONE);
+//
+//
+//                                }
+//
+//                            } else {
+//                                myViewHolder.LDont_Services.setVisibility(View.GONE);
+//                                myViewHolder.txt_dontservices.setVisibility(View.GONE);
+//
+//                            }
+//
+//                    }
+//                }
+//            }
+//        }
 //Queue---- for button check-in,waittime checking
 
         Date c = Calendar.getInstance().getTime();
@@ -1430,6 +1531,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 }
                             } else if (date2 != null && date1.compareTo(date2) < 0) {   // For Future
                                 disableCheckinButton(myViewHolder);
+                                myViewHolder.LService_2.setVisibility(View.VISIBLE);
+                                myViewHolder.txtservices.setVisibility(View.VISIBLE);
                                 // ML/Fixed
                                 if (mShowWaitTime) {
                                     myViewHolder.btn_checkin.setText("Check-in".toUpperCase());
@@ -1677,6 +1780,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         }
         return "";
     }
+
 
 
     @Override

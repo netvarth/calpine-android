@@ -541,6 +541,15 @@ public class SearchAWsResponse {
 
     private String first_checkin_coupon_count;
 
+    public String getLocation_id1() {
+        return location_id1;
+    }
+
+    public void setLocation_id1(String location_id1) {
+        this.location_id1 = location_id1;
+    }
+
+    String location_id1;
 
 }
 

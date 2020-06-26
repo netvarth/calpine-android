@@ -81,6 +81,7 @@ import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
+import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
@@ -131,6 +132,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchDepartmentServices> mSearchDepartmentServices;
     String mbranchId, latitude, longitude, lat_long;
     boolean online_presence;
+    boolean donationFundRaising;
     Boolean firstCouponAvailable, couponAvailable;
     JdnResponse jdnList;
     String jdnDiscount, jdnMaxvalue;
@@ -210,6 +212,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     HashMap<String, List<SearchListModel>> departmentMap;
     LinearLayout L_layout;
+    ArrayList<SearchDonation> LServicesList = new ArrayList<>();
+    ArrayList<SearchDonation> gServiceList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -564,6 +568,74 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 mBottomDialog.dismiss();
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+    private void ApiDonationServices(final int id) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+
+
+        Call<ArrayList<SearchDonation>> call = apiService.getSearchDonation(mProvoderId);
+
+        call.enqueue(new Callback<ArrayList<SearchDonation>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchDonation>> call, Response<ArrayList<SearchDonation>> response) {
+
+                try {
+
+                    //  if (mDialog.isShowing())
+                    //  Config.closeDialog(getParent(), mDialog);
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+
+                        for (int i = 0; i < response.body().size(); i++) {
+                            SearchDonation mService = new SearchDonation();
+                            mService.setName(response.body().get(i).getName());
+                            mService.setId(id);
+                            mService.setId(response.body().get(i).getId());
+                            mService.setLivetrack(response.body().get(i).getLivetrack());
+                            mService.setPrePayment(response.body().get(i).isPrePayment());
+                            mService.setTotalAmount(response.body().get(i).getTotalAmount());
+                            mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
+                            mService.setServiceType(response.body().get(i).getServiceType());
+                            mService.setMultiples(response.body().get(i).getMultiples());
+                            mService.setMinDonationAmount(response.body().get(i).getMinDonationAmount());
+                            mService.setMaxDonationAmount(response.body().get(i).getMaxDonationAmount());
+                            LServicesList.add(mService);
+                        }
+                        gServiceList.addAll(LServicesList);
+                        // Department Section Starts
+
+
+
+
+
+                    }  } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchDonation>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                //  if (mDialog.isShowing())
+                //  Config.closeDialog(getParent(), mDialog);
 
             }
         });
@@ -1334,6 +1406,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Log.i("plplplp", new Gson().toJson(mBusinessDataList));
                         mbranchId = mBusinessDataList.getBranchId();
                         online_presence = mBusinessDataList.isOnlinePresence();
+                        donationFundRaising = mBusinessDataList.isDonationFundRaising();
+
                         lat_long = mBusinessDataList.getBaseLocation().getLattitude() + "," + mBusinessDataList.getBaseLocation().getLongitude();
                         Config.logV("Provider------------" + new Gson().toJson(mBusinessDataList));
 //                        Handler handler = new Handler();
@@ -2180,7 +2254,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     private void ApiSearchViewSetting(String muniqueID) {
 
-
+        ApiDonationServices(mProvoderId);
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
 
@@ -2231,7 +2305,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         uniID = homeUniqueId;
                     }
 
-                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence);
+                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence,donationFundRaising,gServiceList);
                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
                     mSearchLocAdapter.notifyDataSetChanged();
                 }
@@ -3148,6 +3222,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                                 search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
+                                search.setLocation_id1(response.body().getHits().getHit().get(i).getFields().getLocation_id1());
 
                                 search.setSector(response.body().getHits().getHit().get(i).getFields().getSector());
                                 search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
@@ -3363,6 +3438,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
                                             searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+                                            searchList.setLocation_id1(mSearchRespPass.get(i).getLocation_id1());
                                             //String spec = "";
 //                                        if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
 //                                            for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
@@ -3575,6 +3651,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                             searchList.setRating(mSearchRespPass.get(i).getRating());
                                             searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
                                             searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+                                            searchList.setLocation_id1(mSearchRespPass.get(i).getLocation_id1());
 
                                             searchList.setSectorname(mSearchRespPass.get(i).getSector());
                                             searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
@@ -3897,6 +3974,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
     }
+
+
 
 
     void groupByDepartmentCode(List<SearchListModel> mSearchListModel) {

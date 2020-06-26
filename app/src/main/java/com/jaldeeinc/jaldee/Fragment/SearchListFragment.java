@@ -1249,6 +1249,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                 search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
+                                search.setLocation_id1(response.body().getHits().getHit().get(i).getFields().getLocation_id1());
 
                                 search.setSector(response.body().getHits().getHit().get(i).getFields().getSector());
                                 search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
@@ -1496,6 +1497,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 search.setPlace1(response.body().getHits().getHit().get(i).getFields().getPlace1());
                                 search.setUnique_id(response.body().getHits().getHit().get(i).getFields().getUnique_id());
                                 search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
+                                search.setLocation_id1(response.body().getHits().getHit().get(i).getFields().getLocation_id1());
                                 search.setSector(response.body().getHits().getHit().get(i).getFields().getSector());
                                 search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
                                 search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
@@ -1762,6 +1764,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
                                     searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+                                    searchList.setLocation_id1(mSearchRespPass.get(i).getLocation_id1());
                                     searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
 
 
@@ -1940,6 +1943,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     searchList.setRating(mSearchRespPass.get(i).getRating());
                                     searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
                                     searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+                                    searchList.setLocation_id1(mSearchRespPass.get(i).getLocation_id1());
 
                                     searchList.setSectorname(mSearchRespPass.get(i).getSector());
                                     searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());

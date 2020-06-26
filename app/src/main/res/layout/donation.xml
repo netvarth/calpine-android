@@ -937,7 +937,7 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Enter Amount"
+                                        android:text="Enter Amount ₹"
                                         android:layout_marginLeft="@dimen/default_padding"
                                         android:textSize="@dimen/txtsize_12"
                                         android:layout_weight="0.1"/>
@@ -947,6 +947,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="0.9"
+                                        android:inputType="number"
                                         />
 
 

@@ -50,6 +50,16 @@ public class SearchViewDetail {
     String branchId;
     boolean onlinePresence;
 
+    public boolean isDonationFundRaising() {
+        return donationFundRaising;
+    }
+
+    public void setDonationFundRaising(boolean donationFundRaising) {
+        this.donationFundRaising = donationFundRaising;
+    }
+
+    boolean donationFundRaising;
+
     public boolean isOnlinePresence() {
         return onlinePresence;
     }

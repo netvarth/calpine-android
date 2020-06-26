@@ -490,7 +490,6 @@
             android:layout_marginLeft="@dimen/padding2"
             android:layout_marginTop="@dimen/padding2"
             android:layout_marginBottom="@dimen/padding2"
-
             android:gravity="left"
             android:paddingRight="@dimen/padding5"
             android:text="Claim it now in www.jaldee.com"
@@ -510,7 +509,8 @@
             android:gravity="left"
             android:text="Message"
             android:textColor="@color/title_grey"
-            android:textSize="@dimen/txtsize_12" />
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/txt_peopleahead"

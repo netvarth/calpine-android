@@ -679,7 +679,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.tv_claimable.setVisibility(View.INVISIBLE);
                         // myViewHolder.tv_useWeb.setVisibility(View.INVISIBLE);
                         myViewHolder.L_layout_type.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                       // myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -808,7 +808,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             e.printStackTrace();
                         }
                         if (searchdetailList.getMessage() != null && searchdetailList.getClaimable() == null) {
-                            myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                           // myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                             myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                         } else {
                             myViewHolder.tv_qmessage.setVisibility(View.GONE);
@@ -817,7 +817,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         if(searchdetailList.getMessage() != null && searchdetailList.getClaimable()!=null){
                             if (searchdetailList.getClaimable().equals("0")) {
-                                myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+                              //  myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
                                 myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                                 myViewHolder.tv_qmessage.setTextColor(context.getResources().getColor(R.color.red));
                                 myViewHolder.tv_WaitTime.setVisibility(View.GONE);
@@ -997,7 +997,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         Intent iAppoinment = new Intent(v.getContext(), Donation.class);
-                        iAppoinment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
+                        iAppoinment.putExtra("serviceId", Integer.parseInt(searchdetailList.getLocation_id1()));
                         iAppoinment.putExtra("uniqueID", searchdetailList.getUniqueid());
                         iAppoinment.putExtra("accountID", searchdetailList.getId());
                         iAppoinment.putExtra("googlemap", searchdetailList.getLocation1());
@@ -1315,6 +1315,21 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.L_appoinment.setVisibility(View.GONE);
                     myViewHolder.L_appointments.setVisibility(View.GONE);
                 }
+                if (searchdetailList.getOnline_profile() != null && searchdetailList.getDonation_status() != null) {
+                    if (searchdetailList.getDonation_status().equals("1") && searchdetailList.getOnline_profile().equals("1")) {
+                        myViewHolder.L_donation.setVisibility(View.VISIBLE);
+                        myViewHolder.L_donations.setVisibility(View.VISIBLE);
+                    } else {
+                        myViewHolder.L_donation.setVisibility(View.GONE);
+                        myViewHolder.L_donations.setVisibility(View.GONE);
+                    }
+
+                } else {
+                    myViewHolder.L_donation.setVisibility(View.GONE);
+                    myViewHolder.L_donations.setVisibility(View.GONE);
+                }
+
+
 
 
                 if (searchdetailList.getDonation_services() != null) {
@@ -1395,21 +1410,17 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             myViewHolder.L_donations.addView(dynaText);
                         }
                     }
-
-                }
-                if (searchdetailList.getOnline_profile() != null && searchdetailList.getDonation_status() != null) {
-                    if (searchdetailList.getDonation_status().equals("1") && searchdetailList.getOnline_profile().equals("1")) {
-                        myViewHolder.L_donation.setVisibility(View.VISIBLE);
-                        myViewHolder.L_donations.setVisibility(View.VISIBLE);
-                    } else {
+                    else{
                         myViewHolder.L_donation.setVisibility(View.GONE);
                         myViewHolder.L_donations.setVisibility(View.GONE);
                     }
 
-                } else {
+                }
+                else{
                     myViewHolder.L_donation.setVisibility(View.GONE);
                     myViewHolder.L_donations.setVisibility(View.GONE);
                 }
+
 
                 if (searchdetailList.getRating() != null) {
                     myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));

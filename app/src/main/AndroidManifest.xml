@@ -61,6 +61,7 @@
         <activity
             android:name=".activities.Donation"
             android:screenOrientation="unspecified"
+            android:windowSoftInputMode="adjustResize"
              />
         <activity
             android:name=".activities.Signup"
@@ -107,11 +108,13 @@
         <activity
             android:name=".activities.CheckIn"
             android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
             android:name=".activities.Appointment"
             android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity
             android:name=".activities.PaymentDetail"
             android:screenOrientation="unspecified"

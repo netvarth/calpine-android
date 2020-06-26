@@ -177,6 +177,7 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
                                 fav.setUniqueId(mFavList.get(i).getUniqueId());
                                 fav.setBusinessName(mFavList.get(i).getBusinessName());
                                 fav.setOnlinePresence(mFavList.get(i).getOnlinePresence());
+                                fav.setDonationServiceStatus(mFavList.get(i).getDonationServiceStatus());
                                 Config.logV("Revel Phone--@@@------------"+mFavList.get(i).isRevealPhoneNumber()+"Title"+mFavList.get(i).getBusinessName());
                                 String locid = "";
                                 String place = "";

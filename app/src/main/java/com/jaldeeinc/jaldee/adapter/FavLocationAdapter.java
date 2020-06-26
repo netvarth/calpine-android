@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
+import com.jaldeeinc.jaldee.activities.Donation;
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
@@ -265,24 +266,21 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 }
 
 
-
-
+                final int finalI = i;
+                final int finalI1 = i;
                 myViewHolder.btnappointments.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent iAppoinment = new Intent(v.getContext(), Appointment.class);
                         if(queueList.getNextAvailableQueue()!=null){
-                            iAppoinment.putExtra("serviceId", Integer.parseInt(String.valueOf(queueList.getNextAvailableQueue().getLocation().getId())));
+                            iAppoinment.putExtra("serviceId", Integer.parseInt(String.valueOf(mScheduleList.get(finalI).getAvailableSchedule().getLocation().getId())));
                         }
                         iAppoinment.putExtra("uniqueID", uniqueId);
-                        iAppoinment.putExtra("accountID",queueList.getProvider().getId());
+                        iAppoinment.putExtra("accountID",mScheduleList.get(finalI1).getProvider().getId());
                         iAppoinment.putExtra("from", "favourites");
                         iAppoinment.putExtra("title", title);
                         iAppoinment.putExtra("terminology",terminologys);
                         iAppoinment.putExtra("place", myViewHolder.tv_loc.getText().toString());
-                        if(queueList.getNextAvailableQueue()!=null){
-                            iAppoinment.putExtra("isshowtoken", queueList.getNextAvailableQueue().isShowToken());
-                        }
                         mContext.startActivity(iAppoinment);
 
 
@@ -290,6 +288,34 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                     }
                 });
 
+               if(mFavList.get(i).getOnlinePresence().equals("true") && mFavList.get(i).getDonationServiceStatus().equals("true")){
+                   myViewHolder.donationLayouts.setVisibility(View.VISIBLE);
+               }
+               else{
+                   myViewHolder.donationLayouts.setVisibility(View.GONE);
+               }
+
+                final int finalI2 = i;
+                final int finalI3 = i;
+                myViewHolder.btndonations.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent iDonation = new Intent(v.getContext(), Donation.class);
+                        if(queueList.getNextAvailableQueue()!=null){
+                            iDonation.putExtra("serviceId", mFavList.get(finalI3).getLocations().get(finalI3).getId());
+                        }
+                        iDonation.putExtra("uniqueID", uniqueId);
+                        iDonation.putExtra("accountID",mFavList.get(finalI2).getId());
+                        iDonation.putExtra("from", "favourites");
+                        iDonation.putExtra("title", title);
+                        iDonation.putExtra("terminology",terminologys);
+                        iDonation.putExtra("place", myViewHolder.tv_loc.getText().toString());
+                        mContext.startActivity(iDonation);
+
+
+
+                    }
+                });
 
                 if(mFavList.get(i).isFutureCheckin()){
                     myViewHolder.tv_date.setVisibility(View.VISIBLE);
