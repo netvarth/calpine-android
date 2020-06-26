@@ -14,45 +14,71 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/layout_toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/hometopbar"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/custom_toolbar" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding5">
+            android:background="@color/hometopbar"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding5"
+            android:weightSum="1">
 
-            <TextView
-                android:textColor="@color/black"
-                android:letterSpacing="0.03"
-                android:textStyle="bold"
-                android:justificationMode="inter_word"
-                android:lineSpacingExtra="@dimen/padding3"
-                android:id="@+id/checkins"
+            <Button
+                android:id="@+id/booking"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/input_border_top_diffcolor"
-                android:padding="@dimen/padding5"
-                android:text="Check-Ins / Tokens"
-                android:textSize="@dimen/txtsize_hint" />
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/padding2"
+                android:layout_weight="0.5"
+                android:background="@drawable/input_background_white_round"
+                android:text="My bookings">
 
+            </Button>
+
+            <Button
+                android:layout_margin="@dimen/padding2"
+
+                android:id="@+id/payment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@drawable/input_background_white_rounds"
+
+                android:text="My payments">
+
+            </Button>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/padding5">
+
             <TextView
-                android:textColor="@color/black"
-                android:letterSpacing="0.03"
-                android:textStyle="bold"
-                android:justificationMode="inter_word"
-                android:lineSpacingExtra="@dimen/padding3"
                 android:id="@+id/appointments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_border_top_diffcolor"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
                 android:padding="@dimen/padding5"
                 android:text="Appointments"
-                android:textSize="@dimen/txtsize_hint" />
+                android:textColor="@color/black"
+                android:textSize="@dimen/txtsize_hint"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtnoappointments"
@@ -64,5 +90,53 @@
                 android:textSize="@dimen/txtsize_hint"
                 android:visibility="gone" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/padding5">
+
+            <TextView
+                android:id="@+id/tokens"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_border_top_diffcolor"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:padding="@dimen/padding5"
+                android:text="Tokens"
+                android:textColor="@color/black"
+                android:textSize="@dimen/txtsize_hint"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/padding5">
+
+            <TextView
+                android:id="@+id/checkins"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_border_top_diffcolor"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:padding="@dimen/padding5"
+                android:text="Check-Ins"
+                android:textColor="@color/black"
+                android:textSize="@dimen/txtsize_hint"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
     </LinearLayout>
 </FrameLayout>

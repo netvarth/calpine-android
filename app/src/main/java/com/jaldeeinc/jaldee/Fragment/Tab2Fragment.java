@@ -159,6 +159,24 @@ public class Tab2Fragment extends RootFragment  {
         payments_listview = row.findViewById(R.id.payment_inner_list);
         mContext = getActivity();
         ApiPayments();
+
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+        iBackPress.setVisibility(View.VISIBLE);
+        tv_title.setText("My Payments");
+        Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface);
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+            }
+        });
+
         return row;
     }
 

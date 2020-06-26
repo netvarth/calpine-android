@@ -90,6 +90,16 @@ public class ActiveCheckIn {
 
     String ynwUuid;
 
+    String showToken;
+
+    public String getShowToken() {
+        return showToken;
+    }
+
+    public void setShowToken(String showToken) {
+        this.showToken = showToken;
+    }
+
     public String getGoogleMapUrl() {
         return googleMapUrl;
     }

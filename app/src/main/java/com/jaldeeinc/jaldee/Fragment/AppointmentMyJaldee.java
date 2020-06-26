@@ -201,11 +201,28 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
 
         Home.doubleBackToExitPressedOnce = false;
 
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+        iBackPress.setVisibility(View.VISIBLE);
+        tv_title.setText("Appointments");
+        Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface);
+        iBackPress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
+            }
+        });
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         final TextView txtCheckins = (TextView) row.findViewById(R.id.checkins);
-        final TextView txtAppointments = (TextView) row.findViewById(R.id.appointments);
         expandlistAppointment = (ExpandableListView) row.findViewById(R.id.appointmentView);
+        expandlistAppointment.setVisibility(View.VISIBLE);
 
         LocationManager service = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -233,18 +250,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         }
 
 
-        txtAppointments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (expandlistAppointment.getVisibility() == View.GONE) {
-                    expandlistAppointment.setVisibility(View.VISIBLE);
-                    txtAppointments.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
-                } else {
-                    expandlistAppointment.setVisibility(View.GONE);
-                    txtAppointments.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down_light, 0);
-                }
-            }
-        });
+
 
 
 
