@@ -73,8 +73,7 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.PaymentActivity;
 import com.jaldeeinc.jaldee.adapter.DetailFileAdapter;
-import com.jaldeeinc.jaldee.adapter.ExpandableListAdapter;
-import com.jaldeeinc.jaldee.adapter.ExpandableListAdapterAppointment;
+import com.jaldeeinc.jaldee.adapter.ExpandableListAdapterToken;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
@@ -131,15 +130,14 @@ import static android.support.v4.content.ContextCompat.getSystemService;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCallback, ActiveAdapterOnCallback {
+public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallback,ActiveAdapterOnCallback {
 
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
 
-    public CheckinsMyJaldee() {
+    public TokensMyJaldee() {
         // Required empty public constructor
     }
-
     boolean firstTimeRating = false;
     Context mContext;
     Activity mActivity;
@@ -169,17 +167,16 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
     private Uri mImageUri;
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View row = inflater.inflate(R.layout.chekins_myjaldee, container, false);
+        View row = inflater.inflate(R.layout.tokens_myjaldee, container, false);
         mContext = getActivity();
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
         mCallback = (ActiveAdapterOnCallback) this;
-
-
 
         Home.doubleBackToExitPressedOnce = false;
 
@@ -189,7 +186,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface1);
         iBackPress.setVisibility(View.VISIBLE);
-        tv_title.setText("Check-ins");
+        tv_title.setText("Tokens");
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
@@ -200,11 +197,12 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
 
-
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
-
         expandlist.setVisibility(View.VISIBLE);
+
+
+
 
 
         LocationManager service = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
@@ -233,6 +231,8 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         }
 
 
+
+
         if (Config.isOnline(mContext)) {
             ApiFavList();
         } else {
@@ -255,6 +255,8 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
         return row;
     }
+
+
 
 
     private void ApiTodayChekInList() {
@@ -284,19 +286,19 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
 
                         mCheckTodayFutureList = response.body();
-                        Log.i("hgfhrty", new Gson().toJson(mCheckTodayFutureList));
+                        Log.i("hgfhrty",new Gson().toJson(mCheckTodayFutureList));
 
 
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mCheckTodayFutureList.size(); i++) {
                             if (date.equalsIgnoreCase(mCheckTodayFutureList.get(i).getDate())) {
                                 if(response.body().get(i).getShowToken()!=null){
-                                    if(mCheckTodayFutureList.get(i).getShowToken().equalsIgnoreCase("false")){
+                                    if(mCheckTodayFutureList.get(i).getShowToken().equalsIgnoreCase("true")){
                                         mCheckTodayList.add(response.body().get(i));
-                                        Log.i("hgfhrty22", new Gson().toJson(mCheckTodayList));
+                                        Log.i("hgfhrty22",new Gson().toJson(mCheckTodayList));
                                     }
-
                                 }
+
 
                             }
 
@@ -332,6 +334,9 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
 
     }
+
+
+
 
 
     private void ApiOldChekInList() {
@@ -372,6 +377,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
 
                         }
+
 
                         DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteMyCheckin("old");
@@ -424,6 +430,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                 try {
 
 
+
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
@@ -433,7 +440,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                         mCheckFutureListTemp = response.body();
 
                         for(int i = 0; i < mCheckFutureListTemp.size();i++){
-                            if(mCheckFutureListTemp.get(i).getShowToken().equalsIgnoreCase("false")){
+                            if(mCheckFutureListTemp.get(i).getShowToken().equalsIgnoreCase("true")){
 
                                 mCheckFutureList.add(response.body().get(i));
 
@@ -580,11 +587,12 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (from.equalsIgnoreCase("checkin")) {
+                if(from.equalsIgnoreCase("checkin")){
                     ApiCommunicate(ynwuuid, String.valueOf(accountID), edt_message.getText().toString(), dialog);
-                } else {
+                }else{
                     ApiCommunicateAppointment(ynwuuid, String.valueOf(accountID), edt_message.getText().toString(), dialog);
                 }
+
 
 
             }
@@ -876,7 +884,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
 
     @Override
-    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName,int customerId) {
+    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
@@ -904,14 +912,15 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
 
 
+
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                if (from.equalsIgnoreCase("checkin")) {
+                if(from.equalsIgnoreCase("checkin")){
                     ApiDeleteCheckin(ynwuuid, String.valueOf(accountID), dialog);
-                } else {
+                }else{
                     ApiDeleteAppointment(ynwuuid, String.valueOf(accountID), dialog);
                 }
 
@@ -944,7 +953,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer,int customerId) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer) {
         Log.i("Purpose: ", "billPayment");
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
@@ -957,7 +966,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
     }
 
     @Override
-    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue,int customerId) {
+    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue) {
         Log.i("Purpose: ", "prePayment");
         // APIPayment(accountID, ynwUUID, amountDue);
         Intent i = new Intent(mContext, PaymentActivity.class);
@@ -1295,6 +1304,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
 
     }
+
 
 
     private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
@@ -1675,7 +1685,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
     }
 
-    ExpandableListAdapter adapter;
+    ExpandableListAdapterToken adapter;
 
     boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
 
@@ -1718,7 +1728,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
+        adapter = new ExpandableListAdapterToken(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
         expandlist.setAdapter(adapter);
         expandlist.setVerticalScrollBarEnabled(false);
         adapter.notifyDataSetChanged();
@@ -1734,6 +1744,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
 
     }
+
 
 
 }

@@ -48,10 +48,10 @@ public class MyPaymentAdapter  extends ArrayAdapter<MyPayments> {
 
         TextView accountName = (TextView) listItem.findViewById(R.id.accountName);
         TextView amount = (TextView) listItem.findViewById(R.id.amount);
-        TextView acceptPaymentBy = (TextView) listItem.findViewById(R.id.acceptPaymentBy);
+//        TextView acceptPaymentBy = (TextView) listItem.findViewById(R.id.acceptPaymentBy);
         TextView paymentOn = (TextView) listItem.findViewById(R.id.paymentOn);
-        TextView status = (TextView) listItem.findViewById(R.id.status);
-        TextView txnType = (TextView) listItem.findViewById(R.id.txnType);
+//        TextView status = (TextView) listItem.findViewById(R.id.status);
+//        TextView txnType = (TextView) listItem.findViewById(R.id.txnType);
         CardView card = (CardView) listItem.findViewById(R.id.card);
 
         if(paymentsList.get(position).getAccountName()!=null){
@@ -68,12 +68,12 @@ public class MyPaymentAdapter  extends ArrayAdapter<MyPayments> {
             amount.setVisibility(View.INVISIBLE);
         }
 
-        if(paymentsList.get(position).getAcceptPaymentBy()!=null){
-            acceptPaymentBy.setText(paymentsList.get(position).getAcceptPaymentBy());
-            acceptPaymentBy.setVisibility(View.VISIBLE);
-        }else{
-            acceptPaymentBy.setVisibility(View.INVISIBLE);
-        }
+//        if(paymentsList.get(position).getAcceptPaymentBy()!=null){
+//            acceptPaymentBy.setText(paymentsList.get(position).getAcceptPaymentBy());
+//            acceptPaymentBy.setVisibility(View.VISIBLE);
+//        }else{
+//            acceptPaymentBy.setVisibility(View.INVISIBLE);
+//        }
 
         if(paymentsList.get(position).getPaymentOn()!=null){
             paymentOn.setText(paymentsList.get(position).getPaymentOn());
@@ -82,26 +82,26 @@ public class MyPaymentAdapter  extends ArrayAdapter<MyPayments> {
             paymentOn.setVisibility(View.INVISIBLE);
         }
 
-        if(paymentsList.get(position).getStatus()!=null){
-            status.setText(paymentsList.get(position).getStatus());
-            status.setVisibility(View.VISIBLE);
-        }else{
-            status.setVisibility(View.INVISIBLE);
-        }
+//        if(paymentsList.get(position).getStatus()!=null){
+//            status.setText(paymentsList.get(position).getStatus());
+//            status.setVisibility(View.VISIBLE);
+//        }else{
+//            status.setVisibility(View.INVISIBLE);
+//        }
 
 
-        if(paymentsList.get(position).getTxnType()!=null){
-            if(paymentsList.get(position).getTxnType().equalsIgnoreCase("Waitlist")){
-                txnType.setText("C");
-            }else if(paymentsList.get(position).getTxnType().equalsIgnoreCase("Appointment")){
-                txnType.setText("A");
-            }else if (paymentsList.get(position).getTxnType().equalsIgnoreCase("Donation")){
-                txnType.setText("D");
-            }
-            txnType.setVisibility(View.VISIBLE);
-        }else{
-            txnType.setVisibility(View.INVISIBLE);
-        }
+//        if(paymentsList.get(position).getTxnType()!=null){
+//            if(paymentsList.get(position).getTxnType().equalsIgnoreCase("Waitlist")){
+//                txnType.setText("C");
+//            }else if(paymentsList.get(position).getTxnType().equalsIgnoreCase("Appointment")){
+//                txnType.setText("A");
+//            }else if (paymentsList.get(position).getTxnType().equalsIgnoreCase("Donation")){
+//                txnType.setText("D");
+//            }
+//            txnType.setVisibility(View.VISIBLE);
+//        }else{
+//            txnType.setVisibility(View.INVISIBLE);
+//        }
 
 
 
@@ -131,16 +131,16 @@ public class MyPaymentAdapter  extends ArrayAdapter<MyPayments> {
 
         });
 
-        txnType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent iPaymentDetail = new Intent(v.getContext(), PaymentDetail.class);
-                iPaymentDetail.putExtra("myPaymentID",String.valueOf(paymentsList.get(position).getId()));
-                mContext.startActivity(iPaymentDetail);
-            }
-
-        });
+//        txnType.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent iPaymentDetail = new Intent(v.getContext(), PaymentDetail.class);
+//                iPaymentDetail.putExtra("myPaymentID",String.valueOf(paymentsList.get(position).getId()));
+//                mContext.startActivity(iPaymentDetail);
+//            }
+//
+//        });
 
 
         return listItem;

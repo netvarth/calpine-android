@@ -144,14 +144,21 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     Activity mActivity;
 
     ArrayList<ActiveCheckIn> mCheckFutureList = new ArrayList<>();
+    ArrayList<ActiveCheckIn> mCheckFutureListTemp = new ArrayList<>();
+    ArrayList<ActiveCheckIn> mTokenFutureList = new ArrayList<>();
+    ArrayList<ActiveCheckIn> mTokenFutureListTemp = new ArrayList<>();
     ArrayList<ActiveAppointment> mCheckFutureListAppointment = new ArrayList<>();
     ArrayList<ActiveCheckIn> mCheckTodayList = new ArrayList<>();
+    ArrayList<ActiveCheckIn> mTokenTodayList = new ArrayList<>();
     ArrayList<ActiveAppointment> mAppointmentTodayList = new ArrayList<>();
     ArrayList<ActiveCheckIn> mCheckTodayFutureList = new ArrayList<>();
+    ArrayList<ActiveCheckIn> mTokenTodayFutureList = new ArrayList<>();
     ArrayList<ActiveAppointment> mAppointmentFutureList = new ArrayList<>();
 
     ArrayList<ActiveCheckIn> mCheckOldList = new ArrayList<>();
     ArrayList<ActiveAppointment> mAppointmentOldList = new ArrayList<>();
+    int tokenCount,checkinCount,appointmentCount;
+
 
 
     HistoryAdapterCallback mInterface;
@@ -172,13 +179,14 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     ArrayList<String> imagePathList = new ArrayList<>();
     private Uri mImageUri;
     String filePath;
-    TextView txtCheckins;
+
     public final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
     static double latitude;
     static double longitude;
     private Location mylocation;
     private GoogleApiClient googleApiClient;
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
+     TextView txtTokens,txtCheckins,txtAppointments;
 
 
     @Override
@@ -195,19 +203,28 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //expList = (ExpandableListView) row.findViewById(R.id.exp_list);
-        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
-        final TextView txtCheckins = (TextView) row.findViewById(R.id.checkins);
-        final TextView txtAppointments = (TextView) row.findViewById(R.id.appointments);
-//        final TextView txtDonations = (TextView) row.findViewById(R.id.donations);
-//        TextView txtPaylog = (TextView) row.findViewById(R.id.paylog);
-        final TextView txtnoappointments = (TextView) row.findViewById(R.id.txtnoappointments);
-//        final TextView txtnodonations = (TextView) row.findViewById(R.id.txtnodonations);
-//        final TextView txtnopaylog = (TextView) row.findViewById(R.id.txtnopaylog);
+
+        Button booking = (Button) row.findViewById(R.id.booking);
+        Button payment = (Button) row.findViewById(R.id.payment);
+        txtCheckins = (TextView) row.findViewById(R.id.checkins);
+        txtTokens = (TextView) row.findViewById(R.id.tokens);
+         txtAppointments = (TextView) row.findViewById(R.id.appointments);
+
 
         expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
         expandlistAppointment = (ExpandableListView) row.findViewById(R.id.appointmentView);
 
 
+        TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
+        ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface1);
+        iBackPress.setVisibility(View.GONE);
+        tv_title.setText("My Jaldee");
+        Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_title.setTypeface(tyface);
 
         LocationManager service = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -234,6 +251,17 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             alertDialog.show();
         }
 
+        payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Tab2Fragment pfFragment = new Tab2Fragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, pfFragment).commit();
+            }
+        });
+
+
         txtCheckins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -241,6 +269,16 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
+            }
+        });
+
+        txtTokens.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TokensMyJaldee pfFfragment = new TokensMyJaldee();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.mainlayout, pfFfragment).commit();
             }
         });
         txtAppointments.setOnClickListener(new View.OnClickListener() {
@@ -278,6 +316,10 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
         if (Config.isOnline(mContext)) {
             ApiTodayAppointmentList();
+        }
+
+        if (Config.isOnline(mContext)) {
+            ApiTodayTokenList();
         }
 
         return row;
@@ -319,8 +361,14 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mCheckTodayFutureList.size(); i++) {
                             if (date.equalsIgnoreCase(mCheckTodayFutureList.get(i).getDate())) {
-                                mCheckTodayList.add(response.body().get(i));
-                                Log.i("hgfhrty22",new Gson().toJson(mCheckTodayList));
+                                if(response.body().get(i).getShowToken()!=null){
+                                    if(mCheckTodayFutureList.get(i).getShowToken().equalsIgnoreCase("false")){
+                                        mCheckTodayList.add(response.body().get(i));
+                                        Log.i("hgfhrty22", new Gson().toJson(mCheckTodayList));
+                                    }
+
+                                }
+
                             }
 
                         }
@@ -329,6 +377,76 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         db.DeleteMyCheckin("today");
                         db.insertMyCheckinInfo(mCheckTodayList);
                         ApiFutureChekInList();
+
+
+                    } else {
+                        if (response.code() != 419) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+
+            }
+        });
+
+
+    }
+
+    private void ApiTodayTokenList() {
+
+        Config.logV("API TODAY Call");
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
+
+
+        call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
+
+                try {
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+                        mTokenTodayFutureList.clear();
+                        mTokenTodayList.clear();
+
+
+                        mTokenTodayFutureList = response.body();
+                        Log.i("hgfhrty",new Gson().toJson(mTokenTodayFutureList));
+
+
+                        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                        for (int i = 0; i < mTokenTodayFutureList.size(); i++) {
+                            if (date.equalsIgnoreCase(mTokenTodayFutureList.get(i).getDate())) {
+
+                                if(response.body().get(i).getShowToken()!=null){
+                                    if(mTokenTodayFutureList.get(i).getShowToken().equalsIgnoreCase("true")){
+                                        mTokenTodayList.add(response.body().get(i));
+                                        Log.i("hgfhrty22",new Gson().toJson(mTokenTodayList));
+                                    }
+                                }
+
+
+
+                            }
+
+                        }
+                        ApiFutureTokenList();
 
 
                     } else {
@@ -526,13 +644,31 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
                     if (response.code() == 200) {
                         mCheckFutureList.clear();
-                        mCheckFutureList = response.body();
+                        mCheckFutureListTemp.clear();
+                        mCheckFutureListTemp = response.body();
+
+                        for(int i = 0; i < mCheckFutureListTemp.size();i++){
+                            if(mCheckFutureListTemp.get(i).getShowToken().equalsIgnoreCase("false")){
+
+                                mCheckFutureList.add(response.body().get(i));
+
+                            }
+                        }
+
+
+                        checkinCount = mCheckTodayList.size() + mCheckFutureList.size();
+                        txtCheckins.setText("Check-Ins ("+checkinCount+")");
+
+                        if(checkinCount>0){
+                            txtCheckins.setVisibility(View.VISIBLE);
+                        }else{
+                            txtCheckins.setVisibility(View.GONE);
+                        }
 
                         DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteMyCheckin("future");
                         db.insertMyCheckinInfo(mCheckFutureList);
 
-                        ApiOldChekInList();
 
 
                     } else {
@@ -558,7 +694,83 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         });
 
 
-    }    private void ApiFutureAppointmentList() {
+    }
+
+    private void ApiFutureTokenList() {
+
+        Config.logV("API Call");
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        Call<ArrayList<ActiveCheckIn>> call = apiService.getFutureCheckInList();
+
+
+        call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
+
+                try {
+
+
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+
+                        mTokenFutureList.clear();
+                        mTokenFutureListTemp.clear();
+                        mTokenFutureListTemp = response.body();
+
+                        for(int i = 0; i < mTokenFutureListTemp.size();i++){
+                            if(mTokenFutureListTemp.get(i).getShowToken().equalsIgnoreCase("true")){
+
+                                mTokenFutureList.add(response.body().get(i));
+
+                            }
+
+
+                        }
+
+                        Log.i("bnmbnmb",String.valueOf(mTokenFutureList.size()));
+                        Log.i("bnmbnmb",String.valueOf(mTokenTodayList.size()));
+                        tokenCount = mTokenFutureList.size() + mTokenTodayList.size();
+                        if(tokenCount>0){
+                            txtTokens.setVisibility(View.VISIBLE);
+                        }else{
+                            txtTokens.setVisibility(View.GONE);
+                        }
+
+                        txtTokens.setText("Tokens ("+tokenCount+")");
+
+
+                    } else {
+                        if (response.code() != 419) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+
+
+            }
+        });
+
+
+    }
+
+    private void ApiFutureAppointmentList() {
 
         Config.logV("API Call");
         final ApiInterface apiService =
@@ -575,6 +787,15 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         mCheckFutureListAppointment.clear();
                         mCheckFutureListAppointment = response.body();
                         Log.i("appointment123future",new Gson().toJson(mCheckFutureListAppointment));
+
+                        appointmentCount = mAppointmentTodayList.size() + mCheckFutureListAppointment.size();
+                        txtAppointments.setText("Appointments ("+appointmentCount+")");
+
+                        if(appointmentCount>0){
+                            txtAppointments.setVisibility(View.VISIBLE);
+                        }else{
+                            txtAppointments.setVisibility(View.GONE);
+                        }
 
                         ApiOldAppointmentList();
 

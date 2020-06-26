@@ -7,10 +7,25 @@
     android:background="@color/spinnerbg"
     android:focusableInTouchMode="true">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/payment_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/layout_toolbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/hometopbar"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/custom_toolbar" />
+        </LinearLayout>
+
 
         <ListView
             android:id="@+id/payment_inner_list"
@@ -24,6 +39,6 @@
 
         </ListView>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </FrameLayout>
