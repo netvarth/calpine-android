@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.jaldeeinc.jaldee.activities.Appointment;
+import com.jaldeeinc.jaldee.activities.Donation;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
@@ -93,10 +94,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     ArrayList<SearchViewDetail> mSearchGallery;
     String uniqueID;
     List<QueueList> mQueueList;
-    ArrayList serviceNames = new ArrayList();
-    ArrayList serviceNamesAppointments = new ArrayList();
-
-
 
     public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList) {
         this.context = context;
@@ -629,6 +626,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.tv_name.setTypeface(tyface_confm);
                 myViewHolder.btncheckin.setTypeface(tyface_confm);
                 myViewHolder.btnappointments.setTypeface(tyface_confm);
+                myViewHolder.btndonations.setTypeface(tyface_confm);
                 // myViewHolder.tv_Open.setTypeface(tyface_confm);
 
                 myViewHolder.tv_location.setOnClickListener(new View.OnClickListener() {
@@ -994,6 +992,26 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         context.startActivity(iAppoinment);
                     }
                 });
+
+                myViewHolder.btndonations.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent iAppoinment = new Intent(v.getContext(), Donation.class);
+                        iAppoinment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
+                        iAppoinment.putExtra("uniqueID", searchdetailList.getUniqueid());
+                        iAppoinment.putExtra("accountID", searchdetailList.getId());
+                        iAppoinment.putExtra("googlemap", searchdetailList.getLocation1());
+                        iAppoinment.putExtra("from", "checkin");
+                        iAppoinment.putExtra("title", searchdetailList.getTitle());
+                        iAppoinment.putExtra("place", searchdetailList.getPlace1());
+                        iAppoinment.putExtra("sector", searchdetailList.getSectorname());
+                        iAppoinment.putExtra("subsector", searchdetailList.getSub_sector());
+                        iAppoinment.putExtra("terminology", termilogy);
+                        iAppoinment.putExtra("isshowtoken", searchdetailList.isShowToken());
+                        iAppoinment.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                        context.startActivity(iAppoinment);
+                    }
+                });
                 /////////////////////////////////////////////////////////
                 setSpecializations(myViewHolder, searchdetailList);
                 //  Picasso.with(context).load(searchdetailList.getLogo()).fit().into(myViewHolder.profile);
@@ -1116,8 +1134,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
 
 
-                serviceNames.clear();
+
                 if (searchdetailList.getServices() != null) {
+                    final ArrayList serviceNames = new ArrayList();
+                    serviceNames.clear();
                     try {
                         String serviceName = searchdetailList.getServices().toString();
                         try {
@@ -1171,6 +1191,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 @Override
                                 public void onClick(View v) {
                                     ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+
                                 }
                             });
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -1198,8 +1219,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
 
-                serviceNamesAppointments.clear();
+
                 if (searchdetailList.getAppt_services() != null) {
+                    final ArrayList serviceNamesAppointments = new ArrayList();
+                    serviceNamesAppointments.clear();
                     try {
                         String serviceName = searchdetailList.getAppt_services().toString();
                         try {
@@ -1291,6 +1314,101 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     myViewHolder.L_appoinment.setVisibility(View.GONE);
                     myViewHolder.L_appointments.setVisibility(View.GONE);
+                }
+
+
+                if (searchdetailList.getDonation_services() != null) {
+                    final ArrayList serviceNamesDonations = new ArrayList();
+                    serviceNamesDonations.clear();
+                    try {
+                        String serviceName = searchdetailList.getDonation_services().toString();
+                        try {
+                            JSONArray jsonArray = new JSONArray(serviceName);
+                            String jsonArry = jsonArray.getString(0);
+                            JSONArray jsonArray1 = new JSONArray(jsonArry);
+                            for(int i =0;i<jsonArray1.length();i++){
+                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                                String name = jsonObject.optString("name");
+                                serviceNamesDonations.add(i,name);
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (serviceNamesDonations.size() > 0) {
+                        myViewHolder.L_donations.removeAllViews();
+                        int size = 0;
+                        if (serviceNamesDonations.size() == 1) {
+                            size = 1;
+                        } else {
+                            if (serviceNamesDonations.size() == 2)
+                                size = 2;
+                            else
+                                size = 3;
+                        }
+                        for (int i = 0; i < size; i++) {
+                            TextView dynaText = new TextView(context);
+                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                                    "fonts/Montserrat_Regular.otf");
+                            dynaText.setTypeface(tyface);
+                            dynaText.setText(serviceNamesDonations.get(i).toString());
+                            dynaText.setTextSize(13);
+                            dynaText.setPadding(5, 0, 5, 0);
+                            dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+                            // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
+
+                            dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+                            dynaText.setMaxLines(1);
+                            if (size > 2) {
+                                dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                                dynaText.setMaxEms(10);
+                            }
+                            final int finalI = i;
+                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ApiService(searchdetailList.getUniqueid(), serviceNamesDonations.get(finalI).toString(), searchdetailList.getTitle());
+                                }
+                            });
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            params.setMargins(0, 0, 20, 0);
+
+                            dynaText.setLayoutParams(params);
+                            myViewHolder.L_donations.addView(dynaText);
+                        }
+                        if (size > 3) {
+                            TextView dynaText = new TextView(context);
+                            dynaText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mAdapterCallback.onMethodServiceCallback(serviceNamesDonations, searchdetailList.getTitle(), searchdetailList.getUniqueid());
+                                }
+                            });
+                            dynaText.setGravity(Gravity.CENTER);
+                            dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+                            dynaText.setText(" ... ");
+                            myViewHolder.L_donations.addView(dynaText);
+                        }
+                    }
+
+                }
+                if (searchdetailList.getOnline_profile() != null && searchdetailList.getDonation_status() != null) {
+                    if (searchdetailList.getDonation_status().equals("1") && searchdetailList.getOnline_profile().equals("1")) {
+                        myViewHolder.L_donation.setVisibility(View.VISIBLE);
+                        myViewHolder.L_donations.setVisibility(View.VISIBLE);
+                    } else {
+                        myViewHolder.L_donation.setVisibility(View.GONE);
+                        myViewHolder.L_donations.setVisibility(View.GONE);
+                    }
+
+                } else {
+                    myViewHolder.L_donation.setVisibility(View.GONE);
+                    myViewHolder.L_donations.setVisibility(View.GONE);
                 }
 
                 if (searchdetailList.getRating() != null) {
@@ -1716,7 +1834,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     protected class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec_more, tv_spec22, tv_count, tv_qmessage, tv_dept, tv_services, tv_dep1, tv_dep2, tv_dep22, tv_dep_more, tv_peopleahead;
-        LinearLayout L_specialization, L_services, L_layout_type, L_checkin, L_departments,L_appoinment,L_appointments;
+        LinearLayout L_specialization, L_services, L_layout_type, L_checkin, L_departments,L_appoinment,L_appointments,L_donation,L_donations;
         View vsep;
 
         ImageView ic_jaldeeverifiedIcon;
@@ -1724,7 +1842,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         RatingBar rating;
         TextView tv_claimable, tv_distance, tv_branch_name;
 
-        Button btncheckin,btnappointments;
+        Button btncheckin,btnappointments,btndonations;
         LinearLayout layout_row;
         TextView mImageViewText,tv_useWeb;
         LinearLayout layout_type;
@@ -1735,6 +1853,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(view);
             L_checkin = view.findViewById(R.id.checkinlayout);
             L_appoinment = view.findViewById(R.id.appoinmentLayouts);
+            L_donation = view.findViewById(R.id.donationLayouts);
             ic_jaldeeverifiedIcon = view.findViewById(R.id.ic_jaldeeverifiedIcon);
             tv_name = view.findViewById(R.id.name);
             tv_count = view.findViewById(R.id.count_doctors);
@@ -1748,10 +1867,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             L_departments = view.findViewById(R.id.department);
             L_services = view.findViewById(R.id.service);
             L_appointments = view.findViewById(R.id.appointmentList);
+            L_donations = view.findViewById(R.id.donationList);
             tv_distance = view.findViewById(R.id.distance);
             btncheckin = view.findViewById(R.id.btncheckin);
 
             btnappointments = view.findViewById(R.id.btnappointments);
+            btndonations = view.findViewById(R.id.btndonations);
             tv_Futuredate = view.findViewById(R.id.txt_diffdate);
             tv_WaitTime = view.findViewById(R.id.txtWaitTime);
             L_specialization = view.findViewById(R.id.Lspec);

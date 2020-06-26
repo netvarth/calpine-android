@@ -1,24 +1,38 @@
 package com.jaldeeinc.jaldee.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -37,6 +51,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
+import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -58,25 +73,39 @@ import com.jaldeeinc.jaldee.response.SearchUsers;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -84,6 +113,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -195,6 +226,7 @@ public class CheckIn extends AppCompatActivity {
     EditText et_virtualId;
     String selectedServiceType;
     String callingMode,valueNumber,serviceInstructions;
+    File file;
 
 
     @Override
@@ -391,7 +423,130 @@ public class CheckIn extends AppCompatActivity {
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                     }
                 });
+                imagePathList.clear();
+                tv_attach = dialog.findViewById(R.id.btn);
+                tv_camera = dialog.findViewById(R.id.camera);
+                recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
+                //  imageview = dialog.findViewById(R.id.iv);
+                // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
+
+
+                requestMultiplePermissions();
+                tv_attach.setVisibility(View.VISIBLE);
+                tv_camera.setVisibility(View.VISIBLE);
+
+
+                tv_attach.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+
+                                    requestPermissions(new String[]{
+                                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
+
+                                    return;
+                                } else {
+                                    Intent intent = new Intent();
+                                    intent.setType("*/*");
+                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                                }
+                            } else {
+
+                                Intent intent = new Intent();
+                                intent.setType("*/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                });
+
+//
+                tv_camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+
+                                    requestPermissions(new String[]{
+                                            Manifest.permission.CAMERA}, CAMERA);
+
+                                    return;
+                                } else {
+                                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                    Intent cameraIntent = new Intent();
+                                    cameraIntent.setType("image/*");
+                                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                                    startActivityForResult(intent, CAMERA);
+                                }
+                            } else {
+
+                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                Intent cameraIntent = new Intent();
+                                cameraIntent.setType("image/*");
+                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(intent, CAMERA);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                });
+
+//
+                btn_send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //
+                        txt_message = edt_message.getText().toString();
+                        dialog.dismiss();
+                    }
+                });
+
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        imagePathList.clear();
+                        dialog.dismiss();
+                    }
+                });
+//
+                edt_message.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable arg0) {
+                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
+                            btn_send.setEnabled(true);
+                            btn_send.setClickable(true);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
+                        } else {
+                            btn_send.setEnabled(false);
+                            btn_send.setClickable(false);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
+                        }
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
             }
+
         });
 
         ic_left = findViewById(R.id.ic_left);
@@ -861,6 +1016,186 @@ public class CheckIn extends AppCompatActivity {
                 mtermsAndConditionDetail.setVisibility(mtermsAndConditionDetail.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             }
         });
+    }
+    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
+        //copy file and send new file path
+        String fileName = getFileNameInfo(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            String ext = "";
+            if (fileName.contains(".")) {
+            } else {
+                ext = "." + extension;
+            }
+            File wallpaperDirectoryFile = new File(
+                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
+            copy(context, contentUri, wallpaperDirectoryFile);
+            return wallpaperDirectoryFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    protected static String getFileNameInfo(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public static void copy(Context context, Uri srcUri, File dstFile) {
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
+            if (inputStream == null) return;
+            FileOutputStream outputStream = new FileOutputStream(dstFile);
+            IOUtils.copy(inputStream, outputStream);
+            inputStream.close();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
+    }
+    public String saveImage(Bitmap myBitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        if (myBitmap != null) {
+            myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        }
+        File wallpaperDirectory = new File(
+                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
+        // have the object build the directory structure, if needed.
+        if (!wallpaperDirectory.exists()) {
+            wallpaperDirectory.mkdirs();
+        }
+
+        try {
+            f = new File(wallpaperDirectory, Calendar.getInstance()
+                    .getTimeInMillis() + ".jpg");
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            MediaScannerConnection.scanFile(mContext,
+                    new String[]{f.getPath()},
+                    new String[]{"image/jpeg"}, null);
+            fo.close();
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
+
+            return f.getAbsolutePath();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return "";
+    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public String getPDFPath(Uri uri) {
+
+        final String id = DocumentsContract.getDocumentId(uri);
+        final Uri contentUri = ContentUris.withAppendedId(
+                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = mActivity.getApplicationContext().getContentResolver().query(contentUri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    public String getFilePathFromURI(Uri contentUri, Context context) {
+        //copy file and send new file path
+        String fileName = getFileName(contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            File copyFile = new File(context.getExternalCacheDir() + File.separator + fileName);
+            //copy(context, contentUri, copyFile);
+            return copyFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    public String getFileName(Uri uri) {
+        if (uri == null) return null;
+        String fileName = null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
+        }
+        return fileName;
+    }
+
+    public String getRealFilePath(Uri uri) {
+        String path = uri.getPath();
+        String[] pathArray = path.split(":");
+        String fileName = pathArray[pathArray.length - 1];
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
+    }
+    private void requestMultiplePermissions() {
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // show alert dialog navigating to Settings
+                            //openSettingsDialog();fc
+                            Toast.makeText(getApplicationContext(), "You Denied the Permission", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).
+                withErrorListener(new PermissionRequestErrorListener() {
+                    @Override
+                    public void onError(DexterError error) {
+                        Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .onSameThread()
+                .check();
+    }
+    //
+    public static float getImageSize(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        if (cursor != null) {
+            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+            cursor.moveToFirst();
+            float imageSize = cursor.getLong(sizeIndex);
+            cursor.close();
+            return imageSize / (1024f * 1024f); // returns size in bytes
+        }
+        return 0;
     }
 
 
@@ -2602,7 +2937,7 @@ public class CheckIn extends AppCompatActivity {
         });
     }
 
-    private void ApiCheckin(String txt_addnote) {
+    private void ApiCheckin(final String txt_addnote) {
 
         phoneNumber = phoneNumberValue.getText().toString();
         uuid = UUID.randomUUID().toString();
@@ -2736,13 +3071,14 @@ public class CheckIn extends AppCompatActivity {
                         System.out.println("VALUE: " + "------>" + value);
                         // finish();
                         Config.logV("Response--isPrepayment------------------" + isPrepayment);
+                        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
                         if (isPrepayment) {
                             if (!showPaytmWallet && !showPayU) {
 
                                 //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
                             } else {
                                 try {
-                                    final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+
                                     dialog.setContentView(R.layout.prepayment);
                                     dialog.show();
 
@@ -2778,8 +3114,10 @@ public class CheckIn extends AppCompatActivity {
                                             // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
                                             Config.logV("Account ID --------------" + modifyAccountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin");
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin",familyMEmID,Constants.SOURCE_PAYMENT);
                                             dialog.dismiss();
+                                            if(imagePathList.size()>0){
+                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);}
                                         }
                                     });
 
@@ -2790,10 +3128,12 @@ public class CheckIn extends AppCompatActivity {
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "");
+                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "",familyMEmID);
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
+                                            if(imagePathList.size()>0){
+                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);}
                                         }
                                     });
                                 } catch (Exception e) {
@@ -2803,6 +3143,8 @@ public class CheckIn extends AppCompatActivity {
 
 
                         } else {
+                            if(imagePathList.size()>0){
+                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);}
                             Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
                             finish();
                         }
@@ -2941,35 +3283,35 @@ public class CheckIn extends AppCompatActivity {
     }
 
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //   mTxvBuy.setEnabled(true);
-
-        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-
-
-            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
-            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
-
-            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
-
-                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
-                    showAlert("Payment Successful");
-                    finish();
-                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
-                    showAlert("Payment Cancelled");
-                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
-                    showAlert("Payment Failed");
-                }
-
-            } else if (resultModel != null && resultModel.getError() != null) {
-                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
-            } else {
-                //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
-            showAlert("Payment Cancelled");
-        }
-    }
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        //   mTxvBuy.setEnabled(true);
+//
+//        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
+//
+//
+//            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
+//            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
+//
+//            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
+//
+//                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
+//                    showAlert("Payment Successful");
+//                    finish();
+//                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
+//                    showAlert("Payment Cancelled");
+//                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
+//                    showAlert("Payment Failed");
+//                }
+//
+//            } else if (resultModel != null && resultModel.getError() != null) {
+//                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
+//            } else {
+//                //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
+//            }
+//        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
+//            showAlert("Payment Cancelled");
+//        }
+//    }
 
     private static Double convertStringToDouble(String str) {
         return Double.parseDouble(str);
@@ -3118,7 +3460,181 @@ public class CheckIn extends AppCompatActivity {
             }
         });
     }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //   mTxvBuy.setEnabled(true);
 
+        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
+
+
+            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
+            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
+
+            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
+
+                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
+                    showAlert("Payment Successful");
+                    finish();
+                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
+                    showAlert("Payment Cancelled");
+                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
+                    showAlert("Payment Failed");
+                }
+
+            } else if (resultModel != null && resultModel.getError() != null) {
+                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
+            } else {
+                //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
+            showAlert("Payment Cancelled");
+        }
+        if (requestCode == GALLERY) {
+            if (data != null) {
+                try {
+                    if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        String orgFilePath = getRealPathFromURI(uri, this);
+                        String filepath = "";//default fileName
+
+                        String mimeType = this.mContext.getContentResolver().getType(uri);
+                        String uriString = uri.toString();
+                        String extension = "";
+                        if (uriString.contains(".")) {
+                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
+                        }
+
+
+                        if (mimeType != null) {
+                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
+                        }
+                        if (Arrays.asList(fileExtsSupported).contains(extension)) {
+                            if (orgFilePath == null) {
+                                orgFilePath = getFilePathFromURI(mContext, uri, extension);
+                            }
+                        } else {
+                            Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+//
+                        imagePathList.add(orgFilePath);
+//
+
+                        DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+                        recycle_image_attachment.setLayoutManager(mLayoutManager);
+                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
+                        mDetailFileAdapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else if (requestCode == CAMERA) {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            //      imageview.setImageBitmap(bitmap);
+            path = saveImage(bitmap);
+            // imagePathList.add(bitmap.toString());
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
+            if (path != null) {
+                mImageUri = Uri.parse(path);
+                imagePathList.add(mImageUri.toString());
+            }
+            try {
+                bytes.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+            recycle_image_attachment.setLayoutManager(mLayoutManager);
+            recycle_image_attachment.setAdapter(mDetailFileAdapter);
+            mDetailFileAdapter.notifyDataSetChanged();
+
+        }
+    }
+    private void ApiCommunicateCheckin(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
+
+
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        MediaType type = MediaType.parse("*/*");
+        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
+        mBuilder.setType(MultipartBody.FORM);
+        mBuilder.addFormDataPart("message", message);
+        for (int i = 0; i < imagePathList.size(); i++) {
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (bitmap != null) {
+                path = saveImage(bitmap);
+                file = new File(path);
+            }
+//            else{
+//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
+//            }
+            else {
+                file = new File(imagePathList.get(i));
+            }
+            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
+        }
+        RequestBody requestBody = mBuilder.build();
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        JSONObject jsonObj = new JSONObject();
+        try {
+            jsonObj.put("message", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
+
+        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID.split("-")[0]), requestBody);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+
+
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+
+                    if (response.code() == 200) {
+                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
+                        imagePathList.clear();
+                        dialog.dismiss();
+
+
+                    } else {
+                        if (response.code() == 422) {
+                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+
+    }
 
 //    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
 //

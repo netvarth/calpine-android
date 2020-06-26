@@ -27,6 +27,16 @@ public class SearchListModel implements Serializable {
     private String claimable;
     boolean isCheckinAllowed;
 
+    public String getDonation_status() {
+        return donation_status;
+    }
+
+    public void setDonation_status(String donation_status) {
+        this.donation_status = donation_status;
+    }
+
+    private String donation_status;
+
     public String getaLoc() {
         return aLoc;
     }
@@ -104,6 +114,7 @@ public class SearchListModel implements Serializable {
     boolean isopen;
     private ArrayList services;
     private ArrayList appt_services;
+    private ArrayList donation_services;
 
     public ArrayList getAppt_services() {
         return appt_services;
@@ -112,6 +123,15 @@ public class SearchListModel implements Serializable {
     public void setAppt_services(ArrayList appt_services) {
         this.appt_services = appt_services;
     }
+
+    public ArrayList getDonation_services() {
+        return donation_services;
+    }
+
+    public void setDonation_services(ArrayList donation_services) {
+        this.donation_services = donation_services;
+    }
+
 
     private ArrayList Departments;
 

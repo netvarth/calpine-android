@@ -42,6 +42,16 @@ public class SearchAWsResponse {
     String today_appt;
     String online_profile;
 
+    public String getDonation_status() {
+        return donation_status;
+    }
+
+    public void setDonation_status(String donation_status) {
+        this.donation_status = donation_status;
+    }
+
+    String donation_status;
+
     public String getOnline_profile() {
         return online_profile;
     }
@@ -367,6 +377,17 @@ public class SearchAWsResponse {
 
     @SerializedName("appt_services")
     private ArrayList appt_services;
+
+    public ArrayList getDonation_services() {
+        return donation_services;
+    }
+
+    public void setDonation_services(ArrayList donation_services) {
+        this.donation_services = donation_services;
+    }
+
+    @SerializedName("donation_services")
+    private ArrayList donation_services;
 
     public ArrayList getDepartments() {
         return departments;
