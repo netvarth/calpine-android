@@ -2120,7 +2120,7 @@ public class Appointment extends AppCompatActivity {
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + "this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
                         }
 
 
@@ -3071,7 +3071,7 @@ public class Appointment extends AppCompatActivity {
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + "this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
                         }
 
 

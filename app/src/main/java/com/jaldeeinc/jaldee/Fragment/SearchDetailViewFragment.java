@@ -600,7 +600,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     Config.logV("Response--code-------------------------" + response.code());
 
                     if (response.code() == 200) {
-
+                          LServicesList.clear();
+                          gServiceList.clear();
 
                         for (int i = 0; i < response.body().size(); i++) {
                             SearchDonation mService = new SearchDonation();
