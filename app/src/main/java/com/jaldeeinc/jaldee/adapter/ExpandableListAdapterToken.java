@@ -510,11 +510,11 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         }
         Boolean live = true;
 
-        Log.i("dsfgdfg",String.valueOf(activelist.getService().getLivetrack()));
+        Log.i("dsfgdfg",String.valueOf(activelist.getLivetrack()));
 
         latitude = SharedPreference.getInstance(mContext).getStringValue("latitudes", "");
         longitude = SharedPreference.getInstance(mContext).getStringValue("longitudes", "");
-        if (header.equals("today") && activelist.getService().getLivetrack()!=null && activelist.getLivetrack().equals("true") || header.equals("future") && activelist.getLivetrack()!=null && activelist.getLivetrack().equals("true")) {
+        if (header.equals("today") && activelist.getLivetrack()!=null && activelist.getLivetrack().equals("true") || header.equals("future") && activelist.getLivetrack()!=null && activelist.getLivetrack().equals("true")) {
             if(!latitude.equals("") && !longitude.equals("")){
                 distance(Double.parseDouble(activelist.getLattitude()),Double.parseDouble(activelist.getLongitude()),Double.parseDouble(latitude),Double.parseDouble(longitude));
             }else{
@@ -525,7 +525,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
 
             String text = "Jaldee recommends you always";
             String text3 = " share your arrival time";
-            String text4 = " with " + activelist.getProviderAccount().getBusinessName();
+            String text4 = " with " + activelist.getBusinessName();
 
             String text2 = text + text3 + text4;
 
@@ -536,7 +536,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
 
             String text5 =  "You are ";
             String text6 =  "sharing your arrival time ";
-            String text7 =  "with "+activelist.getProviderAccount().getBusinessName();
+            String text7 =  "with "+activelist.getBusinessName();
 
             String text8 = text5 + text6 + text7;
 
@@ -548,7 +548,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
 
             liveTrackLayout.setVisibility(View.VISIBLE);
             if (!gps_enabled && !network_enabled) {
-                tv_enable_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getProviderAccount().getBusinessName());
+                tv_enable_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getBusinessName());
                 tv_recom_loc.setText("Jaldee recommends you to enable location");
                 tv_recom_loc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 tv_recom_liveloc.setVisibility(View.GONE);
@@ -562,7 +562,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
 
             else {
                 tv_enable_loc.setVisibility(View.GONE);
-                tv_recom_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getProviderAccount().getBusinessName());
+                tv_recom_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getBusinessName());
                 tv_recom_liveloc.setText(spannable, TextView.BufferType.SPANNABLE);
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             }
@@ -598,7 +598,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 intent.putExtra("waitlistPhonenumber", activelist.getPhoneNo());
                 intent.putExtra("uuid", activelist.getYnwUuid());
                 intent.putExtra("accountID", String.valueOf(activelist.getId()));
-                intent.putExtra("title", activelist.getProviderAccount().getBusinessName());
+                intent.putExtra("title", activelist.getBusinessName());
                 intent.putExtra("terminology", "Check-in");
                 intent.putExtra("calcMode", activelist.getCalculationMode());
                 intent.putExtra("queueStartTime",activelist.getQueueStartTime());
@@ -740,7 +740,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         });
 
 
-        tv_businessname.setText(Config.toTitleCase(activelist.getProviderAccount().getBusinessName()));
+        tv_businessname.setText(Config.toTitleCase(activelist.getBusinessName()));
 
 
         icon_cancel.setOnClickListener(new View.OnClickListener() {
@@ -756,14 +756,14 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         tv_businessname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodActiveCallback(activelist.getProviderAccount().getUniqueId());
+                callback.onMethodActiveCallback(activelist.getUniqueId());
             }
         });
 
 
         try {
-            if(activelist.getLocation().getGoogleMapUrl()!=null){
-                String geoUri = activelist.getLocation().getGoogleMapUrl();
+            if(activelist.getGoogleMapUrl()!=null){
+                String geoUri = activelist.getGoogleMapUrl();
                 if (activelist.getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
                     tv_place.setVisibility(View.VISIBLE);
                     tv_place.setText(activelist.getPlace());
@@ -819,12 +819,12 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         tv_service.setVisibility(View.GONE);
 
 
-        if (activelist.getService().getName() != null) {
+        if (activelist.getName() != null) {
             tv_service.setVisibility(View.VISIBLE);
 
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
-            String firstWord = activelist.getService().getName();
+            String firstWord = activelist.getName();
             String secondWord = " for ";
             String thirdWord = Config.toTitleCase(activelist.getConsumer().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getLastName());
             Spannable spannable = new SpannableString(firstWord + secondWord + thirdWord);
@@ -858,7 +858,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getConsumer().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getLastName())),activelist.getConsumer().getId());
+                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getConsumer().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getLastName())),activelist.getConsumer().getId());
             }
         });
 
@@ -1723,7 +1723,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         icon_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getId()), activelist.getProviderAccount().getBusinessName(),"checkin");
+                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getId()), activelist.getBusinessName(),"checkin");
             }
         });
         if (header.equalsIgnoreCase("old")) {
@@ -1934,9 +1934,9 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
                 String consumer = Config.toTitleCase(activelist.getConsumer().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getLastName());
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-                    callbacks.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getId()), activelist.getAmountDue(),activelist.getConsumer().getId());
+                    callbacks.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), activelist.getAmountDue(),activelist.getConsumer().getId());
                 } else {
-                    callbacks.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getId()), consumer,activelist.getConsumer().getId());
+                    callbacks.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), consumer,activelist.getConsumer().getId());
                 }
             }
         });
@@ -1979,7 +1979,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 icon_cancel.setVisibility(View.GONE);
             }
         }
-        Config.logV("Header Title" + header + "Title" + activelist.getProviderAccount().getBusinessName() + "Group" + groupPosition);
+        Config.logV("Header Title" + header + "Title" + activelist.getBusinessName() + "Group" + groupPosition);
         return view;
     }
 
