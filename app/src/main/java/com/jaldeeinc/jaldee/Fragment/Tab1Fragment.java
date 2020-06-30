@@ -659,11 +659,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         checkinCount = mCheckTodayList.size() + mCheckFutureList.size();
                         txtCheckins.setText("Check-Ins ("+checkinCount+")");
 
-                        if(checkinCount>0){
-                            txtCheckins.setVisibility(View.VISIBLE);
-                        }else{
-                            txtCheckins.setVisibility(View.GONE);
-                        }
+
 
                         DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteMyCheckin("future");
@@ -736,11 +732,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         Log.i("bnmbnmb",String.valueOf(mTokenFutureList.size()));
                         Log.i("bnmbnmb",String.valueOf(mTokenTodayList.size()));
                         tokenCount = mTokenFutureList.size() + mTokenTodayList.size();
-                        if(tokenCount>0){
-                            txtTokens.setVisibility(View.VISIBLE);
-                        }else{
-                            txtTokens.setVisibility(View.GONE);
-                        }
+
 
                         txtTokens.setText("Tokens ("+tokenCount+")");
 
@@ -791,11 +783,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         appointmentCount = mAppointmentTodayList.size() + mCheckFutureListAppointment.size();
                         txtAppointments.setText("Appointments ("+appointmentCount+")");
 
-                        if(appointmentCount>0){
-                            txtAppointments.setVisibility(View.VISIBLE);
-                        }else{
-                            txtAppointments.setVisibility(View.GONE);
-                        }
 
                         ApiOldAppointmentList();
 
