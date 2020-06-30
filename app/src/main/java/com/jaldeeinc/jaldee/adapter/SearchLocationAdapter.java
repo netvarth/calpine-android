@@ -462,7 +462,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         } else {
             myViewHolder.mLayouthide.setVisibility(View.GONE);
             myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_down);
-            myViewHolder.LexpandCheckin.setVisibility(View.VISIBLE);
+            myViewHolder.LexpandCheckin.setVisibility(View.GONE);
 
         }
 
@@ -622,7 +622,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     myViewHolder.mLayouthide.setVisibility(View.GONE);
                     myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_down);
                     searchLoclist.setExpandFlag(false);
-                    myViewHolder.LexpandCheckin.setVisibility(View.VISIBLE);
+                    myViewHolder.LexpandCheckin.setVisibility(View.GONE);
 
                 }
             }
@@ -1388,10 +1388,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             if (!mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc")) {
                 mShowWaitTime = true;
             } else {
-                if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && isShowTokenId) {
-                    mShowWaitTime = true;
-                } else {
-                    mShowWaitTime = false;
+                for(int l = 0;l<mQueueList.size();l++) {
+                    if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && mQueueList.get(l).getNextAvailableQueue().isShowToken()) {
+                        mShowWaitTime = true;
+                    } else {
+                        mShowWaitTime = false;
+                    }
                 }
             }
 
@@ -1430,9 +1432,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         if (!mSearachAwsResponse.getHits().getHit().isEmpty()) {
                                             if (mSearachAwsResponse.getHits().getHit().get(k).getFields() != null && mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins() != null) {
                                                 if (mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins().equals("1")) {
-                                                    if (isShowTokenId) {
+                                                    if (mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
                                                         myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
                                                         myViewHolder.txt_diffdate_expand.setText("Do you want to Get Token for another day?");
+
 
                                                     } else {
                                                         myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
@@ -1475,7 +1478,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 }
 
                                 if (mSearchSetting.getCalculationMode() != null) { //   Token/No Token
-                                    if (isShowTokenId) {
+                                    if (mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
                                         myViewHolder.btn_checkin.setText("GET TOKEN");
                                         myViewHolder.btn_checkin_expand.setText("GET TOKEN");
 
@@ -1538,10 +1541,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     myViewHolder.btn_checkin.setText("Check-in".toUpperCase());
                                     myViewHolder.btn_checkin_expand.setText("Check-in".toUpperCase());
                                     // For ML/Fixed
-                                    if (mShowWaitTime && isShowTokenId == false) {
+                                    if (mShowWaitTime &&mQueueList.get(i).getNextAvailableQueue().isShowToken() == false) {
                                     } else {
                                         if (mSearchSetting.getCalculationMode() != null) {
-                                            if (isShowTokenId) {
+                                            if (mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
                                                 myViewHolder.btn_checkin.setText("GET TOKEN");
                                                 myViewHolder.btn_checkin_expand.setText("GET TOKEN");
                                                 if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
@@ -1600,7 +1603,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
 
-                        if (calcMode.equalsIgnoreCase("NoCalc") && !isShowTokenId) {
+                        if (calcMode.equalsIgnoreCase("NoCalc") && !mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
                             myViewHolder.tv_waittime.setVisibility(View.GONE);
                             myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
                             myViewHolder.txt_peopleahead.setVisibility(View.GONE);

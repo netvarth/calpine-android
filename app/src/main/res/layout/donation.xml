@@ -124,13 +124,15 @@
                                         android:layout_height="wrap_content"
                                         android:text="Sony"
                                         android:textColor="@color/title_grey"
-                                        android:textSize="@dimen/txtsize_12" />
-                                    <ImageView
-                                        android:layout_width="15dp"
-                                        android:layout_height="15dp"
-                                        android:layout_gravity="center"
-                                        android:layout_marginLeft="@dimen/padding3"
-                                        android:src="@drawable/edit_icon" />
+                                        android:textSize="@dimen/txtsize_12"
+                                        android:theme="@android:style/Theme.Holo.Light"
+                                        />
+<!--                                    <ImageView-->
+<!--                                        android:layout_width="15dp"-->
+<!--                                        android:layout_height="15dp"-->
+<!--                                        android:layout_gravity="center"-->
+<!--                                        android:layout_marginLeft="@dimen/padding3"-->
+<!--                                        android:src="@drawable/edit_icon" />-->
 
                                     <TextView
                                         android:drawablePadding="@dimen/padding3"
@@ -202,12 +204,12 @@
                                         android:textSize="@dimen/dimen_14sp"
                                         android:theme="@android:style/Theme.Holo.Light" />
 
-                                    <ImageView
-                                        android:layout_width="15dp"
-                                        android:layout_height="15dp"
-                                        android:layout_gravity="center"
-                                        android:layout_marginLeft="@dimen/padding3"
-                                        android:src="@drawable/edit_icon" />
+<!--                                    <ImageView-->
+<!--                                        android:layout_width="15dp"-->
+<!--                                        android:layout_height="15dp"-->
+<!--                                        android:layout_gravity="center"-->
+<!--                                        android:layout_marginLeft="@dimen/padding3"-->
+<!--                                        android:src="@drawable/edit_icon" />-->
 
 
                                 </LinearLayout>

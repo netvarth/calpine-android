@@ -848,7 +848,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                         myViewHolder.L_services.setVisibility(View.VISIBLE);
                                     }else{
                                         myViewHolder.btncheckin.setVisibility(View.GONE);
-                                        myViewHolder.L_services.setVisibility(View.GONE);
+                                       // myViewHolder.L_services.setVisibility(View.GONE);
                                     }
                                 }
                             }else{
@@ -1603,11 +1603,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                                 });
                                             } else {
                                                 myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                                                myViewHolder.L_services.setVisibility(View.GONE);
+                                               // myViewHolder.L_services.setVisibility(View.GONE);
                                             }
                                         }else {
                                             myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                                            myViewHolder.L_services.setVisibility(View.GONE);
+                                          //  myViewHolder.L_services.setVisibility(View.GONE);
                                         }
                                     } else {
                                         myViewHolder.tv_Futuredate.setVisibility(View.GONE);

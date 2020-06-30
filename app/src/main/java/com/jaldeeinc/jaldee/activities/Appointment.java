@@ -246,7 +246,7 @@ public class Appointment extends AppCompatActivity {
     TextView tv_fileAttach;
     File file;
     BottomSheetDialog dialog;
-
+    static String schdId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -798,16 +798,16 @@ public class Appointment extends AppCompatActivity {
 
                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                  //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                     ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
                 } else {
                     if (selectedDateFormat != null) {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                      //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
                         ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
                     } else {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                      //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                         ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
                     }
                 }
@@ -1611,7 +1611,7 @@ public class Appointment extends AppCompatActivity {
             e.printStackTrace();
         }
         Config.logV("Selected Date---&&&&&&&&&&&#%%%%%%%-------------" + selectedDate);
-        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, String.valueOf(isShowToken));
+      //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, String.valueOf(isShowToken));
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -2120,7 +2120,8 @@ public class Appointment extends AppCompatActivity {
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
+                            earliestAvailable.setText("Timeslots not available");
                         }
 
 
@@ -2737,14 +2738,14 @@ public class Appointment extends AppCompatActivity {
 
                                             if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                              //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                             } else {
                                                 if (selectedDateFormat != null) {
 
-                                                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                                                //    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
                                                 } else {
 
-                                                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                                 //   ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                                 }
                                             }
                                         }
@@ -3029,11 +3030,6 @@ public class Appointment extends AppCompatActivity {
                             tv_queue.setText("Choose the time window");
                         }
 
-                        if (schedResponse.size() == 1) {
-                            tv_queue.setText("Time window");
-                        } else {
-                            tv_queue.setText("Choose the time window");
-                        }
 
                         if (schedResponse.size() > 0) {
                             Lbottomlayout.setVisibility(View.VISIBLE);
@@ -3071,7 +3067,8 @@ public class Appointment extends AppCompatActivity {
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
+                            earliestAvailable.setText("Time slots not available");
                         }
 
 
@@ -3528,12 +3525,14 @@ public class Appointment extends AppCompatActivity {
             //   qjsonObj.put("id", queueId);
             if (txtWaitTime.getText().toString().contains("Today")) {
                 queueobj.put("appmtDate", formattedDate);
+                sjsonobj.put("id", schedResponse.get(i).getId());
             } else {
                 queueobj.put("appmtDate", txtWaitTime.getText().toString());
+                sjsonobj.put("id", schdId);
             }
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("phonenumber", phoneNumber);
-            sjsonobj.put("id", schedResponse.get(i).getId());
+
 
             if (callingMode != null && callingMode.equalsIgnoreCase("whatsapp")) {
                 virtualService.put("WhatsApp", et_vitualId.getText());
@@ -3541,7 +3540,7 @@ public class Appointment extends AppCompatActivity {
                 virtualService.put("", "");
             }
 
-            virtualService.put("id", schedResponse.get(i).getId());
+//            virtualService.put("id", schedResponse.get(i).getId());
             sejsonobj.put("id", selectedService);
 
 
@@ -3750,8 +3749,8 @@ public class Appointment extends AppCompatActivity {
                             checkinShareLocations.putExtra("title", title);
                             checkinShareLocations.putExtra("terminology", terminology);
                             checkinShareLocations.putExtra("calcMode", calcMode);
-                            checkinShareLocations.putExtra("queueStartTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
-                            checkinShareLocations.putExtra("queueEndTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
+                            checkinShareLocations.putExtra("queueStartTime", schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).getsTime());
+                            checkinShareLocations.putExtra("queueEndTime", schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).geteTime());
                             checkinShareLocations.putExtra("from", "appt");
                             startActivity(checkinShareLocations);
                         }
@@ -4025,7 +4024,22 @@ public class Appointment extends AppCompatActivity {
             System.out.println("UTC time: " + sdfs.format(currentTimes));
             txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
         }
+        Date currentTimes = new Date();
+        final SimpleDateFormat sdfs = new SimpleDateFormat(
+                "dd-MM-yyyy", Locale.US);
+        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdfs.format(currentTimes));
 
+        Date c= Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = df.format(c);
+        if(!txtWaitTime.getText().toString().equals("Today\n" + sdfs.format(currentTimes)) || !txtWaitTime.getText().toString().equals(currentDate)){
+            Lbottomlayout.setVisibility(View.VISIBLE);
+            txtnocheckin.setVisibility(View.GONE);
+        }
+    }
+    public static void schedid(String id) {
+       schdId = id;
     }
 
     SearchViewDetail mBusinessDataList;

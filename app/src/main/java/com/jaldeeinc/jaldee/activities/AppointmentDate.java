@@ -239,6 +239,7 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                           if (schedResponse.get(i).getId() != 0) {
                               id = String.valueOf(schedResponse.get(i).getId());
                               ApiScheduleId(id, mDate, accountIDs);
+                              Appointment.schedid(id);
                           }
 
 
@@ -292,6 +293,7 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                                   if (schedResponse.get(i).getId() != 0) {
                                       id = String.valueOf(schedResponse.get(i).getId());
                                       ApiScheduleId(id, mDate, accountIDs);
+                                      Appointment.schedid(id);
 
                                   }
 
@@ -336,6 +338,7 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                                   if (schedResponse.get(i).getId() != 0) {
                                       id = String.valueOf(schedResponse.get(i).getId());
                                       ApiScheduleId(id, mDate, accountIDs);
+                                      Appointment.schedid(id);
 
                                   }
 

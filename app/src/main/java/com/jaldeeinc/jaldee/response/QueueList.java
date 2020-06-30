@@ -73,7 +73,15 @@ public class QueueList  {
 
     int branchSpCount;
 
+    public boolean isShowToken() {
+        return showToken;
+    }
 
+    public void setShowToken(boolean showToken) {
+        this.showToken = showToken;
+    }
+
+    boolean showToken;
 
 
 

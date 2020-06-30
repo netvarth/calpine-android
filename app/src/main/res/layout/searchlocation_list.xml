@@ -617,138 +617,136 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/txtapptservices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginTop="@dimen/padding2"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
+                android:text="Appointment Services"
+                android:textColor="@color/black"
+                android:textSize="@dimen/txtsize_hint_11"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/appointmentList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginTop="@dimen/padding2"
+                android:layout_marginRight="@dimen/padding5"
+                android:gravity="left"
+                android:orientation="vertical"
+                android:textColor="@color/title_consu"
+                android:textSize="@dimen/txtsize_12"
+                android:visibility="gone">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/appoinmentLayouts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/padding5"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+
+                <Button
+                    android:id="@+id/btnappointments"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@color/green"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/padding3"
+                    android:paddingRight="@dimen/padding3"
+                    android:text="Appointment"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold" />
+
+                <!--  android:textSize="@dimen/txtsize_subtitle" />-->
+            </LinearLayout>
+            <TextView
+                android:id="@+id/txtdontservices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginTop="@dimen/padding2"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
+                android:text="Donation Services"
+                android:textColor="@color/black"
+                android:textSize="@dimen/txtsize_hint_11"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/donationList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding5"
+                android:layout_marginTop="@dimen/padding2"
+                android:layout_marginRight="@dimen/padding5"
+                android:gravity="left"
+                android:orientation="vertical"
+                android:textColor="@color/title_consu"
+                android:textSize="@dimen/txtsize_12"
+                android:visibility="gone">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/donationLayouts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/padding5"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+
+                <Button
+                    android:id="@+id/btndonations"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@color/green"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/padding3"
+                    android:paddingRight="@dimen/padding3"
+                    android:text="Donate"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold" />
+
+                <!--  android:textSize="@dimen/txtsize_subtitle" />-->
+            </LinearLayout>
+
 
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/txtapptservices"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/padding5"
-        android:layout_marginTop="@dimen/padding2"
-        android:layout_marginRight="@dimen/dimen_2dp"
-        android:justificationMode="inter_word"
-        android:letterSpacing="0.03"
-        android:lineSpacingExtra="@dimen/padding3"
-        android:paddingLeft="@dimen/dimen_5dp"
-        android:paddingRight="@dimen/dimen_5dp"
-        android:text="Appointment Services"
-        android:textColor="@color/black"
-        android:textSize="@dimen/txtsize_hint_11"
-        android:textStyle="bold"
-        android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/appointmentList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/padding5"
-        android:layout_marginTop="@dimen/padding2"
-        android:layout_marginRight="@dimen/padding5"
-        android:gravity="left"
-        android:orientation="vertical"
-        android:textColor="@color/title_consu"
-        android:textSize="@dimen/txtsize_12"
-        android:visibility="gone">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/appoinmentLayouts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/padding5"
-        android:layout_marginTop="@dimen/padding5"
-        android:layout_marginRight="@dimen/padding5"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-
-        <Button
-            android:id="@+id/btnappointments"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@color/green"
-            android:gravity="center"
-            android:paddingLeft="@dimen/padding3"
-            android:paddingRight="@dimen/padding3"
-            android:text="Appointment"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/txtsize_12"
-            android:textStyle="bold" />
-
-        <!--  android:textSize="@dimen/txtsize_subtitle" />-->
-    </LinearLayout>
-    <TextView
-        android:id="@+id/txtdontservices"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/padding5"
-        android:layout_marginTop="@dimen/padding2"
-        android:layout_marginRight="@dimen/dimen_2dp"
-        android:justificationMode="inter_word"
-        android:letterSpacing="0.03"
-        android:lineSpacingExtra="@dimen/padding3"
-        android:paddingLeft="@dimen/dimen_5dp"
-        android:paddingRight="@dimen/dimen_5dp"
-        android:text="Donation Services"
-        android:textColor="@color/black"
-        android:textSize="@dimen/txtsize_hint_11"
-        android:textStyle="bold"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:id="@+id/donationList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/padding5"
-        android:layout_marginTop="@dimen/padding2"
-        android:layout_marginRight="@dimen/padding5"
-        android:gravity="left"
-        android:orientation="vertical"
-        android:textColor="@color/title_consu"
-        android:textSize="@dimen/txtsize_12"
-        android:visibility="gone">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/donationLayouts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/padding5"
-        android:layout_marginTop="@dimen/padding5"
-        android:layout_marginRight="@dimen/padding5"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-
-        <Button
-            android:id="@+id/btndonations"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@color/green"
-            android:gravity="center"
-            android:paddingLeft="@dimen/padding3"
-            android:paddingRight="@dimen/padding3"
-            android:text="Donate"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/txtsize_12"
-            android:textStyle="bold" />
-
-        <!--  android:textSize="@dimen/txtsize_subtitle" />-->
-    </LinearLayout>
 
 
     <View
