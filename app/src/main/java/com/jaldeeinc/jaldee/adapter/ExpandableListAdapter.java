@@ -511,7 +511,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         }
         Boolean live = true;
 
-        Log.i("dsfgdfg",String.valueOf(activelist.getLivetrack()));
 
         latitude = SharedPreference.getInstance(mContext).getStringValue("latitudes", "");
         longitude = SharedPreference.getInstance(mContext).getStringValue("longitudes", "");
@@ -596,7 +595,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, CheckinShareLocation.class);
-                intent.putExtra("waitlistPhonenumber", activelist.getPrimaryMobileNo());
+                intent.putExtra("waitlistPhonenumber", activelist.getPhoneNo());
                 intent.putExtra("uuid", activelist.getYnwUuid());
                 intent.putExtra("accountID", String.valueOf(activelist.getId()));
                 intent.putExtra("title", activelist.getBusinessName());
@@ -763,8 +762,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
 
         try {
-            if(activelist.getLocation().getGoogleMapUrl()!=null){
-            String geoUri = activelist.getLocation().getGoogleMapUrl();
+            if(activelist.getGoogleMapUrl()!=null){
+            String geoUri = activelist.getGoogleMapUrl();
             if (activelist.getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
                 tv_place.setVisibility(View.VISIBLE);
                 tv_place.setText(activelist.getPlace());
@@ -787,7 +786,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 Config.logV("Fav Fav List--------%%%%--" + activelist.getId());
                 icon_fav.setVisibility(View.VISIBLE);
                 icon_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
-                activelist.setFavFlag(true);
+                activelist.getConsumer().setFavourite(true);
                 icon_fav.setText("Favourite");
             }
         }
@@ -795,7 +794,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         icon_fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (activelist.isFavFlag()) {
+                if (activelist.getConsumer().isFavourite()) {
 
                     Config.logV("Fav" + activelist.getId());
                     callback.onMethodDeleteFavourite(activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag);
@@ -827,7 +826,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     "fonts/Montserrat_Bold.otf");
             String firstWord = activelist.getName();
             String secondWord = " for ";
-            String thirdWord = Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName());
+            String thirdWord = Config.toTitleCase(activelist.getConsumer().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getLastName());
             Spannable spannable = new SpannableString(firstWord + secondWord + thirdWord);
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() + secondWord.length(), firstWord.length() + secondWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -859,7 +858,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName())),activelist.getConsumer().getId());
+                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getConsumer().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getLastName())),activelist.getConsumer().getId());
             }
         });
 
@@ -1933,7 +1932,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             public void onClick(View v) {
                 Config.logV("Button Pay@@@@@@@@@@@@@@@@@" + activelist.getWaitlistStatus());
                 // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
-                String consumer = Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName());
+                String consumer = Config.toTitleCase(activelist.getConsumer().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getLastName());
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                     callbacks.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), activelist.getAmountDue(),activelist.getConsumer().getId());
                 } else {

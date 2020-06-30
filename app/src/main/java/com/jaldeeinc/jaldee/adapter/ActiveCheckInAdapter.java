@@ -144,7 +144,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
     public void onBindViewHolder(final ActiveCheckInAdapter.MyViewHolder myViewHolder, final int position) {
         final ActiveCheckIn activelist = activeChekinList.get(position);
 
-        Config.logV("Provider NAme-------------------" + activelist.getBusinessName());
+
         myViewHolder.tv_businessname.setText(toTitleCase(activelist.getBusinessName()));
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -452,9 +452,9 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                 // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
                 String consumer = Config.toTitleCase(activelist.getFirstName() )+ " " + Config.toTitleCase(activelist.getLastName());
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-                    callback.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()),activelist.getAmountDue(),activelist.getConsumer().getId());
+                    callback.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()),activelist.getAmountDue(),activelist.getId());
                 }else {
-                    callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()),consumer,activelist.getConsumer().getId());
+                    callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()),consumer,activelist.getId());
                 }
             }
         });
@@ -471,7 +471,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             @Override
             public void onClick(View v) {
                 String consumer = Config.toTitleCase(activelist.getFirstName() )+ " " + Config.toTitleCase(activelist.getLastName());
-                callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(),activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()),consumer,activelist.getConsumer().getId());
+                callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(),activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()),consumer,activelist.getId());
             }
         });
 
@@ -567,7 +567,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //                    myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
 //                }
 
-                if (!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                     myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                     myViewHolder.tv_estTime.setText(spannable);
 //                    myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
@@ -648,7 +648,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //                }
 
 
-                if (!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                     myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                     myViewHolder.tv_estTime.setText(spannable);
                     //  myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
@@ -754,7 +754,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                     }
 
 
-                    if (!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                    if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                         myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                         myViewHolder.tv_estTime.setText(spannable);
 //                        myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
@@ -911,7 +911,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                             myViewHolder.tv_status.setVisibility(View.GONE);
                         }
 
-                        if (!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                        if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                             myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                             myViewHolder.tv_estTime.setText(spannable);
 //                            myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
@@ -1079,7 +1079,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                     }
 
 
-                    if (!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                    if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                         myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                         myViewHolder.tv_estTime.setText(spannable);
 //                        myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
@@ -1231,7 +1231,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         }
 
 
-                        if (!activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+                        if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
                             myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
                             myViewHolder.tv_estTime.setText(spannable);
 //                            myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);

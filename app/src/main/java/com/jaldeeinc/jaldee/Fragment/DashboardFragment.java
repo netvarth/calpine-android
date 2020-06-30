@@ -1291,6 +1291,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 db.insertCheckinInfo(MActiveList);
                                 MActiveList.clear();
                                 MActiveList = db.getAllCheckinList();
+                                Log.i("rtyrty",new Gson().toJson(MActiveList));
                                 Config.logV("MActiveList---DB-------------------" + MActiveList.size());
                                 tv_activechkin.setText("Active Check-ins " + "(" + MActiveList.size() + ")");
                                 LActiveCheckin.setVisibility(View.VISIBLE);
