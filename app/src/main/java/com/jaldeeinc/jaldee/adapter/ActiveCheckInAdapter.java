@@ -85,7 +85,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_businessname, tv_estTime, tv_place, tv_status, tv_check_in, tv_queueTime;
         TextView icon_bill, tv_prepaid, tv_service,tv_makepay,tv_peopleahead;
-        LinearLayout layout_btnpay;
+        LinearLayout layout_btnpay,layout_activeCheckin;
         Button btn_pay;
 
 
@@ -104,6 +104,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             tv_peopleahead= (TextView) view.findViewById(R.id.txt_peopleahead);
             tv_check_in = (TextView) view.findViewById(R.id.txt_check_in);
             tv_queueTime = (TextView) view.findViewById(R.id.txt_queuetime);
+            layout_activeCheckin = (LinearLayout) view.findViewById(R.id.activecheckin);
         }
     }
 
@@ -164,6 +165,10 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         myViewHolder.tv_status.setTypeface(tyfacestatus);
 
         myViewHolder.tv_status.setText(activelist.getWaitlistStatus());
+        if(activelist.getWaitlistStatus().equalsIgnoreCase("failed")){
+            myViewHolder.layout_activeCheckin.setVisibility(View.GONE);
+        }
+
         if (activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
             myViewHolder.tv_status.setText("Completed");
             myViewHolder.tv_status.setVisibility(View.VISIBLE);
