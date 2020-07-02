@@ -1389,10 +1389,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 mShowWaitTime = true;
             } else {
                 for(int l = 0;l<mQueueList.size();l++) {
-                    if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && mQueueList.get(l).getNextAvailableQueue().isShowToken()) {
-                        mShowWaitTime = true;
-                    } else {
-                        mShowWaitTime = false;
+                    if(mQueueList.get(l).getNextAvailableQueue()!=null) {
+                        if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && mQueueList.get(l).getNextAvailableQueue().isShowToken()) {
+                            mShowWaitTime = true;
+                        } else {
+                            mShowWaitTime = false;
+                        }
                     }
                 }
             }
@@ -1432,14 +1434,17 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         if (!mSearachAwsResponse.getHits().getHit().isEmpty()) {
                                             if (mSearachAwsResponse.getHits().getHit().get(k).getFields() != null && mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins() != null) {
                                                 if (mSearachAwsResponse.getHits().getHit().get(k).getFields().getFuture_checkins().equals("1")) {
-                                                    if (mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
-                                                        myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
-                                                        myViewHolder.txt_diffdate_expand.setText("Do you want to Get Token for another day?");
+                                                    if(mQueueList.get(i).getNextAvailableQueue()!=null) {
+                                                        if (mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
+                                                            myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
+                                                            myViewHolder.txt_diffdate_expand.setText("Do you want to Get Token for another day?");
 
 
-                                                    } else {
-                                                        myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
-                                                        myViewHolder.txt_diffdate_expand.setText("Do you want to " + " " + terminology + " for another day?");
+                                                        } else {
+                                                            myViewHolder.txt_diffdate.setText("Do you want to " + " " + terminology + " for another day?");
+                                                            myViewHolder.txt_diffdate_expand.setText("Do you want to " + " " + terminology + " for another day?");
+                                                        }
+
                                                     }
                                                 }
                                             }

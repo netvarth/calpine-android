@@ -552,12 +552,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 tv_recom_loc.setText("Jaldee recommends you to enable location");
                 tv_recom_loc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 tv_recom_liveloc.setVisibility(View.GONE);
+                tv_enable_loc.setVisibility(View.VISIBLE);
+                tv_recom_loc.setVisibility(View.VISIBLE);
             }
 
             else if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
                 tv_enable_loc.setVisibility(View.GONE);
                 tv_recom_liveloc.setText(spannables, TextView.BufferType.SPANNABLE);
                 tv_recom_loc.setVisibility(View.GONE);
+                tv_recom_liveloc.setVisibility(View.VISIBLE);
             }
 
             else {
@@ -565,6 +568,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 tv_recom_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getBusinessName());
                 tv_recom_liveloc.setText(spannable, TextView.BufferType.SPANNABLE);
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                tv_recom_liveloc.setVisibility(View.VISIBLE);
+                tv_recom_loc.setVisibility(View.VISIBLE);
             }
 
         } else {
