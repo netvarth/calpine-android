@@ -373,6 +373,7 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                       tv_noavail_slot.setVisibility(View.VISIBLE);
                       recycle_timeslots.setAlpha(0);
                       Toast.makeText(AppointmentDate.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
+                      Appointment.schedid(String.valueOf(response.body().size()));
                   }
 
                     }
