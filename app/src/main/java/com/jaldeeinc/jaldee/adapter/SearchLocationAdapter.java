@@ -1389,11 +1389,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 mShowWaitTime = true;
             } else {
                 for(int l = 0;l<mQueueList.size();l++) {
-                    if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && mQueueList.get(l).getNextAvailableQueue().isShowToken()) {
-                        mShowWaitTime = true;
-                    } else {
-                        mShowWaitTime = false;
+                    if(mQueueList.get(l).getNextAvailableQueue()!=null){
+                        if (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc") && mQueueList.get(l).getNextAvailableQueue().isShowToken()) {
+                            mShowWaitTime = true;
+                        } else {
+                            mShowWaitTime = false;
+                        }
                     }
+
                 }
             }
 
