@@ -552,19 +552,25 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 tv_recom_loc.setText("Jaldee recommends you to enable location");
                 tv_recom_loc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 tv_recom_liveloc.setVisibility(View.GONE);
+                tv_enable_loc.setVisibility(View.VISIBLE);
+                tv_recom_loc.setVisibility(View.VISIBLE);
             }
 
             else if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
-                tv_enable_loc.setVisibility(View.GONE);
+
                 tv_recom_liveloc.setText(spannables, TextView.BufferType.SPANNABLE);
                 tv_recom_loc.setVisibility(View.GONE);
+                tv_enable_loc.setVisibility(View.GONE);
+                tv_recom_liveloc.setVisibility(View.VISIBLE);
             }
 
             else {
-                tv_enable_loc.setVisibility(View.GONE);
                 tv_recom_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getBusinessName());
                 tv_recom_liveloc.setText(spannable, TextView.BufferType.SPANNABLE);
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                tv_recom_liveloc.setVisibility(View.VISIBLE);
+                tv_recom_loc.setVisibility(View.VISIBLE);
+                tv_enable_loc.setVisibility(View.GONE);
             }
 
         } else {
@@ -756,14 +762,14 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         tv_businessname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodActiveCallback(activelist.getProviderAccount().getUniqueId());
+                callback.onMethodActiveCallback(activelist.getUniqueId());
             }
         });
 
 
         try {
-            if(activelist.getLocation().getGoogleMapUrl()!=null){
-                String geoUri = activelist.getLocation().getGoogleMapUrl();
+            if(activelist.getGoogleMapUrl()!=null){
+                String geoUri = activelist.getGoogleMapUrl();
                 if (activelist.getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
                     tv_place.setVisibility(View.VISIBLE);
                     tv_place.setText(activelist.getPlace());
