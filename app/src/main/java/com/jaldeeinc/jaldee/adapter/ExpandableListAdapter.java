@@ -833,7 +833,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     "fonts/Montserrat_Bold.otf");
             String firstWord = activelist.getName();
             String secondWord = " for ";
-            String thirdWord = Config.toTitleCase(activelist.getConsumer().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getLastName());
+            String thirdWord = Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName());
             Spannable spannable = new SpannableString(firstWord + secondWord + thirdWord);
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length() + secondWord.length(), firstWord.length() + secondWord.length() + thirdWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -865,7 +865,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getConsumer().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getLastName())),activelist.getConsumer().getId());
+                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName())),activelist.getConsumer().getId());
             }
         });
 
@@ -1939,7 +1939,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             public void onClick(View v) {
                 Config.logV("Button Pay@@@@@@@@@@@@@@@@@" + activelist.getWaitlistStatus());
                 // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
-                String consumer = Config.toTitleCase(activelist.getConsumer().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getLastName());
+                String consumer = Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName());
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                     callbacks.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), activelist.getAmountDue(),activelist.getConsumer().getId());
                 } else {
