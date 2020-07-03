@@ -330,10 +330,13 @@ public interface ApiInterface {
 
     @Headers("User-Agent: android")
     @POST("consumer/payment")
-    Call<CheckSumModel> generateHash(@Body RequestBody jsonObj, @Query("accountId") String account);
+    Call<CheckSumModel> generateHash(@Body RequestBody jsonObj);
 
     @Headers("User-Agent: android")
+    @POST("consumer/payment/status")
+    Call<String> verifyRazorpayPayment(@QueryMap(encoded = true) Map<String, String> query);
 
+    @Headers("User-Agent: android")
     @POST("consumer/payment")
     Call<PaytmChecksum> generateHashPaytm(@Body RequestBody jsonObj);
 

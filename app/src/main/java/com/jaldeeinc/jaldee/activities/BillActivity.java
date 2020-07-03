@@ -31,8 +31,10 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.BillModel;
+import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
+import com.jaldeeinc.jaldee.payment.RazorpayPayment;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.jaldeeinc.jaldee.response.PaymentModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
@@ -43,6 +45,8 @@ import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -60,7 +64,7 @@ import retrofit2.Response;
  * Created by sharmila on 1/10/18.
  */
 
-public class BillActivity extends AppCompatActivity {
+public class BillActivity extends AppCompatActivity implements PaymentResultWithDataListener {
 
     static Context mCOntext;
     static Activity mActivity;
@@ -767,6 +771,35 @@ public class BillActivity extends AppCompatActivity {
 
 
     }
+    public void paymentFinished(RazorpayModel razorpayModel) {
+        Intent intent = new Intent(mCOntext, Home.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("message", "razorpay");
+        startActivity(intent);
+        finish();
+    }
+    @Override
+    public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
+        Log.i("mani","here");
+        try {
+            Log.i("Success1111",  new Gson().toJson(paymentData));
+            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
+            new PaymentGateway(mCOntext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            Toast.makeText(mCOntext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
+            paymentFinished(razorpayModel);
 
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentSuccess", e);
+        }
+    }
 
+    @Override
+    public void onPaymentError(int code, String response, PaymentData paymentData) {
+        try {
+            Log.i("here.....", new Gson().toJson(paymentData));
+            Toast.makeText(mCOntext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentError..", e);
+        }
+    }
 }
