@@ -761,8 +761,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                             myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
 
                                         } else {
-                                            myViewHolder.tv_WaitTime.setVisibility(View.GONE);
 
+                                            if(mQueueList.get(l).isShowToken() && (mQueueList.get(l).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) && !mQueueList.get(l).getNextAvailableQueue().isOpenNow()){
+                                                myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                                            }else{
+                                                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                                            }
                                         }
                                     } else {
                                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);

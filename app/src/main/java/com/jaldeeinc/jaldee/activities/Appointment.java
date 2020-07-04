@@ -4040,6 +4040,15 @@ public class Appointment extends AppCompatActivity {
     }
     public static void schedid(String id) {
        schdId = id;
+       if(schdId.equals("0")){
+           earliestAvailable.setText("Timeslots not available");
+           Lbottomlayout.setVisibility(View.GONE);
+           txtnocheckin.setText("Appointment" + " for this service is not available at the moment. Please try for a different time or date");
+           txtnocheckin.setVisibility(View.VISIBLE);
+           queuelayout.setVisibility(View.GONE);
+           tv_queue.setVisibility(View.GONE);
+
+       }
     }
 
     SearchViewDetail mBusinessDataList;
