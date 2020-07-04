@@ -471,11 +471,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             if(mQueueList.get(i).getNextAvailableQueue()!=null) {
                 if (online_presence && mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled()) {
                   if(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn() || mSearchSetting.isFutureDateWaitlist()) {
-                      if (!mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                      if (!mQueueList.get(i).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) {
                           myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                           myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
                       } else {
-                          if(mSearchSetting.isShowTokenId() && (mSearchSetting.getCalculationMode().equalsIgnoreCase("NoCalc")) && !mQueueList.get(i).getNextAvailableQueue().isOpenNow()){
+                          if(mQueueList.get(i).isShowToken() && (mQueueList.get(i).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc"))){
                               myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                               myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
                           }else{
@@ -1752,49 +1752,30 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         if (mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != null) {
             if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() != -1) {
                 Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
-                if (mQueueList.get(i).getNextAvailableQueue().getPersonAhead() == 0) {
-                    String firstWord = "Next Available Time ";
-                    String secondWord = "\nToday, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
-                    myViewHolder.tv_waittime.setText(firstWord + secondWord);
-                    myViewHolder.txtwaittime_expand.setText(firstWord + secondWord);
+
+
                     if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
-//                        myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
-//                        myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+                        String firstWord = "Next Available Time ";
+                        String secondWord = "\nToday, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
+                        myViewHolder.tv_waittime.setText(firstWord + secondWord);
+                        myViewHolder.txtwaittime_expand.setText(firstWord + secondWord);
+                        myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " " + " People waiting in line");
+                        myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
                     } else {
-//                        myViewHolder.tv_waittime.setVisibility(View.GONE);
-//                        myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
+                        String firstWord = "Est wait time";
+                        String secondWord = "\n" + Config.getTimeinHourMinutes(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
+                        myViewHolder.tv_waittime.setText(firstWord + secondWord);
+                        myViewHolder.txtwaittime_expand.setText(firstWord + secondWord);
+                        myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " " + " People waiting in line");
+                        myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
+
                     }
 
-                    //   myViewHolder.tv_waittime.setText(" Be the first in line");
 
-                    //    myViewHolder.txtwaittime_expand.setText(" Be the first in line");
-                    myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " " + " People waiting in line");
-//                    myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
 
-                } else {
-//                    myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
-//                    myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                    //   String firstWord = String.valueOf(mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
-                    //    String secondWord = " People waiting in line";
-                    String firstWord = "Next Available Time ";
-                    String secondWord = "\nToday, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
-                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                            "fonts/Montserrat_Bold.otf");
-                    Spannable spannable = new SpannableString(firstWord + secondWord);
-                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    myViewHolder.tv_waittime.setText(spannable);
-                    myViewHolder.txtwaittime_expand.setText(spannable);
-//                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
-//                        myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
-//                        myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-//                    } else {
-//                        myViewHolder.tv_waittime.setVisibility(View.GONE);
-//                        myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
-//                    }
 
-                    myViewHolder.txt_peopleahead.setText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead() + " " + " People waiting in line");
-                    myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
-                }
+
+
             }
         }
 

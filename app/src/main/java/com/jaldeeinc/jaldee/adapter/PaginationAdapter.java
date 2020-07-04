@@ -759,10 +759,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     if (mQueueList.get(l).getNextAvailableQueue().isOnlineCheckIn() || searchdetailList.getFuture_checkins().equals("1")) {
                                         if (!mQueueList.get(l).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                             myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-
                                         } else {
-
-                                            if(mQueueList.get(l).isShowToken() && (mQueueList.get(l).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) && !mQueueList.get(l).getNextAvailableQueue().isOpenNow()){
+                                            if(mQueueList.get(l).isShowToken() && (mQueueList.get(l).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) ){
                                                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
                                             }else{
                                                 myViewHolder.tv_WaitTime.setVisibility(View.GONE);
