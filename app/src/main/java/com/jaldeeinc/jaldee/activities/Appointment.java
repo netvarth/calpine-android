@@ -60,6 +60,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
@@ -91,6 +92,8 @@ import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -131,7 +134,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class Appointment extends AppCompatActivity {
+public class Appointment extends AppCompatActivity implements PaymentResultWithDataListener {
 
     ArrayList<String> couponArraylist = new ArrayList<>();
 
@@ -3438,7 +3441,7 @@ public class Appointment extends AppCompatActivity {
 
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(body, accountID);
+        Call<CheckSumModel> call = apiService.generateHash(body);
 
         call.enqueue(new Callback<CheckSumModel>() {
             @Override
@@ -4246,6 +4249,32 @@ public class Appointment extends AppCompatActivity {
             }
         });
 
+    }
+    public void paymentFinished(RazorpayModel razorpayModel) {
+        finish();
+    }
+    @Override
+    public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
+        Log.i("mani","here");
+        try {
+            Log.i("Success1111",  new Gson().toJson(paymentData));
+            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
+            new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            Toast.makeText(this.mContext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
+            paymentFinished(razorpayModel);
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentSuccess", e);
+        }
+    }
+
+    @Override
+    public void onPaymentError(int code, String response, PaymentData paymentData) {
+        try {
+            Log.i("here.....", new Gson().toJson(paymentData));
+            Toast.makeText(this.mContext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentError..", e);
+        }
     }
 }
 
