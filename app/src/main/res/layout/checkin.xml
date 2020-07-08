@@ -288,12 +288,12 @@
                                         android:textSize="@dimen/dimen_14sp"
                                         android:theme="@android:style/Theme.Holo.Light" />
 
-                                    <ImageView
-                                        android:layout_marginLeft="@dimen/padding3"
-                                        android:layout_width="15dp"
-                                        android:layout_height="15dp"
-                                        android:layout_gravity="center"
-                                        android:src="@drawable/edit_icon" />
+<!--                                    <ImageView-->
+<!--                                        android:layout_marginLeft="@dimen/padding3"-->
+<!--                                        android:layout_width="15dp"-->
+<!--                                        android:layout_height="15dp"-->
+<!--                                        android:layout_gravity="center"-->
+<!--                                        android:src="@drawable/edit_icon" />-->
 
 
                                 </LinearLayout>

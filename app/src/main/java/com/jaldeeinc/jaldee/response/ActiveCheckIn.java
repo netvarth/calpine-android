@@ -10,43 +10,183 @@ import java.util.ArrayList;
 
 public class ActiveCheckIn {
 
-    public String getJaldeeStartTimeType() {
-        return jaldeeStartTimeType;
+
+    int token;
+    String checkinEncId;
+    String date;
+    @SerializedName("providerAccount")
+    private ActiveCheckIn providerAccount;
+    int id;
+    String businessName;
+    String licensePkgID;
+    String uniqueId;
+    String corpId;
+    String branchId;
+    String userSubdomain;
+    String profileId;
+    @SerializedName("consumer")
+    private ConsumerDetails consumer;
+
+    public ConsumerDetails getConsumer() {
+        return consumer;
     }
 
-    public void setJaldeeStartTimeType(String jaldeeStartTimeType) {
-        this.jaldeeStartTimeType = jaldeeStartTimeType;
+    public void setConsumer(ConsumerDetails consumer) {
+        this.consumer = consumer;
     }
 
-    String jaldeeStartTimeType;
+    String firstName;
+    String lastName;
+    boolean favourite;
+    boolean phone_verified;
+    boolean email_verified;
+    int parent;
+    int jaldeeConsumer;
+    @SerializedName("service")
+    private ActiveCheckIn service;
+    String name;
+    int department;
+    String deptName;
+    String serviceType;
+    int multiples;
+    String livetrack;
+    String waitlistStatus;
+    String statusUpdatedTime;
+    int partySize;
+    String consumerNote;
+    String recalculatedTime;
+    int appxWaitingTime;
 
-    public String getPaymentStatus() {
-        return paymentStatus;
+    public int getAppxWaitingTime() {
+        return appxWaitingTime;
+    }
+
+    public void setAppxWaitingTime(int appxWaitingTime) {
+        this.appxWaitingTime = appxWaitingTime;
+    }
+
+    @SerializedName("queue")
+    private ActiveCheckIn queue;
+    @SerializedName("location")
+    private ActiveCheckIn location;
+    String place;
+    String address;
+    String longitude;
+    String lattitude;
+    String googleMapUrl;
+    String queueStartTime;
+    String queueEndTime;
+    int personAhead;
+    String waitlistedBy;
+    int personsAhead=-1;
+    @SerializedName("waitlistingFor")
+    private ArrayList<ActiveCheckIn> waitlistingFor;
+    String phoneNo;
+    String email;
+    String ynwUuid;
+    @SerializedName("rating")
+    private ActiveCheckIn rating;
+    String stars;
+
+    public ActiveCheckIn getRating() {
+        return rating;
+    }
+
+    public void setRating(ActiveCheckIn rating) {
+        this.rating = rating;
+    }
+
+    public String getStars() {
+        return stars;
+    }
+
+    public void setStars(String stars) {
+        this.stars = stars;
     }
 
     String paymentStatus;
+    String billStatus;
+    String calculationMode;
     String checkInTime;
+    String serviceTime;
 
-    public String getCheckInTime() {
-        return checkInTime;
+    public String getServiceTime() {
+        return serviceTime;
     }
 
-    public void setCheckInTime(String checkInTime) {
-        this.checkInTime = checkInTime;
+    public void setServiceTime(String serviceTime) {
+        this.serviceTime = serviceTime;
     }
 
-    public int getPartySize() {
-        return partySize;
+    String billViewStatus;
+    double amountPaid;
+    double amountDue;
+    int billId;
+    String parentUuid;
+
+    public String getParentUuid() {
+        return parentUuid;
     }
 
-    int partySize;
-    public boolean isFavourite() {
-        return favourite;
+    public void setParentUuid(String parentUuid) {
+        this.parentUuid = parentUuid;
     }
 
-    boolean favourite;
-    public int getPersonsAhead() {
-        return personsAhead;
+    String batchName;
+
+    public String getBatchName() {
+        return batchName;
+    }
+
+    public void setBatchName(String batchName) {
+        this.batchName = batchName;
+    }
+
+    @SerializedName("jaldeeWaitlistDistanceTime")
+    private JaldeeWaitlistDistanceTime jaldeeWaitlistDistanceTime;
+    String jaldeeStartTimeType;
+    String waitlistPhoneNumber;
+    int account;
+    boolean onlineRequest;
+    boolean kioskRequest;
+    boolean firstCheckIn;
+    boolean active;
+    int accessScope;
+    String waitlistMode;
+    boolean consumerStarted;
+    boolean callingStatus;
+    String showToken;
+
+    public int getToken() {
+        return token;
+    }
+
+    public void setToken(int token) {
+        this.token = token;
+    }
+
+    public String getCheckinEncId() {
+        return checkinEncId;
+    }
+
+    public void setCheckinEncId(String checkinEncId) {
+        this.checkinEncId = checkinEncId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public ActiveCheckIn getProviderAccount() {
+        return providerAccount;
+    }
+
+    public void setProviderAccount(ActiveCheckIn providerAccount) {
+        this.providerAccount = providerAccount;
     }
 
     public int getId() {
@@ -57,128 +197,69 @@ public class ActiveCheckIn {
         this.id = id;
     }
 
-    int id;
-
-    double amountPaid;
-
-    public double getAmountPaid() {
-        return amountPaid;
-    }
-
-    public void setAmountPaid(double amountPaid) {
-        this.amountPaid = amountPaid;
-    }
-
-    public double getAmountDue() {
-        return amountDue;
-    }
-
-    public void setAmountDue(double amountDue) {
-        this.amountDue = amountDue;
-    }
-
-    double amountDue;
-
-    int personsAhead=-1;
-    public String getYnwUuid() {
-        return ynwUuid;
-    }
-
-    public void setYnwUuid(String ynwUuid) {
-        this.ynwUuid = ynwUuid;
-    }
-
-    String ynwUuid;
-
-    String showToken;
-
-    public String getShowToken() {
-        return showToken;
-    }
-
-    public void setShowToken(String showToken) {
-        this.showToken = showToken;
-    }
-
-    public String getGoogleMapUrl() {
-        return googleMapUrl;
-    }
-
-    String googleMapUrl;
-
-    public String getBillStatus() {
-        return billStatus;
-    }
-
-    public void setBillStatus(String billStatus) {
-        this.billStatus = billStatus;
-    }
-
-    String billStatus;
-
-    public String getBillViewStatus() {
-        return billViewStatus;
-    }
-
-    public void setBillViewStatus(String billViewStatus) {
-        this.billViewStatus = billViewStatus;
-    }
-
-    String billViewStatus;
-
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public void setPartySize(int partySize) {
-        this.partySize = partySize;
-    }
-
-    public void setFavourite(boolean favourite) {
-        this.favourite = favourite;
-    }
-
-    public void setPersonsAhead(int personsAhead) {
-        this.personsAhead = personsAhead;
-    }
-
-    public void setGoogleMapUrl(String googleMapUrl) {
-        this.googleMapUrl = googleMapUrl;
-    }
-
-
-
-    public void setWaitlistingFor(ArrayList<ActiveCheckIn> waitlistingFor) {
-        this.waitlistingFor = waitlistingFor;
+    public String getBusinessName() {
+        return businessName;
     }
 
     public void setBusinessName(String businessName) {
         this.businessName = businessName;
     }
 
-    public void setQueue(ActiveCheckIn queue) {
-        Queue = queue;
+    public String getLicensePkgID() {
+        return licensePkgID;
     }
 
-    @SerializedName("consumer")
-
-    private ActiveCheckIn consumer;
-
-    public ActiveCheckIn getConsumer() {
-        return consumer;
+    public void setLicensePkgID(String licensePkgID) {
+        this.licensePkgID = licensePkgID;
     }
 
-    public void setConsumer(ActiveCheckIn consumer) {
-        this.consumer = consumer;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
-    public ActiveCheckIn getUserProfile() {
-        return userProfile;
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
-    public void setUserProfile(ActiveCheckIn userProfile) {
-        this.userProfile = userProfile;
+    public String getCorpId() {
+        return corpId;
     }
+
+    public void setCorpId(String corpId) {
+        this.corpId = corpId;
+    }
+
+    public String getBranchId() {
+        return branchId;
+    }
+
+    public void setBranchId(String branchId) {
+        this.branchId = branchId;
+    }
+
+    public String getUserSubdomain() {
+        return userSubdomain;
+    }
+
+    public void setUserSubdomain(String userSubdomain) {
+        this.userSubdomain = userSubdomain;
+    }
+
+    public String getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(String profileId) {
+        this.profileId = profileId;
+    }
+
+//    public ActiveCheckIn getConsumer() {
+//        return consumer;
+//    }
+
+//    public void setConsumer(ActiveCheckIn consumer) {
+//        this.consumer = consumer;
+//    }
 
     public String getFirstName() {
         return firstName;
@@ -196,93 +277,52 @@ public class ActiveCheckIn {
         this.lastName = lastName;
     }
 
-    @SerializedName("userProfile")
-    private ActiveCheckIn userProfile;
-
-    String firstName;
-    String lastName;
-
-
-
-    public String getStars() {
-        return stars;
+    public boolean isFavourite() {
+        return favourite;
     }
 
-    public ActiveCheckIn getRating() {
-        return rating;
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 
-    String stars;
-
-    public void setRating(ActiveCheckIn rating) {
-        this.rating = rating;
+    public boolean isPhone_verified() {
+        return phone_verified;
     }
 
-    ActiveCheckIn rating;
-
-
-    public ActiveCheckIn getProviderAccount() {
-        return providerAccount;
+    public void setPhone_verified(boolean phone_verified) {
+        this.phone_verified = phone_verified;
     }
 
-    public void setProviderAccount(ActiveCheckIn providerAccount) {
-        this.providerAccount = providerAccount;
+    public boolean isEmail_verified() {
+        return email_verified;
     }
 
-    @SerializedName("providerAccount")
-    private ActiveCheckIn providerAccount;
-
-    public ArrayList<ActiveCheckIn> getWaitlistingFor() {
-        return waitlistingFor;
+    public void setEmail_verified(boolean email_verified) {
+        this.email_verified = email_verified;
     }
 
-    @SerializedName("waitlistingFor")
-    private ArrayList<ActiveCheckIn> waitlistingFor;
-
-
-    public String getUniqueId() {
-        return uniqueId;
+    public int getParent() {
+        return parent;
     }
 
-    public void setUniqueId(String uniqueId) {
-        this.uniqueId = uniqueId;
+    public void setParent(int parent) {
+        this.parent = parent;
     }
 
-    String uniqueId;
-
-    public ActiveCheckIn getLocation() {
-        return location;
+    public int getJaldeeConsumer() {
+        return jaldeeConsumer;
     }
 
-    public String getPlace() {
-        return place;
+    public void setJaldeeConsumer(int jaldeeConsumer) {
+        this.jaldeeConsumer = jaldeeConsumer;
     }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
-
-    String place;
-
-    public String getServiceTime() {
-        return serviceTime;
-    }
-
-    public void setServiceTime(String serviceTime) {
-        this.serviceTime = serviceTime;
-    }
-
-    String serviceTime;
-    public void setLocation(ActiveCheckIn location) {
-        this.location = location;
-    }
-
-    @SerializedName("location")
-    private ActiveCheckIn location;
-
 
     public ActiveCheckIn getService() {
         return service;
+    }
+
+    public void setService(ActiveCheckIn service) {
+        this.service = service;
     }
 
     public String getName() {
@@ -293,31 +333,37 @@ public class ActiveCheckIn {
         this.name = name;
     }
 
-    String name;
-
-    public int getToken() {
-        return token;
+    public int getDepartment() {
+        return department;
     }
 
-    public void setToken(int token) {
-        this.token = token;
+    public void setDepartment(int department) {
+        this.department = department;
     }
 
-    int token;
-
-    public void setService(ActiveCheckIn service) {
-        this.service = service;
+    public String getDeptName() {
+        return deptName;
     }
 
-    @SerializedName("service")
-    private ActiveCheckIn service;
-
-    public String getBusinessName() {
-        return businessName;
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 
-    String businessName;
+    public String getServiceType() {
+        return serviceType;
+    }
 
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    public int getMultiples() {
+        return multiples;
+    }
+
+    public void setMultiples(int multiples) {
+        this.multiples = multiples;
+    }
 
     public String getLivetrack() {
         return livetrack;
@@ -327,37 +373,101 @@ public class ActiveCheckIn {
         this.livetrack = livetrack;
     }
 
-    String livetrack;
-
-
-    public String getDate() {
-        return date;
+    public String getWaitlistStatus() {
+        return waitlistStatus;
     }
 
-        String date;
-
-    public int getAppxWaitingTime() {
-        return appxWaitingTime;
+    public void setWaitlistStatus(String waitlistStatus) {
+        this.waitlistStatus = waitlistStatus;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public String getStatusUpdatedTime() {
+        return statusUpdatedTime;
     }
 
-    public void setAppxWaitingTime(int appxWaitingTime) {
-        this.appxWaitingTime = appxWaitingTime;
+    public void setStatusUpdatedTime(String statusUpdatedTime) {
+        this.statusUpdatedTime = statusUpdatedTime;
     }
 
-    int appxWaitingTime=-1;
+    public int getPartySize() {
+        return partySize;
+    }
 
+    public void setPartySize(int partySize) {
+        this.partySize = partySize;
+    }
+
+    public String getConsumerNote() {
+        return consumerNote;
+    }
+
+    public void setConsumerNote(String consumerNote) {
+        this.consumerNote = consumerNote;
+    }
+
+    public String getRecalculatedTime() {
+        return recalculatedTime;
+    }
+
+    public void setRecalculatedTime(String recalculatedTime) {
+        this.recalculatedTime = recalculatedTime;
+    }
 
     public ActiveCheckIn getQueue() {
-        return Queue;
+        return queue;
     }
 
-    @SerializedName("queue")
-    private ActiveCheckIn Queue;
+    public void setQueue(ActiveCheckIn queue) {
+        this.queue = queue;
+    }
 
+    public ActiveCheckIn getLocation() {
+        return location;
+    }
+
+    public void setLocation(ActiveCheckIn location) {
+        this.location = location;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLattitude() {
+        return lattitude;
+    }
+
+    public void setLattitude(String lattitude) {
+        this.lattitude = lattitude;
+    }
+
+    public String getGoogleMapUrl() {
+        return googleMapUrl;
+    }
+
+    public void setGoogleMapUrl(String googleMapUrl) {
+        this.googleMapUrl = googleMapUrl;
+    }
 
     public String getQueueStartTime() {
         return queueStartTime;
@@ -367,9 +477,6 @@ public class ActiveCheckIn {
         this.queueStartTime = queueStartTime;
     }
 
-    String queueStartTime;
-
-
     public String getQueueEndTime() {
         return queueEndTime;
     }
@@ -378,37 +485,127 @@ public class ActiveCheckIn {
         this.queueEndTime = queueEndTime;
     }
 
-    String queueEndTime;
-
-    public String getWaitlistStatus() {
-        return waitlistStatus;
+    public int getPersonAhead() {
+        return personAhead;
     }
 
-    public void setWaitlistStatus(String waitlistStatus) {
-        this.waitlistStatus = waitlistStatus;
+    public void setPersonAhead(int personAhead) {
+        this.personAhead = personAhead;
     }
 
-    String waitlistStatus;
-
-    public boolean isFavFlag() {
-        return favFlag;
+    public String getWaitlistedBy() {
+        return waitlistedBy;
     }
 
-    public void setFavFlag(boolean favFlag) {
-        this.favFlag = favFlag;
+    public void setWaitlistedBy(String waitlistedBy) {
+        this.waitlistedBy = waitlistedBy;
     }
 
-    boolean favFlag=false;
-
-
-    public void setStatusUpdatedTime(String statusUpdatedTime) {
-        this.statusUpdatedTime = statusUpdatedTime;
+    public int getPersonsAhead() {
+        return personsAhead;
     }
 
-    String statusUpdatedTime;
+    public void setPersonsAhead(int personsAhead) {
+        this.personsAhead = personsAhead;
+    }
 
-    public String getStatusUpdatedTime() {
-        return statusUpdatedTime;
+    public ArrayList<ActiveCheckIn> getWaitlistingFor() {
+        return waitlistingFor;
+    }
+
+    public void setWaitlistingFor(ArrayList<ActiveCheckIn> waitlistingFor) {
+        this.waitlistingFor = waitlistingFor;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getYnwUuid() {
+        return ynwUuid;
+    }
+
+    public void setYnwUuid(String ynwUuid) {
+        this.ynwUuid = ynwUuid;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getBillStatus() {
+        return billStatus;
+    }
+
+    public void setBillStatus(String billStatus) {
+        this.billStatus = billStatus;
+    }
+
+
+    public String getCalculationMode() {
+        return calculationMode;
+    }
+
+    public void setCalculationMode(String calculationMode) {
+        this.calculationMode = calculationMode;
+    }
+
+    public String getCheckInTime() {
+        return checkInTime;
+    }
+
+    public void setCheckInTime(String checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public double getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(double amountPaid) {
+        this.amountPaid = amountPaid;
+    }
+
+    public double getAmountDue() {
+        return amountDue;
+    }
+
+    public void setAmountDue(double amountDue) {
+        this.amountDue = amountDue;
+    }
+
+
+
+    public String getBillViewStatus() {
+        return billViewStatus;
+    }
+
+    public void setBillViewStatus(String billViewStatus) {
+        this.billViewStatus = billViewStatus;
+    }
+
+    public int getBillId() {
+        return billId;
+    }
+
+    public void setBillId(int billId) {
+        this.billId = billId;
     }
 
     public JaldeeWaitlistDistanceTime getJaldeeWaitlistDistanceTime() {
@@ -419,67 +616,100 @@ public class ActiveCheckIn {
         this.jaldeeWaitlistDistanceTime = jaldeeWaitlistDistanceTime;
     }
 
-    @SerializedName("jaldeeWaitlistDistanceTime")
-    private JaldeeWaitlistDistanceTime jaldeeWaitlistDistanceTime;
-
-    public String getBatchName() {
-        return batchName;
+    public String getJaldeeStartTimeType() {
+        return jaldeeStartTimeType;
     }
 
-    public void setBatchName(String batchName) {
-        this.batchName = batchName;
+    public void setJaldeeStartTimeType(String jaldeeStartTimeType) {
+        this.jaldeeStartTimeType = jaldeeStartTimeType;
     }
 
-    String batchName;
-
-    public String getParentUuid() {
-        return parentUuid;
+    public String getWaitlistPhoneNumber() {
+        return waitlistPhoneNumber;
     }
 
-    public void setParentUuid(String parentUuid) {
-        this.parentUuid = parentUuid;
+    public void setWaitlistPhoneNumber(String waitlistPhoneNumber) {
+        this.waitlistPhoneNumber = waitlistPhoneNumber;
     }
 
-    String parentUuid;
-
-
-    public String getLattitude() {
-        return lattitude;
+    public int getAccount() {
+        return account;
     }
 
-    public void setLattitude(String lattitude) {
-        this.lattitude = lattitude;
+    public void setAccount(int account) {
+        this.account = account;
     }
 
-    String lattitude;
-
-    public String getLongitude() {
-        return longitude;
+    public boolean isOnlineRequest() {
+        return onlineRequest;
     }
 
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setOnlineRequest(boolean onlineRequest) {
+        this.onlineRequest = onlineRequest;
     }
 
-    String longitude;
-
-    public String getPrimaryMobileNo() {
-        return primaryMobileNo;
+    public boolean isKioskRequest() {
+        return kioskRequest;
     }
 
-    public void setPrimaryMobileNo(String primaryMobileNo) {
-        this.primaryMobileNo = primaryMobileNo;
+    public void setKioskRequest(boolean kioskRequest) {
+        this.kioskRequest = kioskRequest;
     }
 
-    String primaryMobileNo;
-
-    public String getCalculationMode() {
-        return calculationMode;
+    public boolean isFirstCheckIn() {
+        return firstCheckIn;
     }
 
-    public void setCalculationMode(String calculationMode) {
-        this.calculationMode = calculationMode;
+    public void setFirstCheckIn(boolean firstCheckIn) {
+        this.firstCheckIn = firstCheckIn;
     }
 
-    String calculationMode;
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public int getAccessScope() {
+        return accessScope;
+    }
+
+    public void setAccessScope(int accessScope) {
+        this.accessScope = accessScope;
+    }
+
+    public String getWaitlistMode() {
+        return waitlistMode;
+    }
+
+    public void setWaitlistMode(String waitlistMode) {
+        this.waitlistMode = waitlistMode;
+    }
+
+    public boolean isConsumerStarted() {
+        return consumerStarted;
+    }
+
+    public void setConsumerStarted(boolean consumerStarted) {
+        this.consumerStarted = consumerStarted;
+    }
+
+    public boolean isCallingStatus() {
+        return callingStatus;
+    }
+
+    public void setCallingStatus(boolean callingStatus) {
+        this.callingStatus = callingStatus;
+    }
+
+    public String getShowToken() {
+        return showToken;
+    }
+
+    public void setShowToken(String showToken) {
+        this.showToken = showToken;
+    }
+
 }

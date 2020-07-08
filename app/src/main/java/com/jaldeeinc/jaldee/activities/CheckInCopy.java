@@ -157,7 +157,7 @@ public class CheckInCopy extends AppCompatActivity {
 
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(body,accountID);
+        Call<CheckSumModel> call = apiService.generateHash(body);
 
         call.enqueue(new Callback<CheckSumModel>() {
             @Override

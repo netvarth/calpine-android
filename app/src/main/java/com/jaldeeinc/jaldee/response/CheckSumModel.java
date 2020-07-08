@@ -18,7 +18,66 @@ public class CheckSumModel implements Serializable {
     String merchantKey;
     String amount;
     String txnid;
+    String paymentGateway;
+    String providerName;
+    String consumerPhoneumber;
+    String consumerName;
+    String razorpayId;
+    String description;
+    String orderId;
+    String ConsumerEmail;
 
+    public String getConsumerEmail() {
+        return ConsumerEmail;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setPaymentGateway(String paymentGateway) {
+        this.paymentGateway = paymentGateway;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    public void setConsumerPhoneumber(String consumerPhoneumber) {
+        this.consumerPhoneumber = consumerPhoneumber;
+    }
+
+    public void setConsumerName(String consumerName) {
+        this.consumerName = consumerName;
+    }
+
+    public void setRazorpayId(String razorpayId) {
+        this.razorpayId = razorpayId;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setConsumerEmail(String consumerEmail) {
+        ConsumerEmail = consumerEmail;
+    }
+
+    public String getRazorpayId() {
+        return razorpayId;
+    }
+
+    public String getConsumerName() {
+        return consumerName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     public String getAmount() {
         return amount;
@@ -63,6 +122,17 @@ public class CheckSumModel implements Serializable {
 
     public String getEmail() {
         return email;
+    }
+    public String getConsumerPhoneumber() {
+        return consumerPhoneumber;
+    }
+
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public String getPaymentGateway() {
+        return paymentGateway;
     }
 
     public String getMerchantKey() {

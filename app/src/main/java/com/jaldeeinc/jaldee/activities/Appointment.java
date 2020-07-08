@@ -60,6 +60,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
@@ -91,6 +92,8 @@ import com.payumoney.core.PayUmoneySdkInitializer;
 import com.payumoney.core.entity.TransactionResponse;
 import com.payumoney.sdkui.ui.utils.PayUmoneyFlowManager;
 import com.payumoney.sdkui.ui.utils.ResultModel;
+import com.razorpay.PaymentData;
+import com.razorpay.PaymentResultWithDataListener;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -131,7 +134,7 @@ import retrofit2.Response;
  * Created by sharmila on 6/8/18.
  */
 
-public class Appointment extends AppCompatActivity {
+public class Appointment extends AppCompatActivity implements PaymentResultWithDataListener {
 
     ArrayList<String> couponArraylist = new ArrayList<>();
 
@@ -246,6 +249,7 @@ public class Appointment extends AppCompatActivity {
     TextView tv_fileAttach;
     File file;
     BottomSheetDialog dialog;
+    static String schdId;
     EditText edt_message;
 
 
@@ -799,16 +803,16 @@ public class Appointment extends AppCompatActivity {
 
                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                  //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                     ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
                 } else {
                     if (selectedDateFormat != null) {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                      //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
                         ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
                     } else {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                      //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                         ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
                     }
                 }
@@ -1612,7 +1616,7 @@ public class Appointment extends AppCompatActivity {
             e.printStackTrace();
         }
         Config.logV("Selected Date---&&&&&&&&&&&#%%%%%%%-------------" + selectedDate);
-        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, String.valueOf(isShowToken));
+      //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, String.valueOf(isShowToken));
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -2121,7 +2125,8 @@ public class Appointment extends AppCompatActivity {
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
+                            earliestAvailable.setText("Timeslots not available");
                         }
 
 
@@ -2738,14 +2743,14 @@ public class Appointment extends AppCompatActivity {
 
                                             if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                              //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                             } else {
                                                 if (selectedDateFormat != null) {
 
-                                                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                                                //    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
                                                 } else {
 
-                                                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                                 //   ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                                 }
                                             }
                                         }
@@ -3030,11 +3035,6 @@ public class Appointment extends AppCompatActivity {
                             tv_queue.setText("Choose the time window");
                         }
 
-                        if (schedResponse.size() == 1) {
-                            tv_queue.setText("Time window");
-                        } else {
-                            tv_queue.setText("Choose the time window");
-                        }
 
                         if (schedResponse.size() > 0) {
                             Lbottomlayout.setVisibility(View.VISIBLE);
@@ -3072,7 +3072,8 @@ public class Appointment extends AppCompatActivity {
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
+                            earliestAvailable.setText("Time slots not available");
                         }
 
 
@@ -3444,7 +3445,7 @@ public class Appointment extends AppCompatActivity {
 
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-        Call<CheckSumModel> call = apiService.generateHash(body, accountID);
+        Call<CheckSumModel> call = apiService.generateHash(body);
 
         call.enqueue(new Callback<CheckSumModel>() {
             @Override
@@ -3531,12 +3532,14 @@ public class Appointment extends AppCompatActivity {
             //   qjsonObj.put("id", queueId);
             if (txtWaitTime.getText().toString().contains("Today")) {
                 queueobj.put("appmtDate", formattedDate);
+                sjsonobj.put("id", schedResponse.get(i).getId());
             } else {
                 queueobj.put("appmtDate", txtWaitTime.getText().toString());
+                sjsonobj.put("id", schdId);
             }
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("phonenumber", phoneNumber);
-            sjsonobj.put("id", schedResponse.get(i).getId());
+
 
             if (callingMode != null && callingMode.equalsIgnoreCase("whatsapp")) {
                 virtualService.put("WhatsApp", et_vitualId.getText());
@@ -3544,7 +3547,7 @@ public class Appointment extends AppCompatActivity {
                 virtualService.put("", "");
             }
 
-            virtualService.put("id", schedResponse.get(i).getId());
+//            virtualService.put("id", schedResponse.get(i).getId());
             sejsonobj.put("id", selectedService);
 
 
@@ -3753,8 +3756,8 @@ public class Appointment extends AppCompatActivity {
                             checkinShareLocations.putExtra("title", title);
                             checkinShareLocations.putExtra("terminology", terminology);
                             checkinShareLocations.putExtra("calcMode", calcMode);
-                            checkinShareLocations.putExtra("queueStartTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
-                            checkinShareLocations.putExtra("queueEndTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
+                            checkinShareLocations.putExtra("queueStartTime", schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).getsTime());
+                            checkinShareLocations.putExtra("queueEndTime", schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).geteTime());
                             checkinShareLocations.putExtra("from", "appt");
                             startActivity(checkinShareLocations);
                         }
@@ -4034,7 +4037,31 @@ public class Appointment extends AppCompatActivity {
             System.out.println("UTC time: " + sdfs.format(currentTimes));
             txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
         }
+        Date currentTimes = new Date();
+        final SimpleDateFormat sdfs = new SimpleDateFormat(
+                "dd-MM-yyyy", Locale.US);
+        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdfs.format(currentTimes));
 
+        Date c= Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = df.format(c);
+        if(!txtWaitTime.getText().toString().equals("Today\n" + sdfs.format(currentTimes)) || !txtWaitTime.getText().toString().equals(currentDate)){
+            Lbottomlayout.setVisibility(View.VISIBLE);
+            txtnocheckin.setVisibility(View.GONE);
+        }
+    }
+    public static void schedid(String id) {
+       schdId = id;
+       if(schdId.equals("0")){
+           earliestAvailable.setText("Timeslots not available");
+           Lbottomlayout.setVisibility(View.GONE);
+           txtnocheckin.setText("Appointment" + " for this service is not available at the moment. Please try for a different time or date");
+           txtnocheckin.setVisibility(View.VISIBLE);
+           queuelayout.setVisibility(View.GONE);
+           tv_queue.setVisibility(View.GONE);
+
+       }
     }
 
     SearchViewDetail mBusinessDataList;
@@ -4232,6 +4259,32 @@ public class Appointment extends AppCompatActivity {
             }
         });
 
+    }
+    public void paymentFinished(RazorpayModel razorpayModel) {
+        finish();
+    }
+    @Override
+    public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
+        Log.i("mani","here");
+        try {
+            Log.i("Success1111",  new Gson().toJson(paymentData));
+            RazorpayModel razorpayModel = new RazorpayModel(paymentData);
+            new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
+            Toast.makeText(this.mContext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
+            paymentFinished(razorpayModel);
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentSuccess", e);
+        }
+    }
+
+    @Override
+    public void onPaymentError(int code, String response, PaymentData paymentData) {
+        try {
+            Log.i("here.....", new Gson().toJson(paymentData));
+            Toast.makeText(this.mContext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("TAG", "Exception in onPaymentError..", e);
+        }
     }
 }
 

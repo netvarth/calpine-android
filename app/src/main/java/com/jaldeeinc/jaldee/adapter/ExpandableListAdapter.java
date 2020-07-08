@@ -520,7 +520,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         }
         Boolean live = true;
 
-        Log.i("dsfgdfg",String.valueOf(activelist.getLivetrack()));
 
         latitude = SharedPreference.getInstance(mContext).getStringValue("latitudes", "");
         longitude = SharedPreference.getInstance(mContext).getStringValue("longitudes", "");
@@ -562,18 +561,25 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 tv_recom_loc.setText("Jaldee recommends you to enable location");
                 tv_recom_loc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 tv_recom_liveloc.setVisibility(View.GONE);
+                tv_enable_loc.setVisibility(View.VISIBLE);
+                tv_recom_loc.setVisibility(View.VISIBLE);
             }
 
             else if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
-                tv_enable_loc.setVisibility(View.GONE);
+
                 tv_recom_liveloc.setText(spannables, TextView.BufferType.SPANNABLE);
                 tv_recom_loc.setVisibility(View.GONE);
+                tv_enable_loc.setVisibility(View.GONE);
+                tv_recom_liveloc.setVisibility(View.VISIBLE);
             }
 
             else {
-                tv_enable_loc.setVisibility(View.GONE);
+
                 tv_recom_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getBusinessName());
                 tv_recom_liveloc.setText(spannable, TextView.BufferType.SPANNABLE);
+                tv_recom_liveloc.setVisibility(View.VISIBLE);
+                tv_recom_loc.setVisibility(View.VISIBLE);
+                tv_enable_loc.setVisibility(View.GONE);
                 tv_recom_liveloc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             }
 
@@ -605,7 +611,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, CheckinShareLocation.class);
-                intent.putExtra("waitlistPhonenumber", activelist.getPrimaryMobileNo());
+                intent.putExtra("waitlistPhonenumber", activelist.getPhoneNo());
                 intent.putExtra("uuid", activelist.getYnwUuid());
                 intent.putExtra("accountID", String.valueOf(activelist.getId()));
                 intent.putExtra("title", activelist.getBusinessName());
@@ -772,8 +778,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
 
         try {
-            if(activelist.getLocation().getGoogleMapUrl()!=null){
-            String geoUri = activelist.getLocation().getGoogleMapUrl();
+            if(activelist.getGoogleMapUrl()!=null){
+            String geoUri = activelist.getGoogleMapUrl();
             if (activelist.getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
                 tv_place.setVisibility(View.VISIBLE);
                 tv_place.setText(activelist.getPlace());
@@ -796,7 +802,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 Config.logV("Fav Fav List--------%%%%--" + activelist.getId());
                 icon_fav.setVisibility(View.VISIBLE);
                 icon_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
-                activelist.setFavFlag(true);
+                activelist.getConsumer().setFavourite(true);
                 icon_fav.setText("Favourite");
             }
         }
@@ -804,7 +810,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         icon_fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (activelist.isFavFlag()) {
+                if (activelist.getConsumer().isFavourite()) {
 
                     Config.logV("Fav" + activelist.getId());
                     callback.onMethodDeleteFavourite(activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag);

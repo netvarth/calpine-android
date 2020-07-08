@@ -48,7 +48,7 @@ public class CheckinFamilyMemberAppointment extends AppCompatActivity {
     static Button btn_changemem;
     TextView txt_toolbartitle;
     ImageView imgBackpress;
-    boolean multiple;
+    boolean multiple = false;
     ArrayList<FamilyArrayModel> familyList = new ArrayList<>();
     ArrayList<FamilyArrayModel> checkList = new ArrayList<>();
     ArrayList<FamilyArrayModel> data = new ArrayList<>();
@@ -76,7 +76,7 @@ public class CheckinFamilyMemberAppointment extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
 
-            multiple = extras.getBoolean("multiple");
+           // multiple = extras.getBoolean("multiple");
             firstname = extras.getString("firstname");
             lastname = extras.getString("lastname");
             consumerID = extras.getInt("consumerID");
