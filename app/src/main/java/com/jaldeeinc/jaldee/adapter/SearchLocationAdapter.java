@@ -1754,7 +1754,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + mQueueList.get(0).getNextAvailableQueue().getPersonAhead());
 
 
-                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+                     if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
                         String firstWord = "Next Available Time ";
                         String secondWord = "\nToday, " + mQueueList.get(i).getNextAvailableQueue().getServiceTime();
                         myViewHolder.tv_waittime.setText(firstWord + secondWord);

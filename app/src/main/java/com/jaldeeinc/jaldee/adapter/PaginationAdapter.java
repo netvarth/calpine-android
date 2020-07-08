@@ -751,20 +751,20 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                     }
                 }
-                for(int l = 0;l<mQueueList.size();l++) {
-                    if (mQueueList.get(l).getNextAvailableQueue() != null) {
+//                for(int l = 0;l<mQueueList.size();l++) {
+                    if (searchdetailList != null) {
                         if(searchdetailList.getOnline_profile()!=null) {
-                            if (searchdetailList.getOnline_profile().equals("1") && mQueueList.get(l).getNextAvailableQueue().isWaitlistEnabled()) {
+                            if (searchdetailList.getOnline_profile().equalsIgnoreCase("1") && searchdetailList.isWaitlistEnabled()) {
                                 if(searchdetailList.getFuture_checkins()!=null){
-                                    if (mQueueList.get(l).getNextAvailableQueue().isOnlineCheckIn() || searchdetailList.getFuture_checkins().equals("1")) {
-                                        if (!mQueueList.get(l).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                                    if (searchdetailList.isOnlineCheckIn() || searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
+                                        if (!searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                             myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
                                         } else {
-                                            if(mQueueList.get(l).isShowToken() && (mQueueList.get(l).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) ){
-                                                myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                                            }else{
+//                                            if(searchdetailList.isShowToken() && (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")) ){
+//                                                myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+//                                            }else{
                                                 myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                                            }
+                                           // }
                                         }
                                     } else {
                                         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
@@ -775,7 +775,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         }
                     }
-                }
+              //  }
 
 //                if (searchdetailList.getFuture_checkins() != null) {
 //                    if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
@@ -1692,46 +1692,49 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void noCalcShowToken(SearchListModel searchdetailList, MyViewHolder myViewHolder) {
         if (searchdetailList.getPersonAhead() != -1) {
             Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + searchdetailList.getPersonAhead());
-            if (searchdetailList.getPersonAhead() == 0) {
+//            if (searchdetailList.getPersonAhead() == 0) {
              //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
               //  myViewHolder.tv_WaitTime.setText(" Be the first in line");
-                String firstWord = "Next Available Time ";
-                String secondWord = "\nToday, " + searchdetailList.getServiceTime();
-                Spannable spannable = new SpannableString(firstWord + secondWord);
-               // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_WaitTime.setText(spannable);
+
                 if(searchdetailList.getServiceTime()!= null){
-                 //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                    String firstWord = "Next Available Time ";
+                    String secondWord = "\nToday, " + searchdetailList.getServiceTime();
+                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                    // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    myViewHolder.tv_WaitTime.setText(spannable);
                 }
                 else{
                  //   myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+                    String firstWord = "Est wait time";
+                    String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
+                    myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
                 }
                 myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
                 myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-            } else {
-             //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-//                String firstWord = String.valueOf(searchdetailList.getPersonAhead());
-//                String secondWord = " People waiting in line";
-                String firstWord = "Next Available Time ";
-                String secondWord = "\nToday, " + searchdetailList.getServiceTime();
-                Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Bold.otf");
-                Spannable spannable = new SpannableString(firstWord + secondWord);
-                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_WaitTime.setText(spannable);
-                if(searchdetailList.getServiceTime()!=null){
-                 //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                }
-                else{
-                //    myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-
-                }
+//            } else {
+//             //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+////                String firstWord = String.valueOf(searchdetailList.getPersonAhead());
+////                String secondWord = " People waiting in line";
+//                String firstWord = "Next Available Time ";
+//                String secondWord = "\nToday, " + searchdetailList.getServiceTime();
+//                Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Bold.otf");
+//                Spannable spannable = new SpannableString(firstWord + secondWord);
+//                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                myViewHolder.tv_WaitTime.setText(spannable);
+//                if(searchdetailList.getServiceTime()!=null){
+//                 //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+//                }
+//                else{
+//                //    myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+//
+//                }
 
                 myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
                 myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
             }
         }
-    }
+
 
     public int dpToPx(int dp) {
         float density = context.getResources()

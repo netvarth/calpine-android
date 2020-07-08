@@ -546,7 +546,7 @@
                 android:text="Est WaitTime"
                 android:textColor="@color/white"
                 android:textSize="@dimen/txtsize_12"
-                android:visibility="invisible" />
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/btncheckin"
