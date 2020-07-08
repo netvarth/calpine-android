@@ -187,6 +187,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
     private Location mylocation;
     private GoogleApiClient googleApiClient;
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
+    EditText edt_message;
 
 
     @Override
@@ -660,6 +661,9 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
+                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                            Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -688,6 +692,9 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(mDetailFileAdapter);
             mDetailFileAdapter.notifyDataSetChanged();
+            if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+            }
 
         }
     }

@@ -78,6 +78,8 @@ import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
+import com.jaldeeinc.jaldee.response.SearchAppoinment;
+import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
@@ -213,7 +215,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     HashMap<String, List<SearchListModel>> departmentMap;
     LinearLayout L_layout;
     ArrayList<SearchDonation> LServicesList = new ArrayList<>();
+    ArrayList<SearchAppointmentDepartmentServices> LaServicesList = new ArrayList<>();
     ArrayList<SearchDonation> gServiceList = new ArrayList<>();
+    ArrayList<SearchAppointmentDepartmentServices> aServiceList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -574,6 +578,111 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
 
     }
+    private void ApiAppointmentServices(String muniqueID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+
+
+        Call<ArrayList<SearchAppointmentDepartmentServices>> call = apiService.getAppointmentServices(Integer.parseInt(muniqueID), sdf.format(currentTime));
+
+        call.enqueue(new Callback<ArrayList<SearchAppointmentDepartmentServices>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchAppointmentDepartmentServices>> call, Response<ArrayList<SearchAppointmentDepartmentServices>> response) {
+
+                try {
+
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+
+                    if (response.code() == 200) {
+                        LaServicesList.clear();
+                        aServiceList.clear();
+                        for(int i = 0;i<response.body().size();i++) {
+
+                            if (response.body().get(i).getServices() == null) {
+                                SearchAppointmentDepartmentServices mService = new SearchAppointmentDepartmentServices();
+                                 mService.setName(response.body().get(i).getName());
+                                 LaServicesList.add(mService);
+                            }
+                            else{
+                                SearchAppointmentDepartmentServices mService = new SearchAppointmentDepartmentServices();
+                                mService.setDepartmentName(response.body().get(i).getDepartmentName());
+                                mService.setServices(response.body().get(i).getServices());
+                                mService.setName(response.body().get(i).getName());
+                                LaServicesList.add(mService);
+                            }
+                        }
+                        aServiceList = response.body();
+
+//                        for (int i = 0; i < response.body().size(); i++) {
+//                            SearchAppointmentDepartmentServices mService = new SearchAppointmentDepartmentServices();
+//                            mService.setDepartmentName();Name(response.body().get(i).getName());
+//                            mService.setId(response.body().get(i).getId());
+//                            mService.setLivetrack(response.body().get(i).getLivetrack());
+//                            mService.setIsPrePayment(response.body().get(i).getIsPrePayment());
+//                            mService.setTotalAmount(response.body().get(i).getTotalAmount());
+//                            mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
+//                            mService.setServiceType(response.body().get(i).getServiceType());
+//                            mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
+//                            mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
+//                            mService.setInstructions(response.body().get(i).getInstructions());
+//                            mService.setCallingMode(response.body().get(i).getCallingMode());
+//                            mService.setValue(response.body().get(i).getValue());
+//                            LaServicesList.add(mService);
+//                        }
+//                        aServiceList.addAll(LaServicesList);
+                        // Department Section Starts
+
+
+
+
+
+
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchAppointmentDepartmentServices>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+
+            }
+        });
+
+
+    }
+
+
+
+
+
+
     private void ApiDonationServices(final int id) {
 
 
@@ -1604,6 +1713,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         for (int k = 0; k < mSearchLocList.size(); k++) {
 
                             ApiSearchViewServiceID(mSearchLocList.get(k).getId());
+                            ApiAppointmentServices(muniqueID);
 
                         }
                     }
@@ -2306,7 +2416,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         uniID = homeUniqueId;
                     }
 
-                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence,donationFundRaising,gServiceList);
+                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence,donationFundRaising,gServiceList,LaServicesList);
                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
                     mSearchLocAdapter.notifyDataSetChanged();
                 }

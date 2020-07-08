@@ -348,6 +348,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         TextView tv_recom_loc = (TextView) view.findViewById(R.id.recomEnableLoc);
         TextView tv_recom_liveloc = (TextView) view.findViewById(R.id.recomShareLiveLoc);
         LinearLayout liveTrackLayout = (LinearLayout) view.findViewById(R.id.liveTrackLayout);
+        LinearLayout layout_checkin = (LinearLayout) view.findViewById(R.id.checkin);
+
+//        if(activelist.getWaitlistStatus().equalsIgnoreCase("failed")){
+//            layout_checkin.setVisibility(View.GONE);
+//        }
+//        else{
+//            layout_checkin.setVisibility(View.VISIBLE);
+//        }
+
 
         if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn") && header.equals("today")) {
 

@@ -347,6 +347,15 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         TextView tv_recom_loc = (TextView) view.findViewById(R.id.recomEnableLoc);
         TextView tv_recom_liveloc = (TextView) view.findViewById(R.id.recomShareLiveLoc);
         LinearLayout liveTrackLayout = (LinearLayout) view.findViewById(R.id.liveTrackLayout);
+        LinearLayout layouttoken = (LinearLayout) view.findViewById(R.id.checkin);
+
+//        if(activelist.getWaitlistStatus().equalsIgnoreCase("failed")){
+//            layouttoken.setVisibility(View.GONE);
+//        }
+//        else{
+//            layouttoken.setVisibility(View.VISIBLE);
+//        }
+
 
         if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn") && header.equals("today")) {
 
@@ -492,6 +501,8 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
             travelDetailsLayout.setVisibility(View.GONE);
             locationManager.removeUpdates(ExpandableListAdapterToken.this);
         }
+
+
 
 
         LocationManager lm = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);

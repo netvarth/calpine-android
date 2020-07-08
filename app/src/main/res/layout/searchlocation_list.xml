@@ -35,10 +35,11 @@
 
                     <LinearLayout
                         android:id="@+id/locationName"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dimen_2dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1.5">
 
                         <TextView
                             android:id="@+id/txtLoc"

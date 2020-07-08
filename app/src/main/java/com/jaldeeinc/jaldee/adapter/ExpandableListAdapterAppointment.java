@@ -317,8 +317,8 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         TextView tv_enable_loc = (TextView) view.findViewById(R.id.notEnableLoc);
         TextView tv_recom_loc = (TextView) view.findViewById(R.id.recomEnableLoc);
         TextView tv_recom_liveloc = (TextView) view.findViewById(R.id.recomShareLiveLoc);
-
         LinearLayout liveTrackLayout = (LinearLayout) view.findViewById(R.id.liveTrackLayout);
+        LinearLayout layout_appointment = (LinearLayout) view.findViewById(R.id.appointment);
 
         if (activelist.getJaldeeApptDistanceTime() != null && activelist.getApptStatus().equalsIgnoreCase("Confirmed") && header.equalsIgnoreCase("today")) {
             activelistLatest = activelist;
@@ -451,6 +451,12 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             locationManager.removeUpdates(ExpandableListAdapterAppointment.this);
         }
 
+//        if(activelist.getApptStatus().equalsIgnoreCase("failed")){
+//            layout_appointment.setVisibility(View.GONE);
+//        }
+//        else{
+//            layout_appointment.setVisibility(View.VISIBLE);
+//        }
 
         LocationManager lm = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;

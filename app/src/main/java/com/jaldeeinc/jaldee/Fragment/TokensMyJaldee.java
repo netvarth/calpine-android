@@ -165,6 +165,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
     RecyclerView recycle_image_attachment;
     ArrayList<String> imagePathList = new ArrayList<>();
     private Uri mImageUri;
+    EditText edt_message;
 
 
 
@@ -490,7 +491,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
 
         final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
         final Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        edt_message = (EditText) dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
         String firstWord = "Message to ";
         String secondWord = providerNAme;
@@ -737,6 +738,9 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
+                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                            Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -765,6 +769,9 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(mDetailFileAdapter);
             mDetailFileAdapter.notifyDataSetChanged();
+            if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+            }
 
         }
     }

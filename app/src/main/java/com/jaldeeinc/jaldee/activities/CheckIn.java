@@ -227,6 +227,7 @@ public class CheckIn extends AppCompatActivity {
     String selectedServiceType;
     String callingMode,valueNumber,serviceInstructions;
     File file;
+    EditText edt_message;
 
 
     @Override
@@ -295,7 +296,7 @@ public class CheckIn extends AppCompatActivity {
 
                 final Button btn_send = dialog.findViewById(R.id.btn_send);
                 Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
-                final EditText edt_message = dialog.findViewById(R.id.edt_message);
+                edt_message = dialog.findViewById(R.id.edt_message);
                 TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
                 txtsendmsg.setVisibility(View.GONE);
                 btn_send.setText("ADD");
@@ -505,6 +506,9 @@ public class CheckIn extends AppCompatActivity {
 
                 });
 
+                if(imagePathList.size()>0 && edt_message.getText().toString().equals("") ){
+                    Toast.makeText(CheckIn.this, "Please enter add note", Toast.LENGTH_SHORT).show();
+                }
 //
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -2100,6 +2104,20 @@ public class CheckIn extends AppCompatActivity {
 
 //                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
+                                    if (mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Ml")))) {
+                                        tv_personahead.setVisibility(View.VISIBLE);
+
+
+                                        String firstWord = "ahead of you ";
+                                        String secondWord = String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()+ " People");
+
+                                        Spannable spannable = new SpannableString(secondWord + '\n' + firstWord);
+                                        tv_personahead.setText(spannable);
+
+                                    }
+                                    else{
+                                        tv_personahead.setVisibility(View.GONE);
+                                    }
 
                                     String firstWord = null;
 
@@ -2309,6 +2327,20 @@ public class CheckIn extends AppCompatActivity {
 
 //                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
+                                    if (mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Ml")))) {
+                                        tv_personahead.setVisibility(View.VISIBLE);
+
+
+                                        String firstWord = "ahead of you ";
+                                        String secondWord = String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()+ " People");
+
+                                        Spannable spannable = new SpannableString(secondWord + '\n' + firstWord);
+                                        tv_personahead.setText(spannable);
+
+                                    }
+                                    else{
+                                        tv_personahead.setVisibility(View.GONE);
+                                    }
 
 
                                     if (mQueueTimeSlotList.get(i).getId() != 0) {
@@ -3525,6 +3557,9 @@ public class CheckIn extends AppCompatActivity {
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
+                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                            Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3553,6 +3588,9 @@ public class CheckIn extends AppCompatActivity {
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(mDetailFileAdapter);
             mDetailFileAdapter.notifyDataSetChanged();
+            if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+            }
 
         }
     }

@@ -29,6 +29,7 @@ import com.jaldeeinc.jaldee.response.ScheduleId;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchAppoinment;
+import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
@@ -242,6 +243,9 @@ public interface ApiInterface {
 
     @GET("consumer/appointment/service/{id}")
     Call<ArrayList<SearchAppoinment>> getSearchAppointment(@Path("id") int id);
+
+    @GET("{consumerID}/apptServices.json")
+    Call<ArrayList<SearchAppointmentDepartmentServices>> getAppointmentServices(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
 
     @GET("consumer/donation/services")

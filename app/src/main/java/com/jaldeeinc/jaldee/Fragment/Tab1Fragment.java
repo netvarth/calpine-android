@@ -187,6 +187,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     private GoogleApiClient googleApiClient;
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
      TextView txtTokens,txtCheckins,txtAppointments;
+     EditText edt_message;
 
 
     @Override
@@ -826,7 +827,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
         final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
         final Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        edt_message = (EditText) dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
         String firstWord = "Message to ";
         String secondWord = providerNAme;
@@ -1073,6 +1074,9 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
+                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                            Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1101,6 +1105,9 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(mDetailFileAdapter);
             mDetailFileAdapter.notifyDataSetChanged();
+            if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+            }
 
         }
     }

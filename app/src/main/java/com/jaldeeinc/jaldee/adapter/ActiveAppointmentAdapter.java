@@ -87,6 +87,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         TextView icon_bill, tv_prepaid, tv_service,tv_makepay,tv_peopleahead;
         LinearLayout layout_btnpay;
         Button btn_pay;
+        LinearLayout layout_activeAppointment;
 
 
         public MyViewHolder(View view) {
@@ -104,6 +105,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
             tv_peopleahead= (TextView) view.findViewById(R.id.txt_peopleahead);
             tv_check_in = (TextView) view.findViewById(R.id.txt_check_in);
             tv_queueTime = (TextView) view.findViewById(R.id.txt_queuetime);
+            layout_activeAppointment = (LinearLayout) view.findViewById(R.id.activecheckin);
         }
     }
 
@@ -159,6 +161,10 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         Typeface tyfacestatus = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_status.setTypeface(tyfacestatus);
+
+//        if(activelist.getApptStatus().equalsIgnoreCase("failed")){
+//            myViewHolder.layout_activeAppointment.setVisibility(View.GONE);
+//        }
 
         myViewHolder.tv_status.setText(activelist.getApptStatus() + " at " + activelist.getStatusUpdatedTime());
         myViewHolder.tv_status.setTextColor(mContext.getResources().getColor(R.color.red));

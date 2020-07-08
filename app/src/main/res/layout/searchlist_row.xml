@@ -581,6 +581,80 @@
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone" />
 
+        <LinearLayout
+            android:id="@+id/department_app"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding5"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="@dimen/padding5"
+            android:gravity="left"
+            android:orientation="horizontal"
+            android:textColor="@color/title_consu"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/txtdep1_app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="Spec1"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                android:textStyle="bold"
+                android:visibility="gone"
+
+                />
+
+            <TextView
+                android:id="@+id/txtdep2_app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/padding2"
+                android:text="SPEC2"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                android:textStyle="bold"
+                android:visibility="gone"
+
+                />
+
+            <TextView
+                android:id="@+id/txtdep22_app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/padding2"
+                android:text="SPEC2"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                android:textStyle="bold"
+                android:visibility="gone"
+
+                />
+
+            <TextView
+                android:id="@+id/txtdep_more_app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding5"
+                android:gravity="center"
+                android:text="..."
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                android:textStyle="bold"
+                android:visibility="gone"
+
+                />
+
+
+        </LinearLayout>
+
 
 
         <LinearLayout

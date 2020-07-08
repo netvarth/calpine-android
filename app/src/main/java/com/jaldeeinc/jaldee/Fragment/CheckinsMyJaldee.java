@@ -167,6 +167,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
     RecyclerView recycle_image_attachment;
     ArrayList<String> imagePathList = new ArrayList<>();
     private Uri mImageUri;
+    EditText edt_message;
 
 
     @Override
@@ -483,7 +484,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
         final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
         final Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        edt_message = (EditText) dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
         String firstWord = "Message to ";
         String secondWord = providerNAme;
@@ -729,6 +730,9 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
+                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                            Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -757,6 +761,9 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(mDetailFileAdapter);
             mDetailFileAdapter.notifyDataSetChanged();
+            if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+            }
 
         }
     }

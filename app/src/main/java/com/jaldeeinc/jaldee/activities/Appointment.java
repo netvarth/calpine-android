@@ -246,6 +246,7 @@ public class Appointment extends AppCompatActivity {
     TextView tv_fileAttach;
     File file;
     BottomSheetDialog dialog;
+    EditText edt_message;
 
 
     @Override
@@ -317,7 +318,7 @@ public class Appointment extends AppCompatActivity {
 
                 final Button btn_send = dialog.findViewById(R.id.btn_send);
                 Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
-                final EditText edt_message = dialog.findViewById(R.id.edt_message);
+                edt_message = dialog.findViewById(R.id.edt_message);
                 TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
                 txtsendmsg.setVisibility(View.GONE);
                 btn_send.setText("ADD");
@@ -3112,6 +3113,7 @@ public class Appointment extends AppCompatActivity {
                                     if (schedResponse.get(i).getId() != 0) {
                                         id = String.valueOf(schedResponse.get(i).getId());
                                         ApiScheduleId(id, mDate, accountIDs);
+                                        txtWaitTime.setText(mDate);
 
                                     }
 
@@ -3156,6 +3158,7 @@ public class Appointment extends AppCompatActivity {
                                     if (schedResponse.get(i).getId() != 0) {
                                         id = String.valueOf(schedResponse.get(i).getId());
                                         ApiScheduleId(id, mDate, accountIDs);
+                                        txtWaitTime.setText(mDate);
 
                                     }
 
@@ -3942,6 +3945,9 @@ public class Appointment extends AppCompatActivity {
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
+                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                            Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3970,6 +3976,9 @@ public class Appointment extends AppCompatActivity {
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(mDetailFileAdapter);
             mDetailFileAdapter.notifyDataSetChanged();
+            if(imagePathList.size()>0 && edt_message.getText().toString().equals("")){
+                Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+            }
 
         }
     }

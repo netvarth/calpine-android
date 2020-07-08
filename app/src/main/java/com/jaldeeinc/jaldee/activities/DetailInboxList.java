@@ -123,6 +123,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
 
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
+    EditText edt_message;
 
 
     @Override
@@ -187,7 +188,7 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
         dialog.show();
         final Button btn_send = dialog.findViewById(R.id.btn_send);
         Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message = dialog.findViewById(R.id.edt_message);
+        edt_message = dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
         tv_attach = dialog.findViewById(R.id.btn);
         tv_camera = dialog.findViewById(R.id.camera);
@@ -531,6 +532,9 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
+                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                            Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -559,6 +563,9 @@ public class DetailInboxList extends AppCompatActivity implements DetailInboxAda
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(mDetailFileAdapter);
             mDetailFileAdapter.notifyDataSetChanged();
+            if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+            }
 
         }
     }

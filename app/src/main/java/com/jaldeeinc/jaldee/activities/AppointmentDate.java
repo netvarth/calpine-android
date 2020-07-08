@@ -121,7 +121,8 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
         }
         try {
             cv.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(selectDate).getTime(), true, true);
-            ApiScheduleId(schdId, selectDate, accountId);
+            ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, accountId);
+           // ApiScheduleId(schdId, selectDate, accountId);
         } catch (ParseException e) {
             e.printStackTrace();
         }
