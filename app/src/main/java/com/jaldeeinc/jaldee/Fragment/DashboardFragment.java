@@ -1285,7 +1285,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 MActiveList = response.body();
                                 Log.i("fghhgf",new Gson().toJson(MActiveList));
                             Config.logV("MActiveList----------------------" + MActiveList.size());
+                            for(int i=0;i<MActiveList.size();i++) {
+                                if (MActiveList.get(i).getWaitlistStatus().equalsIgnoreCase("failed") || MActiveList.get(i).getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                                    MActiveList.remove(i);
+                                    i = i-1;
+
+                                }
+                            }
                             if (MActiveList.size() > 0) {
+
                                 db = new DatabaseHandler(mContext);
                                 db.DeleteCheckin();
                                 db.insertCheckinInfo(MActiveList);
@@ -1351,8 +1359,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             txt_sorry_appointment.setVisibility(View.GONE);
 
                             MActiveListAppointment = response.body();
-                            if (MActiveListAppointment.size() > 0) {
+                            for (int i = 0; i < MActiveListAppointment.size(); i++) {
+                                if (MActiveListAppointment.get(i).getApptStatus().equalsIgnoreCase("failed") || MActiveListAppointment.get(i).getApptStatus().equalsIgnoreCase("prepaymentPending")) {
+                                    MActiveListAppointment.remove(i);
+                                    i = i-1;
 
+                                }
+                            }
+
+                            if (MActiveListAppointment.size() > 0) {
                                 tv_activeappt.setText("Active Appointments " + "(" + MActiveListAppointment.size() + ")");
                                 LActiveAppointment.setVisibility(View.VISIBLE);
 
@@ -1364,7 +1379,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             } else {
                                 LActiveAppointment.setVisibility(View.VISIBLE);
                             }
-                        } else {
+                         } else {
                             tv_activeappt.setText("Active Appointments ");
                             txt_sorry_appointment.setVisibility(View.VISIBLE);
                             LActiveAppointment.setVisibility(View.VISIBLE);

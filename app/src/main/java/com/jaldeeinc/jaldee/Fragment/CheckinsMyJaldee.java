@@ -285,6 +285,12 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
 
                         mCheckTodayFutureList = response.body();
+                        for(int i =0;i<mCheckTodayFutureList.size();i++) {
+                            if (mCheckTodayFutureList.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
+                                mCheckTodayFutureList.remove(i);
+                                i = i -1;
+                            }
+                        }
                         Log.i("hgfhrty", new Gson().toJson(mCheckTodayFutureList));
 
 
@@ -432,6 +438,12 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                         mCheckFutureList.clear();
                         mCheckFutureListTemp.clear();
                         mCheckFutureListTemp = response.body();
+                        for(int i =0;i<mCheckFutureListTemp.size();i++) {
+                            if (mCheckFutureListTemp.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
+                                mCheckFutureListTemp.remove(i);
+                                i = i -1;
+                            }
+                        }
 
                         for(int i = 0; i < mCheckFutureListTemp.size();i++){
                             if(mCheckFutureListTemp.get(i).getShowToken().equalsIgnoreCase("false")){

@@ -350,6 +350,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
 
                         mCheckTodayFutureList = response.body();
+                        for(int i =0;i<mCheckTodayFutureList.size();i++) {
+                            if (mCheckTodayFutureList.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
+                                mCheckTodayFutureList.remove(i);
+                                i = i -1;
+                            }
+                        }
                         Log.i("hgfhrty",new Gson().toJson(mCheckTodayFutureList));
 
 
@@ -412,6 +418,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
                         mAppointmentFutureList = response.body();
                         Log.i("appointment123today",new Gson().toJson(mAppointmentFutureList));
+                        for(int i =0;i<mAppointmentFutureList.size();i++) {
+                            if (mAppointmentFutureList.get(i).getApptStatus().equalsIgnoreCase("failed")) {
+                                mAppointmentFutureList.remove(i);
+                                i = i -1;
+                            }
+                        }
 
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mAppointmentFutureList.size(); i++) {
@@ -564,6 +576,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                     if (response.code() == 200) {
                         mCheckFutureList.clear();
                         mCheckFutureList = response.body();
+                        for(int i =0;i<mCheckFutureList.size();i++) {
+                            if (mCheckFutureList.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
+                                mCheckFutureList.remove(i);
+                                i = i -1;
+                            }
+                        }
 
                         DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteMyCheckin("future");
@@ -612,6 +630,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         mCheckFutureListAppointment.clear();
                         mCheckFutureListAppointment = response.body();
                         Log.i("appointment123future",new Gson().toJson(mCheckFutureListAppointment));
+                        for(int i =0;i<mCheckFutureListAppointment.size();i++) {
+                            if (mCheckFutureListAppointment.get(i).getApptStatus().equalsIgnoreCase("failed")) {
+                                mCheckFutureListAppointment.remove(i);
+                                i = i -1;
+                            }
+                        }
 
                         ApiOldAppointmentList();
 

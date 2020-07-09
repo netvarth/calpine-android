@@ -302,12 +302,18 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                         mAppointmentTodayList.clear();
 
                         mAppointmentFutureList = response.body();
+                        for(int i =0;i<mAppointmentFutureList.size();i++) {
+                            if (mAppointmentFutureList.get(i).getApptStatus().equalsIgnoreCase("failed")) {
+                                mAppointmentFutureList.remove(i);
+                                i = i -1;
+                            }
+                        }
                         Log.i("appointment123today",new Gson().toJson(mAppointmentFutureList));
 
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mAppointmentFutureList.size(); i++) {
                             if (date.equalsIgnoreCase(mAppointmentFutureList.get(i).getAppmtDate())) {
-                                mAppointmentTodayList.add(response.body().get(i));
+                                mAppointmentTodayList.add(mAppointmentFutureList.get(i));
                                 Log.i("appointment123456",new Gson().toJson(mAppointmentTodayList));
                             }
                         }
@@ -389,6 +395,13 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                         mCheckFutureListAppointment.clear();
                         mCheckFutureListAppointment = response.body();
                         Log.i("appointment123future",new Gson().toJson(mCheckFutureListAppointment));
+                        for(int i =0;i<mCheckFutureListAppointment.size();i++) {
+                            if (mCheckFutureListAppointment.get(i).getApptStatus().equalsIgnoreCase("failed")) {
+                                mCheckFutureListAppointment.remove(i);
+                                i = i -1;
+                            }
+                        }
+
 
                         ApiOldAppointmentList();
 

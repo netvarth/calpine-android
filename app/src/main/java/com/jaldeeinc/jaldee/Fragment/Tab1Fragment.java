@@ -356,6 +356,12 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
 
                         mCheckTodayFutureList = response.body();
+                        for(int i =0;i<mCheckTodayFutureList.size();i++) {
+                            if (mCheckTodayFutureList.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
+                                mCheckTodayFutureList.remove(i);
+                                i = i -1;
+                            }
+                        }
                         Log.i("hgfhrty",new Gson().toJson(mCheckTodayFutureList));
 
 
@@ -428,6 +434,12 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
 
                         mTokenTodayFutureList = response.body();
+                        for(int i =0;i<mTokenTodayFutureList.size();i++) {
+                            if (mTokenTodayFutureList.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
+                                mTokenTodayFutureList.remove(i);
+                                i = i -1;
+                            }
+                        }
                         Log.i("hgfhrty",new Gson().toJson(mTokenTodayFutureList));
 
 
@@ -493,7 +505,14 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         mAppointmentTodayList.clear();
 
                         mAppointmentFutureList = response.body();
+                        for(int i =0;i<mAppointmentFutureList.size();i++) {
+                            if (mAppointmentFutureList.get(i).getApptStatus().equalsIgnoreCase("failed")) {
+                                mAppointmentFutureList.remove(i);
+                                i = i -1;
+                            }
+                        }
                         Log.i("appointment123today",new Gson().toJson(mAppointmentFutureList));
+
 
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mAppointmentFutureList.size(); i++) {
@@ -648,6 +667,13 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         mCheckFutureListTemp.clear();
                         mCheckFutureListTemp = response.body();
 
+                        for(int i =0;i<mCheckFutureListTemp.size();i++) {
+                            if (mCheckFutureListTemp.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
+                                mCheckFutureListTemp.remove(i);
+                                i = i -1;
+                            }
+                        }
+
                         for(int i = 0; i < mCheckFutureListTemp.size();i++){
                             if(mCheckFutureListTemp.get(i).getShowToken().equalsIgnoreCase("false")){
 
@@ -719,6 +745,12 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         mTokenFutureList.clear();
                         mTokenFutureListTemp.clear();
                         mTokenFutureListTemp = response.body();
+                        for(int i =0;i<mTokenFutureListTemp.size();i++) {
+                            if (mTokenFutureListTemp.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
+                                mTokenFutureListTemp.remove(i);
+                                i = i -1;
+                            }
+                        }
 
                         for(int i = 0; i < mTokenFutureListTemp.size();i++){
                             if(mTokenFutureListTemp.get(i).getShowToken().equalsIgnoreCase("true")){
@@ -780,6 +812,12 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         mCheckFutureListAppointment.clear();
                         mCheckFutureListAppointment = response.body();
                         Log.i("appointment123future",new Gson().toJson(mCheckFutureListAppointment));
+                        for(int i =0;i<mCheckFutureListAppointment.size();i++) {
+                            if (mCheckFutureListAppointment.get(i).getApptStatus().equalsIgnoreCase("failed")) {
+                                mCheckFutureListAppointment.remove(i);
+                                i = i -1;
+                            }
+                        }
 
                         appointmentCount = mAppointmentTodayList.size() + mCheckFutureListAppointment.size();
                         txtAppointments.setText("Appointments ("+appointmentCount+")");

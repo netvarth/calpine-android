@@ -728,11 +728,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.tv_location.setVisibility(View.GONE);
                 }
 
-                for(int i = 0 ; i < mQueueList.size(); i++){
+            //    for(int i = 0 ; i < mQueueList.size(); i++){
                     if(searchdetailList.getOnline_profile()!=null) {
                         if (searchdetailList.getOnline_profile().equals("1") && searchdetailList.isWaitlistEnabled()) {
-                            if (searchdetailList.getFuture_checkins() != null && mQueueList.get(i).getNextAvailableQueue()!=null) {
-                                if(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()!=null){
+                            if (searchdetailList.getFuture_checkins() != null) {
+                                if(searchdetailList.getAvail_date()!=null){
                                     if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
                                         myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
                                     }else{
@@ -750,7 +750,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }else{
                         myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                     }
-                }
+              //  }
 //                for(int l = 0;l<mQueueList.size();l++) {
                     if (searchdetailList != null) {
                         if(searchdetailList.getOnline_profile()!=null) {

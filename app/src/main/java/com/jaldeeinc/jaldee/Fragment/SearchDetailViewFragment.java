@@ -1714,6 +1714,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                             ApiSearchViewServiceID(mSearchLocList.get(k).getId());
                             ApiAppointmentServices(muniqueID);
+                            ApiDonationServices(mProvoderId);
 
                         }
                     }
@@ -2365,7 +2366,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     private void ApiSearchViewSetting(String muniqueID) {
 
-        ApiDonationServices(mProvoderId);
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
 
