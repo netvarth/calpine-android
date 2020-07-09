@@ -302,7 +302,6 @@
                                 android:drawablePadding="@dimen/dimen_4dp"
                                 android:layout_marginLeft="@dimen/default_padding"
                                 android:layout_marginRight="@dimen/default_padding"
-                                android:drawableLeft="@drawable/whatsappicon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/virtual_id"

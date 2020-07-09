@@ -291,6 +291,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         et_virtualId = findViewById(R.id.virtual_id);
 
 
+
         tv_addnote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -792,8 +793,17 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         tv_enterInstructions.setVisibility(View.VISIBLE);
                         tv_enterInstructions.setText(serviceInstructions);
                         et_virtualId.setText(phoneNumber);
+                        et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon,0,0,0);
                         et_virtualId.setVisibility(View.VISIBLE);
-                    } else {
+                    }else if(callingMode.equalsIgnoreCase("Phone")){
+                        serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                        tv_enterInstructions.setVisibility(View.VISIBLE);
+                        tv_enterInstructions.setText(serviceInstructions);
+                        et_virtualId.setText(phoneNumber);
+                        et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps,0,0,0);
+                        et_virtualId.setVisibility(View.VISIBLE);
+                    }
+                    else {
                         serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
                         tv_enterInstructions.setVisibility(View.VISIBLE);
                         tv_enterInstructions.setText(serviceInstructions);
@@ -3013,8 +3023,13 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             queueobj.put("waitlistPhonenumber", phoneNumber);
             if(callingMode!=null && callingMode.equalsIgnoreCase("whatsapp")){
                 virtualService.put("WhatsApp", et_virtualId.getText());
-            }else{
-              //  virtualService.put("", "");
+            }else if(callingMode!= null && callingMode.equalsIgnoreCase("GoogleMeet")) {
+                virtualService.put("GoogleMeet", valueNumber);
+            }
+            else if(callingMode!=null && callingMode.equalsIgnoreCase("Zoom")){
+                virtualService.put("Zoom", valueNumber);
+            }else if(callingMode!=null && callingMode.equalsIgnoreCase("Phone")){
+                virtualService.put("Phone", et_virtualId.getText());
             }
 
 

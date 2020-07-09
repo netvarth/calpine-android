@@ -771,8 +771,17 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         tv_enterInstructions.setVisibility(View.VISIBLE);
                         tv_enterInstructions.setText(serviceInstructions);
                         et_vitualId.setText(phoneNumber);
+                        et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon,0,0,0);
                         et_vitualId.setVisibility(View.VISIBLE);
-                    } else {
+                    }else if(callingMode.equalsIgnoreCase("Phone")){
+                        serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                        tv_enterInstructions.setVisibility(View.VISIBLE);
+                        tv_enterInstructions.setText(serviceInstructions);
+                        et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps,0,0,0);
+                        et_vitualId.setText(phoneNumber);
+                        et_vitualId.setVisibility(View.VISIBLE);
+                    }
+                    else {
                         serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
                         tv_enterInstructions.setVisibility(View.VISIBLE);
                         tv_enterInstructions.setText(serviceInstructions);
@@ -3543,8 +3552,13 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
             if (callingMode != null && callingMode.equalsIgnoreCase("whatsapp")) {
                 virtualService.put("WhatsApp", et_vitualId.getText());
-            } else {
-                virtualService.put("", "");
+            } else if(callingMode!= null && callingMode.equalsIgnoreCase("GoogleMeet")) {
+                virtualService.put("GoogleMeet", valueNumber);
+            }
+            else if(callingMode!=null && callingMode.equalsIgnoreCase("Zoom")){
+                virtualService.put("Zoom", valueNumber);
+            }else if(callingMode!=null && callingMode.equalsIgnoreCase("Phone")){
+                virtualService.put("Phone", et_vitualId.getText());
             }
 
 //            virtualService.put("id", schedResponse.get(i).getId());
