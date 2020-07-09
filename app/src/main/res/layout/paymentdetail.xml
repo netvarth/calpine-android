@@ -62,9 +62,10 @@
                     android:id="@+id/provider"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pattupurakkal Devi Temple"
+                    android:text=""
                     android:textColor="@color/black"
-                    android:textSize="@dimen/txtsize_hint" />
+                    android:textSize="@dimen/txtsize_hint"
+                    />
 
             </LinearLayout>
 
@@ -86,7 +87,7 @@
                     android:id="@+id/dateandtime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="20/06/2020 20:49:22 PM"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -110,7 +111,7 @@
                     android:id="@+id/mode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Self pay"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -134,7 +135,7 @@
                     android:id="@+id/paymentMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="DC"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -159,7 +160,7 @@
                     android:id="@+id/paymentGateway"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PAYUMONEY"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -183,7 +184,7 @@
                     android:id="@+id/amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="₹ 1.00"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -207,7 +208,7 @@
                     android:id="@+id/status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SUCCESS"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -223,7 +224,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Refudable : "
+                    android:text="Refundable : "
                     android:textColor="#AAA"
                     android:textSize="@dimen/txtsize_hint" />
 
@@ -231,7 +232,7 @@
                     android:id="@+id/refundable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="₹ 0.00"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/txtsize_hint" />
 
