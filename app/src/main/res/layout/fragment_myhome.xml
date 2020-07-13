@@ -262,7 +262,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycleActive"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="500dp">
 
                     </android.support.v7.widget.RecyclerView>
                 </LinearLayout>
@@ -299,7 +299,8 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycleActiveAppointment"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="500dp"
+                        >
 
                     </android.support.v7.widget.RecyclerView>
                 </LinearLayout>

@@ -63,6 +63,8 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
      static String schdId;
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
     static ArrayList<String> timeslots= new ArrayList<>();
+    static ArrayList<String> timeslotsFormat= new ArrayList<>();
+    static ArrayList<String> timeslotsMeridian= new ArrayList<>();
     Date last_date =new Date();
     static String selectDate;
     static int i = 0;
@@ -130,12 +132,12 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
             tv_noavail_slot.setVisibility(View.GONE);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
         recycle_timeslots.setLayoutManager(mLayoutManager);
-        sAdapter = new TimeSlotsAdapter(timeslot);
+        sAdapter = new TimeSlotsAdapter(timeslot,timeslotsFormat);
         recycle_timeslots.setAdapter(sAdapter);
         sAdapter.notifyDataSetChanged();
         } else{
             tv_noavail_slot.setVisibility(View.VISIBLE);
-            Appointment.timeslotdate("Time Slots not available");
+            Appointment.timeslotdate("Time Slots not available","");
             Toast.makeText(this, "Time Slots not available", Toast.LENGTH_SHORT).show();
 
         }
@@ -423,6 +425,8 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
 
                     if (response.code() == 200) {
                         timeslots.clear();
+                        timeslotsFormat.clear();
+                        timeslotsMeridian.clear();
                         if(response.body().getAvailableSlots()!=null){
                         int availableslots = response.body().getAvailableSlots().size();
 
@@ -433,6 +437,31 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
 
 
                             }
+                            for(int j = 0;j<timeslots.size();j++){
+                                timeslotsMeridian.add(Config.convert12(timeslots.get(j)));
+                            }
+                            SimpleDateFormat code12Hours = new SimpleDateFormat("hh:mm"); // 12 hour format
+
+                            Date dateCode12 = null;
+
+                            String formatTwelve;
+                            String results;
+
+
+                            for (int i = 0;i<timeslots.size();i++) {
+
+                                try {
+                                    dateCode12 = code12Hours.parse(timeslots.get(i)); // 12 hour
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                                formatTwelve = code12Hours.format(dateCode12); // 12
+                                results = formatTwelve + " " + timeslotsMeridian.get(i);
+                                timeslotsFormat.add(results);
+                            }
+
+
                             if(timeslots.size()==0){
                                 tv_noavail_slot.setVisibility(View.VISIBLE);
                             }
@@ -440,12 +469,12 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                             tv_noavail_slot.setVisibility(View.GONE);}
                             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
                             recycle_timeslots.setLayoutManager(mLayoutManager);
-                            sAdapter = new TimeSlotsAdapter(timeslots);
+                            sAdapter = new TimeSlotsAdapter(timeslotsFormat,timeslots);
                             recycle_timeslots.setAdapter(sAdapter);
                             sAdapter.notifyDataSetChanged();
                             recycle_timeslots.setAlpha(1);
                             if (timeslots != null) {
-                                earliestAvailable.setText("Earliest available\n" + timeslots.get(0));
+                                earliestAvailable.setText("Earliest available\n" + timeslotsFormat.get(0));
                             }
 
 

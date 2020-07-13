@@ -947,7 +947,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 String firstWord = "";
                 firstWord = "Appointment time ";
 
-                String secondWord = "Today" + "," + " " + activelist.getAppmtTime();
+                String secondWord = "Today" + "," + " " + Config.convert24(activelist.getAppmtTime()) + " " + Config.convert12(activelist.getAppmtTime());
                 Spannable spannable = new SpannableString(firstWord + '\n' + secondWord);
                 //   spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
@@ -1017,7 +1017,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                     format = new SimpleDateFormat("EE, MMM d'th' yyyy");
 
                 String yourDate = format.format(dateParse);
-                String secondWord = yourDate + ", " + activelist.getAppmtTime();
+                String secondWord = yourDate + ", " + Config.convert24(activelist.getAppmtTime()) + " " + Config.convert12(activelist.getAppmtTime());
 
 
                 Spannable spannable = new SpannableString(firstWord + '\n' + secondWord);

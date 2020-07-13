@@ -174,6 +174,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     static String mFrom;
     String title, place, terminology, calcMode;
     ArrayList<String> timeslots = new ArrayList<>();
+    ArrayList<String> timeslotsFormat = new ArrayList<>();
+    ArrayList<String> timeslotsMeridian = new ArrayList<>();
     static String isShowToken;
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
@@ -215,6 +217,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     int maxPartysize;
     static RecyclerView recycle_family;
     static String dateTime;
+    static String slotTime;
 
     static LinearLayout LSinglemember, Lbottomlayout;
     RecyclerView list;
@@ -696,7 +699,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             @Override
             public void onClick(View v) {
                 Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
-                appDate.putExtra("timeslots", timeslots);
+                appDate.putExtra("timeslots", timeslotsFormat);
                 appDate.putExtra("serviceId", serviceId);
                 appDate.putExtra("mSpinnertext", mSpinnertext);
                 appDate.putExtra("accountId", modifyAccountID);
@@ -718,7 +721,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             @Override
             public void onClick(View v) {
                 Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
-                appDate.putExtra("timeslots", timeslots);
+                appDate.putExtra("timeslots", timeslotsFormat);
                 appDate.putExtra("serviceId", serviceId);
                 appDate.putExtra("mSpinnertext", mSpinnertext);
                 appDate.putExtra("accountId", modifyAccountID);
@@ -3249,6 +3252,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                     if (response.code() == 200) {
                         timeslots.clear();
+                        timeslotsFormat.clear();
+                        timeslotsMeridian.clear();
                         if (response.body().getAvailableSlots() != null) {
                             int availableslots = response.body().getAvailableSlots().size();
                             for (int i = 0; i < availableslots; i++) {
@@ -3257,8 +3262,33 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 }
                             }
 
-                            if (timeslots.size()>0) {
-                                earliestAvailable.setText("Earliest available\n" + timeslots.get(0));
+                            for(int j = 0;j<timeslots.size();j++){
+                                timeslotsMeridian.add(Config.convert12(timeslots.get(j)));
+                            }
+                            SimpleDateFormat code12Hours = new SimpleDateFormat("hh:mm"); // 12 hour format
+
+                            Date dateCode12 = null;
+
+                            String formatTwelve;
+                            String results;
+
+
+                            for (int i = 0;i<timeslots.size();i++) {
+
+                                try {
+                                    dateCode12 = code12Hours.parse(timeslots.get(i)); // 12 hour
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                                formatTwelve = code12Hours.format(dateCode12); // 12
+                                results = formatTwelve + " " + timeslotsMeridian.get(i);
+                                timeslotsFormat.add(results);
+                            }
+
+
+                                if (timeslotsFormat.size()>0) {
+                                earliestAvailable.setText("Earliest available\n" + timeslotsFormat.get(0));
                             }else {
                                 earliestAvailable.setText("Timeslots not available");
                             }
@@ -3621,7 +3651,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         if(timeslots.size()>0){
                         waitobj.put("apptTime", timeslots.get(0));}
                     } else {
-                        waitobj.put("apptTime", earliestAvailable.getText().toString());
+                        waitobj.put("apptTime", dateTime);
                     }
                 }
                 waitlistArray.put(waitobj);
@@ -4034,9 +4064,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     }
 
 
-    public static void timeslotdate(String timeDate) {
+    public static void timeslotdate(String timeDate, String slotTimes) {
         dateTime = timeDate;
-        earliestAvailable.setText(dateTime);
+        slotTime = slotTimes;
+        earliestAvailable.setText(slotTime);
         mAaptTime = dateTime;
     }
 

@@ -124,7 +124,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
     @Override
     public ActiveAppointmentAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.active_checkin_newrow, parent, false);
+                .inflate(R.layout.active_appointment_newrow, parent, false);
 
         return new ActiveAppointmentAdapter.MyViewHolder(itemView);
     }
@@ -474,7 +474,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 String firstWord = "Appointment for ";
-                String secondWord = "Today" + ", "+ activelist.getAppmtFor().get(0).getApptTime();
+                String secondWord = "Today" + ", "+ Config.convert24(activelist.getAppmtFor().get(0).getApptTime()) + " "  +  Config.convert12(activelist.getAppmtFor().get(0).getApptTime());
                 Spannable spannable = new SpannableString(firstWord + secondWord );
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)),
@@ -524,7 +524,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
                     format = new SimpleDateFormat("EE, MMM d'th' yyyy");
 
                 String yourDate = format.format(dateParse);
-                String secondWord = yourDate + ", " + activelist.getAppmtFor().get(0).getApptTime();
+                String secondWord = yourDate + ", " + Config.convert24(activelist.getAppmtFor().get(0).getApptTime()) + " "  +  Config.convert12(activelist.getAppmtFor().get(0).getApptTime());
 
                 Spannable spannable = new SpannableString(firstWord + secondWord);
                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -23,12 +23,16 @@ import java.util.Date;
 
 public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. TimeSlotsAdapterViewHolder> {
     ArrayList timeSlots = new ArrayList();
+    ArrayList timeSlotsFormat = new ArrayList();
     int selectedPosition = -1;
     String selectTime = "";
+    String selectTimeslot = "";
 
 
-    public  TimeSlotsAdapter( ArrayList timeSlots) {
+    public  TimeSlotsAdapter(ArrayList timeSlotsFormat, ArrayList timeSlots) {
+        this.timeSlotsFormat = timeSlotsFormat;
         this.timeSlots = timeSlots;
+
 
     }
 
@@ -42,9 +46,9 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. Ti
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindViewHolder(final  TimeSlotsAdapterViewHolder myViewHolder, final int position) {
+    public void onBindViewHolder(final  TimeSlotsAdapterViewHolder myViewHolder, @SuppressLint("RecyclerView") final int position) {
         //SearchVirtualFields virtualList = virtualFieldList.get(position);
-        final String timeSlot = timeSlots.get(position).toString();
+        final String timeSlot = timeSlotsFormat.get(position).toString();
         myViewHolder.mSpecial.setText(timeSlot);
         if(selectedPosition==position){
             myViewHolder.itemView.setBackgroundResource(R.drawable.rounded_popularsearch_green);}
@@ -58,8 +62,9 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. Ti
                 selectedPosition = position;
                 notifyDataSetChanged();
                 selectTime = timeSlots.get(selectedPosition).toString();
+                selectTimeslot = timeSlotsFormat.get(selectedPosition).toString();
              //   Toast.makeText(context, selectTime, Toast.LENGTH_SHORT).show();
-                Appointment.timeslotdate(selectTime);
+                Appointment.timeslotdate(selectTime,selectTimeslot);
 
             }
         });
