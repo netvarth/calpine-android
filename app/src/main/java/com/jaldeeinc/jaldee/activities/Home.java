@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.Fragment.CheckinsFragmentCopy;
+import com.jaldeeinc.jaldee.Fragment.DashboardFragment;
 import com.jaldeeinc.jaldee.Fragment.HomeTabFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.R;
@@ -184,6 +186,7 @@ public class Home extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
         if(mHomeTab!=null){
             if (!mHomeTab.onBackPressed()) {
                 Config.logV("Home Back Presss-------------");

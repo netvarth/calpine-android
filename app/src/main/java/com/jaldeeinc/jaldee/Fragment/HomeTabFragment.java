@@ -42,7 +42,7 @@ public class HomeTabFragment extends Fragment {
 
     FavouriteFragment favFragment;
     DashboardFragment homeFragment;
-    CheckinsFragmentCopy checkinFragment;
+    // CheckinsFragmentCopy checkinFragment;
 
 
     Tab1Fragment tab1Fragment;
@@ -211,7 +211,7 @@ public class HomeTabFragment extends Fragment {
         homeFragment = new DashboardFragment();
 
         tab1Fragment = new Tab1Fragment();
-        checkinFragment = new CheckinsFragmentCopy();
+        // checkinFragment = new CheckinsFragmentCopy();
         favFragment = new FavouriteFragment();
         inboxFragment = new InboxFragment();
         profileFragment = new ProfileFragment();

@@ -1,23 +1,16 @@
 package com.jaldeeinc.jaldee.Fragment;
 
-
-import android.Manifest;
 import android.Manifest.permission;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.MediaScannerConnection;
@@ -25,10 +18,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -40,7 +31,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,16 +46,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.BillActivity;
@@ -73,7 +53,6 @@ import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.PaymentActivity;
 import com.jaldeeinc.jaldee.adapter.DetailFileAdapter;
-import com.jaldeeinc.jaldee.adapter.ExpandableListAdapter;
 import com.jaldeeinc.jaldee.adapter.ExpandableListAdapterAppointment;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
@@ -83,7 +62,6 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
-import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.response.RatingResponse;
 import com.karumi.dexter.Dexter;
@@ -93,7 +71,6 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.payumoney.sdkui.ui.utils.ToastUtils;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
@@ -104,9 +81,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,9 +99,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.support.v4.content.ContextCompat.getSystemService;
-
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -138,9 +109,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
 
     public AppointmentMyJaldee() {
         // Required empty public constructor
-
     }
-
     String simpleFileName1 = "note1.txt";
     String simpleFileName2 = "note2.txt";
     String simpleFileName3 = "note3.txt";
@@ -148,25 +117,12 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
     Context mContext;
     Activity mActivity;
     private int PICK_IMAGE_REQUEST = 1;
-
-    //  ArrayList<ArrayList<ActiveCheckIn>> mCheckList = new ArrayList<>();
-
-    ArrayList<ActiveAppointment> mCheckFutureListAppointment = new ArrayList<>();
-
     ArrayList<ActiveAppointment> mAppointmentTodayList = new ArrayList<>();
-
     ArrayList<ActiveAppointment> mAppointmentFutureList = new ArrayList<>();
-
-
     ArrayList<ActiveAppointment> mAppointmentOldList = new ArrayList<>();
-
-
     HistoryAdapterCallback mInterface;
     ActiveAdapterOnCallback mCallback;
-
     ExpandableListView expandlistAppointment;
-
-
     TextView tv_attach, tv_camera;
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int CAMERA = 2;
@@ -189,7 +145,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     EditText edt_message;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -199,9 +154,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
         mCallback = (ActiveAdapterOnCallback) this;
-
         Home.doubleBackToExitPressedOnce = false;
-
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
@@ -232,31 +185,19 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         if (!enabled) {
             android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
             alertDialog.setMessage("To continue, turn on device location, which uses Google location service");
-
             alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
                 }
             });
-
             alertDialog.setPositiveButton("Turn On GPS", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(intent);
                 }
             });
-
             alertDialog.show();
         }
-
-
-
-
-
-
-
-
         if (Config.isOnline(mContext)) {
             ApiFavList();
         } else {
@@ -264,60 +205,46 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
             mFavList.clear();
             mFavList = db.getFavouriteID();
         }
-
-
         mFutureFlag = false;
         mTodayFlag = false;
         mOldFlag = false;
-
-
         if (Config.isOnline(mContext)) {
-            ApiTodayAppointmentList();
+            //ApiTodayAppointmentList();
+            getActiveAppointments();
         }
-
-
         return row;
     }
 
-
-
-
-
-
-
-    private void ApiTodayAppointmentList() {
+    /**
+     * * Author Mani E V
+     * To get Active Appointments [Both Today and Future]
+     */
+    private void getActiveAppointments() {
         Config.logV("API TODAY Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveAppointment>> call = apiService.getActiveAppointment();
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("apptStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveAppointment>> call = apiService.getActiveAppointment(filter);
         call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
                 try {
-
                     if (response.code() == 200) {
-
                         mAppointmentFutureList.clear();
                         mAppointmentTodayList.clear();
-
-                        mAppointmentFutureList = response.body();
-                        for(int i =0;i<mAppointmentFutureList.size();i++) {
-                            if (mAppointmentFutureList.get(i).getApptStatus().equalsIgnoreCase("failed")) {
-                                mAppointmentFutureList.remove(i);
-                                i = i -1;
-                            }
-                        }
-                        Log.i("appointment123today",new Gson().toJson(mAppointmentFutureList));
-
+                        ArrayList<ActiveAppointment> mActiveAppointments = response.body();
+                        Log.i("appointment123today",new Gson().toJson(mActiveAppointments));
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                        for (int i = 0; i < mAppointmentFutureList.size(); i++) {
-                            if (date.equalsIgnoreCase(mAppointmentFutureList.get(i).getAppmtDate())) {
-                                mAppointmentTodayList.add(mAppointmentFutureList.get(i));
+                        for (int i = 0; i < mActiveAppointments.size(); i++) {
+                            if (date.equalsIgnoreCase(mActiveAppointments.get(i).getAppmtDate())) {
+                                mAppointmentTodayList.add(mActiveAppointments.get(i));
                                 Log.i("appointment123456",new Gson().toJson(mAppointmentTodayList));
+                            } else {
+                                mAppointmentFutureList.add(mActiveAppointments.get(i));
                             }
                         }
-                        ApiFutureAppointmentList();
+                        getHistoryAppointments();
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
@@ -327,41 +254,34 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
                 // Log error here since request failed
-
             }
         });
-
-
     }
 
-
-
-    private void ApiOldAppointmentList() {
+    /**
+     * * Author Mani E V
+     * To get History Appointments
+     */
+    private void getHistoryAppointments() {
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveAppointment>> call = apiService.getAppointmentList();
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("apptStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveAppointment>> call = apiService.getAppointmentList(filter);
         call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
-
                 try {
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         mAppointmentOldList.clear();
                         mAppointmentOldList = response.body();
-                        Log.i("appointment123Old",new Gson().toJson(mAppointmentOldList));
-
+                        Log.i("appointment123Old", new Gson().toJson(mAppointmentOldList));
                         setItemsAppointment();
-
                     } else {
                         // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                     }
@@ -369,67 +289,19 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
                 // Log error here since request failed
-
             }
         });
-
-
     }
-    private void ApiFutureAppointmentList() {
-
-        Config.logV("API Call");
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveAppointment>> call = apiService.getFutureAppointmentList();
-        call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
-                try {
-
-
-                    if (response.code() == 200) {
-                        mCheckFutureListAppointment.clear();
-                        mCheckFutureListAppointment = response.body();
-                        Log.i("appointment123future",new Gson().toJson(mCheckFutureListAppointment));
-                        for(int i =0;i<mCheckFutureListAppointment.size();i++) {
-                            if (mCheckFutureListAppointment.get(i).getApptStatus().equalsIgnoreCase("failed")) {
-                                mCheckFutureListAppointment.remove(i);
-                                i = i -1;
-                            }
-                        }
-
-
-                        ApiOldAppointmentList();
-
-                    } else {
-                        if (response.code() != 419) {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
-
-            }
-        });
-
-
-    }
-
     @Override
     public void onMethodMessageCallback(final String ynwuuid, final String accountID, String providerNAme, final String from) {
         imagePathList.clear();
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();
-
         final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
         final Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
@@ -441,28 +313,21 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                 "fonts/Montserrat_Bold.otf");
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         txtsendmsg.setText(spannable);
-
         tv_attach = dialog.findViewById(R.id.btn);
         tv_camera = dialog.findViewById(R.id.camera);
         recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
         //  imageview = dialog.findViewById(R.id.iv);
         // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
-
-
         if (ynwuuid != null) {
             requestMultiplePermissions();
             tv_attach.setVisibility(View.VISIBLE);
             tv_camera.setVisibility(View.VISIBLE);
-
-
             tv_attach.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if ((ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-
                                 requestPermissions(new String[]{
                                         permission.READ_EXTERNAL_STORAGE}, GALLERY);
 
@@ -474,7 +339,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
                             }
                         } else {
-
                             Intent intent = new Intent();
                             intent.setType("*/*");
                             intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -487,18 +351,14 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
 
             });
 
-
             tv_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (ContextCompat.checkSelfPermission(mContext, permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
-
                                 requestPermissions(new String[]{
                                         permission.CAMERA}, CAMERA);
-
                                 return;
                             } else {
                                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -509,7 +369,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                                 startActivityForResult(intent, CAMERA);
                             }
                         } else {
-
                             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                             Intent cameraIntent = new Intent();
                             cameraIntent.setType("image/*");
@@ -524,17 +383,12 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
 
             });
         }
-
-
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                     ApiCommunicateAppointment(ynwuuid, String.valueOf(accountID), edt_message.getText().toString(), dialog);
-
             }
         });
-
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -542,7 +396,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                 dialog.dismiss();
             }
         });
-
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
@@ -556,18 +409,14 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                     btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
                 }
             }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
     }
-
-
     public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
         //copy file and send new file path
         String fileName = getFileNameInfo(contentUri);
@@ -584,7 +433,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         }
         return null;
     }
-
     protected static String getFileNameInfo(Uri uri) {
         if (uri == null) {
             return null;
@@ -610,7 +458,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
             e.printStackTrace();
         }
     }
-
     public String getRealPathFromURI(Uri contentURI, Activity context) {
         String[] projection = {MediaStore.Images.Media.DATA};
         @SuppressWarnings("deprecation")
@@ -628,15 +475,12 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         // cursor.close();
         return null;
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == getActivity().RESULT_CANCELED) {
             return;
         }
-
         if (requestCode == GALLERY) {
             if (data != null) {
                 try {
@@ -644,15 +488,12 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                         Uri uri = data.getData();
                         String orgFilePath = getRealPathFromURI(uri, getActivity());
                         String filepath = "";//default fileName
-
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
                         String extension = "";
                         if (uriString.contains(".")) {
                             extension = uriString.substring(uriString.lastIndexOf(".") + 1);
                         }
-
-
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
@@ -664,11 +505,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                             return;
                         }
-
-//
                         imagePathList.add(orgFilePath);
-//
-
                         DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -682,7 +519,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                     e.printStackTrace();
                 }
             }
-
         } else if (requestCode == CAMERA) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             //      imageview.setImageBitmap(bitmap);
@@ -708,11 +544,8 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
             if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
                 Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
             }
-
         }
     }
-
-
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         if (myBitmap != null) {
@@ -724,7 +557,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         if (!wallpaperDirectory.exists()) {
             wallpaperDirectory.mkdirs();
         }
-
         try {
             f = new File(wallpaperDirectory, Calendar.getInstance()
                     .getTimeInMillis() + ".jpg");
@@ -743,7 +575,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         }
         return "";
     }
-
     private void requestMultiplePermissions() {
         Dexter.withActivity((Activity) mContext)
                 .withPermissions(
@@ -757,13 +588,11 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                         if (report.areAllPermissionsGranted()) {
                             Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
-
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
                             //openSettingsDialog();
                             Toast.makeText(mContext, "You Denied the Permissions", Toast.LENGTH_SHORT).show();
-
                         }
                     }
 
@@ -781,9 +610,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                 .onSameThread()
                 .check();
     }
-
-
-
     public String getFilePathFromURI(Uri contentUri, Context context) {
         //copy file and send new file path
         String fileName = getFileName(contentUri);
@@ -794,7 +620,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         }
         return null;
     }
-
     public String getFileName(Uri uri) {
         if (uri == null) return null;
         String fileName = null;
@@ -805,15 +630,12 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         }
         return fileName;
     }
-
     public String getRealFilePath(Uri uri) {
         String path = uri.getPath();
         String[] pathArray = path.split(":");
         String fileName = pathArray[pathArray.length - 1];
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
     }
-
-
     @Override
     public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName,int customerId) {
         Intent iBill = new Intent(mContext, BillActivity.class);
@@ -825,33 +647,24 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         iBill.putExtra("consumer", CustomerName);
         startActivity(iBill);
     }
-
     @Override
     public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID, boolean todayFlag, boolean futFlag, boolean oldFlag, final String from) {
-
         mOldFlag = oldFlag;
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
-
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
         dialog.setContentView(R.layout.cancelcheckin);
         dialog.show();
-
         Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
         Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
-
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                     ApiDeleteAppointment(ynwuuid, String.valueOf(accountID), dialog);
-
-
-
             }
         });
-
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -859,23 +672,18 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
             }
         });
     }
-
     @Override
     public void onMethodActiveCallback(String value) {
         Bundle bundle = new Bundle();
-
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
-
         bundle.putString("uniqueID", value);
         pfFragment.setArguments(bundle);
-
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
-
     @Override
     public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer,int customerId) {
         Log.i("Purpose: ", "billPayment");
@@ -888,7 +696,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
         startActivity(iBill);
     }
-
     @Override
     public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue,int customerId) {
         Log.i("Purpose: ", "prePayment");
@@ -900,8 +707,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
         startActivity(i);
     }
-
-
     @Override
     public void onMethodAddFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
         mOldFlag = oldFlag;
@@ -909,65 +714,42 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         mTodayFlag = todayFlag;
         ApiAddFavo(value);
     }
-
     @Override
     public void onMethodDeleteFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
         mOldFlag = oldFlag;
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
         ApiRemoveFavo(value);
-
     }
-
     @Override
     public void onMethodRating(String accountID, String UUID, boolean todayFlag, boolean futFlag, boolean oldFlag) {
         mOldFlag = oldFlag;
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
-
         ApiRating(accountID, UUID);
     }
-
     BottomSheetDialog dialog;
-
     float rate = 0;
     String comment = "";
-
     private void ApiRating(final String accountID, final String UUID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Map<String, String> query = new HashMap<>();
-
         query.put("account", accountID);
         query.put("uId-eq", UUID);
-
-
         Call<ArrayList<RatingResponse>> call = apiService.getRating(query);
-
         Config.logV("Location-----###########@@@@@@" + query);
-
         call.enqueue(new Callback<ArrayList<RatingResponse>>() {
             @Override
             public void onResponse(Call<ArrayList<RatingResponse>> call, final Response<ArrayList<RatingResponse>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL----------Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--------Message-----------------" + response.code());
-
                     if (response.code() == 200) {
-
-
                         final ArrayList<RatingResponse> mRatingDATA = response.body();
                         Config.logV("Response--code--------BottomSheetDialog-----------------" + response.code());
                         dialog = new BottomSheetDialog(mContext);
@@ -975,22 +757,18 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                         dialog.setCancelable(true);
                         dialog.show();
                         TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
-
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
-
                         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
-
                         final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
                         btn_rate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 rate = rating.getRating();
                                 comment = edt_message.getText().toString();
-
                                 if (response.body().size() == 0) {
                                     firstTimeRating = true;
                                 } else {
@@ -1000,7 +778,6 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
 
                             }
                         });
-
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
@@ -1014,11 +791,9 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                                 }
                             }
-
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                             }
-
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
                             }
@@ -1027,135 +802,87 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                             @Override
                             public void onClick(View v) {
                                 dialog.dismiss();
-
-
                             }
                         });
-
                         if (response.body().size() > 0) {
                             if (mRatingDATA.get(0).getStars() != 0) {
                                 rating.setRating(Float.valueOf(mRatingDATA.get(0).getStars()));
                             }
-
-
                             if (mRatingDATA.get(0).getFeedback() != null) {
                                 Config.logV("Comments---------" + mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
                                 edt_message.setText(mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
                             }
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ArrayList<RatingResponse>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
     private void ApiPUTRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("uuid", UUID);
             jsonObj.put("stars", String.valueOf(stars));
             jsonObj.put("feedback", feedback);
-
             Config.logV("Feedback--------------" + feedback);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call;
         if (firstTimerate) {
             call = apiService.PostRating(accountID, body);
         } else {
             call = apiService.PutRating(accountID, body);
         }
-
         Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     Config.logV("URL-------Request---" + response.raw().request().url().toString().trim());
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     dialog.dismiss();
                     Config.logV("Put Rating#########################" + response.code());
                     if (response.code() == 200) {
-
-
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Rated successfully", Toast.LENGTH_LONG).show();
-
-
                         }
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
-
-
-
     private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-
-
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
         for (int i = 0; i < imagePathList.size(); i++) {
-
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
             } catch (IOException e) {
@@ -1164,18 +891,12 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
             if (bitmap != null) {
                 path = saveImage(bitmap);
                 file = new File(path);
-            }
-//            else{
-//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-//            }
-            else {
+            } else {
                 file = new File(imagePathList.get(i));
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
@@ -1185,324 +906,197 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID), requestBody);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         imagePathList.clear();
                         dialog.dismiss();
-
-
                     } else {
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
-
-
     private void ApiDeleteAppointment(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ResponseBody> call = apiService.deleteAppointment(ynwuuid, String.valueOf(accountID));
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
-
                             Toast.makeText(mContext, "Appointment cancelled successfully", Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                             ApiFavList();
-
                         }
-
-
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
     @Override
     public void onResume() {
         super.onResume();
-
     }
-
     private void ApiAddFavo(int providerID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Call<ResponseBody> call = apiService.AddFavourite(providerID);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
-
                             ApiFavList();
                             Toast.makeText(mContext, "Added to Favourites", Toast.LENGTH_LONG).show();
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
     ArrayList<FavouriteModel> mFavList = new ArrayList<>();
-
     private void ApiFavList() {
-
-        Config.logV("API FAV Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
         Call<ArrayList<FavouriteModel>> call = apiService.getFavourites();
-
-
         call.enqueue(new Callback<ArrayList<FavouriteModel>>() {
             @Override
             public void onResponse(Call<ArrayList<FavouriteModel>> call, Response<ArrayList<FavouriteModel>> response) {
-
                 try {
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         mFavList.clear();
-                        //  mFavList = response.body();
                         DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteFAVID();
                         db.insertFavIDInfo(response.body());
                         mFavList = db.getFavouriteID();
-                        ApiTodayAppointmentList();
-
-
+                        getActiveAppointments();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ArrayList<FavouriteModel>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
-
             }
         });
-
-
     }
-
     private void ApiRemoveFavo(int providerID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Call<ResponseBody> call = apiService.DeleteFavourite(providerID);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Removed from favourites", Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
-
     boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
-
-
     ExpandableListAdapterAppointment adapterAppointment;
-
     boolean mTodayFlagAppointment = false, mOldFlagAppointment = false, mFutureFlagAppointment = false;
-
     void setItemsAppointment() {
-
-
         ArrayList<String> header = new ArrayList<String>();
         HashMap<String, ArrayList<ActiveAppointment>> hashMap = new HashMap<String, ArrayList<ActiveAppointment>>();
         header.add("Today");
         header.add("Future");
         header.add("Old");
-
-
         hashMap.put(header.get(0), mAppointmentTodayList);
-        hashMap.put(header.get(1), mCheckFutureListAppointment);
+        hashMap.put(header.get(1), mAppointmentFutureList);
         hashMap.put(header.get(2), mAppointmentOldList);
-
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         adapterAppointment = new ExpandableListAdapterAppointment(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
         expandlistAppointment.setAdapter(adapterAppointment);
         expandlistAppointment.setVerticalScrollBarEnabled(false);
         adapterAppointment.notifyDataSetChanged();
-
-
         if (mAppointmentTodayList.size() > 0 || mTodayFlag)
             expandlistAppointment.expandGroup(0);
-        if (mCheckFutureListAppointment.size() > 0 || mFutureFlag)
+        if (mAppointmentFutureList.size() > 0 || mFutureFlag)
             expandlistAppointment.expandGroup(1);
-        if ((mAppointmentTodayList.size() == 0 && mCheckFutureListAppointment.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
+        if ((mAppointmentTodayList.size() == 0 && mAppointmentFutureList.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
             expandlistAppointment.expandGroup(2);
         }
-
-
     }
-
 }

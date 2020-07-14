@@ -136,36 +136,25 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
 
     public Tab1Fragment() {
-
     }
-
     boolean firstTimeRating = false;
     Context mContext;
     Activity mActivity;
-
     ArrayList<ActiveCheckIn> mCheckFutureList = new ArrayList<>();
-    ArrayList<ActiveCheckIn> mCheckFutureListTemp = new ArrayList<>();
-    ArrayList<ActiveCheckIn> mTokenFutureList = new ArrayList<>();
-    ArrayList<ActiveCheckIn> mTokenFutureListTemp = new ArrayList<>();
-    ArrayList<ActiveAppointment> mCheckFutureListAppointment = new ArrayList<>();
-    ArrayList<ActiveCheckIn> mCheckTodayList = new ArrayList<>();
-    ArrayList<ActiveCheckIn> mTokenTodayList = new ArrayList<>();
-    ArrayList<ActiveAppointment> mAppointmentTodayList = new ArrayList<>();
-    ArrayList<ActiveCheckIn> mCheckTodayFutureList = new ArrayList<>();
-    ArrayList<ActiveCheckIn> mTokenTodayFutureList = new ArrayList<>();
-    ArrayList<ActiveAppointment> mAppointmentFutureList = new ArrayList<>();
-
+    ArrayList<ActiveCheckIn> mActiveCheckins = new ArrayList<>();
+    ArrayList<ActiveCheckIn> mActiveTokens = new ArrayList<>();
+    ArrayList<ActiveCheckIn> mActiveFutureCheckins = new ArrayList<>();
+    ArrayList<ActiveCheckIn> mActiveFutureTokens = new ArrayList<>();
+    ArrayList<ActiveCheckIn> mTodayTokens_Checkins = new ArrayList<>();
     ArrayList<ActiveCheckIn> mCheckOldList = new ArrayList<>();
+    ArrayList<ActiveAppointment> mAppointmentTodayList = new ArrayList<>();
+    ArrayList<ActiveAppointment> mAppointmentFutureList = new ArrayList<>();
     ArrayList<ActiveAppointment> mAppointmentOldList = new ArrayList<>();
     int tokenCount,checkinCount,appointmentCount;
-
-
-
     HistoryAdapterCallback mInterface;
     ActiveAdapterOnCallback mCallback;
     ExpandableListView expandlist;
     ExpandableListView expandlistAppointment;
-
     TextView tv_attach, tv_camera;
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int CAMERA = 2;
@@ -179,7 +168,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     ArrayList<String> imagePathList = new ArrayList<>();
     private Uri mImageUri;
     String filePath;
-
     public final static int REQUEST_ID_MULTIPLE_PERMISSIONS = 0x2;
     static double latitude;
     static double longitude;
@@ -188,8 +176,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
      TextView txtTokens,txtCheckins,txtAppointments;
      EditText edt_message;
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -199,23 +185,16 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
         mCallback = (ActiveAdapterOnCallback) this;
-
         Home.doubleBackToExitPressedOnce = false;
-
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //expList = (ExpandableListView) row.findViewById(R.id.exp_list);
-
         Button booking = (Button) row.findViewById(R.id.booking);
         Button payment = (Button) row.findViewById(R.id.payment);
         txtCheckins = (TextView) row.findViewById(R.id.checkins);
         txtTokens = (TextView) row.findViewById(R.id.tokens);
          txtAppointments = (TextView) row.findViewById(R.id.appointments);
-
-
         expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
         expandlistAppointment = (ExpandableListView) row.findViewById(R.id.appointmentView);
-
-
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
@@ -226,32 +205,25 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         Typeface tyface = Typeface.createFromAsset(getActivity().getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface);
-
         LocationManager service = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
         // Check if enabled and if not send user to the GPS settings
         if (!enabled) {
             android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
             alertDialog.setMessage("To continue, turn on device location, which uses Google location service");
-
             alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
                 }
             });
-
             alertDialog.setPositiveButton("Turn On GPS", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(intent);
                 }
             });
-
             alertDialog.show();
         }
-
         payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,8 +233,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
             }
         });
-
-
         txtCheckins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,7 +242,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
             }
         });
-
         txtTokens.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -291,10 +260,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 transaction.replace(R.id.mainlayout, afFragment).commit();
             }
         });
-
-
-
-
         if (Config.isOnline(mContext)) {
             ApiFavList();
         } else {
@@ -302,226 +267,53 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             mFavList.clear();
             mFavList = db.getFavouriteID();
         }
-
         if (Config.isOnline(mContext)) {
-            ApiTodayChekInList();
-
+            getActiveTokens_Checkins();
         } else {
-
             setItems();
         }
         mFutureFlag = false;
         mTodayFlag = false;
         mOldFlag = false;
-
-
         if (Config.isOnline(mContext)) {
-            ApiTodayAppointmentList();
+            getActiveAppointments();
         }
-
-        if (Config.isOnline(mContext)) {
-            ApiTodayTokenList();
-        }
-
+//        if (Config.isOnline(mContext)) {
+//            ApiTodayTokenList();
+//        }
         return row;
     }
-
-
-
-
-    private void ApiTodayChekInList() {
-
-        Config.logV("API TODAY Call");
+    /*
+     * To get Active Appointments [Both Today and Future]
+     */
+    private void getActiveAppointments() {
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-       /* Map<String, String> query = new HashMap<>();
-
-        query.put("from", "0");
-        query.put("count", "10");*/
-        Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
-
-
-        call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
-                try {
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-                        mCheckTodayFutureList.clear();
-                        mCheckTodayList.clear();
-
-
-                        mCheckTodayFutureList = response.body();
-                        for(int i =0;i<mCheckTodayFutureList.size();i++) {
-                            if (mCheckTodayFutureList.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
-                                mCheckTodayFutureList.remove(i);
-                                i = i -1;
-                            }
-                        }
-                        Log.i("hgfhrty",new Gson().toJson(mCheckTodayFutureList));
-
-
-                        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                        for (int i = 0; i < mCheckTodayFutureList.size(); i++) {
-                            if (date.equalsIgnoreCase(mCheckTodayFutureList.get(i).getDate())) {
-                                if(response.body().get(i).getShowToken()!=null){
-                                    if(mCheckTodayFutureList.get(i).getShowToken().equalsIgnoreCase("false")){
-                                        mCheckTodayList.add(response.body().get(i));
-                                        Log.i("hgfhrty22", new Gson().toJson(mCheckTodayList));
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                        DatabaseHandler db = new DatabaseHandler(mContext);
-                        db.DeleteMyCheckin("today");
-                        db.insertMyCheckinInfo(mCheckTodayList);
-                        ApiFutureChekInList();
-
-
-                    } else {
-                        if (response.code() != 419) {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-
-
-            }
-        });
-
-
-    }
-
-    private void ApiTodayTokenList() {
-
-        Config.logV("API TODAY Call");
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
-
-
-        call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
-                try {
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-                        mTokenTodayFutureList.clear();
-                        mTokenTodayList.clear();
-
-
-                        mTokenTodayFutureList = response.body();
-                        for(int i =0;i<mTokenTodayFutureList.size();i++) {
-                            if (mTokenTodayFutureList.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
-                                mTokenTodayFutureList.remove(i);
-                                i = i -1;
-                            }
-                        }
-                        Log.i("hgfhrty",new Gson().toJson(mTokenTodayFutureList));
-
-
-                        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                        for (int i = 0; i < mTokenTodayFutureList.size(); i++) {
-                            if (date.equalsIgnoreCase(mTokenTodayFutureList.get(i).getDate())) {
-
-                                if(response.body().get(i).getShowToken()!=null){
-                                    if(mTokenTodayFutureList.get(i).getShowToken().equalsIgnoreCase("true")){
-                                        mTokenTodayList.add(response.body().get(i));
-                                        Log.i("hgfhrty22",new Gson().toJson(mTokenTodayList));
-                                    }
-                                }
-
-
-
-                            }
-
-                        }
-                        ApiFutureTokenList();
-
-
-                    } else {
-                        if (response.code() != 419) {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-
-
-            }
-        });
-
-
-    }
-
-
-    private void ApiTodayAppointmentList() {
-        Config.logV("API TODAY Call");
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveAppointment>> call = apiService.getActiveAppointment();
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("apptStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveAppointment>> call = apiService.getActiveAppointment(filter);
         call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
                 try {
-
                     if (response.code() == 200) {
-
                         mAppointmentFutureList.clear();
                         mAppointmentTodayList.clear();
-
-                        mAppointmentFutureList = response.body();
-                        for(int i =0;i<mAppointmentFutureList.size();i++) {
-                            if (mAppointmentFutureList.get(i).getApptStatus().equalsIgnoreCase("failed")) {
-                                mAppointmentFutureList.remove(i);
-                                i = i -1;
-                            }
-                        }
-                        Log.i("appointment123today",new Gson().toJson(mAppointmentFutureList));
-
-
+                        ArrayList<ActiveAppointment> mActiveAppointments = response.body();
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                        for (int i = 0; i < mAppointmentFutureList.size(); i++) {
-                            if (date.equalsIgnoreCase(mAppointmentFutureList.get(i).getAppmtDate())) {
-                                mAppointmentTodayList.add(response.body().get(i));
+                        appointmentCount = mActiveAppointments.size();
+                        txtAppointments.setText("Appointments ("+appointmentCount+")");
+                        getOldAppointments();
+                        for (int i = 0; i < mActiveAppointments.size(); i++) {
+                            if (date.equalsIgnoreCase(mActiveAppointments.get(i).getAppmtDate())) {
+                                mAppointmentTodayList.add(mActiveAppointments.get(i));
                                 Log.i("appointment123456",new Gson().toJson(mAppointmentTodayList));
+                            } else {
+                                mAppointmentFutureList.add(mActiveAppointments.get(i));
                             }
                         }
-                        ApiFutureAppointmentList();
+
+//                        ApiFutureAppointmentList();
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
@@ -531,99 +323,32 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
                 // Log error here since request failed
-
             }
         });
-
-
     }
-
-
-    private void ApiOldChekInList() {
-
-        Config.logV("API Call");
+    /**
+     * To get History/Old Appointments
+     */
+    private void getOldAppointments() {
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-       /* Map<String, String> query = new HashMap<>();
-
-        query.put("from", "0");
-        query.put("count", "10");*/
-        Call<ArrayList<ActiveCheckIn>> call = apiService.getCheckInList();
-
-
-        call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
-                try {
-
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-                        mCheckOldList.clear();
-                        mCheckOldList = response.body();
-
-                        DatabaseHandler db = new DatabaseHandler(mContext);
-                        db.DeleteMyCheckin("old");
-                        db.insertMyCheckinInfo(mCheckOldList);
-
-                        Config.logV("mCheckList mCheckOldList size-------------------------" + mCheckOldList.size());
-
-
-                        setItems();
-
-                    } else {
-                        // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-
-
-            }
-        });
-
-
-    }
-    private void ApiOldAppointmentList() {
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveAppointment>> call = apiService.getAppointmentList();
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("apptStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveAppointment>> call = apiService.getAppointmentList(filter);
         call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
-
                 try {
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         mAppointmentOldList.clear();
                         mAppointmentOldList = response.body();
                         Log.i("appointment123Old",new Gson().toJson(mAppointmentOldList));
-
                         setItemsAppointment();
-
                     } else {
                         // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                     }
@@ -634,222 +359,120 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             @Override
             public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
                 // Log error here since request failed
-
             }
         });
-
-
     }
-
-    private void ApiFutureChekInList() {
-
-        Config.logV("API Call");
+    /*
+     * To get Active Checkins [Both Today and Future]
+     */
+    private void getActiveTokens_Checkins() {
+        Config.logV("API TODAY Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-        Call<ArrayList<ActiveCheckIn>> call = apiService.getFutureCheckInList();
-
-
+       /* Map<String, String> query = new HashMap<>();
+        query.put("from", "0");
+        query.put("count", "10");*/
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("waitlistStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn(filter);
         call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
                 try {
-
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-                        mCheckFutureList.clear();
-                        mCheckFutureListTemp.clear();
-                        mCheckFutureListTemp = response.body();
-
-                        for(int i =0;i<mCheckFutureListTemp.size();i++) {
-                            if (mCheckFutureListTemp.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
-                                mCheckFutureListTemp.remove(i);
-                                i = i -1;
-                            }
-                        }
-
-                        for(int i = 0; i < mCheckFutureListTemp.size();i++){
-                            if(mCheckFutureListTemp.get(i).getShowToken().equalsIgnoreCase("false")){
-
-                                mCheckFutureList.add(response.body().get(i));
-
-                            }
-                        }
-
-
-                        checkinCount = mCheckTodayList.size() + mCheckFutureList.size();
-                        txtCheckins.setText("Check-Ins ("+checkinCount+")");
-
-
+//                        mActiveTokens.clear();
+//                        mActiveCheckins.clear();
+//                        mActiveFutureCheckins.clear();
+//                        mActiveFutureTokens.clear();
+//                        ArrayList<ActiveCheckIn> mActiveTokens_Checkins = response.body();
+//                        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+//                        for (int i = 0; i < mActiveTokens_Checkins.size(); i++) {
+//                            if (date.equalsIgnoreCase(mActiveTokens_Checkins.get(i).getDate())) {
+//                                if(mActiveTokens_Checkins.get(i).getShowToken()!=null){
+//                                    if(mActiveTokens_Checkins.get(i).getShowToken().equalsIgnoreCase("false")){
+//                                        mActiveCheckins.add(mActiveTokens_Checkins.get(i));
+//                                    } else { // Tokens
+//                                        mActiveTokens.add(mActiveTokens_Checkins.get(i));
+//                                    }
+//                                }
+//                            } else { // future
+//                                if(mActiveTokens_Checkins.get(i).getShowToken()!=null){
+//                                    if(mActiveTokens_Checkins.get(i).getShowToken().equalsIgnoreCase("false")){
+//                                        mActiveFutureCheckins.add(mActiveTokens_Checkins.get(i));
+//                                    } else { // Tokens
+//                                        mActiveFutureTokens.add(mActiveTokens_Checkins.get(i));
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        checkinCount = mActiveCheckins.size() + mActiveFutureCheckins.size();
+//                        tokenCount = mActiveTokens.size() + mActiveFutureTokens.size();
+//                        txtTokens.setText("Tokens ("+tokenCount+")");
+//                        txtCheckins.setText("Check-Ins ("+checkinCount+")");
 
                         DatabaseHandler db = new DatabaseHandler(mContext);
+                        db.DeleteMyCheckin("today");
                         db.DeleteMyCheckin("future");
-                        db.insertMyCheckinInfo(mCheckFutureList);
-
-
-
+                        db.insertMyCheckinInfo(response.body());
+                        getOldTokens_Checkins ();
+                        // ApiFutureChekInList();
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
-
             }
         });
-
-
     }
-
-    private void ApiFutureTokenList() {
+    private void getOldTokens_Checkins() {
 
         Config.logV("API Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-        Call<ArrayList<ActiveCheckIn>> call = apiService.getFutureCheckInList();
-
-
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("waitlistStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveCheckIn>> call = apiService.getCheckInList(filter);
         call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
                 try {
-
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
-                        mTokenFutureList.clear();
-                        mTokenFutureListTemp.clear();
-                        mTokenFutureListTemp = response.body();
-                        for(int i =0;i<mTokenFutureListTemp.size();i++) {
-                            if (mTokenFutureListTemp.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
-                                mTokenFutureListTemp.remove(i);
-                                i = i -1;
-                            }
-                        }
-
-                        for(int i = 0; i < mTokenFutureListTemp.size();i++){
-                            if(mTokenFutureListTemp.get(i).getShowToken().equalsIgnoreCase("true")){
-
-                                mTokenFutureList.add(response.body().get(i));
-
-                            }
-
-
-                        }
-
-                        Log.i("bnmbnmb",String.valueOf(mTokenFutureList.size()));
-                        Log.i("bnmbnmb",String.valueOf(mTokenTodayList.size()));
-                        tokenCount = mTokenFutureList.size() + mTokenTodayList.size();
-
-
-                        txtTokens.setText("Tokens ("+tokenCount+")");
-
-
+                        DatabaseHandler db = new DatabaseHandler(mContext);
+                        db.DeleteMyCheckin("old");
+                        db.insertMyCheckinInfo(response.body());
+                        setItems();
                     } else {
-                        if (response.code() != 419) {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
+                        // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
-
             }
         });
-
-
     }
-
-    private void ApiFutureAppointmentList() {
-
-        Config.logV("API Call");
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveAppointment>> call = apiService.getFutureAppointmentList();
-        call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
-                try {
-
-
-                    if (response.code() == 200) {
-                        mCheckFutureListAppointment.clear();
-                        mCheckFutureListAppointment = response.body();
-                        Log.i("appointment123future",new Gson().toJson(mCheckFutureListAppointment));
-                        for(int i =0;i<mCheckFutureListAppointment.size();i++) {
-                            if (mCheckFutureListAppointment.get(i).getApptStatus().equalsIgnoreCase("failed")) {
-                                mCheckFutureListAppointment.remove(i);
-                                i = i -1;
-                            }
-                        }
-
-                        appointmentCount = mAppointmentTodayList.size() + mCheckFutureListAppointment.size();
-                        txtAppointments.setText("Appointments ("+appointmentCount+")");
-
-
-                        ApiOldAppointmentList();
-
-                    } else {
-                        if (response.code() != 419) {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
-
-            }
-        });
-
-
-    }
-
     @Override
     public void onMethodMessageCallback(final String ynwuuid, final String accountID, String providerNAme, final String from) {
         imagePathList.clear();
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();
-
         final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
         final Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
         edt_message = (EditText) dialog.findViewById(R.id.edt_message);
@@ -861,31 +484,23 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 "fonts/Montserrat_Bold.otf");
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         txtsendmsg.setText(spannable);
-
         tv_attach = dialog.findViewById(R.id.btn);
         tv_camera = dialog.findViewById(R.id.camera);
         recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
         //  imageview = dialog.findViewById(R.id.iv);
         // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
-
-
         if (ynwuuid != null) {
             requestMultiplePermissions();
             tv_attach.setVisibility(View.VISIBLE);
             tv_camera.setVisibility(View.VISIBLE);
-
-
             tv_attach.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if ((ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-
                                 requestPermissions(new String[]{
                                         permission.READ_EXTERNAL_STORAGE}, GALLERY);
-
                                 return;
                             } else {
                                 Intent intent = new Intent();
@@ -894,7 +509,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
                             }
                         } else {
-
                             Intent intent = new Intent();
                             intent.setType("*/*");
                             intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -906,19 +520,14 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 }
 
             });
-
-
             tv_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (ContextCompat.checkSelfPermission(mContext, permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
-
                                 requestPermissions(new String[]{
                                         permission.CAMERA}, CAMERA);
-
                                 return;
                             } else {
                                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -929,7 +538,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                                 startActivityForResult(intent, CAMERA);
                             }
                         } else {
-
                             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                             Intent cameraIntent = new Intent();
                             cameraIntent.setType("image/*");
@@ -944,8 +552,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
             });
         }
-
-
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -954,12 +560,8 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 }else{
                     ApiCommunicateAppointment(ynwuuid, String.valueOf(accountID), edt_message.getText().toString(), dialog);
                 }
-
-
-
             }
         });
-
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -991,7 +593,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             }
         });
     }
-
 
     public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
         //copy file and send new file path
@@ -1057,11 +658,9 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == getActivity().RESULT_CANCELED) {
             return;
         }
-
         if (requestCode == GALLERY) {
             if (data != null) {
                 try {
@@ -1069,15 +668,12 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         Uri uri = data.getData();
                         String orgFilePath = getRealPathFromURI(uri, getActivity());
                         String filepath = "";//default fileName
-
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
                         String extension = "";
                         if (uriString.contains(".")) {
                             extension = uriString.substring(uriString.lastIndexOf(".") + 1);
                         }
-
-
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
@@ -1089,11 +685,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                             return;
                         }
-
-//
                         imagePathList.add(orgFilePath);
-//
-
                         DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -1133,10 +725,8 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
                 Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
             }
-
         }
     }
-
 
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -1149,7 +739,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         if (!wallpaperDirectory.exists()) {
             wallpaperDirectory.mkdirs();
         }
-
         try {
             f = new File(wallpaperDirectory, Calendar.getInstance()
                     .getTimeInMillis() + ".jpg");
@@ -1161,7 +750,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                     new String[]{"image/jpeg"}, null);
             fo.close();
             Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-
             return f.getAbsolutePath();
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -1182,13 +770,11 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         if (report.areAllPermissionsGranted()) {
                             Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
-
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
                             //openSettingsDialog();
                             Toast.makeText(mContext, "You Denied the Permissions", Toast.LENGTH_SHORT).show();
-
                         }
                     }
 
@@ -1209,7 +795,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public String getPDFPath(Uri uri) {
-
         final String id = DocumentsContract.getDocumentId(uri);
         final Uri contentUri = ContentUris.withAppendedId(
                 Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
@@ -1265,37 +850,26 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
     @Override
     public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID, boolean todayFlag, boolean futFlag, boolean oldFlag, final String from) {
-
         mOldFlag = oldFlag;
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
-
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
         dialog.setContentView(R.layout.cancelcheckin);
         dialog.show();
-
         Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
         Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
-
-
-
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 if(from.equalsIgnoreCase("checkin")){
                     ApiDeleteCheckin(ynwuuid, String.valueOf(accountID), dialog);
                 }else{
                     ApiDeleteAppointment(ynwuuid, String.valueOf(accountID), dialog);
                 }
-
-
             }
         });
-
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1307,12 +881,9 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     @Override
     public void onMethodActiveCallback(String value) {
         Bundle bundle = new Bundle();
-
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
-
         bundle.putString("uniqueID", value);
         pfFragment.setArguments(bundle);
-
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
@@ -1345,7 +916,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         startActivity(i);
     }
 
-
     @Override
     public void onMethodAddFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
         mOldFlag = oldFlag;
@@ -1360,7 +930,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
         ApiRemoveFavo(value);
-
     }
 
     @Override
@@ -1368,50 +937,30 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         mOldFlag = oldFlag;
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
-
         ApiRating(accountID, UUID);
     }
-
     BottomSheetDialog dialog;
-
     float rate = 0;
     String comment = "";
-
     private void ApiRating(final String accountID, final String UUID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Map<String, String> query = new HashMap<>();
-
         query.put("account", accountID);
         query.put("uId-eq", UUID);
-
-
         Call<ArrayList<RatingResponse>> call = apiService.getRating(query);
-
         Config.logV("Location-----###########@@@@@@" + query);
-
         call.enqueue(new Callback<ArrayList<RatingResponse>>() {
             @Override
             public void onResponse(Call<ArrayList<RatingResponse>> call, final Response<ArrayList<RatingResponse>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL----------Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--------Message-----------------" + response.code());
-
                     if (response.code() == 200) {
-
-
                         final ArrayList<RatingResponse> mRatingDATA = response.body();
                         Config.logV("Response--code--------BottomSheetDialog-----------------" + response.code());
                         dialog = new BottomSheetDialog(mContext);
@@ -1419,15 +968,12 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         dialog.setCancelable(true);
                         dialog.show();
                         TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
-
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
-
                         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
-
                         final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
                         btn_rate.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1471,31 +1017,21 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                             @Override
                             public void onClick(View v) {
                                 dialog.dismiss();
-
-
                             }
                         });
-
                         if (response.body().size() > 0) {
                             if (mRatingDATA.get(0).getStars() != 0) {
                                 rating.setRating(Float.valueOf(mRatingDATA.get(0).getStars()));
                             }
-
-
                             if (mRatingDATA.get(0).getFeedback() != null) {
                                 Config.logV("Comments---------" + mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
                                 edt_message.setText(mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
                             }
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1504,73 +1040,50 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
-
     private void ApiPUTRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("uuid", UUID);
             jsonObj.put("stars", String.valueOf(stars));
             jsonObj.put("feedback", feedback);
-
             Config.logV("Feedback--------------" + feedback);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call;
         if (firstTimerate) {
             call = apiService.PostRating(accountID, body);
         } else {
             call = apiService.PutRating(accountID, body);
         }
-
         Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     Config.logV("URL-------Request---" + response.raw().request().url().toString().trim());
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     dialog.dismiss();
                     Config.logV("Put Rating#########################" + response.code());
                     if (response.code() == 200) {
-
-
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Rated successfully", Toast.LENGTH_LONG).show();
-                            ApiTodayChekInList();
-
+                            getActiveTokens_Checkins();
                         }
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1582,8 +1095,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
 
             }
         });
-
-
     }
 
     private String getFileNameByUri(Context context, Uri uri) {
@@ -1593,13 +1104,10 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         if (uri.getScheme().toString().compareTo("content") == 0) {
             Cursor cursor = context.getContentResolver().query(uri, new String[]{android.provider.MediaStore.Images.ImageColumns.DATA, MediaStore.Images.Media.ORIENTATION}, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
             cursor.moveToFirst();
-
             String mImagePath = cursor.getString(column_index);
             cursor.close();
             filepath = mImagePath;
-
         } else if (uri.getScheme().compareTo("file") == 0) {
             try {
                 file = new File(new URI(uri.toString()));
@@ -1616,8 +1124,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     }
 
     private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
@@ -1634,18 +1140,12 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             if (bitmap != null) {
                 path = saveImage(bitmap);
                 file = new File(path);
-            }
-//            else{
-//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-//            }
-            else {
+            } else {
                 file = new File(imagePathList.get(i));
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
@@ -1655,38 +1155,27 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), requestBody);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         imagePathList.clear();
                         dialog.dismiss();
-
-
                     } else {
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1695,25 +1184,17 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
-
-
     private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-
-
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
         for (int i = 0; i < imagePathList.size(); i++) {
-
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
             } catch (IOException e) {
@@ -1722,18 +1203,12 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             if (bitmap != null) {
                 path = saveImage(bitmap);
                 file = new File(path);
-            }
-//            else{
-//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-//            }
-            else {
+            } else {
                 file = new File(imagePathList.get(i));
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
@@ -1743,38 +1218,27 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID), requestBody);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         imagePathList.clear();
                         dialog.dismiss();
-
-
                     } else {
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1783,61 +1247,38 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
-
     private void ApiDeleteCheckin(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ResponseBody> call = apiService.deleteActiveCheckIn(ynwuuid, String.valueOf(accountID));
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
-
                             Toast.makeText(mContext, "Check-In cancelled successfully", Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                             ApiFavList();
-
                         }
-
-
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1846,60 +1287,38 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
     private void ApiDeleteAppointment(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ResponseBody> call = apiService.deleteAppointment(ynwuuid, String.valueOf(accountID));
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
-
                             Toast.makeText(mContext, "Appointment cancelled successfully", Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                             ApiFavList();
-
                         }
-
-
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1908,95 +1327,60 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     private void ApiAddFavo(int providerID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Call<ResponseBody> call = apiService.AddFavourite(providerID);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
-
                             ApiFavList();
                             Toast.makeText(mContext, "Added to Favourites", Toast.LENGTH_LONG).show();
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
     ArrayList<FavouriteModel> mFavList = new ArrayList<>();
-
     private void ApiFavList() {
-
         Config.logV("API FAV Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
         Call<ArrayList<FavouriteModel>> call = apiService.getFavourites();
-
-
         call.enqueue(new Callback<ArrayList<FavouriteModel>>() {
             @Override
             public void onResponse(Call<ArrayList<FavouriteModel>> call, Response<ArrayList<FavouriteModel>> response) {
-
                 try {
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         mFavList.clear();
                         //  mFavList = response.body();
@@ -2004,70 +1388,45 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                         db.DeleteFAVID();
                         db.insertFavIDInfo(response.body());
                         mFavList = db.getFavouriteID();
-                        ApiTodayChekInList();
-                        ApiTodayAppointmentList();
-
-
+                        getActiveTokens_Checkins();
+                        getActiveAppointments();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
             public void onFailure(Call<ArrayList<FavouriteModel>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
-
             }
         });
-
-
     }
 
     private void ApiRemoveFavo(int providerID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Call<ResponseBody> call = apiService.DeleteFavourite(providerID);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Removed from favourites", Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -2076,106 +1435,90 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
+    }
 
+    private int getTokensCount(ArrayList<ActiveCheckIn> activeTokensAndCheckins) {
+        ArrayList<ActiveCheckIn> activeTokens = new ArrayList<>();
+        for (int i = 0; i < activeTokensAndCheckins.size(); i++) {
+            if (activeTokensAndCheckins.get(i).getShowToken() != null && activeTokensAndCheckins.get(i).getShowToken().equalsIgnoreCase("true")) {
+                activeTokens.add(activeTokensAndCheckins.get(i));
+            }
+        }
+        return activeTokens.size();
+    }
 
+    private int getCheckinsCount(ArrayList<ActiveCheckIn> activeTokensAndCheckins) {
+        ArrayList<ActiveCheckIn> activeCheckins = new ArrayList<>();
+        for (int i = 0; i < activeTokensAndCheckins.size(); i++){
+            if(activeTokensAndCheckins.get(i).getShowToken()!=null && activeTokensAndCheckins.get(i).getShowToken().equalsIgnoreCase("false")){
+                activeCheckins.add(activeTokensAndCheckins.get(i));
+            }
+        }
+        return activeCheckins.size();
     }
 
     ExpandableListAdapter adapter;
-
     boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
-
     void setItems() {
-
-
-        mCheckTodayList.clear();
+        mTodayTokens_Checkins.clear();
         mCheckOldList.clear();
         mCheckFutureList.clear();
-
         // Array list for header
         ArrayList<String> header = new ArrayList<String>();
-
-
         // Hash map for both header and child
         HashMap<String, ArrayList<ActiveCheckIn>> hashMap = new HashMap<String, ArrayList<ActiveCheckIn>>();
-
         // Adding headers to list
         header.add("Today");
         header.add("Future");
         header.add("Old");
         // Adding child data
-
-
         DatabaseHandler db = new DatabaseHandler(mContext);
-
-        mCheckTodayList = db.getMyCheckinList("today");
+        mTodayTokens_Checkins = db.getMyCheckinList("today");
         mCheckOldList = db.getMyCheckinList("old");
         mCheckFutureList = db.getMyCheckinList("future");
-
-
-        Config.logV("Today---#####----" + mCheckTodayList.size() + "" + mTodayFlag);
-        Config.logV("Futrue-------" + mCheckFutureList.size() + "" + mFutureFlag);
-        Config.logV("Old-------" + mCheckOldList.size() + "" + mOldFlag);
-
+        txtTokens.setText("Tokens ("+ (getTokensCount(mTodayTokens_Checkins) + getTokensCount((mCheckFutureList))) + ")");
+        txtCheckins.setText("Check-Ins ("+(getCheckinsCount(mTodayTokens_Checkins) + getCheckinsCount((mCheckFutureList)))+")");
         // Adding header and childs to hash map
-        hashMap.put(header.get(0), mCheckTodayList);
+        hashMap.put(header.get(0), mTodayTokens_Checkins);
         hashMap.put(header.get(1), mCheckFutureList);
         hashMap.put(header.get(2), mCheckOldList);
-
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
         adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
         // Setting adpater over expandablelistview
         expandlist.setAdapter(adapter);
         expandlist.setVerticalScrollBarEnabled(false);
         adapter.notifyDataSetChanged();
-
-
-        if (mCheckTodayList.size() > 0 || mTodayFlag)
+        if (mTodayTokens_Checkins.size() > 0 || mTodayFlag)
             expandlist.expandGroup(0);
         if (mCheckFutureList.size() > 0 || mFutureFlag)
             expandlist.expandGroup(1);
-        if ((mCheckTodayList.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) || mOldFlag) {
+        if ((mTodayTokens_Checkins.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) || mOldFlag) {
             expandlist.expandGroup(2);
         }
-
-
     }
-
-
-
     ExpandableListAdapterAppointment adapterAppointment;
-
     boolean mTodayFlagAppointment = false, mOldFlagAppointment = false, mFutureFlagAppointment = false;
-
     void setItemsAppointment() {
-
-
         ArrayList<String> header = new ArrayList<String>();
         HashMap<String, ArrayList<ActiveAppointment>> hashMap = new HashMap<String, ArrayList<ActiveAppointment>>();
         header.add("Today");
         header.add("Future");
         header.add("Old");
-
-
         hashMap.put(header.get(0), mAppointmentTodayList);
-        hashMap.put(header.get(1), mCheckFutureListAppointment);
+        hashMap.put(header.get(1), mAppointmentFutureList);
         hashMap.put(header.get(2), mAppointmentOldList);
-
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         adapterAppointment = new ExpandableListAdapterAppointment(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
         expandlistAppointment.setAdapter(adapterAppointment);
         expandlistAppointment.setVerticalScrollBarEnabled(false);
         adapterAppointment.notifyDataSetChanged();
-
-
         if (mAppointmentTodayList.size() > 0 || mTodayFlag)
             expandlistAppointment.expandGroup(0);
-        if (mCheckFutureListAppointment.size() > 0 || mFutureFlag)
+        if (mAppointmentFutureList.size() > 0 || mFutureFlag)
             expandlistAppointment.expandGroup(1);
-        if ((mAppointmentTodayList.size() == 0 && mCheckFutureListAppointment.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
+        if ((mAppointmentTodayList.size() == 0 && mAppointmentFutureList.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
             expandlistAppointment.expandGroup(2);
         }
 
