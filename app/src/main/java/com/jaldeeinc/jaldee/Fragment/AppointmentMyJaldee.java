@@ -144,6 +144,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
     private GoogleApiClient googleApiClient;
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     EditText edt_message;
+    Dialog mDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -198,6 +199,8 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
             });
             alertDialog.show();
         }
+        mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         if (Config.isOnline(mContext)) {
             ApiFavList();
         } else {
@@ -1086,6 +1089,8 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         hashMap.put(header.get(0), mAppointmentTodayList);
         hashMap.put(header.get(1), mAppointmentFutureList);
         hashMap.put(header.get(2), mAppointmentOldList);
+        if (mDialog.isShowing())
+            Config.closeDialog(getActivity(), mDialog);
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         adapterAppointment = new ExpandableListAdapterAppointment(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
         expandlistAppointment.setAdapter(adapterAppointment);

@@ -176,6 +176,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
      TextView txtTokens,txtCheckins,txtAppointments;
      EditText edt_message;
+     Dialog mDialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -260,6 +261,8 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
                 transaction.replace(R.id.mainlayout, afFragment).commit();
             }
         });
+        mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         if (Config.isOnline(mContext)) {
             ApiFavList();
         } else {
@@ -1462,6 +1465,8 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
     ExpandableListAdapter adapter;
     boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
     void setItems() {
+
+
         mTodayTokens_Checkins.clear();
         mCheckOldList.clear();
         mCheckFutureList.clear();
@@ -1480,6 +1485,8 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         mCheckFutureList = db.getMyCheckinList("future");
         txtTokens.setText("Tokens ("+ (getTokensCount(mTodayTokens_Checkins) + getTokensCount((mCheckFutureList))) + ")");
         txtCheckins.setText("Check-Ins ("+(getCheckinsCount(mTodayTokens_Checkins) + getCheckinsCount((mCheckFutureList)))+")");
+        if (mDialog.isShowing())
+            Config.closeDialog(getActivity(), mDialog);
         // Adding header and childs to hash map
         hashMap.put(header.get(0), mTodayTokens_Checkins);
         hashMap.put(header.get(1), mCheckFutureList);
@@ -1497,6 +1504,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         if ((mTodayTokens_Checkins.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) || mOldFlag) {
             expandlist.expandGroup(2);
         }
+
     }
     ExpandableListAdapterAppointment adapterAppointment;
     boolean mTodayFlagAppointment = false, mOldFlagAppointment = false, mFutureFlagAppointment = false;
@@ -1521,7 +1529,6 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         if ((mAppointmentTodayList.size() == 0 && mAppointmentFutureList.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
             expandlistAppointment.expandGroup(2);
         }
-
 
     }
 

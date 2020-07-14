@@ -128,6 +128,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
     ArrayList<String> imagePathList = new ArrayList<>();
     private Uri mImageUri;
     EditText edt_message;
+    Dialog mDialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -176,6 +177,8 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             });
             alertDialog.show();
         }
+        mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         if (Config.isOnline(mContext)) {
             ApiFavList();
         } else {
@@ -1227,6 +1230,8 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         hashMap.put(header.get(0), mCheckTodayList);
         hashMap.put(header.get(1), mCheckFutureList);
         hashMap.put(header.get(2), mCheckOldList);
+        if (mDialog.isShowing())
+            Config.closeDialog(getActivity(), mDialog);
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
         expandlist.setAdapter(adapter);
