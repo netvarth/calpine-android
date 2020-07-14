@@ -31,7 +31,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -224,7 +226,9 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
     private void ApiTodayChekInList(final Location location) {
         final ApiInterface apiService =
                 ApiClient.getClient(LiveTrackService.this).create(ApiInterface.class);
-        Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("waitlistStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn(filter);
         call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {

@@ -695,10 +695,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         //  tv_editphone = findViewById(R.id.txteditphone);
 
         final Date currentTimes = new Date();
-        final SimpleDateFormat sdfs = new SimpleDateFormat(
-                "dd-MM-yyyy", Locale.US);
-        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdfs.format(currentTimes));
+        final SimpleDateFormat sdfss = new SimpleDateFormat(
+                "yyyy-MM-dd", Locale.US);
+        sdfss.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdfss.format(currentTimes));
 
         earliestAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -710,7 +710,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 appDate.putExtra("accountId", modifyAccountID);
                 appDate.putExtra("id", id);
                 if(txtWaitTime.getText().toString().contains("Today")){
-                    appDate.putExtra("selectDate", sdfs.format(currentTimes));
+                    appDate.putExtra("selectDate", sdfss.format(currentTimes));
                 }
                 else{
                 appDate.putExtra("selectDate",txtWaitTime.getText().toString());}
@@ -720,9 +720,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         });
 
 
-
-        System.out.println("UTC time: " + sdfs.format(currentTimes));
-        txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
+        final Date currentTimess = new Date();
+        final SimpleDateFormat sdfs = new SimpleDateFormat(
+                "dd-MM-yyyy", Locale.US);
+        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdfs.format(currentTimess));
+        txtWaitTime.setText("Today\n" + sdfs.format(currentTimess));
 
         txtWaitTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -734,7 +737,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 appDate.putExtra("accountId", modifyAccountID);
                 appDate.putExtra("id", id);
                 if(txtWaitTime.getText().toString().contains("Today")){
-                    appDate.putExtra("selectDate", sdfs.format(currentTimes));
+                    appDate.putExtra("selectDate", sdfss.format(currentTimes));
                 }
                 else{
                     appDate.putExtra("selectDate",txtWaitTime.getText().toString());}
