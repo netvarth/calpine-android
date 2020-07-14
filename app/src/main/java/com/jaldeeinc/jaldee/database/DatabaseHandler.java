@@ -814,14 +814,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         profile.setGender(cursor.getString(7));
         profile.setDob(cursor.getString(8));
 
-
         db.setTransactionSuccessful();
         db.endTransaction();
         db.close();
-
         return profile;
-
-
     }
 
     public ArrayList<SearchModel> getPopularSearch(String sectorName) {
@@ -851,10 +847,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.setTransactionSuccessful();
         db.endTransaction();
         db.close();
-
         return searchModelList;
-
-
     }
 
     public ArrayList<Domain_Spinner> getDomain() {

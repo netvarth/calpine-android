@@ -189,7 +189,7 @@ public interface ApiInterface {
     Call<ResponseBody> logOut();
 
     @GET("consumer/waitlist")
-    Call<ArrayList<ActiveCheckIn>> getActiveCheckIn();
+    Call<ArrayList<ActiveCheckIn>> getActiveCheckIn(@QueryMap(encoded = true) Map<String, String> query);
 
     @GET("consumer/payment")
     Call<ArrayList<MyPayments>> getMyPayments();
@@ -198,7 +198,7 @@ public interface ApiInterface {
     Call<MyPayments> getMyPaymentsDetails(@Path("id") String id);
 
     @GET("consumer/appointment")
-    Call<ArrayList<ActiveAppointment>> getActiveAppointment();
+    Call<ArrayList<ActiveAppointment>> getActiveAppointment(@QueryMap(encoded = true) Map<String, String> query);
 
 
     @GET("consumer/waitlist/{uuid}")
@@ -298,16 +298,16 @@ public interface ApiInterface {
 
 
     @GET("consumer/waitlist/history")
-    Call<ArrayList<ActiveCheckIn>> getCheckInList(/*@QueryMap(encoded = true) Map<String, String>   query*/);
+    Call<ArrayList<ActiveCheckIn>> getCheckInList(@QueryMap(encoded = true) Map<String, String>   query);
 
     @GET("consumer/appointment/history")
-    Call<ArrayList<ActiveAppointment>> getAppointmentList(/*@QueryMap(encoded = true) Map<String, String>   query*/);
+    Call<ArrayList<ActiveAppointment>> getAppointmentList(@QueryMap(encoded = true) Map<String, String>   query);
 
     @GET("consumer/waitlist/future")
-    Call<ArrayList<ActiveCheckIn>> getFutureCheckInList();
+    Call<ArrayList<ActiveCheckIn>> getFutureCheckInList(@QueryMap(encoded = true) Map<String, String>   query);
 
     @GET("consumer/appointment/future")
-    Call<ArrayList<ActiveAppointment>> getFutureAppointmentList();
+    Call<ArrayList<ActiveAppointment>> getFutureAppointmentList(@QueryMap(encoded = true) Map<String, String>   query);
 
 
     @POST("consumer/communications")

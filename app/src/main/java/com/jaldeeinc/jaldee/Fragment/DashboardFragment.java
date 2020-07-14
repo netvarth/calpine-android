@@ -80,8 +80,10 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -1245,8 +1247,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
-
             }
         });
 
@@ -1261,42 +1261,27 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-        Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
-
-
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("waitlistStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn(filter);
         call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL------ACTIVE CHECKIN---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     activeCheckin = false;
                     if (response.code() == 200) {
-
-
                         Config.logV("Response--Array size--Active-----------------------" + response.body());
-
                         if (response.body().size() > 0) {
                             txt_sorry.setVisibility(View.GONE);
                             MActiveList.clear();
                                 MActiveList = response.body();
                                 Log.i("fghhgf",new Gson().toJson(MActiveList));
                             Config.logV("MActiveList----------------------" + MActiveList.size());
-                            for(int i=0;i<MActiveList.size();i++) {
-                                if (MActiveList.get(i).getWaitlistStatus().equalsIgnoreCase("failed") || MActiveList.get(i).getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-                                    MActiveList.remove(i);
-                                    i = i-1;
-
-                                }
-                            }
                             if (MActiveList.size() > 0) {
-
                                 db = new DatabaseHandler(mContext);
                                 db.DeleteCheckin();
                                 db.insertCheckinInfo(MActiveList);
@@ -1324,14 +1309,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         }
                     } else {
                         // Toast.makeText(mContext,response.errorBody().string(),Toast.LENGTH_SHORT).show();
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1340,39 +1321,24 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
     private void ApiTodayAppointmentList() {
         Config.logV("API TODAY Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveAppointment>> call = apiService.getActiveAppointment();
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("apptStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveAppointment>> call = apiService.getActiveAppointment(filter);
         call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
                 try {
-
                     if (response.code() == 200) {
-
                         if (response.body().size() > 0) {
                             txt_sorry_appointment.setVisibility(View.GONE);
-
                             MActiveListAppointment = response.body();
-                            for (int i = 0; i < MActiveListAppointment.size(); i++) {
-                                if (MActiveListAppointment.get(i).getApptStatus().equalsIgnoreCase("failed") || MActiveListAppointment.get(i).getApptStatus().equalsIgnoreCase("prepaymentPending")) {
-                                    MActiveListAppointment.remove(i);
-                                    i = i-1;
-
-                                }
-                            }
-
                             if (MActiveListAppointment.size() > 0) {
                                 tv_activeappt.setText("Active Appointments " + "(" + MActiveListAppointment.size() + ")");
                                 LActiveAppointment.setVisibility(View.VISIBLE);
@@ -1392,10 +1358,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             txt_sorry_appointment.setVisibility(View.VISIBLE);
                             LActiveAppointment.setVisibility(View.VISIBLE);
                         }
-
                     } else {
                         if (response.code() != 419) {
-
                         }
                     }
                 } catch (Exception e) {
@@ -1406,16 +1370,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             @Override
             public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
                 // Log error here since request failed
-
             }
         });
-
-
     }
-
     public LanLong getLocationNearBy(double lant, double longt,String typ) {
-
-
         if(typ.equalsIgnoreCase("state")){
             distance = 300;
         }else if(typ.equalsIgnoreCase("city")){
@@ -1427,10 +1385,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }else if(typ.equalsIgnoreCase("capital")){
             distance = 20;
         }
-
-
-
-
         double distInDegree = distance / 111;
         double upperLeftLat = lant - distInDegree;
         double upperLeftLon = longt + distInDegree;
@@ -1439,17 +1393,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         /*double locationRange = '[\'' + lowerRightLat + ',' + lowerRightLon + '\',\'' + upperLeftLat + ',' + upperLeftLon + '\']';
         double retarr = {'locationRange':locationRange, 'upperLeftLat':upperLeftLat, 'upperLeftLon':
         upperLeftLon, 'lowerRightLat':lowerRightLat, 'lowerRightLon':lowerRightLon};*/
-
         LanLong lan = new LanLong();
         lan.setUpperLeftLat(upperLeftLat);
         lan.setUpperLeftLon(upperLeftLon);
         lan.setLowerRightLat(lowerRightLat);
         lan.setLowerRightLon(lowerRightLon);
-
         return lan;
-
     }
-
     public void FunPopularSearch(String sector, String category, String name) {
         String mSector;
         if(mtyp==null){
@@ -1465,16 +1415,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         String querycreate = "";
         mSector = sector;
         Config.logV("Sector--------------" + mSector);
-
         if (category.equalsIgnoreCase("Specializations")) {
             sub = "specialization:" + "'" + name + "'";
             querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
         }
         if (category.equalsIgnoreCase("Sub Domain")) {
-
             sub = "sub_sector:" + "'" + name + "'";
             querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
-
             subdomainquery = "sub_sector:'" + name + "'";
             subdomainName = name;
         }
@@ -1482,19 +1429,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             querycreate = sector;
         } else {
             if (category.equalsIgnoreCase("Suggested Search")) {
-
                 String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf(")"));
                 Config.logV("Second---------" + requiredString);
                 querycreate = requiredString;
-
                 subdomainquery = "sub_sector:'" + name + "'";
                 subdomainName = name;
             }
         }
-
         if (category.equalsIgnoreCase("Business Name as")) {
-
-
             if (mSector.equalsIgnoreCase("All")) {
                 querycreate = "title:" + "'" + name + "'";
             } else {
@@ -1502,21 +1444,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
             }
         }
-
-
         Config.logV("Query-----------" + querycreate);
-
-
         // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
-
-
         String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
-
         Bundle bundle = new Bundle();
        /* bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
         bundle.putString("url", pass);*/
-
-
         //VALID QUERY PASS
         if(sector.indexOf("sub_sector_displayname")!=-1) { // if keyw
             String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf("))"));
@@ -1525,14 +1458,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
-
         Config.logV("Popular Text__________@@@Del111e");
         mSearchView.setQuery("", false);
-
         if(Config.isOnline(getActivity())) {
-
             SearchListFragment pfFragment = new SearchListFragment();
-
             bundle.putString("locName", mCurrentLoc.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
@@ -1556,28 +1485,22 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             mSearchView.clearFocus();
         }
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-
     }
-
     @Override
     public void onResume() {
         super.onResume();
         String s_currentLoc = SharedPreference.getInstance(getActivity()).getStringValue("current_loc", "");
         Config.logV("Current Location---------------------------" + s_currentLoc);
         if (!s_currentLoc.equalsIgnoreCase("no")) {
-
             if (googleApiClient != null) {
                 googleApiClient.connect();
                 Config.logV("Google ONREUME");
-
             } else {
                 setUpGClient();
             }
-
         }
         if (Config.isOnline(getActivity())) {
             Config.logV("Active Checkin------@@@@@@@@@@@--------##########-----" + activeCheckin);
@@ -1585,7 +1508,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 activeCheckin = true;
                 ApiActiveCheckIn();
             }
-
             ApiTodayAppointmentList();
 
         } else {
@@ -1609,12 +1531,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 txt_sorry.setVisibility(View.VISIBLE);
                 LActiveCheckin.setVisibility(View.VISIBLE);
             }
-
         }
-
-
     }
-
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -1627,9 +1545,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         //Do whatever you need
         //You can display a message here
     }
-
-
-
 
     /*@Override
     public void onPause() {
@@ -1682,7 +1597,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }
 
-
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         //You can display a message here
@@ -1690,30 +1604,23 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     private void getMyLocation() {
         if (googleApiClient != null) {
-
             if (googleApiClient.isConnected()) {
-
                 Config.logV("Google api connected granted");
                 int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
-
                     Config.logV("Google api connected granted@2@@@");
                     mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                     LocationRequest locationRequest = new LocationRequest();
                     locationRequest.setInterval(0);        // 10 seconds, in milliseconds
                     locationRequest.setFastestInterval(0); // 1 second, in milliseconds
-
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-
                     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                             .addLocationRequest(locationRequest);
                     builder.setAlwaysShow(true);
                     LocationServices.FusedLocationApi
                             .requestLocationUpdates(googleApiClient, locationRequest, this);
                     //DefaultLocation();
-
                     PendingResult<LocationSettingsResult> result =
                             LocationServices.SettingsApi
                                     .checkLocationSettings(googleApiClient, builder.build());
@@ -1733,7 +1640,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                         mylocation = LocationServices.FusedLocationApi
                                                 .getLastLocation(googleApiClient);
                                     }
-
                                     Config.logV("Google apiClient LocationSettingsStatusCodes.SUCCESS");
                                     break;
                                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
@@ -1743,7 +1649,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                         // Show the dialog by calling startResolutionForResult(),
                                         // and check the result in onActivityResult().
                                         // Ask to turn on GPS automatically
-
                                         Config.logV("Google Ask to turn on GPS automatically");
                                         /*status.startResolutionForResult(getActivity(),
                                                 REQUEST_CHECK_SETTINGS_GPS);*/
@@ -1752,8 +1657,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                         // Ignore the error.
                                         e.printStackTrace();
                                     }
-
-
                                     break;
                                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                                     // Location settings are not satisfied.
@@ -1771,17 +1674,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         // if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
         Config.logV("GPS ON Google ##################");
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS_GPS:
                 Config.logV("GPS ON Google resultCode ##################" + resultCode);
                 switch (resultCode) {
-
                     case RESULT_OK:
                         Config.logV("GPS ON Google");
                         getMyLocation();
@@ -1791,48 +1691,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         //getActivity().finish();
                         DefaultLocation();
                         break;
-
-
                 }
-
                 break;
         }
-       /* if (requestCode == REQUEST_CHECK_SETTINGS_GPS && resultCode == RESULT_OK && data != null) {
-            Config.logV("GPS ON Google");
-            getMyLocation();
-        } else if (requestCode == REQUEST_CHECK_SETTINGS_GPS && resultCode == RESULT_CANCELED) {
-            Config.logV("GPS ON Google Cancelled");
-            //getActivity().finish();
-            DefaultLocation();
-        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-            Config.logV("PayU Monry");
-
-            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
-            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
-
-            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
-
-                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
-                    showAlert("Payment Successful");
-
-                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
-                    showAlert("Payment Cancelled");
-                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
-                    showAlert("Payment Failed");
-                }
-
-            } else if (resultModel != null && resultModel.getError() != null) {
-                Toast.makeText(getActivity(), "Error check log", Toast.LENGTH_SHORT).show();
-            } else {
-                // Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
-            showAlert("Payment Cancelled");
-        }*/
-
-
     }
-
     private void checkPermissions() {
         int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
@@ -1845,15 +1707,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), REQUEST_ID_MULTIPLE_PERMISSIONS);*/
                 requestPermissions(new String[]{
                         Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_ID_MULTIPLE_PERMISSIONS);
-
                 Config.logV("GoogleNot Granted" + permissionLocation);
             }
-
         } else {
             getMyLocation();
         }
     }
-
 
     public void DefaultLocation() {
         Config.logV("Google DEFAULT LOCATION" + mCurrentLoc.getText().toString());
@@ -1872,7 +1731,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 mCurrentLoc.setVisibility(View.VISIBLE);
                 mCurrentLoc.setText("Bengaluru");
             }
-
             //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
         } catch (Exception e) {
             e.printStackTrace();
@@ -1892,16 +1750,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         } else {
             DefaultLocation();
         }
-
     }
-
-
     public static Fragment getHomeFragment() {
         return home;
     }
-
     public void QuerySubmitCLick(String query) {
-
         mSearchView.setQuery("", false);
         if(mtyp==null){
             mtyp = "city";
@@ -1912,30 +1765,24 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         double lowerRightLat = Lanlong.getLowerRightLat();
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
-
         query1 = query;
-
         if (query1.contains(" ")) {
             Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
             query1 = query.replace(" ", "__");
         }
-
         if (query1.contains("'")) {
             Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query1);
             query1 = query1.replace("'", "%5C%27");
         }
-
         if (query1.contains(" ")) {
             Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query1);
             query1 = query1.replace(" ", "%20");
         }
-
         if (query.contains("'")) {
             Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + query);
             query = query.replace("'", "%5C%27");
         }
         Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + query);
-
         String querycreate = "";
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
             if(query.equals("")) {
@@ -1950,26 +1797,16 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 querycreate = "";
             }
         }
-
-
         // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
-
-
         String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
-
         Bundle bundle = new Bundle();
-
-
       /*  bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
         bundle.putString("url", pass);*/
-
         //VALID QUERY PASS
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
-
         if(Config.isOnline(getActivity())) {
             SearchListFragment pfFragment = new SearchListFragment();
-
             bundle.putString("locName", mCurrentLoc.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
@@ -1982,7 +1819,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 bundle.putString("searchtxt", "");
             }
             pfFragment.setArguments(bundle);
-
             bundle.putString("subdomain_select", "false");
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
@@ -1994,50 +1830,34 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }
 
-
     public void SpinnerItemCLick() {
-
         mSearchView.setQuery("", false);
-
         if(mtyp==null){
             mtyp = "city";
         }
-
         LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();
         double lowerRightLon = Lanlong.getLowerRightLon();
         String locationRange = "['" + lowerRightLat + "," + lowerRightLon + "','" + upperLeftLat + "," + upperLeftLon + "']";
-
         String querycreate = "";
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
             querycreate = "sector :'" + mDomainSpinner + "'";
         } else {
             querycreate = " ";
         }
-
         //  Config.logV("Query-----------" + querycreate);
-
-
         // String pass = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
-
-
         String pass = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
-
         Bundle bundle = new Bundle();
-
-
       /*  bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
         bundle.putString("url", pass);*/
-
         //VALID QUERY PASS
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
-
         if(Config.isOnline(getActivity())) {
             SearchListFragment pfFragment = new SearchListFragment();
-
             bundle.putString("locName", mCurrentLoc.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
             bundle.putString("longitude", String.valueOf(longitude));
@@ -2047,8 +1867,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             bundle.putString("typ", mtyp);
             bundle.putString("subdomain_select", "false");
             pfFragment.setArguments(bundle);
-
-
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
             // Store the Fragment in stack
@@ -2059,7 +1877,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }
 
-
     public static boolean UpdateLocation(Double mlatitude, Double mlongitude, String locNme,String typ) {
         Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude + "" + locNme);
         try {
@@ -2067,18 +1884,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             longitude = mlongitude;
             mlocName = locNme;
             mtyp = typ;
-
-
             SharedPreference.getInstance(mContext).setValue("lat", latitude);
             SharedPreference.getInstance(mContext).setValue("longitu", longitude);
             SharedPreference.getInstance(mContext).setValue("locnme", mlocName);
             SharedPreference.getInstance(mContext).setValue("typ", mtyp);
-
-
             SharedPreference.getInstance(mContext).setValue("locnme", mlocName);
             Config.logV("UpdateLocation 4444----" + mlocName);
             mCurrentLoc.setVisibility(View.VISIBLE);
-
             if (mlocName.equalsIgnoreCase("")) {
                 Config.logV("UpdateLocation banglore");
                 latitude = 12.971599;
@@ -2091,21 +1903,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     mCurrentLoc.setText(addresses.get(0).getLocality());
                     //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
                 } catch (Exception e) {
-
                 }
             } else {
                 mCurrentLoc.setText(mlocName);
             }
-
-
             //  SharedPreference.getInstance(mContext).setValue("map_intial","false");
         } catch (Exception e) {
-
         }
-
         return true;
     }
-
     @Override
     public void onStop() {
         super.onStop();
@@ -2118,17 +1924,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             }
         }
     }
-
-
     @Override
     public void onMethodActiveCallback(String value) {
         Bundle bundle = new Bundle();
-
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
-
         bundle.putString("uniqueID", value);
         pfFragment.setArguments(bundle);
-
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
@@ -2152,10 +1953,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             }
         }
         startActivity(iBill);
-
     }
-
-
     @Override
     public void onMethodActivePayIconCallback(String payStatus, final String ynwUUID, String provider, final String accountID, final double amountDue, int customerId) {
         Log.i("Purpose: ", "prePayment");
@@ -2172,112 +1970,4 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
         startActivity(i);
     }
-
-    /*public void PaymentFunc(final String ynwUUID, final String accountID, final double amountDue) {
-        try {
-
-            final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
-            dialog.setContentView(R.layout.prepayment);
-            dialog.show();
-
-            Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-            Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
-            if (showPaytmWallet) {
-                btn_paytm.setVisibility(View.VISIBLE);
-            } else {
-                btn_paytm.setVisibility(View.GONE);
-            }
-            if (showPayU) {
-                btn_payu.setVisibility(View.VISIBLE);
-            } else {
-                btn_payu.setVisibility(View.GONE);
-            }
-
-            final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-            TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
-            txtamt.setText("Rs." + String.valueOf(amountDue));
-            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            txtamt.setTypeface(tyface1);
-            btn_payu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(ynwUUID, String.valueOf(amountDue), accountID, "dashboard");
-                    dialog.dismiss();
-                    // payment.ApiGenerateHash(ynwUUID, sAmountPay, accountID);
-                       *//*
-                        dialog.dismiss();*//*
-
-                }
-            });
-
-            btn_paytm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    PaytmPayment payment = new PaytmPayment(mContext);
-                    // payment.generateCheckSum(sAmountPay);
-                    payment.ApiGenerateHashPaytm(ynwUUID, String.valueOf(amountDue), accountID, mContext, mActivity, "home");
-                    //  payment.ApiGenerateHashPaytm(ynwUUID, sAmountPay, accountID,mCOntext,mActivity);
-                    dialog.dismiss();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
-
-
-
-    /*public static void launchPaymentFlow(String amount, CheckSumModelTest checksumModel) {
-        PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
-
-        // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
-        payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
-
-
-        PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
-        builder.setAmount(convertStringToDouble(amount))
-                .setTxnId(checksumModel.getTxnId())
-                .setPhone(checksumModel.getMobile())
-                // .setProductName(checksumModel.getProductinfo().getPaymentParts().get(0).toString())
-                .setProductName(checksumModel.getProductinfo())
-                .setFirstName(checksumModel.getFirstName())
-                .setEmail(checksumModel.getEmail())
-                .setsUrl(checksumModel.getFirstName())
-                .setfUrl(checksumModel.getFurl())
-                .setUdf1("")
-                .setUdf2("")
-                .setUdf3("")
-                .setUdf4("")
-                .setUdf5("")
-                .setUdf6("")
-                .setUdf7("")
-                .setUdf8("")
-                .setUdf9("")
-                .setUdf10("")
-                .setIsDebug(true)
-                .setKey(checksumModel.getKey())
-                .setMerchantId(checksumModel.getMerchantID());
-
-        try {
-            PayUmoneySdkInitializer.PaymentParam mPaymentParams = builder.build();
-            if (checksumModel.getChecksum().isEmpty() || checksumModel.getChecksum().equals("")) {
-                //  Toast.makeText(mCOntext, "Could not generate hash", Toast.LENGTH_SHORT).show();
-            } else {
-
-
-                mPaymentParams.setMerchantHash(checksumModel.getChecksum());
-                Config.logV("Checksum id---22222222222222--------" + mPaymentParams);
-
-                PayUmoneyFlowManager.startPayUMoneyFlow(mPaymentParams, mActivity, R.style.PayUMoney, true);
-            }
-        } catch (Exception e) {
-            Config.logV("e.getMessage()------" + e.getMessage());
-            Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_LONG).show();
-
-            // mTxvBuy.setEnabled(true);
-        }
-    }*/
 }

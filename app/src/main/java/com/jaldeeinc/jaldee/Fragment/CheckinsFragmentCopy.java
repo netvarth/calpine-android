@@ -14,10 +14,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.MediaScannerConnection;
@@ -40,7 +37,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +60,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
@@ -93,7 +88,6 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.payumoney.sdkui.ui.utils.ToastUtils;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
@@ -104,7 +98,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -125,20 +118,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.support.v4.content.ContextCompat.getSystemService;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapterCallback,ActiveAdapterOnCallback {
-
+public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapterCallback, ActiveAdapterOnCallback {
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
 
     public CheckinsFragmentCopy() {
         // Required empty public constructor
-
     }
 
     String simpleFileName1 = "note1.txt";
@@ -148,7 +137,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     Context mContext;
     Activity mActivity;
     private int PICK_IMAGE_REQUEST = 1;
-
     //  ArrayList<ArrayList<ActiveCheckIn>> mCheckList = new ArrayList<>();
     ArrayList<ActiveCheckIn> mCheckFutureList = new ArrayList<>();
     ArrayList<ActiveAppointment> mCheckFutureListAppointment = new ArrayList<>();
@@ -156,17 +144,14 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     ArrayList<ActiveAppointment> mAppointmentTodayList = new ArrayList<>();
     ArrayList<ActiveCheckIn> mCheckTodayFutureList = new ArrayList<>();
     ArrayList<ActiveAppointment> mAppointmentFutureList = new ArrayList<>();
-
     ArrayList<ActiveCheckIn> mCheckOldList = new ArrayList<>();
-    ArrayList<ActiveAppointment> mAppointmentOldList = new ArrayList<>();
-
-
+    //    ArrayList<ActiveAppointment> mAppointmentOldList = new ArrayList<>();
+    ArrayList<ActiveAppointment> mAppointmentsHistory = new ArrayList<>();
     HistoryAdapterCallback mInterface;
     ActiveAdapterOnCallback mCallback;
     ExpandableListView expandlist;
     ExpandableListView expandlistAppointment;
     /*TextView  tv_notodaychekcin, tv_nofuturecheckin, tv_nocheckold;*/
-
     TextView tv_attach, tv_camera;
     private static final String IMAGE_DIRECTORY = "/demonuts";
     private int CAMERA = 2;
@@ -189,7 +174,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     EditText edt_message;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -199,9 +183,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
         mCallback = (ActiveAdapterOnCallback) this;
-
         Home.doubleBackToExitPressedOnce = false;
-
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //expList = (ExpandableListView) row.findViewById(R.id.exp_list);
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -212,43 +194,32 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         final TextView txtnoappointments = (TextView) row.findViewById(R.id.txtnoappointments);
 //        final TextView txtnodonations = (TextView) row.findViewById(R.id.txtnodonations);
 //        final TextView txtnopaylog = (TextView) row.findViewById(R.id.txtnopaylog);
-
         expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
         expandlistAppointment = (ExpandableListView) row.findViewById(R.id.appointmentView);
-
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setVisibility(View.GONE);
-
-
         LocationManager service = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
         // Check if enabled and if not send user to the GPS settings
         if (!enabled) {
             android.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
             alertDialog.setMessage("To continue, turn on device location, which uses Google location service");
-
             alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
                 }
             });
-
             alertDialog.setPositiveButton("Turn On GPS", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(intent);
                 }
             });
-
             alertDialog.show();
         }
-
         txtCheckins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (expandlist.getVisibility() == View.GONE) {
                     expandlist.setVisibility(View.VISIBLE);
                     txtCheckins.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up_light, 0);
@@ -285,13 +256,10 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 //            }
 //        });
 
-
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setText("My Jaldee");
         tv_title.setTypeface(tyface);
-
-
         if (Config.isOnline(mContext)) {
             ApiFavList();
         } else {
@@ -299,140 +267,110 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             mFavList.clear();
             mFavList = db.getFavouriteID();
         }
-
         if (Config.isOnline(mContext)) {
             ApiTodayChekInList();
-
         } else {
-
             setItems();
         }
         mFutureFlag = false;
         mTodayFlag = false;
         mOldFlag = false;
-
-
         if (Config.isOnline(mContext)) {
-            ApiTodayAppointmentList();
+            getActiveAppoinments();
         }
-
-
         return row;
     }
 
-
-
-
     private void ApiTodayChekInList() {
-
         Config.logV("API TODAY Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
        /* Map<String, String> query = new HashMap<>();
-
         query.put("from", "0");
         query.put("count", "10");*/
-        Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn();
-
-
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("waitlistStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveCheckIn>> call = apiService.getActiveCheckIn(filter);
         call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
                 try {
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         mCheckTodayFutureList.clear();
                         mCheckTodayList.clear();
-
-
                         mCheckTodayFutureList = response.body();
-                        for(int i =0;i<mCheckTodayFutureList.size();i++) {
-                            if (mCheckTodayFutureList.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
-                                mCheckTodayFutureList.remove(i);
-                                i = i -1;
-                            }
-                        }
-                        Log.i("hgfhrty",new Gson().toJson(mCheckTodayFutureList));
-
-
+                        Log.i("hgfhrty", new Gson().toJson(mCheckTodayFutureList));
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mCheckTodayFutureList.size(); i++) {
                             if (date.equalsIgnoreCase(mCheckTodayFutureList.get(i).getDate())) {
                                 mCheckTodayList.add(response.body().get(i));
-                                Log.i("hgfhrty22",new Gson().toJson(mCheckTodayList));
+                                Log.i("hgfhrty22", new Gson().toJson(mCheckTodayList));
                             }
-
                         }
-
                         DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteMyCheckin("today");
                         db.insertMyCheckinInfo(mCheckTodayList);
                         ApiFutureChekInList();
-
-
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
             public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
-
             }
         });
+    }
 
+    /**
+     * * Author Mani E V
+     * * To get Active Checkins [Both Today and Future]
+     */
+    private void getActiveCheckins() {
 
     }
 
-
-    private void ApiTodayAppointmentList() {
+    /**
+     * * Author Mani E V
+     * To get Active Appointments [Both Today and Future]
+     */
+    private void getActiveAppoinments() {
         Config.logV("API TODAY Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveAppointment>> call = apiService.getActiveAppointment();
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("apptStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveAppointment>> call = apiService.getActiveAppointment(filter);
         call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
                 try {
-
                     if (response.code() == 200) {
-
                         mAppointmentFutureList.clear();
                         mAppointmentTodayList.clear();
-
-                        mAppointmentFutureList = response.body();
-                        Log.i("appointment123today",new Gson().toJson(mAppointmentFutureList));
-                        for(int i =0;i<mAppointmentFutureList.size();i++) {
-                            if (mAppointmentFutureList.get(i).getApptStatus().equalsIgnoreCase("failed")) {
-                                mAppointmentFutureList.remove(i);
-                                i = i -1;
-                            }
-                        }
-
+                        mCheckFutureListAppointment.clear();
+                        ArrayList<ActiveAppointment> mActiveAppointments = response.body();
+                        Log.i("appointment123today", new Gson().toJson(mActiveAppointments));
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                        for (int i = 0; i < mAppointmentFutureList.size(); i++) {
-                            if (date.equalsIgnoreCase(mAppointmentFutureList.get(i).getAppmtDate())) {
-                                mAppointmentTodayList.add(response.body().get(i));
-                                Log.i("appointment123456",new Gson().toJson(mAppointmentTodayList));
+                        for (int i = 0; i < mActiveAppointments.size(); i++) {
+                            if (date.equalsIgnoreCase(mActiveAppointments.get(i).getAppmtDate())) {
+                                mAppointmentTodayList.add(mActiveAppointments.get(i));
+                                Log.i("appointment123456", new Gson().toJson(mAppointmentTodayList));
+                            } else {
+                                mAppointmentFutureList.add(mActiveAppointments.get(i));
+                                mCheckFutureListAppointment.add(mActiveAppointments.get(i));
                             }
                         }
-                        ApiFutureAppointmentList();
+                        getHistoryAppointments();
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
@@ -446,216 +384,250 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             @Override
             public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
                 // Log error here since request failed
-
             }
         });
-
-
     }
+
+    /**
+     * * Author Mani E V
+     * To get History Appointments
+     */
+    private void getHistoryAppointments() {
+        final ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("apptStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveAppointment>> call = apiService.getAppointmentList(filter);
+        call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
+                try {
+                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-------------------------" + response.code());
+                    if (response.code() == 200) {
+                        mAppointmentsHistory.clear();
+                        mAppointmentsHistory = response.body();
+                        Log.i("appointment123Old", new Gson().toJson(mAppointmentsHistory));
+                        setItemsAppointment();
+                    } else {
+                        // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
+                // Log error here since request failed
+            }
+        });
+    }
+//    private void ApiOldAppointmentList() {
+//        final ApiInterface apiService =
+//                ApiClient.getClient(mContext).create(ApiInterface.class);
+//
+//        Call<ArrayList<ActiveAppointment>> call = apiService.getAppointmentList();
+//        call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
+//                try {
+//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//                    if (response.code() == 200) {
+//                        mAppointmentOldList.clear();
+//                        mAppointmentOldList = response.body();
+//                        Log.i("appointment123Old",new Gson().toJson(mAppointmentOldList));
+//
+//                        setItemsAppointment();
+//
+//                    } else {
+//                        // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
+//                // Log error here since request failed
+//            }
+//        });
+//    }
+//    private void ApiTodayAppointmentList() {
+//        Config.logV("API TODAY Call");
+//        final ApiInterface apiService =
+//                ApiClient.getClient(mContext).create(ApiInterface.class);
+//
+//        Call<ArrayList<ActiveAppointment>> call = apiService.getActiveAppointment();
+//        call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
+//                try {
+//
+//                    if (response.code() == 200) {
+//
+//                        mAppointmentFutureList.clear();
+//                        mAppointmentTodayList.clear();
+//
+//                        mAppointmentFutureList = response.body();
+//                        Log.i("appointment123today",new Gson().toJson(mAppointmentFutureList));
+//                        for(int i =0;i<mAppointmentFutureList.size();i++) {
+//                            if (mAppointmentFutureList.get(i).getApptStatus().equalsIgnoreCase("failed")) {
+//                                mAppointmentFutureList.remove(i);
+//                                i = i0 -1;
+//                            }
+//                        }
+//
+//                        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+//                        for (int i = 0; i < mAppointmentFutureList.size(); i++) {
+//                            if (date.equalsIgnoreCase(mAppointmentFutureList.get(i).getAppmtDate())) {
+//                                mAppointmentTodayList.add(response.body().get(i));
+//                                Log.i("appointment123456",new Gson().toJson(mAppointmentTodayList));
+//                            }
+//                        }
+//                        ApiFutureAppointmentList();
+//                    } else {
+//                        if (response.code() != 419) {
+//                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
+//                // Log error here since request failed
+//
+//            }
+//        });
+//
+//
+//    }
 
 
     private void ApiOldChekInList() {
-
         Config.logV("API Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
        /* Map<String, String> query = new HashMap<>();
-
         query.put("from", "0");
         query.put("count", "10");*/
-        Call<ArrayList<ActiveCheckIn>> call = apiService.getCheckInList();
-
-
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("apptStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveCheckIn>> call = apiService.getCheckInList(filter);
         call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
                 try {
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         mCheckOldList.clear();
                         mCheckOldList = response.body();
-
                         DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteMyCheckin("old");
                         db.insertMyCheckinInfo(mCheckOldList);
-
                         Config.logV("mCheckList mCheckOldList size-------------------------" + mCheckOldList.size());
-
-
                         setItems();
-
                     } else {
                         // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
             public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
-
             }
         });
-
-
-    }
-    private void ApiOldAppointmentList() {
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveAppointment>> call = apiService.getAppointmentList();
-        call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
-
-                try {
-
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-                        mAppointmentOldList.clear();
-                        mAppointmentOldList = response.body();
-                        Log.i("appointment123Old",new Gson().toJson(mAppointmentOldList));
-
-                        setItemsAppointment();
-
-                    } else {
-                        // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
-                // Log error here since request failed
-
-            }
-        });
-
-
     }
 
     private void ApiFutureChekInList() {
-
         Config.logV("API Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-        Call<ArrayList<ActiveCheckIn>> call = apiService.getFutureCheckInList();
-
-
+        Map<String, String> filter = new HashMap<String, String>();
+        filter.put("waitlistStatus-neq", "failed,prepaymentPending");
+        Call<ArrayList<ActiveCheckIn>> call = apiService.getFutureCheckInList(filter);
         call.enqueue(new Callback<ArrayList<ActiveCheckIn>>() {
             @Override
             public void onResponse(Call<ArrayList<ActiveCheckIn>> call, Response<ArrayList<ActiveCheckIn>> response) {
-
                 try {
-
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         mCheckFutureList.clear();
                         mCheckFutureList = response.body();
-                        for(int i =0;i<mCheckFutureList.size();i++) {
-                            if (mCheckFutureList.get(i).getWaitlistStatus().equalsIgnoreCase("failed")) {
-                                mCheckFutureList.remove(i);
-                                i = i -1;
-                            }
-                        }
-
                         DatabaseHandler db = new DatabaseHandler(mContext);
                         db.DeleteMyCheckin("future");
                         db.insertMyCheckinInfo(mCheckFutureList);
-
                         ApiOldChekInList();
-
-
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
             public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
-
             }
         });
-
-
-    }    private void ApiFutureAppointmentList() {
-
-        Config.logV("API Call");
-        final ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-        Call<ArrayList<ActiveAppointment>> call = apiService.getFutureAppointmentList();
-        call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
-            @Override
-            public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
-                try {
-
-
-                    if (response.code() == 200) {
-                        mCheckFutureListAppointment.clear();
-                        mCheckFutureListAppointment = response.body();
-                        Log.i("appointment123future",new Gson().toJson(mCheckFutureListAppointment));
-                        for(int i =0;i<mCheckFutureListAppointment.size();i++) {
-                            if (mCheckFutureListAppointment.get(i).getApptStatus().equalsIgnoreCase("failed")) {
-                                mCheckFutureListAppointment.remove(i);
-                                i = i -1;
-                            }
-                        }
-
-                        ApiOldAppointmentList();
-
-                    } else {
-                        if (response.code() != 419) {
-                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
-
-            }
-        });
-
-
     }
+//    private void ApiFutureAppointmentList() {
+//
+//        Config.logV("API Call");
+//        final ApiInterface apiService =
+//                ApiClient.getClient(mContext).create(ApiInterface.class);
+//
+//        Call<ArrayList<ActiveAppointment>> call = apiService.getFutureAppointmentList();
+//        call.enqueue(new Callback<ArrayList<ActiveAppointment>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<ActiveAppointment>> call, Response<ArrayList<ActiveAppointment>> response) {
+//                try {
+//
+//
+//                    if (response.code() == 200) {
+//                        mCheckFutureListAppointment.clear();
+//                        mCheckFutureListAppointment = response.body();
+//                        Log.i("appointment123future",new Gson().toJson(mCheckFutureListAppointment));
+//                        for(int i =0;i<mCheckFutureListAppointment.size();i++) {
+//                            if (mCheckFutureListAppointment.get(i).getApptStatus().equalsIgnoreCase("failed")) {
+//                                mCheckFutureListAppointment.remove(i);
+//                                i = i -1;
+//                            }
+//                        }
+//
+//                        ApiOldAppointmentList();
+//
+//                    } else {
+//                        if (response.code() != 419) {
+//                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<ArrayList<ActiveAppointment>> call, Throwable t) {
+//
+//            }
+//        });
+//
+//
+//    }
 
     @Override
     public void onMethodMessageCallback(final String ynwuuid, final String accountID, String providerNAme, final String from) {
@@ -663,7 +635,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
         dialog.setContentView(R.layout.reply);
         dialog.show();
-
         final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
         final Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
         edt_message = (EditText) dialog.findViewById(R.id.edt_message);
@@ -675,31 +646,23 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 "fonts/Montserrat_Bold.otf");
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         txtsendmsg.setText(spannable);
-
         tv_attach = dialog.findViewById(R.id.btn);
         tv_camera = dialog.findViewById(R.id.camera);
         recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
         //  imageview = dialog.findViewById(R.id.iv);
         // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
-
-
         if (ynwuuid != null) {
             requestMultiplePermissions();
             tv_attach.setVisibility(View.VISIBLE);
             tv_camera.setVisibility(View.VISIBLE);
-
-
             tv_attach.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if ((ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-
                                 requestPermissions(new String[]{
                                         permission.READ_EXTERNAL_STORAGE}, GALLERY);
-
                                 return;
                             } else {
                                 Intent intent = new Intent();
@@ -708,7 +671,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
                             }
                         } else {
-
                             Intent intent = new Intent();
                             intent.setType("*/*");
                             intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -720,19 +682,14 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 }
 
             });
-
-
             tv_camera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (ContextCompat.checkSelfPermission(mContext, permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
-
                                 requestPermissions(new String[]{
                                         permission.CAMERA}, CAMERA);
-
                                 return;
                             } else {
                                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -743,7 +700,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                                 startActivityForResult(intent, CAMERA);
                             }
                         } else {
-
                             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                             Intent cameraIntent = new Intent();
                             cameraIntent.setType("image/*");
@@ -758,19 +714,14 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
             });
         }
-
-
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(from.equalsIgnoreCase("checkin")){
+                if (from.equalsIgnoreCase("checkin")) {
                     ApiCommunicate(ynwuuid, String.valueOf(accountID), edt_message.getText().toString(), dialog);
-                }else{
+                } else {
                     ApiCommunicateAppointment(ynwuuid, String.valueOf(accountID), edt_message.getText().toString(), dialog);
                 }
-
-
-
             }
         });
 
@@ -871,11 +822,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == getActivity().RESULT_CANCELED) {
             return;
         }
-
         if (requestCode == GALLERY) {
             if (data != null) {
                 try {
@@ -883,15 +832,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         Uri uri = data.getData();
                         String orgFilePath = getRealPathFromURI(uri, getActivity());
                         String filepath = "";//default fileName
-
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
                         String extension = "";
                         if (uriString.contains(".")) {
                             extension = uriString.substring(uriString.lastIndexOf(".") + 1);
                         }
-
-
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
@@ -903,17 +849,13 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                             return;
                         }
-
-//
                         imagePathList.add(orgFilePath);
-//
-
                         DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
-                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                        if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
                             Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -921,7 +863,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                     e.printStackTrace();
                 }
             }
-
         } else if (requestCode == CAMERA) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             //      imageview.setImageBitmap(bitmap);
@@ -944,13 +885,11 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             recycle_image_attachment.setLayoutManager(mLayoutManager);
             recycle_image_attachment.setAdapter(mDetailFileAdapter);
             mDetailFileAdapter.notifyDataSetChanged();
-            if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+            if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
                 Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
             }
-
         }
     }
-
 
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -963,7 +902,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         if (!wallpaperDirectory.exists()) {
             wallpaperDirectory.mkdirs();
         }
-
         try {
             f = new File(wallpaperDirectory, Calendar.getInstance()
                     .getTimeInMillis() + ".jpg");
@@ -996,13 +934,11 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         if (report.areAllPermissionsGranted()) {
                             Toast.makeText(mContext, "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
                         }
-
                         // check for permanent denial of any permission
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // show alert dialog navigating to Settings
                             //openSettingsDialog();
                             Toast.makeText(mContext, "You Denied the Permissions", Toast.LENGTH_SHORT).show();
-
                         }
                     }
 
@@ -1023,11 +959,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public String getPDFPath(Uri uri) {
-
         final String id = DocumentsContract.getDocumentId(uri);
         final Uri contentUri = ContentUris.withAppendedId(
                 Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
         String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = mActivity.getApplicationContext().getContentResolver().query(contentUri, projection, null, null, null);
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -1064,9 +998,8 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
     }
 
-
     @Override
-    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName,int customerId) {
+    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName, int customerId) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
@@ -1079,37 +1012,26 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
     @Override
     public void onMethodDelecteCheckinCallback(final String ynwuuid, final int accountID, boolean todayFlag, boolean futFlag, boolean oldFlag, final String from) {
-
         mOldFlag = oldFlag;
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
-
         final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
         dialog.setContentView(R.layout.cancelcheckin);
         dialog.show();
-
         Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
         Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
-
-
-
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                if(from.equalsIgnoreCase("checkin")){
+                if (from.equalsIgnoreCase("checkin")) {
                     ApiDeleteCheckin(ynwuuid, String.valueOf(accountID), dialog);
-                }else{
+                } else {
                     ApiDeleteAppointment(ynwuuid, String.valueOf(accountID), dialog);
                 }
-
-
             }
         });
-
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1121,12 +1043,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     @Override
     public void onMethodActiveCallback(String value) {
         Bundle bundle = new Bundle();
-
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
-
         bundle.putString("uniqueID", value);
         pfFragment.setArguments(bundle);
-
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
@@ -1135,7 +1054,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer,int customerId) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer, int customerId) {
         Log.i("Purpose: ", "billPayment");
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
@@ -1148,7 +1067,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     @Override
-    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue,int customerID) {
+    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue, int customerID) {
         Log.i("Purpose: ", "prePayment");
         // APIPayment(accountID, ynwUUID, amountDue);
         Intent i = new Intent(mContext, PaymentActivity.class);
@@ -1158,7 +1077,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
         startActivity(i);
     }
-
 
     @Override
     public void onMethodAddFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
@@ -1174,7 +1092,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
         ApiRemoveFavo(value);
-
     }
 
     @Override
@@ -1182,50 +1099,32 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         mOldFlag = oldFlag;
         mFutureFlag = futFlag;
         mTodayFlag = todayFlag;
-
         ApiRating(accountID, UUID);
     }
 
     BottomSheetDialog dialog;
-
     float rate = 0;
     String comment = "";
 
     private void ApiRating(final String accountID, final String UUID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Map<String, String> query = new HashMap<>();
-
         query.put("account", accountID);
         query.put("uId-eq", UUID);
-
-
         Call<ArrayList<RatingResponse>> call = apiService.getRating(query);
-
         Config.logV("Location-----###########@@@@@@" + query);
-
         call.enqueue(new Callback<ArrayList<RatingResponse>>() {
             @Override
             public void onResponse(Call<ArrayList<RatingResponse>> call, final Response<ArrayList<RatingResponse>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL----------Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--------Message-----------------" + response.code());
-
                     if (response.code() == 200) {
-
-
                         final ArrayList<RatingResponse> mRatingDATA = response.body();
                         Config.logV("Response--code--------BottomSheetDialog-----------------" + response.code());
                         dialog = new BottomSheetDialog(mContext);
@@ -1233,32 +1132,26 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         dialog.setCancelable(true);
                         dialog.show();
                         TextView tv_title = (TextView) dialog.findViewById(R.id.txtratevisit);
-
                         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
                         final RatingBar rating = (RatingBar) dialog.findViewById(R.id.rRatingBar);
-
                         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         tv_title.setTypeface(tyface);
                         final Button btn_close = (Button) dialog.findViewById(R.id.btn_cancel);
-
                         final Button btn_rate = (Button) dialog.findViewById(R.id.btn_send);
                         btn_rate.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 rate = rating.getRating();
                                 comment = edt_message.getText().toString();
-
                                 if (response.body().size() == 0) {
                                     firstTimeRating = true;
                                 } else {
                                     firstTimeRating = false;
                                 }
                                 ApiPUTRating(Math.round(rate), UUID, comment, accountID, dialog, firstTimeRating);
-
                             }
                         });
-
                         edt_message.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void afterTextChanged(Editable arg0) {
@@ -1285,31 +1178,21 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                             @Override
                             public void onClick(View v) {
                                 dialog.dismiss();
-
-
                             }
                         });
-
                         if (response.body().size() > 0) {
                             if (mRatingDATA.get(0).getStars() != 0) {
                                 rating.setRating(Float.valueOf(mRatingDATA.get(0).getStars()));
                             }
-
-
                             if (mRatingDATA.get(0).getFeedback() != null) {
                                 Config.logV("Comments---------" + mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
                                 edt_message.setText(mRatingDATA.get(0).getFeedback().get(mRatingDATA.get(0).getFeedback().size() - 1).getComments());
                             }
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1318,24 +1201,15 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
-
     private void ApiPUTRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("uuid", UUID);
@@ -1347,44 +1221,31 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call;
         if (firstTimerate) {
             call = apiService.PostRating(accountID, body);
         } else {
             call = apiService.PutRating(accountID, body);
         }
-
         Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     Config.logV("URL-------Request---" + response.raw().request().url().toString().trim());
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     dialog.dismiss();
                     Config.logV("Put Rating#########################" + response.code());
                     if (response.code() == 200) {
-
-
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Rated successfully", Toast.LENGTH_LONG).show();
                             ApiTodayChekInList();
-
                         }
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1393,11 +1254,8 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
     private String getFileNameByUri(Context context, Uri uri) {
@@ -1407,13 +1265,10 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         if (uri.getScheme().toString().compareTo("content") == 0) {
             Cursor cursor = context.getContentResolver().query(uri, new String[]{android.provider.MediaStore.Images.ImageColumns.DATA, MediaStore.Images.Media.ORIENTATION}, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
             cursor.moveToFirst();
-
             String mImagePath = cursor.getString(column_index);
             cursor.close();
             filepath = mImagePath;
-
         } else if (uri.getScheme().compareTo("file") == 0) {
             try {
                 file = new File(new URI(uri.toString()));
@@ -1430,8 +1285,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
     }
 
     private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
@@ -1458,8 +1311,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
@@ -1469,38 +1320,27 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), requestBody);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         imagePathList.clear();
                         dialog.dismiss();
-
-
                     } else {
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1509,18 +1349,11 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
-
-
     private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-
-
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
@@ -1546,8 +1379,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
@@ -1557,38 +1388,27 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call = apiService.AppointmentMessage(waitListId, String.valueOf(accountID), requestBody);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         imagePathList.clear();
                         dialog.dismiss();
-
-
                     } else {
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1597,13 +1417,9 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
 
     private void ApiDeleteCheckin(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
 
@@ -1663,57 +1479,36 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
             }
         });
-
-
     }
 
     private void ApiDeleteAppointment(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ResponseBody> call = apiService.deleteAppointment(ynwuuid, String.valueOf(accountID));
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
-
                             Toast.makeText(mContext, "Appointment cancelled successfully", Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                             ApiFavList();
-
                         }
-
-
                     } else {
                         if (response.code() != 419) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1722,59 +1517,38 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     private void ApiAddFavo(int providerID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Call<ResponseBody> call = apiService.AddFavourite(providerID);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
-
                             ApiFavList();
                             Toast.makeText(mContext, "Added to Favourites", Toast.LENGTH_LONG).show();
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1786,28 +1560,19 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
             }
         });
-
-
     }
 
     ArrayList<FavouriteModel> mFavList = new ArrayList<>();
 
     private void ApiFavList() {
-
         Config.logV("API FAV Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
         Call<ArrayList<FavouriteModel>> call = apiService.getFavourites();
-
-
         call.enqueue(new Callback<ArrayList<FavouriteModel>>() {
             @Override
             public void onResponse(Call<ArrayList<FavouriteModel>> call, Response<ArrayList<FavouriteModel>> response) {
-
                 try {
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
 
@@ -1819,69 +1584,45 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         db.insertFavIDInfo(response.body());
                         mFavList = db.getFavouriteID();
                         ApiTodayChekInList();
-                        ApiTodayAppointmentList();
-
-
+                        // ApiTodayAppointmentList();
+                        getActiveAppoinments();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
             public void onFailure(Call<ArrayList<FavouriteModel>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
-
             }
         });
-
-
     }
 
     private void ApiRemoveFavo(int providerID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Call<ResponseBody> call = apiService.DeleteFavourite(providerID);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Removed from favourites", Toast.LENGTH_LONG).show();
                             ApiFavList();
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1890,63 +1631,42 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
     ExpandableListAdapter adapter;
-
     boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
-
     void setItems() {
-
-
         mCheckTodayList.clear();
         mCheckOldList.clear();
         mCheckFutureList.clear();
-
         // Array list for header
         ArrayList<String> header = new ArrayList<String>();
-
-
         // Hash map for both header and child
         HashMap<String, ArrayList<ActiveCheckIn>> hashMap = new HashMap<String, ArrayList<ActiveCheckIn>>();
-
         // Adding headers to list
         header.add("Today");
         header.add("Future");
         header.add("Old");
         // Adding child data
-
-
         DatabaseHandler db = new DatabaseHandler(mContext);
-
         mCheckTodayList = db.getMyCheckinList("today");
         mCheckOldList = db.getMyCheckinList("old");
         mCheckFutureList = db.getMyCheckinList("future");
-
-
         Config.logV("Today---#####----" + mCheckTodayList.size() + "" + mTodayFlag);
         Config.logV("Futrue-------" + mCheckFutureList.size() + "" + mFutureFlag);
         Config.logV("Old-------" + mCheckOldList.size() + "" + mOldFlag);
-
         // Adding header and childs to hash map
         hashMap.put(header.get(0), mCheckTodayList);
         hashMap.put(header.get(1), mCheckFutureList);
         hashMap.put(header.get(2), mCheckOldList);
-
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
         adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
         // Setting adpater over expandablelistview
         expandlist.setAdapter(adapter);
         expandlist.setVerticalScrollBarEnabled(false);
         adapter.notifyDataSetChanged();
-
-
         if (mCheckTodayList.size() > 0 || mTodayFlag)
             expandlist.expandGroup(0);
         if (mCheckFutureList.size() > 0 || mFutureFlag)
@@ -1954,64 +1674,52 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         if ((mCheckTodayList.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) || mOldFlag) {
             expandlist.expandGroup(2);
         }
-
-
     }
 
-
-
     ExpandableListAdapterAppointment adapterAppointment;
-
     boolean mTodayFlagAppointment = false, mOldFlagAppointment = false, mFutureFlagAppointment = false;
 
     void setItemsAppointment() {
-
-
         ArrayList<String> header = new ArrayList<String>();
         HashMap<String, ArrayList<ActiveAppointment>> hashMap = new HashMap<String, ArrayList<ActiveAppointment>>();
         header.add("Today");
         header.add("Future");
         header.add("Old");
-
-
         hashMap.put(header.get(0), mAppointmentTodayList);
-        hashMap.put(header.get(1), mCheckFutureListAppointment);
-        hashMap.put(header.get(2), mAppointmentOldList);
-
+        hashMap.put(header.get(1), mAppointmentFutureList);
+//        hashMap.put(header.get(1), mCheckFutureListAppointment);
+        hashMap.put(header.get(2), mAppointmentsHistory);
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         adapterAppointment = new ExpandableListAdapterAppointment(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
         expandlistAppointment.setAdapter(adapterAppointment);
         expandlistAppointment.setVerticalScrollBarEnabled(false);
         adapterAppointment.notifyDataSetChanged();
-
-
         if (mAppointmentTodayList.size() > 0 || mTodayFlag)
             expandlistAppointment.expandGroup(0);
-        if (mCheckFutureListAppointment.size() > 0 || mFutureFlag)
+        if (mAppointmentFutureList.size() > 0 || mFutureFlag)
             expandlistAppointment.expandGroup(1);
-        if ((mAppointmentTodayList.size() == 0 && mCheckFutureListAppointment.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
+        if ((mAppointmentTodayList.size() == 0 && mAppointmentFutureList.size() == 0 && mAppointmentsHistory.size() > 0) || mOldFlag) {
             expandlistAppointment.expandGroup(2);
         }
-
-
+//        if (mCheckFutureListAppointment.size() > 0 || mFutureFlag)
+//            expandlistAppointment.expandGroup(1);
+//        if ((mAppointmentTodayList.size() == 0 && mCheckFutureListAppointment.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
+//            expandlistAppointment.expandGroup(2);
+//        }
     }
 
     private void getMyLocation() {
         if (googleApiClient != null) {
-
             if (googleApiClient.isConnected()) {
-
                 Config.logV("Google api connected granted");
                 int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_FINE_LOCATION);
                 if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
-
                     Config.logV("Google api connected granted@2@@@");
                     mylocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                     LocationRequest locationRequest = new LocationRequest();
                     locationRequest.setInterval(0);        // 10 seconds, in milliseconds
                     locationRequest.setFastestInterval(0); // 1 second, in milliseconds
-
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                     LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                             .addLocationRequest(locationRequest);
@@ -2019,7 +1727,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                     LocationServices.FusedLocationApi
                             .requestLocationUpdates(googleApiClient, locationRequest, (LocationListener) this);
                     //DefaultLocation();
-
                     PendingResult<LocationSettingsResult> result =
                             LocationServices.SettingsApi
                                     .checkLocationSettings(googleApiClient, builder.build());
@@ -2039,7 +1746,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                                         mylocation = LocationServices.FusedLocationApi
                                                 .getLastLocation(googleApiClient);
                                     }
-
                                     Config.logV("Google apiClient LocationSettingsStatusCodes.SUCCESS");
                                     break;
                                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
@@ -2058,8 +1764,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                                         // Ignore the error.
                                         e.printStackTrace();
                                     }
-
-
                                     break;
                                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                                     // Location settings are not satisfied.
@@ -2079,13 +1783,10 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
 
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-
         //Setting Dialog Title
-     //   alertDialog.setTitle("GPSAlertDialogTitle");
-
+        //   alertDialog.setTitle("GPSAlertDialogTitle");
         //Setting Dialog Message
         alertDialog.setMessage("To continue, turn on device location");
-
         //On Pressing Setting button
         alertDialog.setPositiveButton("action_settings", new DialogInterface.OnClickListener() {
 
@@ -2095,7 +1796,6 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                 mContext.startActivity(intent);
             }
         });
-
         //On pressing cancel button
         alertDialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 
