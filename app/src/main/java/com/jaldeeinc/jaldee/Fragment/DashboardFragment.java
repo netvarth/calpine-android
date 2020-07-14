@@ -423,8 +423,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active, mInterface);
                 mRecycleActive.setAdapter(activeAdapter);
                 activeAdapter.notifyDataSetChanged();
+                mRecycleActive.setVisibility(View.VISIBLE);
+
             } else {
 
+                mRecycleActive.setVisibility(View.GONE);
                 tv_activechkin.setText("Active Check-ins ");
                 txt_sorry.setVisibility(View.VISIBLE);
                 LActiveCheckin.setVisibility(View.VISIBLE);
@@ -1308,10 +1311,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active, mInterface);
                                 mRecycleActive.setAdapter(activeAdapter);
                                 activeAdapter.notifyDataSetChanged();
+                                mRecycleActive.setVisibility(View.VISIBLE);
                             } else {
                                 LActiveCheckin.setVisibility(View.VISIBLE);
+
                             }
                         } else {
+                            mRecycleActive.setVisibility(View.GONE);
                             tv_activechkin.setText("Active Check-ins ");
                             txt_sorry.setVisibility(View.VISIBLE);
                             LActiveCheckin.setVisibility(View.VISIBLE);
@@ -1376,10 +1382,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 activeAdapterAppointment = new ActiveAppointmentAdapter(MActiveListAppointment, mContext, getActivity(), active, mInterface);
                                 mRecycleAppointment.setAdapter(activeAdapterAppointment);
                                 activeAdapterAppointment.notifyDataSetChanged();
+                                mRecycleAppointment.setVisibility(View.VISIBLE);
                             } else {
                                 LActiveAppointment.setVisibility(View.VISIBLE);
                             }
                          } else {
+                            mRecycleAppointment.setVisibility(View.GONE);
                             tv_activeappt.setText("Active Appointments ");
                             txt_sorry_appointment.setVisibility(View.VISIBLE);
                             LActiveAppointment.setVisibility(View.VISIBLE);
@@ -1593,8 +1601,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active, mInterface);
                 mRecycleActive.setAdapter(activeAdapter);
                 activeAdapter.notifyDataSetChanged();
-            } else {
+                mRecycleActive.setVisibility(View.VISIBLE);
 
+            } else {
+                mRecycleActive.setVisibility(View.GONE);
                 tv_activechkin.setText("Active Check-ins ");
                 txt_sorry.setVisibility(View.VISIBLE);
                 LActiveCheckin.setVisibility(View.VISIBLE);

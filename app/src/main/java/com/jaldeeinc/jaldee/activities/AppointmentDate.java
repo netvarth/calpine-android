@@ -50,6 +50,7 @@ import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
 
 public class AppointmentDate<mAdapter> extends AppCompatActivity {
      ArrayList timeslot = new ArrayList();
+     ArrayList timeslotFormat = new ArrayList();
      RecyclerView recycle_timeslots;
      TimeSlotsAdapter sAdapter;
      TextView  tv_noavail_slot;
@@ -120,6 +121,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
             accountId = extras.getString("accountId");
             schdId = extras.getString("id");
             selectDate = extras.getString("selectDate");
+            timeslotFormat = extras.getStringArrayList("timeslotsFormat");
         }
         try {
             cv.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(selectDate).getTime(), true, true);
@@ -132,7 +134,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
             tv_noavail_slot.setVisibility(View.GONE);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
         recycle_timeslots.setLayoutManager(mLayoutManager);
-        sAdapter = new TimeSlotsAdapter(timeslot,timeslotsFormat);
+        sAdapter = new TimeSlotsAdapter(timeslotFormat,timeslot);
         recycle_timeslots.setAdapter(sAdapter);
         sAdapter.notifyDataSetChanged();
         } else{

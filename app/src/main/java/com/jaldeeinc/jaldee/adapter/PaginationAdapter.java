@@ -845,7 +845,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                                 myViewHolder.tv_qmessage.setTextColor(context.getResources().getColor(R.color.red));
                               //  myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                                myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                            //    myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                                 disableCheckinButton(myViewHolder,searchdetailList);
 
                             }
@@ -870,18 +870,23 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     if(searchdetailList.isOnlineCheckIn() && searchdetailList.isAvailableToday() && formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())){
                                         myViewHolder.btncheckin.setVisibility(View.VISIBLE);
                                         myViewHolder.L_services.setVisibility(View.VISIBLE);
+                                        myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
                                     }else{
                                         myViewHolder.btncheckin.setVisibility(View.GONE);
                                        // myViewHolder.L_services.setVisibility(View.GONE);
+                                        myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+
                                     }
                                 }
                             }else{
                                 myViewHolder.L_checkin.setVisibility(View.GONE);
                                 myViewHolder.L_services.setVisibility(View.GONE);
+                                myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                             }
                         }else{
                             myViewHolder.L_checkin.setVisibility(View.GONE);
                             myViewHolder.L_services.setVisibility(View.GONE);
+                            myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                         }
 
 
@@ -890,7 +895,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if(searchdetailList.getAvail_date()!=null){
                             if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) { // if Today
                               //  myViewHolder.tv_WaitTime.setVisibility(View.INVISIBLE);
-                                myViewHolder.tv_peopleahead.setVisibility(View.INVISIBLE);
+                           //     myViewHolder.tv_peopleahead.setVisibility(View.INVISIBLE);
 
                                 if (searchdetailList.isOnlineCheckIn()) {
 //                                    enableCheckinButton(myViewHolder);
@@ -911,11 +916,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         if (searchdetailList.isShowToken()) {
                                             myViewHolder.btncheckin.setText("GET TOKEN");
-                                            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+                                        //    myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
                                             noCalcShowToken(searchdetailList, myViewHolder);
                                         } else {
                                           //  myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                                            myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                                       //     myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                                         }
 
 
@@ -929,11 +934,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                                         if (searchdetailList.isShowToken()) {
                                             myViewHolder.btncheckin.setText("GET TOKEN");
-                                            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+                                       //     myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
                                             noCalcShowToken(searchdetailList, myViewHolder);
                                         } else {
                                          //   myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                                            myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                                       //     myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                                         }
 
                                     setFutureDateCheckin(searchdetailList, myViewHolder,position);
@@ -941,8 +946,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             } else {
                                 disableCheckinButton(myViewHolder,searchdetailList);
                            //     myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                                myViewHolder.tv_peopleahead.setVisibility(View.GONE);
-                                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                          //      myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                            //    myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                             }
                         }
 
@@ -1683,7 +1688,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     if (searchdetailList.getFuture_checkins() != null && mQueueList.get(i).getNextAvailableQueue()!=null) {
                                         if(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()!=null){
                                             if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
-                                                myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
+                                              //  myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
                                                 myViewHolder.L_services.setVisibility(View.VISIBLE);
                                                 myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
                                                     @Override
@@ -1710,24 +1715,24 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                                     }
                                                 });
                                             } else {
-                                                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                                             //   myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                                                // myViewHolder.L_services.setVisibility(View.GONE);
                                             }
                                         }else {
-                                            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                                          //  myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                                           //  myViewHolder.L_services.setVisibility(View.GONE);
                                         }
                                     } else {
-                                        myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                                      //  myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                                         myViewHolder.L_services.setVisibility(View.GONE);
                                     }
 
                                 }else {
-                                    myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                                 //   myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                                     myViewHolder.L_services.setVisibility(View.GONE);
                                 }
                             }else {
-                                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                               // myViewHolder.tv_Futuredate.setVisibility(View.GONE);
                                 myViewHolder.L_services.setVisibility(View.GONE);
                             }
 
@@ -1740,7 +1745,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
-            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+         //   myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
             disableCheckinButton(myViewHolder,searchdetailList);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -1768,7 +1773,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
     //    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-        myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+    //    myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
 
     }
 
@@ -1793,7 +1798,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
                 }
                 myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
-                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+          //      myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
 //            } else {
 //             //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
 ////                String firstWord = String.valueOf(searchdetailList.getPersonAhead());
@@ -1814,7 +1819,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                }
 
                 myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
-                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+          //      myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
             }
         }
 

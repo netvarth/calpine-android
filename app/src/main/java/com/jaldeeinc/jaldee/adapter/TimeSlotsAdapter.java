@@ -29,7 +29,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. Ti
     String selectTimeslot = "";
 
 
-    public  TimeSlotsAdapter(ArrayList timeSlotsFormat, ArrayList timeSlots) {
+    public TimeSlotsAdapter(ArrayList timeSlotsFormat, ArrayList timeSlots) {
         this.timeSlotsFormat = timeSlotsFormat;
         this.timeSlots = timeSlots;
 

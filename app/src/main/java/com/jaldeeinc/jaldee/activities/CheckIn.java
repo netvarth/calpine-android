@@ -1856,7 +1856,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                         if (mQueueTimeSlotList.size() > 0) {
                             i = 0;
-                            if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("Ml")))) {
+                          //  if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("Ml")))) {
                                 tv_personahead.setVisibility(View.VISIBLE);
 
 
@@ -1866,10 +1866,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 Spannable spannable = new SpannableString(secondWord + '\n' + firstWord);
                                 tv_personahead.setText(spannable);
 
-                            }
-                            else{
-                                tv_personahead.setVisibility(View.GONE);
-                            }
+                        //    }
+                       //     else{
+                           //     tv_personahead.setVisibility(View.GONE);
+                          //  }
                         }
 
                         if (mQueueTimeSlotList.size() == 1) {
@@ -2118,7 +2118,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
 //                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
-                                    if (mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Ml")))) {
+                               //     if (mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Ml")))) {
                                         tv_personahead.setVisibility(View.VISIBLE);
 
 
@@ -2128,14 +2128,14 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                         Spannable spannable = new SpannableString(secondWord + '\n' + firstWord);
                                         tv_personahead.setText(spannable);
 
-                                    }
-                                    else{
-                                        tv_personahead.setVisibility(View.GONE);
-                                    }
+                               //     }
+//                                    else{
+//                                        tv_personahead.setVisibility(View.GONE);
+//                                    }
 
-                                    String firstWord = null;
+                                     firstWord = null;
 
-                                    String secondWord = null;
+                                     secondWord = null;
                                     try {
                                         String startTime = "00:00";
                                         String newtime;
@@ -2266,7 +2266,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                         }
                                     }
 
-                                    Spannable spannable = new SpannableString(firstWord +'\n' + secondWord);
+                                    spannable = new SpannableString(firstWord +'\n' + secondWord);
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -2341,7 +2341,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
 //                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
-                                    if (mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Ml")))) {
+                                 //   if (mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Ml")))) {
                                         tv_personahead.setVisibility(View.VISIBLE);
 
 
@@ -2351,19 +2351,19 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                         Spannable spannable = new SpannableString(secondWord + '\n' + firstWord);
                                         tv_personahead.setText(spannable);
 
-                                    }
-                                    else{
-                                        tv_personahead.setVisibility(View.GONE);
-                                    }
+//                                    }
+//                                    else{
+//                                        tv_personahead.setVisibility(View.GONE);
+//                                    }
 
 
                                     if (mQueueTimeSlotList.get(i).getId() != 0) {
                                         queueId = mQueueTimeSlotList.get(i).getId();
                                     }
 
-                                    String firstWord = null;
+                                     firstWord = null;
 
-                                    String secondWord = null;
+                                     secondWord = null;
                                     try {
                                         String startTime = "00:00";
                                         String newtime;
@@ -2492,7 +2492,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                         }
                                     }
 
-                                    Spannable spannable = new SpannableString(firstWord + '\n' + secondWord);
+                                    spannable = new SpannableString(firstWord + '\n' + secondWord);
                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                             "fonts/Montserrat_Bold.otf");
                                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

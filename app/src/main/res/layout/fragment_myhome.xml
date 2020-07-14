@@ -262,7 +262,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycleActive"
                         android:layout_width="match_parent"
-                        android:layout_height="500dp">
+                        android:layout_height="300dp">
 
                     </android.support.v7.widget.RecyclerView>
                 </LinearLayout>
@@ -292,14 +292,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/padding5"
-                        android:text=" No Active Appointment "
+                        android:text=" No Active Appointments "
                         android:textColor="@color/title_grey"
                         android:visibility="gone" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycleActiveAppointment"
                         android:layout_width="match_parent"
-                        android:layout_height="500dp"
+                        android:layout_height="300dp"
                         >
 
                     </android.support.v7.widget.RecyclerView>

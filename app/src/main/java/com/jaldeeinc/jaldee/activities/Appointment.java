@@ -694,26 +694,33 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         tv_addmember = findViewById(R.id.txtaddmember);
         //  tv_editphone = findViewById(R.id.txteditphone);
 
+        final Date currentTimes = new Date();
+        final SimpleDateFormat sdfs = new SimpleDateFormat(
+                "dd-MM-yyyy", Locale.US);
+        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdfs.format(currentTimes));
 
         earliestAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
-                appDate.putExtra("timeslots", timeslotsFormat);
+                appDate.putExtra("timeslots", timeslots);
                 appDate.putExtra("serviceId", serviceId);
                 appDate.putExtra("mSpinnertext", mSpinnertext);
                 appDate.putExtra("accountId", modifyAccountID);
                 appDate.putExtra("id", id);
-                appDate.putExtra("selectDate",txtWaitTime.getText().toString());
+                if(txtWaitTime.getText().toString().contains("Today")){
+                    appDate.putExtra("selectDate", sdfs.format(currentTimes));
+                }
+                else{
+                appDate.putExtra("selectDate",txtWaitTime.getText().toString());}
+                appDate.putExtra("timeslotsFormat", timeslotsFormat);
                 startActivity(appDate);
             }
         });
 
 
-        Date currentTimes = new Date();
-        final SimpleDateFormat sdfs = new SimpleDateFormat(
-                "dd-MM-yyyy", Locale.US);
-        sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
+
         System.out.println("UTC time: " + sdfs.format(currentTimes));
         txtWaitTime.setText("Today\n" + sdfs.format(currentTimes));
 
@@ -721,12 +728,17 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             @Override
             public void onClick(View v) {
                 Intent appDate = new Intent(v.getContext(), AppointmentDate.class);
-                appDate.putExtra("timeslots", timeslotsFormat);
+                appDate.putExtra("timeslots", timeslots);
                 appDate.putExtra("serviceId", serviceId);
                 appDate.putExtra("mSpinnertext", mSpinnertext);
                 appDate.putExtra("accountId", modifyAccountID);
                 appDate.putExtra("id", id);
-                appDate.putExtra("selectDate",txtWaitTime.getText().toString());
+                if(txtWaitTime.getText().toString().contains("Today")){
+                    appDate.putExtra("selectDate", sdfs.format(currentTimes));
+                }
+                else{
+                    appDate.putExtra("selectDate",txtWaitTime.getText().toString());}
+                appDate.putExtra("timeslotsFormat", timeslotsFormat);
                 startActivity(appDate);
             }
         });
