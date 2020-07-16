@@ -425,6 +425,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active, mInterface);
                 mRecycleActive.setAdapter(activeAdapter);
                 activeAdapter.notifyDataSetChanged();
+                mRecycleActive.setNestedScrollingEnabled(false);
                 mRecycleActive.setVisibility(View.VISIBLE);
 
             } else {
@@ -1296,6 +1297,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active, mInterface);
                                 mRecycleActive.setAdapter(activeAdapter);
                                 activeAdapter.notifyDataSetChanged();
+                                mRecycleActive.setNestedScrollingEnabled(false);
                                 mRecycleActive.setVisibility(View.VISIBLE);
                             } else {
                                 LActiveCheckin.setVisibility(View.VISIBLE);
@@ -1523,6 +1525,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 activeAdapter = new ActiveCheckInAdapter(MActiveList, mContext, getActivity(), active, mInterface);
                 mRecycleActive.setAdapter(activeAdapter);
                 activeAdapter.notifyDataSetChanged();
+                mRecycleActive.setNestedScrollingEnabled(false);
                 mRecycleActive.setVisibility(View.VISIBLE);
 
             } else {

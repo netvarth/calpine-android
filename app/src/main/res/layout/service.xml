@@ -141,6 +141,103 @@
                     android:gravity="center"/>
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_marginRight="@dimen/dimen_5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+        <LinearLayout
+            android:id="@+id/Lminvalue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.5"
+            android:layout_marginTop="@dimen/dimen_10dp">
+
+            <TextView
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Min Amount "
+                android:textColor="#3D3C44"
+
+                android:textSize="@dimen/txtsize_hint" />
+
+            <TextView
+                android:layout_marginTop="@dimen/dimen_2dp"
+                android:id="@+id/txtminValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/customfont"
+                android:text="200"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/Lmaxvalue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.5"
+            android:layout_marginTop="@dimen/dimen_10dp">
+
+            <TextView
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Max Amount "
+                android:textColor="#3D3C44"
+                android:layout_gravity="center"
+                android:textSize="@dimen/txtsize_hint" />
+
+            <TextView
+                android:layout_marginTop="@dimen/dimen_2dp"
+                android:id="@+id/txtmaxvalue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/customfont"
+                android:text="200"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                android:textStyle="bold"
+                android:gravity="center"/>
+        </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Lmultiples"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/padding5"
+            android:layout_marginTop="@dimen/dimen_10dp">
+
+            <TextView
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Multiples "
+                android:textColor="#3D3C44"
+                android:textSize="@dimen/txtsize_hint" />
+
+            <TextView
+                android:layout_marginTop="@dimen/dimen_2dp"
+                android:id="@+id/txtmultiples"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/customfont"
+                android:text="2"
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_marginLeft="@dimen/dimen_5dp"

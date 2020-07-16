@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.callback;
 
 import com.jaldeeinc.jaldee.model.WorkingModel;
+import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
 
@@ -18,6 +19,8 @@ public interface SearchLocationAdpterCallback {
     void onMethodServiceCallback(ArrayList<SearchService> searchService, String value);
 
     void onMethodServiceCallback(ArrayList<SearchService> searchService, String value,ArrayList<SearchDepartment> mSearchDepartment);
+
+    void onMethodServiceCallbackAppointment(ArrayList<SearchAppointmentDepartmentServices> searchService, String value, ArrayList<SearchDepartment> mSearchDepartment);
 
     void onMethodCheckinCallback(int locID,String from,String location);
 

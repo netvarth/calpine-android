@@ -2924,6 +2924,23 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
+
+    @Override
+    public void onMethodServiceCallbackAppointment(ArrayList<SearchAppointmentDepartmentServices> searchService, String value, ArrayList<SearchDepartment> mSearchDepartment) {
+        ServiceListAppointmentFragment pfFragment = new ServiceListAppointmentFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("servicelist", searchService);
+        bundle.putSerializable("departmentlist", mSearchDepartment);
+        bundle.putString("title", value);
+        bundle.putString("from", "searchdetail");
+        bundle.putString("uniqueID", uniqueID);
+        pfFragment.setArguments(bundle);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.add(R.id.mainlayout, pfFragment).commit();
+    }
+
     @Override
     public void onMethodCheckinCallback(int locID, String from, String location) {
         ApiCheckInMessage(locID, from, location);

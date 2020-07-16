@@ -648,8 +648,22 @@
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_12"
                 android:visibility="gone">
-
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtapptSeeAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:layout_marginLeft="@dimen/padding5"
+                android:gravity="left"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:text="See All"
+                android:textColor="@color/title_consu"
+                android:textSize="@dimen/txtsize_title_term_small"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/appoinmentLayouts"

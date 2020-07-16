@@ -144,6 +144,7 @@ public class Tab2Fragment extends RootFragment  {
     private MyPaymentAdapter mAdapter;
 
     Context mContext;
+    Dialog mDialog;
 
 
     public Tab2Fragment() {
@@ -176,6 +177,8 @@ public class Tab2Fragment extends RootFragment  {
                 getFragmentManager().popBackStack();
             }
         });
+        mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
 
         return row;
     }
@@ -213,6 +216,8 @@ public class Tab2Fragment extends RootFragment  {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
 
             }
 

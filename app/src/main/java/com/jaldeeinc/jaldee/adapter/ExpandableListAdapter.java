@@ -853,7 +853,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
         if (activelist.getPaymentStatus().
 
-                equalsIgnoreCase("FullyPaid")) {
+                equalsIgnoreCase("FullyPaid") || activelist.getPaymentStatus().equalsIgnoreCase("Refund")) {
             icon_bill.setText("Receipt");
         } else {
             icon_bill.setText("Bill");
@@ -866,9 +866,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             } else {
                 icon_bill.setVisibility(View.GONE);
             }
-        } else {
-            icon_bill.setVisibility(View.GONE);
-        }
+
+            }else{
+            if(!activelist.getPaymentStatus().equalsIgnoreCase("NotPaid")){
+                icon_bill.setVisibility(View.VISIBLE);
+            }
+            else{
+                icon_bill.setVisibility(View.GONE);}
+           }
+
+
 
 
         icon_bill.setOnClickListener(new View.OnClickListener() {

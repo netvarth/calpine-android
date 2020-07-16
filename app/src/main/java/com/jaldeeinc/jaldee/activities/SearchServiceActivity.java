@@ -22,9 +22,9 @@ import java.util.ArrayList;
  */
 
 public class SearchServiceActivity extends AppCompatActivity {
-    TextView tv_price, tv_service, tv_desc, tv_duration;
+    TextView tv_price, tv_service, tv_desc, tv_duration, tv_maxvalue, tv_minvalue, tv_multiples;
 
-    String name, duration, price, desc = "";
+    String name, duration, price, desc = "", multiples;
     Toolbar toolbar;
     ArrayList<SearchService> mGallery;
     ImageView i_servicegallery;
@@ -32,10 +32,10 @@ public class SearchServiceActivity extends AppCompatActivity {
     TextView tv_toolbartitle, tv_descVal;
     ImageView i_backpress;
     boolean isTaxable, isPrepayment;
-    LinearLayout Lprepayment, LserviceLayout;
+    LinearLayout Lprepayment, LserviceLayout, LminAmountlayout, LmaxAmountlayout, Lmultilayout, Ldurationlayout;
     TextView txtpreVal;
     String MinPrePaymentAmount, maxDonationAmount,minDonationAmount;
-    int multiples;
+
 
 
     @Override
@@ -52,7 +52,14 @@ public class SearchServiceActivity extends AppCompatActivity {
         i_backpress = findViewById(R.id.backpress);
         Lprepayment = findViewById(R.id.Lprepayment);
         LserviceLayout = findViewById(R.id.Lprice);
+        LmaxAmountlayout = findViewById(R.id.Lmaxvalue);
+        LminAmountlayout = findViewById(R.id.Lminvalue);
+        Lmultilayout = findViewById(R.id.Lmultiples);
+        Ldurationlayout = findViewById(R.id.Lduration);
         txtpreVal = findViewById(R.id.txtpreVal);
+        tv_minvalue = findViewById(R.id.txtminValue);
+        tv_maxvalue = findViewById(R.id.txtmaxvalue);
+        tv_multiples = findViewById(R.id.txtmultiples);
 
         i_backpress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,9 +79,9 @@ public class SearchServiceActivity extends AppCompatActivity {
 
             MinPrePaymentAmount = extras.getString("MinPrePaymentAmount");
             mGallery = (ArrayList<SearchService>) getIntent().getSerializableExtra("servicegallery");
-            minDonationAmount = extras.getString("minDonationAmount");
-            maxDonationAmount = extras.getString("maxDonationAmount");
-            multiples = extras.getInt("multiples");
+            minDonationAmount = extras.getString("minamount");
+            maxDonationAmount = extras.getString("maxamount");
+            multiples = extras.getString("multiples");
         }
 
         tv_toolbartitle = (TextView) findViewById(R.id.txt_toolbartitle);
@@ -118,10 +125,40 @@ public class SearchServiceActivity extends AppCompatActivity {
         if (duration != null) {
             tv_duration.setVisibility(View.VISIBLE);
             tv_duration.setText(duration + " mins");
+            Ldurationlayout.setVisibility(View.VISIBLE);
         } else {
             tv_duration.setVisibility(View.GONE);
+            Ldurationlayout.setVisibility(View.GONE);
 
         }
+
+        if(minDonationAmount!=null){
+            tv_minvalue.setVisibility(View.VISIBLE);
+            tv_minvalue.setText("₹ " + minDonationAmount);
+            LminAmountlayout.setVisibility(View.VISIBLE);
+        }else{
+            tv_minvalue.setVisibility(View.GONE);
+            LminAmountlayout.setVisibility(View.GONE);
+        }
+
+        if(maxDonationAmount!=null){
+            tv_maxvalue.setVisibility(View.VISIBLE);
+            tv_maxvalue.setText("₹ " + maxDonationAmount);
+            LmaxAmountlayout.setVisibility(View.VISIBLE);
+        }else{
+            tv_maxvalue.setVisibility(View.GONE);
+            LmaxAmountlayout.setVisibility(View.GONE);
+        }
+
+        if(multiples!=null){
+            tv_multiples.setVisibility(View.VISIBLE);
+            tv_multiples.setText(multiples);
+            Lmultilayout.setVisibility(View.VISIBLE);
+        }else{
+            tv_multiples.setVisibility(View.GONE);
+            Lmultilayout.setVisibility(View.GONE);
+        }
+
         if (isPrepayment) {
             Lprepayment.setVisibility(View.VISIBLE);
             txtpreVal.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(MinPrePaymentAmount)));

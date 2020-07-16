@@ -51,6 +51,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
+import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapter;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
 import com.jaldeeinc.jaldee.common.Config;
@@ -793,7 +794,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         tv_enterInstructions.setVisibility(View.VISIBLE);
                         tv_enterInstructions.setText(serviceInstructions);
                         et_virtualId.setText(phoneNumber);
-                        et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon,0,0,0);
+                        et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
                         et_virtualId.setVisibility(View.VISIBLE);
                     }else if(callingMode.equalsIgnoreCase("Phone")){
                         serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
@@ -895,8 +896,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     txt_chooseservice.setVisibility(View.GONE);
                     Toast.makeText(CheckIn.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                 } else {
-                    ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity,android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                    adapter.setDropDownViewResource(R.layout.spinner_layout);
                     mSpinnerService.setAdapter(adapter);
                     mSpinnertext = ((SearchService) LServicesList.get(0)).getId();
                     livetrack = LServicesList.get(0).isLivetrack();
@@ -2662,8 +2663,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                 mSpinnerService.setVisibility(View.VISIBLE);
                                                 txt_chooseservice.setVisibility(View.VISIBLE);
                                                 Config.logV("mServicesList" + LServicesList.size());
-                                                ArrayAdapter<SearchService> adapter = new ArrayAdapter<SearchService>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity,android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                adapter.setDropDownViewResource(R.layout.spinner_layout);
                                                 mSpinnerService.setAdapter(adapter);
                                                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
                                                 livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();

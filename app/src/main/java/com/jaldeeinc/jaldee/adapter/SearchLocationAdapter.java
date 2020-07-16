@@ -91,7 +91,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         Button btn_checkin_expand;
         TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices, txtdayofweek;
         TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
-        TextView txt_earliestAvailable, txt_apptservices, txt_dontservices;
+        TextView txt_earliestAvailable, txt_apptservices, txt_dontservices, txtapptSeeAll;
         Button btn_appointments, btn_donations;
 
         ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
@@ -147,6 +147,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             btn_donations = view.findViewById(R.id.btndonations);
             LDont_Services = view.findViewById(R.id.donationList);
             txt_dontservices = view.findViewById(R.id.txtdontservices);
+            txtapptSeeAll = view.findViewById(R.id.txtapptSeeAll);
         }
     }
 
@@ -1086,7 +1087,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
 
 
-
         if (mScheduleList != null) {
             if (online_presence) {
                 if (mScheduleList.get(position).isCheckinAllowed()) {
@@ -1231,10 +1231,17 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                           myViewHolder.txt_apptservices.setVisibility(View.GONE);
                                       }
                                   }
-
+                                    final int finalI = m;
+                                    myViewHolder.txtapptSeeAll.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            adaptercallback.onMethodServiceCallbackAppointment(aServicesList, mTitle, mSearchDepartmentList);
+                                        }
+                                    });
 
 
                                 }
+
         }
 
                  if (gServicesList.size() > 0) {
@@ -1272,6 +1279,16 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                             @Override
                                             public void onClick(View v) {
                                                 //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+                                                for (int i = 0; i < gServicesList.size(); i++) {
+                                                    if (gServicesList.get(i).toString().toLowerCase().equalsIgnoreCase(gServicesList.get(finalI).toString().toLowerCase())) {
+                                                        Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                                        iService.putExtra("name", gServicesList.get(i).toString());
+                                                        iService.putExtra("minamount", String.valueOf(gServicesList.get(i).getMinDonationAmount()));
+                                                        iService.putExtra("maxamount", String.valueOf(gServicesList.get(i).getMaxDonationAmount()));
+                                                        iService.putExtra("multiples", String.valueOf(gServicesList.get(i).getMultiples()));
+                                                        mContext.startActivity(iService);
+                                                    }
+                                                }
                                             }
                                         });
                                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);

@@ -854,7 +854,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
 
         if (activelist.getPaymentStatus().
 
-                equalsIgnoreCase("FullyPaid")) {
+                equalsIgnoreCase("FullyPaid") || activelist.getPaymentStatus().equalsIgnoreCase("Refund")) {
             icon_bill.setText("Receipt");
         } else {
             icon_bill.setText("Bill");
@@ -868,7 +868,12 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 icon_bill.setVisibility(View.GONE);
             }
         } else {
-            icon_bill.setVisibility(View.GONE);
+            if(!activelist.getPaymentStatus().equalsIgnoreCase("NotPaid")){
+                icon_bill.setVisibility(View.VISIBLE);
+            }
+            else{
+                icon_bill.setVisibility(View.GONE);}
+
         }
 
 

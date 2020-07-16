@@ -52,6 +52,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
+import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapterAppointment;
 import com.jaldeeinc.jaldee.adapter.DetailFileAdapter;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
@@ -789,7 +790,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         tv_enterInstructions.setVisibility(View.VISIBLE);
                         tv_enterInstructions.setText(serviceInstructions);
                         et_vitualId.setText(phoneNumber);
-                        et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsappicon,0,0,0);
+                        et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
                         et_vitualId.setVisibility(View.VISIBLE);
                     }else if(callingMode.equalsIgnoreCase("Phone")){
                         serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
@@ -895,7 +896,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     txt_chooseservice.setVisibility(View.GONE);
                     Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                 } else {
-                    ArrayAdapter<SearchAppoinment> adapter = new ArrayAdapter<SearchAppoinment>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                    CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerService.setAdapter(adapter);
                     mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
@@ -2706,7 +2707,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                 mSpinnerService.setVisibility(View.VISIBLE);
                                                 txt_chooseservice.setVisibility(View.VISIBLE);
                                                 Config.logV("mServicesList" + LServicesList.size());
-                                                ArrayAdapter<SearchAppoinment> adapter = new ArrayAdapter<SearchAppoinment>(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity,android.R.layout.simple_spinner_dropdown_item, LServicesList);
                                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                                 mSpinnerService.setAdapter(adapter);
                                                 mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();

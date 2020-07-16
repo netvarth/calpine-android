@@ -103,4 +103,44 @@ public class SearchAppointmentDepartmentServices {
 
     double totalAmount;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    String description;
+
+    public boolean isTaxable() {
+        return taxable;
+    }
+
+    public void setTaxable(boolean taxable) {
+        this.taxable = taxable;
+    }
+
+    boolean taxable;
+
+    public boolean isPrePayment() {
+        return isPrePayment;
+    }
+
+    public void setPrePayment(boolean prePayment) {
+        isPrePayment = prePayment;
+    }
+
+    boolean isPrePayment;
+
+    public double getMinPrePaymentAmount() {
+        return minPrePaymentAmount;
+    }
+
+    public void setMinPrePaymentAmount(double minPrePaymentAmount) {
+        this.minPrePaymentAmount = minPrePaymentAmount;
+    }
+
+    double minPrePaymentAmount;
+
 }

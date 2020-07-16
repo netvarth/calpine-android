@@ -361,8 +361,13 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
 
                 myViewHolder.icon_bill.setVisibility(View.VISIBLE);
             }else{
-                myViewHolder.icon_bill.setVisibility(View.GONE);
+                if(!activelist.getPaymentStatus().equalsIgnoreCase("NotPaid")){
+                    myViewHolder.icon_bill.setVisibility(View.VISIBLE);
+                }
+                else{
+                    myViewHolder.icon_bill.setVisibility(View.GONE);}
             }
+
 
         } else {
             myViewHolder.icon_bill.setVisibility(View.GONE);
@@ -382,7 +387,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         });
 
 
-        if(activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid")){
+        if(activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid") || activelist.getPaymentStatus().equalsIgnoreCase("Refund")){
             myViewHolder.icon_bill.setText("Receipt");
 
         }else{

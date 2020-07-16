@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 import java.util.ArrayList;
@@ -17,12 +18,12 @@ import java.util.ArrayList;
  * Created by sharmila on 6/8/18.
  */
 
-public class CustomSpinnerAdapter extends ArrayAdapter {
-    ArrayList<SearchService> mService;
+public class CustomSpinnerAdapterAppointment extends ArrayAdapter {
+    ArrayList<SearchAppoinment> mService;
     Context mContext;
 
-    public CustomSpinnerAdapter(Context context, int textViewResourceId,
-                                ArrayList<SearchService> objects) {
+    public CustomSpinnerAdapterAppointment(Context context, int textViewResourceId,
+                                ArrayList<SearchAppoinment> objects) {
         super(context, textViewResourceId, objects);
         mContext=context;
         mService=objects;
@@ -37,7 +38,6 @@ public class CustomSpinnerAdapter extends ArrayAdapter {
 // Declaring and Typecasting the textview in the inflated layout
         TextView tvService = (TextView) itemView
                 .findViewById(android.R.id.text1);
-
 
 
 
@@ -56,7 +56,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter {
 
 
         }
-        SearchService mSericeList = mService.get(position);
+        SearchAppoinment mSericeList = mService.get(position);
 // Setting the text using the array
 
         tvService.setText(mSericeList.getName());

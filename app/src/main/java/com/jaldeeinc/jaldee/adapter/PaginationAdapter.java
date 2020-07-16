@@ -1446,7 +1446,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if (searchdetailList.getDonation_services() != null) {
                     final ArrayList serviceNamesDonations = new ArrayList();
+                    final ArrayList serviceNamesDonationsMin = new ArrayList();
+                    final ArrayList serviceNamesDonationsMax = new ArrayList();
+                    final ArrayList serviceNamesDonationsMultiples = new ArrayList();
                     serviceNamesDonations.clear();
+                    serviceNamesDonationsMin.clear();
+                    serviceNamesDonationsMax.clear();
+                    serviceNamesDonationsMultiples.clear();
                     try {
                         String serviceName = searchdetailList.getDonation_services().toString();
                         try {
@@ -1465,6 +1471,64 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
+                    try {
+                        String serviceName = searchdetailList.getDonation_services().toString();
+                        try {
+                            JSONArray jsonArray = new JSONArray(serviceName);
+                            String jsonArry = jsonArray.getString(0);
+                            JSONArray jsonArray1 = new JSONArray(jsonArry);
+                            for(int i =0;i<jsonArray1.length();i++){
+                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                                String minValue = jsonObject.optString("minValue");
+                                serviceNamesDonationsMin.add(i,minValue);
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        String serviceName = searchdetailList.getDonation_services().toString();
+                        try {
+                            JSONArray jsonArray = new JSONArray(serviceName);
+                            String jsonArry = jsonArray.getString(0);
+                            JSONArray jsonArray1 = new JSONArray(jsonArry);
+                            for(int i =0;i<jsonArray1.length();i++){
+                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                                String maxValue = jsonObject.optString("maxValue");
+                                serviceNamesDonationsMax.add(i,maxValue);
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        String serviceName = searchdetailList.getDonation_services().toString();
+                        try {
+                            JSONArray jsonArray = new JSONArray(serviceName);
+                            String jsonArry = jsonArray.getString(0);
+                            JSONArray jsonArray1 = new JSONArray(jsonArry);
+                            for(int i =0;i<jsonArray1.length();i++){
+                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                                String multiples = jsonObject.optString("multiples");
+                                serviceNamesDonationsMultiples.add(i,multiples);
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+
+
 
                     if (serviceNamesDonations.size() > 0) {
                         myViewHolder.L_donations.removeAllViews();
@@ -1499,7 +1563,17 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             dynaText.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ApiService(searchdetailList.getUniqueid(), serviceNamesDonations.get(finalI).toString(), searchdetailList.getTitle());
+                               //     ApiService(searchdetailList.getUniqueid(), serviceNamesDonations.get(finalI).toString(), searchdetailList.getTitle());
+                                    for (int i = 0; i < serviceNamesDonations.size(); i++) {
+                                        if (serviceNamesDonations.get(i).toString().toLowerCase().equalsIgnoreCase(serviceNamesDonations.get(finalI).toString().toLowerCase())) {
+                                            Intent iService = new Intent(context, SearchServiceActivity.class);
+                                            iService.putExtra("name", serviceNamesDonations.get(i).toString());
+                                            iService.putExtra("minamount", serviceNamesDonationsMin.get(i).toString());
+                                            iService.putExtra("maxamount", serviceNamesDonationsMax.get(i).toString());
+                                            iService.putExtra("multiples", serviceNamesDonationsMultiples.get(i).toString());
+                                            context.startActivity(iService);
+                                        }
+                                    }
                                 }
                             });
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
