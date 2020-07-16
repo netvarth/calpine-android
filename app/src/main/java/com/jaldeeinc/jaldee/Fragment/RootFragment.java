@@ -1,6 +1,6 @@
 package com.jaldeeinc.jaldee.Fragment;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.jaldeeinc.jaldee.utils.BackPressImpl;
 

@@ -81,11 +81,11 @@
         android:layout_marginRight="@dimen/padding5"
         android:background="@color/view_border" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/checkloclist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding3"></android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="@dimen/padding3"></androidx.recyclerview.widget.RecyclerView>
 
 
     <Button

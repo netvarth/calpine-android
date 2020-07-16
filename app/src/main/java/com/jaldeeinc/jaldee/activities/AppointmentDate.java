@@ -1,28 +1,20 @@
 package com.jaldeeinc.jaldee.activities;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.SpecialisationAdapter;
 import com.jaldeeinc.jaldee.adapter.TimeSlotsAdapter;
-import com.jaldeeinc.jaldee.adapter.VirtualFieldAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
@@ -34,8 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;

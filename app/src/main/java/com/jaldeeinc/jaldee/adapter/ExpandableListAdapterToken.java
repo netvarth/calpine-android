@@ -1,16 +1,10 @@
 package com.jaldeeinc.jaldee.adapter;
 
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,8 +12,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.IBinder;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.core.app.ActivityCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -41,7 +35,6 @@ import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.jaldeeinc.jaldee.service.LocationUpdatesService;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -63,7 +56,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.RequestBody;
@@ -210,13 +202,13 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         Config.logV("No Child" + getChildrenCount(groupPosition));
         if (getChildrenCount(groupPosition) == 0) {
             if (groupPosition == 0) {
-                txtnocheckold.setText("No Check-ins for today");
+                txtnocheckold.setText("No Tokens for today");
             }
             if (groupPosition == 1) {
-                txtnocheckold.setText("No Future Check-ins");
+                txtnocheckold.setText("No Future Tokens");
             }
             if (groupPosition == 2) {
-                txtnocheckold.setText("No Past Check-ins");
+                txtnocheckold.setText("No Past Tokens");
             }
             txtnocheckold.setVisibility(View.VISIBLE);
         } else {

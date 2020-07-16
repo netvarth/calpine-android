@@ -1,37 +1,20 @@
 package com.jaldeeinc.jaldee.adapter;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
-import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.connection.ApiClient;
-import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ServicesListAdapter extends RecyclerView.Adapter<ServicesListAdapter.MyViewHolder> {
         List<SearchService> mSearchDepartmentServicesList;

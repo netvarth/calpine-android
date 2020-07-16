@@ -2,35 +2,24 @@ package com.jaldeeinc.jaldee.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.jaldeeinc.jaldee.Fragment.RootFragment;
 import com.jaldeeinc.jaldee.Fragment.SearchListFragment;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.adapter.FavouriteAdapter;
 import com.jaldeeinc.jaldee.adapter.FilterAdapter;
-import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.callback.FilterAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
@@ -38,14 +27,7 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.LanLong;
 import com.jaldeeinc.jaldee.response.RefinedFilters;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;

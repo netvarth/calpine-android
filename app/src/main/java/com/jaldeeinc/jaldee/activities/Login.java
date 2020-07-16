@@ -11,12 +11,10 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -32,7 +30,6 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.LoginResponse;
 import com.jaldeeinc.jaldee.utils.LogUtil;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-import com.jaldeeinc.jaldee.utils.TypefaceFont;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -135,8 +132,6 @@ public class Login extends AppCompatActivity {
 
             }
         });
-
-
     }
 
 

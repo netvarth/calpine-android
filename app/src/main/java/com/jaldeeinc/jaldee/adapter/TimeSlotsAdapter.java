@@ -1,24 +1,18 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.AppointmentDate;
-import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 
 public class TimeSlotsAdapter extends RecyclerView.Adapter< TimeSlotsAdapter. TimeSlotsAdapterViewHolder> {

@@ -2,26 +2,19 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.TextView;

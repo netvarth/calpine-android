@@ -9,10 +9,10 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -122,7 +122,7 @@ public class SearchLocationActivity extends AppCompatActivity implements Locatio
         mrRecylce_searchloc = findViewById(R.id.recylce_searchloc);
         //SEARCH
         mSearchView = findViewById(R.id.search_loc);
-        searchSrcTextView = findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchSrcTextView = findViewById(androidx.appcompat.R.id.search_src_text);
         SearchManager searchMng = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchMng.getSearchableInfo(getComponentName()));
 

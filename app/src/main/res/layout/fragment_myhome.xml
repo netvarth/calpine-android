@@ -259,12 +259,12 @@
                         android:textColor="@color/title_grey"
                         android:visibility="gone" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycleActive"
                         android:layout_width="match_parent"
                         android:layout_height="300dp">
 
-                    </android.support.v7.widget.RecyclerView>
+                    </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
 
 
@@ -296,13 +296,13 @@
                         android:textColor="@color/title_grey"
                         android:visibility="gone" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycleActiveAppointment"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
                         >
 
-                    </android.support.v7.widget.RecyclerView>
+                    </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
 
                 <!-- </android.support.v4.widget.NestedScrollView>-->

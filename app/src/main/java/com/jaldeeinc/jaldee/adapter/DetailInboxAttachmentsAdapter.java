@@ -1,28 +1,20 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.callback.DetailInboxAdapterCallback;
-import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.InboxModel;
-import com.jaldeeinc.jaldee.utils.SharedPreference;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class DetailInboxAttachmentsAdapter extends RecyclerView.Adapter<DetailInboxAttachmentsAdapter.MyViewHolder> {

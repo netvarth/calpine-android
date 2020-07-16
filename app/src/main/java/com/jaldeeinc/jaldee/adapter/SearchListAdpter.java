@@ -11,7 +11,7 @@ import java.util.Locale;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.support.v7.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;

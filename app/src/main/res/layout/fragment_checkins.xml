@@ -28,7 +28,7 @@
         </LinearLayout>
 
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
@@ -69,14 +69,14 @@
                             android:textColor="#000000"
                             android:textSize="@dimen/txtsize_hint" />
 
-                        <android.support.v7.widget.RecyclerView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recylce_checkintoday"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:layout_marginBottom="@dimen/padding5"
                             android:background="@drawable/input_border_bottom"
-                            android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
+                            android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
                         <TextView
                             android:id="@+id/txtnocheckintoday"
@@ -110,14 +110,14 @@
                             android:textColor="#000000"
                             android:textSize="@dimen/txtsize_hint" />
 
-                        <android.support.v7.widget.RecyclerView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recylce_checkin"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:layout_marginBottom="@dimen/padding5"
                             android:background="@drawable/input_border_bottom"
-                            android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
+                            android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
                         <TextView
                             android:id="@+id/txtnocheckfuture"
@@ -151,7 +151,7 @@
                             android:textColor="#000000"
                             android:textSize="@dimen/txtsize_hint" />
 
-                        <android.support.v7.widget.RecyclerView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recylce_oldcheckin"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                             android:layout_marginBottom="@dimen/padding5"
                             android:background="@color/app_background_opaque"
                             android:nestedScrollingEnabled="false"
-                            android:visibility="gone"></android.support.v7.widget.RecyclerView>
+                            android:visibility="gone"></androidx.recyclerview.widget.RecyclerView>
 
                         <TextView
                             android:id="@+id/txtnocheckold"
@@ -194,6 +194,6 @@
 
 
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </FrameLayout>

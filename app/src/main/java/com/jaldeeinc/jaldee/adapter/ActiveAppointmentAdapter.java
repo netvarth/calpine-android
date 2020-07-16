@@ -7,22 +7,18 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.CountDownTimer;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,8 +36,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by sharmila on 13/7/18.

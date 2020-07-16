@@ -1,26 +1,21 @@
 package com.jaldeeinc.jaldee.adapter;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,8 +29,6 @@ import com.jaldeeinc.jaldee.activities.Donation;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.connection.ApiClient;
-import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
@@ -49,10 +42,6 @@ import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,11 +49,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**

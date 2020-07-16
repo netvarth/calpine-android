@@ -2,8 +2,8 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.model.ContactModel;
 

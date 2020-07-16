@@ -4,8 +4,8 @@ package com.jaldeeinc.jaldee.utils;
  * Created by sharmila on 9/7/18.
  */
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.jaldeeinc.jaldee.Fragment.OnBackPressListener;
 import com.jaldeeinc.jaldee.common.Config;

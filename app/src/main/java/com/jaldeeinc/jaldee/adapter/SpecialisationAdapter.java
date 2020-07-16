@@ -1,28 +1,14 @@
 package com.jaldeeinc.jaldee.adapter;
 
-import android.content.Context;
-import android.graphics.Typeface;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.jaldeeinc.jaldee.response.SearchVirtualFields;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by sharmila on 22/11/18.

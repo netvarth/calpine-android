@@ -1,32 +1,21 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.Home;
-import com.jaldeeinc.jaldee.adapter.InboxAdapter;
 import com.jaldeeinc.jaldee.adapter.TabViewPagerAdapter;
-import com.jaldeeinc.jaldee.common.Config;
-import com.jaldeeinc.jaldee.connection.ApiClient;
-import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.database.DatabaseHandler;
 
 
 /**

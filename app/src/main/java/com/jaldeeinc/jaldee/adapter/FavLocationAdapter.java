@@ -3,11 +3,10 @@ package com.jaldeeinc.jaldee.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateFormat;
@@ -33,7 +32,6 @@ import com.jaldeeinc.jaldee.response.SearchSetting;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;

@@ -25,7 +25,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Binder;
 import android.os.Build;
@@ -33,9 +32,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -48,8 +47,6 @@ import com.google.android.gms.tasks.Task;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.Utilss;
-import com.payu.magicretry.MainActivity;
-import com.payumoney.sdkui.ui.utils.Utils;
 
 /**
  * A bound and started service that is promoted to a foreground service when location updates have

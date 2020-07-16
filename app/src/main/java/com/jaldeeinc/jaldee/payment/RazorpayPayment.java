@@ -2,24 +2,18 @@ package com.jaldeeinc.jaldee.payment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
 import com.razorpay.Checkout;
-import com.razorpay.PaymentData;
-import com.razorpay.PaymentResultListener;
-import com.razorpay.PaymentResultWithDataListener;
 
 import org.json.JSONObject;
 
