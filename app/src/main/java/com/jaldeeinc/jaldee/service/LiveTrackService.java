@@ -13,10 +13,9 @@ import android.location.Location;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.common.Config;

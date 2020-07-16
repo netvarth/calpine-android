@@ -13,6 +13,8 @@
       <module fileurl="file://$PROJECT_DIR$/app/Jaldee-Android-Appointments-app.iml" filepath="$PROJECT_DIR$/app/Jaldee-Android-Appointments-app.iml" group="Jaldee-Android-Appointments/app" />
       <module fileurl="file://$PROJECT_DIR$/JaldeeAndroid-1.2.2.iml" filepath="$PROJECT_DIR$/JaldeeAndroid-1.2.2.iml" group="JaldeeAndroid-1.2.2" />
       <module fileurl="file://$PROJECT_DIR$/app/JaldeeAndroid-1.2.2-app.iml" filepath="$PROJECT_DIR$/app/JaldeeAndroid-1.2.2-app.iml" group="JaldeeAndroid-1.2.2/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/JaldeeAndroid-calpine-android.iml" filepath="$PROJECT_DIR$/.idea/modules/JaldeeAndroid-calpine-android.iml" group="calpine-android" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/JaldeeAndroid-calpine-android-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/JaldeeAndroid-calpine-android-app.iml" group="calpine-android/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Jaldee_1.3.1.iml" filepath="$PROJECT_DIR$/.idea/modules/Jaldee_1.3.1.iml" group="Jaldee_1.3.1" />
       <module fileurl="file://$PROJECT_DIR$/Jaldee_Android-1.2.2.iml" filepath="$PROJECT_DIR$/Jaldee_Android-1.2.2.iml" group="Jaldee_Android-1.2.2" />
       <module fileurl="file://$PROJECT_DIR$/app/Jaldee_Android-1.2.2-app.iml" filepath="$PROJECT_DIR$/app/Jaldee_Android-1.2.2-app.iml" group="Jaldee_Android-1.2.2/app" />

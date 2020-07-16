@@ -24,7 +24,7 @@
                 layout="@layout/custom_toolbar" />
         </LinearLayout>
 
-        <android.support.v4.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
+        <androidx.core.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusableInTouchMode="true"
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/card"
                     android:layout_width="match_parent"
@@ -391,7 +391,7 @@
 
                             </LinearLayout>
 
-                            <android.support.v7.widget.RecyclerView
+                            <androidx.recyclerview.widget.RecyclerView
                                 android:layout_marginLeft="@dimen/default_padding"
                                 android:layout_marginRight="@dimen/default_padding"
                                 android:id="@+id/mrecycle_specialisation"
@@ -399,7 +399,7 @@
                                 android:layout_height="wrap_content"
                                 android:nestedScrollingEnabled="false"
                                 android:visibility="gone">
-                            </android.support.v7.widget.RecyclerView>
+                            </androidx.recyclerview.widget.RecyclerView>
 
                             <TextView
                                 android:layout_marginBottom="@dimen/default_padding"
@@ -634,7 +634,7 @@
 
                                     </LinearLayout>
 
-                                    <android.support.v7.widget.RecyclerView
+                                    <androidx.recyclerview.widget.RecyclerView
                                         android:id="@+id/mrecycle_virtualfield"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
@@ -642,7 +642,7 @@
                                         android:layout_marginRight="@dimen/padding5"
                                         android:nestedScrollingEnabled="false"
                                         android:visibility="gone">
-                                    </android.support.v7.widget.RecyclerView>
+                                    </androidx.recyclerview.widget.RecyclerView>
 
                                     <TextView
                                         android:layout_marginBottom="@dimen/default_padding"
@@ -703,12 +703,12 @@
                             android:textStyle="bold"
                             android:visibility="gone" />
 
-                        <android.support.v7.widget.RecyclerView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/mSearchLoc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="#F4FAF4"
-                            android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
+                            android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
 
                         <TextView
@@ -734,12 +734,12 @@
                             android:background="@color/view_border" />
 
 
-                        <android.support.v7.widget.RecyclerView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/mDepartmentView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/white"
-                            android:nestedScrollingEnabled="false"></android.support.v7.widget.RecyclerView>
+                            android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
 
 
                         <LinearLayout
@@ -807,8 +807,8 @@
                         </LinearLayout>
 
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
             </FrameLayout>
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </LinearLayout>

@@ -4,26 +4,20 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
-import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.model.FileAttachment;
 import com.squareup.picasso.Picasso;
 

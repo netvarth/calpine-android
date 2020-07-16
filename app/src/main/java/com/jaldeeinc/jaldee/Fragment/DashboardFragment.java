@@ -14,13 +14,13 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -36,7 +36,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -77,9 +76,7 @@ import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.utils.EmptySubmitSearchView;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -668,7 +665,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             }
 
 
-                            ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+                            ImageView searchIcon = (ImageView) mSearchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
                             searchIcon.setImageDrawable(null);
                             searchIcon.setVisibility(View.GONE);
                             if (query.length() > 1) {
@@ -763,7 +760,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 Config.logV("SEARCH TXT--------------88252-" + mSearchtxt);
                             }
 
-                            ImageView searchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+                            ImageView searchIcon = (ImageView) mSearchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
                             searchIcon.setImageDrawable(null);
                             searchIcon.setVisibility(View.GONE);
 
@@ -804,12 +801,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         //SEARCH
         mSearchView = (EmptySubmitSearchView) row.findViewById(R.id.search);
-        searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchSrcTextView = (SearchView.SearchAutoComplete) row.findViewById(androidx.appcompat.R.id.search_src_text);
         SearchManager searchMng = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         mSearchView.setSearchableInfo(searchMng.getSearchableInfo(getActivity().getComponentName()));
         searchSrcTextView.setDropDownHeight(450);
 
-        ImageView searchClose = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
+        ImageView searchClose = (ImageView) mSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         searchClose.setImageResource(R.drawable.icon_cancel);
 
 

@@ -1,7 +1,7 @@
 package com.jaldeeinc.jaldee.utils;
 
 import android.content.Context;
-import android.support.v7.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.widget.TextView;
@@ -37,7 +37,7 @@ public class EmptySubmitSearchView extends SearchView {
     @Override public void setOnQueryTextListener(final OnQueryTextListener listener) {
         super.setOnQueryTextListener(listener);
         this.listener = listener;
-        mSearchSrcTextView = this.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        mSearchSrcTextView = this.findViewById(androidx.appcompat.R.id.search_src_text);
         mSearchSrcTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

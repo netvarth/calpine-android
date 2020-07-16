@@ -27,12 +27,12 @@
                 layout="@layout/custom_toolbar" />
         </LinearLayout>
         <!-- TODO: Update blank fragment layout -->
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recylce_fav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding3"
-          ></android.support.v7.widget.RecyclerView>
+          ></androidx.recyclerview.widget.RecyclerView>
 
         <TextView
             android:id="@+id/txt_nofav"

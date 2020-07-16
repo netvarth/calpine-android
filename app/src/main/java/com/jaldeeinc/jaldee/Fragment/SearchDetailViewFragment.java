@@ -8,23 +8,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -49,7 +47,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
-import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.adapter.ContactDetailAdapter;
 import com.jaldeeinc.jaldee.adapter.DepartmentAdapter;
@@ -78,7 +75,6 @@ import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
-import com.jaldeeinc.jaldee.response.SearchAppoinment;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
@@ -94,10 +90,8 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.jaldeeinc.jaldee.widgets.CustomDialog;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.ls.LSException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -113,8 +107,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**

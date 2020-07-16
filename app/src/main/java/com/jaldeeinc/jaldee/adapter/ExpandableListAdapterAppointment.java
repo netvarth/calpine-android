@@ -1,15 +1,10 @@
 package com.jaldeeinc.jaldee.adapter;
 
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
@@ -17,8 +12,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.IBinder;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.core.app.ActivityCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -36,19 +31,16 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocationAppointment;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.jaldeeinc.jaldee.service.LocationUpdatesService;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
-import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
@@ -64,8 +56,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -273,7 +263,6 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             header = "future";
         if (groupPosition == 2)
             header = "old";
-
 
         if (view == null) {
             LayoutInflater infalInflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

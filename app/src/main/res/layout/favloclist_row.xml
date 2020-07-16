@@ -37,14 +37,14 @@
             android:visibility="visible" />
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:paddingLeft="@dimen/padding7"
         android:paddingRight="@dimen/padding7"
         android:paddingBottom="@dimen/padding7"
         android:id="@+id/recycleview_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 
     <TextView

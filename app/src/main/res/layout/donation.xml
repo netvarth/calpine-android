@@ -21,7 +21,7 @@
             layout="@layout/custom_toolbar" />
     </LinearLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/card"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -319,7 +319,7 @@
 <!--                                android:textSize="@dimen/txtsize_12"-->
 <!--                                android:visibility="visible"/>-->
 
-                            <android.support.v7.widget.RecyclerView
+                            <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/recycle_family"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -328,7 +328,7 @@
                                 android:layout_marginRight="@dimen/default_padding"
                                 android:nestedScrollingEnabled="false"
                                 android:visibility="gone">
-                            </android.support.v7.widget.RecyclerView>
+                            </androidx.recyclerview.widget.RecyclerView>
 
 
                             <TextView
@@ -973,11 +973,11 @@
                             </LinearLayout>
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
                 </FrameLayout>
             </LinearLayout>
 
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

@@ -1,6 +1,6 @@
 package com.jaldeeinc.jaldee.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 

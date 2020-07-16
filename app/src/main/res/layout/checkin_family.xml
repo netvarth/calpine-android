@@ -58,7 +58,7 @@
         android:layout_above="@+id/btn_changemem"
         android:layout_below="@+id/layout_toolbar">
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card"
             android:layout_width="match_parent"
@@ -76,15 +76,15 @@
                 android:background="@color/app_background"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycle_familyMember"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/default_padding">
-                </android.support.v7.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
     </FrameLayout>
 
     <Button

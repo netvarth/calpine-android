@@ -2,11 +2,10 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,21 +14,14 @@ import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.callback.LocationSearchCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.response.LocationResponse;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Locale;
 
 /**

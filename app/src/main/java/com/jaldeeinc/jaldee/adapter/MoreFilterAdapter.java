@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -31,17 +31,13 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
-import com.jaldeeinc.jaldee.callback.FilterAdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 
 import org.json.JSONArray;

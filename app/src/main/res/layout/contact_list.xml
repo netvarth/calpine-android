@@ -24,11 +24,11 @@
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_hint" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/contactlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding5"></android.support.v7.widget.RecyclerView>
+            android:layout_marginTop="@dimen/padding5"></androidx.recyclerview.widget.RecyclerView>
 
         <Button
             android:id="@+id/btn_close"

@@ -1,26 +1,18 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.DialogFragment;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.Spanned;
-import android.text.TextWatcher;
+import androidx.annotation.VisibleForTesting;
+import com.google.android.material.textfield.TextInputEditText;
+import androidx.fragment.app.DialogFragment;
+
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -37,8 +29,6 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
-import com.tsongkha.spinnerdatepicker.DatePicker;
-import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +39,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

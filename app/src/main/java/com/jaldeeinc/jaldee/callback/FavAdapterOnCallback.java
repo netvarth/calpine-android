@@ -1,7 +1,7 @@
 package com.jaldeeinc.jaldee.callback;
 
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v7.widget.RecyclerView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 

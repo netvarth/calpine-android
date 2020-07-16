@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card"
     android:layout_width="match_parent"
@@ -649,14 +649,8 @@
                 android:textSize="@dimen/txtsize_12"
                 android:textStyle="bold"
                 android:visibility="gone"
-
                 />
-
-
         </LinearLayout>
-
-
-
         <LinearLayout
             android:id="@+id/appointmentList"
             android:layout_width="match_parent"
@@ -669,10 +663,7 @@
             android:textColor="@color/title_consu"
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone">
-
         </LinearLayout>
-
-
         <LinearLayout
             android:visibility="gone"
             android:id="@+id/appoinmentLayouts"
@@ -681,9 +672,6 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/default_padding"
             android:orientation="horizontal">
-
-
-
             <Button
                 android:id="@+id/btnappointments"
                 style="?android:attr/borderlessButtonStyle"
@@ -699,10 +687,8 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/txtsize_12" />
-
             <!--  android:textSize="@dimen/txtsize_subtitle" />-->
         </LinearLayout>
-
         <LinearLayout
             android:id="@+id/donationList"
             android:layout_width="match_parent"
@@ -715,10 +701,7 @@
             android:textColor="@color/title_consu"
             android:textSize="@dimen/txtsize_12"
             android:visibility="gone">
-
         </LinearLayout>
-
-
         <LinearLayout
             android:visibility="gone"
             android:id="@+id/donationLayouts"
@@ -727,8 +710,6 @@
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/default_padding"
             android:orientation="horizontal">
-
-
             <Button
                 android:id="@+id/btndonations"
                 style="?android:attr/borderlessButtonStyle"
@@ -744,15 +725,8 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/txtsize_12" />
-
             <!--  android:textSize="@dimen/txtsize_subtitle" />-->
         </LinearLayout>
-
-
-
-
     </LinearLayout>
-
-
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>
 

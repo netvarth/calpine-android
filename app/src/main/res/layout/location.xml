@@ -34,7 +34,7 @@
             android:orientation="vertical">
 
 
-            <android.support.v7.widget.SearchView
+            <androidx.appcompat.widget.SearchView
                 android:elevation="8dp"
 
                 android:id="@+id/search_loc"
@@ -58,11 +58,11 @@
                 android:textColor="@color/sec_title_grey"
                 android:textSize="@dimen/txtsize_12" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recylce_searchloc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_padding"></android.support.v7.widget.RecyclerView>
+                android:layout_marginTop="@dimen/default_padding"></androidx.recyclerview.widget.RecyclerView>
 
             <TextView
                 android:id="@+id/tv_currentloc"

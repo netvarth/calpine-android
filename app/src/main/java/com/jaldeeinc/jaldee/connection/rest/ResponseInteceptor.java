@@ -4,16 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 
-import com.jaldeeinc.jaldee.Fragment.DashboardFragment;
-import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
-import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.activities.Register;
-import com.jaldeeinc.jaldee.activities.SearchLocationActivity;
-import com.jaldeeinc.jaldee.activities.Splash;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;

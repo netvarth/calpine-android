@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
+import com.google.android.material.textfield.TextInputEditText;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
