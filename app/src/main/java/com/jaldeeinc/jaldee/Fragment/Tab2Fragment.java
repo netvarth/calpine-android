@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.Fragment;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
