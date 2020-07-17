@@ -294,7 +294,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         if (groupPosition == 1)
             header = "future";
         if (groupPosition == 2)
-            header = ;
+            header = "old" ;
 
 
         if (view == null) {

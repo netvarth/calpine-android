@@ -890,25 +890,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         spannable2.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                 Word1.length(), Word1.length() + Word2.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_queueTime.setText(spannable2);
-//        if (activelist.getBatchName() != null) {
-//            tv_token.setVisibility(View.GONE);
-//            tv_batchName.setVisibility(View.VISIBLE);
-//            layout_partySize.setVisibility(View.VISIBLE);
-
-//                String queStart = "",queEnd = "",queueWindow = "";
-//                if(activelist.getQueue()!= null ){
-//                    queStart = String.valueOf(activelist.getQueue().getQueueStartTime());
-//                    queEnd = String.valueOf(activelist.getQueue().getQueueEndTime());
-//                    queueWindow = String.valueOf(activelist.getQueue().getName());
-//
-//                }
-//                else{
-//                    //   tv_time_queue.setVisibility(View.GONE);
-//                }
-//            String firstword = "Batch :";
-//            tv_batchName.setText(firstword + " " + activelist.getBatchName());
-
-        //       } else
         if (activelist.getToken() != -1 && activelist.getToken() > 0) {
             layout_partySize.setVisibility(View.VISIBLE);
             tv_token.setVisibility(View.VISIBLE);
@@ -932,9 +913,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
             tv_batchName.setVisibility(View.GONE);
         }
 
-
         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
-
             DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
             String inputDateStr = activelist.getDate();
@@ -945,58 +924,24 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 e.printStackTrace();
             }
             String outputDateStr = outputFormat.format(datechange);
-
-
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             String firstWord = "";
             firstWord = "Checked in for ";
-
-            String dtStart = outputDateStr;
-            Date dateParse = null;
-            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-            try {
-                dateParse = format1.parse(dtStart);
-                System.out.println(dateParse);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            SimpleDateFormat format = new SimpleDateFormat("d");
-            String date1 = format.format(dateParse);
-
-            if (date1.endsWith("1") && !date1.endsWith("11"))
-                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-            else if (date1.endsWith("2") && !date1.endsWith("12"))
-                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-            else if (date1.endsWith("3") && !date1.endsWith("13"))
-                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-            else
-                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-            String yourDate = format.format(dateParse);
-            firstWord = "Checked in for ";
+            String yourDate = Config.getFormatedDate(outputDateStr);
             String secondWord = yourDate + "," + '\n' + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime();
             Spannable spannable = new SpannableString(firstWord + '\n' + secondWord);
-            //  spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                     firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
             tv_check_in.setText(spannable);
-
             tv_check_in.setVisibility(View.VISIBLE);
             layout_dateCheckin.setVisibility(View.VISIBLE);
             tv_queueTime.setVisibility(View.GONE);
             liveTrackLayout.setVisibility(View.GONE);
-
-
         } else {
             tv_check_in.setVisibility(View.GONE);
             tv_queueTime.setVisibility(View.VISIBLE);
-
-
         }
-
         if (activelist.getParentUuid() != null) {
             paymentLayout.setVisibility(View.GONE);
             tv_prepaid.setVisibility(View.GONE);
@@ -1012,23 +957,18 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         if (tv_token.toString().equalsIgnoreCase("") && tv_partysize.toString().equalsIgnoreCase("")) {
             layout_partySize.setVisibility(View.GONE);
         }
-
         if (activelist.getServiceTime() != null) {
-
             String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             if (date.equalsIgnoreCase(activelist.getDate())) {
-
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 String firstWord = "";
                 firstWord = "Checked in for ";
-
                 String secondWord = "Today" + "," + " " + activelist.getServiceTime();
                 Spannable spannable = new SpannableString(firstWord + '\n' + secondWord);
                 //   spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                         firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                     tv_status.setVisibility(View.VISIBLE);
                     tv_statusSmall.setVisibility(View.VISIBLE);
@@ -1037,22 +977,17 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                     tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.red));
                 }
-
                 if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
-                    tv_estTime.setVisibility(View.VISIBLE);
-                    tv_estTime.setText(spannable);
-//                    tv_queueTime.setVisibility(View.VISIBLE);
-//                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+                    if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                        tv_estTime.setVisibility(View.GONE);
+                    } else {
+                        tv_estTime.setVisibility(View.VISIBLE);
+                        tv_estTime.setText(spannable);
+                    }
                 } else {
                     tv_estTime.setVisibility(View.GONE);
-//                    tv_queueTime.setVisibility(View.VISIBLE);
-//                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                 }
-
-
             } else {
-
-
                 DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
                 String inputDateStr = activelist.getDate();
@@ -1063,44 +998,16 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     e.printStackTrace();
                 }
                 String outputDateStr = outputFormat.format(datechange);
-
-
                 Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                         "fonts/Montserrat_Bold.otf");
                 String firstWord = "";
                 firstWord = "Checked in for ";
-
-                String dtStart = outputDateStr;
-                Date dateParse = null;
-                SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                try {
-                    dateParse = format1.parse(dtStart);
-                    System.out.println(dateParse);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                SimpleDateFormat format = new SimpleDateFormat("d");
-                String date1 = format.format(dateParse);
-
-                if (date1.endsWith("1") && !date1.endsWith("11"))
-                    format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                else if (date1.endsWith("2") && !date1.endsWith("12"))
-                    format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                else if (date1.endsWith("3") && !date1.endsWith("13"))
-                    format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                else
-                    format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                String yourDate = format.format(dateParse);
+                String yourDate = Config.getFormatedDate(outputDateStr);
                 String secondWord = yourDate + ", " + activelist.getServiceTime();
-
-
                 Spannable spannable = new SpannableString(firstWord + '\n' + secondWord);
                 //  spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                         firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                     tv_status.setVisibility(View.VISIBLE);
                     tv_statusSmall.setVisibility(View.VISIBLE);
@@ -1111,18 +1018,16 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     //tv_estTime.setText(spannable);
                 }
                 if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
-                    tv_estTime.setVisibility(View.VISIBLE);
-                    tv_estTime.setText(spannable);
-//                    tv_queueTime.setVisibility(View.VISIBLE);
-//                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+                    if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                        tv_estTime.setVisibility(View.GONE);
+                    } else {
+                        tv_estTime.setVisibility(View.VISIBLE);
+                        tv_estTime.setText(spannable);
+                    }
                 } else {
                     tv_estTime.setVisibility(View.GONE);
-//                    tv_queueTime.setVisibility(View.VISIBLE);
-//                    tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                 }
             }
-
-
         } else {
             String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             if (date.equalsIgnoreCase(activelist.getDate())) {
@@ -1136,8 +1041,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     //  spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                             firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
                     if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                         secondWord = "Today";
                         long appwaittime;
@@ -1170,28 +1073,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                         }
                         String outputDateStr = outputFormat.format(datechange);
                         firstWord = "Checked in for ";
-                        String dtStart = outputDateStr;
-                        Date dateParse = null;
-                        SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                        try {
-                            dateParse = format1.parse(dtStart);
-                            System.out.println(dateParse);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        SimpleDateFormat format = new SimpleDateFormat("d");
-                        String date1 = format.format(dateParse);
-
-                        if (date1.endsWith("1") && !date1.endsWith("11"))
-                            format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                        else if (date1.endsWith("2") && !date1.endsWith("12"))
-                            format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                        else if (date1.endsWith("3") && !date1.endsWith("13"))
-                            format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                        else
-                            format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                        String yourDate = format.format(dateParse);
+                        String yourDate = Config.getFormatedDate(outputDateStr);
                         tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         secondWord = yourDate + ", " + timeFORAMT;
@@ -1199,9 +1081,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                         //  spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                                 firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                        //   tv_check_in.setVisibility(View.VISIBLE);
-                        //  tv_check_in.setText(spannable);
                         tv_status.setVisibility(View.VISIBLE);
                         tv_statusSmall.setVisibility(View.VISIBLE);
                         tv_status.setText("Cancelled at " + activelist.getStatusUpdatedTime());
@@ -1214,21 +1093,18 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                         tv_statusSmall.setVisibility(View.GONE);
                     }
                     if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
-                        tv_estTime.setVisibility(View.VISIBLE);
-                        tv_estTime.setText(spannable);
-//                        tv_queueTime.setVisibility(View.VISIBLE);
-//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+                        if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                            tv_estTime.setVisibility(View.GONE);
+                        } else {
+                            tv_estTime.setVisibility(View.VISIBLE);
+                            tv_estTime.setText(spannable);
+                        }
                     } else {
                         tv_estTime.setVisibility(View.GONE);
-//                        tv_queueTime.setVisibility(View.VISIBLE);
-//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                     }
                 } else {
                     if (activelist.getAppxWaitingTime() == -1) {
                         tv_estTime.setVisibility(View.GONE);
-                        //  tv_check_in.setVisibility(View.GONE);
-//                        tv_queueTime.setVisibility(View.VISIBLE);
-//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             tv_status.setVisibility(View.VISIBLE);
                             tv_statusSmall.setVisibility(View.VISIBLE);
@@ -1238,24 +1114,20 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                     } else {
-                        //tv_estTime.setVisibility(View.VISIBLE);
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         String firstWord = "";
                         if (header.equalsIgnoreCase("future")) {
                             firstWord = "Checked in for ";
                         }
-
                         if (header.equalsIgnoreCase("today")) {
                             firstWord = "Est Wait Time ";
                         }
-
                         String secondWord = Config.getTimeinHourMinutes(activelist.getAppxWaitingTime());
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         //  spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                                 firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                             long appwaittime;
                             if (activelist.getAppxWaitingTime() != -1) {
@@ -1288,33 +1160,11 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                             }
                             String outputDateStr = outputFormat.format(datechange);
                             firstWord = "Checked in for ";
-                            String dtStart = outputDateStr;
-                            Date dateParse = null;
-                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                            try {
-                                dateParse = format1.parse(dtStart);
-                                System.out.println(dateParse);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            SimpleDateFormat format = new SimpleDateFormat("d");
-                            String date1 = format.format(dateParse);
-
-                            if (date1.endsWith("1") && !date1.endsWith("11"))
-                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                            else if (date1.endsWith("2") && !date1.endsWith("12"))
-                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                            else if (date1.endsWith("3") && !date1.endsWith("13"))
-                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                            else
-                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                            String yourDate = format.format(dateParse);
+                            String yourDate = Config.getFormatedDate(outputDateStr);
                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             secondWord = yourDate + ", " + timeFORAMT;
                             spannable = new SpannableString(firstWord + '\n' + secondWord);
-                            // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                                     firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             tv_status.setVisibility(View.VISIBLE);
@@ -1325,19 +1175,19 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.red));
                         }
                         if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
-                            tv_estTime.setVisibility(View.VISIBLE);
-                            tv_estTime.setText(spannable);
-//                            tv_queueTime.setVisibility(View.VISIBLE);
-//                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
+                            if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                                tv_estTime.setVisibility(View.GONE);
+                            } else {
+                                tv_estTime.setVisibility(View.VISIBLE);
+                                tv_estTime.setText(spannable);
+                            }
+
                         } else {
                             tv_estTime.setVisibility(View.GONE);
-//                            tv_queueTime.setVisibility(View.VISIBLE);
-//                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         }
                     }
                 }
             } else {
-
                 Config.logV("response.body().get(i).getQueue().getQueueStartTime()" + activelist.getQueueStartTime());
                 Config.logV("Quueue Time----------------" + activelist.getQueueStartTime());
                 Config.logV("App Time----------------" + activelist.getAppxWaitingTime());
@@ -1348,7 +1198,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     appwaittime = 0;
                 }
                 if (activelist.getQueueStartTime() != null) {
-
                     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
                     Date Timeconvert = null;
                     long millis = 0;
@@ -1376,28 +1225,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     }
                     String outputDateStr = outputFormat.format(datechange);
                     firstWord = "Checked in for ";
-                    String dtStart = outputDateStr;
-                    Date dateParse = null;
-                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                    try {
-                        dateParse = format1.parse(dtStart);
-                        System.out.println(dateParse);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    SimpleDateFormat format = new SimpleDateFormat("d");
-                    String date1 = format.format(dateParse);
-
-                    if (date1.endsWith("1") && !date1.endsWith("11"))
-                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                    else if (date1.endsWith("2") && !date1.endsWith("12"))
-                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                    else if (date1.endsWith("3") && !date1.endsWith("13"))
-                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                    else
-                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                    String yourDate = format.format(dateParse);
+                    String yourDate = Config.getFormatedDate(outputDateStr);
                     String secondWord = yourDate + ", " + activelist.getQueueStartTime();
                     Spannable spannable = new SpannableString(firstWord + secondWord);
                     spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1434,38 +1262,13 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                         }
                         outputDateStr = outputFormat.format(datechange);
                         firstWord = "Checked in for ";
-                        dtStart = outputDateStr;
-                        dateParse = null;
-                        format1 = new SimpleDateFormat("dd-MM-yyyy");
-                        try {
-                            dateParse = format1.parse(dtStart);
-                            System.out.println(dateParse);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        format = new SimpleDateFormat("d");
-                        date1 = format.format(dateParse);
-
-                        if (date1.endsWith("1") && !date1.endsWith("11"))
-                            format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                        else if (date1.endsWith("2") && !date1.endsWith("12"))
-                            format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                        else if (date1.endsWith("3") && !date1.endsWith("13"))
-                            format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                        else
-                            format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                        yourDate = format.format(dateParse);
+                        yourDate = Config.getFormatedDate(outputDateStr);
                         tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         secondWord = yourDate + ", " + timeFORAMT;
                         spannable = new SpannableString(firstWord + '\n' + secondWord);
-                        //   spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                                 firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                        //   tv_check_in.setVisibility(View.VISIBLE);
-                        //   tv_check_in.setText(spannable);
                         tv_status.setVisibility(View.VISIBLE);
                         tv_statusSmall.setVisibility(View.VISIBLE);
                         tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
@@ -1473,52 +1276,20 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                         tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                         tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.red));
                     } else {
-                        //   tv_check_in.setVisibility(View.GONE);
                         tv_status.setVisibility(View.GONE);
                         tv_statusSmall.setVisibility(View.GONE);
                     }
                     if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                         tv_estTime.setVisibility(View.VISIBLE);
                         tv_estTime.setText(spannable);
-//                        tv_queueTime.setVisibility(View.VISIBLE);
-//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                     } else {
                         tv_estTime.setVisibility(View.GONE);
-//                        tv_queueTime.setVisibility(View.VISIBLE);
-//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                     }
                 } else {
-
                     if (activelist.getAppxWaitingTime() != -1) {
                         String sTime = null;
                         String firstWord = "";
-                        try {
-                            String startTime = "00:00";
-                            String newtime;
-                            int minutes = activelist.getAppxWaitingTime();
-                            int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
-                            int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
-
-                            if (header.equalsIgnoreCase("future")) {
-                                firstWord = "Checked in for ";
-                            }
-
-                            if (header.equalsIgnoreCase("today")) {
-
-                                firstWord = "Est Wait Time ";
-                            }
-                            if (m > 0 && h > 0) {
-                                newtime = h + " Hour :" + m + " Minutes";
-                            } else if (h > 0 && m == 0) {
-                                newtime = h + " Hour";
-                            } else {
-                                newtime = m + " Minutes";
-                            }
-                            sTime = newtime;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
+                        sTime = Config.getTimeinHourMinutes(activelist.getAppxWaitingTime());
                         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                 "fonts/Montserrat_Bold.otf");
                         DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -1531,28 +1302,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                             e.printStackTrace();
                         }
                         String outputDateStr = outputFormat.format(datechange);
-                        String dtStart = outputDateStr;
-                        Date dateParse = null;
-                        SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                        try {
-                            dateParse = format1.parse(dtStart);
-                            System.out.println(dateParse);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        SimpleDateFormat format = new SimpleDateFormat("d");
-                        String date1 = format.format(dateParse);
-
-                        if (date1.endsWith("1") && !date1.endsWith("11"))
-                            format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                        else if (date1.endsWith("2") && !date1.endsWith("12"))
-                            format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                        else if (date1.endsWith("3") && !date1.endsWith("13"))
-                            format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                        else
-                            format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                        String yourDate = format.format(dateParse);
+                        String yourDate = Config.getFormatedDate(outputDateStr);
                         String secondWord = yourDate + ", " + sTime;
                         Spannable spannable = new SpannableString(firstWord + secondWord);
                         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1588,37 +1338,13 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                             }
                             outputDateStr = outputFormat.format(datechange);
                             firstWord = "Checked in for ";
-                            dtStart = outputDateStr;
-                            dateParse = null;
-                            format1 = new SimpleDateFormat("dd-MM-yyyy");
-                            try {
-                                dateParse = format1.parse(dtStart);
-                                System.out.println(dateParse);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            format = new SimpleDateFormat("d");
-                            date1 = format.format(dateParse);
-
-                            if (date1.endsWith("1") && !date1.endsWith("11"))
-                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                            else if (date1.endsWith("2") && !date1.endsWith("12"))
-                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                            else if (date1.endsWith("3") && !date1.endsWith("13"))
-                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                            else
-                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                            yourDate = format.format(dateParse);
+                            yourDate = Config.getFormatedDate(outputDateStr);
                             tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                     "fonts/Montserrat_Bold.otf");
                             secondWord = yourDate + ", " + timeFORAMT;
                             spannable = new SpannableString(firstWord + '\n' + secondWord);
-                            //    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                                     firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            //   tv_check_in.setVisibility(View.VISIBLE);
-                            //   tv_check_in.setText(spannable);
                             tv_status.setVisibility(View.VISIBLE);
                             tv_statusSmall.setVisibility(View.VISIBLE);
                             tv_status.setText("Cancelled at" + " " + activelist.getStatusUpdatedTime());
@@ -1626,41 +1352,28 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                             tv_status.setTextColor(mContext.getResources().getColor(R.color.red));
                             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.red));
                         } else {
-                            //   tv_check_in.setVisibility(View.GONE);
                             tv_status.setVisibility(View.GONE);
                             tv_statusSmall.setVisibility(View.GONE);
                         }
                         if (!activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
                             tv_estTime.setVisibility(View.VISIBLE);
                             tv_estTime.setText(spannable);
-//                            tv_queueTime.setVisibility(View.VISIBLE);
-//                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         } else {
                             tv_estTime.setVisibility(View.GONE);
-//                            tv_queueTime.setVisibility(View.VISIBLE);
-//                            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         }
                     } else {
                         tv_estTime.setVisibility(View.GONE);
-//                        tv_queueTime.setVisibility(View.VISIBLE);
-//                        tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                     }
                 }
-
             }
-
         }
         layout_partySize.setVisibility(View.GONE);
         if (!header.equalsIgnoreCase("old") && !activelist.getWaitlistStatus().
-
                 equalsIgnoreCase("started") && !activelist.getWaitlistStatus().
-
                 equalsIgnoreCase("cancelled") && !(activelist.getWaitlistStatus().
-
                 equalsIgnoreCase("done"))) {
             Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
-
             if (String.valueOf(activelist.getPartySize()) != null) {
                 if (activelist.getPartySize() > 1) {
                     layout_partySize.setVisibility(View.VISIBLE);
@@ -1671,7 +1384,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                             0, partyWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_partysize.setVisibility(View.VISIBLE);
                     // spannable1.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), partyWord.length(), partyWord.length() + ValueWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                     spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                             partyWord.length(), partyWord.length() + ValueWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_partysize.setText(spannable1);
@@ -1684,11 +1396,8 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         } else {
             layout_partySize.setVisibility(View.GONE);
             tv_estTime.setVisibility(View.GONE);
-//            tv_queueTime.setVisibility(View.VISIBLE);
-//            tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
         }
         if (activelist.getPersonsAhead() != -1 && !activelist.getWaitlistStatus().
-
                 equalsIgnoreCase("cancelled") && !header.equalsIgnoreCase("old")) {
             layout_partySize.setVisibility(View.VISIBLE);
             tv_personahead.setVisibility(View.VISIBLE);
@@ -1917,30 +1626,17 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     tv_prepaid.setVisibility(View.GONE);
                     tv_makepay.setVisibility(View.GONE);
                 }
-
             } else {
                 btn_pay.setVisibility(View.GONE);
                 tv_makepay.setVisibility(View.GONE);
                 paymentLayout.setVisibility(View.GONE);
             }
-
-
         } else {
-
             btn_pay.setVisibility(View.GONE);
             tv_makepay.setVisibility(View.GONE);
             tv_prepaid.setVisibility(View.GONE);
             paymentLayout.setVisibility(View.GONE);
         }
-
-
-//        if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
-//            tv_prepaid.setVisibility(View.GONE);
-//            btn_pay.setVisibility(View.GONE);
-//            tv_status.setVisibility(View.GONE);
-//        }
-
-
         btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

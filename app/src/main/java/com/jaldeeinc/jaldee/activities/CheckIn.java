@@ -130,9 +130,7 @@ import retrofit2.Response;
  */
 
 public class CheckIn extends AppCompatActivity implements PaymentResultWithDataListener {
-
     ArrayList<String> couponArraylist = new ArrayList<String>();
-
     String phoneNumber;
     int providerId;
     String value = null;
@@ -140,7 +138,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static Context mContext;
     static Activity mActivity;
     Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
-    static int serviceId;
+    static int locationId;
     ArrayList<SearchService> LServicesList = new ArrayList<>();
     ArrayList<SearchService> gServiceList = new ArrayList<>();
     ArrayList<SearchUsers>   doctResponse = new ArrayList<>();
@@ -171,7 +169,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
     static TextView tv_queuetime;
-//    static TextView tv_queuename;
+    //    static TextView tv_queuename;
     static LinearLayout queuelayout;
     String toastMessage;
     TextView txt_chooseservice, txt_choosedepartment,txt_choosedoctor;
@@ -233,12 +231,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     File file;
     EditText edt_message;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkin);
-
         list = findViewById(R.id.list);
         tv_personahead = findViewById(R.id.txt_personahead);
         mtermsAndConditionDetail = findViewById(R.id.termsAndConditionDetail);
@@ -290,112 +286,26 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
         et_virtualId = findViewById(R.id.virtual_id);
 
-
-
         tv_addnote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
                 dialog.setContentView(R.layout.reply);
                 dialog.show();
-
                 final Button btn_send = dialog.findViewById(R.id.btn_send);
                 Button btn_cancel = dialog.findViewById(R.id.btn_cancel);
                 edt_message = dialog.findViewById(R.id.edt_message);
                 TextView txtsendmsg = dialog.findViewById(R.id.txtsendmsg);
                 txtsendmsg.setVisibility(View.GONE);
                 btn_send.setText("ADD");
-
-
-//                tv_attach = dialog.findViewById(R.id.btn);
-//                tv_camera = dialog.findViewById(R.id.camera);
-//                recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
-//
-//                tv_attach.setVisibility(View.VISIBLE);
-//                tv_camera.setVisibility(View.VISIBLE);
-//
-//                tv_attach.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        try {
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//
-//                                    //requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST);
-//
-//                                    requestPermissions(new String[]{
-//                                            Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
-//
-//                                    return;
-//                                } else {
-//                                    Intent intent = new Intent();
-//                                    intent.setType("*/*");
-//                                    intent.setAction(Intent.ACTION_GET_CONTENT);
-//                                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
-//                                }
-//                            } else {
-//
-//                                Intent intent = new Intent();
-//                                intent.setType("*/*");
-//                                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
-//                            }
-//                        } catch (Exception ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    }
-//
-//                });
-//
-//                tv_camera.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        try {
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//
-//                                    //requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST);
-//
-//                                    requestPermissions(new String[]{
-//                                            Manifest.permission.CAMERA}, CAMERA);
-//
-//                                    return;
-//                                } else {
-//                                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                                    Intent cameraIntent = new Intent();
-//                                    cameraIntent.setType("image/*");
-//                                    cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//                                    cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
-//                                    startActivityForResult(intent, CAMERA);
-//                                }
-//                            } else {
-//
-//                                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                                Intent cameraIntent = new Intent();
-//                                cameraIntent.setType("image/*");
-//                                cameraIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//                                cameraIntent.setAction(Intent.ACTION_GET_CONTENT);
-//                                startActivityForResult(intent, CAMERA);
-//                            }
-//                        } catch (Exception ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    }
-//
-//                });
-
-
                 if (!txtsendmsg.equals("")) {
                     edt_message.setText(txt_message);
                 }
-
-
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         txt_message = edt_message.getText().toString();
                         dialog.dismiss();
-
                     }
                 });
 
@@ -405,7 +315,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         dialog.dismiss();
                     }
                 });
-
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
@@ -417,7 +326,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             btn_send.setEnabled(true);
                             btn_send.setClickable(true);
                             btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-                          //  btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                            //  btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                         }
                     }
 
@@ -435,24 +344,17 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 recycle_image_attachment = dialog.findViewById(R.id.recycler_view_image);
                 //  imageview = dialog.findViewById(R.id.iv);
                 // RelativeLayout displayImages = dialog.findViewById(R.id.display_images);
-
-
                 requestMultiplePermissions();
                 tv_attach.setVisibility(View.VISIBLE);
                 tv_camera.setVisibility(View.VISIBLE);
-
-
                 tv_attach.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if ((ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-
                                     requestPermissions(new String[]{
                                             Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY);
-
                                     return;
                                 } else {
                                     Intent intent = new Intent();
@@ -474,18 +376,14 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                 });
 
-//
                 tv_camera.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
-
                                     requestPermissions(new String[]{
                                             Manifest.permission.CAMERA}, CAMERA);
-
                                     return;
                                 } else {
                                     Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -510,15 +408,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     }
 
                 });
-
                 if(imagePathList.size()>0 && edt_message.getText().toString().equals("") ){
                     Toast.makeText(CheckIn.this, "Please enter add note", Toast.LENGTH_SHORT).show();
                 }
-//
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //
                         txt_message = edt_message.getText().toString();
                         dialog.dismiss();
                     }
@@ -531,7 +426,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         dialog.dismiss();
                     }
                 });
-//
                 edt_message.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void afterTextChanged(Editable arg0) {
@@ -648,7 +542,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             mFrom = extras.getString("from", "");
             Config.logV("From-------------" + mFrom);
             if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
-                serviceId = extras.getInt("serviceId");
+                locationId = extras.getInt("serviceId");
                 uniqueID = extras.getString("uniqueID");
                 accountID = extras.getString("accountID");
                 modifyAccountID = accountID;
@@ -659,8 +553,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 getAvail_date = extras.getString("getAvail_date", "");
                 ApiSearchViewDetail(uniqueID);
             } else {
-
-                serviceId = extras.getInt("serviceId");
+                locationId = extras.getInt("serviceId");
                 uniqueID = extras.getString("uniqueID");
                 accountID = extras.getString("accountID");
                 /* mFrom = extras.getString("from", "");*/
@@ -742,15 +635,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         ApiSearchViewSetting(uniqueID);
         ApiSearchViewTerminology(uniqueID);
         ApiGetProfileDetail();
-        ApiGetProfileDetail();
         mFirstName = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         mLastName = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
         consumerID = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
         tv_name.setText(mFirstName + " " + mLastName);
         tv_addmember = findViewById(R.id.txtaddmember);
-        //  tv_editphone = findViewById(R.id.txteditphone);
-
-
         tv_addmember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -765,14 +654,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 startActivity(iFamily);
             }
         });
-
-//        tv_editphone.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                phoneNumberValue.setEnabled(true);
-//            }
-//        });
-
         mSpinnerService.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
@@ -824,54 +705,40 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_checkin_service.setText(spannable);
-
                 Date currentTime = new Date();
                 final SimpleDateFormat sdf = new SimpleDateFormat(
                         "yyyy-MM-dd", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 System.out.println("UTC time: " + sdf.format(currentTime));
-
                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                    ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                 } else {
                     if (selectedDateFormat != null) {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                        ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
                     } else {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
-                        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                        ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                     }
                 }
-
-
                 isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
                 Config.logV("Payment------------" + isPrepayment);
                 if (isPrepayment) {
-
                     sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
-
                     Config.logV("Payment----sAmountPay--------" + sAmountPay);
                     APIPayment(modifyAccountID);
-
                 } else {
                     LservicePrepay.setVisibility(View.GONE);
                 }
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
-
-
         });
         mSpinnerDepartment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 deptSpinnertext = depResponse.getDepartments().get(position).getDepartmentId();
                 Log.i("dfgdfg", String.valueOf(deptSpinnertext));
-
                 departmentSelected = depResponse.getDepartments().get(position).getDepartmentName();
                 selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
                 ApiSearchUsers(selectedDepartment);
@@ -885,7 +752,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             break;
                         }
                     }
-
                 }
                 LServicesList.clear();
                 LServicesList.addAll(serviceList);
@@ -903,16 +769,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
                     btn_checkin.setVisibility(View.VISIBLE);
-
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-
-
         });
 
         if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
@@ -927,9 +789,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             Date added_date = addDays(currentTime, 1);
             DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
             //to convert Date to String, use format method of SimpleDateFormat class.
-
-
-
             String strDate = dateFormat.format(added_date);
             /* txt_date.setText(sdf.format(currentTime));*/
             txt_date.setText(strDate);
@@ -938,7 +797,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             selectedDateFormat = selecteddateParse.format(added_date);
             UpdateDAte(selectedDateFormat);
         }
-
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -951,23 +809,16 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             uniqueID = extras.getString("uniqueID");
             ApiJaldeegetS3Coupons(uniqueID);
         }
-
-
-
-
         coupon_link.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    LcouponCheckin.setVisibility(View.VISIBLE);
+                LcouponCheckin.setVisibility(View.VISIBLE);
             }
         });
-
-
         applycouponbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 couponEntered = couponEdit.getEditableText().toString();
-
                 boolean found = false;
                 for (int index = 0; index < couponArraylist.size(); index++) {
                     if (couponArraylist.get(index).equals(couponEntered)) {
@@ -976,9 +827,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     }
                 }
                 if (found) {
-
                     Toast.makeText(CheckIn.this, "Coupon already added", Toast.LENGTH_SHORT).show();
-
                     return;
                 }
                 found = false;
@@ -989,21 +838,15 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     }
                 }
                 if (found) {
-
                     couponArraylist.add(couponEntered);
-
                     couponEdit.setText("");
                     Toast.makeText(CheckIn.this, couponEntered + " " + "Added", Toast.LENGTH_SHORT).show();
-
-
                 } else {
                     if (couponEntered.equals("")) {
                         Toast.makeText(CheckIn.this, "Enter a coupon", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(CheckIn.this, "Coupon Invalid", Toast.LENGTH_SHORT).show();
                     }
-
-
                 }
                 Config.logV("couponArraylist--code-------------------------" + couponArraylist);
                 list.setVisibility(View.VISIBLE);
@@ -1018,19 +861,16 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         mtxtDele.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 mtermsandCond.setVisibility(View.INVISIBLE);
                 mtxtDele.setVisibility(View.INVISIBLE);
                 mtxtTermsandCondition.setVisibility(View.INVISIBLE);
                 couponEdit.setText("");
                 mtermsAndConditionDetail.setVisibility(View.INVISIBLE);
-
             }
         });
         mtxtTermsandCondition.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 mtermsAndConditionDetail.setVisibility(mtermsAndConditionDetail.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             }
         });
@@ -1051,7 +891,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         }
         return null;
     }
-
     protected static String getFileNameInfo(Uri uri) {
         if (uri == null) {
             return null;
@@ -1215,268 +1054,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         }
         return 0;
     }
-
-
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        if (resultCode == this.RESULT_CANCELED) {
-//            return;
-//        }
-//        if (requestCode == GALLERY) {
-//            if (data != null) {
-//                try {
-//                    if (data.getData() != null) {
-//                        Uri uri = data.getData();
-//                        String filepath = "";//default fileName
-//                        //Uri filePathUri = uri;
-//                        File file;
-//                        String mimeType = this.mContext.getContentResolver().getType(uri);
-//                        String uriString = uri.toString();
-//                        String extension = "";
-//                        if (uriString.contains(".")) {
-//                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
-//                        }
-//
-//                        if (Arrays.asList(imgExtsSupported).contains(extension)) {
-//                            try {
-//                                file = new File(new URI(uri.toString()));
-//                                if (file.exists())
-//                                    filepath = file.getAbsolutePath();
-//
-//                            } catch (URISyntaxException e) {
-//                                e.printStackTrace();
-//                            }
-//                        } else {
-//                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
-//                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
-//                                filepath = getFilePathFromURI(this.mContext, uri, extension);
-//                            } else {
-//                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-//                                return;
-//                            }
-//                        }
-//
-////                        if (uri.getScheme().toString().compareTo("external/images/media") == 0) {
-////
-//////                            String[] projection = { MediaStore.Images.Media.DATA };
-//////                            Cursor cursor = this.mContext.getContentResolver().query(uri, projection, null, null, null);
-//////                            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//////
-//////                            cursor.moveToFirst();
-//////                            String mImagePath = cursor.getString(column_index);
-//////                            cursor.close();
-//////                            }
-////                            filepath = getFilePathFromURI(this.mContext, uri);
-////                        } else if (uri.getScheme().compareTo("file") == 0) {
-////                            try {
-////                                file = new File(new URI(uri.toString()));
-////                                if (file.exists())
-////                                    filepath = file.getAbsolutePath();
-////
-////                            } catch (URISyntaxException e) {
-////                                e.printStackTrace();
-////                            }
-////                        }  else {
-////                            filepath = uri.getPath();
-////                        }
-//                        imagePathList.add(filepath);
-////                        Uri mImageUri = data.getData();
-////                        filePath = data.getData().getPath();
-////                        String ext1 = FilenameUtils.getExtension(filePath);
-////
-////
-////                        imagePathList.add(mImageUri.toString());
-////             //         bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
-////                       // if(bitmap!=null){
-////                    //    path = saveImage(bitmap);}
-////
-////                      //  else{
-////                            path = getRealFilePath(mImageUri);
-////                     //   }
-//
-//
-//                        DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-//                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-//                        recycle_image_attachment.setLayoutManager(mLayoutManager);
-//                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
-//
-//                        mDetailFileAdapter.notifyDataSetChanged();
-//
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//        } else if (requestCode == CAMERA) {
-//            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//            //      imageview.setImageBitmap(bitmap);
-//            path = saveImage(bitmap);
-//            // imagePathList.add(bitmap.toString());
-//            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
-//            mImageUri = Uri.parse(paths);
-//            float size = getImageSize(mContext, mImageUri);
-//            imagePathList.add(mImageUri.toString());
-//
-//            DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-//            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-//            recycle_image_attachment.setLayoutManager(mLayoutManager);
-//            recycle_image_attachment.setAdapter(mDetailFileAdapter);
-//            mDetailFileAdapter.notifyDataSetChanged();
-//
-//        }
-//
-//       else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-//
-//
-//            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
-//            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
-//
-//            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
-//
-//                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
-//                    showAlert("Payment Successful");
-//                    finish();
-//                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
-//                    showAlert("Payment Cancelled");
-//                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
-//                    showAlert("Payment Failed");
-//                }
-//
-//            } else if (resultModel != null && resultModel.getError() != null) {
-//                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
-//            } else {
-//                //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
-//            }
-//        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
-//            showAlert("Payment Cancelled");
-//        }
-//    }
-//
-//    public String saveImage(Bitmap myBitmap) {
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//        File wallpaperDirectory = new File(
-//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-//        // have the object build the directory structure, if needed.
-//        if (!wallpaperDirectory.exists()) {
-//            wallpaperDirectory.mkdirs();
-//        }
-//
-//        try {
-//            f = new File(wallpaperDirectory, Calendar.getInstance()
-//                    .getTimeInMillis() + ".jpg");
-//            f.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(f);
-//            fo.write(bytes.toByteArray());
-//            MediaScannerConnection.scanFile(this,
-//                    new String[]{f.getPath()},
-//                    new String[]{"image/jpeg"}, null);
-//            fo.close();
-//            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-//
-//            return f.getAbsolutePath();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
-//        return "";
-//    }
-//
-//    private void requestMultiplePermissions() {
-//        Dexter.withActivity(this)
-//                .withPermissions(
-//                        Manifest.permission.CAMERA,
-//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                        Manifest.permission.READ_EXTERNAL_STORAGE)
-//                .withListener(new MultiplePermissionsListener() {
-//                    @Override
-//                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-//                        // check if all permissions are granted
-//                        if (report.areAllPermissionsGranted()) {
-//                            Toast.makeText(getApplicationContext(), "All permissions are granted by user!", Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                        // check for permanent denial of any permission
-//                        if (report.isAnyPermissionPermanentlyDenied()) {
-//                            // show alert dialog navigating to Settings
-//                            //openSettingsDialog();fc
-//                            Toast.makeText(getApplicationContext(), "You Denied the Permission", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-//                        token.continuePermissionRequest();
-//                    }
-//                }).
-//                withErrorListener(new PermissionRequestErrorListener() {
-//                    @Override
-//                    public void onError(DexterError error) {
-//                        Toast.makeText(getApplicationContext(), "Some Error! ", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .onSameThread()
-//                .check();
-//    }
-//
-//    public static float getImageSize(Context context, Uri uri) {
-//        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-//        if (cursor != null) {
-//            int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
-//            cursor.moveToFirst();
-//            float imageSize = cursor.getLong(sizeIndex);
-//            cursor.close();
-//            return imageSize / (1024f * 1024f); // returns size in bytes
-//        }
-//        return 0;
-//    }
-//
-//    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-//        //copy file and send new file path
-//        String fileName = getFileNameInfo(contentUri);
-//        if (!TextUtils.isEmpty(fileName)) {
-//            String ext = "";
-//            if (fileName.contains(".")) {
-//            } else {
-//                ext = "." + extension;
-//            }
-//            File wallpaperDirectoryFile = new File(
-//                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-//            copy(context, contentUri, wallpaperDirectoryFile);
-//            return wallpaperDirectoryFile.getAbsolutePath();
-//        }
-//        return null;
-//    }
-//
-//    protected static String getFileNameInfo(Uri uri) {
-//        if (uri == null) {
-//            return null;
-//        }
-//        String fileName = null;
-//        String path = uri.getPath();
-//        int cut = path.lastIndexOf('/');
-//        if (cut != -1) {
-//            fileName = path.substring(cut + 1);
-//        }
-//        return fileName;
-//    }
-//
-//    public static void copy(Context context, Uri srcUri, File dstFile) {
-//        try {
-//            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-//            if (inputStream == null) return;
-//            OutputStream outputStream = new FileOutputStream(dstFile);
-//            IOUtils.copy(inputStream, outputStream);
-//            inputStream.close();
-//            outputStream.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
     public void setCouponList(ArrayList couponArraylistNew) {
         this.couponArraylist = couponArraylistNew;
         Log.i("cooooooo", couponArraylist.toString());
@@ -1574,7 +1151,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             e.printStackTrace();
         }
         Config.logV("Selected Date---&&&&&&&&&&&#%%%%%%%-------------" + selectedDate);
-        ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, String.valueOf(isShowToken));
+        ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, String.valueOf(isShowToken));
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -1661,7 +1238,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
 
                             }
-                            ApiSearchViewServiceID(serviceId);
+                            ApiSearchViewServiceID(locationId);
                         }
                     }
 
@@ -1747,44 +1324,29 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     boolean showPayU = false;
 
     private void APIPayment(String accountID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ArrayList<PaymentModel>> call = apiService.getPaymentModes(accountID);
-
         call.enqueue(new Callback<ArrayList<PaymentModel>>() {
             @Override
             public void onResponse(Call<ArrayList<PaymentModel>> call, Response<ArrayList<PaymentModel>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
-
                     Config.logV("URL----%%%%%-----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         mPaymentData = response.body();
-
                         for (int i = 0; i < mPaymentData.size(); i++) {
                             if (mPaymentData.get(i).getDisplayname().equalsIgnoreCase("Wallet")) {
                                 showPaytmWallet = true;
                             }
-
                             if (mPaymentData.get(i).getName().equalsIgnoreCase("CC") || mPaymentData.get(i).getName().equalsIgnoreCase("DC") || mPaymentData.get(i).getName().equalsIgnoreCase("NB")) {
                                 showPayU = true;
                             }
                         }
-
                         if ((showPayU) || showPaytmWallet) {
                             Config.logV("URL----%%%%%---@@--");
                             LservicePrepay.setVisibility(View.VISIBLE);
@@ -1799,16 +1361,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             txtprepayamount.setText(spannable);
                         }
-
                     } else {
                         Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_LONG).show();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1817,263 +1375,64 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
-
             }
         });
-
-
     }
 
     static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
-
     private static Date dateCompareOne;
-
-    private static void ApiQueueTimeSlot(String serviceId, String subSeriveID, String accountID, String mDate, final String isShowToken) {
-
+    private static void ApiQueueTimeSlot(String locationId, String subSeriveID, String accountID, String mDate, final String isShowToken) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
-        Call<ArrayList<QueueTimeSlotModel>> call = apiService.getQueueTimeSlot(serviceId, subSeriveID, mDate, accountID);
-
+        Call<ArrayList<QueueTimeSlotModel>> call = apiService.getQueueTimeSlot(locationId, subSeriveID, mDate, accountID);
         call.enqueue(new Callback<ArrayList<QueueTimeSlotModel>>() {
             @Override
             public void onResponse(Call<ArrayList<QueueTimeSlotModel>> call, Response<ArrayList<QueueTimeSlotModel>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(mActivity, mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("mQueueTimeSlotList--------11111-----------------" + response.code());
                     if (response.code() == 200) {
                         mQueueTimeSlotList = response.body();
-
-                        if (mQueueTimeSlotList.size() > 0) {
-                            i = 0;
-                          //  if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("Ml")))) {
-                                tv_personahead.setVisibility(View.VISIBLE);
-
-
-                                String firstWord = "ahead of you ";
-                                String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()+ " People");
-
-                                Spannable spannable = new SpannableString(secondWord + '\n' + firstWord);
-                                tv_personahead.setText(spannable);
-
-                        //    }
-                       //     else{
-                           //     tv_personahead.setVisibility(View.GONE);
-                          //  }
-                        }
-
+//                        if (mQueueTimeSlotList.size() > 0) {
+////                            i = 0;
+////                            //  if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("Ml")))) {
+////                            tv_personahead.setVisibility(View.VISIBLE);
+////                            String firstWord = "ahead of you ";
+////                            String secondWord = String.valueOf(mQueueTimeSlotList.get(0).getQueueSize()+ " People");
+////                            Spannable spannable = new SpannableString(secondWord + '\n' + firstWord);
+////                            tv_personahead.setText(spannable);
+////                        }
                         if (mQueueTimeSlotList.size() == 1) {
                             tv_queue.setText("Time window");
                         } else {
                             tv_queue.setText("Choose the time window");
                         }
-
-                        if (mQueueTimeSlotList.size() == 1) {
-                            tv_queue.setText("Time window");
-                        } else {
-                            tv_queue.setText("Choose the time window");
-                        }
-
                         if (mQueueTimeSlotList.size() > 0) {
+                            i=0;
                             Lbottomlayout.setVisibility(View.VISIBLE);
-//                            tv_queuename.setVisibility(View.GONE);
                             tv_queuetime.setVisibility(View.VISIBLE);
                             tv_waittime.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
                             if (mQueueTimeSlotList.get(i).getId() != 0) {
                                 queueId = mQueueTimeSlotList.get(i).getId();
                             }
-
                             Config.logV("mQueueTimeSlotList-------------------------" + mQueueTimeSlotList.size());
                             tv_queue.setVisibility(View.VISIBLE);
                             queuelayout.setVisibility(View.VISIBLE);
-
-
-//                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
                             tv_queuetime.setText(mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
-
-                            String firstWord = null;
-
-                            String secondWord = null;
-                            try {
-                                String startTime = "00:00";
-                                String newtime = null;
-                                int minutes = mQueueTimeSlotList.get(0).getQueueWaitingTime();
-                                int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
-                                int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
-                                if (m > 0 && h > 0) {
-                                    newtime = h + " Hour :" + m + " Minutes";
-                                } else if (h > 0 && m == 0) {
-                                    newtime = h + " Hour";
-                                } else {
-                                    newtime = m + " Minutes";
-                                }
-
-                                secondWord = newtime;
-                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                    if (h > 0) {
-                                        firstWord = /*"Checked in for Today,"*/ " " + "Est Wait Time ";
-                                    } else {
-                                        firstWord = "Est Wait Time ";
-
-                                    }
-                                } else {
-
-                                    firstWord = "Next Available Time ";
-                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
-                                    Date datechange = null;
-                                    try {
-                                        datechange = inputFormat.parse(inputDateStr);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-                                    String outputDateStr = outputFormat.format(datechange);
-                                    String dtStart = outputDateStr;
-                                    Date dateParse = null;
-                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                                    try {
-                                        dateParse = format1.parse(dtStart);
-                                        System.out.println(dateParse);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    SimpleDateFormat format = new SimpleDateFormat("d");
-                                    String date1 = format.format(dateParse);
-
-                                    if (date1.endsWith("1") && !date1.endsWith("11"))
-                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
-                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
-                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                                    else
-                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                                    String yourDate = format.format(dateParse);
-
-                                    secondWord = yourDate + ", " + newtime;
-                                }
-                                Config.logV("Second WORD---@@@@----222--------" + secondWord + "Datecompare" + dateCompareOne);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            if (mQueueTimeSlotList.get(i).getId() != 0) {
-                                queueId = mQueueTimeSlotList.get(i).getId();
-                            }
-
-                            if (mQueueTimeSlotList.get(0).getServiceTime() != null) {
-
-                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                    firstWord = "Next Available Time Today, ";
-                                    secondWord = mQueueTimeSlotList.get(0).getServiceTime();
-                                } else {
-
-                                    firstWord = "Next Available Time ";
-                                    DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                    DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                                    String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
-                                    Date datechange = null;
-                                    try {
-                                        datechange = inputFormat.parse(inputDateStr);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-                                    String outputDateStr = outputFormat.format(datechange);
-                                    String dtStart = outputDateStr;
-                                    Date dateParse = null;
-                                    SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                                    try {
-                                        dateParse = format1.parse(dtStart);
-                                        System.out.println(dateParse);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    SimpleDateFormat format = new SimpleDateFormat("d");
-                                    String date1 = format.format(dateParse);
-
-                                    if (date1.endsWith("1") && !date1.endsWith("11"))
-                                        format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                                    else if (date1.endsWith("2") && !date1.endsWith("12"))
-                                        format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                                    else if (date1.endsWith("3") && !date1.endsWith("13"))
-                                        format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                                    else
-                                        format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                                    String yourDate = format.format(dateParse);
-
-
-                                    secondWord = yourDate + ", " + mQueueTimeSlotList.get(0).getServiceTime();
-                                }
-
-
-                                Config.logV("Second WORD---------------" + secondWord);
-                            }
-
-                            Spannable spannable = new SpannableString(firstWord + '\n' + secondWord);
-                            Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                    "fonts/Montserrat_Bold.otf");
-                            spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            tv_waittime.setText(spannable);
-
-                            Config.logV("TV WAITTIME-------------VISIBLE-------" + spannable);
-
-
-                            if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                                tv_waittime.setVisibility(View.VISIBLE);
-                                Config.logV("TV WAITTIME-------------INVISIBLE-------");
-
-                                Date c = Calendar.getInstance().getTime();
-                                System.out.println("Current time => " + c);
-                                String formattedDate;
-                                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyy");
-                                    formattedDate = "Today, " + df.format(c);
-                                } else {
-                                    String dtStart = selectedDateFormat;
-                                    Date dateParse = null;
-                                    SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-                                    try {
-                                        dateParse = format1.parse(dtStart);
-                                        System.out.println(dateParse);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    SimpleDateFormat df = new SimpleDateFormat("EE,dd-MM-yyy");
-                                    formattedDate = df.format(dateParse);
-                                }
-
-                                tv_waittime.setText(formattedDate);
-
+                            tv_personahead.setText(Config.getPersonsAheadText(mQueueTimeSlotList.get(0).getQueueSize()));
+                            if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                                tv_waittime.setVisibility(View.GONE);
                             } else {
                                 tv_waittime.setVisibility(View.VISIBLE);
+                                tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(0)));
                             }
-
-
                         } else {
-
                             Config.logV("No Checkins-------------------" + mQueueTimeSlotList.size());
                             tv_queue.setVisibility(View.GONE);
                             queuelayout.setVisibility(View.GONE);
@@ -2084,21 +1443,15 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             txtnocheckin.setVisibility(View.VISIBLE);
                             txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
                         }
-
-
                         if (mQueueTimeSlotList.size() > 1) {
-
                             ic_right.setVisibility(View.VISIBLE);
                             ic_left.setVisibility(View.VISIBLE);
                             ic_right.setImageResource(R.drawable.icon_right_angle_active);
                             ic_right.setEnabled(true);
-
-
                         } else {
                             ic_right.setVisibility(View.INVISIBLE);
                             ic_left.setVisibility(View.INVISIBLE);
                         }
-
                         if (i > 0) {
                             ic_left.setEnabled(true);
                             ic_left.setImageResource(R.drawable.icon_left_angle_active);
@@ -2106,503 +1459,164 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             ic_left.setEnabled(false);
                             ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
                         }
-
-
                         ic_left.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
                                 i--;
                                 Config.logV("Left Click------------------**" + i);
                                 if (i >= 0) {
-
-//                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                     tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
-                               //     if (mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Ml")))) {
-                                        tv_personahead.setVisibility(View.VISIBLE);
-
-
-                                        String firstWord = "ahead of you ";
-                                        String secondWord = String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()+ " People");
-
-                                        Spannable spannable = new SpannableString(secondWord + '\n' + firstWord);
-                                        tv_personahead.setText(spannable);
-
-                               //     }
-//                                    else{
-//                                        tv_personahead.setVisibility(View.GONE);
-//                                    }
-
-                                     firstWord = null;
-
-                                     secondWord = null;
-                                    try {
-                                        String startTime = "00:00";
-                                        String newtime;
-                                        int minutes = mQueueTimeSlotList.get(i).getQueueWaitingTime();
-                                        int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
-                                        int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
-                                        if (m > 0 && h > 0) {
-                                            newtime = h + " Hour :" + m + "  Minutes";
-                                        } else if (h > 0 && m == 0) {
-                                            newtime = h + " Hour";
-                                        } else {
-                                            newtime = m + " Minutes";
-                                        }
-                                        secondWord = newtime;
-                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                            if (h > 0) {
-                                                firstWord = "Next Available Time Today, ";
-                                            } else {
-                                                firstWord = "Est Wait Time ";
-
-                                            }
-
-                                        } else {
-
-                                            firstWord = "Next Available Time ";
-                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
-                                            Date datechange = null;
-                                            try {
-                                                datechange = inputFormat.parse(inputDateStr);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                            String outputDateStr = outputFormat.format(datechange);
-
-
-                                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
-
-                                            String dtStart = outputDateStr;
-                                            Date dateParse = null;
-                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                                            try {
-                                                dateParse = format1.parse(dtStart);
-                                                System.out.println(dateParse);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            SimpleDateFormat format = new SimpleDateFormat("d");
-                                            String date1 = format.format(dateParse);
-
-                                            if (date1.endsWith("1") && !date1.endsWith("11"))
-                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
-                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
-                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                                            else
-                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                                            String yourDate = format.format(dateParse);
-
-                                            secondWord = yourDate + ", " + newtime;
-                                        }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-
+                                    tv_personahead.setText(Config.getPersonsAheadText(mQueueTimeSlotList.get(i).getQueueSize()));
                                     if (mQueueTimeSlotList.get(i).getId() != 0) {
                                         queueId = mQueueTimeSlotList.get(i).getId();
                                     }
-
-                                    if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
-                                        // secondWord = mQueueTimeSlotList.get(i).getServiceTime();
-
-
-                                        //  dateCompareOne = parseDate(secondWord);
-
-
-                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                            firstWord = "Next Available Time Today, ";
-                                            secondWord = mQueueTimeSlotList.get(i).getServiceTime();
-
-                                        } else {
-
-                                            firstWord = "Next Available Time ";
-                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
-                                            Date datechange = null;
-                                            try {
-                                                datechange = inputFormat.parse(inputDateStr);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                            String outputDateStr = outputFormat.format(datechange);
-                                            String dtStart = outputDateStr;
-                                            Date dateParse = null;
-                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                                            try {
-                                                dateParse = format1.parse(dtStart);
-                                                System.out.println(dateParse);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            SimpleDateFormat format = new SimpleDateFormat("d");
-                                            String date1 = format.format(dateParse);
-
-                                            if (date1.endsWith("1") && !date1.endsWith("11"))
-                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
-                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
-                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                                            else
-                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                                            String yourDate = format.format(dateParse);
-
-
-                                            secondWord = yourDate + ", " + mQueueTimeSlotList.get(i).getServiceTime();
-                                        }
-                                    }
-
-                                    spannable = new SpannableString(firstWord +'\n' + secondWord);
-                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                            "fonts/Montserrat_Bold.otf");
-                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    tv_waittime.setText(spannable);
-
-                                    if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                                        //   tv_waittime.setVisibility(View.INVISIBLE);
-
-                                        tv_waittime.setVisibility(View.VISIBLE);
-                                        Config.logV("TV WAITTIME-------------INVISIBLE-------");
-                                        Date c = Calendar.getInstance().getTime();
-                                        System.out.println("Current time => " + c);
-                                        String formattedDate;
-                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyy");
-                                            formattedDate = "Today," + df.format(c);
-                                        } else {
-                                            String dtStart = selectedDateFormat;
-                                            Date dateParse = null;
-                                            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-                                            try {
-                                                dateParse = format1.parse(dtStart);
-                                                System.out.println(dateParse);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            SimpleDateFormat df = new SimpleDateFormat("EE,dd-MM-yyy");
-                                            formattedDate = df.format(dateParse);
-                                        }
-
-                                        tv_waittime.setText(formattedDate);
+                                    if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                                        tv_waittime.setVisibility(View.GONE);
                                     } else {
                                         tv_waittime.setVisibility(View.VISIBLE);
+                                        tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(i)));
                                     }
                                 }
-
-
                                 if (i < mQueueTimeSlotList.size()) {
-                                    ic_right.setEnabled(true);
-                                    ic_right.setImageResource(R.drawable.icon_right_angle_active);
-                                } else {
-                                    ic_right.setEnabled(false);
-                                    ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
-                                }
+                                ic_right.setEnabled(true);
+                                ic_right.setImageResource(R.drawable.icon_right_angle_active);
+                            } else {
+                                ic_right.setEnabled(false);
+                                ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                            }
 
                                 if (i <= 0) {
-                                    ic_left.setEnabled(false);
-                                    ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
-                                } else {
+                                ic_left.setEnabled(false);
+                                ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                            } else {
 
-                                    ic_left.setEnabled(true);
-                                    ic_left.setImageResource(R.drawable.icon_left_angle_active);
-                                }
-
+                                ic_left.setEnabled(true);
+                                ic_left.setImageResource(R.drawable.icon_left_angle_active);
                             }
-                        });
 
-                        ic_right.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                        }
+                    });
 
-                                if (i < 0) {
-                                    i = 0;
+                    ic_right.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (i < 0) {
+                                i = 0;
+                            }
+                            i++;
+                            Config.logV("Right Click----1111--------------" + i);
+                            if (i < mQueueTimeSlotList.size()) {
+                                tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
+                                tv_personahead.setVisibility(View.VISIBLE);
+                                tv_personahead.setText(Config.getPersonsAheadText(mQueueTimeSlotList.get(i).getQueueSize()));
+                                if (mQueueTimeSlotList.get(i).getId() != 0) {
+                                    queueId = mQueueTimeSlotList.get(i).getId();
                                 }
-                                i++;
-                                Config.logV("Right Click----1111--------------" + i);
-                                if (i < mQueueTimeSlotList.size()) {
-
-//                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
-                                    tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
-                                 //   if (mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc") && String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()) != null && isShowToken.equalsIgnoreCase("true") || ((mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Fixed") || mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("Ml")))) {
-                                        tv_personahead.setVisibility(View.VISIBLE);
-
-
-                                        String firstWord = "ahead of you ";
-                                        String secondWord = String.valueOf(mQueueTimeSlotList.get(i).getQueueSize()+ " People");
-
-                                        Spannable spannable = new SpannableString(secondWord + '\n' + firstWord);
-                                        tv_personahead.setText(spannable);
-
-//                                    }
-//                                    else{
-//                                        tv_personahead.setVisibility(View.GONE);
-//                                    }
-
-
-                                    if (mQueueTimeSlotList.get(i).getId() != 0) {
-                                        queueId = mQueueTimeSlotList.get(i).getId();
-                                    }
-
-                                     firstWord = null;
-
-                                     secondWord = null;
-                                    try {
-                                        String startTime = "00:00";
-                                        String newtime;
-                                        int minutes = mQueueTimeSlotList.get(i).getQueueWaitingTime();
-                                        int h = minutes / 60 + Integer.parseInt(startTime.substring(0, 1));
-                                        int m = minutes % 60 + Integer.parseInt(startTime.substring(3, 4));
-                                        if (m > 0 && h > 0) {
-                                            newtime = h + " Hour :" + m + " Minutes";
-                                        } else if (h > 0 && m == 0) {
-                                            newtime = h + " Hour";
-                                        } else {
-                                            newtime = m + " Minutes";
-                                        }
-                                        secondWord = newtime;
-
-
-                                        // dateCompareOne = parseDate(secondWord);
-
-
-                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                            if (h > 0) {
-                                                firstWord = "Next Available Time Today, ";
-                                            } else {
-                                                firstWord = "Est Wait Time ";
-
-                                            }
-                                            secondWord = newtime;
-                                            Config.logV("First Word@@@@@@@@@@@@@" + firstWord + "Second" + secondWord);
-                                        } else {
-
-                                            firstWord = "Next Available Time ";
-                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
-                                            Date datechange = null;
-                                            try {
-                                                datechange = inputFormat.parse(inputDateStr);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                            String outputDateStr = outputFormat.format(datechange);
-
-
-                                            // String strDate = outputDateStr + ", " + activelist.getServiceTime();
-
-                                            String dtStart = outputDateStr;
-                                            Date dateParse = null;
-                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                                            try {
-                                                dateParse = format1.parse(dtStart);
-                                                System.out.println(dateParse);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            SimpleDateFormat format = new SimpleDateFormat("d");
-                                            String date1 = format.format(dateParse);
-
-                                            if (date1.endsWith("1") && !date1.endsWith("11"))
-                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
-                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
-                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                                            else
-                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                                            String yourDate = format.format(dateParse);
-
-                                            secondWord = yourDate + ", " + newtime;
-                                        }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-
-                                    if (mQueueTimeSlotList.get(i).getServiceTime() != null) {
-                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                            firstWord = "Next Available Time Today, ";
-                                            secondWord = mQueueTimeSlotList.get(i).getServiceTime();
-                                            Config.logV("First Word@@@@@@@@@@@@@" + firstWord + "Second777" + secondWord);
-
-                                        } else {
-
-                                            firstWord = "Next Available Time ";
-                                            DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                                            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                                            String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
-                                            Date datechange = null;
-                                            try {
-                                                datechange = inputFormat.parse(inputDateStr);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-                                            String outputDateStr = outputFormat.format(datechange);
-                                            String dtStart = outputDateStr;
-                                            Date dateParse = null;
-                                            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                                            try {
-                                                dateParse = format1.parse(dtStart);
-                                                System.out.println(dateParse);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            SimpleDateFormat format = new SimpleDateFormat("d");
-                                            String date1 = format.format(dateParse);
-
-                                            if (date1.endsWith("1") && !date1.endsWith("11"))
-                                                format = new SimpleDateFormat("EE, MMM d'st' yyyy");
-                                            else if (date1.endsWith("2") && !date1.endsWith("12"))
-                                                format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
-                                            else if (date1.endsWith("3") && !date1.endsWith("13"))
-                                                format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
-                                            else
-                                                format = new SimpleDateFormat("EE, MMM d'th' yyyy");
-
-                                            String yourDate = format.format(dateParse);
-
-
-                                            secondWord = yourDate + ", " + mQueueTimeSlotList.get(i).getServiceTime();
-
-                                        }
-                                    }
-
-                                    spannable = new SpannableString(firstWord + '\n' + secondWord);
-                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                                            "fonts/Montserrat_Bold.otf");
-                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    tv_waittime.setText(spannable);
-                                    if (mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                                        // tv_waittime.setVisibility(View.INVISIBLE);
-                                        tv_waittime.setVisibility(View.VISIBLE);
-                                        Config.logV("TV WAITTIME-------------INVISIBLE-------");
-                                        Date c = Calendar.getInstance().getTime();
-                                        System.out.println("Current time => " + c);
-                                        String formattedDate;
-                                        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyy");
-                                            formattedDate = "Today, " + df.format(c);
-                                        } else {
-                                            //  formattedDate = selectedDateFormat;
-                                            String dtStart = selectedDateFormat;
-                                            Date dateParse = null;
-                                            SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-                                            try {
-                                                dateParse = format1.parse(dtStart);
-                                                System.out.println(dateParse);
-                                            } catch (ParseException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            SimpleDateFormat df = new SimpleDateFormat("EE,dd-MM-yyy");
-                                            formattedDate = df.format(dateParse);
-                                        }
-                                        tv_waittime.setText(formattedDate);
-                                    } else {
-                                        tv_waittime.setVisibility(View.VISIBLE);
-                                    }
-
-                                }
-
-                                if (i >= 0) {
-                                    ic_left.setEnabled(true);
-                                    ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                                if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                                    tv_waittime.setVisibility(View.GONE);
                                 } else {
-                                    ic_left.setEnabled(false);
-                                    ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
-                                }
-
-                                Config.logV("Queuesize---------------" + mQueueTimeSlotList.size() + "position" + i);
-                                if (i == mQueueTimeSlotList.size() - 1) {
-
-                                    ic_right.setEnabled(false);
-                                    ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
-                                } else {
-                                    ic_right.setEnabled(true);
-                                    ic_right.setImageResource(R.drawable.icon_right_angle_active);
+                                    tv_waittime.setVisibility(View.VISIBLE);
+                                    tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(i)));
                                 }
                             }
-                        });
+                            if (i >= 0) {
+                                ic_left.setEnabled(true);
+                                ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                            } else {
+                                ic_left.setEnabled(false);
+                                ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                            }
 
+                            Config.logV("Queuesize---------------" + mQueueTimeSlotList.size() + "position" + i);
+                            if (i == mQueueTimeSlotList.size() - 1) {
 
-                    }
-
-
-                } catch (Exception e) {
+                                ic_right.setEnabled(false);
+                                ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                            } else {
+                                ic_right.setEnabled(true);
+                                ic_right.setImageResource(R.drawable.icon_right_angle_active);
+                            }
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        @Override
+        public void onFailure(Call<ArrayList<QueueTimeSlotModel>> call, Throwable t) {
+            // Log error here since request failed
+            Config.logV("Fail---------------" + t.toString());
+            if (mDialog.isShowing())
+                Config.closeDialog(mActivity, mDialog);
+        }
+    });
+}
+    public static Spannable getWaitingTime(QueueTimeSlotModel queue) {
+        String firstWord = "";
+        String secondWord = "";
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date c = Calendar.getInstance().getTime();
+        String formattedDate = df.format(c);
+        System.out.println("Current time => " + formattedDate);
+        Date date1 = null, date2 = null;
+        try {
+            date1 = df.parse(formattedDate);
+            if (queue.getEffectiveSchedule().getStartDate() != null)
+                date2 = df.parse(queue.getEffectiveSchedule().getStartDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String type = null;
+        if (date2 != null && date1.compareTo(date2) < 0) {
+            type = "future";
+        }
+        if(queue.getServiceTime()!= null){
+            firstWord = "Next Available Time ";
+            if (type != null) {
+                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                String inputDateStr = mQueueTimeSlotList.get(0).getEffectiveSchedule().getStartDate();
+                Date datechange = null;
+                try {
+                    datechange = inputFormat.parse(inputDateStr);
+                } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
+                String outputDateStr = outputFormat.format(datechange);
+                String yourDate = Config.getFormatedDate(outputDateStr);
+                secondWord = yourDate + ", " + queue.getServiceTime();
+            } else {
+                secondWord =  "\nToday, " + queue.getServiceTime();
             }
-
-            @Override
-            public void onFailure(Call<ArrayList<QueueTimeSlotModel>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(mActivity, mDialog);
-
-            }
-        });
-
+        }
+        else{
+            firstWord = "Est wait time";
+            secondWord = "\n" + Config.getTimeinHourMinutes(queue.getQueueWaitingTime());
+        }
+        Spannable spannable = new SpannableString(firstWord + secondWord);
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
+        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannable;
     }
 
-
     private void ApiSearchViewServiceID(final int id) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ArrayList<SearchService>> call = apiService.getSearchService(id);
-
         call.enqueue(new Callback<ArrayList<SearchService>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchService>> call, Response<ArrayList<SearchService>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
-
                         for (int i = 0; i < response.body().size(); i++) {
                             SearchService mService = new SearchService();
                             mService.setName(response.body().get(i).getName());
@@ -2615,12 +1629,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             mService.setServiceType(response.body().get(i).getServiceType());
                             mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
                             mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
-
                             LServicesList.add(mService);
                         }
                         gServiceList.addAll(LServicesList);
                         // Department Section Starts
-
                         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
                         if (!accountID.equals("")) {
                             Call<SearchDepartment> call1 = apiService.getDepartment(Integer.parseInt(accountID.split("-")[0]));
@@ -2629,9 +1641,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
                                     try {
                                         if (response.code() == 200) {
-
                                             Config.logV("URL123---------------" + response.raw().request().url().toString().trim());
-
                                             depResponse = response.body();
                                             if (depResponse.isFilterByDept() && depResponse.getDepartments().size() > 0) {
                                                 mSpinnerDepartment.setVisibility(View.VISIBLE);
@@ -2645,18 +1655,15 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                 selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
                                                 departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
                                                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
-
                                                     for (int i = 0; i < gServiceList.size(); i++) {
                                                         if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
                                                             serviceList.add(gServiceList.get(i));
                                                             break;
                                                         }
                                                     }
-
                                                 }
                                                 LServicesList.clear();
                                                 LServicesList.addAll(serviceList);
-
                                             }
                                             if (LServicesList.size() > 0) {
                                                 mSpinnerService.setVisibility(View.VISIBLE);
@@ -2668,15 +1675,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                 mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
                                                 livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
                                             } else {
-
                                                 mSpinnerService.setVisibility(View.GONE);
                                                 txt_chooseservice.setVisibility(View.GONE);
-
                                                 if (LServicesList.size() == 1) {
                                                     // String firstWord = "Check-in for ";
                                                     String firstWord = Word_Change;
                                                     String secondWord = LServicesList.get(0).getName();
-
                                                     Spannable spannable = new SpannableString(firstWord + secondWord);
                                                     Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                                                             "fonts/Montserrat_Bold.otf");
@@ -2726,14 +1730,14 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                             if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                                                ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                                ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                             } else {
                                                 if (selectedDateFormat != null) {
 
-                                                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                                                    ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
                                                 } else {
 
-                                                    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                                    ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                                 }
                                             }
                                         }
@@ -2747,12 +1751,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     Config.logV("Fail---------------" + t.toString());
                                 }
                             });
-
                             // Department Ends Here
-
                         }
-
-
                     }  } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -2765,16 +1765,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
-
             }
         });
-
-
     }
 
     private void ApiSearchUsers(int deptId) {
-
-
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(deptId,Integer.parseInt(accountID.split("-")[0]));
         call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
@@ -2784,32 +1779,17 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     if (response.code() == 200) {
                         doctResponse = response.body();
                         Log.i("getUser123",new Gson().toJson(response.body()));
-
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(Call<ArrayList<SearchUsers>> call, Throwable t) {
-
             }
-
-
-
         });
-
         // Department Ends Here
-
     }
-
-
-
-
-
-
     SearchTerminology mSearchTerminology;
 
     private void ApiSearchViewTerminology(String muniqueID) {
@@ -3048,7 +2028,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
             Log.i("couponList", couponList.toString());
 
-            service.put("id", serviceId);
+            service.put("id", locationId);
             if (enableparty) {
                 queueobj.put("partySize", editpartysize.getText().toString());
             }
@@ -3090,26 +2070,18 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     Config.logV("Response--code-------------------------" + response.body());
-
                     MultiplefamilyList.clear();
                     if (response.code() == 200) {
-
-
                         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "true");
                         txt_message = "";
-
                         JSONObject reader = new JSONObject(response.body().string());
                         Iterator iteratorObj = reader.keys();
-
                         while (iteratorObj.hasNext()) {
                             String getJsonObj = (String) iteratorObj.next();
                             System.out.println("KEY: " + "------>" + getJsonObj);
@@ -3255,12 +2227,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 Toast.makeText(mContext, responseerror, Toast.LENGTH_LONG).show();
                         }
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
 
             @Override
@@ -3272,26 +2241,17 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
             }
         });
-
-
     }
 
     // Dialog mDialog1 = null;
-
     public static void launchPaymentFlow(String amount, CheckSumModel checksumModel) {
         PayUmoneyConfig payUmoneyConfig = PayUmoneyConfig.getInstance();
-
         // payUmoneyConfig.setPayUmoneyActivityTitle("Buy" + getResources().getString(R.string.nike_power_run));
         payUmoneyConfig.setDoneButtonText("Pay Rs." + amount);
-
         //  Config.logV("Response--PayU-------------------------" + checksumModel.getProductinfo().get(0).toString());
-
         String firstname = SharedPreference.getInstance(mContext).getStringValue("firstname", "");
         String lastname = SharedPreference.getInstance(mContext).getStringValue("lastname", "");
-
         String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
-
-
         PayUmoneySdkInitializer.PaymentParam.Builder builder = new PayUmoneySdkInitializer.PaymentParam.Builder();
         builder.setAmount(convertStringToDouble(amount))
                 .setTxnId(checksumModel.getTxnid())
@@ -3328,42 +2288,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
         } catch (Exception e) {
             Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-
-            // mTxvBuy.setEnabled(true);
         }
     }
-
-
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        //   mTxvBuy.setEnabled(true);
-//
-//        if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-//
-//
-//            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
-//            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
-//
-//            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
-//
-//                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
-//                    showAlert("Payment Successful");
-//                    finish();
-//                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
-//                    showAlert("Payment Cancelled");
-//                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
-//                    showAlert("Payment Failed");
-//                }
-//
-//            } else if (resultModel != null && resultModel.getError() != null) {
-//                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
-//            } else {
-//                //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
-//            }
-//        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
-//            showAlert("Payment Cancelled");
-//        }
-//    }
-
     private static Double convertStringToDouble(String str) {
         return Double.parseDouble(str);
     }
@@ -3380,13 +2306,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         });
         alertDialog.show();
     }
-
     static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
-
     public static void refreshMultipleMEmList(ArrayList<FamilyArrayModel> familyList) {
         MultiplefamilyList.clear();
         MultiplefamilyList.addAll(familyList);
-
         recycle_family.setVisibility(View.VISIBLE);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         recycle_family.setLayoutManager(mLayoutManager);
@@ -3395,56 +2318,36 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         mFamilyAdpater.notifyDataSetChanged();
         LSinglemember.setVisibility(View.GONE);
     }
-
     SearchViewDetail mBusinessDataList;
-
     private void ApiSearchViewDetail(final String muniqueID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<SearchViewDetail> call = apiService.getSearchViewDetail(Integer.parseInt(muniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<SearchViewDetail>() {
             @Override
             public void onResponse(Call<SearchViewDetail> call, Response<SearchViewDetail> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----detail--------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         mBusinessDataList = response.body();
                         sector = mBusinessDataList.getServiceSector().getDomain();
                         subsector = mBusinessDataList.getServiceSubSector().getSubDomain();
                         providerId = mBusinessDataList.getId();
                         APISector(sector, subsector);
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -3453,36 +2356,27 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getParent(), mDialog);
-
             }
         });
 
     }
 
     private void ApiJaldeegetS3Coupons(String uniqueID) {
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
         Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
             @Override
             public void onResponse(Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
-
                 try {
-
                     Config.logV("Response---------------------------" + response.body().toString());
                     Config.logV("URL-response--------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
-
                     if (response.code() == 200) {
                         s3couponList.clear();
                         s3couponList = response.body();
@@ -3493,14 +2387,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         }else {
                             coupon_link.setVisibility(View.GONE);
                         }
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -3513,15 +2403,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
-
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-
-
             TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
             ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
-
             if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
-
                 if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
                     showAlert("Payment Successful");
                     finish();
@@ -3546,15 +2431,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         Uri uri = data.getData();
                         String orgFilePath = getRealPathFromURI(uri, this);
                         String filepath = "";//default fileName
-
                         String mimeType = this.mContext.getContentResolver().getType(uri);
                         String uriString = uri.toString();
                         String extension = "";
                         if (uriString.contains(".")) {
                             extension = uriString.substring(uriString.lastIndexOf(".") + 1);
                         }
-
-
                         if (mimeType != null) {
                             extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
                         }
@@ -3566,11 +2448,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
                             return;
                         }
-
-//
                         imagePathList.add(orgFilePath);
-//
-
                         DetailFileImageAdapter mDetailFileAdapter = new DetailFileImageAdapter(imagePathList, mContext);
                         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
@@ -3614,15 +2492,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         }
     }
     private void ApiCommunicateCheckin(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-
-
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
         MultipartBody.Builder mBuilder = new MultipartBody.Builder();
         mBuilder.setType(MultipartBody.FORM);
         mBuilder.addFormDataPart("message", message);
         for (int i = 0; i < imagePathList.size(); i++) {
-
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.fromFile(new File(imagePathList.get(i))));
             } catch (IOException e) {
@@ -3631,18 +2506,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             if (bitmap != null) {
                 path = saveImage(bitmap);
                 file = new File(path);
-            }
-//            else{
-//                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-//            }
-            else {
+            } else {
                 file = new File(imagePathList.get(i));
             }
             mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
         }
         RequestBody requestBody = mBuilder.build();
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
@@ -3652,135 +2521,36 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-
         Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID.split("-")[0]), requestBody);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
                         Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         imagePathList.clear();
                         dialog.dismiss();
-
-
                     } else {
                         if (response.code() == 422) {
                             Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
             }
         });
-
     }
-
-//    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-//
-//        ApiInterface apiService =
-//                ApiClient.getClient(mContext).create(ApiInterface.class);
-//        MediaType type = MediaType.parse("*/*");
-//        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
-//        mBuilder.setType(MultipartBody.FORM);
-//        mBuilder.addFormDataPart("message", message);
-//        for (int i = 0; i < imagePathList.size(); i++) {
-////            if(imagePathList.contains("content://")) {
-////                Uri imageUri = Uri.parse(imagePathList.get(i));
-////                File file = new File(String.valueOf(imageUri));
-////                mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
-////            }
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.parse(imagePathList.get(i)));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            if (bitmap != null) {
-//                path = saveImage(bitmap);
-//            }
-////            else{
-////                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-////            }
-//
-//            File file = new File(imagePathList.get(i));
-//            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
-//        }
-//        RequestBody requestBody = mBuilder.build();
-//
-//
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//        JSONObject jsonObj = new JSONObject();
-//        try {
-//            jsonObj.put("communicationMessage", message);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-//
-//        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), requestBody);
-//
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                try {
-//
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(CheckIn.this, mDialog);
-//
-//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//
-//                    if (response.code() == 200) {
-//                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
-//                        imagePathList.clear();
-//                        dialog.dismiss();
-//
-//
-//                    } else {
-//                        if (response.code() == 422) {
-//                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog( CheckIn.this, mDialog);
-//
-//            }
-//        });
-//    }
-public void paymentFinished() {
-    finish();
-}
+    public void paymentFinished() {
+        finish();
+    }
     @Override
     public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
         Log.i("mani","here");
@@ -3788,8 +2558,8 @@ public void paymentFinished() {
             Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
-                Toast.makeText(this.mContext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
-                paymentFinished();
+            Toast.makeText(this.mContext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
+            paymentFinished();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentSuccess", e);
         }
