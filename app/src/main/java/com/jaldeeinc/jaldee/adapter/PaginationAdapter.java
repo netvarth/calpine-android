@@ -147,6 +147,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (getItemViewType(position)) {
             case ITEM:
                 final MyViewHolder myViewHolder = (MyViewHolder) holder;
+                resetAllControls(myViewHolder);
                 Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
                 Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
                 handleJaldeeVerification(myViewHolder, searchdetailList);
@@ -197,7 +198,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 if (searchdetailList.getPlace1() != null) {
                     myViewHolder.tv_location.setVisibility(View.VISIBLE);
-                    // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
                     Config.logV("Place @@@@@@@@@@@@@@" + searchdetailList.getDistance());
                     Double distance = Double.valueOf(searchdetailList.getDistance()) * 1.6;
                     if (distance >= 1) {
@@ -318,7 +318,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     if (serviceNames.size() > 0) {
                         myViewHolder.L_services.removeAllViews();
                         int size = 0;
@@ -447,7 +446,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 break;
         }
     }
-
+    private void disableDepartments(MyViewHolder myViewHolder) {
+        myViewHolder.L_departments.setVisibility(View.GONE);
+        myViewHolder.L_departments_app.setVisibility(View.GONE);
+    }
     private void setTerminologies(SearchListModel searchdetailList) {
         if (searchdetailList.getTerminologies() != null) {
             try {
@@ -609,7 +611,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         if (searchdetailList.getDonation_services() != null) {
             final ArrayList serviceNamesDonations = new ArrayList();
+            final ArrayList serviceNamesDonationsMin = new ArrayList();
+            final ArrayList serviceNamesDonationsMax = new ArrayList();
+            final ArrayList serviceNamesDonationsMultiples = new ArrayList();
             serviceNamesDonations.clear();
+            serviceNamesDonationsMin.clear();
+            serviceNamesDonationsMax.clear();
+            serviceNamesDonationsMultiples.clear();
             try {
                 String serviceName = searchdetailList.getDonation_services().toString();
                 try {
@@ -620,6 +628,59 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         JSONObject jsonObject = jsonArray1.getJSONObject(i);
                         String name = jsonObject.optString("name");
                         serviceNamesDonations.add(i,name);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                String serviceName = searchdetailList.getDonation_services().toString();
+                try {
+                    JSONArray jsonArray = new JSONArray(serviceName);
+                    String jsonArry = jsonArray.getString(0);
+                    JSONArray jsonArray1 = new JSONArray(jsonArry);
+                    for(int i =0;i<jsonArray1.length();i++){
+                        JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                        String minValue = jsonObject.optString("minValue");
+                        serviceNamesDonationsMin.add(i,minValue);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                String serviceName = searchdetailList.getDonation_services().toString();
+                try {
+                    JSONArray jsonArray = new JSONArray(serviceName);
+                    String jsonArry = jsonArray.getString(0);
+                    JSONArray jsonArray1 = new JSONArray(jsonArry);
+                    for(int i =0;i<jsonArray1.length();i++){
+                        JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                        String maxValue = jsonObject.optString("maxValue");
+                        serviceNamesDonationsMax.add(i,maxValue);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                String serviceName = searchdetailList.getDonation_services().toString();
+                try {
+                    JSONArray jsonArray = new JSONArray(serviceName);
+                    String jsonArry = jsonArray.getString(0);
+                    JSONArray jsonArray1 = new JSONArray(jsonArry);
+                    for(int i =0;i<jsonArray1.length();i++){
+                        JSONObject jsonObject = jsonArray1.getJSONObject(i);
+                        String multiples = jsonObject.optString("multiples");
+                        serviceNamesDonationsMultiples.add(i,multiples);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -647,6 +708,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     dynaText.setTextSize(13);
                     dynaText.setPadding(5, 0, 5, 0);
                     dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+                    // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
                     dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                     dynaText.setMaxLines(1);
                     if (size > 2) {
@@ -657,11 +719,22 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     dynaText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ApiService(searchdetailList.getUniqueid(), serviceNamesDonations.get(finalI).toString(), searchdetailList.getTitle());
+                            //     ApiService(searchdetailList.getUniqueid(), serviceNamesDonations.get(finalI).toString(), searchdetailList.getTitle());
+                            for (int i = 0; i < serviceNamesDonations.size(); i++) {
+                                if (serviceNamesDonations.get(i).toString().toLowerCase().equalsIgnoreCase(serviceNamesDonations.get(finalI).toString().toLowerCase())) {
+                                    Intent iService = new Intent(context, SearchServiceActivity.class);
+                                    iService.putExtra("name", serviceNamesDonations.get(i).toString());
+                                    iService.putExtra("minamount", serviceNamesDonationsMin.get(i).toString());
+                                    iService.putExtra("maxamount", serviceNamesDonationsMax.get(i).toString());
+                                    iService.putExtra("multiples", serviceNamesDonationsMultiples.get(i).toString());
+                                    context.startActivity(iService);
+                                }
+                            }
                         }
                     });
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     params.setMargins(0, 0, 20, 0);
+
                     dynaText.setLayoutParams(params);
                     myViewHolder.L_donations.addView(dynaText);
                 }
@@ -779,7 +852,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
         }
     }
-
+    private void disableWorkingHours(MyViewHolder myViewHolder) {
+        workingModelArrayList.clear();
+    }
     public void handleCouponsAndDiscounts(MyViewHolder myViewHolder, final SearchListModel searchdetailList, LinearLayout parent, LinearLayout.LayoutParams params1) {
         if(searchdetailList.getJdn()!=null){
             if (searchdetailList.getJdn().equals("1")) {
@@ -847,7 +922,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         });
     }
-
     public void handleLocationAmenities(MyViewHolder myViewHolder, final SearchListModel searchdetailList, LinearLayout parent, LinearLayout.LayoutParams params1) {
         if (searchdetailList.getParking_type_location1() != null) {
             if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
@@ -1056,13 +1130,19 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.btncheckin.setTypeface(tyface_confm);
-        disableCheckinFeature (myViewHolder, searchdetailList);
+        disableCheckinFeature (myViewHolder);
         if(searchdetailList!=null && searchdetailList.getOnline_profile()!=null) {
             myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
             if (searchdetailList.getOnline_profile().equalsIgnoreCase("1") && searchdetailList.isWaitlistEnabled()) {
                 myViewHolder.L_checkin.setVisibility(View.VISIBLE);
                 myViewHolder.L_services.setVisibility(View.VISIBLE);
                 myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                if(searchdetailList.isShowToken()){
+                    myViewHolder.btncheckin.setText("GET TOKEN");
+                }
+                else{
+                    myViewHolder.btncheckin.setText("CHECK-IN");
+                }
                 if(searchdetailList.getId()!=null && searchdetailList.getQId()!=null) {
                     if (searchdetailList.getId().equalsIgnoreCase(searchdetailList.getQId())) {
                         Date c = Calendar.getInstance().getTime();
@@ -1085,7 +1165,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) { // Conventional
                                         showWaitingTime(myViewHolder, searchdetailList,  null);
                                     } else {  // NoCalc without show waiting time
-                                        myViewHolder.tv_WaitTime.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
+                                        String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
+                                        myViewHolder.tv_WaitTime.setText(message);
                                         myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                                     }
                                 } else {
@@ -1118,41 +1199,16 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             if (searchdetailList.getClaimable().equals("0")) {
                                 myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
                                 myViewHolder.tv_qmessage.setTextColor(context.getResources().getColor(R.color.red));
-                                disableCheckinButton(myViewHolder,searchdetailList);
+                                disableCheckinButton(myViewHolder);
                             }
                         }
-
-//
-//                            else if (date2 != null && date1.compareTo(date2) < 0) {   // For Future
-//                                disableCheckinButton(myViewHolder,searchdetailList);
-//                                // ML/Fixed
-//                                if (searchdetailList.getShow_waiting_time() != null) {
-//                                    myViewHolder.btncheckin.setText(termilogy.toUpperCase());
-//                                    if (searchdetailList.isShowToken()) {
-//                                        myViewHolder.btncheckin.setText("GET TOKEN");
-//                                        noCalcShowToken(searchdetailList, myViewHolder);
-//                                    } else {
-//                                    }
-//                                    setFutureDateCheckin(searchdetailList, myViewHolder,position);
-//                                }
-
-
-//                                    myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-//                                    myViewHolder.L_services.setVisibility(View.VISIBLE);
-//                                    myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-//                                } else {
-//                                    myViewHolder.btncheckin.setVisibility(View.GONE);
-//                                    // myViewHolder.L_services.setVisibility(View.GONE);
-//                                    myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-//                                }
-//                            }
                     }
                 }
             } else {
-                disableCheckinFeature (myViewHolder, searchdetailList);
+                disableCheckinFeature (myViewHolder);
             }
         } else {
-            disableCheckinFeature (myViewHolder, searchdetailList);
+            disableCheckinFeature (myViewHolder);
         }
         myViewHolder.btncheckin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1307,203 +1363,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.L_appointments.setVisibility(View.GONE);
             }
 
-                } else {
-                    myViewHolder.L_appoinment.setVisibility(View.GONE);
-                    myViewHolder.L_appointments.setVisibility(View.GONE);
-                }
-                if (searchdetailList.getOnline_profile() != null && searchdetailList.getDonation_status() != null) {
-                    if (searchdetailList.getDonation_status().equals("1") && searchdetailList.getOnline_profile().equals("1")) {
-                        myViewHolder.L_donation.setVisibility(View.VISIBLE);
-                        myViewHolder.L_donations.setVisibility(View.VISIBLE);
-                    } else {
-                        myViewHolder.L_donation.setVisibility(View.GONE);
-                        myViewHolder.L_donations.setVisibility(View.GONE);
-                    }
-
-                } else {
-                    myViewHolder.L_donation.setVisibility(View.GONE);
-                    myViewHolder.L_donations.setVisibility(View.GONE);
-                }
-
-
-
-
-                if (searchdetailList.getDonation_services() != null) {
-                    final ArrayList serviceNamesDonations = new ArrayList();
-                    final ArrayList serviceNamesDonationsMin = new ArrayList();
-                    final ArrayList serviceNamesDonationsMax = new ArrayList();
-                    final ArrayList serviceNamesDonationsMultiples = new ArrayList();
-                    serviceNamesDonations.clear();
-                    serviceNamesDonationsMin.clear();
-                    serviceNamesDonationsMax.clear();
-                    serviceNamesDonationsMultiples.clear();
-                    try {
-                        String serviceName = searchdetailList.getDonation_services().toString();
-                        try {
-                            JSONArray jsonArray = new JSONArray(serviceName);
-                            String jsonArry = jsonArray.getString(0);
-                            JSONArray jsonArray1 = new JSONArray(jsonArry);
-                            for(int i =0;i<jsonArray1.length();i++){
-                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
-                                String name = jsonObject.optString("name");
-                                serviceNamesDonations.add(i,name);
-
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        String serviceName = searchdetailList.getDonation_services().toString();
-                        try {
-                            JSONArray jsonArray = new JSONArray(serviceName);
-                            String jsonArry = jsonArray.getString(0);
-                            JSONArray jsonArray1 = new JSONArray(jsonArry);
-                            for(int i =0;i<jsonArray1.length();i++){
-                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
-                                String minValue = jsonObject.optString("minValue");
-                                serviceNamesDonationsMin.add(i,minValue);
-
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        String serviceName = searchdetailList.getDonation_services().toString();
-                        try {
-                            JSONArray jsonArray = new JSONArray(serviceName);
-                            String jsonArry = jsonArray.getString(0);
-                            JSONArray jsonArray1 = new JSONArray(jsonArry);
-                            for(int i =0;i<jsonArray1.length();i++){
-                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
-                                String maxValue = jsonObject.optString("maxValue");
-                                serviceNamesDonationsMax.add(i,maxValue);
-
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        String serviceName = searchdetailList.getDonation_services().toString();
-                        try {
-                            JSONArray jsonArray = new JSONArray(serviceName);
-                            String jsonArry = jsonArray.getString(0);
-                            JSONArray jsonArray1 = new JSONArray(jsonArry);
-                            for(int i =0;i<jsonArray1.length();i++){
-                                JSONObject jsonObject = jsonArray1.getJSONObject(i);
-                                String multiples = jsonObject.optString("multiples");
-                                serviceNamesDonationsMultiples.add(i,multiples);
-
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-
-
-
-                    if (serviceNamesDonations.size() > 0) {
-                        myViewHolder.L_donations.removeAllViews();
-                        int size = 0;
-                        if (serviceNamesDonations.size() == 1) {
-                            size = 1;
-                        } else {
-                            if (serviceNamesDonations.size() == 2)
-                                size = 2;
-                            else
-                                size = 3;
-                        }
-                        for (int i = 0; i < size; i++) {
-                            TextView dynaText = new TextView(context);
-                            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                                    "fonts/Montserrat_Regular.otf");
-                            dynaText.setTypeface(tyface);
-                            dynaText.setText(serviceNamesDonations.get(i).toString());
-                            dynaText.setTextSize(13);
-                            dynaText.setPadding(5, 0, 5, 0);
-                            dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
-                            // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
-
-                            dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
-                            dynaText.setMaxLines(1);
-                            if (size > 2) {
-                                dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                                dynaText.setMaxEms(10);
-                            }
-                            final int finalI = i;
-                            dynaText.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                               //     ApiService(searchdetailList.getUniqueid(), serviceNamesDonations.get(finalI).toString(), searchdetailList.getTitle());
-                                    for (int i = 0; i < serviceNamesDonations.size(); i++) {
-                                        if (serviceNamesDonations.get(i).toString().toLowerCase().equalsIgnoreCase(serviceNamesDonations.get(finalI).toString().toLowerCase())) {
-                                            Intent iService = new Intent(context, SearchServiceActivity.class);
-                                            iService.putExtra("name", serviceNamesDonations.get(i).toString());
-                                            iService.putExtra("minamount", serviceNamesDonationsMin.get(i).toString());
-                                            iService.putExtra("maxamount", serviceNamesDonationsMax.get(i).toString());
-                                            iService.putExtra("multiples", serviceNamesDonationsMultiples.get(i).toString());
-                                            context.startActivity(iService);
-                                        }
-                                    }
-                                }
-                            });
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            params.setMargins(0, 0, 20, 0);
-
-                            dynaText.setLayoutParams(params);
-                            myViewHolder.L_donations.addView(dynaText);
-                        }
-                        if (size > 3) {
-                            TextView dynaText = new TextView(context);
-                            dynaText.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    mAdapterCallback.onMethodServiceCallback(serviceNamesDonations, searchdetailList.getTitle(), searchdetailList.getUniqueid());
-                                }
-                            });
-                            dynaText.setGravity(Gravity.CENTER);
-                            dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
-                            dynaText.setText(" ... ");
-                            myViewHolder.L_donations.addView(dynaText);
-                        }
-                    }
-                    else{
-                        myViewHolder.L_donation.setVisibility(View.GONE);
-                        myViewHolder.L_donations.setVisibility(View.GONE);
-                    }
-
-                }
-                else{
-                    myViewHolder.L_donation.setVisibility(View.GONE);
-                    myViewHolder.L_donations.setVisibility(View.GONE);
-                }
-
-
-                if (searchdetailList.getRating() != null) {
-                    myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
-                }
-//                break;
-//            case LOADING:
-////                Do nothing
-//                final LoadingVH LHHolder = (LoadingVH) holder;
-//                break;
+        } else {
+            myViewHolder.L_appoinment.setVisibility(View.GONE);
+            myViewHolder.L_appointments.setVisibility(View.GONE);
         }
-  //  }
-
-
+    }
     public void setSpecializations(MyViewHolder myViewHolder, final SearchListModel searchdetailList) {
         if (searchdetailList.getSpecialization_displayname() != null) {
             final List<String> list_spec = searchdetailList.getSpecialization_displayname();
@@ -1592,25 +1456,48 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             myViewHolder.L_specialization.setVisibility(View.GONE);
         }
     }
-    public void disableCheckinFeature (MyViewHolder myViewHolder, SearchListModel searchdetailList) {
+    public void resetAllControls (MyViewHolder myViewHolder) {
+        disableServices(myViewHolder);
+        disableCheckinFeature(myViewHolder);
+        disableAppointmentFeature(myViewHolder);
+        disableDonationFeature(myViewHolder);
+        disableDepartments(myViewHolder);
+        disableProfile(myViewHolder);
+        disableCoupons(myViewHolder);
+        disableWorkingHours(myViewHolder);
+    }
+
+    private void disableServices(MyViewHolder myViewHolder) {
+        myViewHolder.L_services.removeAllViews();
+    }
+
+    private void disableCoupons(MyViewHolder myViewHolder) {
+
+    }
+
+    private void disableProfile(MyViewHolder myViewHolder) {
+
+    }
+
+    private void disableDonationFeature(MyViewHolder myViewHolder) {
+
+    }
+
+    private void disableAppointmentFeature(MyViewHolder myViewHolder) {
+
+    }
+
+    public void disableCheckinFeature (MyViewHolder myViewHolder) {
         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-        disableCheckinButton(myViewHolder, searchdetailList);
+        disableCheckinButton(myViewHolder);
         myViewHolder.btncheckin.setVisibility(View.GONE);
         myViewHolder.L_checkin.setVisibility(View.GONE);
-        myViewHolder.L_services.setVisibility(View.GONE);
         myViewHolder.tv_peopleahead.setVisibility(View.GONE);
         myViewHolder.tv_qmessage.setVisibility(View.GONE);
         myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-        myViewHolder.L_departments.setVisibility(View.GONE);
         myViewHolder.tv_count.setVisibility(View.GONE);
     }
-    public void disableCheckinButton(MyViewHolder myViewHolder, SearchListModel searchdetailList) {
-        if(searchdetailList.isShowToken()){
-            myViewHolder.btncheckin.setText("GET TOKEN");
-        }
-        else{
-            myViewHolder.btncheckin.setText("CHECK-IN");
-        }
+    public void disableCheckinButton(MyViewHolder myViewHolder) {
         myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
         myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
         myViewHolder.btncheckin.setEnabled(false);
@@ -1623,99 +1510,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         myViewHolder.btncheckin.setEnabled(true);
         myViewHolder.btncheckin.setVisibility(View.VISIBLE);
     }
-
-    public void setFutureDateCheckin(final SearchListModel searchdetailList, MyViewHolder myViewHolder, int position) {
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = format.parse(searchdetailList.getAvail_date());
-            String day = (String) DateFormat.format("dd", date);
-            String monthString = (String) DateFormat.format("MMM", date);
-            Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
-                    "fonts/Montserrat_Bold.otf");
-            String firstWord = "Next Available Time ";
-            String secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
-            myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
-            if(searchdetailList.getCalculationMode()!=null){
-                if(searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc")){
-                    if(mQueueList!=null){
-                        for(int i = 0;i<mQueueList.size();i++) {
-                            if (mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().isOpenNow()) {
-                                //   myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                            } else {
-                                if (searchdetailList.isShowToken()) {
-                                    //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                                } else {
-                                    //    myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                                }
-                            }
-                            if(searchdetailList.getOnline_profile()!=null) {
-                                if (searchdetailList.getOnline_profile().equals("1") && searchdetailList.isWaitlistEnabled()) {
-                                    if (searchdetailList.getFuture_checkins() != null && mQueueList.get(i).getNextAvailableQueue()!=null) {
-                                        if(mQueueList.get(i).getNextAvailableQueue().getAvailableDate()!=null){
-                                            if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
-                                                //  myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
-                                                myViewHolder.L_services.setVisibility(View.VISIBLE);
-                                                myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                                                        if (searchdetailList.getmLoc() != null) {
-                                                            iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
-                                                        }
-                                                        iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
-                                                        iCheckIn.putExtra("accountID", searchdetailList.getId());
-                                                        iCheckIn.putExtra("googlemap", searchdetailList.getLocation1());
-                                                        // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
-                                                        iCheckIn.putExtra("from", "future_date");
-                                                        iCheckIn.putExtra("title", searchdetailList.getTitle());
-                                                        iCheckIn.putExtra("place", searchdetailList.getPlace1());
-                                                        Config.logV("sector%%%%%%-------------" + searchdetailList.getSectorname());
-                                                        iCheckIn.putExtra("sector", searchdetailList.getSectorname());
-                                                        iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
-                                                        iCheckIn.putExtra("terminology", termilogy);
-                                                        iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
-                                                        iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
-                                                        context.startActivity(iCheckIn);
-                                                    }
-                                                });
-                                            } else {
-                                                //   myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                                                // myViewHolder.L_services.setVisibility(View.GONE);
-                                            }
-                                        }else {
-                                            //  myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                                            //  myViewHolder.L_services.setVisibility(View.GONE);
-                                        }
-                                    } else {
-                                        //  myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                                        myViewHolder.L_services.setVisibility(View.GONE);
-                                    }
-
-                                }else {
-                                    //   myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                                    myViewHolder.L_services.setVisibility(View.GONE);
-                                }
-                            }else {
-                                // myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                                myViewHolder.L_services.setVisibility(View.GONE);
-                            }
-
-                        }
-                    }
-                }
-                else{
-                    //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                }
-            }
-
-            myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
-            //   myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-            disableCheckinButton(myViewHolder,searchdetailList);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void showWaitingTime(MyViewHolder myViewHolder, SearchListModel searchdetailList, String type) {
         if(searchdetailList.getServiceTime()!= null){
             String firstWord = "Next Available Time ";
@@ -1747,55 +1541,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
         }
         myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-        myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
+        String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
+        myViewHolder.tv_peopleahead.setText(message);
     }
-
-    public void noCalcShowToken(SearchListModel searchdetailList, MyViewHolder myViewHolder) {
-        if (searchdetailList.getPersonAhead() != -1) {
-            Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + searchdetailList.getPersonAhead());
-//            if (searchdetailList.getPersonAhead() == 0) {
-            //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-            //  myViewHolder.tv_WaitTime.setText(" Be the first in line");
-
-            if(searchdetailList.getServiceTime()!= null){
-                String firstWord = "Next Available Time ";
-                String secondWord = "\nToday, " + searchdetailList.getServiceTime();
-                Spannable spannable = new SpannableString(firstWord + secondWord);
-                // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                myViewHolder.tv_WaitTime.setText(spannable);
-            }
-            else{
-                //   myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                String firstWord = "Est wait time";
-                String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
-                myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
-            }
-            myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
-            //      myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-//            } else {
-//             //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-////                String firstWord = String.valueOf(searchdetailList.getPersonAhead());
-////                String secondWord = " People waiting in line";
-//                String firstWord = "Next Available Time ";
-//                String secondWord = "\nToday, " + searchdetailList.getServiceTime();
-//                Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
-//                        "fonts/Montserrat_Bold.otf");
-//                Spannable spannable = new SpannableString(firstWord + secondWord);
-//                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                myViewHolder.tv_WaitTime.setText(spannable);
-//                if(searchdetailList.getServiceTime()!=null){
-//                 //   myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-//                }
-//                else{
-//                //    myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-//
-//                }
-            myViewHolder.tv_peopleahead.setText(String.valueOf(searchdetailList.getPersonAhead()) + " People waiting in line");
-            //      myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-        }
-    }
-
-
     public int dpToPx(int dp) {
         float density = context.getResources()
                 .getDisplayMetrics()
@@ -1993,13 +1741,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
     ImageView profile1, profile2, profile3;
     public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery, final SearchListModel searchdetailList) {
-        //  Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
         Config.logV("Gallery--------------333-----" + mGallery.size());
         try {
             if (mGallery.size() > 0 || searchdetailList.getLogo() != null) {
-//                profile.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
                 Config.logV("Gallery------------------------------" + mGallery.size());
                 ArrayList<String> mGalleryList = new ArrayList<>();
                 if (searchdetailList.getLogo() != null) {
@@ -2015,15 +1759,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     intent.putExtra("pos", 0);
                     context.startActivity(intent);
                 }
-//                    }
-//                });
                 profile2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Config.logV("Gallery------------------------------" + mGallery.size());
                         ArrayList<String> mGalleryList = new ArrayList<>();
                         if (searchdetailList.getLogo() != null) {
-
                             mGalleryList.add(searchdetailList.getLogo());
                         }
                         for (int i = 0; i < mGallery.size(); i++) {
@@ -2056,31 +1797,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         }
                     }
                 });
-            } /*else {
-                tv_Gallery.setVisibility(View.GONE);
-            }*/
-            // Config.logV("Bussiness logo @@@@@@@@@@" + mBusinessDataList.getLogo());
+            }
             if (searchdetailList.getLogo() != null) {
                 Picasso.with(context).load(searchdetailList.getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
 
             } else {
                 Picasso.with(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
             }
-//            if (mBusinessDataList.getLogo() != null) {
-//                if (mGallery.size() > 0) {
-//                    tv_mImageViewTextnew.setVisibility(View.VISIBLE);
-//                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
-//                }
-//
-//            } else if (mBusinessDataList.getLogo() == null) {
-//                if (mGallery.size() > 0) {
-//                    tv_mImageViewTextnew.setVisibility(View.VISIBLE);
-//                    tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size() - 1));
-//                } else {
-//                    tv_mImageViewTextnew.setVisibility(View.GONE);
-//                }
-//            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2089,8 +1812,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void ApiSearchGallery(final String muniqueID, final SearchListModel searchdetailList) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(context).create(ApiInterface.class);
-        //final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
-        //mDialog.show();
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
@@ -2101,8 +1822,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             @Override
             public void onResponse(Call<ArrayList<SearchViewDetail>> call, Response<ArrayList<SearchViewDetail>> response) {
                 try {
-                    // if (mDialog.isShowing())
-                    // Config.closeDialog(getActivity(), mDialog);
                     Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----gallery--------------------" + response.code());
                     if (response.code() == 200) {
@@ -2110,7 +1829,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         UpdateGallery(mSearchGallery, searchdetailList);
                     } else {
                         if (searchdetailList.getLogo() != null) {
-                            // Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
                             ArrayList<String> mGalleryList = new ArrayList<>();
                             mGalleryList.add(searchdetailList.getLogo());
                             boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, context);

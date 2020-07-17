@@ -131,6 +131,41 @@ public class Config {
         return dialog;
     }
 
+    public static String getPersonsAheadText(int personAhead) {
+        String message = "";
+        if(personAhead <= 0) {
+            message = "Be the first in line";
+        } else if (personAhead == 1) {
+            message = "1 Person waiting in line";
+        } else {
+            message = String.valueOf(personAhead) + " People waiting in line";
+        }
+        return message;
+    }
+
+    public static String getFormatedDate(String dtStart) {
+        Date dateParse = null;
+        SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            dateParse = format1.parse(dtStart);
+            System.out.println(dateParse);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+        SimpleDateFormat format = new SimpleDateFormat("d");
+        String date1 = format.format(dateParse);
+        if (date1.endsWith("1") && !date1.endsWith("11"))
+            format = new SimpleDateFormat("EE, MMM d'st' yyyy");
+        else if (date1.endsWith("2") && !date1.endsWith("12"))
+            format = new SimpleDateFormat("EE, MMM d'nd' yyyy");
+        else if (date1.endsWith("3") && !date1.endsWith("13"))
+            format = new SimpleDateFormat("EE, MMM d'rd' yyyy");
+        else
+            format = new SimpleDateFormat("EE, MMM d'th' yyyy");
+        return format.format(dateParse);
+    }
+
     public static String getTimeinHourMinutes(int minutes) {
         String hour_minutes = "";
         if(minutes == 0) {

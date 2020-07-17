@@ -21,6 +21,10 @@ import com.jaldeeinc.jaldee.response.SearchDepartment;
 
 import java.util.ArrayList;
 
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Created by sharmila on 3/9/18.
  */
