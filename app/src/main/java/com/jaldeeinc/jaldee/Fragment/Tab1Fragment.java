@@ -186,7 +186,7 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         Button payment = (Button) row.findViewById(R.id.payment);
         txtCheckins = (TextView) row.findViewById(R.id.checkins);
         txtTokens = (TextView) row.findViewById(R.id.tokens);
-         txtAppointments = (TextView) row.findViewById(R.id.appointments);
+        txtAppointments = (TextView) row.findViewById(R.id.appointments);
         expandlist = (ExpandableListView) row.findViewById(R.id.simple_expandable_listview);
         expandlistAppointment = (ExpandableListView) row.findViewById(R.id.appointmentView);
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -1485,18 +1485,18 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         hashMap.put(header.get(1), mCheckFutureList);
         hashMap.put(header.get(2), mCheckOldList);
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
-        // Setting adpater over expandablelistview
-        expandlist.setAdapter(adapter);
-        expandlist.setVerticalScrollBarEnabled(false);
-        adapter.notifyDataSetChanged();
-        if (mTodayTokens_Checkins.size() > 0 || mTodayFlag)
-            expandlist.expandGroup(0);
-        if (mCheckFutureList.size() > 0 || mFutureFlag)
-            expandlist.expandGroup(1);
-        if ((mTodayTokens_Checkins.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) || mOldFlag) {
-            expandlist.expandGroup(2);
-        }
+//        adapter = new ExpandableListAdapter(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
+//        // Setting adpater over expandablelistview
+//        expandlist.setAdapter(adapter);
+//        expandlist.setVerticalScrollBarEnabled(false);
+//        adapter.notifyDataSetChanged();
+//        if (mTodayTokens_Checkins.size() > 0 || mTodayFlag)
+//            expandlist.expandGroup(0);
+//        if (mCheckFutureList.size() > 0 || mFutureFlag)
+//            expandlist.expandGroup(1);
+//        if ((mTodayTokens_Checkins.size() == 0 && mCheckFutureList.size() == 0 && mCheckOldList.size() > 0) || mOldFlag) {
+//            expandlist.expandGroup(2);
+//        }
 
     }
     ExpandableListAdapterAppointment adapterAppointment;
@@ -1511,17 +1511,17 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
         hashMap.put(header.get(1), mAppointmentFutureList);
         hashMap.put(header.get(2), mAppointmentOldList);
         LocationManager mgr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        adapterAppointment = new ExpandableListAdapterAppointment(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
-        expandlistAppointment.setAdapter(adapterAppointment);
-        expandlistAppointment.setVerticalScrollBarEnabled(false);
-        adapterAppointment.notifyDataSetChanged();
-        if (mAppointmentTodayList.size() > 0 || mTodayFlag)
-            expandlistAppointment.expandGroup(0);
-        if (mAppointmentFutureList.size() > 0 || mFutureFlag)
-            expandlistAppointment.expandGroup(1);
-        if ((mAppointmentTodayList.size() == 0 && mAppointmentFutureList.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
-            expandlistAppointment.expandGroup(2);
-        }
+//        adapterAppointment = new ExpandableListAdapterAppointment(mFavList, mContext, mActivity, mInterface, header, hashMap, mTodayFlag, mFutureFlag, mOldFlag, mgr, mCallback);
+//        expandlistAppointment.setAdapter(adapterAppointment);
+//        expandlistAppointment.setVerticalScrollBarEnabled(false);
+//        adapterAppointment.notifyDataSetChanged();
+//        if (mAppointmentTodayList.size() > 0 || mTodayFlag)
+//            expandlistAppointment.expandGroup(0);
+//        if (mAppointmentFutureList.size() > 0 || mFutureFlag)
+//            expandlistAppointment.expandGroup(1);
+//        if ((mAppointmentTodayList.size() == 0 && mAppointmentFutureList.size() == 0 && mAppointmentOldList.size() > 0) || mOldFlag) {
+//            expandlistAppointment.expandGroup(2);
+//        }
 
     }
 
