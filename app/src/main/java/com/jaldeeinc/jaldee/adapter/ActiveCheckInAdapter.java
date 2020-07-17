@@ -566,8 +566,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 //                }
 
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
-                    myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_estTime.setText(spannable);
+                    if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                     myViewHolder.tv_estTime.setVisibility(View.GONE);
+                    } else {
+                     myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
+                     myViewHolder.tv_estTime.setText(spannable);
+                    }
+
 //                    myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
 //                    myViewHolder.tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                 } else {
@@ -647,8 +652,13 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
-                    myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_estTime.setText(spannable);
+                    if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                      myViewHolder.tv_estTime.setVisibility(View.GONE);
+                    } else {
+                        myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_estTime.setText(spannable);
+                    }
+//
                     //  myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
                     //  myViewHolder.tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                 } else {
@@ -753,8 +763,12 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
 
 
                     if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
-                        myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_estTime.setText(spannable);
+                        if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                            myViewHolder.tv_estTime.setVisibility(View.GONE);
+                        } else {
+                            myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_estTime.setText(spannable);
+                        }
 //                        myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
 //                        myViewHolder.tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                     } else {
@@ -910,8 +924,12 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
                         }
 
                         if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn")) {
-                            myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_estTime.setText(spannable);
+                            if (activelist.getShowToken().equalsIgnoreCase("true") && activelist.getCalculationMode().equalsIgnoreCase("NoCalc")){
+                                myViewHolder.tv_estTime.setVisibility(View.GONE);
+                            } else {
+                                myViewHolder.tv_estTime.setVisibility(View.VISIBLE);
+                                myViewHolder.tv_estTime.setText(spannable);
+                            }
 //                            myViewHolder.tv_queueTime.setVisibility(View.VISIBLE);
 //                            myViewHolder.tv_queueTime.setText("Checked in for " + " " + activelist.getQueueStartTime() + " " + "-" + " " + activelist.getQueueEndTime());
                         } else {

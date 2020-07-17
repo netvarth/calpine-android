@@ -539,7 +539,7 @@
                 android:paddingLeft="@dimen/dimen_5dp"
                 android:paddingRight="@dimen/dimen_5dp"
                 android:text=""
-                android:textColor="@color/violet"
+                android:textColor="@color/title_grey"
                 android:textSize="@dimen/txtsize_12"
                 android:textStyle="bold" />
 

@@ -281,27 +281,27 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             myViewHolder.LexpandCheckin.setVisibility(View.GONE);
         }
         for (int i = 0; i < mQueueList.size(); i++) {
-            if (mQueueList.get(i).getNextAvailableQueue() != null) {
-                if (online_presence && mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled()) {
-                    if (mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn() || mSearchSetting.isFutureDateWaitlist()) {
-                        if (!mQueueList.get(i).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                            myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
-                            myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                        } else {
-                            if (mQueueList.get(i).isShowToken() && (mQueueList.get(i).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc"))) {
-                                myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
-                                myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                            } else {
-                                myViewHolder.tv_waittime.setVisibility(View.GONE);
-                                myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
-                            }
-                        }
-                    } else {
-                        myViewHolder.tv_waittime.setVisibility(View.GONE);
-                        myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
-                    }
-                }
-            }
+//            if (mQueueList.get(i).getNextAvailableQueue() != null) {
+//                if (online_presence && mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled()) {
+//                    if (mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn() || mSearchSetting.isFutureDateWaitlist()) {
+//                        if (!mQueueList.get(i).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) {
+//                            myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+//                            myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+//                        } else {
+//                            if (mQueueList.get(i).isShowToken() && (mQueueList.get(i).getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc"))) {
+//                                myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+//                                myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
+//                            } else {
+//                                myViewHolder.tv_waittime.setVisibility(View.GONE);
+//                                myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
+//                            }
+//                        }
+//                    } else {
+//                        myViewHolder.tv_waittime.setVisibility(View.GONE);
+//                        myViewHolder.txtwaittime_expand.setVisibility(View.GONE);
+//                    }
+//                }
+//            }
 
             if (mQueueList.get(i).getNextAvailableQueue() != null) {
                 if (online_presence && mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled()) {
@@ -947,13 +947,18 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.txt_apptservices.setVisibility(View.GONE);
                     }
                 }
-                final int finalI = m;
-                myViewHolder.txtapptSeeAll.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        adaptercallback.onMethodServiceCallbackAppointment(aServicesList, mTitle, mSearchDepartmentList);
-                    }
-                });
+                if(aServicesList.size()>3) {
+                    myViewHolder.txtapptSeeAll.setVisibility(View.VISIBLE);
+                    final int finalI = m;
+                    myViewHolder.txtapptSeeAll.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            adaptercallback.onMethodServiceCallbackAppointment(aServicesList, mTitle, mSearchDepartmentList);
+                        }
+                    });
+                } else{
+                    myViewHolder.txtapptSeeAll.setVisibility(View.GONE);
+                }
             }
         }
 
@@ -1124,11 +1129,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                             String message = Config.getPersonsAheadText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
                                             myViewHolder.tv_waittime.setText(message);
                                             myViewHolder.txtwaittime_expand.setText(message);
+                                            myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
+                                            myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
                                             myViewHolder.txt_peopleahead.setVisibility(View.GONE);
                                         } else { // Conventional (Token with Waiting time)
                                             myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                                             myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                                            Spannable spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue());
+                                            String spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue(),myViewHolder);
                                             myViewHolder.tv_waittime.setText(spannable);
                                             myViewHolder.txtwaittime_expand.setText(spannable);
                                         }
@@ -1137,15 +1144,17 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         myViewHolder.btn_checkin_expand.setText("Check-in".toUpperCase());
                                         myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                                         myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                                        Spannable spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue());
+                                        String spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue(),myViewHolder);
                                         myViewHolder.tv_waittime.setText(spannable);
                                         myViewHolder.txtwaittime_expand.setText(spannable);
                                     }
+                                }else{
+                                    disableCheckinButton(myViewHolder);
                                 }
                                 if (date2 != null && date1.compareTo(date2) < 0) {
                                     myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                                     myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                                    Spannable spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue());
+                                    String spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue(),myViewHolder);
                                     myViewHolder.tv_waittime.setText(spannable);
                                     myViewHolder.txtwaittime_expand.setText(spannable);
                                 }
@@ -1171,7 +1180,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         }
     }
-    public static Spannable getWaitingTime(NextAvailableQModel queue) {
+    public static String getWaitingTime(NextAvailableQModel queue,MyViewHolder myViewHolder) {
         String firstWord = "";
         String secondWord = "";
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -1193,18 +1202,30 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         if(queue.getServiceTime()!= null){
             firstWord = "Next Available Time ";
             if (type != null) {
-                java.text.DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-                java.text.DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-                String inputDateStr = queue.getAvailableDate();
-                Date datechange = null;
+//                java.text.DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                java.text.DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+//                String inputDateStr = queue.getAvailableDate();
+//                Date datechange = null;
+//                try {
+//                    datechange = inputFormat.parse(inputDateStr);
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = null;
                 try {
-                    datechange = inputFormat.parse(inputDateStr);
+                    date = format.parse(queue.getAvailableDate());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                String outputDateStr = outputFormat.format(datechange);
-                String yourDate = Config.getFormatedDate(outputDateStr);
-                secondWord = yourDate + ", " + queue.getServiceTime();
+                String day = (String) DateFormat.format("dd", date);
+                String monthString = (String) DateFormat.format("MMM", date);
+                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                secondWord = "\n" + monthString + " " + day + ", " + queue.getServiceTime();
+//                String outputDateStr = outputFormat.format(datechange);
+//                String yourDate = Config.getFormatedDate(outputDateStr);
+//                secondWord = yourDate + ", " + queue.getServiceTime();
             } else {
                 secondWord =  "\nToday, " + queue.getServiceTime();
             }
@@ -1213,12 +1234,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             firstWord = "Est wait time";
             secondWord = "\n" + Config.getTimeinHourMinutes(queue.getQueueWaitingTime());
         }
-        Spannable spannable = new SpannableString(firstWord + secondWord);
-        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
-        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannable;
+        myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
+        String message = Config.getPersonsAheadText(queue.getPersonAhead());
+        myViewHolder.txt_peopleahead.setText(message);
+        // Spannable spannable = new SpannableString(firstWord + secondWord);
+//        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
+//        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return firstWord + secondWord;
     }
     private void handleLocationAmenities(final MyViewHolder myViewHolder, final SearchLocation searchLoclist) {
         if (searchLoclist.getParkingType() != null) {
