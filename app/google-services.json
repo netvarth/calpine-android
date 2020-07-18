@@ -1,35 +1,78 @@
 {
   "project_info": {
-    "project_number": "832808993898",
-    "firebase_url": "https://jaldee-consumer.firebaseio.com",
-    "project_id": "jaldee-consumer",
-    "storage_bucket": "jaldee-consumer.appspot.com"
+    "project_number": "906354236471",
+    "firebase_url": "https://jaldee-4e85e.firebaseio.com",
+    "project_id": "jaldee-4e85e",
+    "storage_bucket": "jaldee-4e85e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:832808993898:android:2bb0c2886ce6c99d893613",
+        "mobilesdk_app_id": "1:906354236471:android:106c48b50f0b288c",
         "android_client_info": {
           "package_name": "com.nv.ynw"
         }
       },
       "oauth_client": [
         {
-          "client_id": "832808993898-t2grk4818lqt0cbs76r8qqn3ds21jgm9.apps.googleusercontent.com",
+          "client_id": "906354236471-m269aatldldhea76uu53uaild6v9rsis.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDeiqBLZz6_c5juheH_cHilJCwdLoY4QaA"
+          "current_key": "AIzaSyCtFtfLJhLB0btRShx1cXWr6o8Kjya3qI0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "832808993898-t2grk4818lqt0cbs76r8qqn3ds21jgm9.apps.googleusercontent.com",
+              "client_id": "906354236471-m269aatldldhea76uu53uaild6v9rsis.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "906354236471-m7mpq2h3f2ea9r8f6rcm2i52k13in6mm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaldeeinc.jaldeebusiness"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906354236471:android:49ad839716440904",
+        "android_client_info": {
+          "package_name": "com.jaldeeinc.jaldeebusiness"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906354236471-m269aatldldhea76uu53uaild6v9rsis.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtFtfLJhLB0btRShx1cXWr6o8Kjya3qI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906354236471-m269aatldldhea76uu53uaild6v9rsis.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "906354236471-m7mpq2h3f2ea9r8f6rcm2i52k13in6mm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaldeeinc.jaldeebusiness"
+              }
             }
           ]
         }

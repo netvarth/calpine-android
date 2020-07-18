@@ -307,7 +307,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         dialog.show();
         final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
         final Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-        final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+        edt_message = (EditText) dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
         String firstWord = "Message to ";
         String secondWord = providerNAme;
