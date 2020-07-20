@@ -1625,6 +1625,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     PendingResult<LocationSettingsResult> result =
                             LocationServices.SettingsApi
                                     .checkLocationSettings(googleApiClient, builder.build());
+
                     result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
 
                         @Override
@@ -1634,8 +1635,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 case LocationSettingsStatusCodes.SUCCESS:
                                     // All location settings are satisfied.
                                     // You can initialize location requests here.
+//Mani Changed getActivity() -> mContext
                                     int permissionLocation = ContextCompat
-                                            .checkSelfPermission(getActivity(),
+                                            .checkSelfPermission(mContext,
                                                     Manifest.permission.ACCESS_FINE_LOCATION);
                                     if (permissionLocation == PackageManager.PERMISSION_GRANTED) {
                                         mylocation = LocationServices.FusedLocationApi

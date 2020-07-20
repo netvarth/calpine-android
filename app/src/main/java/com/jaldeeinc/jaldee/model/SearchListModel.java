@@ -115,6 +115,7 @@ public class SearchListModel implements Serializable {
     private ArrayList services;
     private ArrayList appt_services;
     private ArrayList donation_services;
+    private ArrayList providers;
 
     public String getLocation_id1() {
         return location_id1;
@@ -572,6 +573,14 @@ public class SearchListModel implements Serializable {
 
     public void setBusiness_hours1(ArrayList business_hours1) {
         this.business_hours1 = business_hours1;
+    }
+
+    public ArrayList getProviders() {
+        return providers;
+    }
+
+    public void setProviders(ArrayList providers) {
+        this.providers = providers;
     }
 
     public ArrayList getTerminologies() {

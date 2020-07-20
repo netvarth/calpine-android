@@ -115,7 +115,6 @@ import retrofit2.Response;
 
 
 public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback, DepartmentAdapter.OnItemClickListener {
-
     Context mContext;
     ListView deptListview;
     SearchViewDetail mBusinessDataList;
@@ -131,44 +130,30 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     JdnResponse jdnList;
     String jdnDiscount, jdnMaxvalue;
     AdapterCallback mAdapterCallback;
-
-
     SearchSetting mSearchSettings;
     SearchAWsResponse mSearchAWSResponse;
     SearchTerminology mSearchTerminology;
-
     ArrayList<QueueList> mSearchQueueList;
     ArrayList<ScheduleList> mSearchScheduleList;
-
     ArrayList<SearchService> mServicesList;
-
     ArrayList<DepartmentModal> mDepartmentsList;
-
     ArrayList<SearchCheckInMessage> mSearchmCheckMessageList;
-
     ArrayList<SearchCheckInMessage> mSearchmCheckListShow = new ArrayList<>();
-
     ArrayList<String> departmentNameList = new ArrayList();
     ArrayList<String> departmentCodeList = new ArrayList();
-
-
     TextView tv_busName, tv_domain, tv_desc, tv_msg, txtMore;
     ImageView img_arrow;
     Boolean isExpandFlag = true;
-
     RecyclerView mRecyLocDetail, mRecycle_virtualfield, mRecycleDepartment, mrecycle_specialisation;
     SearchLocationAdapter mSearchLocAdapter;
     DepartmentAdapter mDepartmentAdapter;
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
-
     int mProvoderId;
     ArrayList<String> ids;
     String uniqueID;
     String customUniqueID;
-
     String home, homeUniqueId,uniID;
     String claimable;
-
     TextView tv_ImageViewText, tv_Moredetails, tv_specializtion, tv_SocialMedia, tv_Gallery, tv_mImageViewTextnew, locationHeading;
     RatingBar rating;
     SearchLocationAdpterCallback mInterface;
@@ -177,8 +162,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     String location;
     TextView tv_fav;
     int department;
-
-
     boolean flag_more = false;
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
@@ -188,7 +171,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ImageView tv_jdn;
     List<SearchDepartment> departmentList;
     private String departmentCode;
-
     private int TOTAL_PAGES = 0;
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
     List<SearchAWsResponse> mSearchRespDetail = new ArrayList<>();
@@ -203,7 +185,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     String terminology;
     List<SearchDepartment> mSearchDepartmentList;
     TextView departmentHeading;
-
     HashMap<String, List<SearchListModel>> departmentMap;
     LinearLayout L_layout;
     ArrayList<SearchDonation> LServicesList = new ArrayList<>();
@@ -255,48 +236,33 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         tv_title.setVisibility(View.INVISIBLE);
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
-
-
-
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-
             home = bundle.getString("home");
             homeUniqueId = bundle.getString("homeUniqueId");
-
-
             if (home != null && home.equals("home")) {
                 if (homeUniqueId != null) {
                     ApiUniqueID(homeUniqueId);
                     uniqueID = homeUniqueId;
-
                     Log.i("uniqueCutomIdSecond",uniqueID);
-
                 }
-
             }else{
                 uniqueID = bundle.getString("uniqueID");
             }
-
             claimable = "0";
-
         }
-
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(homeUniqueId==null){
-                    getFragmentManager().popBackStack();
-                }else{
-                    Intent intent = new Intent(mContext, Home.class);
-                    startActivity(intent);
-                }
-                // what do you want here
-
+            if(homeUniqueId==null){
+                getFragmentManager().popBackStack();
+            }else{
+                Intent intent = new Intent(mContext, Home.class);
+                startActivity(intent);
+            }
+            // what do you want here
             }
         });
-
         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mRecyLocDetail.setNestedScrollingEnabled(false);
         tv_busName = (TextView) row.findViewById(R.id.txtbus_name);
@@ -324,10 +290,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ic_twitt = (ImageView) row.findViewById(R.id.ic_twitt);
         ic_yout = (ImageView) row.findViewById(R.id.ic_yout);
         ic_jaldeeverifiedIcon = (ImageView) row.findViewById(R.id.ic_jaldeeverifiedIcon);
-
         //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
         tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
-
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_busName.setTypeface(tyface);
@@ -340,102 +304,88 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             ApiJDN(uniqueID);
             ApiSearchViewTerminology(uniqueID);
             ApiSearchViewDetail(uniqueID, mSearchResp);
-            ApiSearchGallery(uniqueID);
+//            ApiSearchGallery(uniqueID);
             ApiSearchVirtualFields(uniqueID);
+            apiShowDepartments(uniqueID);
         }
-
-
-
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!flag_more) {
-                    flag_more = true;
-                    mRecycle_virtualfield.setVisibility(View.VISIBLE);
-                    Config.logV("Domain Size@@@@@@@@@@@@@" + domainVirtual.size());
-                    Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
-                    tv_Moredetails.setText("See Less");
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, domainVirtual.size());
-                    mRecycle_virtualfield.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
+            if (!flag_more) {
+                flag_more = true;
+                mRecycle_virtualfield.setVisibility(View.VISIBLE);
+                Config.logV("Domain Size@@@@@@@@@@@@@" + domainVirtual.size());
+                Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
+                tv_Moredetails.setText("See Less");
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, domainVirtual.size());
+                mRecycle_virtualfield.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            } else {
+                flag_more = false;
+                tv_Moredetails.setText("See All");
+                int size = domainVirtual.size();
+                if (size == 1) {
+                    size = 1;
                 } else {
-                    flag_more = false;
-                    tv_Moredetails.setText("See All");
-                    int size = domainVirtual.size();
-                    if (size == 1) {
-                        size = 1;
-                    } else {
-                        size = 2;
-                    }
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
-                    mRecycle_virtualfield.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
+                    size = 2;
                 }
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
+                mRecycle_virtualfield.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            }
             }
         });
-
-
         img_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mRecycle_virtualfield.getVisibility() != View.VISIBLE) {
-                    mRecycle_virtualfield.setVisibility(View.VISIBLE);
-                    img_arrow.setImageResource(R.drawable.icon_angle_up);
-                    int size = domainVirtual.size();
-                    if (size > 2) {
-                        tv_Moredetails.setVisibility(View.VISIBLE);
-                    } else {
-                        tv_Moredetails.setVisibility(View.GONE);
-                    }
-
+             if (mRecycle_virtualfield.getVisibility() != View.VISIBLE) {
+                mRecycle_virtualfield.setVisibility(View.VISIBLE);
+                img_arrow.setImageResource(R.drawable.icon_angle_up);
+                int size = domainVirtual.size();
+                if (size > 2) {
+                    tv_Moredetails.setVisibility(View.VISIBLE);
                 } else {
-                    mRecycle_virtualfield.setVisibility(View.GONE);
-                    img_arrow.setImageResource(R.drawable.icon_angle_down);
                     tv_Moredetails.setVisibility(View.GONE);
-
                 }
+            } else {
+                mRecycle_virtualfield.setVisibility(View.GONE);
+                img_arrow.setImageResource(R.drawable.icon_angle_down);
+                tv_Moredetails.setVisibility(View.GONE);
+            }
             }
         });
-
-
         tv_jdn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(homeUniqueId==null){
-                    onMethodJdn(uniqueID);
-                }else{
-                    onMethodJdn(homeUniqueId);
-                }
-
+            if(homeUniqueId==null){
+                onMethodJdn(uniqueID);
+            }else{
+                onMethodJdn(homeUniqueId);
+            }
             }
         });
         tv_coupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if(homeUniqueId==null){
-                    onMethodCoupn(uniqueID);
-                }else{
-                    onMethodCoupn(homeUniqueId);
-                }
+            if(homeUniqueId==null){
+                onMethodCoupn(uniqueID);
+            }else{
+                onMethodCoupn(homeUniqueId);
+            }
             }
         });
-
-
         tv_first_ccoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if(homeUniqueId==null){
-                    onMethodFirstCoupn(uniqueID);
-                }else{
-                    onMethodFirstCoupn(homeUniqueId);
-                }
+            if(homeUniqueId==null){
+                onMethodFirstCoupn(uniqueID);
+            }else{
+                onMethodFirstCoupn(homeUniqueId);
+            }
             }
         });
         mInterface = (SearchLocationAdpterCallback) this;
@@ -453,108 +403,118 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("Provider iD--------------" + String.valueOf(mProvoderId));
-
-                final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
-                dialog.setContentView(R.layout.reply);
-                dialog.show();
-
-                final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
-                Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
-                txtsendmsg.setVisibility(View.VISIBLE);
-                txtsendmsg.setText("Message to " + tv_busName.getText().toString());
-                btn_send.setText("SEND");
-
-                edt_message.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable arg0) {
-                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
-                            btn_send.setEnabled(true);
-                            btn_send.setClickable(true);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
-                        } else {
-                            btn_send.setEnabled(false);
-                            btn_send.setClickable(false);
-                            btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                        }
+            Config.logV("Provider iD--------------" + String.valueOf(mProvoderId));
+            final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
+            dialog.setContentView(R.layout.reply);
+            dialog.show();
+            final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+            Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+            final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+            TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+            txtsendmsg.setVisibility(View.VISIBLE);
+            txtsendmsg.setText("Message to " + tv_busName.getText().toString());
+            btn_send.setText("SEND");
+            edt_message.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable arg0) {
+                    if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
+                        btn_send.setEnabled(true);
+                        btn_send.setClickable(true);
+                        btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                    } else {
+                        btn_send.setEnabled(false);
+                        btn_send.setClickable(false);
+                        btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                     }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-                });
-                btn_send.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        String modifyAccountID = String.valueOf(mProvoderId);
-                        ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
-                    }
-                });
-
-                btn_cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
+                }
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
+            btn_send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String modifyAccountID = String.valueOf(mProvoderId);
+                    ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
+                }
+            });
+            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
             }
         });
         return row;
     }
 
+    private void apiShowDepartments(String uniqueID) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Call<ArrayList<DepartmentModal>> call = apiService.getUserandDepartments(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<DepartmentModal>>() {
+            @Override
+            public void onResponse(Call<ArrayList<DepartmentModal>> call, Response<ArrayList<DepartmentModal>> response) {
+                try {
+//                    if (mDialog.isShowing())
+//                    Config.closeDialog(getActivity(), mDialog);
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        // Department Section Starts
+                        Log.i("DepartmentProviders", new Gson().toJson(response.body()));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<DepartmentModal>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(getActivity(), mDialog);
+            }
+        });
+
+    }
+
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("communicationMessage", message);
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.PostMessage(accountID, body);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
                         mBottomDialog.dismiss();
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -564,52 +524,36 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 mBottomDialog.dismiss();
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
     private void ApiAppointmentServices(String muniqueID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<ArrayList<SearchAppointmentDepartmentServices>> call = apiService.getAppointmentServices(Integer.parseInt(muniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<ArrayList<SearchAppointmentDepartmentServices>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchAppointmentDepartmentServices>> call, Response<ArrayList<SearchAppointmentDepartmentServices>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
-
                     if (response.code() == 200) {
                         LaServicesList.clear();
                         aServiceList.clear();
                         for(int i = 0;i<response.body().size();i++) {
-
                             if (response.body().get(i).getServices() == null) {
                                 SearchAppointmentDepartmentServices mService = new SearchAppointmentDepartmentServices();
-                                 mService.setName(response.body().get(i).getName());
-                                 LaServicesList.add(mService);
+                                mService.setName(response.body().get(i).getName());
+                                LaServicesList.add(mService);
                             }
                             else{
                                 SearchAppointmentDepartmentServices mService = new SearchAppointmentDepartmentServices();
@@ -620,7 +564,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             }
                         }
                         aServiceList = response.body();
-
 //                        for (int i = 0; i < response.body().size(); i++) {
 //                            SearchAppointmentDepartmentServices mService = new SearchAppointmentDepartmentServices();
 //                            mService.setDepartmentName();Name(response.body().get(i).getName());
@@ -639,71 +582,37 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                        }
 //                        aServiceList.addAll(LaServicesList);
                         // Department Section Starts
-
-
-
-
-
-
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
-
             @Override
             public void onFailure(Call<ArrayList<SearchAppointmentDepartmentServices>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
-
-
-
-
     private void ApiDonationServices(final int id) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
 //        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
 //        mDialog.show();
-
-
         Call<ArrayList<SearchDonation>> call = apiService.getSearchDonation(mProvoderId);
-
         call.enqueue(new Callback<ArrayList<SearchDonation>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchDonation>> call, Response<ArrayList<SearchDonation>> response) {
-
                 try {
-
                     //  if (mDialog.isShowing())
                     //  Config.closeDialog(getParent(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-                          LServicesList.clear();
-                          gServiceList.clear();
-
+                        LServicesList.clear();
+                        gServiceList.clear();
                         for (int i = 0; i < response.body().size(); i++) {
                             SearchDonation mService = new SearchDonation();
                             mService.setName(response.body().get(i).getName());
@@ -721,15 +630,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         }
                         gServiceList.addAll(LServicesList);
                         // Department Section Starts
-
-
-
-
-
                     }  } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -738,132 +641,86 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
                 //  if (mDialog.isShowing())
                 //  Config.closeDialog(getParent(), mDialog);
-
             }
         });
-
-
     }
-
     public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery) {
         //  Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
-
         Config.logV("Gallery--------------333-----" + mGallery.size());
         try {
             if (mGallery.size() > 0 || mBusinessDataList.getLogo() != null) {
-
                 mImgeProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        Config.logV("Gallery------------------------------" + mGallery.size());
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-
-                        if (mBusinessDataList.getLogo() != null) {
-                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                        }
-
-                        for (int i = 0; i < mGallery.size(); i++) {
-
-                            mGalleryList.add(mGallery.get(i).getUrl());
-                        }
-
-
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                        if (mValue) {
-
-                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                            intent.putExtra("pos", 0);
-                            startActivity(intent);
-                        }
-
-
+                    Config.logV("Gallery------------------------------" + mGallery.size());
+                    ArrayList<String> mGalleryList = new ArrayList<>();
+                    if (mBusinessDataList.getLogo() != null) {
+                        mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                    }
+                    for (int i = 0; i < mGallery.size(); i++) {
+                        mGalleryList.add(mGallery.get(i).getUrl());
+                    }
+                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                    if (mValue) {
+                        Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                        intent.putExtra("pos", 0);
+                        startActivity(intent);
+                    }
                     }
                 });
-
-
                 mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        Config.logV("Gallery------------------------------" + mGallery.size());
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-
-
-                        if (mBusinessDataList.getLogo() != null) {
-
-                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                        }
-                        for (int i = 0; i < mGallery.size(); i++) {
-                            mGalleryList.add(mGallery.get(i).getUrl());
-                        }
-
-
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                        if (mValue) {
-
-                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                            intent.putExtra("pos", 1);
-                            startActivity(intent);
-                        }
-
-
+                    Config.logV("Gallery------------------------------" + mGallery.size());
+                    ArrayList<String> mGalleryList = new ArrayList<>();
+                    if (mBusinessDataList.getLogo() != null) {
+                        mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                    }
+                    for (int i = 0; i < mGallery.size(); i++) {
+                        mGalleryList.add(mGallery.get(i).getUrl());
+                    }
+                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                    if (mValue) {
+                        Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                        intent.putExtra("pos", 1);
+                        startActivity(intent);
+                    }
                     }
                 });
-
-
                 mImgthumbProfile1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        Config.logV("Gallery------------------------------" + mGallery.size());
-                        ArrayList<String> mGalleryList = new ArrayList<>();
-
-
-                        if (mBusinessDataList.getLogo() != null) {
-
-                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                        }
-                        for (int i = 0; i < mGallery.size(); i++) {
-
-                            mGalleryList.add(mGallery.get(i).getUrl());
-                        }
-
-
-                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                        if (mValue) {
-
-                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                            intent.putExtra("pos", 2);
-                            startActivity(intent);
-                        }
-
-
+                    Config.logV("Gallery------------------------------" + mGallery.size());
+                    ArrayList<String> mGalleryList = new ArrayList<>();
+                    if (mBusinessDataList.getLogo() != null) {
+                        mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                    }
+                    for (int i = 0; i < mGallery.size(); i++) {
+                        mGalleryList.add(mGallery.get(i).getUrl());
+                    }
+                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                    if (mValue) {
+                        Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                        intent.putExtra("pos", 2);
+                        startActivity(intent);
+                    }
                     }
                 });
-
-
             } /*else {
                 tv_Gallery.setVisibility(View.GONE);
             }*/
-
             Config.logV("Bussiness logo @@@@@@@@@@" + mBusinessDataList.getLogo());
             if (mBusinessDataList.getLogo() != null) {
                 Picasso.with(mContext).load(mBusinessDataList.getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
-
             } else {
                 //Toast.makeText(mContext, "There is no Profile Pic", Toast.LENGTH_SHORT).show();
                 // Picasso.with(mContext).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(mImgeProfile);
-
             }
-
-
             if (mBusinessDataList.getLogo() != null) {
                 if (mGallery.size() > 0) {
                     tv_mImageViewTextnew.setVisibility(View.VISIBLE);
                     tv_mImageViewTextnew.setText(" +" + String.valueOf(mGallery.size()));
                 }
-
             } else if (mBusinessDataList.getLogo() == null) {
                 if (mGallery.size() > 0) {
                     tv_mImageViewTextnew.setVisibility(View.VISIBLE);
@@ -872,27 +729,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     tv_mImageViewTextnew.setVisibility(View.GONE);
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     /*  ArrayList<SearchViewDetail> emails = new ArrayList<>();
       ArrayList<SearchViewDetail> phoneNumber = new ArrayList<>();*/
     ArrayList<ContactModel> contactDetail = new ArrayList<>();
     boolean isContact = false;
-
     ArrayList<SocialMediaModel> socialMedia = new ArrayList<>();
-
-
     //  boolean expand =false;
     public void UpdateMainUI(final SearchViewDetail getBussinessData) {
-
         if (getBussinessData.getSpecialization() != null) {
             if (getBussinessData.getSpecialization().size() > 0) {
-
-
                 tv_specializtion.setVisibility(View.VISIBLE);
                 mrecycle_specialisation.setVisibility(View.VISIBLE);
                 specialSeeAll.setVisibility(View.VISIBLE);
@@ -906,9 +755,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         tv_spec2.setVisibility(View.GONE);
                         tv_seeAll.setVisibility(View.GONE);
                         if(getBussinessData.getSpecialization().get(0).toString()!=null){
-                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString());
-                    }
-
+                            tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString());
+                        }
                     } else {
                         mrecycle_specialisation.setVisibility(View.GONE);
                         specialSeeAll.setVisibility(View.GONE);
@@ -923,22 +771,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                        tv_spec1.setMaxEms(6);
 //                        tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
 //                        tv_spec1.setMaxLines(1);
-                     //   tv_spec2.setVisibility(View.VISIBLE);
+                        //   tv_spec2.setVisibility(View.VISIBLE);
 //                        tv_spec2.setMaxEms(6);
 //                        tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
 //                        tv_spec2.setMaxLines(1);
-                     //   tv_seeAll.setVisibility(View.VISIBLE);
+                        //   tv_seeAll.setVisibility(View.VISIBLE);
                         String specialization = getBussinessData.getSpecialization().get(0).toString() + ", " + getBussinessData.getSpecialization().get(1).toString() +", ";
                         String more =  tv_seeAll.getText().toString();
                         final Spannable spannable1 = new SpannableString(specialization + " " +  more);
                         spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                                 0, more.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-
-                     //   tv_spec1.setText(spannable1);
-                      //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
-                    final Spannable seeAll = new SpannableString(spannable1);
-
+                        //   tv_spec1.setText(spannable1);
+                        //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
+                        final Spannable seeAll = new SpannableString(spannable1);
                         ClickableSpan clickableSpan = new ClickableSpan() {
                             @Override
                             public void onClick(@NonNull View widget) {
@@ -946,22 +791,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mrecycle_specialisation.setVisibility(View.VISIBLE);
                                 specialSeeAll.setVisibility(View.VISIBLE);
                                 LSpecialization.removeAllViews();
-
-
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mrecycle_specialisation.setLayoutManager(mLayoutManager);
                                 sAdapter = new SpecialisationAdapter(getBussinessData);
                                 mrecycle_specialisation.setAdapter(sAdapter);
                                 sAdapter.notifyDataSetChanged();
-
-
                                 SpannableString spanStr = new SpannableString("See less");
                                 spanStr.setSpan(new UnderlineSpan(), 0, spanStr.length(), 0);
-
                                 specialSeeAll.setText(spanStr);
-
-
-
                                 specialSeeAll.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -974,7 +811,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                        else{
 //                                            tv_spec2.setVisibility(View.VISIBLE);
 //                                        }
-                                      //  tv_seeAll.setVisibility(View.VISIBLE);
+                                        //  tv_seeAll.setVisibility(View.VISIBLE);
 //                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
 //                                            tv_spec2.setVisibility(View.GONE);
 //                                        }
@@ -988,13 +825,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         specialSeeAll.setVisibility(View.GONE);
                                     }
                                 });
-
                                 LinearLayout parent1 = new LinearLayout(mContext);
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 parent1.setOrientation(LinearLayout.VERTICAL);
                                 parent1.setLayoutParams(params);
                                 for (int i = 0; i < getBussinessData.getSpecialization().size(); i++) {
-
                                     TextView dynaText = new TextView(mContext);
                                     dynaText.setText(getBussinessData.getSpecialization().get(i).toString());
                                     dynaText.getLineSpacingExtra();
@@ -1012,14 +847,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     params.setMargins(0, 10, 0, 0);
                                     dynaText.setGravity(Gravity.LEFT);
                                     parent1.addView(dynaText);
-
                                 }
                                 TextView dynaText = new TextView(mContext);
                                 Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                                         "fonts/Montserrat_Regular.otf");
                                 dynaText.setTypeface(tyface);
                                 dynaText.setText("See Less");
-
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     dynaText.getJustificationMode();
                                 }
@@ -1028,14 +861,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     dynaText.getLetterSpacing();
                                 }
-
                                 dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                                 dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
                                 // dynaText.setPadding(5, 5, 5, 5);
                                 dynaText.setMaxLines(1);
                                 dynaText.setLayoutParams(params);
-
-
                                 params.setMargins(0, 10, 0, 0);
                                 dynaText.setGravity(Gravity.LEFT);
                                 parent1.addView(dynaText);
@@ -1057,16 +887,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                             }
                         };
-
-                       seeAll.setSpan(clickableSpan,specialization.length(),specialization.length() + more.length() + 1,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                       seeAll.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)),
+                        seeAll.setSpan(clickableSpan,specialization.length(),specialization.length() + more.length() + 1,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        seeAll.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)),
                                 specialization.length(), specialization.length() + more.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                       tv_spec1.setText(seeAll);
-                       tv_spec1.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-
-
+                        tv_spec1.setText(seeAll);
+                        tv_spec1.setMovementMethod(LinkMovementMethod.getInstance());
 //                        tv_seeAll.setOnClickListener(new View.OnClickListener() {
 //                            @Override
 //                            public void onClick(View v) {
@@ -1168,12 +993,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                LSpecialization.addView(parent1);
 //                            }
 //                        });
-
-
                     }
                 }
-
-
             } else {
                 tv_specializtion.setVisibility(View.GONE);
                 LSpecialization.setVisibility(View.GONE);
@@ -1184,13 +1005,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             LSpecialization.setVisibility(View.GONE);
             LSpecialization_2.setVisibility(View.GONE);
         }
-
         if (getBussinessData.getSocialMedia() != null) {
             if (getBussinessData.getSocialMedia().size() > 0) {
                 LsocialMedia.setVisibility(View.VISIBLE);
-
                 for (int i = 0; i < getBussinessData.getSocialMedia().size(); i++) {
-
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
 //                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_fac.setVisibility(View.VISIBLE);
@@ -1211,8 +1029,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         });
                     }
-
-
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("googleplus")) {
 //                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_gplus.setVisibility(View.VISIBLE);
@@ -1253,7 +1069,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         });
                     }
-
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("linkedin")) {
 //                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_link.setVisibility(View.VISIBLE);
@@ -1274,8 +1089,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         });
                     }
-
-
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("pinterest")) {
 //                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_pin.setVisibility(View.VISIBLE);
@@ -1296,12 +1109,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         });
                     }
-
-
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("youtube")) {
 //                        tv_SocialMedia.setVisibility(View.VISIBLE);
                         ic_yout.setVisibility(View.VISIBLE);
-
                         final int finalI2 = i;
                         ic_yout.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -1319,10 +1129,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         });
                     }
-
                 }
-
-
             } else {
                 LsocialMedia.setVisibility(View.GONE);
                 tv_SocialMedia.setVisibility(View.GONE);
@@ -1341,9 +1148,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 contact.setLabel(getBussinessData.getPhoneNumbers().get(i).getLabel());
                 contactDetail.add(contact);
             }
-
         }
-
         if (getBussinessData.getEmails().size() > 0) {
             for (int i = 0; i < getBussinessData.getEmails().size(); i++) {
                 ContactModel contact = new ContactModel();
@@ -1354,9 +1159,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         }
 
-
         if (getBussinessData.getPhoneNumbers().size() > 0 || getBussinessData.getEmails().size() > 0 && contactDetail.size() > 0) {
-
             tv_contact.setVisibility(View.VISIBLE);
             tv_contact.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1376,14 +1179,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         BottomSheetContactDialog();
                     } else {
                         Config.logV("CLosed");
-
                         //   tv_contactdetails.setVisibility(View.GONE);
                         /* mrecycle_contactdetail.setVisibility(View.GONE);*/
                     }
                 }
             });
-
-
         } else {
             //   tv_contactdetails.setVisibility(View.GONE);
             //  mrecycle_contactdetail.setVisibility(View.GONE);
@@ -1402,9 +1202,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM") || getBussinessData.getVerifyLevel().equalsIgnoreCase("ADVANCED")) {
                     ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_adv);
                 }
-
             } else {
-
                 ic_jaldeeverifiedIcon.setVisibility(View.GONE);
             }
 
@@ -1418,28 +1216,21 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ynw_verified = "3";
                     else if (getBussinessData.getVerifyLevel().equalsIgnoreCase("PREMIUM") || getBussinessData.getVerifyLevel().equalsIgnoreCase("ADVANCED"))
                         ynw_verified = "4";
-
                     Config.logV("YNW VERIFIED@@@@@@@@@@@@" + ynw_verified);
                     CustomDialog cdd = new CustomDialog(mContext, ynw_verified, getBussinessData.getBusinessName());
                     cdd.setCanceledOnTouchOutside(true);
                     cdd.show();
                 }
             });
-
         } else {
             ic_jaldeeverifiedIcon.setVisibility(View.GONE);
         }
-
         tv_msg.setEnabled(true);
         tv_busName.setText(getBussinessData.getBusinessName());
         rating.setRating(getBussinessData.getAvgRating());
-
-
         if (getBussinessData.getServiceSector().getDisplayName() != null && getBussinessData.getServiceSubSector().getDisplayName() != null) {
             tv_domain.setText(getBussinessData.getServiceSector().getDisplayName() + " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
         }
-
-
         if (getBussinessData.getBusinessDesc() != null) {
             tv_desc.setVisibility(View.VISIBLE);
             tv_desc.setText(getBussinessData.getBusinessDesc());
@@ -1448,58 +1239,38 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 public void run() {
                     int lineCount = tv_desc.getLineCount();
                     //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
-
                     if (lineCount > 3) {
                         ResizableCustomView.doResizeTextView(mContext, tv_desc, 3, "..more", true);
                     } else {
-
                     }
                     // Use lineCount here
-
                 }
             });
-
         } else {
             tv_desc.setVisibility(View.GONE);
         }
-
-
     }
 
     private void ApiSearchViewDetail(final String muniqueID, final List<SearchAWsResponse> mSearchRespPass) {
-
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<SearchViewDetail> call = apiService.getSearchViewDetail(Integer.parseInt(muniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<SearchViewDetail>() {
             @Override
             public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----detail--------------------" + response.code());
-
                     if (response.code() == 200) {
-
-
                         mBusinessDataList = response.body();
                         if (homeUniqueId != null) {
                             ApiAddFavo(mBusinessDataList.getId());
@@ -1509,49 +1280,33 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mbranchId = mBusinessDataList.getBranchId();
                         online_presence = mBusinessDataList.isOnlinePresence();
                         donationFundRaising = mBusinessDataList.isDonationFundRaising();
-
                         lat_long = mBusinessDataList.getBaseLocation().getLattitude() + "," + mBusinessDataList.getBaseLocation().getLongitude();
                         Config.logV("Provider------------" + new Gson().toJson(mBusinessDataList));
-//                        Handler handler = new Handler();
-//                        handler.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                if(response.body().getId()!=0){
-//                                    mProvoderId = response.body().getId();}
-//                            }
-//                        }, 1000);
                         if (response.body().getId() != 0) {
                             mProvoderId = response.body().getId();
                         }
-
-
                         UpdateMainUI(mBusinessDataList);
                         if(homeUniqueId==null){
                             ApiSearchGallery(uniqueID);
                         }else{
                             ApiSearchGallery(homeUniqueId);
                         }
-
                         ApiFavList(mSearchRespPass, claimable);
-                        APIServiceDepartments(mProvoderId);
+                        if (mProvoderId != 0) {
+                            APIServiceDepartments(mProvoderId);
+                        }
                         if(homeUniqueId==null){
                             ApiSearchViewLocation(uniqueID);
-                            listProviders(uniqueID);
+//                            listProviders(uniqueID);
                         }else{
                             ApiSearchViewLocation(homeUniqueId);
-                            listProviders(homeUniqueId);
+//                            listProviders(homeUniqueId);
                         }
-
-                        listDoctorsByDepartment();
-
-
+//                        listDoctorsByDepartment();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1560,50 +1315,32 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
     private void ApiSearchGallery(final String muniqueID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<ArrayList<SearchViewDetail>> call = apiService.getSearchGallery(Integer.parseInt(muniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<ArrayList<SearchViewDetail>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchViewDetail>> call, Response<ArrayList<SearchViewDetail>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----gallery--------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         mSearchGallery = response.body();
-
                         UpdateGallery(mSearchGallery);
-
                     } else {
                         tv_mImageViewTextnew.setVisibility(View.GONE);
                         if (mBusinessDataList.getLogo() != null) {
@@ -1613,12 +1350,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             tv_mImageViewTextnew.setVisibility(View.GONE);
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1627,95 +1361,59 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
     int count = 0;
-
     private void ApiSearchViewLocation(final String muniqueID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<ArrayList<SearchLocation>> call = apiService.getSearchViewLoc(Integer.parseInt(muniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<ArrayList<SearchLocation>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchLocation>> call, Response<ArrayList<SearchLocation>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---3333------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--Location-----------------------" + response.code());
                     mSearchLocList.clear();
-
                     if (response.code() == 200) {
-
-
                         mSearchLocList = response.body();
-
                         if (mSearchLocList != null) {
                             locationHeading.setVisibility(View.VISIBLE);
-
                             if (mSearchLocList.size() == 1) {
                                 locationHeading.setText("Location (1)");
                             } else if (mSearchLocList.size() > 1) {
                                 locationHeading.setText("Location " + "(" + mSearchLocList.size() + ")");
                             }
-
                         } else {
                             locationHeading.setVisibility(View.GONE);
                         }
-
                         for (int i = 0; i < response.body().size(); i++) {
                             ids.add(String.valueOf(response.body().get(i).getId()));
                         }
-
-
                         for (int k = 0; k < mSearchLocList.size(); k++) {
-
                             Config.logV("Location-----###########" + mSearchLocList.get(k).getId());
                             ApiCheckInMessage(mSearchLocList.get(k).getId(), "notshow", "");
-
                         }
-
-
                         Config.logV("mSearchLocList " + mSearchLocList.size());
-
                         for (int k = 0; k < mSearchLocList.size(); k++) {
-
                             ApiSearchViewServiceID(mSearchLocList.get(k).getId());
                             ApiAppointmentServices(muniqueID);
                             ApiDonationServices(mProvoderId);
-
                         }
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1727,18 +1425,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
             }
         });
-
-
     }
-
     BottomSheetDialog bdialog;
-
     public void BottomSheetContactDialog() {
         bdialog = new BottomSheetDialog(mContext);
         bdialog.setContentView(R.layout.contact_list);
         bdialog.setCancelable(true);
         bdialog.show();
-
         RecyclerView contactlist = (RecyclerView) bdialog.findViewById(R.id.contactlist);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -1771,49 +1464,30 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     }
                 }
         );
-
         contactlist.setLayoutManager(mLayoutManager);
         ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity(), mInterfaceContact);
         contactlist.setAdapter(checkAdapter);
         checkAdapter.notifyDataSetChanged();
-
-
     }
-
     BottomSheetDialog dialog;
-
     private void ApiCheckInMessage(final int mLocid, final String from, final String loc) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Map<String, String> query = new HashMap<>();
-
         query.put("location-eq", String.valueOf(mLocid));
         query.put("waitlistStatus-eq", "checkedIn,arrived");
-
-
         Call<ArrayList<SearchCheckInMessage>> call = apiService.getSearchCheckInMessage(query);
-
         Config.logV("Location-----###########@@@@@@" + query);
-
         call.enqueue(new Callback<ArrayList<SearchCheckInMessage>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchCheckInMessage>> call, Response<ArrayList<SearchCheckInMessage>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL-----4444-----Location-----###########@@@@@@-----" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code--------Message-----------------" + response.code());
-
                     if (response.code() == 200) {
                         mSearchmCheckListShow.clear();
                         if (response.body().size() > 0) {
@@ -1822,47 +1496,34 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             mCheckMessage.setLocid(mLocid);
                             mSearchmCheckMessageList.add(mCheckMessage);
                             if (from.equalsIgnoreCase("show")) {
-
                                 dialog = new BottomSheetDialog(mContext);
                                 dialog.setContentView(R.layout.checkin_loclist);
                                 dialog.setCancelable(true);
                                 dialog.show();
                                 TextView tv_title = (TextView) dialog.findViewById(R.id.tv_title);
-
                                 TextView tv_token = (TextView) dialog.findViewById(R.id.tv_token);
-
                                 if (mSearchSettings.getCalculationMode().equalsIgnoreCase("NoCalc") && mSearchSettings.isShowTokenId()) {
                                     tv_token.setVisibility(View.VISIBLE);
                                 } else {
                                     tv_token.setVisibility(View.GONE);
                                 }
-
                                 String firstWord = "Your " + terminology + " at ";
                                 String secondWord = loc;
                                 location = loc;
-
                                 Spannable spannable = new SpannableString(firstWord + secondWord);
                                 Typeface tyface_edittext2 = Typeface.createFromAsset(mContext.getAssets(),
                                         "fonts/Montserrat_Bold.otf");
                                 spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 tv_title.setText(spannable);
-
-
                                 RecyclerView checkloclist = (RecyclerView) dialog.findViewById(R.id.checkloclist);
-
                                 Button btn_close = (Button) dialog.findViewById(R.id.btn_close);
-
-
                                 btn_close.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         dialog.dismiss();
                                         refreshList();
-
                                     }
                                 });
-
-
                                 mSearchmCheckListShow = response.body();
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 checkloclist.setLayoutManager(mLayoutManager);
@@ -1870,18 +1531,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 checkloclist.setAdapter(checkAdapter);
                                 checkAdapter.notifyDataSetChanged();
                             }
-
-                           /* Config.logV("Locationttt-----kkkk###########@@@@@@" + mLocid);
-                            Config.logV("Locationttt-----size###########@@@@@@" + response.body().size());*/
                         }
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1890,75 +1544,42 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
     private void ApiSearchViewServiceID(final int id) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ArrayList<SearchService>> call = apiService.getSearchService(id);
-
         call.enqueue(new Callback<ArrayList<SearchService>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchService>> call, Response<ArrayList<SearchService>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code----------Service---------------" + response.code());
-
-
                     if (response.code() == 200) {
-
-
                         SearchService mService = new SearchService();
                         mService.setmAllService(response.body());
                         mService.setLocid(id);
                         mServicesList.add(mService);
-
 //                        ApiServicesGroupbyDepartment(mServicesList);
-
                         Config.logV("mServicesList @@@@" + response.body().size());
                         Config.logV("mServicesList" + mServicesList.size());
-
-
                         count++;
                         Config.logV("Count " + count);
                         if (count == mSearchLocList.size()) {
-
-
                             if (ids.size() > 0) {
-
                                 ApiSearchScheduleViewID(mProvoderId, ids);
                             }
-
-
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1967,7 +1588,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
     }
@@ -1979,60 +1599,45 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
     }
 
+    /**
+     * To show departments and its doctors/services
+     * @param uniqueID
+     */
     private void ApiDepartmentServices(String uniqueID) {
-
         Log.i("apidepartment", "apidept1");
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<ArrayList<SearchDepartmentServices>> call = apiService.getDepartmentServices(Integer.parseInt(uniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
-
                 try {
-
                     Log.i("apidepartment", "apidept2");
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         Log.i("apidepartment", "apidept3");
                         mSearchDepartmentServices.clear();
                         String responses = new Gson().toJson(response.body());
                         Config.logV("Deapartnamesss---------------" + responses);
-
-
                         for (int i = 0; i < response.body().size(); i++) {
                             departmentNameList.add(response.body().get(i).getDepartmentName());
                             departmentCodeList.add(response.body().get(i).getDepartmentCode());
                         }
-
                         mSearchDepartmentServices.addAll(response.body());
-
                         if (mSearchDepartmentServices != null) {
-
                             if (mSearchDepartmentServices.size() == 1) {
                                 departmentHeading.setVisibility(View.VISIBLE);
                                 departmentHeading.setText("Department (1)");
-
                             } else if (mSearchDepartmentServices.size() > 1) {
                                 departmentHeading.setVisibility(View.VISIBLE);
                                 departmentHeading.setText("Departments " + "(" + mSearchDepartmentServices.size() + ")");
@@ -2040,27 +1645,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         } else {
                             departmentHeading.setVisibility(View.GONE);
                         }
-
                         Log.i("departmentservice", new Gson().toJson(mSearchDepartmentServices));
-
                         Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
                         Config.logV("DepartmEntqweName --------------" + departmentNameList);
-
-
                         RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
                         mRecycleDepartment.setLayoutManager(mDepartmentLayout);
                         mDepartmentAdapter.setFields(mSearchDepartmentServices, departmentMap, mBusinessDataList.getBusinessName(), mServicesList.get(0).getmAllService(), department);
                         mRecycleDepartment.setAdapter(mDepartmentAdapter);
                         mDepartmentAdapter.notifyDataSetChanged();
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -2069,72 +1665,68 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
-    private void ApiDepartment(final int id) {
-
-
+    private void APIServiceDepartments(final int id) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-
-
         Call<SearchDepartment> call = apiService.getDepartment(id);
-
         call.enqueue(new Callback<SearchDepartment>() {
             @Override
             public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
-
                 try {
-
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code----------Service---------------" + response.code());
-
-
+                    if (response.code() == 200) {
+                        String responses = new Gson().toJson(response.body());
+                        Config.logV("Deapartnamesss---------------" + responses);
+                        mSearchDepartments.addAll(response.body().getDepartments());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<SearchDepartment> call, Throwable t) {
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
+    private void ApiDepartment(final int id) {
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Call<SearchDepartment> call = apiService.getDepartment(id);
+        call.enqueue(new Callback<SearchDepartment>() {
+            @Override
+            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code----------Service---------------" + response.code());
                     if (response.code() == 200) {
                         mSearchDepartments.clear();
                         String responses = new Gson().toJson(response.body());
                         Config.logV("Deapartnamesss---------------" + responses);
-
                         for (int i = 0; i < response.body().getDepartments().size(); i++) {
                             departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
                             departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
-
-
                         }
-
                         mSearchDepartments.addAll(response.body().getDepartments());
-
                         Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
                         Config.logV("DepartmEntqweName --------------" + departmentNameList);
-
-
                         RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
                         mRecycleDepartment.setLayoutManager(mDepartmentLayout);
                         mDepartmentAdapter.setFields(mSearchDepartmentServices, departmentMap, mBusinessDataList.getBusinessName(), mServicesList.get(0).getmAllService(), department);
                         mRecycleDepartment.setAdapter(mDepartmentAdapter);
                         mDepartmentAdapter.notifyDataSetChanged();
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -2142,115 +1734,38 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
-    private void APIServiceDepartments(final int id) {
-
-
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-
-
-        Call<SearchDepartment> call = apiService.getDepartment(id);
-
-        call.enqueue(new Callback<SearchDepartment>() {
-            @Override
-            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
-
-                try {
-
-                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code----------Service---------------" + response.code());
-
-
-                    if (response.code() == 200) {
-
-                        String responses = new Gson().toJson(response.body());
-                        Config.logV("Deapartnamesss---------------" + responses);
-
-//                        for (int i = 0; i < response.body().getDepartments().size(); i++) {
-//                            departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
-//                            departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
-//
-//
-//                        }
-
-                        mSearchDepartments.addAll(response.body().getDepartments());
-
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<SearchDepartment> call, Throwable t) {
-                Config.logV("Fail---------------" + t.toString());
-
-            }
-        });
-
-
-    }
-
-
     private void ApiSearchViewID(int mProviderid, ArrayList<String> ids) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         String idPass = "";
         for (int i = 0; i < ids.size(); i++) {
             idPass += mProviderid + "-" + ids.get(i) + ",";
         }
-
         if (!idPass.equals("") && idPass != null) {
             Config.logV("IDS_--------------------" + idPass);
-
             Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
-
             call.enqueue(new Callback<ArrayList<QueueList>>() {
                 @Override
                 public void onResponse(Call<ArrayList<QueueList>> call, Response<ArrayList<QueueList>> response) {
-
                     try {
-
                         if (mDialog.isShowing())
                             Config.closeDialog(getActivity(), mDialog);
-
                         Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-----SearchViewID--------------------" + response.code());
                         Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
-
                         if (response.code() == 200) {
-
                             mSearchQueueList = response.body();
                             if(homeUniqueId==null){
-                            ApiSearchViewSetting(uniqueID);}
+                                ApiSearchViewSetting(uniqueID);}
                             else {
                                 ApiSearchViewSetting(homeUniqueId);
                             }
-
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -2264,51 +1779,33 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Config.closeDialog(getActivity(), mDialog);
                 }
             });
-
         }
     }
     private void ApiSearchScheduleViewID(int mProviderid, final ArrayList<String> ids) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         String idPass = "";
         for (int i = 0; i < ids.size(); i++) {
             idPass += mProviderid + "-" + ids.get(i) + ",";
         }
-
         if (!idPass.equals("") && idPass != null) {
             Config.logV("IDS_--------------------" + idPass);
-
             Call<ArrayList<ScheduleList>> call = apiService.getSchedule(idPass);
-
             call.enqueue(new Callback<ArrayList<ScheduleList>>() {
                 @Override
                 public void onResponse(Call<ArrayList<ScheduleList>> call, Response<ArrayList<ScheduleList>> response) {
-
                     try {
-
                         if (mDialog.isShowing())
                             Config.closeDialog(getActivity(), mDialog);
-
                         Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-----SearchViewID--------------------" + response.code());
                         Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
-
                         if (response.code() == 200) {
-
                             mSearchScheduleList = response.body();
-
                             ApiSearchViewID(mProvoderId, ids);
-
-
                         }
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -2322,11 +1819,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Config.closeDialog(getActivity(), mDialog);
                 }
             });
-
         }
     }
-
-
     private void ApiUniqueID(String customID) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         Call<ResponseBody> call = apiService.getUniqueID(customID);
@@ -2341,7 +1835,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ApiJDN(homeUniqueId);
                         ApiSearchViewTerminology(homeUniqueId);
                         ApiSearchViewDetail(homeUniqueId, mSearchResp);
-                        ApiSearchGallery(homeUniqueId);
+//                        ApiSearchGallery(homeUniqueId);
                         ApiSearchVirtualFields(homeUniqueId);
                     }
                 } catch (Exception e) {
@@ -2352,182 +1846,113 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             public void onFailure(Call<ResponseBody> call, Throwable t) {
             }
         });
-
     }
-
-
     private void ApiSearchViewSetting(String muniqueID) {
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<SearchSetting> call = apiService.getSearchViewSetting(Integer.parseInt(muniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<SearchSetting>() {
             @Override
             public void onResponse(Call<SearchSetting> call, Response<SearchSetting> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         mSearchSettings = response.body();
-
-
                         Config.logV("Location Adapter-----------------------");
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                     mRecyLocDetail.setLayoutManager(mLayoutManager);
                     if(homeUniqueId==null){
-                         uniID = uniqueID;
+                        uniID = uniqueID;
                     }else{
                         uniID = homeUniqueId;
                     }
-
                     mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence,donationFundRaising,gServiceList,LaServicesList);
                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
                     mSearchLocAdapter.notifyDataSetChanged();
                 }
-
             }
-
-
             @Override
             public void onFailure(Call<SearchSetting> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
     VirtualFieldAdapter mAdapter;
     SpecialisationAdapter sAdapter;
     SearchVirtualFields resultData;
     ArrayList<SearchVirtualFields> domainVirtual = new ArrayList<>();
     ArrayList<SearchVirtualFields> sub_domainVirtual = new ArrayList<>();
-
     ArrayList<SearchVirtualFields> mergeResult = new ArrayList<>();
-
     private void ApiSearchVirtualFields(String muniqueID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-       /* Gson gson = new GsonBuilder()
-                .registerTypeAdapter(SearchVirtualFields.class, new SearchVirtualFields.DataStateDeserializer())
-                .create();*/
-
-       /* String url=SharedPreference.getInstance(mContext).getStringValue("s3Url", "")+"/";
-        Retrofit retrofit  = new Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ApiInterface apiService =retrofit.create(ApiInterface.class);*/
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<SearchVirtualFields> call = apiService.getVirtualFields(Integer.parseInt(muniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<SearchVirtualFields>() {
             @Override
             public void onResponse(Call<SearchVirtualFields> call, Response<SearchVirtualFields> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL----VIRTUAL---8888--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------VIRTUAL-------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         resultData = response.body();
                         if (resultData != null) {
-
                             domainVirtual.clear();
                             domainVirtual = response.body().getDomain();
                             sub_domainVirtual.clear();
                             sub_domainVirtual = response.body().getSubdomain();
-
-
                             domainVirtual.addAll(sub_domainVirtual);
-
                             if (domainVirtual.size() > 0) {
                                 layout_exapnd_moreDetails.setVisibility(View.VISIBLE);
                                 txtMore.setVisibility(View.VISIBLE);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mRecycle_virtualfield.setLayoutManager(mLayoutManager);
                                 int size = domainVirtual.size();
-
-
                                 if (size == 1) {
                                     size = 1;
                                 } else {
                                     size = 2;
                                 }
-
-
                                 mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
                                 mRecycle_virtualfield.setAdapter(mAdapter);
                                 mAdapter.notifyDataSetChanged();
                             } else {
                                 layout_exapnd_moreDetails.setVisibility(View.GONE);
                             }
-
-
                         } else {
                             tv_Moredetails.setVisibility(View.GONE);
                             mRecycle_virtualfield.setVisibility(View.GONE);
                             txtMore.setVisibility(View.GONE);
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -2536,56 +1961,35 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
-
     private void ApiSearchViewTerminology(String muniqueID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<SearchTerminology> call = apiService.getSearchViewTerminology(Integer.parseInt(muniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<SearchTerminology>() {
             @Override
             public void onResponse(Call<SearchTerminology> call, Response<SearchTerminology> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL-------9999--------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----Terminl--------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         mSearchTerminology = response.body();
                         terminology = mSearchTerminology.getWaitlist();
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -2594,13 +1998,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
     }
-
-
     public void onMethodNewSearch(String uniqueID) {
         NewSearchFragment nsfFragment = new NewSearchFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -2610,7 +2010,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, nsfFragment).commit();
-
     }
 
     public void onMethodCoupn(String uniqueID) {
@@ -2624,9 +2023,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.add(R.id.mainlayout, cfFragment).commit();
     }
 
-
     public void onMethodJdn(String uniqueid) {
-
         JdnFragment jdnFragment = new JdnFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
@@ -2635,11 +2032,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, jdnFragment).commit();
-
     }
 
     public void onMethodFirstCoupn(String uniqueid) {
-
         CouponFirstFragment cffFragment = new CouponFirstFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
@@ -2648,59 +2043,39 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, cffFragment).commit();
-
     }
-
-
     private void ApiJDN(String uniqueID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-
         Call<JdnResponse> call = apiService.getJdnList(Integer.parseInt(uniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<JdnResponse>() {
             @Override
             public void onResponse(Call<JdnResponse> call, Response<JdnResponse> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-----detail--------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         jdnList = response.body();
                         jdnDiscount = jdnList.getDiscPercentage();
                         jdnMaxvalue = jdnList.getDiscMax();
-
-
                         if (new Gson().toJson(jdnList).equals("{}")) {
                             tv_jdn.setVisibility(View.GONE);
                         } else {
                             tv_jdn.setVisibility(View.VISIBLE);
                         }
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -2709,21 +2084,15 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
 
     private void ApiJaldeeCoupan(String uniqueID) {
-
         couponAvailable = false;
         firstCouponAvailable = false;
-
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
@@ -2739,36 +2108,28 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         couponResponse = response.body();
                         Log.i("couponRR", couponResponse.toString());
                         Log.i("couponRR", new Gson().toJson(couponResponse));
-
                         if (couponResponse.size() > 0) {
-
                             for (int i = 0; i < couponResponse.size(); i++) {
-
                                 if (couponResponse.get(i).isFirstCheckinOnly()) {
                                     firstCouponAvailable = true;
                                 } else {
                                     couponAvailable = true;
                                 }
-
                                 if (firstCouponAvailable && couponAvailable) {
                                     break;
                                 }
                             }
                         }
-
                         if (firstCouponAvailable) {
                             tv_first_ccoupon.setVisibility(View.VISIBLE);
                         } else {
                             tv_first_ccoupon.setVisibility(View.GONE);
                         }
-
                         if (couponAvailable) {
                             tv_coupon.setVisibility(View.VISIBLE);
                         } else {
                             tv_coupon.setVisibility(View.GONE);
                         }
-
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2782,14 +2143,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
     public void onMethodDepartment(SearchDepartmentServices departmentCode, List<SearchListModel> searchList, String businessName, ArrayList<SearchService> mServicesList, int department) {
-
         Log.i("qweqweq", "qweqweqwe");
         DeptFragment deptFragment = new DeptFragment(departmentCode, searchList, this, businessName, mServicesList, department);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, deptFragment).commit();
-
     }
 
 
@@ -2797,12 +2156,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         CustomDialog cdd = new CustomDialog(mContext, ynw_verified, providername);
         cdd.setCanceledOnTouchOutside(true);
         cdd.show();
-
     }
 
     public void onMethodOpenMap(String location) {
-
-
         String geoUri = "http://maps.google.com/maps?q=loc:" + location;
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
         mContext.startActivity(intent);
@@ -2822,8 +2178,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         txtsendmsg.setVisibility(View.VISIBLE);
         txtsendmsg.setText("Message to " + provider);
         btn_send.setText("SEND");
-
-
         edt_message.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
@@ -2846,29 +2200,20 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
-
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
-                ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
-                // ApiSearchViewTerminology(modifyAccountID);
-                //dialog.dismiss();
-
+            String modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
+            ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
             }
         });
-
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
-
-
     }
-
 
     @Override
     public void onMethodWorkingCallback(ArrayList<WorkingModel> workingModel, String value) {
@@ -2916,7 +2261,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
-
     @Override
     public void onMethodServiceCallbackAppointment(ArrayList<SearchAppointmentDepartmentServices> searchService, String value, ArrayList<SearchDepartment> mSearchDepartment) {
         ServiceListAppointmentFragment pfFragment = new ServiceListAppointmentFragment();
@@ -2932,31 +2276,22 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, pfFragment).commit();
     }
-
     @Override
     public void onMethodCheckinCallback(int locID, String from, String location) {
         ApiCheckInMessage(locID, from, location);
     }
-
-
     @Override
     public void onMethodCallback() {
-
         Toast.makeText(mContext, terminology + " cancelled successfully", Toast.LENGTH_LONG).show();
         dialog.dismiss();
         refreshList();
     }
-
-
     public void onMethodCallback(String value, String claimable) {
-
         Bundle bundle = new Bundle();
-
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
         bundle.putString("uniqueID", value);
         bundle.putString("claimable", claimable);
         pfFragment.setArguments(bundle);
-
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         // Store the Fragment in stack
@@ -2964,13 +2299,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.add(R.id.mainlayout, pfFragment).commit();
 
     }
-
-
     public void refreshList() {
         Config.logV("Refresh $$$$$@@@@@@@@@@@@@@@@@@");
         count = 0;
         isContact = false;
-
         SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
         mBusinessDataList = new SearchViewDetail();
         mSearchGallery = new ArrayList<>();
@@ -2988,96 +2320,61 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }else{
             ApiSearchViewDetail(homeUniqueId, mSearchResp);
         }
-
         //ApiSearchGallery(uniqueID);
         if(homeUniqueId==null){
             ApiSearchViewTerminology(uniqueID);
         }else{
             ApiSearchViewTerminology(homeUniqueId);
         }
-
-
     }
-
     private void ApiAddFavo(int providerID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Call<ResponseBody> call = apiService.AddFavourite(providerID);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Added to Favourites", Toast.LENGTH_LONG).show();
                             ApiFavList(mSearchResp, claimable);
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
     boolean favFlag = false;
     ArrayList<FavouriteModel> mFavList = new ArrayList<>();
-
     private void ApiFavList(final List<SearchAWsResponse> mSearchRespPass, final String claimable) {
-
         Config.logV("API Call");
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
         Call<ArrayList<FavouriteModel>> call = apiService.getFavourites();
-
-
         call.enqueue(new Callback<ArrayList<FavouriteModel>>() {
             @Override
             public void onResponse(Call<ArrayList<FavouriteModel>> call, Response<ArrayList<FavouriteModel>> response) {
-
                 try {
                     tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourite_line, 0, 0);
                     tv_fav.setText("Favourite");
-
-
                     Config.logV("URL-----22222----------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
-
                     if (response.code() == 200) {
                         mFavList.clear();
                         mFavList = response.body();
@@ -3085,23 +2382,17 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         for (int i = 0; i < mFavList.size(); i++) {
                             Config.logV("Fav List-----##&&&-----" + mFavList.get(i).getId());
                             Config.logV("Fav Fav List--------%%%%--" + mBusinessDataList.getId());
-
                             if (mFavList.get(i).getId() == mBusinessDataList.getId()) {
                                 favFlag = true;
                                 tv_fav.setVisibility(View.VISIBLE);
                                 tv_fav.setText("Favourite");
                                 tv_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourited, 0, 0);
-
                             }
-
-
                         }
-
                         tv_fav.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (favFlag) {
-
                                     ApiRemoveFavo(mBusinessDataList.getId());
                                     /*AlertDialog myQuittingDialogBox = new AlertDialog.Builder(mContext)
                                             //set message, title, and icon
@@ -3126,101 +2417,64 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 }
                             }
                         });
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ArrayList<FavouriteModel>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-
-
             }
         });
-
-
     }
-
-
     private void ApiRemoveFavo(int providerID) {
-
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Call<ResponseBody> call = apiService.DeleteFavourite(providerID);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
                         if (response.body().string().equalsIgnoreCase("true")) {
                             Toast.makeText(mContext, "Removed from favourites", Toast.LENGTH_LONG).show();
                             ApiFavList(mSearchResp, claimable);
                         }
-
-
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
-
-
     }
-
     @Override
     public void onResume() {
         super.onResume();
-
         String refresh = SharedPreference.getInstance(mContext).getStringValue("refreshcheckin", "");
         if (refresh.equalsIgnoreCase("true")) {
             refreshList();
         }
     }
-
-
     @Override
     public void onMethodContactCallback(String type, String value) {
-
         if (type.equalsIgnoreCase("Phoneno")) {
             callPhoneNumber(value);
         }
-
         if (type.equalsIgnoreCase("Email")) {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                     "mailto", value, null));
@@ -3232,25 +2486,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Toast.makeText(mContext, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
-
     private final int CALL_REQUEST = 100;
     String phoneNumber;
-
     public void callPhoneNumber(String phNo) {
         try {
-
             phoneNumber = phNo;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
-
                     //requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, CALL_REQUEST);
-
                     requestPermissions(new String[]{
                             Manifest.permission.CALL_PHONE}, CALL_REQUEST);
-
                     return;
                 } else {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
@@ -3258,7 +2505,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     startActivity(callIntent);
                 }
             } else {
-
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + phNo));
                 startActivity(callIntent);
@@ -3267,853 +2513,540 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             ex.printStackTrace();
         }
     }
-
-
-    private void listDoctorsByDepartment() {
-
-        final ApiInterface apiService =
-                ApiClient.getClientAWS(mContext).create(ApiInterface.class);
-
-
-        Map<String, String> query = new HashMap<>();
-        query.put("start", "0");
-        query.put("q", "(and " + "account_type:" + 1 + " branch_id:" + mbranchId + ")");
-        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
-        if (mobile.startsWith("55")) {
-            query.put("fq", "(and  test_account:1 )");
-        } else {
-            query.put("fq", "(and  (not test_account:1) )");
-        }
-
-        Map<String, String> params = new HashMap<>();
-
-        params.put("size", "10000");
-        params.put("q.parser", "structured");
-        params.put("sort", "claimable asc,ynw_verified_level desc, distance asc");
-        params.put("expr.distance", "haversin(" + lat_long + ", location1.latitude, location1.longitude)");
-        params.put("return", "_all_fields,distance");
-
-        Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
-
-
-        call.enqueue(new Callback<SearchAWsResponse>() {
-            @Override
-            public void onResponse(Call<SearchAWsResponse> call, Response<SearchAWsResponse> response) {
-                try {
-
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-
-                        Config.logV("Response--Body AWSmbbnm-------------------------" + new Gson().toJson(response.body()));
-
-
-                        Config.logV("Response--Body AWS-------------------------" + new Gson().toJson(response.body()));
-
-                        Config.logV("Status" + response.body().getStatus().getRid());
-
-                        Config.logV("Found" + response.body().getHits().getFound());
-                        TOTAL_PAGES = response.body().getHits().getFound() / 10;
-                        if (response.body().getHits().getFound() > 0) {
-
-
-                            mSearchResp.clear();
-                            ArrayList<String> ids = new ArrayList<>();
-                            for (int i = 0; i < response.body().getHits().getHit().size(); i++) {
-                                SearchAWsResponse search = new SearchAWsResponse();
-                                search.setId(response.body().getHits().getHit().get(i).getId());
-                                search.setLogo(response.body().getHits().getHit().get(i).getFields().getLogo());
-                                search.setSub_sector_displayname(response.body().getHits().getHit().get(i).getFields().getSub_sector_displayname());
-                                search.setTitle(response.body().getHits().getHit().get(i).getFields().getTitle());
-                                search.setRating(response.body().getHits().getHit().get(i).getFields().getRating());
-                                search.setPlace1(response.body().getHits().getHit().get(i).getFields().getPlace1());
-                                search.setUnique_id(response.body().getHits().getHit().get(i).getFields().getUnique_id());
-                                search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
-                                search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
-                                search.setOnline_profile(response.body().getHits().getHit().get(i).getFields().getOnline_profile());
-                                search.setDonation_status(response.body().getHits().getHit().get(i).getFields().getDonation_status());
-                                search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
-                                search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
-                                search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
-                                search.setFuture_appt(response.body().getHits().getHit().get(i).getFields().getFuture_appt());
-
-
-                                search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
-                                search.setLocation_id1(response.body().getHits().getHit().get(i).getFields().getLocation_id1());
-
-                                search.setSector(response.body().getHits().getHit().get(i).getFields().getSector());
-                                search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
-
-                                if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
-                                    search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
-
-                                }
-
-
-                                if (response.body().getHits().getHit().get(i).getFields().getYnw_verified_level() != null) {
-                                    search.setYnw_verified_level(response.body().getHits().getHit().get(i).getFields().getYnw_verified_level());
-
-                                }
-
-
-                                if (response.body().getHits().getHit().get(i).getFields().getQualification() != null) {
-                                    search.setQualification(response.body().getHits().getHit().get(i).getFields().getQualification());
-
-                                }
-
-                                if (response.body().getHits().getHit().get(i).getExprs() != null) {
-                                    search.setDistance(response.body().getHits().getHit().get(i).getExprs().getDistance());
-                                }
-
-                                if (response.body().getHits().getHit().get(i).getFields().getSpecialization_displayname() != null) {
-                                    search.setSpecialization_displayname(response.body().getHits().getHit().get(i).getFields().getSpecialization_displayname());
-
-                                }
-                                if (response.body().getHits().getHit().get(i).getFields().getShow_waiting_time() != null) {
-                                    search.setShow_waiting_time(response.body().getHits().getHit().get(i).getFields().getShow_waiting_time());
-                                }
-
-                                // Config.logV("response.body().getHits().getHit().get(i).getFields().toString()"+response.body().getHits().getHit().get(i).getFields().toString());
-                                //search.setFound(response.body().getHits().getFound());
-                                if (response.body().getHits().getHit().get(i).getFields().getServices() != null) {
-                                    search.setServices(response.body().getHits().getHit().get(i).getFields().getServices());
-                                }
-
-                                if (response.body().getHits().getHit().get(i).getFields().getAppt_services() != null) {
-                                    search.setAppt_services(response.body().getHits().getHit().get(i).getFields().getAppt_services());
-                                }
-
-                                if (response.body().getHits().getHit().get(i).getFields().getDonation_services() != null) {
-                                    search.setDonation_services(response.body().getHits().getHit().get(i).getFields().getDonation_services());
-                                }
-
-                                if (response.body().getHits().getHit().get(i).getFields().getBusiness_hours1() != null) {
-                                    search.setBusiness_hours1(response.body().getHits().getHit().get(i).getFields().getBusiness_hours1());
-                                }
-
-
-                                if (response.body().getHits().getHit().get(i).getFields().getTerminologies() != null) {
-                                    search.setTerminologies(response.body().getHits().getHit().get(i).getFields().getTerminologies());
-                                }
-
-
-                                if (response.body().getHits().getHit().get(i).getFields().getOnline_checkins() != null) {
-                                    search.setOnline_checkins(response.body().getHits().getHit().get(i).getFields().getOnline_checkins());
-                                }
-                                if (response.body().getHits().getHit().get(i).getFields().getFuture_checkins() != null) {
-                                    search.setFuture_checkins(response.body().getHits().getHit().get(i).getFields().getFuture_checkins());
-                                }
-
-                                if (response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails() != null) {
-                                    search.setGallery_thumb_nails(response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails());
-                                }
-                                //7 types
-
-                                if (response.body().getHits().getHit().get(i).getFields().getParking_type_location1() != null) {
-                                    Config.logV("PArking----111---------" + response.body().getHits().getHit().get(i).getFields().getParking_type_location1());
-                                    search.setParking_type_location1(response.body().getHits().getHit().get(i).getFields().getParking_type_location1());
-                                }
-
-                                if (response.body().getHits().getHit().get(i).getFields().getParking_location1() != null) {
-
-                                    Config.logV("Park-@@@@-------------------" + response.body().getHits().getHit().get(i).getFields().getParking_location1());
-                                    search.setParking_location1(response.body().getHits().getHit().get(i).getFields().getParking_location1());
-                                }
-
-                                if (response.body().getHits().getHit().get(i).getFields().getAlways_open_location1() != null) {
-                                    search.setAlways_open_location1(response.body().getHits().getHit().get(i).getFields().getAlways_open_location1());
-                                }
-
-                                if (response.body().getHits().getHit().get(i).getFields().getTraumacentre_location1() != null) {
-                                    search.setTraumacentre_location1(response.body().getHits().getHit().get(i).getFields().getTraumacentre_location1());
-                                }
-                                if (response.body().getHits().getHit().get(i).getFields().getDentistemergencyservices_location1() != null) {
-                                    search.setDentistemergencyservices_location1(response.body().getHits().getHit().get(i).getFields().getDentistemergencyservices_location1());
-                                }
-                                if (response.body().getHits().getHit().get(i).getFields().getDocambulance_location1() != null) {
-                                    search.setDocambulance_location1(response.body().getHits().getHit().get(i).getFields().getDocambulance_location1());
-                                }
-                                if (response.body().getHits().getHit().get(i).getFields().getPhysiciansemergencyservices_location1() != null) {
-                                    search.setPhysiciansemergencyservices_location1(response.body().getHits().getHit().get(i).getFields().getPhysiciansemergencyservices_location1());
-                                }
-                                if(response.body().getHits().getHit().get(i).getFields().getHosemergencyservices_location1() != null){
-                                    search.setHosemergencyservices_location1(response.body().getHits().getHit().get(i).getHosemergencyservices_location1());
-                                }
-                                if (response.body().getHits().getHit().get(i).getFields().getFirstaid_location1() != null) {
-                                    search.setFirstaid_location1(response.body().getHits().getHit().get(i).getFields().getFirstaid_location1());
-                                }
-                                if (response.body().getHits().getHit().get(i).getFields().getDepartment_code() != null) {
-                                    search.setDepartment_code(response.body().getHits().getHit().get(i).getFields().getDepartment_code());
-                                }
-                                if (response.body().getHits().getHit().get(i).getFields().getClaimable().equals("1")) {
-                                    tv_fav.setVisibility(View.GONE);
-                                }
-
-
-                                mSearchResp.add(search);
-
-                                Config.logV("mSearchResp" + new Gson().toJson(mSearchResp));
-
-                                ids.add(response.body().getHits().getHit().get(i).getId());
-                            }
-                            ApiQueueList(ids, mSearchResp, "next");
-                            if (mSearchResp.get(0).getClaimable().equals("1")) {
-                                tv_fav.setVisibility(View.GONE);
-                            }
-
-                        }
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            private void ApiQueueList(ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck) {
-
-                ApiInterface apiService =
-                        ApiClient.getClient(mContext).create(ApiInterface.class);
-
-
-                StringBuilder csvBuilder = new StringBuilder();
-                for (String data : queuelist) {
-                    csvBuilder.append(data);
-                    csvBuilder.append(",");
-                }
-                String csv = csvBuilder.toString();
-                System.out.println(csv);
-
-                if(csv!= " " && csv!= null) {
-
-                    Call<List<QueueList>> call = apiService.getQueueCheckReponse(csv);
-
-                    call.enqueue(new Callback<List<QueueList>>() {
-                        @Override
-                        public void onResponse(Call<List<QueueList>> call, Response<List<QueueList>> response) {
-
-                            try {
-                                Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                                Config.logV("code---------------" + response.code());
-                                mQueueList.clear();
-                                if (response.code() == 200) {
-                                    Config.logV("Sucess123 ----------" + response.body());
-
-
-                                    for (int i = 0; i < response.body().size(); i++) {
-//                                    QueueList que = new QueueList();
-//                                    que.setId(response.body().get(i).getProvider().getId());
-//
-//                                    if (response.body().get(i).getNextAvailableQueue() != null) {
-//                                        que.setLocation(response.body().get(i).getNextAvailableQueue().getLocation());
-//                                        //  Config.logV("Available Time----1111---"+response.body().get(i).getNextAvailableQueue().getAvailableDate());
-//                                        que.setAvailableDate(response.body().get(i).getNextAvailableQueue().getAvailableDate());
-//                                        que.setOpenNow(response.body().get(i).getNextAvailableQueue().isOpenNow());
-//                                        if (response.body().get(i).getNextAvailableQueue().getServiceTime() != null) {
-//                                            que.setServiceTime(response.body().get(i).getNextAvailableQueue().getServiceTime());
-//                                        }
-//
-//                                        Config.logV("Calc Mode @@@@@@@@@@@RRRR" + response.body().get(i).getNextAvailableQueue().getCalculationMode());
-//                                        que.setCalculationMode(response.body().get(i).getNextAvailableQueue().getCalculationMode());
-//                                        que.setPersonAhead(response.body().get(i).getNextAvailableQueue().getPersonAhead());
-//                                        Config.logV("personAheadtttt @@@@@@@@@@@ ####" + response.body().get(i).getNextAvailableQueue().getPersonAhead());
-//                                        que.setQueueWaitingTime(response.body().get(i).getNextAvailableQueue().getQueueWaitingTime());
-//
+//    private void listDoctorsByDepartment() {
+//        final ApiInterface apiService =
+//                ApiClient.getClientAWS(mContext).create(ApiInterface.class);
+//        Map<String, String> query = new HashMap<>();
+//        query.put("start", "0");
+//        query.put("q", "(and " + "account_type:" + 1 + " branch_id:" + mbranchId + ")");
+//        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+//        if (mobile.startsWith("55")) {
+//            query.put("fq", "(and  test_account:1 )");
+//        } else {
+//            query.put("fq", "(and  (not test_account:1) )");
+//        }
+//        Map<String, String> params = new HashMap<>();
+//        params.put("size", "10000");
+//        params.put("q.parser", "structured");
+//        params.put("sort", "claimable asc,ynw_verified_level desc, distance asc");
+//        params.put("expr.distance", "haversin(" + lat_long + ", location1.latitude, location1.longitude)");
+//        params.put("return", "_all_fields,distance");
+//        Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
+//        call.enqueue(new Callback<SearchAWsResponse>() {
+//            @Override
+//            public void onResponse(Call<SearchAWsResponse> call, Response<SearchAWsResponse> response) {
+//                try {
+//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//                    if (response.code() == 200) {
+//                        Config.logV("Response--Body AWSmbbnm-------------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Response--Body AWS-------------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Status" + response.body().getStatus().getRid());
+//                        Config.logV("Found" + response.body().getHits().getFound());
+//                        TOTAL_PAGES = response.body().getHits().getFound() / 10;
+//                        if (response.body().getHits().getFound() > 0) {
+//                            mSearchResp.clear();
+//                            ArrayList<String> ids = new ArrayList<>();
+//                            for (int i = 0; i < response.body().getHits().getHit().size(); i++) {
+//                                SearchAWsResponse search = new SearchAWsResponse();
+//                                search.setId(response.body().getHits().getHit().get(i).getId());
+//                                search.setLogo(response.body().getHits().getHit().get(i).getFields().getLogo());
+//                                search.setSub_sector_displayname(response.body().getHits().getHit().get(i).getFields().getSub_sector_displayname());
+//                                search.setTitle(response.body().getHits().getHit().get(i).getFields().getTitle());
+//                                search.setRating(response.body().getHits().getHit().get(i).getFields().getRating());
+//                                search.setPlace1(response.body().getHits().getHit().get(i).getFields().getPlace1());
+//                                search.setUnique_id(response.body().getHits().getHit().get(i).getFields().getUnique_id());
+//                                search.setClaimable(response.body().getHits().getHit().get(i).getFields().getClaimable());
+//                                search.setCoupon_enabled(response.body().getHits().getHit().get(i).getFields().getCoupon_enabled());
+//                                search.setOnline_profile(response.body().getHits().getHit().get(i).getFields().getOnline_profile());
+//                                search.setDonation_status(response.body().getHits().getHit().get(i).getFields().getDonation_status());
+//                                search.setAccountType(response.body().getHits().getHit().get(i).getFields().getAccountType());
+//                                search.setBranch_name(response.body().getHits().getHit().get(i).getFields().getBranch_name());
+//                                search.setToday_appt(response.body().getHits().getHit().get(i).getFields().getToday_appt());
+//                                search.setFuture_appt(response.body().getHits().getHit().get(i).getFields().getFuture_appt());
+//                                search.setLocation1(response.body().getHits().getHit().get(i).getFields().getLocation1());
+//                                search.setLocation_id1(response.body().getHits().getHit().get(i).getFields().getLocation_id1());
+//                                search.setSector(response.body().getHits().getHit().get(i).getFields().getSector());
+//                                search.setSub_sector(response.body().getHits().getHit().get(i).getFields().getSub_sector());
+//                                if (response.body().getHits().getHit().get(i).getFields().getYnw_verified() != null) {
+//                                    search.setYnw_verified(response.body().getHits().getHit().get(i).getFields().getYnw_verified());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getYnw_verified_level() != null) {
+//                                    search.setYnw_verified_level(response.body().getHits().getHit().get(i).getFields().getYnw_verified_level());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getQualification() != null) {
+//                                    search.setQualification(response.body().getHits().getHit().get(i).getFields().getQualification());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getExprs() != null) {
+//                                    search.setDistance(response.body().getHits().getHit().get(i).getExprs().getDistance());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getSpecialization_displayname() != null) {
+//                                    search.setSpecialization_displayname(response.body().getHits().getHit().get(i).getFields().getSpecialization_displayname());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getShow_waiting_time() != null) {
+//                                    search.setShow_waiting_time(response.body().getHits().getHit().get(i).getFields().getShow_waiting_time());
+//                                }
+//                                // Config.logV("response.body().getHits().getHit().get(i).getFields().toString()"+response.body().getHits().getHit().get(i).getFields().toString());
+//                                //search.setFound(response.body().getHits().getFound());
+//                                if (response.body().getHits().getHit().get(i).getFields().getServices() != null) {
+//                                    search.setServices(response.body().getHits().getHit().get(i).getFields().getServices());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getAppt_services() != null) {
+//                                    search.setAppt_services(response.body().getHits().getHit().get(i).getFields().getAppt_services());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getDonation_services() != null) {
+//                                    search.setDonation_services(response.body().getHits().getHit().get(i).getFields().getDonation_services());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getBusiness_hours1() != null) {
+//                                    search.setBusiness_hours1(response.body().getHits().getHit().get(i).getFields().getBusiness_hours1());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getTerminologies() != null) {
+//                                    search.setTerminologies(response.body().getHits().getHit().get(i).getFields().getTerminologies());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getOnline_checkins() != null) {
+//                                    search.setOnline_checkins(response.body().getHits().getHit().get(i).getFields().getOnline_checkins());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getFuture_checkins() != null) {
+//                                    search.setFuture_checkins(response.body().getHits().getHit().get(i).getFields().getFuture_checkins());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails() != null) {
+//                                    search.setGallery_thumb_nails(response.body().getHits().getHit().get(i).getFields().getGallery_thumb_nails());
+//                                }
+//                                //7 types
+//                                if (response.body().getHits().getHit().get(i).getFields().getParking_type_location1() != null) {
+//                                    Config.logV("PArking----111---------" + response.body().getHits().getHit().get(i).getFields().getParking_type_location1());
+//                                    search.setParking_type_location1(response.body().getHits().getHit().get(i).getFields().getParking_type_location1());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getParking_location1() != null) {
+//                                    Config.logV("Park-@@@@-------------------" + response.body().getHits().getHit().get(i).getFields().getParking_location1());
+//                                    search.setParking_location1(response.body().getHits().getHit().get(i).getFields().getParking_location1());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getAlways_open_location1() != null) {
+//                                    search.setAlways_open_location1(response.body().getHits().getHit().get(i).getFields().getAlways_open_location1());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getTraumacentre_location1() != null) {
+//                                    search.setTraumacentre_location1(response.body().getHits().getHit().get(i).getFields().getTraumacentre_location1());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getDentistemergencyservices_location1() != null) {
+//                                    search.setDentistemergencyservices_location1(response.body().getHits().getHit().get(i).getFields().getDentistemergencyservices_location1());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getDocambulance_location1() != null) {
+//                                    search.setDocambulance_location1(response.body().getHits().getHit().get(i).getFields().getDocambulance_location1());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getPhysiciansemergencyservices_location1() != null) {
+//                                    search.setPhysiciansemergencyservices_location1(response.body().getHits().getHit().get(i).getFields().getPhysiciansemergencyservices_location1());
+//                                }
+//                                if(response.body().getHits().getHit().get(i).getFields().getHosemergencyservices_location1() != null){
+//                                    search.setHosemergencyservices_location1(response.body().getHits().getHit().get(i).getHosemergencyservices_location1());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getFirstaid_location1() != null) {
+//                                    search.setFirstaid_location1(response.body().getHits().getHit().get(i).getFields().getFirstaid_location1());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getDepartment_code() != null) {
+//                                    search.setDepartment_code(response.body().getHits().getHit().get(i).getFields().getDepartment_code());
+//                                }
+//                                if (response.body().getHits().getHit().get(i).getFields().getClaimable().equals("1")) {
+//                                    tv_fav.setVisibility(View.GONE);
+//                                }
+//                                mSearchResp.add(search);
+//                                Config.logV("mSearchResp" + new Gson().toJson(mSearchResp));
+//                                ids.add(response.body().getHits().getHit().get(i).getId());
+//                            }
+//                            ApiQueueList(ids, mSearchResp, "next");
+//                            if (mSearchResp.get(0).getClaimable().equals("1")) {
+//                                tv_fav.setVisibility(View.GONE);
+//                            }
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            private void ApiQueueList(ArrayList<String> queuelist, final List<SearchAWsResponse> mSearchRespPass, final String mCheck) {
+//                ApiInterface apiService =
+//                        ApiClient.getClient(mContext).create(ApiInterface.class);
+//                StringBuilder csvBuilder = new StringBuilder();
+//                for (String data : queuelist) {
+//                    csvBuilder.append(data);
+//                    csvBuilder.append(",");
+//                }
+//                String csv = csvBuilder.toString();
+//                System.out.println(csv);
+//                if(csv!= " " && csv!= null) {
+//                    Call<List<QueueList>> call = apiService.getQueueCheckReponse(csv);
+//                    call.enqueue(new Callback<List<QueueList>>() {
+//                        @Override
+//                        public void onResponse(Call<List<QueueList>> call, Response<List<QueueList>> response) {
+//                            try {
+//                                Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+//                                Config.logV("code---------------" + response.code());
+//                                mQueueList.clear();
+//                                if (response.code() == 200) {
+//                                    Config.logV("Sucess123 ----------" + response.body());
+//                                    for (int i = 0; i < response.body().size(); i++) {
+//                                        mQueueList.add(response.body().get(i));
 //                                    }
-
-                                        mQueueList.add(response.body().get(i));
-                                    }
-
-                                    if (mCheck.equalsIgnoreCase("next")) {
-
-                                        Config.logV("TOTAL PAGES_--------------" + TOTAL_PAGES);
-                                        Config.logV("CURRENT PAGE**22222**555***********" + TOTAL_PAGES);
-                                        // pageadapter.removeLoadingFooter();
-                                        isLoading = false;
-
-
-                                        mSearchListModel.clear();
-                                        for (int i = 0; i < mSearchRespPass.size(); i++) {
-                                            SearchListModel searchList = new SearchListModel();
-                                            searchList.setId(mSearchRespPass.get(i).getId());
-                                            searchList.setLogo(mSearchRespPass.get(i).getLogo());
-                                            searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
-                                            searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
-                                            searchList.setTitle(mSearchRespPass.get(i).getTitle());
-                                            searchList.setRating(mSearchRespPass.get(i).getRating());
-                                            searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
-                                            searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
-                                            searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
-                                            searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
-                                            searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
-                                            searchList.setSectorname(mSearchRespPass.get(i).getSector());
-                                            searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
-                                            searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
-                                            searchList.setOnline_profile(mSearchRespPass.get(i).getOnline_profile());
-                                            searchList.setDonation_status(mSearchRespPass.get(i).getDonation_status());
-                                            searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
-
-
-                                            searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
-                                            searchList.setLocation_id1(mSearchRespPass.get(i).getLocation_id1());
-                                            //String spec = "";
-//                                        if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
-//                                            for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
-//                                                if (!spec.equalsIgnoreCase("")) {
-//                                                    spec = spec + ", " + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-//                                                } else {
-//                                                    spec = spec + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
+//                                    if (mCheck.equalsIgnoreCase("next")) {
+//                                        Config.logV("TOTAL PAGES_--------------" + TOTAL_PAGES);
+//                                        Config.logV("CURRENT PAGE**22222**555***********" + TOTAL_PAGES);
+//                                        // pageadapter.removeLoadingFooter();
+//                                        isLoading = false;
+//                                        mSearchListModel.clear();
+//                                        for (int i = 0; i < mSearchRespPass.size(); i++) {
+//                                            SearchListModel searchList = new SearchListModel();
+//                                            searchList.setId(mSearchRespPass.get(i).getId());
+//                                            searchList.setLogo(mSearchRespPass.get(i).getLogo());
+//                                            searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
+//                                            searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
+//                                            searchList.setTitle(mSearchRespPass.get(i).getTitle());
+//                                            searchList.setRating(mSearchRespPass.get(i).getRating());
+//                                            searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
+//                                            searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
+//                                            searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
+//                                            searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
+//                                            searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
+//                                            searchList.setSectorname(mSearchRespPass.get(i).getSector());
+//                                            searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
+//                                            searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
+//                                            searchList.setOnline_profile(mSearchRespPass.get(i).getOnline_profile());
+//                                            searchList.setDonation_status(mSearchRespPass.get(i).getDonation_status());
+//                                            searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
+//                                            searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+//                                            searchList.setLocation_id1(mSearchRespPass.get(i).getLocation_id1());
+//                                            String qualify = "";
+//                                            if (mSearchRespPass.get(i).getQualification() != null) {
+//                                                for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
+//                                                    qualify = qualify + ", " + mSearchRespPass.get(i).getQualification().get(l);
 //                                                }
+//                                                searchList.setQualification(qualify);
 //                                            }
-//                                            searchList.setSpecialization_displayname(spec);
-//                                        }
-
-                                            String qualify = "";
-                                            if (mSearchRespPass.get(i).getQualification() != null) {
-                                                for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
-                                                    qualify = qualify + ", " + mSearchRespPass.get(i).getQualification().get(l);
-
-                                                }
-                                                searchList.setQualification(qualify);
-                                            }
-                                            if (mSearchRespPass.get(i).getDepartment_code() != null) {
-                                                searchList.setDepartment_code(mSearchRespPass.get(i).getDepartment_code());
-                                            }
-                                            if (mSearchRespPass.get(i).getYnw_verified() != null) {
-                                                searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
-
-                                            }
-
-                                            if (mSearchRespPass.get(i).getDistance() != null) {
-                                                Config.logV("Distance @@@@@@@@@@@" + mSearchRespPass.get(i).getDistance());
-                                                searchList.setDistance(mSearchRespPass.get(i).getDistance());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
-                                                searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
-
-                                            }
-
-
-                                            if (mSearchRespPass.get(i).getServices() != null) {
-                                                searchList.setServices(mSearchRespPass.get(i).getServices());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getAppt_services() != null) {
-                                                searchList.setAppt_services(mSearchRespPass.get(i).getAppt_services());
-                                            }
-
-                                            if(mSearchRespPass.get(i).getDonation_services()!=null){
-                                                searchList.setDonation_services(mSearchRespPass.get(i).getDonation_services());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
-                                                searchList.setBusiness_hours1(mSearchRespPass.get(i).getBusiness_hours1());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getTerminologies() != null) {
-                                                searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getOnline_checkins() != null) {
-                                                searchList.setOnline_checkins(mSearchRespPass.get(i).getOnline_checkins());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getFuture_checkins() != null) {
-                                                searchList.setFuture_checkins(mSearchRespPass.get(i).getFuture_checkins());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getShow_waiting_time() != null) {
-                                                searchList.setShow_waiting_time(mSearchRespPass.get(i).getShow_waiting_time());
-                                            }
-
-
-                                            if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
-                                                //   Config.logV("Gallery-@@@@---111-------5555---------" + mSearchRespPass.get(i).getGallery_thumb_nails());
-                                                searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
-                                            }
-
-                                            //7types
-
-                                            if (mSearchRespPass.get(i).getParking_type_location1() != null) {
-                                                Config.logV("PArking-------------" + mSearchRespPass.get(i).getParking_type_location1());
-                                                searchList.setParking_type_location1(mSearchRespPass.get(i).getParking_type_location1());
-                                            }
-
-
-                                            if (mSearchRespPass.get(i).getParking_location1() != null) {
-
-                                                Config.logV("Park-@@@@-------------3333------" + mSearchRespPass.get(i).getParking_location1());
-                                                searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
-                                            }
-
-
-                                            if (mSearchRespPass.get(i).getAlways_open_location1() != null) {
-                                                searchList.setAlways_open_location1(mSearchRespPass.get(i).getAlways_open_location1());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getTraumacentre_location1() != null) {
-                                                searchList.setTraumacentre_location1(mSearchRespPass.get(i).getTraumacentre_location1());
-                                            }
-                                            if (mSearchRespPass.get(i).getDentistemergencyservices_location1() != null) {
-                                                searchList.setDentistemergencyservices_location1(mSearchRespPass.get(i).getDentistemergencyservices_location1());
-                                            }
-                                            if (mSearchRespPass.get(i).getDocambulance_location1() != null) {
-                                                searchList.setDocambulance_location1(mSearchRespPass.get(i).getDocambulance_location1());
-                                            }
-                                            if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
-                                                searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
-                                            }
-                                            if(mSearchRespPass.get(i).getHosemergencyservices_location1() != null){
-                                                searchList.setHosemergencyservices_location1(mSearchRespPass.get(i).getHosemergencyservices_location1());
-                                            }
-                                            if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
-                                                searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
-                                            }
-                                            if (mSearchRespPass.get(i).getClaimable().equals("1")) {
-                                                tv_fav.setVisibility(View.GONE);
-                                            }
-                                            searchList.setQId(mSearchRespPass.get(i).getId());
-                                            if (mQueueList.get(i).getMessage() != null) {
-                                                searchList.setMessage(mQueueList.get(i).getMessage());
-                                            }
-
-
-                                            if (mQueueList.get(i).getNextAvailableQueue() != null) {
-                                                if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
-                                                    if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
-                                                        searchList.setAvail_date(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
-                                                    }
-                                                    if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
-                                                        searchList.setmLoc(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getLocation().getId()));
-                                                    }
-                                                    searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
-                                                    searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
-                                                    searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
-                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
-                                                    searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
-                                                    searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
-                                                    searchList.setWaitlistEnabled(mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled());
-                                                    searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
-                                                    searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
-                                                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
-                                                        searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
-                                                    }
-                                                }
-
-                                            }
-//                                        for (int j = 0; j < mQueueList.size(); j++) {
-//                                            Config.logV("mQueueList.get(j).getLocation().getId()" + mQueueList.get(j).getNextAvailableQueue().getLocation());
-//                                            if (mQueueList.get(j).getNextAvailableQueue().getLocation() != null) {
-//
-//                                                String json = new Gson().toJson(mQueueList.get(j).getNextAvailableQueue().getLocation());
-//                                                JSONObject json1 = new JSONObject(json);
-//
-//                                                String QID = json1.getString("id");
-//
-//
-//                                                String mID = mQueueList.get(j).getNextAvailableQueue().getId() + "-" + mQueueList.get(j).getNextAvailableQueue().getLocation().getId();
-//                                                Config.logV("QID----mmm-------------------" + mID + "compare-------" + mSearchRespPass.get(i).getId());
-//                                                if (mID.equalsIgnoreCase(mSearchRespPass.get(i).getId())) {
-//                                                    if (mQueueList.get(j).getNextAvailableQueue().getAvailableDate() != null) {
-//
-//                                                        searchList.setAvail_date(mQueueList.get(j).getNextAvailableQueue().getAvailableDate());
-//                                                    }
-//                                                    if (mQueueList.get(j).getNextAvailableQueue().getLocation() != null) {
-//                                                        searchList.setmLoc(QID);
-//                                                    }
-//                                                    //searchList.setQId(mQueueList.get(j).getId());
-//                                                    searchList.setQId(mID);
-//                                                    searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
-//                                                    searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
-//                                                    searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
-//
-//                                                    Config.logV("personAhead @@@@@@@@@@@ 33####" + mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
-//                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
-//                                                    if (mQueueList.get(i).getServiceTime() != null) {
-//                                                        searchList.setServiceTime(mQueueList.get(i).getServiceTime());
-//                                                    }
-//
-//                                                }
+//                                            if (mSearchRespPass.get(i).getDepartment_code() != null) {
+//                                                searchList.setDepartment_code(mSearchRespPass.get(i).getDepartment_code());
 //                                            }
-//                                        }
-
-
-                                            mSearchListModel.add(searchList);
-                                            Log.i("iopiop", new Gson().toJson(mSearchListModel));
-                                        }
-
-
-                                        Config.logV("Response--Sucess-------------------------" + new Gson().toJson(mSearchListModel));
-                                        List<SearchListModel> results = mSearchListModel;
-//                                    pageadapter.addAll(results);
-//                                    pageadapter.notifyDataSetChanged();
-
-//                                    if (currentPage / 10 != TOTAL_PAGES) {
-//                                        pageadapter.addLoadingFooter();
-//                                    } else {
-//                                        isLastPage = true;
-//                                    }
-                                    } else {
-
-
-                                        mSearchListModel.clear();
-                                        for (int i = 0; i < mSearchRespPass.size(); i++) {
-                                            SearchListModel searchList = new SearchListModel();
-                                            searchList.setId(mSearchRespPass.get(i).getId());
-                                            searchList.setLogo(mSearchRespPass.get(i).getLogo());
-                                            searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
-                                            searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
-                                            searchList.setTitle(mSearchRespPass.get(i).getTitle());
-                                            searchList.setRating(mSearchRespPass.get(i).getRating());
-                                            searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
-                                            searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
-                                            searchList.setLocation_id1(mSearchRespPass.get(i).getLocation_id1());
-
-                                            searchList.setSectorname(mSearchRespPass.get(i).getSector());
-                                            searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
-                                            searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
-                                            searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
-                                            searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
-                                            searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
-                                            searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
-                                            searchList.setOnline_profile(mSearchRespPass.get(i).getOnline_profile());
-                                            searchList.setDonation_status(mSearchRespPass.get(i).getDonation_status());
-                                            searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
-                                            searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
-
-//                                        String spec = "";
-//                                        if (mSearchRespPass.get(i).getSpecialization_displayname() != null) {
-//                                            for (int l = 0; l < mSearchRespPass.get(i).getSpecialization_displayname().size(); l++) {
-//                                                if (!spec.equalsIgnoreCase("")) {
-//                                                    spec = spec + ", " + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-//                                                } else {
-//                                                    spec = spec + mSearchRespPass.get(i).getSpecialization_displayname().get(l);
-//                                                }
+//                                            if (mSearchRespPass.get(i).getYnw_verified() != null) {
+//                                                searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
 //                                            }
-//                                            searchList.setSpecialization_displayname(spec);
-//                                        }
-
-
-                                            String qualify = "";
-                                            if (mSearchRespPass.get(i).getQualification() != null) {
-                                                for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
-                                                    qualify = qualify + ", " + mSearchRespPass.get(i).getQualification().get(l);
-
-                                                }
-                                                searchList.setQualification(qualify);
-                                            }
-
-                                            if (mSearchRespPass.get(i).getYnw_verified() != null) {
-                                                searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
-
-                                            }
-                                            if (mSearchRespPass.get(i).getDepartment_code() != null) {
-                                                searchList.setDepartment_code(mSearchRespPass.get(i).getDepartment_code());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getDistance() != null) {
-                                                Config.logV("Distance @@@@@@@@@@@44444" + mSearchRespPass.get(i).getDistance());
-                                                searchList.setDistance(mSearchRespPass.get(i).getDistance());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
-                                                searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
-
-                                            }
-
-
-                                            if (mSearchRespPass.get(i).getServices() != null) {
-                                                searchList.setServices(mSearchRespPass.get(i).getServices());
-                                            }
-                                            if (mSearchRespPass.get(i).getAppt_services() != null) {
-                                                searchList.setAppt_services(mSearchRespPass.get(i).getAppt_services());
-                                            }
-                                            if (mSearchRespPass.get(i).getDonation_services() != null) {
-                                                searchList.setDonation_services(mSearchRespPass.get(i).getDonation_services());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
-                                                searchList.setBusiness_hours1(mSearchRespPass.get(i).getBusiness_hours1());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getTerminologies() != null) {
-                                                searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getOnline_checkins() != null) {
-                                                searchList.setOnline_checkins(mSearchRespPass.get(i).getOnline_checkins());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getFuture_checkins() != null) {
-                                                searchList.setFuture_checkins(mSearchRespPass.get(i).getFuture_checkins());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getShow_waiting_time() != null) {
-                                                searchList.setShow_waiting_time(mSearchRespPass.get(i).getShow_waiting_time());
-                                            }
-
-
-                                            if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
-                                                // Config.logV("Gallery ###########"+mSearchRespPass.get(i).getGallery_thumb_nails());
-                                                searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
-                                            }
-
-
-                                            if (mSearchRespPass.get(i).getParking_type_location1() != null) {
-                                                searchList.setParking_type_location1(mSearchRespPass.get(i).getParking_type_location1());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getParking_location1() != null) {
-
-                                                Config.logV("Park-@@@@----------4444-----" + mSearchRespPass.get(i).getParking_location1());
-                                                searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getAlways_open_location1() != null) {
-                                                searchList.setAlways_open_location1(mSearchRespPass.get(i).getAlways_open_location1());
-                                            }
-
-                                            if (mSearchRespPass.get(i).getTraumacentre_location1() != null) {
-                                                searchList.setTraumacentre_location1(mSearchRespPass.get(i).getTraumacentre_location1());
-                                            }
-                                            if (mSearchRespPass.get(i).getDentistemergencyservices_location1() != null) {
-                                                searchList.setDentistemergencyservices_location1(mSearchRespPass.get(i).getDentistemergencyservices_location1());
-                                            }
-                                            if (mSearchRespPass.get(i).getDocambulance_location1() != null) {
-                                                searchList.setDocambulance_location1(mSearchRespPass.get(i).getDocambulance_location1());
-                                            }
-                                            if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
-                                                searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
-                                            }
-                                            if(mSearchRespPass.get(i).getHosemergencyservices_location1() != null){
-                                                searchList.setHosemergencyservices_location1(mSearchRespPass.get(i).getHosemergencyservices_location1());
-                                            }
-                                            if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
-                                                searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
-                                            }
-
-
-                                            searchList.setQId(mSearchRespPass.get(i).getId());
-                                            if (mQueueList.get(i).getMessage() != null) {
-                                                searchList.setMessage(mQueueList.get(i).getMessage());
-                                            }
-
-
-                                            if (mQueueList.get(i).getNextAvailableQueue() != null) {
-                                                if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
-                                                    if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
-                                                        searchList.setAvail_date(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
-                                                    }
-                                                    if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
-                                                        searchList.setmLoc(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getLocation().getId()));
-                                                    }
-                                                    searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
-                                                    searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
-                                                    searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
-                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
-                                                    searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
-
-                                                    searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
-                                                    searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
-                                                    searchList.setWaitlistEnabled(mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled());
-                                                    searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
-                                                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
-                                                        searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
-                                                    }
-                                                }
-                                            }
-
-
-//                                        for (int j = 0; j < mQueueList.size(); j++) {
-//                                            //Config.logV("mQueueList.get(j).getLocation().getId()"+mQueueList.get(j).getLocation());
-//                                            if (mQueueList.get(j).getNextAvailableQueue().getLocation() != null) {
+//                                            if (mSearchRespPass.get(i).getDistance() != null) {
+//                                                Config.logV("Distance @@@@@@@@@@@" + mSearchRespPass.get(i).getDistance());
+//                                                searchList.setDistance(mSearchRespPass.get(i).getDistance());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
+//                                                searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getServices() != null) {
+//                                                searchList.setServices(mSearchRespPass.get(i).getServices());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getAppt_services() != null) {
+//                                                searchList.setAppt_services(mSearchRespPass.get(i).getAppt_services());
+//                                            }
+//                                            if(mSearchRespPass.get(i).getDonation_services()!=null){
+//                                                searchList.setDonation_services(mSearchRespPass.get(i).getDonation_services());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
+//                                                searchList.setBusiness_hours1(mSearchRespPass.get(i).getBusiness_hours1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getTerminologies() != null) {
+//                                                searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getOnline_checkins() != null) {
+//                                                searchList.setOnline_checkins(mSearchRespPass.get(i).getOnline_checkins());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getFuture_checkins() != null) {
+//                                                searchList.setFuture_checkins(mSearchRespPass.get(i).getFuture_checkins());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getShow_waiting_time() != null) {
+//                                                searchList.setShow_waiting_time(mSearchRespPass.get(i).getShow_waiting_time());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
+//                                                //   Config.logV("Gallery-@@@@---111-------5555---------" + mSearchRespPass.get(i).getGallery_thumb_nails());
+//                                                searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
+//                                            }
+//                                            //7types
+//                                            if (mSearchRespPass.get(i).getParking_type_location1() != null) {
+//                                                Config.logV("PArking-------------" + mSearchRespPass.get(i).getParking_type_location1());
+//                                                searchList.setParking_type_location1(mSearchRespPass.get(i).getParking_type_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getParking_location1() != null) {
+//                                                Config.logV("Park-@@@@-------------3333------" + mSearchRespPass.get(i).getParking_location1());
+//                                                searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getAlways_open_location1() != null) {
+//                                                searchList.setAlways_open_location1(mSearchRespPass.get(i).getAlways_open_location1());
+//                                            }
 //
-//                                                String json = new Gson().toJson(mQueueList.get(j).getNextAvailableQueue().getLocation());
-//                                                JSONObject json1 = new JSONObject(json);
-//
-//                                                String QID = json1.getString("id");
-//
-//
-//                                                String mID = mQueueList.get(j).getId() + "-" + mQueueList.get(j).getNextAvailableQueue().getLocation().getId();
-//                                                //Config.logV("QID----mmm-------------------"+mID+"compare-------"+mSearchRespPass.get(i).getId());
-//                                                if (mID.equalsIgnoreCase(mSearchRespPass.get(i).getId())) {
-//                                                    if (mQueueList.get(j).getNextAvailableQueue().getAvailableDate() != null) {
-//
-//                                                        searchList.setAvail_date(mQueueList.get(j).getNextAvailableQueue().getAvailableDate());
+//                                            if (mSearchRespPass.get(i).getTraumacentre_location1() != null) {
+//                                                searchList.setTraumacentre_location1(mSearchRespPass.get(i).getTraumacentre_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getDentistemergencyservices_location1() != null) {
+//                                                searchList.setDentistemergencyservices_location1(mSearchRespPass.get(i).getDentistemergencyservices_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getDocambulance_location1() != null) {
+//                                                searchList.setDocambulance_location1(mSearchRespPass.get(i).getDocambulance_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
+//                                                searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
+//                                            }
+//                                            if(mSearchRespPass.get(i).getHosemergencyservices_location1() != null){
+//                                                searchList.setHosemergencyservices_location1(mSearchRespPass.get(i).getHosemergencyservices_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
+//                                                searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getClaimable().equals("1")) {
+//                                                tv_fav.setVisibility(View.GONE);
+//                                            }
+//                                            searchList.setQId(mSearchRespPass.get(i).getId());
+//                                            if (mQueueList.get(i).getMessage() != null) {
+//                                                searchList.setMessage(mQueueList.get(i).getMessage());
+//                                            }
+//                                            if (mQueueList.get(i).getNextAvailableQueue() != null) {
+//                                                if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
+//                                                    if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
+//                                                        searchList.setAvail_date(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
 //                                                    }
-//                                                    if (mQueueList.get(j).getNextAvailableQueue().getLocation() != null) {
-//                                                        searchList.setmLoc(QID);
+//                                                    if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
+//                                                        searchList.setmLoc(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getLocation().getId()));
 //                                                    }
-//                                                    searchList.setQId(mID);
 //                                                    searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
 //                                                    searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
 //                                                    searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
 //                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
-//                                                    Config.logV("personAhead @@@@@@@@@@@ ####" + mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
-//                                                    if (mQueueList.get(i).getServiceTime() != null) {
-//                                                        searchList.setServiceTime(mQueueList.get(i).getServiceTime());
+//                                                    searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
+//                                                    searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
+//                                                    searchList.setWaitlistEnabled(mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled());
+//                                                    searchList.setAvailableToday(mQueueList.get(i).getNextAvailableQueue().isAvailableToday());
+//                                                    searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
+//                                                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+//                                                        searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
 //                                                    }
 //                                                }
 //                                            }
+//                                            mSearchListModel.add(searchList);
+//                                            Log.i("iopiop", new Gson().toJson(mSearchListModel));
 //                                        }
-
-
-                                            mSearchListModel.add(searchList);
-                                        }
-
-
-                                        final List<SearchListModel> results = mSearchListModel;
-
-//                                    pageadapter.addAll(results);
-//                                    pageadapter.notifyDataSetChanged();
-
-
-//                                    Config.logV("Results@@@@@@@@@@@@@@@@@" + results.size());
-//                                    Config.logV("CURRENT PAGE**22222*************" + TOTAL_PAGES);
-//                                    Config.logV("CURRENT PAGE**333*************" + currentPage);
-//                                    if (TOTAL_PAGES > 0 && total_foundcount > 10) {
-//                                        Config.logV("First ADD Footer");
-//                                        pageadapter.addLoadingFooter();
-//
-//
+//                                        Config.logV("Response--Sucess-------------------------" + new Gson().toJson(mSearchListModel));
+//                                        List<SearchListModel> results = mSearchListModel;
 //                                    } else {
-//                                        isLastPage = true;
+//                                        mSearchListModel.clear();
+//                                        for (int i = 0; i < mSearchRespPass.size(); i++) {
+//                                            SearchListModel searchList = new SearchListModel();
+//                                            searchList.setId(mSearchRespPass.get(i).getId());
+//                                            searchList.setLogo(mSearchRespPass.get(i).getLogo());
+//                                            searchList.setPlace1(mSearchRespPass.get(i).getPlace1());
+//                                            searchList.setSector(mSearchRespPass.get(i).getSub_sector_displayname());
+//                                            searchList.setTitle(mSearchRespPass.get(i).getTitle());
+//                                            searchList.setRating(mSearchRespPass.get(i).getRating());
+//                                            searchList.setUniqueid(mSearchRespPass.get(i).getUnique_id());
+//                                            searchList.setLocation1(mSearchRespPass.get(i).getLocation1());
+//                                            searchList.setLocation_id1(mSearchRespPass.get(i).getLocation_id1());
+//                                            searchList.setSectorname(mSearchRespPass.get(i).getSector());
+//                                            searchList.setSub_sector(mSearchRespPass.get(i).getSub_sector());
+//                                            searchList.setClaimable(mSearchRespPass.get(i).getClaimable());
+//                                            searchList.setAccountType(mSearchRespPass.get(i).getAccountType());
+//                                            searchList.setBranch_name(mSearchRespPass.get(i).getBranch_name());
+//                                            searchList.setCoupon_enabled(mSearchRespPass.get(i).getCoupon_enabled());
+//                                            searchList.setToday_appt(mSearchRespPass.get(i).getToday_appt());
+//                                            searchList.setOnline_profile(mSearchRespPass.get(i).getOnline_profile());
+//                                            searchList.setDonation_status(mSearchRespPass.get(i).getDonation_status());
+//                                            searchList.setFuture_appt(mSearchRespPass.get(i).getFuture_appt());
+//                                            searchList.setSpecialization_displayname(mSearchRespPass.get(i).getSpecialization_displayname());
+//                                            String qualify = "";
+//                                            if (mSearchRespPass.get(i).getQualification() != null) {
+//                                                for (int l = 0; l < mSearchRespPass.get(i).getQualification().size(); l++) {
+//                                                    qualify = qualify + ", " + mSearchRespPass.get(i).getQualification().get(l);
+//                                                }
+//                                                searchList.setQualification(qualify);
+//                                            }
+//                                            if (mSearchRespPass.get(i).getYnw_verified() != null) {
+//                                                searchList.setYnw_verified(Integer.parseInt(mSearchRespPass.get(i).getYnw_verified()));
+//                                            }
+//                                            if (mSearchRespPass.get(i).getDepartment_code() != null) {
+//                                                searchList.setDepartment_code(mSearchRespPass.get(i).getDepartment_code());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getDistance() != null) {
+//                                                Config.logV("Distance @@@@@@@@@@@44444" + mSearchRespPass.get(i).getDistance());
+//                                                searchList.setDistance(mSearchRespPass.get(i).getDistance());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getYnw_verified_level() != null) {
+//                                                searchList.setYnw_verified_level(mSearchRespPass.get(i).getYnw_verified_level());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getServices() != null) {
+//                                                searchList.setServices(mSearchRespPass.get(i).getServices());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getAppt_services() != null) {
+//                                                searchList.setAppt_services(mSearchRespPass.get(i).getAppt_services());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getDonation_services() != null) {
+//                                                searchList.setDonation_services(mSearchRespPass.get(i).getDonation_services());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getBusiness_hours1() != null) {
+//                                                searchList.setBusiness_hours1(mSearchRespPass.get(i).getBusiness_hours1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getTerminologies() != null) {
+//                                                searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getOnline_checkins() != null) {
+//                                                searchList.setOnline_checkins(mSearchRespPass.get(i).getOnline_checkins());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getFuture_checkins() != null) {
+//                                                searchList.setFuture_checkins(mSearchRespPass.get(i).getFuture_checkins());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getShow_waiting_time() != null) {
+//                                                searchList.setShow_waiting_time(mSearchRespPass.get(i).getShow_waiting_time());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getGallery_thumb_nails() != null) {
+//                                                // Config.logV("Gallery ###########"+mSearchRespPass.get(i).getGallery_thumb_nails());
+//                                                searchList.setGallery_thumb_nails(mSearchRespPass.get(i).getGallery_thumb_nails());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getParking_type_location1() != null) {
+//                                                searchList.setParking_type_location1(mSearchRespPass.get(i).getParking_type_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getParking_location1() != null) {
+//                                                Config.logV("Park-@@@@----------4444-----" + mSearchRespPass.get(i).getParking_location1());
+//                                                searchList.setParking_location1(mSearchRespPass.get(i).getParking_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getAlways_open_location1() != null) {
+//                                                searchList.setAlways_open_location1(mSearchRespPass.get(i).getAlways_open_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getTraumacentre_location1() != null) {
+//                                                searchList.setTraumacentre_location1(mSearchRespPass.get(i).getTraumacentre_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getDentistemergencyservices_location1() != null) {
+//                                                searchList.setDentistemergencyservices_location1(mSearchRespPass.get(i).getDentistemergencyservices_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getDocambulance_location1() != null) {
+//                                                searchList.setDocambulance_location1(mSearchRespPass.get(i).getDocambulance_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getPhysiciansemergencyservices_location1() != null) {
+//                                                searchList.setPhysiciansemergencyservices_location1(mSearchRespPass.get(i).getPhysiciansemergencyservices_location1());
+//                                            }
+//                                            if(mSearchRespPass.get(i).getHosemergencyservices_location1() != null){
+//                                                searchList.setHosemergencyservices_location1(mSearchRespPass.get(i).getHosemergencyservices_location1());
+//                                            }
+//                                            if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
+//                                                searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
+//                                            }
+//                                            searchList.setQId(mSearchRespPass.get(i).getId());
+//                                            if (mQueueList.get(i).getMessage() != null) {
+//                                                searchList.setMessage(mQueueList.get(i).getMessage());
+//                                            }
+//                                            if (mQueueList.get(i).getNextAvailableQueue() != null) {
+//                                                if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
+//                                                    if (mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
+//                                                        searchList.setAvail_date(mQueueList.get(i).getNextAvailableQueue().getAvailableDate());
+//                                                    }
+//                                                    if (mQueueList.get(i).getNextAvailableQueue().getLocation() != null) {
+//                                                        searchList.setmLoc(String.valueOf(mQueueList.get(i).getNextAvailableQueue().getLocation().getId()));
+//                                                    }
+//                                                    searchList.setIsopen(mQueueList.get(i).getNextAvailableQueue().isOpenNow());
+//                                                    searchList.setPersonAhead(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+//                                                    searchList.setCalculationMode(mQueueList.get(i).getNextAvailableQueue().getCalculationMode());
+//                                                    searchList.setQueueWaitingTime(mQueueList.get(i).getNextAvailableQueue().getQueueWaitingTime());
+//                                                    searchList.setBranchSpCount(mQueueList.get(i).getBranchSpCount());
+//                                                    searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
+//                                                    searchList.setOnlineCheckIn(mQueueList.get(i).getNextAvailableQueue().isOnlineCheckIn());
+//                                                    searchList.setWaitlistEnabled(mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled());
+//                                                    searchList.setShowToken(mQueueList.get(i).getNextAvailableQueue().isShowToken());
+//                                                    if (mQueueList.get(i).getNextAvailableQueue().getServiceTime() != null) {
+//                                                        searchList.setServiceTime(mQueueList.get(i).getNextAvailableQueue().getServiceTime());
+//                                                    }
+//                                                }
+//                                            }
+//                                            mSearchListModel.add(searchList);
+//                                        }
+//                                        final List<SearchListModel> results = mSearchListModel;
 //                                    }
-                                    }
-                                    groupByDepartmentCode(mSearchListModel);
-                                    ApiDepartment(mProvoderId);
-                                    if(homeUniqueId==null){
-                                        ApiDepartmentServices(uniqueID);
-                                    }else{
-                                        ApiDepartmentServices(homeUniqueId);
-                                    }
-
-                                }
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<QueueList>> call, Throwable t) {
-                            // Log error here since request failed
-                            Config.logV("Fail---------------" + t.toString());
-               /* if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-*/
-                        }
-                    });
-                }
-
-            }
-
-
-            @Override
-            public void onFailure(Call<SearchAWsResponse> call, Throwable t) {
-                t.printStackTrace();
-
-            }
-        });
-
-
-    }
-
-
-    private void listProviders(final String muniqueID) {
-
-        final ApiInterface apiService = ApiClient.getClientAWS(mContext).create(ApiInterface.class);
-        Map<String, String> query = new HashMap<>();
-        query.put("start", "0");
-        query.put("q", "(and " + "unique_id:" + muniqueID + ")");
-        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
-        if (mobile.startsWith("55")) {
-            query.put("fq", "(and  test_account:1 )");
-        } else {
-            query.put("fq", "(and  (not test_account:1) )");
-        }
-
-        Map<String, String> params = new HashMap<>();
-        params.put("size", "10000");
-        params.put("q.parser", "structured");
-        params.put("sort", "claimable asc,ynw_verified_level desc, distance asc");
-        params.put("expr.distance", "haversin(" + lat_long + ", location1.latitude, location1.longitude)");
-        params.put("return", "_all_fields,distance");
-
-        Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
-        call.enqueue(new Callback<SearchAWsResponse>() {
-            @Override
-            public void onResponse(Call<SearchAWsResponse> call, Response<SearchAWsResponse> response) {
-                try {
-
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-
-                    Config.logV("Response--code-------------------------" + response.code());
-
-                    if (response.code() == 200) {
-
-                        if (response.body().getHits().getFound() > 0) {
-
-
-                            mSearchResp.clear();
-                            ArrayList<String> ids = new ArrayList<>();
-                            for (int i = 0; i < response.body().getHits().getHit().size(); i++) {
-                                SearchAWsResponse search = new SearchAWsResponse();
-
-
-                                if (response.body().getHits().getHit().get(i).getFields().getFuture_checkins() != null) {
-                                    search.setFuture_checkins(response.body().getHits().getHit().get(i).getFields().getFuture_checkins());
-                                }
-                                mSearchResp.add(search);
-                            }
-
-                        }
-                        mSearchAWSResponse = response.body();
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-
-            @Override
-            public void onFailure(Call<SearchAWsResponse> call, Throwable t) {
-                t.printStackTrace();
-
-            }
-        });
-
-
-    }
-
-
-
-
-    void groupByDepartmentCode(List<SearchListModel> mSearchListModel) {
-        departmentMap = new HashMap<String, List<SearchListModel>>();
-        for (SearchListModel searchModel : mSearchListModel) {
-            String deptCode = searchModel.getDepartment_code();
-            if (departmentMap.containsKey(deptCode)) {
-                departmentMap.get(deptCode).add(searchModel);
-            } else {
-                ArrayList<SearchListModel> emptyList = new ArrayList<SearchListModel>();
-                emptyList.add(searchModel);
-                departmentMap.put(deptCode, emptyList);
-            }
-        }
-        Log.i("Groupby", new Gson().toJson(departmentMap));
-    }
-
-
+//                                    groupByDepartmentCode(mSearchListModel);
+//                                    if (mProvoderId != 0) {
+//                                        ApiDepartment(mProvoderId);
+//                                    }
+//                                    if(homeUniqueId==null){
+//                                        ApiDepartmentServices(uniqueID);
+//                                    }else{
+//                                        ApiDepartmentServices(homeUniqueId);
+//                                    }
+//                                }
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<List<QueueList>> call, Throwable t) {
+//                            // Log error here since request failed
+//                            Config.logV("Fail---------------" + t.toString());
+//                        }
+//                    });
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<SearchAWsResponse> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        });
+//    }
+//    private void listProviders(final String muniqueID) {
+//        final ApiInterface apiService = ApiClient.getClientAWS(mContext).create(ApiInterface.class);
+//        Map<String, String> query = new HashMap<>();
+//        query.put("start", "0");
+//        query.put("q", "(and " + "unique_id:" + muniqueID + ")");
+//        String mobile = SharedPreference.getInstance(mContext).getStringValue("mobile", "");
+//        if (mobile.startsWith("55")) {
+//            query.put("fq", "(and  test_account:1 )");
+//        } else {
+//            query.put("fq", "(and  (not test_account:1) )");
+//        }
+//        Map<String, String> params = new HashMap<>();
+//        params.put("size", "10000");
+//        params.put("q.parser", "structured");
+//        params.put("sort", "claimable asc,ynw_verified_level desc, distance asc");
+//        params.put("expr.distance", "haversin(" + lat_long + ", location1.latitude, location1.longitude)");
+//        params.put("return", "_all_fields,distance");
+//        Call<SearchAWsResponse> call = apiService.getSearchAWS(query, params);
+//        call.enqueue(new Callback<SearchAWsResponse>() {
+//            @Override
+//            public void onResponse(Call<SearchAWsResponse> call, Response<SearchAWsResponse> response) {
+//                try {
+//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//                    if (response.code() == 200) {
+//                        if (response.body().getHits().getFound() > 0) {
+//                            mSearchResp.clear();
+//                            ArrayList<String> ids = new ArrayList<>();
+//                            for (int i = 0; i < response.body().getHits().getHit().size(); i++) {
+//                                SearchAWsResponse search = new SearchAWsResponse();
+//                                if (response.body().getHits().getHit().get(i).getFields().getFuture_checkins() != null) {
+//                                    search.setFuture_checkins(response.body().getHits().getHit().get(i).getFields().getFuture_checkins());
+//                                }
+//                                mSearchResp.add(search);
+//                            }
+//                        }
+//                        mSearchAWSResponse = response.body();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<SearchAWsResponse> call, Throwable t) {
+//                t.printStackTrace();
+//            }
+//        });
+//    }
+//    void groupByDepartmentCode(List<SearchListModel> mSearchListModel) {
+//        departmentMap = new HashMap<String, List<SearchListModel>>();
+//        for (SearchListModel searchModel : mSearchListModel) {
+//            String deptCode = searchModel.getDepartment_code();
+//            if (departmentMap.containsKey(deptCode)) {
+//                departmentMap.get(deptCode).add(searchModel);
+//            } else {
+//                ArrayList<SearchListModel> emptyList = new ArrayList<SearchListModel>();
+//                emptyList.add(searchModel);
+//                departmentMap.put(deptCode, emptyList);
+//            }
+//        }
+//        Log.i("Groupby", new Gson().toJson(departmentMap));
+//    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
@@ -4133,6 +3066,4 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     public void departmentClicked(SearchDepartmentServices searchDepartment, List<SearchListModel> searchListModels, String businessName, ArrayList<SearchService> mServicesList, int department) {
         onMethodDepartment(searchDepartment, searchListModels, businessName, mServicesList, department);
     }
-
-
 }
