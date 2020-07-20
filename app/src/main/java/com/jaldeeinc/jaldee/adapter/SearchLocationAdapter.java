@@ -76,7 +76,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         Button btn_checkin_expand;
         TextView txtwaittime_expand, txt_diffdate_expand, txtlocation_amentites, txtparkingSeeAll, txtservices, txtdayofweek;
         TextView txtservice1, txtservice2, txtSeeAll, txtwork1, txtworkSeeAll, txtworking;
-        TextView txt_earliestAvailable, txt_apptservices, txt_dontservices, txtapptSeeAll;
+        TextView txt_earliestAvailable, txt_apptservices, txt_dontservices, txtapptSeeAll , txtdntSeeAll;
         Button btn_appointments, btn_donations;
 
         ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
@@ -132,6 +132,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             LDont_Services = view.findViewById(R.id.donationList);
             txt_dontservices = view.findViewById(R.id.txtdontservices);
             txtapptSeeAll = view.findViewById(R.id.txtapptSeeAll);
+            txtdntSeeAll = view.findViewById(R.id.txtdntSeeAll);
         }
     }
 
@@ -819,11 +820,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     myViewHolder.LAppointment.setVisibility(View.GONE);
                     myViewHolder.LApp_Services.setVisibility(View.GONE);
                     myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                    myViewHolder.txtapptSeeAll.setVisibility(View.GONE);
                 }
             } else {
                 myViewHolder.LAppointment.setVisibility(View.GONE);
                 myViewHolder.LApp_Services.setVisibility(View.GONE);
                 myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                myViewHolder.txtapptSeeAll.setVisibility(View.GONE);
             }
             for (int m = 0; m < aServicesList.size(); m++) {
                 if (aServicesList.get(m).getServices() != null) {
@@ -845,7 +848,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     "fonts/Montserrat_Regular.otf");
                             dynaText.setTypeface(tyface);
                             for (int j = 0; j < aServicesList.get(i).getServices().size(); j++) {
-                                dynaText.setText(aServicesList.get(i).getServices().get(j).getName().toString() + " (" + aServicesList.get(i).getDepartmentName() + " )");
+                                dynaText.setText(aServicesList.get(i).getServices().get(j).getName() + " (" + aServicesList.get(i).getDepartmentName() + " )");
                                 dynaText.setTextSize(13);
                                 dynaText.setPadding(5, 0, 5, 0);
                                 dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
@@ -948,8 +951,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     }
                 }
                 if(aServicesList.size()>3) {
-                    myViewHolder.txtapptSeeAll.setVisibility(View.VISIBLE);
                     final int finalI = m;
+                    if(online_presence){
+                        if(mScheduleList.get(position).isCheckinAllowed()){
+                        myViewHolder.txtapptSeeAll.setVisibility(View.VISIBLE);
+                    }
+                    }
+
+
                     myViewHolder.txtapptSeeAll.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1000,6 +1009,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 iService.putExtra("minamount", String.valueOf(gServicesList.get(i).getMinDonationAmount()));
                                 iService.putExtra("maxamount", String.valueOf(gServicesList.get(i).getMaxDonationAmount()));
                                 iService.putExtra("multiples", String.valueOf(gServicesList.get(i).getMultiples()));
+                                iService.putExtra("servicegallery", gServicesList.get(i).getServicegallery());
+                                iService.putExtra("from","dnt");
                                 mContext.startActivity(iService);
                             }
                         }
@@ -1016,21 +1027,34 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 dynaText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getTitle(), searchdetailList.getUniqueid());
+                        // adaptercallback.onMethodServiceCallbackDonation(serviceNames, mTitle);
                     }
                 });
                 dynaText.setGravity(Gravity.CENTER);
                 dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
                 dynaText.setText(" ... ");
                 myViewHolder.LDont_Services.addView(dynaText);
+            } else {
+                myViewHolder.LDont_Services.setVisibility(View.GONE);
+                myViewHolder.txt_dontservices.setVisibility(View.GONE);
             }
-        } else {
-            myViewHolder.LDont_Services.setVisibility(View.GONE);
-            myViewHolder.txt_dontservices.setVisibility(View.GONE);
-
-
+            if (gServicesList.size() > 3) {
+                TextView dynaText = new TextView(mContext);
+                myViewHolder.txtdntSeeAll.setVisibility(View.VISIBLE);
+                myViewHolder.txtdntSeeAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        adaptercallback.onMethodServiceCallbackDonation(gServicesList, mTitle);
+                    }
+                });
+            }
+            else{
+                myViewHolder.txtdntSeeAll.setVisibility(View.GONE);
+            }
         }
-        if (online_presence) {
+
+
+            if (online_presence) {
             if (donationFundRaising) {
                 myViewHolder.LDonation.setVisibility(View.VISIBLE);
                 myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
@@ -1039,11 +1063,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 myViewHolder.LDonation.setVisibility(View.GONE);
                 myViewHolder.LDont_Services.setVisibility(View.GONE);
                 myViewHolder.txt_dontservices.setVisibility(View.GONE);
+                myViewHolder.txtdntSeeAll.setVisibility(View.GONE);
             }
         } else {
             myViewHolder.LDonation.setVisibility(View.GONE);
             myViewHolder.LDont_Services.setVisibility(View.GONE);
             myViewHolder.txt_dontservices.setVisibility(View.GONE);
+            myViewHolder.txtdntSeeAll.setVisibility(View.GONE);
         }
 
         Date c = Calendar.getInstance().getTime();

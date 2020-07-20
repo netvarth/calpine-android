@@ -1,8 +1,11 @@
 package com.jaldeeinc.jaldee.response;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SearchDonation {
+public class SearchDonation implements Serializable {
 
     int id;
     String name;
@@ -27,6 +30,18 @@ public class SearchDonation {
     String value;
     int maxDonationAmount;
     int minDonationAmount;
+    String url;
+    String thumbUrl;
+
+    public ArrayList<SearchDonation> getServicegallery() {
+        return servicegallery;
+    }
+
+    public void setServicegallery(ArrayList<SearchDonation> servicegallery) {
+        this.servicegallery = servicegallery;
+    }
+
+    ArrayList<SearchDonation> servicegallery;
 
 
     public int getId() {
@@ -207,6 +222,22 @@ public class SearchDonation {
 
     public void setMinDonationAmount(int minDonationAmount) {
         this.minDonationAmount = minDonationAmount;
+    }
+
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    public String getThumbUrl() {
+        return thumbUrl;
+    }
+
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
     }
 
 }

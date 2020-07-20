@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -27,8 +29,9 @@ public class SearchServiceActivity extends AppCompatActivity {
     String name, duration, price, desc = "", multiples;
     Toolbar toolbar;
     ArrayList<SearchService> mGallery;
+    ArrayList<SearchDonation> dGallery;
     ImageView i_servicegallery;
-    String title;
+    String title,from;
     TextView tv_toolbartitle, tv_descVal;
     ImageView i_backpress;
     boolean isTaxable, isPrepayment;
@@ -76,13 +79,22 @@ public class SearchServiceActivity extends AppCompatActivity {
             title = extras.getString("title");
             isTaxable = extras.getBoolean("taxable");
             isPrepayment = extras.getBoolean("isPrePayment");
+            from = extras.getString("from");
 
             MinPrePaymentAmount = extras.getString("MinPrePaymentAmount");
-            mGallery = (ArrayList<SearchService>) getIntent().getSerializableExtra("servicegallery");
-            minDonationAmount = extras.getString("minamount");
-            maxDonationAmount = extras.getString("maxamount");
-            multiples = extras.getString("multiples");
+            if (from != null) {
+                if (from.equalsIgnoreCase("dnt")) {
+                    dGallery = (ArrayList<SearchDonation>) getIntent().getSerializableExtra("servicegallery");
+                }
+
+            }
+                mGallery = (ArrayList<SearchService>) getIntent().getSerializableExtra("servicegallery");
+                minDonationAmount = extras.getString("minamount");
+                maxDonationAmount = extras.getString("maxamount");
+                multiples = extras.getString("multiples");
+
         }
+
 
         tv_toolbartitle = (TextView) findViewById(R.id.txt_toolbartitle);
         tv_toolbartitle.setText(title);
@@ -180,30 +192,56 @@ public class SearchServiceActivity extends AppCompatActivity {
         if (mGallery != null) {
 
             if (mGallery.size() > 0) {
+                if(from.equalsIgnoreCase("dnt")){
+                    i_servicegallery.setVisibility(View.VISIBLE);
+                    try {
+                        Picasso.with(this).setLoggingEnabled(true);
+                        Picasso.with(this).load(dGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
 
-                Config.logV("SERVICE GALLERY" + mGallery.get(0).getUrl());
-                i_servicegallery.setVisibility(View.VISIBLE);
-                try {
-                    Picasso.with(this).setLoggingEnabled(true);
-                    Picasso.with(this).load(mGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    Config.logV("SERVICE GALLERY" + mGallery.get(0).getUrl());
+                    i_servicegallery.setVisibility(View.VISIBLE);
+                    try {
+                        Picasso.with(this).setLoggingEnabled(true);
+                        Picasso.with(this).load(mGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             i_servicegallery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ArrayList<String> mGalleryList = new ArrayList<>();
-                    for (int i = 0; i < mGallery.size(); i++) {
-                        mGalleryList.add(mGallery.get(i).getUrl());
-                    }
+                    if (from.equalsIgnoreCase("dnt")) {
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        for (int i = 0; i < dGallery.size(); i++) {
+                            mGalleryList.add(dGallery.get(i).getUrl());
+                        }
 
 
-                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                    if (mValue) {
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
 
-                        Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
-                        startActivity(intent);
+                            Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
+                            startActivity(intent);
+                        }
+                    } else {
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        for (int i = 0; i < mGallery.size(); i++) {
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+
+
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+
+                            Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
+                            startActivity(intent);
+                        }
                     }
                 }
             });

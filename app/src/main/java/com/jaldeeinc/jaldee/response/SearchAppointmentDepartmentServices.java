@@ -1,8 +1,9 @@
 package com.jaldeeinc.jaldee.response;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SearchAppointmentDepartmentServices {
+public class SearchAppointmentDepartmentServices implements Serializable {
     public String getDepartmentName() {
         return departmentName;
     }

@@ -616,6 +616,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mService.setDepartmentName(response.body().get(i).getDepartmentName());
                                 mService.setServices(response.body().get(i).getServices());
                                 mService.setName(response.body().get(i).getName());
+                                mService.setDepartmentId(response.body().get(i).getDepartmentId());
                                 LaServicesList.add(mService);
                             }
                         }
@@ -717,6 +718,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             mService.setMultiples(response.body().get(i).getMultiples());
                             mService.setMinDonationAmount(response.body().get(i).getMinDonationAmount());
                             mService.setMaxDonationAmount(response.body().get(i).getMaxDonationAmount());
+                            mService.setServicegallery(response.body().get(i).getServicegallery());
                             LServicesList.add(mService);
                         }
                         gServiceList.addAll(LServicesList);
@@ -2932,6 +2934,22 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, pfFragment).commit();
     }
+
+    @Override
+    public void onMethodServiceCallbackDonation(ArrayList<SearchDonation> searchService, String value) {
+        ServiceListDonationFragment pfFragment = new  ServiceListDonationFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("servicelist", searchService);
+        bundle.putString("title", value);
+        bundle.putString("from", "searchdetail");
+        bundle.putString("uniqueID", uniqueID);
+        pfFragment.setArguments(bundle);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.add(R.id.mainlayout, pfFragment).commit();
+    }
+
 
     @Override
     public void onMethodCheckinCallback(int locID, String from, String location) {

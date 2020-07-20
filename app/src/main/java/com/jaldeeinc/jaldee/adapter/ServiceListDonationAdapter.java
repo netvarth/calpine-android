@@ -21,6 +21,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
+import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 import java.text.SimpleDateFormat;
@@ -39,10 +40,8 @@ import retrofit2.Response;
  * Created by sharmila on 3/9/18.
  */
 
-public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceListAppointmentAdapter.MyViewHolder> {
-    List<SearchDepartment> mSearchDepartmentList;
+public class ServiceListDonationAdapter extends RecyclerView.Adapter<ServiceListDonationAdapter.MyViewHolder> {
     Context mContext;
-    ArrayList<String> servicesList = new ArrayList<>();
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_service;
@@ -55,14 +54,13 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
 
         }
     }
-    ArrayList<SearchAppointmentDepartmentServices> mServiceList;
+    ArrayList<SearchDonation> mServiceList;
     String from;
     String title;
     String uniqueID;
     Activity activity;
     String serviceName;
-    String serviceNames;
-    public ServiceListAppointmentAdapter(ArrayList<SearchAppointmentDepartmentServices> mServiceList, Context mContext, String from, String title, String uniqueID, Activity mActivity, ArrayList<SearchDepartment> departmentList) {
+    public ServiceListDonationAdapter(ArrayList<SearchDonation> mServiceList, Context mContext, String from, String title, String uniqueID, Activity mActivity) {
         this.mContext = mContext;
         this.mServiceList = mServiceList;
         Config.logV("ServiceList--------------"+mServiceList.size());
@@ -70,60 +68,84 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
         this.title=title;
         this.uniqueID=uniqueID;
         activity=mActivity;
-        this.mSearchDepartmentList = departmentList;
+
     }
 
     @Override
-    public ServiceListAppointmentAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ServiceListDonationAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.servicelist_row, parent, false);
 
-        return new ServiceListAppointmentAdapter.MyViewHolder(itemView);
+        return new ServiceListDonationAdapter.MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final ServiceListAppointmentAdapter.MyViewHolder myViewHolder, final int position) {
-        final SearchAppointmentDepartmentServices serviceList = mServiceList.get(position);
+    public void onBindViewHolder(final ServiceListDonationAdapter.MyViewHolder myViewHolder, final int position) {
+        final SearchDonation serviceList = mServiceList.get(position);
+        if(serviceList!=null){
 
+                serviceName = serviceList.getName();}
 
-        String serviceName = serviceList.getServices().get(position).getName();
-        if(serviceList.getDepartmentId()!=0){
-            String deptName = getDepartmentName(serviceList.getDepartmentId());
-            serviceName = serviceName.concat(" (").concat(deptName).concat(")");
-        }
+        else{
+            serviceName = serviceList.getName();}
+//        if(serviceList.getDepartment()!=0){
+//            String deptName = getDepartmentName(serviceList.getDepartment());
+//            serviceName = serviceName.concat(" (").concat(deptName).concat(")");
+//        }
         myViewHolder.tv_service.setText(serviceName);
-        myViewHolder.serviceList.setOnClickListener(new View.OnClickListener() {
+
+        myViewHolder.tv_service.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(from.equalsIgnoreCase("searchdetail")) {
-                    final String mServicename = serviceList.getServices().get(position).getName();
-                    final String mServiceprice = String.valueOf(serviceList.getServices().get(position).getTotalAmount());
-                    final String mServicedesc = serviceList.getServices().get(position).getDescription();
-                    final String mServiceduration = String.valueOf(serviceList.getServices().get(position).getServiceDuration());
-                    final boolean mTaxable = serviceList.getServices().get(position).isTaxable();
-                   // final ArrayList<SearchService> mServiceGallery = serviceList.getServicegallery();
-
-                    final boolean isPrepayment = serviceList.getServices().get(position).isPrePayment();
-                    final String minPrepayment = String.valueOf(serviceList.getServices().get(position).getMinPrePaymentAmount());
-
-                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                    iService.putExtra("name", mServicename);
-                    iService.putExtra("duration", mServiceduration);
-                    iService.putExtra("price", mServiceprice);
-                    iService.putExtra("desc", mServicedesc);
-                  //  iService.putExtra("servicegallery", mServiceGallery);
-                    iService.putExtra("title", title);
-                    iService.putExtra("taxable", mTaxable);
-                    iService.putExtra("isPrePayment", isPrepayment);
-                    iService.putExtra("MinPrePaymentAmount",minPrepayment);
-                    mContext.startActivity(iService);
-                }else{
-
-                    Config.logV("Service ID pass------------"+serviceList.getName());
-                    ApiService(uniqueID,serviceList.getName(),title);
+                for (int i = 0; i < mServiceList.size(); i++) {
+                    if (mServiceList.get(i).toString().toLowerCase().equalsIgnoreCase(mServiceList.get(position).toString().toLowerCase())) {
+                        Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                        iService.putExtra("name", mServiceList.get(i).toString());
+                        iService.putExtra("minamount", String.valueOf(mServiceList.get(i).getMinDonationAmount()));
+                        iService.putExtra("maxamount", String.valueOf(mServiceList.get(i).getMaxDonationAmount()));
+                        iService.putExtra("multiples", String.valueOf(mServiceList.get(i).getMultiples()));
+                        iService.putExtra("servicegallery",mServiceList.get(i).getServicegallery());
+                        iService.putExtra("from","dnt");
+                        mContext.startActivity(iService);
+                    }
                 }
+
             }
         });
+
+
+//        myViewHolder.serviceList.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(from.equalsIgnoreCase("searchdetail")) {
+//                    final String mServicename = serviceList.getName();
+//                    final String mServiceprice = String.valueOf(serviceList.getTotalAmount());
+//                    final String mServicedesc = serviceList.getDescription();
+//                    final String mServiceduration = String.valueOf(serviceList.getServiceDuration());
+//                    final boolean mTaxable = serviceList.isTaxable();
+//                  //  final ArrayList<SearchService> mServiceGallery = serviceList.getServicegallery();
+//
+//                    final boolean isPrepayment = serviceList.isPrePayment();
+//                    final String minPrepayment = String.valueOf(serviceList.getMinPrePaymentAmount());
+//
+//                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+//                    iService.putExtra("name", mServicename);
+//                    iService.putExtra("duration", mServiceduration);
+//                    iService.putExtra("price", mServiceprice);
+//                    iService.putExtra("desc", mServicedesc);
+//                  //  iService.putExtra("servicegallery", mServiceGallery);
+//                    iService.putExtra("title", title);
+//                    iService.putExtra("taxable", mTaxable);
+//                    iService.putExtra("isPrePayment", isPrepayment);
+//                    iService.putExtra("MinPrePaymentAmount",minPrepayment);
+//                    mContext.startActivity(iService);
+//                }else{
+//
+//                    Config.logV("Service ID pass------------"+serviceList.getName());
+//                    ApiService(uniqueID,serviceList.getName(),title);
+//                }
+//            }
+//        });
 
 
     }
@@ -207,17 +229,10 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
 
 
     }
-    public String getDepartmentName(int department) {
-       // Log.i("departments", new Gson().toJson(mSearchDepartmentList));
-        for(int i=0;i<mServiceList.size();i++){
-            if(mServiceList.get(i).getDepartmentId()==department) {
-                return mServiceList.get(i).getDepartmentName();
-            }
-        }
-        return "";
-    }
+
     @Override
     public int getItemCount() {
         return mServiceList.size();
     }
 }
+
