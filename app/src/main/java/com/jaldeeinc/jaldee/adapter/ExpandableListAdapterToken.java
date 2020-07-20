@@ -776,21 +776,16 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 if (activelist.getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
                     tv_place.setVisibility(View.VISIBLE);
                     tv_place.setText(activelist.getPlace());
-
-                } }
+                }
+            }
         } catch (
                 Exception e) {
             e.printStackTrace();
         }
-
         icon_fav.setText("Favourite");
         icon_fav.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_favourite_line, 0, 0);
-
-        for (
-                int i = 0; i < FavList.size(); i++) {
+        for (int i = 0; i < FavList.size(); i++) {
             Config.logV("Fav List-----##&&&-----" + FavList.get(i).getId());
-
-
             if (FavList.get(i).getId() == activelist.getId()) {
                 Config.logV("Fav Fav List--------%%%%--" + activelist.getId());
                 icon_fav.setVisibility(View.VISIBLE);
@@ -799,38 +794,31 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 icon_fav.setText("Favourite");
             }
         }
-
         icon_fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (activelist.getConsumer().isFavourite()) {
-
-                    Config.logV("Fav" + activelist.getId());
-                    callback.onMethodDeleteFavourite(activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag);
-
-                } else {
-                    Config.logV("Fav Addd" + activelist.getId());
-                    callback.onMethodAddFavourite(activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag);
-                }
+            if (activelist.getConsumer().isFavourite()) {
+                Config.logV("Fav" + activelist.getId());
+                callback.onMethodDeleteFavourite(activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag);
+            } else {
+                Config.logV("Fav Addd" + activelist.getId());
+                callback.onMethodAddFavourite(activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag);
+            }
             }
         });
         tv_place.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("googlemap url--------" + activelist.getGoogleMapUrl());
-                if(activelist.getGoogleMapUrl()!=null){
-                    String geoUri = activelist.getGoogleMapUrl();
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                    mContext.startActivity(intent);}
+            Config.logV("googlemap url--------" + activelist.getGoogleMapUrl());
+            if(activelist.getGoogleMapUrl()!=null){
+                String geoUri = activelist.getGoogleMapUrl();
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                mContext.startActivity(intent);}
             }
         });
-
         tv_service.setVisibility(View.GONE);
-
-
         if (activelist.getName() != null) {
             tv_service.setVisibility(View.VISIBLE);
-
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                     "fonts/Montserrat_Bold.otf");
             String firstWord = activelist.getName();
@@ -843,15 +831,12 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         } else {
             tv_service.setVisibility(View.GONE);
         }
-
         if (activelist.getPaymentStatus().
-
                 equalsIgnoreCase("FullyPaid") || activelist.getPaymentStatus().equalsIgnoreCase("Refund")) {
             icon_bill.setText("Receipt");
         } else {
             icon_bill.setText("Bill");
         }
-
         Config.logV("Bill------------" + activelist.getWaitlistStatus());
         if (activelist.getBillViewStatus() != null && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
             if (activelist.getBillViewStatus().equalsIgnoreCase("Show")) {
@@ -864,22 +849,16 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 icon_bill.setVisibility(View.VISIBLE);
             }
             else{
-                icon_bill.setVisibility(View.GONE);}
-
+                icon_bill.setVisibility(View.GONE);
+            }
         }
-
-
         icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName())),activelist.getConsumer().getId());
+            callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName())),activelist.getConsumer().getId());
             }
         });
-
-
         Config.logV("Date------------" + activelist.getDate());
-
-
         //  tv_estTime.setVisibility(View.VISIBLE);
         Typeface tyface3 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
@@ -1405,9 +1384,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
             String secondWord1 = String.valueOf(activelist.getPersonsAhead());
             String nobody_ahead = "You are first in line ";
             String one_person_ahead = "1 person ahead of you ";
-
             if (activelist.getPersonsAhead() == 0) {
-
                 Spannable spannable1 = new SpannableString(nobody_ahead);
                 spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                         0, nobody_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1418,7 +1395,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 }
             } else if (activelist.getPersonsAhead() == 1) {
                 if (activelist.getAppxWaitingTime() == 0) {
-
                     Spannable spannable1 = new SpannableString(one_person_ahead);
                     spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                             0, one_person_ahead.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1430,7 +1406,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     tv_personahead.setText(spannable1);
                 }
             } else {
-
                 Spannable spannable1 = new SpannableString(secondWord1 + " " + firstWord1);
                 spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                         0, firstWord1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1446,7 +1421,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         icon_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getId()), activelist.getBusinessName(),"checkin");
+            callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getId()), activelist.getBusinessName(),"checkin");
             }
         });
         if (header.equalsIgnoreCase("old")) {
@@ -1495,7 +1470,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.purple));
             tv_check_in.setVisibility(View.GONE);
         }
-
         if (activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
             tv_check_in.setVisibility(View.GONE);
             tv_status.setText("Started");
@@ -1505,7 +1479,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
             tv_status.setTextColor(mContext.getResources().getColor(R.color.cyan));
             tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.cyan));
         }
-
         if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
             if (activelist.getParentUuid() != null) {
                 tv_status.setVisibility(View.GONE);
@@ -1519,15 +1492,11 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 tv_statusSmall.setTextColor(mContext.getResources().getColor(R.color.gray));
             }
         }
-
-
         if (!(activelist.getPaymentStatus().equalsIgnoreCase("FullyPaid")) && (activelist.getBillViewStatus() != null) || activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
             if (activelist.getAmountDue() != 0) {
-
                 if (activelist.getBillViewStatus() != null && activelist.getBillViewStatus().equalsIgnoreCase("Show") && activelist.getAmountDue() > 0 && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
                     btn_pay.setVisibility(View.VISIBLE);
                     btn_pay.setText("PAY");
-
                     if (activelist.getAmountDue() > 0) {
                         tv_prepaid.setVisibility(View.VISIBLE);
                         tv_prepaid.setText("Amount Due: ₹ " + Config.getAmountinTwoDecimalPoints(activelist.getAmountDue()));
@@ -1545,13 +1514,10 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 tv_makepay.setVisibility(View.VISIBLE);
                 paymentLayout.setVisibility(View.VISIBLE);
                 btn_pay.setText("PAY");
-
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 Date time = new Date();
                 Log.i("shankar", simpleDateFormat.format(time));
-
                 String checkinTime = activelist.getDate() + " " + activelist.getCheckInTime();
-
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
                 try {
                     Date date2 = format.parse(checkinTime);
@@ -1559,12 +1525,9 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                     if (diff < 0) {
                         Date date3 = subtractDays(date2, 1);
                         long diff1 = (time.getTime() - date3.getTime());
-
                         final long diffMins = diff1 / 60000;
-
                         if (diffMins <= 15) {
                             new CountDownTimer(diff1, 60000) {
-
                                 public void onTick(long millisUntilFinished) {
                                     long mins = 15 - diffMins;
                                     if (activelist.getParentUuid() != null) {
@@ -1573,21 +1536,16 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                                         tv_makepay.setText("");
                                         mins--;
                                     }
-
                                 }
-
                                 public void onFinish() {
                                     tv_makepay.setVisibility(View.GONE);
                                 }
                             }.start();
                         }
-
                     }
                     final long diffMins = diff / 60000;
-
                     if (diffMins <= 15) {
                         new CountDownTimer(diff, 60000) {
-
                             public void onTick(long millisUntilFinished) {
                                 long mins = 15 - diffMins;
                                 if (activelist.getParentUuid() != null) {
@@ -1596,7 +1554,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                                     tv_makepay.setText("");
                                     mins--;
                                 }
-
                             }
 
                             public void onFinish() {
@@ -1640,31 +1597,25 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Config.logV("Button Pay@@@@@@@@@@@@@@@@@" + activelist.getWaitlistStatus());
-                // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
-                String consumer = Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName());
-                if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-                    callbacks.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), activelist.getAmountDue(),activelist.getConsumer().getId());
-                } else {
-                    callbacks.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), consumer,activelist.getConsumer().getId());
-                }
+            Config.logV("Button Pay@@@@@@@@@@@@@@@@@" + activelist.getWaitlistStatus());
+            // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
+            String consumer = Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName());
+            if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
+                callbacks.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), activelist.getAmountDue(),activelist.getConsumer().getId());
+            } else {
+                callbacks.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), consumer,activelist.getConsumer().getId());
+            }
             }
         });
-
-
         /*if(header.equalsIgnoreCase("old")) {*/
-        if (activelist.getWaitlistStatus().
-
-                equalsIgnoreCase("done")) {
+        if (activelist.getWaitlistStatus().equalsIgnoreCase("done")) {
             icon_rate.setVisibility(View.VISIBLE);
         } else {
             icon_rate.setVisibility(View.GONE);
         }
-
         icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_star_line, 0, 0);
         if (activelist.getRating() != null) {
             if (Integer.parseInt(activelist.getRating().getStars()) > 0) {
-
                 icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.star_full, 0, 0);
             } else {
                 icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_star_line, 0, 0);
@@ -1673,8 +1624,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         icon_rate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                callback.onMethodRating(String.valueOf(activelist.getId()), activelist.getYnwUuid(), mTodayFlag, mFutureFlag, mOldFlag);
+            callback.onMethodRating(String.valueOf(activelist.getId()), activelist.getYnwUuid(), mTodayFlag, mFutureFlag, mOldFlag);
             }
         });
 
@@ -1682,7 +1632,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
             travelDetailsLayout.setVisibility(View.GONE);
             icon_cancel.setVisibility(View.GONE);
         } else {
-
             if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn") || activelist.getWaitlistStatus().equalsIgnoreCase("arrived") || activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
                 icon_cancel.setVisibility(View.VISIBLE);
             } else {
@@ -1738,9 +1687,7 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
 
     @Override
     public void onLocationChanged(Location location) {
-
         distance(location.getLatitude(), location.getLongitude(), 10.5276, 76.2144);
-
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         JSONObject jsonObj = new JSONObject();
         try {
@@ -1762,12 +1709,10 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 try {
                     if (response.code() == 200) {
                         Log.i("MELVINS", "UpdateLatLong");
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -1776,8 +1721,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
             }
         });
-
-
     }
 
 
@@ -1791,7 +1734,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
         dist = Math.acos(dist);
         dist = rad2deg(dist);
         dist = dist * 60 * 1.1515;
-
         Log.i("DistanceVivek", String.valueOf(dist));
         return (dist);
     }
@@ -1799,7 +1741,6 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
     private double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
-
     private double rad2deg(double rad) {
         return (rad * 180.0 / Math.PI);
     }
@@ -1823,6 +1764,4 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
     }
-
-
 }

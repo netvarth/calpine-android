@@ -1260,6 +1260,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (response.body().getHits().getHit().get(i).getFields().getTerminologies() != null) {
                                     search.setTerminologies(response.body().getHits().getHit().get(i).getFields().getTerminologies());
                                 }
+                                if (response.body().getHits().getHit().get(i).getFields().getProviders() != null) {
+                                    search.setProviders(response.body().getHits().getHit().get(i).getFields().getProviders());
+                                }
                                 if (response.body().getHits().getHit().get(i).getFields().getOnline_checkins() != null) {
                                     search.setOnline_checkins(response.body().getHits().getHit().get(i).getFields().getOnline_checkins());
                                 }
@@ -1502,7 +1505,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (response.body().getHits().getHit().get(i).getFields().getTerminologies() != null) {
                                     search.setTerminologies(response.body().getHits().getHit().get(i).getFields().getTerminologies());
                                 }
-
+                                if (response.body().getHits().getHit().get(i).getFields().getProviders() != null) {
+                                    search.setProviders(response.body().getHits().getHit().get(i).getFields().getProviders());
+                                }
 
                                 if (response.body().getHits().getHit().get(i).getFields().getFuture_checkins() != null) {
                                     search.setFuture_checkins(response.body().getHits().getHit().get(i).getFields().getFuture_checkins());
@@ -1713,6 +1718,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     if (mSearchRespPass.get(i).getTerminologies() != null) {
                                         searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
                                     }
+                                    if (mSearchRespPass.get(i).getProviders() != null) {
+                                        searchList.setProviders(mSearchRespPass.get(i).getProviders());
+                                    }
                                     if (mSearchRespPass.get(i).getOnline_checkins() != null) {
                                         searchList.setOnline_checkins(mSearchRespPass.get(i).getOnline_checkins());
                                     }
@@ -1869,6 +1877,9 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     if (mSearchRespPass.get(i).getTerminologies() != null) {
                                         searchList.setTerminologies(mSearchRespPass.get(i).getTerminologies());
                                     }
+                                    if (mSearchRespPass.get(i).getProviders() != null) {
+                                        searchList.setProviders(mSearchRespPass.get(i).getProviders());
+                                    }
                                     if (mSearchRespPass.get(i).getOnline_checkins() != null) {
                                         searchList.setOnline_checkins(mSearchRespPass.get(i).getOnline_checkins());
                                     }
@@ -1911,7 +1922,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
                                         searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
                                     }
-                                    Log.i("mSearchResponse", new Gson().toJson(mSearchRespPass));
+//                                    Log.i("mSearchResponse", new Gson().toJson(mSearchRespPass));
                                     searchList.setQId(mSearchRespPass.get(i).getId());
                                     if (mQueueList.get(i).getMessage() != null) {
                                         searchList.setMessage(mQueueList.get(i).getMessage());
@@ -1955,7 +1966,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     mSearchListModel.add(searchList);
                                 }
                                 final List<SearchListModel> results = mSearchListModel;
-                                Log.i("FinalResult", new Gson().toJson(results));
+//                                Log.i("FinalResult", new Gson().toJson(results));
                                 progressBar.setVisibility(View.GONE);
                                 pageadapter.addAll(results);
                                 pageadapter.notifyDataSetChanged();

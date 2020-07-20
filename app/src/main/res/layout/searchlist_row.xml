@@ -128,7 +128,16 @@
                                 android:src="@drawable/jdn_icon"
                                 android:visibility="gone" />
                         </LinearLayout>
-
+                        <TextView
+                            android:id="@+id/count_doctors"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/padding3"
+                            android:gravity="left"
+                            android:text=""
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
                         <TextView
                             android:id="@+id/branch_name"
                             android:layout_width="wrap_content"
@@ -148,7 +157,6 @@
                             android:text="Name"
                             android:textColor="@color/black"
                             android:textSize="@dimen/txtsize_12" />
-
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -323,18 +331,6 @@
 
 
             </HorizontalScrollView>
-
-            <TextView
-                android:id="@+id/count_doctors"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/padding3"
-                android:gravity="left"
-                android:text=""
-                android:textColor="@color/title_consu"
-                android:textSize="13sp"
-                android:visibility="gone" />
 
 
             <TextView

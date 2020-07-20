@@ -14,6 +14,15 @@ public class DepartmentModal {
     String departmentCode;
     String departmentDescription;
     ArrayList<SearchService> services;
+    ArrayList<ProviderUserModel> users;
+
+    public ArrayList<ProviderUserModel> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<ProviderUserModel> users) {
+        this.users = users;
+    }
 
     public String getDepartmentName() {
         return departmentName;

@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.connection;
 
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
+import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
@@ -45,6 +46,7 @@ import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ShareLocation;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -236,6 +238,9 @@ public interface ApiInterface {
 
     @GET("{consumerID}/terminologies.json")
     Call<SearchTerminology> getSearchViewTerminology(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
+
+    @GET("{uniqueId}/departmentProviders.json")
+    Call<ArrayList<DepartmentModal>> getUserandDepartments(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
 
     @GET("consumer/waitlist/services/{id}")

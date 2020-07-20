@@ -962,7 +962,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     myViewHolder.txtapptSeeAll.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            adaptercallback.onMethodServiceCallbackAppointment(aServicesList, mTitle, mSearchDepartmentList);
+                        adaptercallback.onMethodServiceCallbackAppointment(aServicesList, mTitle, mSearchDepartmentList);
                         }
                     });
                 } else{
@@ -1161,18 +1161,24 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         } else { // Conventional (Token with Waiting time)
                                             myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                                             myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                                            String spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue(),myViewHolder);
+                                            String spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue());
                                             myViewHolder.tv_waittime.setText(spannable);
                                             myViewHolder.txtwaittime_expand.setText(spannable);
+                                            myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
+                                            String message = Config.getPersonsAheadText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                                            myViewHolder.txt_peopleahead.setText(message);
                                         }
                                     } else { // Conventional/Fixed
                                         myViewHolder.btn_checkin.setText("Check-in".toUpperCase());
                                         myViewHolder.btn_checkin_expand.setText("Check-in".toUpperCase());
                                         myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                                         myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                                        String spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue(),myViewHolder);
+                                        String spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue());
                                         myViewHolder.tv_waittime.setText(spannable);
                                         myViewHolder.txtwaittime_expand.setText(spannable);
+                                        myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
+                                        String message = Config.getPersonsAheadText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                                        myViewHolder.txt_peopleahead.setText(message);
                                     }
                                 }else{
                                     disableCheckinButton(myViewHolder);
@@ -1180,9 +1186,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 if (date2 != null && date1.compareTo(date2) < 0) {
                                     myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
                                     myViewHolder.txtwaittime_expand.setVisibility(View.VISIBLE);
-                                    String spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue(),myViewHolder);
+                                    String spannable = getWaitingTime(mQueueList.get(i).getNextAvailableQueue());
                                     myViewHolder.tv_waittime.setText(spannable);
                                     myViewHolder.txtwaittime_expand.setText(spannable);
+                                    myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
+                                    String message = Config.getPersonsAheadText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
+                                    myViewHolder.txt_peopleahead.setText(message);
                                 }
                                 //Future Checkin
                                 if (mSearchSetting.isFutureDateWaitlist() && mQueueList.get(0).getNextAvailableQueue().getAvailableDate() != null) {
@@ -1206,7 +1215,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         }
     }
-    public static String getWaitingTime(NextAvailableQModel queue,MyViewHolder myViewHolder) {
+    public static String getWaitingTime(NextAvailableQModel queue) {
         String firstWord = "";
         String secondWord = "";
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -1228,15 +1237,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         if(queue.getServiceTime()!= null){
             firstWord = "Next Available Time ";
             if (type != null) {
-//                java.text.DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-//                java.text.DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-//                String inputDateStr = queue.getAvailableDate();
-//                Date datechange = null;
-//                try {
-//                    datechange = inputFormat.parse(inputDateStr);
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = null;
                 try {
@@ -1260,9 +1260,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             firstWord = "Est wait time";
             secondWord = "\n" + Config.getTimeinHourMinutes(queue.getQueueWaitingTime());
         }
-        myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
-        String message = Config.getPersonsAheadText(queue.getPersonAhead());
-        myViewHolder.txt_peopleahead.setText(message);
         // Spannable spannable = new SpannableString(firstWord + secondWord);
 //        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
 //        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

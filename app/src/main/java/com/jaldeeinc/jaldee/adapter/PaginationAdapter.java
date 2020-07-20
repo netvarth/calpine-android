@@ -498,13 +498,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void showUserInfo(MyViewHolder myViewHolder, SearchListModel searchdetailList) {
         myViewHolder.tv_count.setVisibility(View.GONE);
-        if (searchdetailList.getBranchSpCount() > 0) {
-            if (searchdetailList.getBranchSpCount() > 1) {
-                myViewHolder.tv_count.setText(" " + countTerminology + "s" + " " + ":" + " " + searchdetailList.getBranchSpCount());
+        if (searchdetailList.getProviders()!=null && searchdetailList.getProviders().size() > 0) {
+            Log.i("ProviderCount", String.valueOf(searchdetailList.getProviders().size()));
+            if (searchdetailList.getProviders().size() > 1) {
                 myViewHolder.tv_count.setVisibility(View.VISIBLE);
+                myViewHolder.tv_count.setText(searchdetailList.getProviders().size() + " " + Config.toTitleCase(countTerminology) + "s");
             } else {
-                myViewHolder.tv_count.setText(searchdetailList.getBranchSpCount() + " " + countTerminology);
                 myViewHolder.tv_count.setVisibility(View.VISIBLE);
+                myViewHolder.tv_count.setText(searchdetailList.getProviders().size() + " " + Config.toTitleCase(countTerminology));
             }
         } else {
             myViewHolder.tv_count.setVisibility(View.GONE);
@@ -514,7 +515,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.tv_branch_name.setText(searchdetailList.getBranch_name());
                 myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
             } else if ((searchdetailList.getAccountType().equals("0"))) {
-                myViewHolder.tv_count.setVisibility(View.VISIBLE);
+//                myViewHolder.tv_count.setVisibility(View.VISIBLE);
             } else {
                 myViewHolder.tv_branch_name.setVisibility(View.GONE);
             }
@@ -1495,7 +1496,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         myViewHolder.tv_peopleahead.setVisibility(View.GONE);
         myViewHolder.tv_qmessage.setVisibility(View.GONE);
         myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-        myViewHolder.tv_count.setVisibility(View.GONE);
+//        myViewHolder.tv_count.setVisibility(View.GONE);
     }
     public void disableCheckinButton(MyViewHolder myViewHolder) {
         myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));

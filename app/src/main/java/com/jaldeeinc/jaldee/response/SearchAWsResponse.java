@@ -492,6 +492,16 @@ public class SearchAWsResponse {
 
     ArrayList terminologies;
 
+    ArrayList providers;
+
+    public ArrayList getProviders() {
+        return providers;
+    }
+
+    public void setProviders(ArrayList providers) {
+        this.providers = providers;
+    }
+
     public ArrayList getBusiness_hours1() {
         return business_hours1;
     }
