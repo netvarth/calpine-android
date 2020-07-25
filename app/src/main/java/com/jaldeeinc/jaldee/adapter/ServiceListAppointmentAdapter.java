@@ -85,7 +85,6 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
     public void onBindViewHolder(final ServiceListAppointmentAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchAppointmentDepartmentServices serviceList = mServiceList.get(position);
 
-
         String serviceName = serviceList.getServices().get(position).getName();
         if(serviceList.getDepartmentId()!=0){
             String deptName = getDepartmentName(serviceList.getDepartmentId());

@@ -84,16 +84,8 @@ public class DeptListFragment extends RootFragment {
         mAdapter.setFields(department_List,mdepartmentMap,businessName);
         departmentList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-
-
-
     }
-
         return row;
-
-
     }
-
-
 }
 
