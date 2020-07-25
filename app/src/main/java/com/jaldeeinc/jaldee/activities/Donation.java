@@ -1882,12 +1882,12 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                         checkin_sector = response.body();
                         maxPartysize = 0;
                         if (checkin_sector.isPartySize() && !checkin_sector.isPartySizeForCalculation()) {
-                            layout_party.setVisibility(View.VISIBLE);
+                          //  layout_party.setVisibility(View.VISIBLE);
                             enableparty = true;
                             maxPartysize = checkin_sector.getMaxPartySize();
 
                         } else {
-                            layout_party.setVisibility(View.GONE);
+                         //   layout_party.setVisibility(View.GONE);
                             enableparty = false;
                         }
                         if (checkin_sector.isPartySizeForCalculation()) {

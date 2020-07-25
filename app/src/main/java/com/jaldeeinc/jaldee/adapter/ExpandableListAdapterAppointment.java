@@ -504,13 +504,18 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 tv_recom_loc.setText("Jaldee recommends you to enable location");
                 tv_recom_loc.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                 tv_recom_liveloc.setVisibility(View.GONE);
+                tv_enable_loc.setVisibility(View.VISIBLE);
+                tv_recom_loc.setVisibility(View.VISIBLE);
             } else if (activelist.getJaldeeApptDistanceTime() != null && activelist.getJaldeeApptDistanceTime().getJaldeeDistanceTime() != null) {
                 tv_enable_loc.setVisibility(View.GONE);
                 tv_recom_liveloc.setText(spannables, TextView.BufferType.SPANNABLE);
+                tv_recom_liveloc.setVisibility(View.VISIBLE);
                 tv_recom_loc.setVisibility(View.GONE);
 
-            } else {
 
+            } else {
+                tv_recom_liveloc.setVisibility(View.VISIBLE);
+                tv_recom_loc.setVisibility(View.VISIBLE);
                 tv_enable_loc.setVisibility(View.GONE);
                 tv_recom_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getProviderAccount().getBusinessName());
                 tv_recom_liveloc.setText(spannable, TextView.BufferType.SPANNABLE);

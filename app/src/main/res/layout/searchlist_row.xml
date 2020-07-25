@@ -260,7 +260,6 @@
 
                 <TextView
                     android:id="@+id/txtspec2"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -333,17 +332,17 @@
             </HorizontalScrollView>
 
 
-            <TextView
-                android:id="@+id/departments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding5"
-                android:gravity="center_horizontal"
-                android:text="Departments"
-                android:textColor="@color/sky_blue"
-                android:textSize="@dimen/txtsize_12"
-                android:textStyle="bold"
-                android:visibility="gone"></TextView>
+<!--            <TextView-->
+<!--                android:id="@+id/departments"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="@dimen/padding5"-->
+<!--                android:gravity="center_horizontal"-->
+<!--                android:text="Departments"-->
+<!--                android:textColor="@color/sky_blue"-->
+<!--                android:textSize="@dimen/txtsize_12"-->
+<!--                android:textStyle="bold"-->
+<!--                android:visibility="gone"></TextView>-->
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -445,24 +444,25 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/services"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/padding5"
-            android:gravity="center_horizontal"
-            android:text="No Services"
-            android:textColor="@color/sky_blue"
-            android:textSize="@dimen/txtsize_12"
-            android:textStyle="bold"
-            android:visibility="gone"></TextView>
+<!--        <TextView-->
+<!--            android:id="@+id/services"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="@dimen/padding5"-->
+<!--            android:gravity="center_horizontal"-->
+<!--            android:text="No Services"-->
+<!--            android:textColor="@color/sky_blue"-->
+<!--            android:textSize="@dimen/txtsize_12"-->
+<!--            android:textStyle="bold"-->
+<!--            android:visibility="gone"></TextView>-->
 
         <View
             android:id="@+id/separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@color/button_gray" />
+            android:background="@color/button_gray"
+            android:visibility="gone"/>
 
 
         <TextView
@@ -519,7 +519,26 @@
             android:text=""
             android:textColor="@color/title_grey"
             android:textSize="@dimen/txtsize_12"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/btnbook_service"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding5"
+            android:layout_gravity="center"
+            android:background="@color/green"
+            android:gravity="center"
+            android:paddingLeft="@dimen/padding3"
+            android:paddingRight="@dimen/padding3"
+            android:text="Book Service"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/txtsize_12"
+            android:visibility="gone"/>
+
 
 
         <LinearLayout
@@ -559,7 +578,8 @@
                 android:text="Check-In"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/txtsize_12" />
+                android:textSize="@dimen/txtsize_12"
+                android:visibility="gone"/>
 
             <!--  android:textSize="@dimen/txtsize_subtitle" />-->
         </LinearLayout>

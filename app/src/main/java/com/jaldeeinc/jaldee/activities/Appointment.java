@@ -254,6 +254,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     BottomSheetDialog dialog;
     static String schdId;
     EditText edt_message;
+    boolean virtualServices;
 
 
     @Override
@@ -620,6 +621,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 terminology = extras.getString("terminology", "");
                 isShowToken = extras.getString("isShowToken", "");
                 getAvail_date = extras.getString("getAvail_date", "");
+                virtualServices = extras.getBoolean("virtualservices");
 
             }
         }
@@ -2661,6 +2663,25 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             mService.setCallingMode(response.body().get(i).getCallingMode());
                             mService.setValue(response.body().get(i).getValue());
                             LServicesList.add(mService);
+                            if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
+                                if (mBusinessDataList != null) {
+                                    if (!mBusinessDataList.isVirtualServices()) {
+                                        if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
+                                            LServicesList.remove(mService);
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                    if (!virtualServices) {
+                                        if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
+                                            LServicesList.remove(mService);
+
+                                        }
+
+                                    }
+                                }
+
                         }
                         gServiceList.addAll(LServicesList);
                         // Department Section Starts

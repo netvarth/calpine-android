@@ -88,6 +88,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     ArrayList<SearchViewDetail> mSearchGallery;
     String uniqueID;
     List<QueueList> mQueueList;
+    boolean flag_checkins = false, flag_appts = false,flag_dnts = false;
 
     public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList) {
         this.context = context;
@@ -241,7 +242,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (searchdetailList.getDepartments() != null) {
                     if (searchdetailList.getDepartments().size() > 0) {
                         if (searchdetailList.getDepartments().size() == 1) {
-                            myViewHolder.L_departments.setVisibility(View.VISIBLE);
+                          //  myViewHolder.L_departments.setVisibility(View.VISIBLE);
                             myViewHolder.tv_dep1.setVisibility(View.VISIBLE);
                             myViewHolder.tv_dep1.setText(searchdetailList.getDepartments().get(0).toString());
                             myViewHolder.tv_dep1.setTextSize(13);
@@ -249,7 +250,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             myViewHolder.tv_dep_more.setVisibility(View.GONE);
                             myViewHolder.tv_dep22.setVisibility(View.GONE);
                         } else {
-                            myViewHolder.L_departments.setVisibility(View.VISIBLE);
+                          //  myViewHolder.L_departments.setVisibility(View.VISIBLE);
                             myViewHolder.tv_dep1.setText(searchdetailList.getDepartments().get(0) + "   ");
                             myViewHolder.tv_dep1.setTextSize(13);
                             myViewHolder.tv_dep1.setVisibility(View.VISIBLE);
@@ -376,7 +377,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (searchdetailList.getDepartments() != null) {
                     if (searchdetailList.getDepartments().size() > 0) {
                         if (searchdetailList.getDepartments().size() == 1) {
-                            myViewHolder.L_departments_app.setVisibility(View.VISIBLE);
+                          //  myViewHolder.L_departments_app.setVisibility(View.VISIBLE);
                             myViewHolder.tv_dep1_app.setVisibility(View.VISIBLE);
                             myViewHolder.tv_dep1_app.setText(searchdetailList.getDepartments().get(0).toString());
                             myViewHolder.tv_dep1_app.setTextSize(13);
@@ -384,7 +385,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             myViewHolder.tv_dep_more_app.setVisibility(View.GONE);
                             myViewHolder.tv_dep22_app.setVisibility(View.GONE);
                         } else {
-                            myViewHolder.L_departments_app.setVisibility(View.VISIBLE);
+                          //  myViewHolder.L_departments_app.setVisibility(View.VISIBLE);
                             myViewHolder.tv_dep1_app.setText(searchdetailList.getDepartments().get(0) + "   ");
                             myViewHolder.tv_dep1_app.setTextSize(13);
                             myViewHolder.tv_dep1_app.setVisibility(View.VISIBLE);
@@ -439,12 +440,32 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 if (searchdetailList.getRating() != null) {
                     myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
                 }
+                if(flag_checkins || flag_appts || flag_dnts){
+                    myViewHolder.btnbookservice.setVisibility(View.VISIBLE);
+                    if(searchdetailList.getDepartments()!=null){
+                    myViewHolder.L_departments.setVisibility(View.VISIBLE);}
+                    else if(searchdetailList.getServices()!=null){
+                        myViewHolder.L_services.setVisibility(View.VISIBLE);
+                    }
+
+                }
+                else{
+                    myViewHolder.btnbookservice.setVisibility(View.GONE);
+                }
+                myViewHolder.btnbookservice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(), searchdetailList.getClaimable());
+                    }
+                });
+
                 break;
             case LOADING:
 //                Do nothing
                 final LoadingVH LHHolder = (LoadingVH) holder;
                 break;
         }
+
     }
     private void disableDepartments(MyViewHolder myViewHolder) {
         myViewHolder.L_departments.setVisibility(View.GONE);
@@ -582,26 +603,27 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         myViewHolder.btndonations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iAppoinment = new Intent(v.getContext(), Donation.class);
-                iAppoinment.putExtra("serviceId", Integer.parseInt(searchdetailList.getLocation_id1()));
-                iAppoinment.putExtra("uniqueID", searchdetailList.getUniqueid());
-                iAppoinment.putExtra("accountID", searchdetailList.getId());
-                iAppoinment.putExtra("googlemap", searchdetailList.getLocation1());
-                iAppoinment.putExtra("from", "checkin");
-                iAppoinment.putExtra("title", searchdetailList.getTitle());
-                iAppoinment.putExtra("place", searchdetailList.getPlace1());
-                iAppoinment.putExtra("sector", searchdetailList.getSectorname());
-                iAppoinment.putExtra("subsector", searchdetailList.getSub_sector());
-                iAppoinment.putExtra("terminology", termilogy);
-                iAppoinment.putExtra("isshowtoken", searchdetailList.isShowToken());
-                iAppoinment.putExtra("getAvail_date", searchdetailList.getAvail_date());
-                context.startActivity(iAppoinment);
+                Intent  iDonation = new Intent(v.getContext(), Donation.class);
+                iDonation.putExtra("serviceId", Integer.parseInt(searchdetailList.getLocation_id1()));
+                iDonation.putExtra("uniqueID", searchdetailList.getUniqueid());
+                iDonation.putExtra("accountID", searchdetailList.getId());
+                iDonation.putExtra("googlemap", searchdetailList.getLocation1());
+                iDonation.putExtra("from", "checkin");
+                iDonation.putExtra("title", searchdetailList.getTitle());
+                iDonation.putExtra("place", searchdetailList.getPlace1());
+                iDonation.putExtra("sector", searchdetailList.getSectorname());
+                iDonation.putExtra("subsector", searchdetailList.getSub_sector());
+                iDonation.putExtra("terminology", termilogy);
+                iDonation.putExtra("isshowtoken", searchdetailList.isShowToken());
+                iDonation.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                context.startActivity( iDonation);
             }
         });
         if (searchdetailList.getOnline_profile() != null && searchdetailList.getDonation_status() != null) {
             if (searchdetailList.getDonation_status().equals("1") && searchdetailList.getOnline_profile().equals("1")) {
-                myViewHolder.L_donation.setVisibility(View.VISIBLE);
-                myViewHolder.L_donations.setVisibility(View.VISIBLE);
+               // myViewHolder.L_donation.setVisibility(View.VISIBLE);
+              //  myViewHolder.L_donations.setVisibility(View.VISIBLE);
+                flag_dnts = true;
             } else {
                 myViewHolder.L_donation.setVisibility(View.GONE);
                 myViewHolder.L_donations.setVisibility(View.GONE);
@@ -1135,9 +1157,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if(searchdetailList!=null && searchdetailList.getOnline_profile()!=null) {
             myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
             if (searchdetailList.getOnline_profile().equalsIgnoreCase("1") && searchdetailList.isWaitlistEnabled()) {
-                myViewHolder.L_checkin.setVisibility(View.VISIBLE);
-                myViewHolder.L_services.setVisibility(View.VISIBLE);
-                myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+              //  myViewHolder.L_checkin.setVisibility(View.VISIBLE);
+              //  myViewHolder.L_services.setVisibility(View.VISIBLE);
+             //   myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                flag_checkins = true;
                 if(searchdetailList.isShowToken()){
                     myViewHolder.btncheckin.setText("GET TOKEN");
                 }
@@ -1181,7 +1204,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                             //Future Checkin
                             if(searchdetailList.getFuture_checkins()!=null && searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
-                                myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
+                             //   myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
+                                flag_checkins = true;
                                 if (searchdetailList.isShowToken()) {
                                     myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
                                 } else {
@@ -1264,20 +1288,20 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         myViewHolder.btnappointments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iAppoinment = new Intent(v.getContext(), Appointment.class);
-                iAppoinment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
-                iAppoinment.putExtra("uniqueID", searchdetailList.getUniqueid());
-                iAppoinment.putExtra("accountID", searchdetailList.getId());
-                iAppoinment.putExtra("googlemap", searchdetailList.getLocation1());
-                iAppoinment.putExtra("from", "checkin");
-                iAppoinment.putExtra("title", searchdetailList.getTitle());
-                iAppoinment.putExtra("place", searchdetailList.getPlace1());
-                iAppoinment.putExtra("sector", searchdetailList.getSectorname());
-                iAppoinment.putExtra("subsector", searchdetailList.getSub_sector());
-                iAppoinment.putExtra("terminology", termilogy);
-                iAppoinment.putExtra("isshowtoken", searchdetailList.isShowToken());
-                iAppoinment.putExtra("getAvail_date", searchdetailList.getAvail_date());
-                context.startActivity(iAppoinment);
+                Intent iAppointment = new Intent(v.getContext(), Appointment.class);
+                iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
+                iAppointment.putExtra("uniqueID", searchdetailList.getUniqueid());
+                iAppointment.putExtra("accountID", searchdetailList.getId());
+                iAppointment.putExtra("googlemap", searchdetailList.getLocation1());
+                iAppointment.putExtra("from", "checkin");
+                iAppointment.putExtra("title", searchdetailList.getTitle());
+                iAppointment.putExtra("place", searchdetailList.getPlace1());
+                iAppointment.putExtra("sector", searchdetailList.getSectorname());
+                iAppointment.putExtra("subsector", searchdetailList.getSub_sector());
+                iAppointment.putExtra("terminology", termilogy);
+                iAppointment.putExtra("isshowtoken", searchdetailList.isShowToken());
+                iAppointment.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                context.startActivity( iAppointment);
             }
         });
         if (searchdetailList.getAppt_services() != null) {
@@ -1357,8 +1381,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         if (searchdetailList.getOnline_profile() != null) {
             if (searchdetailList.isCheckinAllowed() && searchdetailList.getOnline_profile().equals("1")) {
-                myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
-                myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+             //   myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
+            //    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+                flag_appts = true;
             } else {
                 myViewHolder.L_appoinment.setVisibility(View.GONE);
                 myViewHolder.L_appointments.setVisibility(View.GONE);
@@ -1541,7 +1566,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
         }
-        myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+       // myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
         String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
         myViewHolder.tv_peopleahead.setText(message);
     }
@@ -1681,7 +1706,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView profile, profile1, profile2;
         RatingBar rating;
         TextView tv_claimable, tv_distance, tv_branch_name;
-        Button btncheckin,btnappointments,btndonations;
+        Button btncheckin,btnappointments,btndonations,btnbookservice;
         LinearLayout layout_row;
         TextView mImageViewText,tv_useWeb;
         LinearLayout layout_type;
@@ -1707,9 +1732,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             L_donations = view.findViewById(R.id.donationList);
             tv_distance = view.findViewById(R.id.distance);
             btncheckin = view.findViewById(R.id.btncheckin);
-
             btnappointments = view.findViewById(R.id.btnappointments);
             btndonations = view.findViewById(R.id.btndonations);
+            btnbookservice = view.findViewById(R.id.btnbook_service);
             tv_Futuredate = view.findViewById(R.id.txt_diffdate);
             tv_WaitTime = view.findViewById(R.id.txtWaitTime);
             L_specialization = view.findViewById(R.id.Lspec);
@@ -1721,8 +1746,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             tv_spec22 = view.findViewById(R.id.txtspec22);
             mImageViewText = view.findViewById(R.id.mImageViewText);
             layout_type = view.findViewById(R.id.layout_type);
-            tv_dept = view.findViewById(R.id.departments);
-            tv_services = view.findViewById(R.id.services);
+         //   tv_dept = view.findViewById(R.id.departments);
+         //   tv_services = view.findViewById(R.id.services);
             tv_dep1 = view.findViewById(R.id.txtdep1);
             tv_dep2 = view.findViewById(R.id.txtdep2);
             tv_dep22 = view.findViewById(R.id.txtdep22);

@@ -243,12 +243,14 @@ public class AboutUsFragment extends RootFragment {
         });
         WebSettings settings = aboutWeb.getSettings();
         settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         aboutWeb.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         aboutWeb.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
         WebSettings settingsterm = termsWeb.getSettings();
         settingsterm.setJavaScriptEnabled(true);
+        settingsterm.setDomStorageEnabled(true);
         settingsterm.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         termsWeb.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         termsWeb.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -256,6 +258,7 @@ public class AboutUsFragment extends RootFragment {
 
         WebSettings settingprivacy = privacyWeb.getSettings();
         settingprivacy.setJavaScriptEnabled(true);
+        settingprivacy.setDomStorageEnabled(true);
         settingprivacy.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         privacyWeb.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         privacyWeb.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);

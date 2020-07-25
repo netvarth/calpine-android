@@ -126,6 +126,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     String mbranchId, latitude, longitude, lat_long;
     boolean online_presence;
     boolean donationFundRaising;
+    boolean virtualServices;
     Boolean firstCouponAvailable, couponAvailable;
     JdnResponse jdnList;
     String jdnDiscount, jdnMaxvalue;
@@ -553,6 +554,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             if (response.body().get(i).getServices() == null) {
                                 SearchAppointmentDepartmentServices mService = new SearchAppointmentDepartmentServices();
                                 mService.setName(response.body().get(i).getName());
+                                mService.setDescription(response.body().get(i).getDescription());
+                                mService.setTotalAmount(response.body().get(i).getTotalAmount());
+                                mService.setServiceDuration(response.body().get(i).getServiceDuration());
+                                mService.setTaxable(response.body().get(i).isTaxable());
+                                mService.setServicegallery(response.body().get(i).getServicegallery());
+                                mService.setPrePayment(response.body().get(i).isPrePayment());
+                                mService.setMinPrePaymentAmount(response.body().get(i).getMinPrePaymentAmount());
+                                mService.setUrl(response.body().get(i).getUrl());
+                                mService.setThumbUrl(response.body().get(i).getThumbUrl());
+
                                 LaServicesList.add(mService);
                             }
                             else{
@@ -1282,6 +1293,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         mbranchId = mBusinessDataList.getBranchId();
                         online_presence = mBusinessDataList.isOnlinePresence();
                         donationFundRaising = mBusinessDataList.isDonationFundRaising();
+                        virtualServices = mBusinessDataList.isVirtualServices();
                         lat_long = mBusinessDataList.getBaseLocation().getLattitude() + "," + mBusinessDataList.getBaseLocation().getLongitude();
                         Config.logV("Provider------------" + new Gson().toJson(mBusinessDataList));
                         if (response.body().getId() != 0) {
@@ -1882,7 +1894,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     }else{
                         uniID = homeUniqueId;
                     }
-                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence,donationFundRaising,gServiceList,LaServicesList);
+                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence,donationFundRaising,gServiceList,LaServicesList,virtualServices);
                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
                     mSearchLocAdapter.notifyDataSetChanged();
                 }

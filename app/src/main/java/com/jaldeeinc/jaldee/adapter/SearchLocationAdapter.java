@@ -152,12 +152,13 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     boolean isShowTokenId;
     boolean online_presence;
     boolean donationFundRaising;
+    boolean virtualServices;
     ArrayList<SearchDepartment> mSearchDepartmentList;
     ArrayList<SearchDonation> gServicesList;
     ArrayList<SearchAppointmentDepartmentServices> aServicesList;
 
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments, List<SearchAWsResponse> mSearchRespDetails, SearchAWsResponse mSearchAWSResponse, List<ScheduleList> SearchScheduleList, boolean online_presence, boolean donationFundRaising, ArrayList<SearchDonation> gServicesList, ArrayList<SearchAppointmentDepartmentServices> aServiceList) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments, List<SearchAWsResponse> mSearchRespDetails, SearchAWsResponse mSearchAWSResponse, List<ScheduleList> SearchScheduleList, boolean online_presence, boolean donationFundRaising, ArrayList<SearchDonation> gServicesList, ArrayList<SearchAppointmentDepartmentServices> aServiceList, boolean virtualServices) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchRespDetail = mSearchRespDetails;
@@ -182,6 +183,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         this.donationFundRaising = donationFundRaising;
         this.gServicesList = gServicesList;
         this.aServicesList = aServiceList;
+        this.virtualServices = virtualServices;
     }
     @Override
     public SearchLocationAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -337,6 +339,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("virtualservices",virtualServices);
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -355,6 +358,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("virtualservices",virtualServices);
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -373,6 +377,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("virtualservices",virtualServices);
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -391,6 +396,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("sector", sector);
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("virtualservices",virtualServices);
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -408,6 +414,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iAppointment.putExtra("sector", sector);
                 iAppointment.putExtra("subsector", subsector);
                 iAppointment.putExtra("terminology", terminology);
+                iAppointment.putExtra("virtualservices",virtualServices);
                 mContext.startActivity(iAppointment);
             }
         });
@@ -415,18 +422,18 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.btn_donations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent iAppointment = new Intent(v.getContext(), Donation.class);
-                iAppointment.putExtra("serviceId", searchLoclist.getId());
-                iAppointment.putExtra("uniqueID", mUniqueID);
-                iAppointment.putExtra("accountID", accountID);
-                iAppointment.putExtra("from", "searchdetail_checkin");
-                iAppointment.putExtra("title", mTitle);
-                iAppointment.putExtra("place", searchLoclist.getPlace());
-                iAppointment.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
-                iAppointment.putExtra("sector", sector);
-                iAppointment.putExtra("subsector", subsector);
-                iAppointment.putExtra("terminology", terminology);
-                mContext.startActivity(iAppointment);
+                Intent iDonation = new Intent(v.getContext(), Donation.class);
+                iDonation.putExtra("serviceId", searchLoclist.getId());
+                iDonation.putExtra("uniqueID", mUniqueID);
+                iDonation.putExtra("accountID", accountID);
+                iDonation.putExtra("from", "searchdetail_checkin");
+                iDonation.putExtra("title", mTitle);
+                iDonation.putExtra("place", searchLoclist.getPlace());
+                iDonation.putExtra("googlemap", searchLoclist.getGoogleMapUrl());
+                iDonation.putExtra("sector", sector);
+                iDonation.putExtra("subsector", subsector);
+                iDonation.putExtra("terminology", terminology);
+                mContext.startActivity( iDonation);
             }
         });
 
@@ -719,6 +726,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 iService.putExtra("isPrePayment", isPrepayment);
                                 iService.putExtra("MinPrePaymentAmount", minPrepayment);
                                 iService.putExtra("departmentName", mDepartmentCode);
+                                iService.putExtra("from", "chk");
                                 mContext.startActivity(iService);
                             }
                         });
@@ -773,6 +781,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 iService.putExtra("title", mTitle);
                                 iService.putExtra("isPrePayment", isPrepayment);
                                 iService.putExtra("MinPrePaymentAmount", minPrepayment);
+                                iService.putExtra("from","chk");
                                 mContext.startActivity(iService);
                             }
                         });
@@ -799,6 +808,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 iService.putExtra("title", mTitle);
                                 iService.putExtra("isPrePayment", isPrepayment1);
                                 iService.putExtra("MinPrePaymentAmount", minPrepayment1);
+                                iService.putExtra("from", "chk");
                                 mContext.startActivity(iService);
                             }
                         });
@@ -923,6 +933,21 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             dynaText.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    for (int i = 0; i < aServicesList.size(); i++) {
+                                        if (aServicesList.get(i).getName().toLowerCase().equalsIgnoreCase(aServicesList.get(finalI).getName().toLowerCase())) {
+                                            Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                            iService.putExtra("name", aServicesList.get(i).getName().toString());
+                                            iService.putExtra("duration",String.valueOf(aServicesList.get(i).getServiceDuration()));
+                                            iService.putExtra("price", String.valueOf(aServicesList.get(i).getTotalAmount()));
+                                            iService.putExtra("desc", aServicesList.get(i).getDescription());
+                                            iService.putExtra("servicegallery", aServicesList.get(i).getServicegallery());
+                                            iService.putExtra("taxable", aServicesList.get(i).isTaxable());
+                                            iService.putExtra("isPrePayment",  aServicesList.get(i).isPrePayment());
+                                            iService.putExtra("MinPrePaymentAmount", String.valueOf(aServicesList.get(i).getMinPrePaymentAmount()));
+                                            iService.putExtra("from","appt");
+                                            mContext.startActivity(iService);
+                                        }
+                                    }
                                     //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
                                 }
                             });
@@ -1402,8 +1427,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         disableCheckinButton(myViewHolder);
         myViewHolder.btn_checkin.setVisibility(View.GONE);
         myViewHolder.btn_checkin_expand.setVisibility(View.GONE);
-        myViewHolder.LService_2.setVisibility(View.GONE);
-        myViewHolder.txtservices.setVisibility(View.GONE);
+        myViewHolder.LService_2.setVisibility(View.VISIBLE);
+        myViewHolder.txtservices.setVisibility(View.VISIBLE);
     }
     public void enableCheckinButton(MyViewHolder myViewHolder) {
         myViewHolder.btn_checkin.setBackgroundColor(mContext.getResources().getColor(R.color.green));

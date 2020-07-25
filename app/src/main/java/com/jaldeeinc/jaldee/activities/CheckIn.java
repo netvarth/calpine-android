@@ -230,6 +230,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     String callingMode,valueNumber,serviceInstructions;
     File file;
     EditText edt_message;
+    boolean virtualServices;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -570,6 +571,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 terminology = extras.getString("terminology", "");
                 isShowToken = extras.getString("isShowToken", "");
                 getAvail_date = extras.getString("getAvail_date", "");
+                virtualServices = extras.getBoolean("virtualservices");
 
             }
         }
@@ -1630,6 +1632,25 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
                             mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
                             LServicesList.add(mService);
+
+                            if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
+                                if (mBusinessDataList != null) {
+                                    if (!mBusinessDataList.isVirtualServices()) {
+                                        if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
+                                            LServicesList.remove(mService);
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                if (!virtualServices) {
+                                    if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
+                                        LServicesList.remove(mService);
+
+                                    }
+
+                                }
+                            }
                         }
                         gServiceList.addAll(LServicesList);
                         // Department Section Starts

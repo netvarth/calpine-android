@@ -326,5 +326,15 @@ public class SearchViewDetail {
 
     String caption;
 
+    public boolean isVirtualServices() {
+        return virtualServices;
+    }
+
+    public void setVirtualServices(boolean virtualServices) {
+        this.virtualServices = virtualServices;
+    }
+
+    boolean virtualServices;
+
 
 }

@@ -50,7 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding3"
             android:text="message"
-            android:textSize="@dimen/txtsize_12" />
+            android:textSize="@dimen/txtsize_12"
+            android:autoLink="web" />
         <TextView
             android:letterSpacing="0.03"
             android:textStyle="bold"

@@ -144,4 +144,34 @@ public class SearchAppointmentDepartmentServices implements Serializable {
 
     double minPrePaymentAmount;
 
+    public ArrayList<SearchAppointmentDepartmentServices> getServicegallery() {
+        return servicegallery;
+    }
+
+    public void setServicegallery(ArrayList<SearchAppointmentDepartmentServices> servicegallery) {
+        this.servicegallery = servicegallery;
+    }
+
+    ArrayList<SearchAppointmentDepartmentServices> servicegallery;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    String url;
+
+    public String getThumbUrl() {
+        return thumbUrl;
+    }
+
+    public void setThumbUrl(String thumbUrl) {
+        this.thumbUrl = thumbUrl;
+    }
+
+    String thumbUrl;
+
 }

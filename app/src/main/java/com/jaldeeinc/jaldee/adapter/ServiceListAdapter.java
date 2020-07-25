@@ -108,6 +108,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                     iService.putExtra("taxable", mTaxable);
                     iService.putExtra("isPrePayment", isPrepayment);
                     iService.putExtra("MinPrePaymentAmount",minPrepayment);
+                    iService.putExtra("from", "chk");
                     mContext.startActivity(iService);
                 }else{
 
