@@ -22,10 +22,7 @@ import java.util.List;
 
 
 public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.MyViewHolder> {
-
-
     OnItemClickListener onItemClickListener;
-
     static Context mcontext;
 
     private List<SearchDepartmentServices> mSearchDepartmentServices;
@@ -33,37 +30,25 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
     String businessName;
     ArrayList<SearchService> mServicesList;
     int department;
-
-
-
-
     public DepartmentAdapter(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void setFields(ArrayList<SearchDepartmentServices> mSearchDepartmentServices, HashMap<String, List<SearchListModel>> departmentMap, String businessName,ArrayList<SearchService> mServicesList,int department) {
+    public void setFields(ArrayList<SearchDepartmentServices> mSearchDepartmentServices, String businessName) {
         this.mSearchDepartmentServices = mSearchDepartmentServices;
-        this.mdepartmentMap = departmentMap;
         this.businessName = businessName;
-        this.mServicesList = mServicesList;
-        this.department = department;
 
     }
 
     public interface OnItemClickListener {
-        void departmentClicked(SearchDepartmentServices searchDepartment, List<SearchListModel> searchListModels, String businessName, ArrayList<SearchService> mServicesList,int department);
+        void departmentClicked(SearchDepartmentServices searchDepartment, String businessName);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
-
         public TextView deptName;
-
         public MyViewHolder(View view) {
             super(view);
-
             deptName = (TextView) view.findViewById(R.id.deptName);
-
         }
     }
 
@@ -76,16 +61,9 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final DepartmentAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final DepartmentAdapter.MyViewHolder holder, final int position) {
         final SearchDepartmentServices searchDepartmentServices = mSearchDepartmentServices.get(position);
-
-
-        Log.i("mdeptmap",new Gson().toJson(mdepartmentMap));
-        Log.i("mdeptmap",new Gson().toJson(mdepartmentMap.get(searchDepartmentServices.getDepartmentCode())));
-
-        int count = 0;
-        if( mdepartmentMap.get(searchDepartmentServices.getDepartmentCode())!=null){
-            count = mdepartmentMap.get(searchDepartmentServices.getDepartmentCode()).size();}
+        int count = mSearchDepartmentServices.get(position).getUsers().size();
         if(count == 0){
             holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + "No Doctors" + ")" );
         }
@@ -98,27 +76,17 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
         if (searchDepartmentServices.getDepartmentName() == null) {
         holder.deptName.setVisibility(View.GONE);
         }
-
         holder.deptName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Log.i("deptNameClick", searchDepartment.getDepartmentCode());
-//                Log.i("deptNameClick", searchDepartment.getDepartmentName());
-                if (searchDepartmentServices.getDepartmentName() != null) {
-
-                    onItemClickListener.departmentClicked(searchDepartmentServices, mdepartmentMap.get(searchDepartmentServices.getDepartmentCode()), businessName, mServicesList, department);
-                }
-
+            if (searchDepartmentServices.getDepartmentName() != null) {
+                onItemClickListener.departmentClicked(searchDepartmentServices, businessName );
+            }
             }
         });
-
     }
-
-
     @Override
     public int getItemCount() {
         return mSearchDepartmentServices.size();
     }
-
-
 }

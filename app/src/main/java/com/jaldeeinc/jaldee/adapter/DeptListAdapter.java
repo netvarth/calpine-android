@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,12 +10,20 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +35,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
@@ -37,9 +47,16 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
+import com.jaldeeinc.jaldee.custom.ResizableCustomView;
+import com.jaldeeinc.jaldee.model.ContactModel;
+import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
+import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchService;
+import com.jaldeeinc.jaldee.response.SearchSetting;
+import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.jaldeeinc.jaldee.widgets.CustomDialog;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -62,7 +79,7 @@ import retrofit2.Response;
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class DeptListAdapter extends RecyclerView.Adapter {
-    List<SearchListModel> searchList;
+    List<DepartmentUserSearchModel> searchList;
     private static final int ITEM = 0;
     private static final int LOADING = 1;
     private AdapterCallback mAdapterCallback;
@@ -72,7 +89,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     String termilogy;
     String countTerminology;
 
-    public DeptListAdapter(FragmentActivity activity, List<SearchListModel> msearchList, SearchDetailViewFragment searchDetailViewFragment) {
+    public DeptListAdapter(FragmentActivity activity, List<DepartmentUserSearchModel> msearchList, SearchDetailViewFragment searchDetailViewFragment) {
         this.searchList = msearchList;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.activity = activity;
@@ -80,9 +97,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-
         public TextView deptName;
-        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_count;
+        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_count,tv_spec_more;
         LinearLayout L_specialization, L_services, L_layout_type, L_checkin;
 
         ImageView ic_jaldeeverifiedIcon;
@@ -119,7 +135,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             layout_row = view.findViewById(R.id.layout_row);
             tv_spec1 = view.findViewById(R.id.txtspec1);
             tv_spec2 = view.findViewById(R.id.txtspec2);
-            tv_spec3 = view.findViewById(R.id.txtspec3);
+            tv_spec_more = view.findViewById(R.id.txtspec3);
             tv_spec22 = view.findViewById(R.id.txtspec22);
             mImageViewText = view.findViewById(R.id.mImageViewText);
             layout_type = view.findViewById(R.id.layout_type);
@@ -136,162 +152,1101 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-        final SearchListModel searchdetailList = searchList.get(position);
-
+        final DepartmentUserSearchModel searchdetailList = searchList.get(position);
+        Log.i("SearchDetailListUser", new Gson().toJson(searchdetailList));
         final DeptListAdapter.MyViewHolder myViewHolder = (DeptListAdapter.MyViewHolder) holder;
+        resetPage(myViewHolder);
+        handleProfileInfo(myViewHolder, searchdetailList);
+        handleCheckinInfo(myViewHolder, searchdetailList);
+        handleAppointmentInfo(myViewHolder, searchdetailList);
 
-        Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
+//
 
-        Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
-        if (searchdetailList.getYnw_verified_level() != null) {
-            if (searchdetailList.getYnw_verified() == 1) {
-                if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("2")) {
+//
+//        Config.logV("VERified-----" + searchdetailList.getYnw_verified() + "name" + searchdetailList.getTitle());
+//
+//        Config.logV("VERified-@@@@----" + searchdetailList.getYnw_verified_level() + "name" + searchdetailList.getTitle());
+//        if (searchdetailList.getYnw_verified_level() != null) {
+//            if (searchdetailList.getYnw_verified() == 1) {
+//                if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("2")) {
+//
+//                    myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
+//                    myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
+//                    //myViewHolder.tv_ynw_verified.setText("Basic");
+//                }
+//                if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("3")) {
+//                          /*  myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
+//                            myViewHolder.tv_ynw_verified.setText("Basic Plus");*/
+//                    myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
+//                    myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basicplus);
+//                }
+//                if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("4")) {
+//
+//                           /* myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
+//                            myViewHolder.tv_ynw_verified.setText("Premium");*/
+//                    myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
+//                    myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_adv);
+//                }
+//            } else {
+//                myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.INVISIBLE);
+//
+//            }
+//        } else {
+//            myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.INVISIBLE);
+//        }
+//
+//
+//        myViewHolder.ic_jaldeeverifiedIcon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                searchDetailViewFragment.onMethodJaldeeLogo(searchdetailList.getYnw_verified_level(), searchdetailList.getTitle());
+//            }
+//        });
+//////////////////////////////7 types////////////////////////////////////////////
+//               /* ArrayList<ParkingModel> listType = new ArrayList<>();
+//                listType.clear();*/
+//
+//        myViewHolder.layout_type.removeAllViews();
+//        LinearLayout parent = new LinearLayout(context);
+//
+//        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        parent.setOrientation(LinearLayout.HORIZONTAL);
+//        parent.setLayoutParams(params1);
+//        TextView firstCoupon = new TextView(context);
+//        Typeface tyface_3 = Typeface.createFromAsset(context.getAssets(),
+//                "fonts/Montserrat_Regular.otf");
+//        firstCoupon.setTypeface(tyface_3);
+//        firstCoupon.setText("SignUp Coupon");
+//        firstCoupon.setText(context.getResources().getString(R.string.first_coupon));
+//        firstCoupon.setTextSize(13);
+//        firstCoupon.setTextColor(context.getResources().getColor(R.color.title_grey));
+//        firstCoupon.setPadding(5, 5, 5, 5);
+//        firstCoupon.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
+//        firstCoupon.setVisibility(View.GONE);
+//        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//        firstCoupon.setMaxLines(2);
+//        firstCoupon.setLayoutParams(params1);
+//        params1.setMargins(10, 7, 10, 7);
+//        firstCoupon.setGravity(Gravity.CENTER);
+//        parent.addView(firstCoupon);
+//
+//
+//        if (searchdetailList.getFirst_checkin_coupon_count() != null && searchdetailList.getFirst_checkin_coupon_count().equals("1")) {
+//            firstCoupon.setVisibility(View.VISIBLE);
+//        }
+//
+//        firstCoupon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                searchDetailViewFragment.
+//                        onMethodFirstCoupn(searchdetailList.getUniqueid());
+//            }
+//        });
+//
+//        TextView dynaText2 = new TextView(context);
+//        Typeface tyface_2 = Typeface.createFromAsset(context.getAssets(),
+//                "fonts/Montserrat_Regular.otf");
+//        dynaText2.setTypeface(tyface_2);
+//        dynaText2.setText("Coupon");
+//        dynaText2.setTextSize(13);
+//        dynaText2.setTextColor(context.getResources().getColor(R.color.title_grey));
+//        dynaText2.setPadding(5, 5, 5, 5);
+//        dynaText2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
+//        dynaText2.setVisibility(View.GONE);
+//        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//        dynaText2.setMaxLines(1);
+//        dynaText2.setLayoutParams(params1);
+//        params1.setMargins(10, 7, 10, 7);
+//        dynaText2.setGravity(Gravity.LEFT);
+//        parent.addView(dynaText2);
+//
+//        if (searchdetailList.getCoupon_enabled() > 0) {
+//            dynaText2.setVisibility(View.VISIBLE);
+//        }
+//
+//        dynaText2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//                searchDetailViewFragment.onMethodCoupn(searchdetailList.getUniqueid());
+//            }
+//        });
+//        TextView dynaText1 = new TextView(context);
+//        Typeface tyface_5 = Typeface.createFromAsset(context.getAssets(),
+//                "fonts/Montserrat_Regular.otf");
+//        dynaText1.setTypeface(tyface_5);
+//        dynaText1.setText("Enquiry");
+//        dynaText1.setTextSize(13);
+//        dynaText1.setTextColor(context.getResources().getColor(R.color.title_grey));
+//        dynaText1.setPadding(5, 5, 5, 5);
+//        dynaText1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_message_gray, 0, 0);
+//        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//        dynaText1.setMaxLines(1);
+//
+//        dynaText1.setLayoutParams(params1);
+//        params1.setMargins(10, 7, 10, 7);
+//        dynaText1.setGravity(Gravity.LEFT);
+//        parent.addView(dynaText1);
+//
+//        dynaText1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                searchDetailViewFragment.onMethodMessage(searchdetailList.getTitle(), searchdetailList.getId(), "search");
+//
+//            }
+//        });
+//
+//
+//        if (searchdetailList.getBusiness_hours1() != null) {
+//            TextView dynaText = new TextView(context);
+//            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                    "fonts/Montserrat_Regular.otf");
+//            dynaText.setTypeface(tyface);
+//            dynaText.setText(context.getResources().getString(R.string.working_hours));
+//
+//            dynaText.setTextSize(13);
+//            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+//            dynaText.setPadding(5, 5, 5, 5);
+//            dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_clock, 0, 0);
+//            //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//            dynaText.setMaxLines(2);
+//
+//
+//            dynaText.setLayoutParams(params1);
+//            params1.setMargins(10, 7, 10, 7);
+//            dynaText.setGravity(Gravity.CENTER);
+//            parent.addView(dynaText);
+//            dynaText.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (searchdetailList.getBusiness_hours1() != null) {
+//
+//                        if (searchdetailList.getBusiness_hours1() != null) {
+//                            try {
+//                                String array_json = searchdetailList.getBusiness_hours1().toString();
+//
+//
+//                                try {
+//
+//
+//                                    //Get the instance of JSONArray that contains JSONObjects
+//                                    JSONArray jsonArray = new JSONArray(array_json);
+//                                    String jsonarry = jsonArray.getString(0);
+//                                    JSONArray jsonArray1 = new JSONArray(jsonarry);
+//
+//                                    //Iterate the jsonArray and print the info of JSONObjects
+//
+//                                    workingModelArrayList.clear();
+//
+//                                    for (int i = 0; i < jsonArray1.length(); i++) {
+//                                        JSONObject jsonObject = jsonArray1.getJSONObject(i);
+//
+//                                        String id = jsonObject.optString("recurringType").toString();
+//                                        String repeatinterval = jsonObject.optString("repeatIntervals").toString();
+//                                        String timeslot = jsonObject.optString("timeSlots").toString();
+//                                        // String publish_date = jsonObject.optString("publish_date").toString();
+//                                        JSONArray jsonArray_time = new JSONArray(timeslot);
+//                                        JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
+//                                        String sTime = jsonObject_time.optString("sTime").toString();
+//                                        String eTime = jsonObject_time.optString("eTime").toString();
+//
+//
+//                                        JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
+//
+//                                        for (int k = 0; k < jsonArray_repeat.length(); k++) {
+//                                            String repeat = jsonArray_repeat.getString(k);
+//
+//                                            WorkingModel work = new WorkingModel();
+//                                            if (repeat.equalsIgnoreCase("2")) {
+//
+//                                                work.setDay("Monday");
+//                                                work.setTime_value(sTime + "-" + eTime);
+//
+//                                            }
+//                                            if (repeat.equalsIgnoreCase("3")) {
+//
+//                                                work.setDay("Tuesday");
+//                                                work.setTime_value(sTime + "-" + eTime);
+//
+//                                            }
+//                                            if (repeat.equalsIgnoreCase("4")) {
+//                                                work.setDay("Wednesday");
+//                                                work.setTime_value(sTime + "-" + eTime);
+//                                            }
+//                                            if (repeat.equalsIgnoreCase("5")) {
+//
+//                                                work.setDay("Thursday");
+//                                                work.setTime_value(sTime + "-" + eTime);
+//                                            }
+//                                            if (repeat.equalsIgnoreCase("6")) {
+//
+//                                                work.setDay("Friday");
+//                                                work.setTime_value(sTime + "-" + eTime);
+//
+//                                            }
+//                                            if (repeat.equalsIgnoreCase("7")) {
+//
+//                                                work.setDay("Saturday");
+//                                                work.setTime_value(sTime + "-" + eTime);
+//
+//                                            }
+//                                            if (repeat.equalsIgnoreCase("1")) {
+//
+//                                                work.setDay("Sunday");
+//                                                work.setTime_value(sTime + "-" + eTime);
+//
+//                                            }
+//
+//                                            workingModelArrayList.add(work);
+//                                        }
+//                                    }
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                        searchDetailViewFragment.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getUniqueid());
+//                        //   Config.logV("Working-----------" + workingModelArrayList.size() + "tt" + searchdetailList.getTitle());
+//                    }
+//                }
+//            });
+//        }
+//        if (searchdetailList.getTerminologies() != null) {
+//            try {
+//                String array_json = searchdetailList.getTerminologies().toString();
+//                Log.i("terminos", array_json);
+//                try {
+//                    //Get the instance of JSONArray that contains JSONObjects
+//
+//                    JSONObject term = new JSONObject(searchdetailList.getTerminologies().get(0).toString());
+//                    termilogy = term.get("waitlist").toString();
+//                    countTerminology = term.get("provider").toString();
+//                    Log.i("waitlistAlternate", term.get("waitlist").toString());
+//
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        if (searchdetailList.getParking_type_location1() != null) {
+//            if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
+//                TextView dynaText = new TextView(context);
+//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Regular.otf");
+//                dynaText.setTypeface(tyface);
+//                dynaText.setText(Config.toTitleCase(searchdetailList.getParking_type_location1()) + " Parking ");
+//                dynaText.setTextSize(13);
+//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+//                dynaText.setPadding(5, 5, 5, 5);
+//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_parking, 0, 0);
+//                dynaText.setMaxLines(1);
+//                params1.setMargins(10, 7, 10, 7);
+//                dynaText.setGravity(Gravity.LEFT);
+//                dynaText.setLayoutParams(params1);
+//                parent.addView(dynaText);
+//                dynaText.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Toast.makeText(activity, searchdetailList.getParking_type_location1() + " parking available", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        }
+//        if (searchdetailList.getAlways_open_location1() != null) {
+//            if (searchdetailList.getAlways_open_location1().equalsIgnoreCase("1")) {
+//                TextView dynaText = new TextView(context);
+//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Regular.otf");
+//                dynaText.setTypeface(tyface);
+//                dynaText.setText("24 Hours");
+//                dynaText.setTextSize(13);
+//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+//                dynaText.setPadding(5, 5, 5, 5);
+//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_24hours, 0, 0);
+//                dynaText.setMaxLines(1);
+//                params1.setMargins(10, 7, 10, 7);
+//                dynaText.setGravity(Gravity.LEFT);
+//                dynaText.setLayoutParams(params1);
+//                parent.addView(dynaText);
+//
+//                dynaText.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Toast.makeText(activity, "Open 24 hours", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        }
+//        if (searchdetailList.getDentistemergencyservices_location1() != null) {
+//            if (searchdetailList.getDentistemergencyservices_location1().equalsIgnoreCase("1")) {
+//
+//                TextView dynaText = new TextView(context);
+//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Regular.otf");
+//                dynaText.setTypeface(tyface);
+//                dynaText.setText("Emergency");
+//                dynaText.setTextSize(13);
+//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+//                dynaText.setPadding(5, 5, 5, 5);
+//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+//                dynaText.setMaxLines(1);
+//
+//                dynaText.setLayoutParams(params1);
+//                params1.setMargins(10, 7, 10, 7);
+//                dynaText.setGravity(Gravity.LEFT);
+//                parent.addView(dynaText);
+//
+//                dynaText.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        }
+//        if (searchdetailList.getDocambulance_location1() != null) {
+//            if (searchdetailList.getDocambulance_location1().equalsIgnoreCase("1")) {
+//
+//                TextView dynaText = new TextView(context);
+//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Regular.otf");
+//                dynaText.setTypeface(tyface);
+//                dynaText.setText("Ambulance");
+//                dynaText.setTextSize(13);
+//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+//                dynaText.setPadding(5, 5, 5, 5);
+//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_ambulance, 0, 0);
+//                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//                dynaText.setMaxLines(1);
+//
+//                dynaText.setLayoutParams(params1);
+//                params1.setMargins(10, 7, 10, 7);
+//                dynaText.setGravity(Gravity.LEFT);
+//                parent.addView(dynaText);
+//
+//                dynaText.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Toast.makeText(activity, "Ambulance services available", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        }
+//        if (searchdetailList.getFirstaid_location1() != null) {
+//            if (searchdetailList.getFirstaid_location1().equalsIgnoreCase("1")) {
+//                TextView dynaText = new TextView(context);
+//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Regular.otf");
+//                dynaText.setTypeface(tyface);
+//                dynaText.setText("First Aid");
+//                dynaText.setTextSize(13);
+//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+//                dynaText.setPadding(5, 5, 5, 5);
+//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_firstaid, 0, 0);
+//                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//                dynaText.setMaxLines(1);
+//                dynaText.setLayoutParams(params1);
+//                params1.setMargins(10, 7, 10, 7);
+//                dynaText.setGravity(Gravity.LEFT);
+//                parent.addView(dynaText);
+//
+//                dynaText.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Toast.makeText(activity, "First aid services available", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        }
+//        if (searchdetailList.getPhysiciansemergencyservices_location1() != null) {
+//            if (searchdetailList.getPhysiciansemergencyservices_location1().equalsIgnoreCase("1")) {
+//                TextView dynaText = new TextView(context);
+//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Regular.otf");
+//                dynaText.setTypeface(tyface);
+//                dynaText.setText("Emergency");
+//                dynaText.setTextSize(13);
+//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+//                dynaText.setPadding(5, 5, 5, 5);
+//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+//                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//                dynaText.setMaxLines(1);
+//                dynaText.setLayoutParams(params1);
+//                params1.setMargins(10, 7, 10, 7);
+//                dynaText.setGravity(Gravity.LEFT);
+//                parent.addView(dynaText);
+//
+//                dynaText.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        }
+//        if (searchdetailList.getTraumacentre_location1() != null) {
+//            if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
+//
+//                TextView dynaText = new TextView(context);
+//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                        "fonts/Montserrat_Regular.otf");
+//                dynaText.setTypeface(tyface);
+//                dynaText.setText("Trauma");
+//                dynaText.setTextSize(13);
+//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+//                dynaText.setPadding(5, 5, 5, 5);
+//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_trauma, 0, 0);
+//                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//                dynaText.setMaxLines(1);
+//
+//                dynaText.setLayoutParams(params1);
+//                params1.setMargins(10, 7, 10, 7);
+//                dynaText.setGravity(Gravity.LEFT);
+//                parent.addView(dynaText);
+//
+//                dynaText.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        Toast.makeText(activity, "Trauma care available", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//            }
+//        }
+//        myViewHolder.layout_type.addView(parent);
+//        //////////////////////////////////////////////////////////////
+//        Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
+//                "fonts/Montserrat_Bold.otf");
+//        myViewHolder.tv_name.setTypeface(tyface_confm);
+//        myViewHolder.btncheckin.setTypeface(tyface_confm);
+//        // myViewHolder.tv_Open.setTypeface(tyface_confm);
+//
+//        myViewHolder.tv_location.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                searchDetailViewFragment.onMethodOpenMap(searchdetailList.getLocation1());
+//            }
+//        });
+//        myViewHolder.layout_row.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Config.logV("UNIUE ID----------------" + searchdetailList.getUniqueid());
+//
+//                Config.logV("Popular Text__________@@@Dele");
+//                String unique_id = searchdetailList.getUniqueid();
+//                searchDetailViewFragment.onMethodCallback(searchdetailList.getUniqueid(),searchdetailList.getClaimable());
+//            }
+//        });
+//
+//        if (searchdetailList.getAccountType() != null) {
+//            if (searchdetailList.getAccountType().equals("1")) {
+//                myViewHolder.tv_branch_name.setText(searchdetailList.getBranch_name());
+//                myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
+//                Log.i("qazqaz", String.valueOf(searchdetailList.getBranchSpCount()));
+//            } else if ((searchdetailList.getAccountType().equals("0"))) {
+//                myViewHolder.tv_count.setVisibility(View.VISIBLE);
+//                Log.i("qaz", String.valueOf(searchdetailList.getBranchSpCount()));
+//            }
+//        } else {
+//            myViewHolder.tv_branch_name.setVisibility(View.GONE);
+//        }
+//        Log.i("Claaaaim", String.valueOf(searchdetailList.getClaimable()));
+//
+//        if (searchdetailList.getClaimable().equals("1")) {
+//            myViewHolder.tv_claimable.setVisibility(View.VISIBLE);
+//            myViewHolder.L_layout_type.setVisibility(View.GONE);
+//            myViewHolder.L_checkin.setVisibility(View.GONE);
+//
+//        } else {
+//            myViewHolder.tv_claimable.setVisibility(View.INVISIBLE);
+//            myViewHolder.L_layout_type.setVisibility(View.VISIBLE);
+//            myViewHolder.L_checkin.setVisibility(View.VISIBLE);
+//        }
+//        myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(activity, "Use jaldee.com in Web Browser to Claim your Business", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        if (searchdetailList.getQualification() != null) {
+//            myViewHolder.tv_name.setText(searchdetailList.getTitle() + " " + searchdetailList.getQualification());
+//        } else {
+//            myViewHolder.tv_name.setText(searchdetailList.getTitle());
+//        }
+//        if (searchdetailList.getSector() != null) {
+//            myViewHolder.tv_domain.setVisibility(View.VISIBLE);
+//            myViewHolder.tv_domain.setText(searchdetailList.getSector());
+//        } else {
+//            myViewHolder.tv_domain.setVisibility(View.GONE);
+//        }
+//        if (searchdetailList.getPlace1() != null) {
+//            myViewHolder.tv_location.setVisibility(View.VISIBLE);
+//            // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
+//            Config.logV("Place @@@@@@@@@@@@@@" + searchdetailList.getDistance());
+//            Double distance = Double.valueOf(searchdetailList.getDistance()) * 1.6;
+//
+//            myViewHolder.tv_location.setText(searchdetailList.getPlace1() + " ( " + String.format("%.2f", distance) + " km )");
+//        } else {
+//            myViewHolder.tv_location.setVisibility(View.GONE);
+//        }
+//        if (searchdetailList.getFuture_checkins() != null) {
+//            if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
+//                myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
+//                myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+//                        iCheckIn.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
+//                        iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
+//                        iCheckIn.putExtra("accountID", searchdetailList.getId());
+//
+//                        iCheckIn.putExtra("googlemap", searchdetailList.getLocation1());
+//                        // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
+//                        iCheckIn.putExtra("from", "future_date");
+//                        iCheckIn.putExtra("title", searchdetailList.getTitle());
+//                        iCheckIn.putExtra("place", searchdetailList.getPlace1());
+//                        Config.logV("sector%%%%%%-------------" + searchdetailList.getSectorname());
+//                        iCheckIn.putExtra("sector", searchdetailList.getSectorname());
+//                        iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
+//                        context.startActivity(iCheckIn);
+//                    }
+//                });
+//            } else {
+//                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+//            }
+//        } else {
+//            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+//        }
+////////////////////////////////////////////////////////////////////////////////////////////
+//
+//        if (searchdetailList.getId().equalsIgnoreCase(searchdetailList.getQId())) {
+//            Date c = Calendar.getInstance().getTime();
+//            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//            String formattedDate = df.format(c);
+//            System.out.println("Current time => " + formattedDate);
+//
+//
+//            Date date1 = null, date2 = null;
+//            try {
+//                date1 = df.parse(formattedDate);
+//                if (searchdetailList.getAvail_date() != null )
+//                    date2 = df.parse(searchdetailList.getAvail_date());
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            if (searchdetailList.getMessage() != null && searchdetailList.getClaimable() == null) {
+////                myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+////                myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
+//            } else {
+////                myViewHolder.tv_qmessage.setVisibility(View.GONE);
+//            }
+//            if (searchdetailList.getShow_waiting_time() != null) {
+//
+//                // For ML/Fixed
+//                if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) {
+//
+//                    if(searchdetailList.isOnlineCheckIn() != false) {
+//                        if (searchdetailList.getAvail_date() != null) {
+//                            myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+//
+//                            // For Today's Checkin
+//                            if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) {
+//                                // Next Available Timing
+//                                if (searchdetailList.getServiceTime() != null) {
+//                                    Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
+//                                            "fonts/Montserrat_Bold.otf");
+//                                    String firstWord = "Next Available Time ";
+//                                    String secondWord = "\nToday, " + searchdetailList.getServiceTime();
+//                                    myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
+//                                } else { // Est. Waiting Time
+//                                    Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
+//                                            "fonts/Montserrat_Bold.otf");
+//                                    String firstWord = "Est Wait Time ";
+//                                    String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
+//                                    myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
+//                                }
+//
+//                            } else if (date1.compareTo(date2) < 0) {   // For Future
+//                                try {
+//                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//                                    Date date = format.parse(searchdetailList.getAvail_date());
+//                                    String day = (String) DateFormat.format("dd", date);
+//                                    String monthString = (String) DateFormat.format("MMM", date);
+//
+//                                    Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
+//                                            "fonts/Montserrat_Bold.otf");
+//                                    String firstWord = "Next Available Time ";
+//                                    String secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
+//                                    myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
+//                                    myViewHolder.btncheckin.setEnabled(false);
+//                                    myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+//                                } catch (ParseException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            } else {
+//                                myViewHolder.tv_WaitTime.setEnabled(false);
+//                                myViewHolder.btncheckin.setEnabled(false);
+//                                myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+//                                myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+//////                                 myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+//                            }
+//                        } else { // Available Date is null
+//                            myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+//                            myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+//                            myViewHolder.btncheckin.setEnabled(false);
+//                            myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+//                            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+//                        }
+//                    } else {
+//                        myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+//                        myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+//                        myViewHolder.btncheckin.setEnabled(false);
+//                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+//                        myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+//                    }
+//                } else { // No Waiting Time && Show/Hide Token
+//                    if (searchdetailList.getCalculationMode() != null) {
+//                        if ( searchdetailList.isShowToken()) {
+//                            myViewHolder.btncheckin.setText("GET TOKEN");
+//                            myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
+//                            if (searchdetailList.getPersonAhead() != -1) {
+//                                Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + searchdetailList.getPersonAhead());
+//                                if (searchdetailList.getPersonAhead() == 0) {
+//                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+//                                    myViewHolder.tv_WaitTime.setText(" Be the first in line");
+//                                } else {
+//                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+//                                    String firstWord = String.valueOf(searchdetailList.getPersonAhead());
+//                                    String secondWord = " People waiting in line";
+//                                    Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
+//                                            "fonts/Montserrat_Bold.otf");
+//                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+//                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                                    myViewHolder.tv_WaitTime.setText(spannable);
+//                                }
+//                            }
+//                        } else {
+//                            if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc") && !searchdetailList.isShowToken()) {
+//                                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+//
+//                                if (termilogy.equals("order")) {
+//                                    myViewHolder.btncheckin.setText("ORDER");
+//                                    myViewHolder.tv_Futuredate.setText("Do you want to Order for another day?");
+//                                } else {
+//                                    myViewHolder.btncheckin.setText("CHECK-IN");
+//                                    myViewHolder.tv_Futuredate.setText("Do you want to Check-in for another day?");
+//                                }
+//                            } else {
+//                                if (termilogy.equals("order")) {
+//                                    myViewHolder.btncheckin.setText("ORDER");
+//                                    myViewHolder.tv_Futuredate.setText("Do you want to Order for another day?");
+//                                } else {
+//                                    myViewHolder.btncheckin.setText("CHECK-IN");
+//                                    myViewHolder.tv_Futuredate.setText("Do you want to Check-in for another day?");
+//                                }
+//                            }
+//                        }
+//                    } else {
+//                        myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+//                        myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+//                        myViewHolder.btncheckin.setEnabled(false);
+//                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+//                        myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+//                    }
+//                }
+//            } else {
+//                myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+//                myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+//                myViewHolder.btncheckin.setEnabled(false);
+//                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+//                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+//            }
+//        } else {
+//
+//            myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+//            myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+//            myViewHolder.btncheckin.setEnabled(false);
+//            myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+//            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+//
+//            if (searchdetailList.getMessage() != null) {
+////                myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
+////                myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
+//                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+//                myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+//                myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+//                myViewHolder.btncheckin.setEnabled(false);
+//            } else {
+////                myViewHolder.tv_qmessage.setVisibility(View.GONE);
+//            }
 
-                    myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
-                    myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
-                    //myViewHolder.tv_ynw_verified.setText("Basic");
+
+//        }
+
+
+//        myViewHolder.btncheckin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+//                iCheckIn.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
+//                iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
+//                iCheckIn.putExtra("accountID", searchdetailList.getId());
+//                iCheckIn.putExtra("googlemap", searchdetailList.getLocation1());
+//                // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
+//                iCheckIn.putExtra("from", "checkin");
+//                iCheckIn.putExtra("title", searchdetailList.getTitle());
+//                iCheckIn.putExtra("place", searchdetailList.getPlace1());
+//                Config.logV("sector%%%%%%-------------" + searchdetailList.getSectorname());
+//                iCheckIn.putExtra("sector", searchdetailList.getSectorname());
+//                iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
+//                context.startActivity(iCheckIn);
+//            }
+//        });
+//        myViewHolder.btnappointment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent iAppointment = new Intent(v.getContext(), Appointment.class);
+//                iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
+//                iAppointment.putExtra("uniqueID", searchdetailList.getUniqueid());
+//                iAppointment.putExtra("accountID", searchdetailList.getId());
+//                iAppointment.putExtra("googlemap", searchdetailList.getLocation1());
+//                iAppointment.putExtra("from", "checkin");
+//                iAppointment.putExtra("title", searchdetailList.getTitle());
+//                iAppointment.putExtra("place", searchdetailList.getPlace1());
+//                iAppointment.putExtra("sector", searchdetailList.getSectorname());
+//                iAppointment.putExtra("subsector", searchdetailList.getSub_sector());
+//                context.startActivity(iAppointment);
+//            }
+//        });
+//        /////////////////////////////////////////////////////////
+//        if (searchdetailList.getSpecialization_displayname() != null) {
+//            final List<String> list_spec = searchdetailList.getSpecialization_displayname();
+//
+//            if (list_spec.size() > 0) {
+//                if (list_spec.size() == 1) {
+//
+//                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_spec1.setText(list_spec.get(0));
+//                    myViewHolder.tv_spec1.setTextSize(13);
+//
+//                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_spec2.setVisibility(View.GONE);
+//                    myViewHolder.tv_spec3.setVisibility(View.GONE);
+//                    myViewHolder.tv_spec22.setVisibility(View.GONE);
+//                } else {
+//
+//                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_spec1.setText(list_spec.get(0) + " , ");
+//                    myViewHolder.tv_spec1.setTextSize(13);
+//                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+//                    // myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+//                    myViewHolder.tv_spec1.setMaxLines(1);
+//
+//                    if (list_spec.size() > 2) {
+//
+//                        myViewHolder.tv_spec1.setMaxEms(5);
+//                        myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+//
+//                        myViewHolder.tv_spec22.setText(list_spec.get(1) + " , ");
+//                        myViewHolder.tv_spec22.setTextSize(13);
+//                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
+//                        myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec22.setMaxLines(1);
+//                        // myViewHolder.tv_spec22.setWidth(dpToPx(120));
+//                        myViewHolder.tv_spec22.setMaxEms(8);
+//
+//                        myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
+//                        myViewHolder.tv_spec2.setTextSize(13);
+//                        myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
+//                        myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec2.setMaxLines(1);
+//                        //  myViewHolder.tv_spec2.setWidth(dpToPx(120));
+//                        myViewHolder.tv_spec2.setMaxEms(8);
+//
+//
+//                        myViewHolder.tv_spec3.setText(" ...");
+//                        myViewHolder.tv_spec3.setTextSize(13);
+//                        myViewHolder.tv_spec3.setVisibility(View.VISIBLE);
+//                    } else {
+//                        myViewHolder.tv_spec22.setText(list_spec.get(1));
+//                        myViewHolder.tv_spec22.setTextSize(13);
+//                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
+//                        //    myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec22.setMaxLines(1);
+//                        // myViewHolder.tv_spec22.setMaxEms(8);
+//
+//                        myViewHolder.tv_spec2.setVisibility(View.GONE);
+//                        myViewHolder.tv_spec3.setVisibility(View.GONE);
+//
+//                    }
+//
+//                }
+//
+//                Config.logV("SpEc Open----------" + searchdetailList.isIs_SpecOpen() + "Prov" + searchdetailList.getTitle());
+//
+//
+//                myViewHolder.tv_spec3.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(),searchdetailList.getClaimable());
+//                    }
+//                });
+//            }
+//        } else {
+//            myViewHolder.tv_spec1.setVisibility(View.GONE);
+//            myViewHolder.tv_spec2.setVisibility(View.GONE);
+//            myViewHolder.tv_spec3.setVisibility(View.GONE);
+//            myViewHolder.tv_spec22.setVisibility(View.GONE);
+//            myViewHolder.L_specialization.setVisibility(View.GONE);
+//        }
+//        //  Picasso.with(context).load(searchdetailList.getLogo()).fit().into(myViewHolder.profile);
+//        Config.logV("LOGO @@@@" + searchdetailList.getLogo() + searchdetailList.getTitle());
+//
+//        Picasso.Builder builder = new Picasso.Builder(context);
+//        builder.listener(new Picasso.Listener() {
+//            @Override
+//            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+//                exception.printStackTrace();
+//            }
+//        });
+//        builder.build().load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+//        if (searchdetailList.getGallery_thumb_nails() != null) {
+//            if (searchdetailList.getGallery_thumb_nails().size() > 0) {
+//                myViewHolder.mImageViewText.setVisibility(View.VISIBLE);
+//                myViewHolder.mImageViewText.setText("+" + searchdetailList.getGallery_thumb_nails().size());
+//            } else {
+//                myViewHolder.mImageViewText.setVisibility(View.GONE);
+//            }
+//        } else {
+//            myViewHolder.mImageViewText.setVisibility(View.GONE);
+//        }
+//
+//
+//        if (searchdetailList.getServices() != null) {
+//
+//
+//            if (searchdetailList.getServices().size() > 0) {
+//                myViewHolder.L_services.removeAllViews();
+//                myViewHolder.L_services.setVisibility(View.VISIBLE);
+//
+//                int size = 0;
+//                if (searchdetailList.getServices().size() == 1) {
+//                    size = 1;
+//                } else {
+//                    if (searchdetailList.getServices().size() == 2)
+//                        size = 2;
+//                    else
+//                        size = 3;
+//                }
+//                for (int i = 0; i < size; i++) {
+//                    TextView dynaText = new TextView(context);
+//                    Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+//                            "fonts/Montserrat_Regular.otf");
+//                    dynaText.setTypeface(tyface);
+//                    dynaText.setText(searchdetailList.getServices().get(i).toString());
+//                    dynaText.setTextSize(13);
+//                    dynaText.setPadding(5, 0, 5, 0);
+//                    dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+//                    // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
+//
+//                    dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+//
+//                    dynaText.setMaxLines(1);
+//                    if (size > 2) {
+//                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//                        dynaText.setMaxEms(10);
+//                    }
+//                    final int finalI = i;
+//                    dynaText.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            ApiService(searchdetailList.getUniqueid(), searchdetailList.getServices().get(finalI).toString(), searchdetailList.getTitle());
+//                        }
+//                    });
+//                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    params.setMargins(0, 0, 20, 0);
+//
+//                    dynaText.setLayoutParams(params);
+//                    myViewHolder.L_services.addView(dynaText);
+//
+//                }
+//
+//                if (size > 3) {
+//
+//                    TextView dynaText = new TextView(context);
+//                    dynaText.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//
+//
+//                            mAdapterCallback.onMethodServiceCallback(searchdetailList.getServices(), searchdetailList.getTitle(), searchdetailList.getUniqueid());
+//                        }
+//                    });
+//                    dynaText.setGravity(Gravity.CENTER);
+//                    dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+//                    dynaText.setText(" ... ");
+//                    // dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_blue));
+//                    myViewHolder.L_services.addView(dynaText);
+//                }
+//            } else {
+//                myViewHolder.L_services.setVisibility(View.GONE);
+//
+//            }
+//
+//        } else {
+//            myViewHolder.L_services.setVisibility(View.GONE);
+//
+//        }
+//
+//
+//        if (searchdetailList.getRating() != null) {
+//            myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
+//        }
+
+
+    }
+
+    private void resetPage(MyViewHolder myViewHolder) {
+
+    }
+
+    private void handleAppointmentInfo(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList) {
+        searchdetailList.getSearchViewDetail();
+    }
+
+    private void handleCheckinInfo(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList) {
+
+    }
+
+    public void setSpecializations(MyViewHolder myViewHolder, SearchViewDetail searchdetailList) {
+        if (searchdetailList.getSpecialization() != null) {
+            final List<String> list_spec = searchdetailList.getSpecialization();
+            if (list_spec.size() > 0) {
+                if (list_spec.size() == 1) {
+                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_spec1.setText(list_spec.get(0));
+                    myViewHolder.tv_spec1.setTextSize(13);
+                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_spec2.setVisibility(View.GONE);
+                    myViewHolder.tv_spec_more.setVisibility(View.GONE);
+                    myViewHolder.tv_spec22.setVisibility(View.GONE);
+                } else {
+                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_spec1.setText(list_spec.get(0) + " , ");
+                    myViewHolder.tv_spec1.setTextSize(13);
+                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    myViewHolder.tv_spec1.setMaxLines(1);
+                    if (list_spec.size() > 2) {
+                        myViewHolder.tv_spec1.setMaxEms(5);
+                        myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+                        myViewHolder.tv_spec22.setText(list_spec.get(1) + " , ");
+                        myViewHolder.tv_spec22.setTextSize(13);
+                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
+                        myViewHolder.tv_spec22.setMaxLines(1);
+                        myViewHolder.tv_spec22.setMaxEms(8);
+                        myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
+                        myViewHolder.tv_spec2.setTextSize(13);
+                        myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
+                        myViewHolder.tv_spec2.setMaxLines(1);
+                        myViewHolder.tv_spec2.setMaxEms(8);
+                        myViewHolder.tv_spec_more.setText(" > ");
+                        myViewHolder.tv_spec_more.setTextSize(20);
+                        myViewHolder.tv_spec_more.setVisibility(View.VISIBLE);
+                    } else {
+                        myViewHolder.tv_spec22.setText(list_spec.get(1));
+                        myViewHolder.tv_spec22.setTextSize(13);
+                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_spec22.setMaxLines(1);
+                        myViewHolder.tv_spec2.setVisibility(View.GONE);
+                        myViewHolder.tv_spec_more.setVisibility(View.GONE);
+                    }
+
                 }
-                if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("3")) {
-                          /*  myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_ynw_verified.setText("Basic Plus");*/
+                myViewHolder.tv_spec2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+                    }
+                });
+                myViewHolder.tv_spec22.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+
+                    }
+                });
+                myViewHolder.tv_spec_more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+
+                    }
+                });
+            }
+        } else {
+            myViewHolder.tv_spec1.setVisibility(View.GONE);
+            myViewHolder.tv_spec2.setVisibility(View.GONE);
+            myViewHolder.tv_spec_more.setVisibility(View.GONE);
+            myViewHolder.tv_spec22.setVisibility(View.GONE);
+            myViewHolder.L_specialization.setVisibility(View.GONE);
+        }
+    }
+    private void handleJaldeeVerification(MyViewHolder myViewHolder, SearchViewDetail searchdetailList) {
+        if (searchdetailList.getVerifyLevel() != null) {
+            if (!searchdetailList.getVerifyLevel().equalsIgnoreCase("NONE")) {
+                myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.INVISIBLE);
+                if (searchdetailList.getVerifyLevel().equalsIgnoreCase("BASIC_PLUS")) {
                     myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
                     myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basicplus);
                 }
-                if (searchdetailList.getYnw_verified_level().equalsIgnoreCase("4")) {
-
-                           /* myViewHolder.tv_ynw_verified.setVisibility(View.VISIBLE);
-                            myViewHolder.tv_ynw_verified.setText("Premium");*/
+                if (searchdetailList.getVerifyLevel().equalsIgnoreCase("BASIC")) {
+                    myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
+                    myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
+                }
+                if (searchdetailList.getVerifyLevel().equalsIgnoreCase("PREMIUM") || searchdetailList.getVerifyLevel().equalsIgnoreCase("ADVANCED")) {
                     myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
                     myViewHolder.ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_adv);
                 }
             } else {
                 myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.INVISIBLE);
-
             }
+
+            myViewHolder.ic_jaldeeverifiedIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapterCallback.onMethodJaldeeLogo(searchdetailList.getVerifyLevel(), searchdetailList.getBusinessName());
+                }
+            });
         } else {
             myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.INVISIBLE);
         }
-
-
-        myViewHolder.ic_jaldeeverifiedIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchDetailViewFragment.onMethodJaldeeLogo(searchdetailList.getYnw_verified_level(), searchdetailList.getTitle());
-            }
-        });
-////////////////////////////7 types////////////////////////////////////////////
-               /* ArrayList<ParkingModel> listType = new ArrayList<>();
-                listType.clear();*/
-
-        myViewHolder.layout_type.removeAllViews();
-        LinearLayout parent = new LinearLayout(context);
-
-        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        parent.setOrientation(LinearLayout.HORIZONTAL);
-        parent.setLayoutParams(params1);
-        TextView firstCoupon = new TextView(context);
-        Typeface tyface_3 = Typeface.createFromAsset(context.getAssets(),
-                "fonts/Montserrat_Regular.otf");
-        firstCoupon.setTypeface(tyface_3);
-        firstCoupon.setText("SignUp Coupon");
-        firstCoupon.setText(context.getResources().getString(R.string.first_coupon));
-        firstCoupon.setTextSize(13);
-        firstCoupon.setTextColor(context.getResources().getColor(R.color.title_grey));
-        firstCoupon.setPadding(5, 5, 5, 5);
-        firstCoupon.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
-        firstCoupon.setVisibility(View.GONE);
-        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-        firstCoupon.setMaxLines(2);
-        firstCoupon.setLayoutParams(params1);
-        params1.setMargins(10, 7, 10, 7);
-        firstCoupon.setGravity(Gravity.CENTER);
-        parent.addView(firstCoupon);
-
-
-        if (searchdetailList.getFirst_checkin_coupon_count() != null && searchdetailList.getFirst_checkin_coupon_count().equals("1")) {
-            firstCoupon.setVisibility(View.VISIBLE);
-        }
-
-        firstCoupon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchDetailViewFragment.
-                        onMethodFirstCoupn(searchdetailList.getUniqueid());
-            }
-        });
-
-        TextView dynaText2 = new TextView(context);
-        Typeface tyface_2 = Typeface.createFromAsset(context.getAssets(),
-                "fonts/Montserrat_Regular.otf");
-        dynaText2.setTypeface(tyface_2);
-        dynaText2.setText("Coupon");
-        dynaText2.setTextSize(13);
-        dynaText2.setTextColor(context.getResources().getColor(R.color.title_grey));
-        dynaText2.setPadding(5, 5, 5, 5);
-        dynaText2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
-        dynaText2.setVisibility(View.GONE);
-        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-        dynaText2.setMaxLines(1);
-        dynaText2.setLayoutParams(params1);
-        params1.setMargins(10, 7, 10, 7);
-        dynaText2.setGravity(Gravity.LEFT);
-        parent.addView(dynaText2);
-
-        if (searchdetailList.getCoupon_enabled() > 0) {
-            dynaText2.setVisibility(View.VISIBLE);
-        }
-
-        dynaText2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                searchDetailViewFragment.onMethodCoupn(searchdetailList.getUniqueid());
-            }
-        });
-        TextView dynaText1 = new TextView(context);
-        Typeface tyface_5 = Typeface.createFromAsset(context.getAssets(),
-                "fonts/Montserrat_Regular.otf");
-        dynaText1.setTypeface(tyface_5);
-        dynaText1.setText("Enquiry");
-        dynaText1.setTextSize(13);
-        dynaText1.setTextColor(context.getResources().getColor(R.color.title_grey));
-        dynaText1.setPadding(5, 5, 5, 5);
-        dynaText1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_message_gray, 0, 0);
-        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-        dynaText1.setMaxLines(1);
-
-        dynaText1.setLayoutParams(params1);
-        params1.setMargins(10, 7, 10, 7);
-        dynaText1.setGravity(Gravity.LEFT);
-        parent.addView(dynaText1);
-
-        dynaText1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                searchDetailViewFragment.onMethodMessage(searchdetailList.getTitle(), searchdetailList.getId(), "search");
-
-            }
-        });
-
-
-        if (searchdetailList.getBusiness_hours1() != null) {
+    }
+    public void handleBusinesshours(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList, LinearLayout parent, LinearLayout.LayoutParams params1) {
+        if (searchdetailList.getLocation().getbSchedule() != null) {
             TextView dynaText = new TextView(context);
             Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                     "fonts/Montserrat_Regular.otf");
             dynaText.setTypeface(tyface);
             dynaText.setText(context.getResources().getString(R.string.working_hours));
-
             dynaText.setTextSize(13);
             dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
             dynaText.setPadding(5, 5, 5, 5);
             dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_clock, 0, 0);
-            //dynaText.setEllipsize(TextUtils.TruncateAt.END);
             dynaText.setMaxLines(2);
-
-
             dynaText.setLayoutParams(params1);
             params1.setMargins(10, 7, 10, 7);
             dynaText.setGravity(Gravity.CENTER);
@@ -299,28 +1254,20 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             dynaText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (searchdetailList.getBusiness_hours1() != null) {
-
-                        if (searchdetailList.getBusiness_hours1() != null) {
+                    if (searchdetailList.getLocation() != null) {
+                        if (searchdetailList.getLocation().getbSchedule() != null) {
                             try {
-                                String array_json = searchdetailList.getBusiness_hours1().toString();
-
-
+                                String array_json = searchdetailList.getLocation().getbSchedule().toString();
+                                Log.i("terminos", array_json);
                                 try {
-
-
                                     //Get the instance of JSONArray that contains JSONObjects
                                     JSONArray jsonArray = new JSONArray(array_json);
                                     String jsonarry = jsonArray.getString(0);
                                     JSONArray jsonArray1 = new JSONArray(jsonarry);
-
                                     //Iterate the jsonArray and print the info of JSONObjects
-
                                     workingModelArrayList.clear();
-
                                     for (int i = 0; i < jsonArray1.length(); i++) {
                                         JSONObject jsonObject = jsonArray1.getJSONObject(i);
-
                                         String id = jsonObject.optString("recurringType").toString();
                                         String repeatinterval = jsonObject.optString("repeatIntervals").toString();
                                         String timeslot = jsonObject.optString("timeSlots").toString();
@@ -329,54 +1276,38 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                         JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
                                         String sTime = jsonObject_time.optString("sTime").toString();
                                         String eTime = jsonObject_time.optString("eTime").toString();
-
-
                                         JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
-
                                         for (int k = 0; k < jsonArray_repeat.length(); k++) {
                                             String repeat = jsonArray_repeat.getString(k);
-
                                             WorkingModel work = new WorkingModel();
                                             if (repeat.equalsIgnoreCase("2")) {
-
                                                 work.setDay("Monday");
                                                 work.setTime_value(sTime + "-" + eTime);
-
                                             }
                                             if (repeat.equalsIgnoreCase("3")) {
-
                                                 work.setDay("Tuesday");
                                                 work.setTime_value(sTime + "-" + eTime);
-
                                             }
                                             if (repeat.equalsIgnoreCase("4")) {
                                                 work.setDay("Wednesday");
                                                 work.setTime_value(sTime + "-" + eTime);
                                             }
                                             if (repeat.equalsIgnoreCase("5")) {
-
                                                 work.setDay("Thursday");
                                                 work.setTime_value(sTime + "-" + eTime);
                                             }
                                             if (repeat.equalsIgnoreCase("6")) {
-
                                                 work.setDay("Friday");
                                                 work.setTime_value(sTime + "-" + eTime);
-
                                             }
                                             if (repeat.equalsIgnoreCase("7")) {
-
                                                 work.setDay("Saturday");
                                                 work.setTime_value(sTime + "-" + eTime);
-
                                             }
                                             if (repeat.equalsIgnoreCase("1")) {
-
                                                 work.setDay("Sunday");
                                                 work.setTime_value(sTime + "-" + eTime);
-
                                             }
-
                                             workingModelArrayList.add(work);
                                         }
                                     }
@@ -387,713 +1318,202 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                 e.printStackTrace();
                             }
                         }
-
-                        searchDetailViewFragment.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getUniqueid());
-                        //   Config.logV("Working-----------" + workingModelArrayList.size() + "tt" + searchdetailList.getTitle());
+//                        mAdapterCallback.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getSearchViewDetail().getBusinessName(),
+//                                searchdetailList.getSearchViewDetail().getId());
                     }
                 }
             });
         }
-        if (searchdetailList.getTerminologies() != null) {
-            try {
-                String array_json = searchdetailList.getTerminologies().toString();
-                Log.i("terminos", array_json);
-                try {
-                    //Get the instance of JSONArray that contains JSONObjects
-
-                    JSONObject term = new JSONObject(searchdetailList.getTerminologies().get(0).toString());
-                    termilogy = term.get("waitlist").toString();
-                    countTerminology = term.get("provider").toString();
-                    Log.i("waitlistAlternate", term.get("waitlist").toString());
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    }
+    private void handleProfileInfo(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList) {
+        SearchViewDetail getBusinessData = searchdetailList.getSearchViewDetail();
+        handleJaldeeVerification(myViewHolder, getBusinessData);
+        setSpecializations(myViewHolder, getBusinessData);
+//        if (getBusinessData.getSocialMedia() != null) {
+//            if (getBusinessData.getSocialMedia().size() > 0) {
+//                LsocialMedia.setVisibility(View.VISIBLE);
+//                for (int i = 0; i < getBusinessData.getSocialMedia().size(); i++) {
+//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
+////                        tv_SocialMedia.setVisibility(View.VISIBLE);
+//                        ic_fac.setVisibility(View.VISIBLE);
+//                        final int finalI = i;
+//                        ic_fac.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                try {
+//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI).getValue()));
+//                                    startActivity(myIntent);
+//                                } catch (ActivityNotFoundException e) {
+//                                    Toast.makeText(mContext, "No application can handle this request."
+//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                    }
+//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("googleplus")) {
+////                        tv_SocialMedia.setVisibility(View.VISIBLE);
+//                        ic_gplus.setVisibility(View.VISIBLE);
+//                        final int finalI3 = i;
+//                        ic_gplus.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                try {
+//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI3).getValue()));
+//                                    startActivity(myIntent);
+//                                } catch (ActivityNotFoundException e) {
+//                                    Toast.makeText(mContext, "No application can handle this request."
+//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                    }
+//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("twitter")) {
+////                        tv_SocialMedia.setVisibility(View.VISIBLE);
+//                        ic_twitt.setVisibility(View.VISIBLE);
+//                        final int finalI1 = i;
+//                        ic_twitt.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                try {
+//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI1).getValue()));
+//                                    startActivity(myIntent);
+//                                } catch (ActivityNotFoundException e) {
+//                                    Toast.makeText(mContext, "No application can handle this request."
+//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                    }
+//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("linkedin")) {
+////                        tv_SocialMedia.setVisibility(View.VISIBLE);
+//                        ic_link.setVisibility(View.VISIBLE);
+//                        final int finalI5 = i;
+//                        ic_link.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                try {
+//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI5).getValue()));
+//                                    startActivity(myIntent);
+//                                } catch (ActivityNotFoundException e) {
+//                                    Toast.makeText(mContext, "No application can handle this request."
+//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                    }
+//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("pinterest")) {
+////                        tv_SocialMedia.setVisibility(View.VISIBLE);
+//                        ic_pin.setVisibility(View.VISIBLE);
+//                        final int finalI4 = i;
+//                        ic_pin.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                try {
+//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI4).getValue()));
+//                                    startActivity(myIntent);
+//                                } catch (ActivityNotFoundException e) {
+//                                    Toast.makeText(mContext, "No application can handle this request."
+//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                    }
+//                    if (getBusinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("youtube")) {
+////                        tv_SocialMedia.setVisibility(View.VISIBLE);
+//                        ic_yout.setVisibility(View.VISIBLE);
+//                        final int finalI2 = i;
+//                        ic_yout.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                try {
+//                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getBusinessData.getSocialMedia().get(finalI2).getValue()));
+//                                    startActivity(myIntent);
+//                                } catch (ActivityNotFoundException e) {
+//                                    Toast.makeText(mContext, "No application can handle this request."
+//                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                    }
+//                }
+//            } else {
+//                LsocialMedia.setVisibility(View.GONE);
+//                tv_SocialMedia.setVisibility(View.GONE);
+//            }
+//        } else {
+//            LsocialMedia.setVisibility(View.GONE);
+//            tv_SocialMedia.setVisibility(View.GONE);
+//        }
+//        contactDetail.clear();
+//        if (getBusinessData.getPhoneNumbers().size() > 0) {
+//            for (int i = 0; i < getBusinessData.getPhoneNumbers().size(); i++) {
+//                Config.logV("Phone @@@@@@@@@@@@" + getBusinessData.getPhoneNumbers().get(i).getInstance());
+//                ContactModel contact = new ContactModel();
+//                contact.setInstance(getBusinessData.getPhoneNumbers().get(i).getInstance());
+//                contact.setResource(getBusinessData.getPhoneNumbers().get(i).getResource());
+//                contact.setLabel(getBusinessData.getPhoneNumbers().get(i).getLabel());
+//                contactDetail.add(contact);
+//            }
+//        }
+//        if (getBusinessData.getEmails().size() > 0) {
+//            for (int i = 0; i < getBusinessData.getEmails().size(); i++) {
+//                ContactModel contact = new ContactModel();
+//                contact.setInstance(getBusinessData.getEmails().get(i).getInstance());
+//                contact.setResource(getBusinessData.getEmails().get(i).getResource());
+//                contact.setLabel(getBusinessData.getEmails().get(i).getLabel());
+//                contactDetail.add(contact);
+//            }
+//        }
+//
+//        if (getBusinessData.getPhoneNumbers().size() > 0 || getBusinessData.getEmails().size() > 0 && contactDetail.size() > 0) {
+//            tv_contact.setVisibility(View.VISIBLE);
+//            tv_contact.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (!isContact) {
+//                        Config.logV("Open");
+//                        isContact = true;
+//                        tv_contact.setText("Contact");
+//                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.contact_selected, 0, 0);
+//                        BottomSheetContactDialog();
+//                    } else {
+//                        Config.logV("CLosed");
+//                    }
+//                }
+//            });
+//        } else {
+//            tv_contact.setVisibility(View.GONE);
+//        }
+//        tv_msg.setEnabled(true);
+        myViewHolder.tv_name.setText(getBusinessData.getBusinessName());
+        myViewHolder.rating.setRating(getBusinessData.getAvgRating());
+        if (getBusinessData.getServiceSector().getDisplayName() != null && getBusinessData.getServiceSubSector().getDisplayName() != null) {
+            myViewHolder.tv_domain.setText(getBusinessData.getServiceSector().getDisplayName() + " " + "(" + getBusinessData.getServiceSubSector().getDisplayName() + ")");
         }
-        if (searchdetailList.getParking_type_location1() != null) {
-            if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText(Config.toTitleCase(searchdetailList.getParking_type_location1()) + " Parking ");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_parking, 0, 0);
-                dynaText.setMaxLines(1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                dynaText.setLayoutParams(params1);
-                parent.addView(dynaText);
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, searchdetailList.getParking_type_location1() + " parking available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-        if (searchdetailList.getAlways_open_location1() != null) {
-            if (searchdetailList.getAlways_open_location1().equalsIgnoreCase("1")) {
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("24 Hours");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_24hours, 0, 0);
-                dynaText.setMaxLines(1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                dynaText.setLayoutParams(params1);
-                parent.addView(dynaText);
-
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Open 24 hours", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-        if (searchdetailList.getDentistemergencyservices_location1() != null) {
-            if (searchdetailList.getDentistemergencyservices_location1().equalsIgnoreCase("1")) {
-
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("Emergency");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
-                dynaText.setMaxLines(1);
-
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
-
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-        if (searchdetailList.getDocambulance_location1() != null) {
-            if (searchdetailList.getDocambulance_location1().equalsIgnoreCase("1")) {
-
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("Ambulance");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_ambulance, 0, 0);
-                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                dynaText.setMaxLines(1);
-
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
-
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Ambulance services available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-        if (searchdetailList.getFirstaid_location1() != null) {
-            if (searchdetailList.getFirstaid_location1().equalsIgnoreCase("1")) {
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("First Aid");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_firstaid, 0, 0);
-                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                dynaText.setMaxLines(1);
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
-
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "First aid services available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-        if (searchdetailList.getPhysiciansemergencyservices_location1() != null) {
-            if (searchdetailList.getPhysiciansemergencyservices_location1().equalsIgnoreCase("1")) {
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("Emergency");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
-                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                dynaText.setMaxLines(1);
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
-
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-        if (searchdetailList.getTraumacentre_location1() != null) {
-            if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
-
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("Trauma");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_trauma, 0, 0);
-                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                dynaText.setMaxLines(1);
-
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
-
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Trauma care available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            }
-        }
-        myViewHolder.layout_type.addView(parent);
-        //////////////////////////////////////////////////////////////
-        Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        myViewHolder.tv_name.setTypeface(tyface_confm);
-        myViewHolder.btncheckin.setTypeface(tyface_confm);
-        // myViewHolder.tv_Open.setTypeface(tyface_confm);
-
-        myViewHolder.tv_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchDetailViewFragment.onMethodOpenMap(searchdetailList.getLocation1());
-            }
-        });
-        myViewHolder.layout_row.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Config.logV("UNIUE ID----------------" + searchdetailList.getUniqueid());
-
-                Config.logV("Popular Text__________@@@Dele");
-                String unique_id = searchdetailList.getUniqueid();
-                searchDetailViewFragment.onMethodCallback(searchdetailList.getUniqueid(),searchdetailList.getClaimable());
-            }
-        });
-
-        if (searchdetailList.getAccountType() != null) {
-            if (searchdetailList.getAccountType().equals("1")) {
-                myViewHolder.tv_branch_name.setText(searchdetailList.getBranch_name());
-                myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
-                Log.i("qazqaz", String.valueOf(searchdetailList.getBranchSpCount()));
-            } else if ((searchdetailList.getAccountType().equals("0"))) {
-                myViewHolder.tv_count.setVisibility(View.VISIBLE);
-                Log.i("qaz", String.valueOf(searchdetailList.getBranchSpCount()));
-            }
-        } else {
-            myViewHolder.tv_branch_name.setVisibility(View.GONE);
-        }
-        Log.i("Claaaaim", String.valueOf(searchdetailList.getClaimable()));
-
-        if (searchdetailList.getClaimable().equals("1")) {
-            myViewHolder.tv_claimable.setVisibility(View.VISIBLE);
-            myViewHolder.L_layout_type.setVisibility(View.GONE);
-            myViewHolder.L_checkin.setVisibility(View.GONE);
-
-        } else {
-            myViewHolder.tv_claimable.setVisibility(View.INVISIBLE);
-            myViewHolder.L_layout_type.setVisibility(View.VISIBLE);
-            myViewHolder.L_checkin.setVisibility(View.VISIBLE);
-        }
-        myViewHolder.tv_claimable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(activity, "Use jaldee.com in Web Browser to Claim your Business", Toast.LENGTH_SHORT).show();
-            }
-        });
-        if (searchdetailList.getQualification() != null) {
-            myViewHolder.tv_name.setText(searchdetailList.getTitle() + " " + searchdetailList.getQualification());
-        } else {
-            myViewHolder.tv_name.setText(searchdetailList.getTitle());
-        }
-        if (searchdetailList.getSector() != null) {
-            myViewHolder.tv_domain.setVisibility(View.VISIBLE);
-            myViewHolder.tv_domain.setText(searchdetailList.getSector());
-        } else {
-            myViewHolder.tv_domain.setVisibility(View.GONE);
-        }
-        if (searchdetailList.getPlace1() != null) {
-            myViewHolder.tv_location.setVisibility(View.VISIBLE);
-            // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
-            Config.logV("Place @@@@@@@@@@@@@@" + searchdetailList.getDistance());
-            Double distance = Double.valueOf(searchdetailList.getDistance()) * 1.6;
-
-            myViewHolder.tv_location.setText(searchdetailList.getPlace1() + " ( " + String.format("%.2f", distance) + " km )");
-        } else {
-            myViewHolder.tv_location.setVisibility(View.GONE);
-        }
-        if (searchdetailList.getFuture_checkins() != null) {
-            if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
-                myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
-                myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                        iCheckIn.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
-                        iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
-                        iCheckIn.putExtra("accountID", searchdetailList.getId());
-
-                        iCheckIn.putExtra("googlemap", searchdetailList.getLocation1());
-                        // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
-                        iCheckIn.putExtra("from", "future_date");
-                        iCheckIn.putExtra("title", searchdetailList.getTitle());
-                        iCheckIn.putExtra("place", searchdetailList.getPlace1());
-                        Config.logV("sector%%%%%%-------------" + searchdetailList.getSectorname());
-                        iCheckIn.putExtra("sector", searchdetailList.getSectorname());
-                        iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
-                        context.startActivity(iCheckIn);
-                    }
-                });
-            } else {
-                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-            }
-        } else {
-            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-        }
-//////////////////////////////////////////////////////////////////////////////////////////
-
-        if (searchdetailList.getId().equalsIgnoreCase(searchdetailList.getQId())) {
-            Date c = Calendar.getInstance().getTime();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String formattedDate = df.format(c);
-            System.out.println("Current time => " + formattedDate);
-
-
-            Date date1 = null, date2 = null;
-            try {
-                date1 = df.parse(formattedDate);
-                if (searchdetailList.getAvail_date() != null )
-                    date2 = df.parse(searchdetailList.getAvail_date());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            if (searchdetailList.getMessage() != null && searchdetailList.getClaimable() == null) {
-//                myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
-//                myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
-            } else {
-//                myViewHolder.tv_qmessage.setVisibility(View.GONE);
-            }
-            if (searchdetailList.getShow_waiting_time() != null) {
-
-                // For ML/Fixed
-                if (searchdetailList.getShow_waiting_time().equalsIgnoreCase("1")) {
-
-                    if(searchdetailList.isOnlineCheckIn() != false) {
-                        if (searchdetailList.getAvail_date() != null) {
-                            myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-
-                            // For Today's Checkin
-                            if (formattedDate.equalsIgnoreCase(searchdetailList.getAvail_date())) {
-                                // Next Available Timing
-                                if (searchdetailList.getServiceTime() != null) {
-                                    Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
-                                            "fonts/Montserrat_Bold.otf");
-                                    String firstWord = "Next Available Time ";
-                                    String secondWord = "\nToday, " + searchdetailList.getServiceTime();
-                                    myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
-                                } else { // Est. Waiting Time
-                                    Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
-                                            "fonts/Montserrat_Bold.otf");
-                                    String firstWord = "Est Wait Time ";
-                                    String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
-                                    myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
-                                }
-
-                            } else if (date1.compareTo(date2) < 0) {   // For Future
-                                try {
-                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                                    Date date = format.parse(searchdetailList.getAvail_date());
-                                    String day = (String) DateFormat.format("dd", date);
-                                    String monthString = (String) DateFormat.format("MMM", date);
-
-                                    Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
-                                            "fonts/Montserrat_Bold.otf");
-                                    String firstWord = "Next Available Time ";
-                                    String secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
-                                    myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
-                                    myViewHolder.btncheckin.setEnabled(false);
-                                    myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                myViewHolder.tv_WaitTime.setEnabled(false);
-                                myViewHolder.btncheckin.setEnabled(false);
-                                myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                                myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-////                                 myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-                            }
-                        } else { // Available Date is null
-                            myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                            myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-                            myViewHolder.btncheckin.setEnabled(false);
-                            myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                        }
-                    } else {
-                        myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                        myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-                        myViewHolder.btncheckin.setEnabled(false);
-                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                        myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                    }
-                } else { // No Waiting Time && Show/Hide Token
-                    if (searchdetailList.getCalculationMode() != null) {
-                        if ( searchdetailList.isShowToken()) {
-                            myViewHolder.btncheckin.setText("GET TOKEN");
-                            myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
-                            if (searchdetailList.getPersonAhead() != -1) {
-                                Config.logV("personAheadtttt @@@@@@@@@@@6666@@@ ####" + searchdetailList.getPersonAhead());
-                                if (searchdetailList.getPersonAhead() == 0) {
-                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                                    myViewHolder.tv_WaitTime.setText(" Be the first in line");
-                                } else {
-                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                                    String firstWord = String.valueOf(searchdetailList.getPersonAhead());
-                                    String secondWord = " People waiting in line";
-                                    Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
-                                            "fonts/Montserrat_Bold.otf");
-                                    Spannable spannable = new SpannableString(firstWord + secondWord);
-                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                                    myViewHolder.tv_WaitTime.setText(spannable);
-                                }
-                            }
-                        } else {
-                            if (searchdetailList.getCalculationMode().equalsIgnoreCase("NoCalc") && !searchdetailList.isShowToken()) {
-                                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-
-                                if (termilogy.equals("order")) {
-                                    myViewHolder.btncheckin.setText("ORDER");
-                                    myViewHolder.tv_Futuredate.setText("Do you want to Order for another day?");
-                                } else {
-                                    myViewHolder.btncheckin.setText("CHECK-IN");
-                                    myViewHolder.tv_Futuredate.setText("Do you want to Check-in for another day?");
-                                }
-                            } else {
-                                if (termilogy.equals("order")) {
-                                    myViewHolder.btncheckin.setText("ORDER");
-                                    myViewHolder.tv_Futuredate.setText("Do you want to Order for another day?");
-                                } else {
-                                    myViewHolder.btncheckin.setText("CHECK-IN");
-                                    myViewHolder.tv_Futuredate.setText("Do you want to Check-in for another day?");
-                                }
-                            }
-                        }
-                    } else {
-                        myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                        myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-                        myViewHolder.btncheckin.setEnabled(false);
-                        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                        myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-                    }
-                }
-            } else {
-                myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-                myViewHolder.btncheckin.setEnabled(false);
-                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-            }
-        } else {
-
-            myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-            myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-            myViewHolder.btncheckin.setEnabled(false);
-            myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
-
-            if (searchdetailList.getMessage() != null) {
-//                myViewHolder.tv_qmessage.setVisibility(View.VISIBLE);
-//                myViewHolder.tv_qmessage.setText(searchdetailList.getMessage());
-                myViewHolder.tv_WaitTime.setVisibility(View.GONE);
-                myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
-                myViewHolder.btncheckin.setEnabled(false);
-            } else {
-//                myViewHolder.tv_qmessage.setVisibility(View.GONE);
-            }
-
-
-        }
-
-
-        myViewHolder.btncheckin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                iCheckIn.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
-                iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
-                iCheckIn.putExtra("accountID", searchdetailList.getId());
-                iCheckIn.putExtra("googlemap", searchdetailList.getLocation1());
-                // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
-                iCheckIn.putExtra("from", "checkin");
-                iCheckIn.putExtra("title", searchdetailList.getTitle());
-                iCheckIn.putExtra("place", searchdetailList.getPlace1());
-                Config.logV("sector%%%%%%-------------" + searchdetailList.getSectorname());
-                iCheckIn.putExtra("sector", searchdetailList.getSectorname());
-                iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
-                context.startActivity(iCheckIn);
-            }
-        });
-        myViewHolder.btnappointment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent iAppointment = new Intent(v.getContext(), Appointment.class);
-                iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
-                iAppointment.putExtra("uniqueID", searchdetailList.getUniqueid());
-                iAppointment.putExtra("accountID", searchdetailList.getId());
-                iAppointment.putExtra("googlemap", searchdetailList.getLocation1());
-                iAppointment.putExtra("from", "checkin");
-                iAppointment.putExtra("title", searchdetailList.getTitle());
-                iAppointment.putExtra("place", searchdetailList.getPlace1());
-                iAppointment.putExtra("sector", searchdetailList.getSectorname());
-                iAppointment.putExtra("subsector", searchdetailList.getSub_sector());
-                context.startActivity(iAppointment);
-            }
-        });
-        /////////////////////////////////////////////////////////
-        if (searchdetailList.getSpecialization_displayname() != null) {
-            final List<String> list_spec = searchdetailList.getSpecialization_displayname();
-
-            if (list_spec.size() > 0) {
-                if (list_spec.size() == 1) {
-
-                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_spec1.setText(list_spec.get(0));
-                    myViewHolder.tv_spec1.setTextSize(13);
-
-                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_spec2.setVisibility(View.GONE);
-                    myViewHolder.tv_spec3.setVisibility(View.GONE);
-                    myViewHolder.tv_spec22.setVisibility(View.GONE);
-                } else {
-
-                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_spec1.setText(list_spec.get(0) + " , ");
-                    myViewHolder.tv_spec1.setTextSize(13);
-                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                    // myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
-                    myViewHolder.tv_spec1.setMaxLines(1);
-
-                    if (list_spec.size() > 2) {
-
-                        myViewHolder.tv_spec1.setMaxEms(5);
-                        myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
-
-                        myViewHolder.tv_spec22.setText(list_spec.get(1) + " , ");
-                        myViewHolder.tv_spec22.setTextSize(13);
-                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
-                        myViewHolder.tv_spec22.setMaxLines(1);
-                        // myViewHolder.tv_spec22.setWidth(dpToPx(120));
-                        myViewHolder.tv_spec22.setMaxEms(8);
-
-                        myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
-                        myViewHolder.tv_spec2.setTextSize(13);
-                        myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
-                        myViewHolder.tv_spec2.setMaxLines(1);
-                        //  myViewHolder.tv_spec2.setWidth(dpToPx(120));
-                        myViewHolder.tv_spec2.setMaxEms(8);
-
-
-                        myViewHolder.tv_spec3.setText(" ...");
-                        myViewHolder.tv_spec3.setTextSize(13);
-                        myViewHolder.tv_spec3.setVisibility(View.VISIBLE);
-                    } else {
-                        myViewHolder.tv_spec22.setText(list_spec.get(1));
-                        myViewHolder.tv_spec22.setTextSize(13);
-                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
-                        //    myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
-                        myViewHolder.tv_spec22.setMaxLines(1);
-                        // myViewHolder.tv_spec22.setMaxEms(8);
-
-                        myViewHolder.tv_spec2.setVisibility(View.GONE);
-                        myViewHolder.tv_spec3.setVisibility(View.GONE);
-
-                    }
-
-                }
-
-                Config.logV("SpEc Open----------" + searchdetailList.isIs_SpecOpen() + "Prov" + searchdetailList.getTitle());
-
-
-                myViewHolder.tv_spec3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(),searchdetailList.getClaimable());
-                    }
-                });
-            }
-        } else {
-            myViewHolder.tv_spec1.setVisibility(View.GONE);
-            myViewHolder.tv_spec2.setVisibility(View.GONE);
-            myViewHolder.tv_spec3.setVisibility(View.GONE);
-            myViewHolder.tv_spec22.setVisibility(View.GONE);
-            myViewHolder.L_specialization.setVisibility(View.GONE);
-        }
-        //  Picasso.with(context).load(searchdetailList.getLogo()).fit().into(myViewHolder.profile);
-        Config.logV("LOGO @@@@" + searchdetailList.getLogo() + searchdetailList.getTitle());
-
-        Picasso.Builder builder = new Picasso.Builder(context);
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-        builder.build().load(searchdetailList.getLogo()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
-        if (searchdetailList.getGallery_thumb_nails() != null) {
-            if (searchdetailList.getGallery_thumb_nails().size() > 0) {
-                myViewHolder.mImageViewText.setVisibility(View.VISIBLE);
-                myViewHolder.mImageViewText.setText("+" + searchdetailList.getGallery_thumb_nails().size());
-            } else {
-                myViewHolder.mImageViewText.setVisibility(View.GONE);
-            }
-        } else {
-            myViewHolder.mImageViewText.setVisibility(View.GONE);
-        }
-
-
-        if (searchdetailList.getServices() != null) {
-
-
-            if (searchdetailList.getServices().size() > 0) {
-                myViewHolder.L_services.removeAllViews();
-                myViewHolder.L_services.setVisibility(View.VISIBLE);
-
-                int size = 0;
-                if (searchdetailList.getServices().size() == 1) {
-                    size = 1;
-                } else {
-                    if (searchdetailList.getServices().size() == 2)
-                        size = 2;
-                    else
-                        size = 3;
-                }
-                for (int i = 0; i < size; i++) {
-                    TextView dynaText = new TextView(context);
-                    Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                            "fonts/Montserrat_Regular.otf");
-                    dynaText.setTypeface(tyface);
-                    dynaText.setText(searchdetailList.getServices().get(i).toString());
-                    dynaText.setTextSize(13);
-                    dynaText.setPadding(5, 0, 5, 0);
-                    dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
-                    // dynaText.setBackground(context.getResources().getDrawable(R.drawable.input_border_rounded_blue_bg));
-
-                    dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
-                    dynaText.setMaxLines(1);
-                    if (size > 2) {
-                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                        dynaText.setMaxEms(10);
-                    }
-                    final int finalI = i;
-                    dynaText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ApiService(searchdetailList.getUniqueid(), searchdetailList.getServices().get(finalI).toString(), searchdetailList.getTitle());
-                        }
-                    });
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0, 0, 20, 0);
-
-                    dynaText.setLayoutParams(params);
-                    myViewHolder.L_services.addView(dynaText);
-
-                }
-
-                if (size > 3) {
-
-                    TextView dynaText = new TextView(context);
-                    dynaText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-
-                            mAdapterCallback.onMethodServiceCallback(searchdetailList.getServices(), searchdetailList.getTitle(), searchdetailList.getUniqueid());
-                        }
-                    });
-                    dynaText.setGravity(Gravity.CENTER);
-                    dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
-                    dynaText.setText(" ... ");
-                    // dynaText.setBackground(context.getResources().getDrawable(R.drawable.icon_arrowright_blue));
-                    myViewHolder.L_services.addView(dynaText);
-                }
-            } else {
-                myViewHolder.L_services.setVisibility(View.GONE);
-
-            }
-
-        } else {
-            myViewHolder.L_services.setVisibility(View.GONE);
-
-        }
-
-
-        if (searchdetailList.getRating() != null) {
-            myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
-        }
-
-
+//        if (getBusinessData.getBusinessDesc() != null) {
+//            myViewHolder.m.setVisibility(View.VISIBLE);
+//            tv_desc.setText(getBusinessData.getBusinessDesc());
+//            tv_desc.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    int lineCount = tv_desc.getLineCount();
+//                    //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
+//                    if (lineCount > 3) {
+//                        ResizableCustomView.doResizeTextView(mContext, tv_desc, 3, "..more", true);
+//                    } else {
+//                    }
+//                    // Use lineCount here
+//                }
+//            });
+//        } else {
+//            tv_desc.setVisibility(View.GONE);
+//        }
     }
 
 
@@ -1106,10 +1526,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
     }
 
-
-
-
-    private void ApiService(String uniqueID, final String serviceName, final String title) {
+        private void ApiService(String uniqueID, final String serviceName, final String title) {
 
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(context).create(ApiInterface.class);

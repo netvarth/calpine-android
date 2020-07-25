@@ -12,14 +12,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -44,6 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
@@ -102,6 +95,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -149,7 +147,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     SearchLocationAdapter mSearchLocAdapter;
     DepartmentAdapter mDepartmentAdapter;
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
-    int mProvoderId;
+    int mProviderId;
     ArrayList<String> ids;
     String uniqueID;
     String customUniqueID;
@@ -243,7 +241,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             homeUniqueId = bundle.getString("homeUniqueId");
             if (home != null && home.equals("home")) {
                 if (homeUniqueId != null) {
-                    ApiUniqueID(homeUniqueId);
+//                    apiFetchIdFromDeepLink(homeUniqueId);
                     uniqueID = homeUniqueId;
                     Log.i("uniqueCutomIdSecond",uniqueID);
                 }
@@ -251,6 +249,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 uniqueID = bundle.getString("uniqueID");
             }
             claimable = "0";
+            if (uniqueID != null) {
+                initSearchView(uniqueID);
+            }
         }
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -299,16 +300,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_ImageViewText.setTypeface(tyface);
         tv_mImageViewTextnew.setTypeface(tyface);
         L_layout = row.findViewById(R.id.layout_type);
-        //tv_contactdetails.setTypeface(tyface);
-        if(homeUniqueId==null){
-            ApiJaldeeCoupan(uniqueID);
-            ApiJDN(uniqueID);
-            ApiSearchViewTerminology(uniqueID);
-            ApiSearchViewDetail(uniqueID, mSearchResp);
-//            ApiSearchGallery(uniqueID);
-            ApiSearchVirtualFields(uniqueID);
-            apiShowDepartments(uniqueID);
-        }
+
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -362,31 +354,31 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_jdn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if(homeUniqueId==null){
+//            if(homeUniqueId==null){
                 onMethodJdn(uniqueID);
-            }else{
-                onMethodJdn(homeUniqueId);
-            }
+//            }else{
+//                onMethodJdn(homeUniqueId);
+//            }
             }
         });
         tv_coupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if(homeUniqueId==null){
+//            if(homeUniqueId==null){
                 onMethodCoupn(uniqueID);
-            }else{
-                onMethodCoupn(homeUniqueId);
-            }
+//            }else{
+//                onMethodCoupn(homeUniqueId);
+//            }
             }
         });
         tv_first_ccoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if(homeUniqueId==null){
+//            if(homeUniqueId==null){
                 onMethodFirstCoupn(uniqueID);
-            }else{
-                onMethodFirstCoupn(homeUniqueId);
-            }
+//            }else{
+//                onMethodFirstCoupn(homeUniqueId);
+//            }
             }
         });
         mInterface = (SearchLocationAdpterCallback) this;
@@ -404,7 +396,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Config.logV("Provider iD--------------" + String.valueOf(mProvoderId));
+            Config.logV("Provider iD--------------" + String.valueOf(mProviderId));
             final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
             dialog.setContentView(R.layout.reply);
             dialog.show();
@@ -438,7 +430,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             btn_send.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String modifyAccountID = String.valueOf(mProvoderId);
+                    String modifyAccountID = String.valueOf(mProviderId);
                     ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
                 }
             });
@@ -453,40 +445,341 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         return row;
     }
 
-    private void apiShowDepartments(String uniqueID) {
+    /**
+     * Load every details for the search details page
+     * @param uniqueID
+     */
+    private void initSearchView (String uniqueID) {
+        apiJaldeeCoupon(uniqueID);
+        apiJDN(uniqueID);
+        apiSearchViewTerminology(uniqueID);
+        apiVirtualFields(uniqueID);
+        apiSettings_Details(uniqueID, mSearchResp);
+//        apiSearchViewDetail(uniqueID, mSearchResp);
+    }
+    private void apiSettings_Details(final String muniqueID, final List<SearchAWsResponse> mSearchResp) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Call<ArrayList<DepartmentModal>> call = apiService.getUserandDepartments(Integer.parseInt(uniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<DepartmentModal>>() {
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<SearchSetting> call = apiService.getSearchViewSetting(Integer.parseInt(muniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<SearchSetting>() {
             @Override
-            public void onResponse(Call<ArrayList<DepartmentModal>> call, Response<ArrayList<DepartmentModal>> response) {
+            public void onResponse(Call<SearchSetting> call, Response<SearchSetting> response) {
                 try {
-//                    if (mDialog.isShowing())
-//                    Config.closeDialog(getActivity(), mDialog);
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
                     Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code------Setting-------------------" + response.code());
                     if (response.code() == 200) {
-                        // Department Section Starts
-                        Log.i("DepartmentProviders", new Gson().toJson(response.body()));
+                        mSearchSettings = response.body();
+                        apiSearchViewDetail(muniqueID, mSearchResp);
+                        if (mSearchSettings.isFilterByDept()) {
+                            apiShowDepartmentsOrServices(muniqueID);
+                        }
+                        Config.logV("Location Adapter-----------------------");
+                        ApiSearchViewLocation(muniqueID);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList<DepartmentModal>> call, Throwable t) {
+            public void onFailure(Call<SearchSetting> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog(getActivity(), mDialog);
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
             }
         });
-
     }
+    private void apiSearchViewDetail(final String muniqueID, final List<SearchAWsResponse> mSearchRespPass) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<SearchViewDetail> call = apiService.getSearchViewDetail(Integer.parseInt(muniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<SearchViewDetail>() {
+            @Override
+            public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----detail--------------------" + response.code());
+                    if (response.code() == 200) {
+                        mBusinessDataList = response.body();
+                        if (homeUniqueId != null) {
+                            ApiAddFavo(mBusinessDataList.getId());
+                        }
+                        Log.i("plplplp", mBusinessDataList.toString());
+                        Log.i("plplplp", new Gson().toJson(mBusinessDataList));
+                        // mbranchId = mBusinessDataList.getBranchId();
+                        online_presence = mBusinessDataList.isOnlinePresence();
+                        donationFundRaising = mBusinessDataList.isDonationFundRaising();
+                        lat_long = mBusinessDataList.getBaseLocation().getLattitude() + "," + mBusinessDataList.getBaseLocation().getLongitude();
+                        Config.logV("Provider------------" + new Gson().toJson(mBusinessDataList));
+                        if (response.body().getId() != 0) {
+                            mProviderId = response.body().getId();
+                        }
+                        UpdateMainUI(mBusinessDataList);
+                        apiSearchGallery(uniqueID);
+//                        if(homeUniqueId==null){
+
+//                        }else{
+//                            ApiSearchGallery(homeUniqueId);
+//                        }
+                        ApiFavList(mSearchRespPass, claimable);
+//                        if (mProviderId != 0) {
+//                            APIServiceDepartments(mProviderId);
+//                        }
+//                        if(homeUniqueId==null){
+//                            ApiSearchViewLocation(uniqueID);
+////                            listProviders(uniqueID);
+//                        }else{
+
+//                            ApiSearchViewLocation(homeUniqueId);
+//                            listProviders(homeUniqueId);
+//                        }
+//                        listDoctorsByDepartment();
+//                        apiSearchViewSetting(uniqueID);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchViewDetail> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+            }
+        });
+    }
+
+    /**
+     * Api to load Jaldee Coupons available of a particular account
+     * @param uniqueID unique Id of the account
+     */
+    private void apiJaldeeCoupon(String uniqueID) {
+        couponAvailable = false;
+        firstCouponAvailable = false;
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
+                try {
+                    if (response.code() == 200) {
+                        couponResponse = response.body();
+                        Log.i("couponRR", couponResponse.toString());
+                        Log.i("couponRR", new Gson().toJson(couponResponse));
+                        if (couponResponse.size() > 0) {
+                            for (int i = 0; i < couponResponse.size(); i++) {
+                                if (couponResponse.get(i).isFirstCheckinOnly()) {
+                                    firstCouponAvailable = true;
+                                } else {
+                                    couponAvailable = true;
+                                }
+                                if (firstCouponAvailable && couponAvailable) {
+                                    break;
+                                }
+                            }
+                        }
+                        if (firstCouponAvailable) {
+                            tv_first_ccoupon.setVisibility(View.VISIBLE);
+                        } else {
+                            tv_first_ccoupon.setVisibility(View.GONE);
+                        }
+                        if (couponAvailable) {
+                            tv_coupon.setVisibility(View.VISIBLE);
+                        } else {
+                            tv_coupon.setVisibility(View.GONE);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ArrayList<CoupnResponse>> call, Throwable t) {
+            }
+        });
+    }
+
+    /**
+     * api to load JDN (Jaldee Discount Network) details of a particular account
+     * @param uniqueID unique id of the account
+     */
+    private void apiJDN(String uniqueID) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<JdnResponse> call = apiService.getJdnList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<JdnResponse>() {
+            @Override
+            public void onResponse(Call<JdnResponse> call, Response<JdnResponse> response) {
+                try {
+                    if (mDialog.isShowing())
+                        Config.closeDialog(getActivity(), mDialog);
+                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----detail--------------------" + response.code());
+                    if (response.code() == 200) {
+                        jdnList = response.body();
+                        jdnDiscount = jdnList.getDiscPercentage();
+                        jdnMaxvalue = jdnList.getDiscMax();
+                        if (new Gson().toJson(jdnList).equals("{}")) {
+                            tv_jdn.setVisibility(View.GONE);
+                        } else {
+                            tv_jdn.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JdnResponse> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(getActivity(), mDialog);
+            }
+        });
+    }
+
+    private void apiShowDepartmentsOrServices(final String uniqueID) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Call<ArrayList<SearchDepartmentServices>> call = apiService.getDepartmentServices(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        // Department Section Starts
+                        Log.i("DepartmentProviders", new Gson().toJson(response.body()));
+                        apiIntegrateWithUsers (uniqueID, response.body());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
+
+    private void apiIntegrateWithUsers(String uniqueID, final ArrayList<SearchDepartmentServices> deptServices) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Call<ArrayList<SearchDepartmentServices>> call = apiService.getUserandDepartments(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
+                try {
+                    ArrayList<SearchDepartmentServices> deptMergedList = new ArrayList<>();
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        // Department Section Starts
+                        Log.i("DepartmentProviders", new Gson().toJson(response.body()));
+                        ArrayList<SearchDepartmentServices> deptProviders = response.body();
+                        if (deptServices != null && deptServices.size() > 0) {
+                            for (int dsIndex=0; dsIndex < deptServices.size(); dsIndex++) {
+                                for (int dpIndex=0; dpIndex < deptProviders.size(); dpIndex++) {
+                                    if (deptServices.get(dsIndex).getDepartmentId().equalsIgnoreCase(deptProviders.get(dpIndex).getDepartmentId())) {
+                                        SearchDepartmentServices merged_S_P =  deptServices.get(dpIndex);
+                                        merged_S_P.setUsers(deptProviders.get(dpIndex).getUsers());
+                                        deptMergedList.add(merged_S_P);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        Log.i("deptMergedList", new Gson().toJson(deptMergedList));
+                        if (deptMergedList.size() > 0) {
+                            mSearchDepartmentServices.clear();
+                            String responses = new Gson().toJson(response.body());
+                            Config.logV("Deapartnamesss---------------" + responses);
+                                for (int i = 0; i < deptMergedList.size(); i++) {
+                                    departmentNameList.add(deptMergedList.get(i).getDepartmentName());
+                                    departmentCodeList.add(deptMergedList.get(i).getDepartmentCode());
+                                }
+                                mSearchDepartmentServices.addAll(deptMergedList);
+                                if (mSearchDepartmentServices != null) {
+                                    if (mSearchDepartmentServices.size() == 1) {
+                                        departmentHeading.setVisibility(View.VISIBLE);
+                                        departmentHeading.setText("Department (1)");
+                                    } else if (mSearchDepartmentServices.size() > 1) {
+                                        departmentHeading.setVisibility(View.VISIBLE);
+                                        departmentHeading.setText("Departments " + "(" + mSearchDepartmentServices.size() + ")");
+                                    }
+                                } else {
+                                    departmentHeading.setVisibility(View.GONE);
+                                }
+                                Log.i("departmentservice", new Gson().toJson(mSearchDepartmentServices));
+                                Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
+                                Config.logV("DepartmEntqweName --------------" + departmentNameList);
+                                Log.i("SizeofDepartments", String.valueOf(mSearchDepartmentServices.size()));
+                                RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
+                                mRecycleDepartment.setVisibility(View.VISIBLE);
+                                mRecycleDepartment.setLayoutManager(mDepartmentLayout);
+                                mDepartmentAdapter.setFields(deptMergedList, mBusinessDataList.getBusinessName());
+                                mRecycleDepartment.setAdapter(mDepartmentAdapter);
+                                mDepartmentAdapter.notifyDataSetChanged();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
+
 
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
         ApiInterface apiService =
@@ -613,7 +906,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 //        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
 //        mDialog.show();
-        Call<ArrayList<SearchDonation>> call = apiService.getSearchDonation(mProvoderId);
+        Call<ArrayList<SearchDonation>> call = apiService.getSearchDonation(mProviderId);
         call.enqueue(new Callback<ArrayList<SearchDonation>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchDonation>> call, Response<ArrayList<SearchDonation>> response) {
@@ -775,27 +1068,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         specialSeeAll.setVisibility(View.GONE);
                         LSpecialization_2.setVisibility(View.VISIBLE);
                         tv_spec1.setVisibility(View.VISIBLE);
-//                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
-//                            tv_spec2.setVisibility(View.GONE);
-//                        }
-//                       else{
-//                            tv_spec2.setVisibility(View.VISIBLE);
-//                        }
-//                        tv_spec1.setMaxEms(6);
-//                        tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
-//                        tv_spec1.setMaxLines(1);
-                        //   tv_spec2.setVisibility(View.VISIBLE);
-//                        tv_spec2.setMaxEms(6);
-//                        tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
-//                        tv_spec2.setMaxLines(1);
-                        //   tv_seeAll.setVisibility(View.VISIBLE);
                         String specialization = getBussinessData.getSpecialization().get(0).toString() + ", " + getBussinessData.getSpecialization().get(1).toString() +", ";
                         String more =  tv_seeAll.getText().toString();
                         final Spannable spannable1 = new SpannableString(specialization + " " +  more);
                         spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                                 0, more.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        //   tv_spec1.setText(spannable1);
-                        //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
                         final Spannable seeAll = new SpannableString(spannable1);
                         ClickableSpan clickableSpan = new ClickableSpan() {
                             @Override
@@ -818,22 +1095,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         LSpecialization_2.setVisibility(View.VISIBLE);
                                         LSpecialization.setVisibility(View.GONE);
                                         tv_spec1.setVisibility(View.VISIBLE);
-//                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
-//                                            tv_spec2.setVisibility(View.GONE);
-//                                        }
-//                                        else{
-//                                            tv_spec2.setVisibility(View.VISIBLE);
-//                                        }
-                                        //  tv_seeAll.setVisibility(View.VISIBLE);
-//                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
-//                                            tv_spec2.setVisibility(View.GONE);
-//                                        }
-//                                        else{
-//                                            tv_spec2.setVisibility(View.VISIBLE);
-//                                        }
                                         tv_seeAll.setVisibility(View.VISIBLE);
                                         tv_spec1.setText(seeAll);
-                                        //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
                                         mrecycle_specialisation.setVisibility(View.GONE);
                                         specialSeeAll.setVisibility(View.GONE);
                                     }
@@ -892,12 +1155,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         tv_seeAll.setVisibility(View.VISIBLE);
                                         tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString() + ", ");
                                         tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
-
                                     }
                                 });
-
                                 LSpecialization.addView(parent1);
-
                             }
                         };
                         seeAll.setSpan(clickableSpan,specialization.length(),specialization.length() + more.length() + 1,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -905,107 +1165,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 specialization.length(), specialization.length() + more.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         tv_spec1.setText(seeAll);
                         tv_spec1.setMovementMethod(LinkMovementMethod.getInstance());
-//                        tv_seeAll.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                LSpecialization_2.setVisibility(View.GONE);
-//                                mrecycle_specialisation.setVisibility(View.VISIBLE);
-//                                specialSeeAll.setVisibility(View.VISIBLE);
-//                                LSpecialization.removeAllViews();
-//
-//
-//                                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-//                                mrecycle_specialisation.setLayoutManager(mLayoutManager);
-//                                sAdapter = new SpecialisationAdapter(getBussinessData);
-//                                mrecycle_specialisation.setAdapter(sAdapter);
-//                                sAdapter.notifyDataSetChanged();
-//
-//                                specialSeeAll.setOnClickListener(new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View v) {
-//                                        LSpecialization_2.setVisibility(View.VISIBLE);
-//                                        LSpecialization.setVisibility(View.GONE);
-//                                        tv_spec1.setVisibility(View.VISIBLE);
-//                                        if(getBussinessData.getSpecialization().get(0).toString().length()>20 || getBussinessData.getSpecialization().get(1).toString().length()>15 ){
-//                                            tv_spec2.setVisibility(View.GONE);
-//                                        }
-//                                        else{
-//                                            tv_spec2.setVisibility(View.VISIBLE);
-//                                        }
-//                                        tv_seeAll.setVisibility(View.VISIBLE);
-//                                        tv_spec1.setText(spannable1);
-//                                      //  tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
-//                                        mrecycle_specialisation.setVisibility(View.GONE);
-//                                        specialSeeAll.setVisibility(View.GONE);
-//                                    }
-//                                });
-//
-//                                LinearLayout parent1 = new LinearLayout(mContext);
-//                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                                parent1.setOrientation(LinearLayout.VERTICAL);
-//                                parent1.setLayoutParams(params);
-//                                for (int i = 0; i < getBussinessData.getSpecialization().size(); i++) {
-//
-//                                    TextView dynaText = new TextView(mContext);
-//                                    dynaText.setText(getBussinessData.getSpecialization().get(i).toString());
-//                                    dynaText.getLineSpacingExtra();
-//                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                                        dynaText.getJustificationMode();
-//                                    }
-//                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                                        dynaText.getLetterSpacing();
-//                                    }
-//                                    dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-//                                    dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
-//                                    //  dynaText.setPadding(5, 5, 5, 5);
-//                                    dynaText.setMaxLines(1);
-//                                    dynaText.setLayoutParams(params);
-//                                    params.setMargins(0, 10, 0, 0);
-//                                    dynaText.setGravity(Gravity.LEFT);
-//                                    parent1.addView(dynaText);
-//
-//                                }
-//                                TextView dynaText = new TextView(mContext);
-//                                Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-//                                        "fonts/Montserrat_Regular.otf");
-//                                dynaText.setTypeface(tyface);
-//                                dynaText.setText("See Less");
-//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                                    dynaText.getJustificationMode();
-//                                }
-//                                dynaText.getLineSpacingExtra();
-//                                dynaText.getLineSpacingExtra();
-//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                                    dynaText.getLetterSpacing();
-//                                }
-//
-//                                dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-//                                dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
-//                                // dynaText.setPadding(5, 5, 5, 5);
-//                                dynaText.setMaxLines(1);
-//                                dynaText.setLayoutParams(params);
-//
-//
-//                                params.setMargins(0, 10, 0, 0);
-//                                dynaText.setGravity(Gravity.LEFT);
-//                                parent1.addView(dynaText);
-//                                dynaText.setOnClickListener(new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View v) {
-//                                        LSpecialization_2.setVisibility(View.VISIBLE);
-//                                        LSpecialization.setVisibility(View.GONE);
-//                                        tv_spec1.setVisibility(View.VISIBLE);
-//                                        tv_spec2.setVisibility(View.VISIBLE);
-//                                        tv_seeAll.setVisibility(View.VISIBLE);
-//                                        tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString() + ", ");
-//                                        tv_spec2.setText(getBussinessData.getSpecialization().get(1).toString());
-//
-//                                    }
-//                                });
-//
-//                                LSpecialization.addView(parent1);
-//                            }
-//                        });
                     }
                 }
             } else {
@@ -1038,8 +1197,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     e.printStackTrace();
                                 }
                             }
-
-
                         });
                     }
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("googleplus")) {
@@ -1058,8 +1215,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     e.printStackTrace();
                                 }
                             }
-
-
                         });
                     }
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("twitter")) {
@@ -1078,8 +1233,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     e.printStackTrace();
                                 }
                             }
-
-
                         });
                     }
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("linkedin")) {
@@ -1098,8 +1251,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     e.printStackTrace();
                                 }
                             }
-
-
                         });
                     }
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("pinterest")) {
@@ -1118,8 +1269,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     e.printStackTrace();
                                 }
                             }
-
-
                         });
                     }
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("youtube")) {
@@ -1138,8 +1287,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     e.printStackTrace();
                                 }
                             }
-
-
                         });
                     }
                 }
@@ -1182,24 +1329,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         isContact = true;
                         tv_contact.setText("Contact");
                         tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.contact_selected, 0, 0);
-                       /* mrecycle_contactdetail.setVisibility(View.VISIBLE);
-                        tv_contactdetails.setVisibility(View.VISIBLE);
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                        mrecycle_contactdetail.setLayoutManager(mLayoutManager);
-                        ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity());
-                        mrecycle_contactdetail.setAdapter(checkAdapter);
-                        checkAdapter.notifyDataSetChanged();*/
                         BottomSheetContactDialog();
                     } else {
                         Config.logV("CLosed");
-                        //   tv_contactdetails.setVisibility(View.GONE);
-                        /* mrecycle_contactdetail.setVisibility(View.GONE);*/
                     }
                 }
             });
         } else {
-            //   tv_contactdetails.setVisibility(View.GONE);
-            //  mrecycle_contactdetail.setVisibility(View.GONE);
             tv_contact.setVisibility(View.GONE);
         }
 
@@ -1264,76 +1400,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
     }
 
-    private void ApiSearchViewDetail(final String muniqueID, final List<SearchAWsResponse> mSearchRespPass) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchViewDetail> call = apiService.getSearchViewDetail(Integer.parseInt(muniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<SearchViewDetail>() {
-            @Override
-            public void onResponse(Call<SearchViewDetail> call, final Response<SearchViewDetail> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-----detail--------------------" + response.code());
-                    if (response.code() == 200) {
-                        mBusinessDataList = response.body();
-                        if (homeUniqueId != null) {
-                            ApiAddFavo(mBusinessDataList.getId());
-                        }
-                        Log.i("plplplp", mBusinessDataList.toString());
-                        Log.i("plplplp", new Gson().toJson(mBusinessDataList));
-                        mbranchId = mBusinessDataList.getBranchId();
-                        online_presence = mBusinessDataList.isOnlinePresence();
-                        donationFundRaising = mBusinessDataList.isDonationFundRaising();
-                        virtualServices = mBusinessDataList.isVirtualServices();
-                        lat_long = mBusinessDataList.getBaseLocation().getLattitude() + "," + mBusinessDataList.getBaseLocation().getLongitude();
-                        Config.logV("Provider------------" + new Gson().toJson(mBusinessDataList));
-                        if (response.body().getId() != 0) {
-                            mProvoderId = response.body().getId();
-                        }
-                        UpdateMainUI(mBusinessDataList);
-                        if(homeUniqueId==null){
-                            ApiSearchGallery(uniqueID);
-                        }else{
-                            ApiSearchGallery(homeUniqueId);
-                        }
-                        ApiFavList(mSearchRespPass, claimable);
-                        if (mProvoderId != 0) {
-                            APIServiceDepartments(mProvoderId);
-                        }
-                        if(homeUniqueId==null){
-                            ApiSearchViewLocation(uniqueID);
-//                            listProviders(uniqueID);
-                        }else{
-                            ApiSearchViewLocation(homeUniqueId);
-//                            listProviders(homeUniqueId);
-                        }
-//                        listDoctorsByDepartment();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SearchViewDetail> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-            }
-        });
-    }
-
-    private void ApiSearchGallery(final String muniqueID) {
+    private void apiSearchGallery(final String muniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
@@ -1405,6 +1472,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             locationHeading.setVisibility(View.VISIBLE);
                             if (mSearchLocList.size() == 1) {
                                 locationHeading.setText("Location (1)");
+                                locationHeading.setVisibility(View.GONE);
                             } else if (mSearchLocList.size() > 1) {
                                 locationHeading.setText("Location " + "(" + mSearchLocList.size() + ")");
                             }
@@ -1422,7 +1490,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         for (int k = 0; k < mSearchLocList.size(); k++) {
                             ApiSearchViewServiceID(mSearchLocList.get(k).getId());
                             ApiAppointmentServices(muniqueID);
-                            ApiDonationServices(mProvoderId);
+                            ApiDonationServices(mProviderId);
                         }
                     }
                 } catch (Exception e) {
@@ -1436,7 +1504,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
                     Config.closeDialog(getActivity(), mDialog);
-
             }
         });
     }
@@ -1456,27 +1523,25 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         btn_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 isContact = false;
                 tv_contact.setText("Contact");
                 tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_contact, 0, 0);
                 bdialog.dismiss();
-
             }
         });
         bdialog.setOnCancelListener(
-                new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        //When you touch outside of dialog bounds,
-                        //the dialog gets canceled and this method executes.
-                        Config.logV("CANCEL @@@@@@@@@@@");
-                        isContact = false;
-                        tv_contact.setText("Contact");
-                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_contact, 0, 0);
-                        bdialog.dismiss();
-                    }
+            new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    //When you touch outside of dialog bounds,
+                    //the dialog gets canceled and this method executes.
+                    Config.logV("CANCEL @@@@@@@@@@@");
+                    isContact = false;
+                    tv_contact.setText("Contact");
+                    tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_contact, 0, 0);
+                    bdialog.dismiss();
                 }
+            }
         );
         contactlist.setLayoutManager(mLayoutManager);
         ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity(), mInterfaceContact);
@@ -1541,7 +1606,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mSearchmCheckListShow = response.body();
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 checkloclist.setLayoutManager(mLayoutManager);
-                                LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback, String.valueOf(mProvoderId), mSearchmCheckListShow, mContext, getActivity());
+                                LocationCheckinAdapter checkAdapter = new LocationCheckinAdapter(callback, String.valueOf(mProviderId), mSearchmCheckListShow, mContext, getActivity());
                                 checkloclist.setAdapter(checkAdapter);
                                 checkAdapter.notifyDataSetChanged();
                             }
@@ -1561,6 +1626,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+    // Need to change
     private void ApiSearchViewServiceID(final int id) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1587,7 +1653,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Config.logV("Count " + count);
                         if (count == mSearchLocList.size()) {
                             if (ids.size() > 0) {
-                                ApiSearchScheduleViewID(mProvoderId, ids);
+                                ApiSearchScheduleViewID(mProviderId, ids);
                             }
                         }
                     }
@@ -1605,152 +1671,148 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
-
-    private void ApiServicesGroupbyDepartment(ArrayList<SearchService> mServicesList) {
-        mDepartmentsList.clear();
-        for (int i = 0; i < mServicesList.size(); i++) {
-
-        }
-    }
-
-    /**
-     * To show departments and its doctors/services
-     * @param uniqueID
-     */
-    private void ApiDepartmentServices(String uniqueID) {
-        Log.i("apidepartment", "apidept1");
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<ArrayList<SearchDepartmentServices>> call = apiService.getDepartmentServices(Integer.parseInt(uniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
-            @Override
-            public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
-                try {
-                    Log.i("apidepartment", "apidept2");
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-                    if (response.code() == 200) {
-                        Log.i("apidepartment", "apidept3");
-                        mSearchDepartmentServices.clear();
-                        String responses = new Gson().toJson(response.body());
-                        Config.logV("Deapartnamesss---------------" + responses);
-                        for (int i = 0; i < response.body().size(); i++) {
-                            departmentNameList.add(response.body().get(i).getDepartmentName());
-                            departmentCodeList.add(response.body().get(i).getDepartmentCode());
-                        }
-                        mSearchDepartmentServices.addAll(response.body());
-                        if (mSearchDepartmentServices != null) {
-                            if (mSearchDepartmentServices.size() == 1) {
-                                departmentHeading.setVisibility(View.VISIBLE);
-                                departmentHeading.setText("Department (1)");
-                            } else if (mSearchDepartmentServices.size() > 1) {
-                                departmentHeading.setVisibility(View.VISIBLE);
-                                departmentHeading.setText("Departments " + "(" + mSearchDepartmentServices.size() + ")");
-                            }
-                        } else {
-                            departmentHeading.setVisibility(View.GONE);
-                        }
-                        Log.i("departmentservice", new Gson().toJson(mSearchDepartmentServices));
-                        Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
-                        Config.logV("DepartmEntqweName --------------" + departmentNameList);
-                        RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
-                        mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-                        mDepartmentAdapter.setFields(mSearchDepartmentServices, departmentMap, mBusinessDataList.getBusinessName(), mServicesList.get(0).getmAllService(), department);
-                        mRecycleDepartment.setAdapter(mDepartmentAdapter);
-                        mDepartmentAdapter.notifyDataSetChanged();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-            }
-        });
-    }
-    private void APIServiceDepartments(final int id) {
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<SearchDepartment> call = apiService.getDepartment(id);
-        call.enqueue(new Callback<SearchDepartment>() {
-            @Override
-            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
-                try {
-                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code----------Service---------------" + response.code());
-                    if (response.code() == 200) {
-                        String responses = new Gson().toJson(response.body());
-                        Config.logV("Deapartnamesss---------------" + responses);
-                        mSearchDepartments.addAll(response.body().getDepartments());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(Call<SearchDepartment> call, Throwable t) {
-                Config.logV("Fail---------------" + t.toString());
-            }
-        });
-    }
-    private void ApiDepartment(final int id) {
-        ApiInterface apiService =
-                ApiClient.getClient(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Call<SearchDepartment> call = apiService.getDepartment(id);
-        call.enqueue(new Callback<SearchDepartment>() {
-            @Override
-            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code----------Service---------------" + response.code());
-                    if (response.code() == 200) {
-                        mSearchDepartments.clear();
-                        String responses = new Gson().toJson(response.body());
-                        Config.logV("Deapartnamesss---------------" + responses);
-                        for (int i = 0; i < response.body().getDepartments().size(); i++) {
-                            departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
-                            departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
-                        }
-                        mSearchDepartments.addAll(response.body().getDepartments());
-                        Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
-                        Config.logV("DepartmEntqweName --------------" + departmentNameList);
-                        RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
-                        mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-                        mDepartmentAdapter.setFields(mSearchDepartmentServices, departmentMap, mBusinessDataList.getBusinessName(), mServicesList.get(0).getmAllService(), department);
-                        mRecycleDepartment.setAdapter(mDepartmentAdapter);
-                        mDepartmentAdapter.notifyDataSetChanged();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SearchDepartment> call, Throwable t) {
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-            }
-        });
-    }
+//
+//    /**
+//     * To show departments and its doctors/services
+//     * @param uniqueID
+//     * @param mProviders // Department Users List
+//     */
+//    private void apiDepartmentServices(final String uniqueID, final ArrayList<SearchDepartmentServices> mProviders) {
+//        Log.i("apidepartment", "apidept1");
+//        ApiInterface apiService =
+//                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+//        Date currentTime = new Date();
+//        final SimpleDateFormat sdf = new SimpleDateFormat(
+//                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        System.out.println("UTC time: " + sdf.format(currentTime));
+//        Call<ArrayList<SearchDepartmentServices>> call = apiService.getDepartmentServices(Integer.parseInt(uniqueID), sdf.format(currentTime));
+//        call.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
+//                try {
+//                    if (mDialog.isShowing())
+//                        Config.closeDialog(getActivity(), mDialog);
+//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//                    if (response.code() == 200) {
+//                        mSearchDepartmentServices.clear();
+//                        String responses = new Gson().toJson(response.body());
+//                        Config.logV("Deapartnamesss---------------" + responses);
+//                        if (mProviders.size() > 0) {
+//                            for (int i = 0; i < response.body().size(); i++) {
+//                                departmentNameList.add(response.body().get(i).getDepartmentName());
+//                                departmentCodeList.add(response.body().get(i).getDepartmentCode());
+//                            }
+//                            mSearchDepartmentServices.addAll(response.body());
+//                            if (mSearchDepartmentServices != null) {
+//                                if (mSearchDepartmentServices.size() == 1) {
+//                                    departmentHeading.setVisibility(View.VISIBLE);
+//                                    departmentHeading.setText("Department (1)");
+//                                } else if (mSearchDepartmentServices.size() > 1) {
+//                                    departmentHeading.setVisibility(View.VISIBLE);
+//                                    departmentHeading.setText("Departments " + "(" + mSearchDepartmentServices.size() + ")");
+//                                }
+//                            } else {
+//                                departmentHeading.setVisibility(View.GONE);
+//                            }
+//                            Log.i("departmentservice", new Gson().toJson(mSearchDepartmentServices));
+//                            Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
+//                            Config.logV("DepartmEntqweName --------------" + departmentNameList);
+//                            RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
+//                            mRecycleDepartment.setLayoutManager(mDepartmentLayout);
+//                            mDepartmentAdapter.setFields(mSearchDepartmentServices, departmentMap, mBusinessDataList.getBusinessName(), mServicesList.get(0).getmAllService(), department);
+//                            mRecycleDepartment.setAdapter(mDepartmentAdapter);
+//                            mDepartmentAdapter.notifyDataSetChanged();
+//                        } else {
+//
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
+//                // Log error here since request failed
+//                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(getActivity(), mDialog);
+//            }
+//        });
+//    }
+//    private void APIServiceDepartments(final int id) {
+//        ApiInterface apiService =
+//                ApiClient.getClient(mContext).create(ApiInterface.class);
+//        Call<SearchDepartment> call = apiService.getDepartment(id);
+//        call.enqueue(new Callback<SearchDepartment>() {
+//            @Override
+//            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
+//                try {
+//                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code----------Service---------------" + response.code());
+//                    if (response.code() == 200) {
+//                        String responses = new Gson().toJson(response.body());
+//                        Config.logV("Deapartnamesss---------------" + responses);
+//                        mSearchDepartments.addAll(response.body().getDepartments());
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<SearchDepartment> call, Throwable t) {
+//                Config.logV("Fail---------------" + t.toString());
+//            }
+//        });
+//    }
+//    private void ApiDepartment(final int id) {
+//        ApiInterface apiService =
+//                ApiClient.getClient(mContext).create(ApiInterface.class);
+//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+//        Call<SearchDepartment> call = apiService.getDepartment(id);
+//        call.enqueue(new Callback<SearchDepartment>() {
+//            @Override
+//            public void onResponse(Call<SearchDepartment> call, Response<SearchDepartment> response) {
+//                try {
+//                    if (mDialog.isShowing())
+//                        Config.closeDialog(getActivity(), mDialog);
+//                    Config.logV("URL---5555------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code----------Service---------------" + response.code());
+//                    if (response.code() == 200) {
+//                        mSearchDepartments.clear();
+//                        String responses = new Gson().toJson(response.body());
+//                        Config.logV("Deapartnamesss---------------" + responses);
+//                        for (int i = 0; i < response.body().getDepartments().size(); i++) {
+//                            departmentNameList.add(response.body().getDepartments().get(i).getDepartmentName());
+//                            departmentCodeList.add(response.body().getDepartments().get(i).getDepartmentCode());
+//                        }
+//                        mSearchDepartments.addAll(response.body().getDepartments());
+//                        Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
+//                        Config.logV("DepartmEntqweName --------------" + departmentNameList);
+//                        RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
+//                        mRecycleDepartment.setLayoutManager(mDepartmentLayout);
+//                        mDepartmentAdapter.setFields(mSearchDepartmentServices, departmentMap, mBusinessDataList.getBusinessName(), mServicesList.get(0).getmAllService(), department);
+//                        mRecycleDepartment.setAdapter(mDepartmentAdapter);
+//                        mDepartmentAdapter.notifyDataSetChanged();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<SearchDepartment> call, Throwable t) {
+//                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(getActivity(), mDialog);
+//            }
+//        });
+//    }
     private void ApiSearchViewID(int mProviderid, ArrayList<String> ids) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1774,14 +1836,25 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
                         if (response.code() == 200) {
                             mSearchQueueList = response.body();
-                            if(homeUniqueId==null){
-                                ApiSearchViewSetting(uniqueID);}
-                            else {
-                                ApiSearchViewSetting(homeUniqueId);
-                            }
+//                            if(homeUniqueId==null){
+//                                ApiSearchViewSetting(uniqueID);}
+//                            else {
+//                                ApiSearchViewSetting(homeUniqueId);
+//                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                    } finally {
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                        mRecyLocDetail.setLayoutManager(mLayoutManager);
+                        if(homeUniqueId==null){
+                            uniID = uniqueID;
+                        }else{
+                            uniID = homeUniqueId;
+                        }
+                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence,donationFundRaising,gServiceList,LaServicesList);
+                        mRecyLocDetail.setAdapter(mSearchLocAdapter);
+                        mSearchLocAdapter.notifyDataSetChanged();
                     }
                 }
 
@@ -1818,7 +1891,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
                         if (response.code() == 200) {
                             mSearchScheduleList = response.body();
-                            ApiSearchViewID(mProvoderId, ids);
+                            ApiSearchViewID(mProviderId, ids);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1835,86 +1908,40 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             });
         }
     }
-    private void ApiUniqueID(String customID) {
-        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ResponseBody> call = apiService.getUniqueID(customID);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    if (response.code() == 200) {
-                        homeUniqueId = response.body().string();
-                        Log.i("sadf",homeUniqueId);
-                        ApiJaldeeCoupan(homeUniqueId);
-                        ApiJDN(homeUniqueId);
-                        ApiSearchViewTerminology(homeUniqueId);
-                        ApiSearchViewDetail(homeUniqueId, mSearchResp);
-//                        ApiSearchGallery(homeUniqueId);
-                        ApiSearchVirtualFields(homeUniqueId);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-            }
-        });
-    }
-    private void ApiSearchViewSetting(String muniqueID) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<SearchSetting> call = apiService.getSearchViewSetting(Integer.parseInt(muniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<SearchSetting>() {
-            @Override
-            public void onResponse(Call<SearchSetting> call, Response<SearchSetting> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code------Setting-------------------" + response.code());
-                    if (response.code() == 200) {
-                        mSearchSettings = response.body();
-                        Config.logV("Location Adapter-----------------------");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                    mRecyLocDetail.setLayoutManager(mLayoutManager);
-                    if(homeUniqueId==null){
-                        uniID = uniqueID;
-                    }else{
-                        uniID = homeUniqueId;
-                    }
-                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProvoderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartments, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence,donationFundRaising,gServiceList,LaServicesList,virtualServices);
-                    mRecyLocDetail.setAdapter(mSearchLocAdapter);
-                    mSearchLocAdapter.notifyDataSetChanged();
-                }
-            }
-            @Override
-            public void onFailure(Call<SearchSetting> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-            }
-        });
-    }
+//    private void apiFetchIdFromDeepLink(String customID) {
+//        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+//        Call<ResponseBody> call = apiService.getUniqueID(customID);
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                try {
+//                    if (response.code() == 200) {
+//                        homeUniqueId = response.body().string();
+//                        Log.i("sadf",homeUniqueId);
+//                        ApiJaldeeCoupan(homeUniqueId);
+//                        ApiJDN(homeUniqueId);
+//                        apiSearchViewTerminology(homeUniqueId);
+//                        apiSearchViewDetail(homeUniqueId, mSearchResp);
+////                        ApiSearchGallery(homeUniqueId);
+//                        ApiSearchVirtualFields(homeUniqueId);
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//            }
+//        });
+//    }
+
     VirtualFieldAdapter mAdapter;
     SpecialisationAdapter sAdapter;
     SearchVirtualFields resultData;
     ArrayList<SearchVirtualFields> domainVirtual = new ArrayList<>();
     ArrayList<SearchVirtualFields> sub_domainVirtual = new ArrayList<>();
     ArrayList<SearchVirtualFields> mergeResult = new ArrayList<>();
-    private void ApiSearchVirtualFields(String muniqueID) {
+    private void apiVirtualFields(String muniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
@@ -1978,7 +2005,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
-    private void ApiSearchViewTerminology(String muniqueID) {
+    private void apiSearchViewTerminology(String muniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
@@ -2000,6 +2027,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
                         mSearchTerminology = response.body();
                         terminology = mSearchTerminology.getWaitlist();
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2058,107 +2086,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, cffFragment).commit();
     }
-    private void ApiJDN(String uniqueID) {
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-        mDialog.show();
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Call<JdnResponse> call = apiService.getJdnList(Integer.parseInt(uniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<JdnResponse>() {
-            @Override
-            public void onResponse(Call<JdnResponse> call, Response<JdnResponse> response) {
-                try {
-                    if (mDialog.isShowing())
-                        Config.closeDialog(getActivity(), mDialog);
-                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-----detail--------------------" + response.code());
-                    if (response.code() == 200) {
-                        jdnList = response.body();
-                        jdnDiscount = jdnList.getDiscPercentage();
-                        jdnMaxvalue = jdnList.getDiscMax();
-                        if (new Gson().toJson(jdnList).equals("{}")) {
-                            tv_jdn.setVisibility(View.GONE);
-                        } else {
-                            tv_jdn.setVisibility(View.VISIBLE);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<JdnResponse> call, Throwable t) {
-                // Log error here since request failed
-                Config.logV("Fail---------------" + t.toString());
-                if (mDialog.isShowing())
-                    Config.closeDialog(getActivity(), mDialog);
-            }
-        });
-    }
-
-    private void ApiJaldeeCoupan(String uniqueID) {
-        couponAvailable = false;
-        firstCouponAvailable = false;
-        ApiInterface apiService =
-                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat(
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Log.i("lkjjkl",uniqueID);
-        Call<ArrayList<CoupnResponse>> call = apiService.getCoupanList(Integer.parseInt(uniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<CoupnResponse>>() {
-            @Override
-            public void onResponse(@NonNull Call<ArrayList<CoupnResponse>> call, Response<ArrayList<CoupnResponse>> response) {
-                try {
-                    if (response.code() == 200) {
-                        couponResponse = response.body();
-                        Log.i("couponRR", couponResponse.toString());
-                        Log.i("couponRR", new Gson().toJson(couponResponse));
-                        if (couponResponse.size() > 0) {
-                            for (int i = 0; i < couponResponse.size(); i++) {
-                                if (couponResponse.get(i).isFirstCheckinOnly()) {
-                                    firstCouponAvailable = true;
-                                } else {
-                                    couponAvailable = true;
-                                }
-                                if (firstCouponAvailable && couponAvailable) {
-                                    break;
-                                }
-                            }
-                        }
-                        if (firstCouponAvailable) {
-                            tv_first_ccoupon.setVisibility(View.VISIBLE);
-                        } else {
-                            tv_first_ccoupon.setVisibility(View.GONE);
-                        }
-                        if (couponAvailable) {
-                            tv_coupon.setVisibility(View.VISIBLE);
-                        } else {
-                            tv_coupon.setVisibility(View.GONE);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ArrayList<CoupnResponse>> call, Throwable t) {
-            }
-        });
-    }
-
-    public void onMethodDepartment(SearchDepartmentServices departmentCode, List<SearchListModel> searchList, String businessName, ArrayList<SearchService> mServicesList, int department) {
+    public void onMethodDepartment(SearchDepartmentServices departmentCode,  String businessName) {
         Log.i("qweqweq", "qweqweqwe");
-        DeptFragment deptFragment = new DeptFragment(departmentCode, searchList, this, businessName, mServicesList, department);
+        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
@@ -2346,15 +2277,15 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         ids = new ArrayList<>();
         contactDetail = new ArrayList<>();
         if(homeUniqueId==null){
-            ApiSearchViewDetail(uniqueID, mSearchResp);
+            apiSearchViewDetail(uniqueID, mSearchResp);
         }else{
-            ApiSearchViewDetail(homeUniqueId, mSearchResp);
+            apiSearchViewDetail(homeUniqueId, mSearchResp);
         }
         //ApiSearchGallery(uniqueID);
         if(homeUniqueId==null){
-            ApiSearchViewTerminology(uniqueID);
+            apiSearchViewTerminology(uniqueID);
         }else{
-            ApiSearchViewTerminology(homeUniqueId);
+            apiSearchViewTerminology(homeUniqueId);
         }
     }
     private void ApiAddFavo(int providerID) {
@@ -2987,8 +2918,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                                        final List<SearchListModel> results = mSearchListModel;
 //                                    }
 //                                    groupByDepartmentCode(mSearchListModel);
-//                                    if (mProvoderId != 0) {
-//                                        ApiDepartment(mProvoderId);
+//                                    if (mProviderId != 0) {
+//                                        ApiDepartment(mProviderId);
 //                                    }
 //                                    if(homeUniqueId==null){
 //                                        ApiDepartmentServices(uniqueID);
@@ -3093,7 +3024,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     }
 
     @Override
-    public void departmentClicked(SearchDepartmentServices searchDepartment, List<SearchListModel> searchListModels, String businessName, ArrayList<SearchService> mServicesList, int department) {
-        onMethodDepartment(searchDepartment, searchListModels, businessName, mServicesList, department);
+    public void departmentClicked(SearchDepartmentServices searchDepartment, String businessName) {
+        onMethodDepartment(searchDepartment, businessName);
     }
 }

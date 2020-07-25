@@ -31,7 +31,6 @@ public class ServicesListAdapter extends RecyclerView.Adapter<ServicesListAdapte
                 tv_services = (TextView) view.findViewById(R.id.txtservices);
                 servicesList=(LinearLayout)view.findViewById(R.id.servicesList);
                 vsep = view.findViewById(R.id.vsep);
-
             }
         }
 
@@ -61,10 +60,6 @@ public class ServicesListAdapter extends RecyclerView.Adapter<ServicesListAdapte
                 myViewHolder.tv_services.setVisibility(View.GONE);
                 myViewHolder.vsep.setVisibility(View.GONE);
             }
-
-
-
-
     }
     @Override
     public int getItemCount() {

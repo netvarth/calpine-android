@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.rxjava3.core.Observable;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -227,6 +228,12 @@ public interface ApiInterface {
     @GET("{consumerID}/businessProfile.json")
     Call<SearchViewDetail> getSearchViewDetail(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
+    @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
+    Call<SearchViewDetail> getUserBusinessProfile(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+
+    @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
+    Observable<SearchViewDetail> getUserBusinessProfiles(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+
     @GET("{consumerID}/gallery.json")
     Call<ArrayList<SearchViewDetail>> getSearchGallery(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
@@ -240,7 +247,13 @@ public interface ApiInterface {
     Call<SearchTerminology> getSearchViewTerminology(@Path("consumerID") int consumerid, @Query("modifiedDate") String mDate);
 
     @GET("{uniqueId}/departmentProviders.json")
-    Call<ArrayList<DepartmentModal>> getUserandDepartments(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+    Call<ArrayList<SearchDepartmentServices>> getUserandDepartments(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+
+    @GET("{uniqueId}/services.json")
+    Call<ArrayList<SearchService>> getService(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+
+    @GET("{uniqueId}/services.json")
+    Call<ArrayList<SearchDepartmentServices>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
 
     @GET("consumer/waitlist/services/{id}")
@@ -374,13 +387,6 @@ public interface ApiInterface {
 
     @GET("consumer/waitlist/{ynwuuid}")
     Call<List<ResponseBody>> waitlist(@Path("ynwuuid") String uuid, @Query("account") String account);
-
-
-    @GET("{serviceid}/services.json")
-    Call<ArrayList<SearchService>> getService(@Path("serviceid") int serviceid, @Query("modifiedDate") String mDate);
-
-    @GET("{uniqueId}/services.json")
-    Call<ArrayList<SearchDepartmentServices>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
 
     /*@POST("PayUMoneyHash.php")
     Call<ResponseBody> generateHashTest(@Body RequestBody jsonObj);*/

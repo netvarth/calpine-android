@@ -1192,7 +1192,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        Config.logV("Response--Body AWS-------------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Response--Body AWS-------------------------" + new Gson().toJson(response.body()));
                         Config.logV("Status" + response.body().getStatus().getRid());
                         Config.logV("Found" + response.body().getHits().getFound());
                         TOTAL_PAGES = response.body().getHits().getFound() / 10;
@@ -1307,7 +1307,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     ids.add(response.body().getHits().getHit().get(i).getId());
                                 }
                             }
-                            Log.i("SearchList", new Gson().toJson(mSearchResp));
+//                            Log.i("SearchList", new Gson().toJson(mSearchResp));
                             ApiSheduleList(ids, mSearchResp, "next", mScheduleList);
                         }
                     }
@@ -1388,7 +1388,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                     if (response.code() == 200) {
 
-                        Config.logV("Response--Body AWS-------------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Response--Body AWS-------------------------" + new Gson().toJson(response.body()));
 
                         Config.logV("Status" + response.body().getStatus().getRid());
 
@@ -1805,7 +1805,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                         }
                                     }
                                     mSearchListModel.add(searchList);
-                                    Log.i("mSearchListModel12", new Gson().toJson(mSearchListModel));
+//                                    Log.i("mSearchListModel12", new Gson().toJson(mSearchListModel));
                                 }
                                 List<SearchListModel> results = mSearchListModel;
                                 pageadapter.addAll(results);
@@ -2015,7 +2015,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 public void onResponse(Call<List<ScheduleList>> call, Response<List<ScheduleList>> response) {
                     try {
                         mScheduleList.clear();
-                        Log.i("SearchScheduleResp", new Gson().toJson(response.body()));
+//                        Log.i("SearchScheduleResp", new Gson().toJson(response.body()));
                         if (response.code() == 200) {
                             for (int i = 0; i < response.body().size(); i++) {
                                 mScheduleList.add(i,response.body().get(i));
@@ -2816,7 +2816,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                             Config.closeDialog(getActivity(), mDialog);
                         Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-------------------------" + response.code());
-                        Config.logV("Response--BODY------Domain-------------------" + new Gson().toJson(response));
+//                        Config.logV("Response--BODY------Domain-------------------" + new Gson().toJson(response));
                         if (response.code() == 200) {
                             Config.logV("Response--Array size-------------------------" + response.body().size());
                             if (response.body().size() > 0) {
