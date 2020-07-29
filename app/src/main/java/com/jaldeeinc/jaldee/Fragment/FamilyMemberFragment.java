@@ -396,7 +396,7 @@ public class FamilyMemberFragment extends RootFragment {
 
         final int consumerId = SharedPreference.getInstance(getActivity()).getIntValue("consumerId", 0);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject userProfile = new JSONObject();
         JSONObject jsonObj = new JSONObject();

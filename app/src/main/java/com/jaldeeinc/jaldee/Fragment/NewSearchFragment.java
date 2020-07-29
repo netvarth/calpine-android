@@ -55,7 +55,7 @@ public class NewSearchFragment extends RootFragment {
         final ApiInterface apiService =
                 ApiClient.getClientAWS(mContext).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         Map<String, String> query = new HashMap<>();
@@ -97,7 +97,7 @@ public class NewSearchFragment extends RootFragment {
                     if (response.code() == 200) {
 
                         Config.logV("Response--Body AWSssqwe-------------------------" + response);
-                        Config.logV("Response--Body AWSss-------------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Response--Body AWSss-------------------------" + new Gson().toJson(response.body()));
 
                         Config.logV("Status" + response.body().getStatus().getRid());
 

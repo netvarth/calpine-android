@@ -300,11 +300,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 if (searchdetailList.getServices() != null) {
                     final ArrayList serviceNames = new ArrayList();
+
+
                     serviceNames.clear();
                     try {
-                        String serviceName = searchdetailList.getServices().toString();
+//                        String serviceName = sszearchdetailList.getServices().toString();
                         try {
-                            JSONArray jsonArray = new JSONArray(serviceName);
+//                            JSONArray jsonArray = new JSONArray(serviceName);
+                            JSONArray jsonArray = new JSONArray(searchdetailList.getServices());
                             String jsonArry = jsonArray.getString(0);
                             JSONArray jsonArray1 = new JSONArray(jsonArry);
                             for(int i =0;i<jsonArray1.length();i++){

@@ -126,7 +126,7 @@ public class UpdateProfileFragment extends RootFragment {
 
         final int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
 
@@ -143,7 +143,7 @@ public class UpdateProfileFragment extends RootFragment {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
+//                        Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
                         Config.logV("Response--first-------------------------" + response.body().getUserprofile().getFirstName());
                         Config.logV("Response--name-------------------------" + response.body().getUserprofile().getLastName());
                         Config.logV("Response--dob-------------------------" + response.body().getUserprofile().getDob());

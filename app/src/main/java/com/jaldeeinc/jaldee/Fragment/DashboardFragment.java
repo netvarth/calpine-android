@@ -968,23 +968,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     private void APiSearchList() {
         {
-
-
             final ApiInterface apiService =
                     ApiClient.getClient(getActivity()).create(ApiInterface.class);
-
-            final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+            final Dialog mDialog = Config.getProgressDialog(mContext, getActivity().getResources().getString(R.string.dialog_log_in));
             mDialog.show();
-
             Call<SearchModel> call = apiService.getAllSearch();
-
-
             call.enqueue(new Callback<SearchModel>() {
                 @Override
                 public void onResponse(Call<SearchModel> call, Response<SearchModel> response) {
-
                     try {
-
                         ArrayList<SearchModel> mPopularSearch = new ArrayList<>();
 
                         if (mDialog.isShowing())
@@ -992,9 +984,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                         Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-------------------------" + response.code());
-                        Config.logV("Response--BODY------Search-------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Response--BODY------Search-------------------" + new Gson().toJson(response.body()));
 //                        Log.i("search1234",response.body().getPopularSearchLabels().toString());
-                        Log.i("search1234",response.body().getPopularSearchLabels().get("all").toString());
+//                        Log.i("search1234",response.body().getPopularSearchLabels().get("all").toString());
                         mGLobalSearch.clear();
 
                         if (response.code() == 200) {
@@ -1034,12 +1026,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 mPopularSearch.add(search);
                             }
 
-                            Log.i("All Search Labels", new Gson().toJson(mPopularSearch));
+//                            Log.i("All Search Labels", new Gson().toJson(mPopularSearch));
 
                             for (int i = 0; i < response.body().getSectorLevelLabels().size(); i++) {
                                 int mSectorSize = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels().size();
                                 Log.i("Sector",response.body().getSectorLevelLabels().get(i).getName());
-                                Log.i("KeyString",new Gson().toJson(response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName())));
+//                                Log.i("KeyString",new Gson().toJson(response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName())));
                                 if(response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName())==null)
                                     continue;
                                 lstPopularSearchLabel = response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName()).getAsJsonObject().get("labels").getAsJsonArray();
@@ -1082,7 +1074,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             DatabaseHandler db = new DatabaseHandler(mContext);
                             db.DeletePopularSearch();
 
-                            Log.i("All Popular Search ", new Gson().toJson(mPopularSearch));
+//                            Log.i("All Popular Search ", new Gson().toJson(mPopularSearch));
 
                             db.insertPopularSearchInfo(mPopularSearch);
 //                            db.insertPopularSearchInfo();
@@ -1127,7 +1119,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             final ApiInterface apiService =
                     ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-            final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+            final Dialog mDialog = Config.getProgressDialog(mContext, getActivity().getResources().getString(R.string.dialog_log_in));
             mDialog.show();
 
             Call<ArrayList<Domain_Spinner>> call = apiService.getAllDomains();
@@ -1258,7 +1250,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         final ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, getActivity().getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Map<String, String> filter = new HashMap<String, String>();
         filter.put("waitlistStatus-neq", "failed,prepaymentPending");
@@ -1278,7 +1270,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             txt_sorry.setVisibility(View.GONE);
                             MActiveList.clear();
                                 MActiveList = response.body();
-                                Log.i("fghhgf",new Gson().toJson(MActiveList));
+//                                Log.i("fghhgf",new Gson().toJson(MActiveList));
                             Config.logV("MActiveList----------------------" + MActiveList.size());
                             if (MActiveList.size() > 0) {
                                 db = new DatabaseHandler(mContext);
@@ -1286,7 +1278,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 db.insertCheckinInfo(MActiveList);
                                 MActiveList.clear();
                                 MActiveList = db.getAllCheckinList();
-                                Log.i("rtyrty",new Gson().toJson(MActiveList));
+//                                Log.i("rtyrty",new Gson().toJson(MActiveList));
                                 Config.logV("MActiveList---DB-------------------" + MActiveList.size());
                                 tv_activechkin.setText("Active Check-ins " + "(" + MActiveList.size() + ")");
                                 LActiveCheckin.setVisibility(View.VISIBLE);

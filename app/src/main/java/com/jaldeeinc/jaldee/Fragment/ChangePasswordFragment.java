@@ -235,7 +235,7 @@ public class ChangePasswordFragment extends RootFragment {
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         JSONObject jsonObj = new JSONObject();
@@ -249,7 +249,7 @@ public class ChangePasswordFragment extends RootFragment {
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.ChangePwd(body);
-        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

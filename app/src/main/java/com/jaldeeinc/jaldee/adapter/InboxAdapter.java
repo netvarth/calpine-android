@@ -101,7 +101,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.MyViewHolder
         final InboxModel inboxList = mInboxList.get(position);
 
         myViewHolder.tv_message.setText(inboxList.getMsg());
-        Log.i("kingiii",new Gson().toJson(inboxList.getAttachments()));
+//        Log.i("kingiii",new Gson().toJson(inboxList.getAttachments()));
 
 
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a");

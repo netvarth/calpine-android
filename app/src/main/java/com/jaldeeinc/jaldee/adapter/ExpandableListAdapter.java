@@ -658,7 +658,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 call = apiService.PutTravelMode(activelist.getYnwUuid(), activelist.getId(), body);
 
 
-                Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+//                Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
 
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -723,7 +723,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 call = apiService.PutTravelMode(activelist.getYnwUuid(), activelist.getId(), body);
 
 
-                Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+//                Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
 
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override

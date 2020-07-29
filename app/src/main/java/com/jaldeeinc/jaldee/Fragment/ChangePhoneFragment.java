@@ -131,7 +131,7 @@ public class ChangePhoneFragment extends RootFragment {
 
         final int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
 
@@ -216,7 +216,7 @@ public class ChangePhoneFragment extends RootFragment {
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         Call<ResponseBody> call = apiService.ChangePhone(mPhone);

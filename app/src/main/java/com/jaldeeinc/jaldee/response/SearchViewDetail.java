@@ -49,6 +49,15 @@ public class SearchViewDetail {
     String domain;
     String branchId;
     boolean onlinePresence;
+    String uniqueId;
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 
     public boolean isDonationFundRaising() {
         return donationFundRaising;

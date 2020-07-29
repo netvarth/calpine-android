@@ -3,7 +3,6 @@ package com.jaldeeinc.jaldee.connection;
 
 import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
-import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
@@ -46,7 +45,6 @@ import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ShareLocation;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -231,6 +229,9 @@ public interface ApiInterface {
     @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
     Call<SearchViewDetail> getUserBusinessProfile(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
 
+    @GET("{uniqueId}/{userId}/providerservices.json")
+    Call<ArrayList<SearchDepartmentServices>> getUserServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+
     @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
     Observable<SearchViewDetail> getUserBusinessProfiles(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
 
@@ -289,8 +290,12 @@ public interface ApiInterface {
     @GET("provider/waitlist/queues/waitingTime/{id}")
     Call<ArrayList<QueueList>> getSearchID(@Path("id") String id);
 
+    @GET("provider/waitlist/queues/providerWaitingTime/{id}")
+    Call<ArrayList<QueueList>> getProviderAvailableQTime(@Path("id") String id);
+
     @GET("provider/appointment/schedule/nextAvailableSchedule/{id}")
     Call<ArrayList<ScheduleList>> getSchedule(@Path("id") String id);
+
 
 
     @GET("provider/business/{id}")

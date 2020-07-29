@@ -175,7 +175,7 @@ public class CheckinFamilyMemberDonation extends AppCompatActivity {
                     if (response.code() == 200) {
 
                         Config.logV("Response--Array size-------------------------" + response.body().size());
-                        Config.logV("Response--Array ----Family List---------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Response--Array ----Family List---------------------" + new Gson().toJson(response.body()));
 
 
                         LuserProfileList.clear();

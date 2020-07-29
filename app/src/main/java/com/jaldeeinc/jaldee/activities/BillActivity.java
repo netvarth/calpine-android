@@ -437,7 +437,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
         final ApiInterface apiService =
                 ApiClient.getClient(this).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mCOntext, mCOntext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         Call<BillModel> call = apiService.getBill(ynwuuid,accountID);
@@ -454,7 +454,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                     Config.logV("URL12---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code12-------------------------" + response.code());
-                    Config.logV("Response--code12-------------------------" + new Gson().toJson(response.body()));
+//                    Config.logV("Response--code12-------------------------" + new Gson().toJson(response.body()));
 
                     if (response.code() == 200) {
 
@@ -722,7 +722,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-                    Config.logV("zxczqw" + new Gson().toJson(response.body()));
+//                    Config.logV("zxczqw" + new Gson().toJson(response.body()));
 
                     if (response.code() == 200) {
 
@@ -733,7 +733,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
                         Toast.makeText(BillActivity.this, couponss + " " + "Coupon Added", Toast.LENGTH_SHORT).show();
 
                         Config.logV("Response--Array size--Activessssssssss-----------------------" + response.body().toString());
-                        Config.logV("zxczxczxzc" + new Gson().toJson(response.body()));
+//                        Config.logV("zxczxczxzc" + new Gson().toJson(response.body()));
                     }
 
                     if (response.code() == 422) {
@@ -776,7 +776,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
         Log.i("mani","here");
         try {
-            Log.i("Success1111",  new Gson().toJson(paymentData));
+//            Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(mCOntext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
             Toast.makeText(mCOntext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
@@ -790,7 +790,7 @@ public class BillActivity extends AppCompatActivity implements PaymentResultWith
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
-            Log.i("here.....", new Gson().toJson(paymentData));
+//            Log.i("here.....", new Gson().toJson(paymentData));
             Toast.makeText(mCOntext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);

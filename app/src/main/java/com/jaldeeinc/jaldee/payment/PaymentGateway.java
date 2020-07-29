@@ -88,7 +88,7 @@ public class PaymentGateway {
                         if (from.equalsIgnoreCase("checkin")) {
 
 
-                            Log.i("Response--Sucess----" , new Gson().toJson(response.body()));
+//                            Log.i("Response--Sucess----" , new Gson().toJson(response.body()));
 
                             Config.logV("Response--Sucess----------@@@@---------------" + response.body().getPaymentEnv());
 
@@ -107,7 +107,7 @@ public class PaymentGateway {
 
                         } else if (from.equalsIgnoreCase("bill")) {
                             // CheckSumModel response_data = response.body();
-                            Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
+//                            Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
                             //  BillActivity.launchPaymentFlow(amount, response_data);
                             if (response_data.getPaymentGateway()!=null && response_data.getPaymentGateway().equals("RAZORPAY")) {

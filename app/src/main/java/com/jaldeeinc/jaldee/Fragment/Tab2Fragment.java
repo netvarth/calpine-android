@@ -81,7 +81,7 @@ public class Tab2Fragment extends RootFragment  {
                 getFragmentManager().popBackStack();
             }
         });
-        mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         return row;
@@ -107,7 +107,7 @@ public class Tab2Fragment extends RootFragment  {
                         payments_listview.setAdapter(mAdapter);
 
 
-                        Log.i("paymentsRes",new Gson().toJson(response.body()));
+//                        Log.i("paymentsRes",new Gson().toJson(response.body()));
 
 
                     } else {

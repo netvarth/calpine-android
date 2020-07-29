@@ -40,6 +40,7 @@ import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchCheckInMessage;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
+import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -153,12 +154,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     boolean online_presence;
     boolean donationFundRaising;
     boolean virtualServices;
-    ArrayList<SearchDepartment> mSearchDepartmentList;
+    ArrayList<SearchDepartmentServices> mSearchDepartmentList;
     ArrayList<SearchDonation> gServicesList;
     ArrayList<SearchAppointmentDepartmentServices> aServicesList;
 
 
-    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartment> mSearchDepartments, List<SearchAWsResponse> mSearchRespDetails, SearchAWsResponse mSearchAWSResponse, List<ScheduleList> SearchScheduleList, boolean online_presence, boolean donationFundRaising, ArrayList<SearchDonation> gServicesList, ArrayList<SearchAppointmentDepartmentServices> aServiceList, boolean virtualServices) {
+    public SearchLocationAdapter(String sector, String subsector, String accountID, String uniqueid, SearchLocationAdpterCallback callback, String title, SearchSetting searchSetting, List<SearchLocation> mSearchLocation, Context mContext, List<SearchService> SearchServiceList, List<QueueList> SearchQueueList, List<SearchCheckInMessage> checkInMessage, String mCalcMode, String terminology, boolean isShowTokenId, ArrayList<SearchDepartmentServices> mSearchDepartments, List<SearchAWsResponse> mSearchRespDetails, SearchAWsResponse mSearchAWSResponse, List<ScheduleList> SearchScheduleList, boolean online_presence, boolean donationFundRaising, ArrayList<SearchDonation> gServicesList, ArrayList<SearchAppointmentDepartmentServices> aServiceList, boolean virtualServices) {
         this.mContext = mContext;
         this.mSearchLocationList = mSearchLocation;
         this.mSearchRespDetail = mSearchRespDetails;
@@ -758,8 +759,14 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle, mSearchDepartmentList);
                             }
                         });
-                        String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(0).getDepartment());
-                        final String mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName().concat(" (").concat(deptName1).concat(")");
+                        String mServicename;
+                        if (mSearchServiceList.get(i).getmAllService().get(0).getDepartment() != 0) {
+                            String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(0).getDepartment());
+                            mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName().concat(" (").concat(deptName1).concat(")");
+                        } else {
+                            mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
+                        }
+
                         final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
                         final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
                         final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
@@ -768,11 +775,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
                         final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(0).isPrePayment();
                         final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(0).getMinPrePaymentAmount();
+                        final String serviceName1 = mServicename;
                         myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                                iService.putExtra("name", mServicename);
+                                iService.putExtra("name", serviceName1);
                                 iService.putExtra("duration", mServiceduration);
                                 iService.putExtra("price", mServiceprice);
                                 iService.putExtra("desc", mServicedesc);
@@ -785,8 +793,16 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 mContext.startActivity(iService);
                             }
                         });
-                        String deptName = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
-                        final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName).concat(")");
+                        String servicename1;
+                        if (mSearchServiceList.get(i).getmAllService().get(1).getDepartment() != 0) {
+                            String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
+                            servicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName1).concat(")");
+                        } else {
+                            servicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName();
+                        }
+                        final String mServicename1 = servicename1;
+//                        String deptName = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
+//                        final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName).concat(")");
                         final String mServiceprice1 = mSearchServiceList.get(i).getmAllService().get(1).getTotalAmount();
                         final String mServicedesc1 = mSearchServiceList.get(i).getmAllService().get(1).getDescription();
                         final String mServiceduration1 = mSearchServiceList.get(i).getmAllService().get(1).getServiceDuration();
@@ -812,12 +828,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 mContext.startActivity(iService);
                             }
                         });
-
-
                     }
                 }
-
-
             }
         }
         if (mScheduleList != null) {
@@ -979,15 +991,15 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     final int finalI = m;
                     if(online_presence){
                         if(mScheduleList.get(position).isCheckinAllowed()){
-                        myViewHolder.txtapptSeeAll.setVisibility(View.VISIBLE);
-                    }
+                            myViewHolder.txtapptSeeAll.setVisibility(View.VISIBLE);
+                        }
                     }
 
 
                     myViewHolder.txtapptSeeAll.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                        adaptercallback.onMethodServiceCallbackAppointment(aServicesList, mTitle, mSearchDepartmentList);
+                            adaptercallback.onMethodServiceCallbackAppointment(aServicesList, mTitle, mSearchDepartmentList);
                         }
                     });
                 } else{
@@ -1079,7 +1091,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         }
 
 
-            if (online_presence) {
+        if (online_presence) {
             if (donationFundRaising) {
                 myViewHolder.LDonation.setVisibility(View.VISIBLE);
                 myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
@@ -1446,7 +1458,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
     private String getDepartmentName(int department) {
         for (int i = 0; i < mSearchDepartmentList.size(); i++) {
-            if (mSearchDepartmentList.get(i).getDepartmentId() == department) {
+            if (Integer.parseInt(mSearchDepartmentList.get(i).getDepartmentId()) == department) {
                 return mSearchDepartmentList.get(i).getDepartmentName();
             }
         }

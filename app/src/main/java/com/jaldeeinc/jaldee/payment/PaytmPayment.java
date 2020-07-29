@@ -67,7 +67,7 @@ public class PaytmPayment {
 
 
                 System.out.println("responseCode@@@@@@@@@@@" + response.body().size());
-                System.out.println("responseCode" + new Gson().toJson(response.body()));
+//                System.out.println("responseCode" + new Gson().toJson(response.body()));
 
                 System.out.println("responseCode" + response.body().get(0).getINDUSTRY_TYPE_ID());
                 System.out.println("responseCode" + response.body().get(0).getChecksum());
@@ -169,7 +169,7 @@ public class PaytmPayment {
 
 
                         PaytmChecksum response_data = response.body();
-                        Config.logV("Response--Sucess----PAytm---------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Response--Sucess----PAytm---------------------" + new Gson().toJson(response.body()));
 
                         try {
 

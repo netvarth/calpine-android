@@ -182,7 +182,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                 Config.logV("String ");
             } else {
 
-                Config.logV("Array " + new Gson().toJson(filterList.getEnumeratedConstants()));
+//                Config.logV("Array " + new Gson().toJson(filterList.getEnumeratedConstants()));
                 String resp = new Gson().toJson(filterList.getEnumeratedConstants());
 
                 boolean fAvailable = false;
@@ -769,7 +769,7 @@ public class MoreFilterAdapter extends RecyclerView.Adapter<MoreFilterAdapter.My
                             Config.logV("String ");
                         } else {
 
-                            Config.logV("Array " + new Gson().toJson(filterList.getEnumeratedConstants()));
+//                            Config.logV("Array " + new Gson().toJson(filterList.getEnumeratedConstants()));
                             String resp = new Gson().toJson(filterList.getEnumeratedConstants());
 
                             boolean fAvailable = false;
