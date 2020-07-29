@@ -222,16 +222,21 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             @Override
             public void onClick(View v) {
                 Tab2Fragment pfFragment = new Tab2Fragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
+
             }
         });
         txtCheckins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CheckinsMyJaldee pfFragment = new CheckinsMyJaldee();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFragment).commit();
             }
@@ -240,18 +245,24 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             @Override
             public void onClick(View v) {
                 TokensMyJaldee pfFfragment = new TokensMyJaldee();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, pfFfragment).commit();
+
             }
         });
         txtAppointments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppointmentMyJaldee afFragment = new AppointmentMyJaldee();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left, R.anim.slide_out_right);
+                // Store the Fragment in stack
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.mainlayout, afFragment).commit();
+
             }
         });
         mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));

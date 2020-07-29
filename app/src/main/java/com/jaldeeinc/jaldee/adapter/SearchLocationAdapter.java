@@ -309,8 +309,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             if (mQueueList.get(i).getNextAvailableQueue() != null) {
                 if (online_presence && mQueueList.get(i).getNextAvailableQueue().isWaitlistEnabled()) {
                     if (mQueueList.get(i).getNextAvailableQueue() != null && mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null && mSearchSetting.isFutureDateWaitlist()) {
-                        myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
-                        myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+//                        myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+//                        myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
                     } else {
                         myViewHolder.txt_diffdate.setVisibility(View.GONE);
                         myViewHolder.txt_diffdate_expand.setVisibility(View.GONE);
@@ -1206,7 +1206,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                         myViewHolder.txt_peopleahead.setText(message);
                                     }
                                 }else{
-                                    disableCheckinButton(myViewHolder);
+                                  //  disableCheckinButton(myViewHolder);
+                                    enableCheckinButton(myViewHolder);
                                 }
                                 if (date2 != null && date1.compareTo(date2) < 0) {
                                     myViewHolder.tv_waittime.setVisibility(View.VISIBLE);
@@ -1220,8 +1221,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 }
                                 //Future Checkin
                                 if (mSearchSetting.isFutureDateWaitlist() && mQueueList.get(0).getNextAvailableQueue().getAvailableDate() != null) {
-                                    myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
-                                    myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
+//                                    myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
+//                                    myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
                                     if (mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
                                         myViewHolder.txt_diffdate.setText("Do you want to Get Token for another day?");
                                         myViewHolder.txt_diffdate_expand.setText("Do you want to Get Token for another day?");

@@ -88,11 +88,16 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     ArrayList<SearchViewDetail> mSearchGallery;
     String uniqueID;
     List<QueueList> mQueueList;
-    boolean flag_checkins = false, flag_appts = false,flag_dnts = false;
+    ArrayList<Boolean> checkins_flag;
+    ArrayList<Boolean> appts_flag;
+    ArrayList<Boolean> dnts_flag;
 
     public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList) {
         this.context = context;
         searchResults = new ArrayList<>();
+        checkins_flag = new ArrayList<>();
+        dnts_flag = new ArrayList<>();
+        appts_flag = new ArrayList<>();
         this.mFragment = mFragment;
         mSearchView = searchview;
         this.mAdapterCallback = callback;
@@ -435,29 +440,84 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     myViewHolder.L_departments_app.setVisibility(View.GONE);
                 }
                 handleCheckins(myViewHolder, searchdetailList, position);
-                handleAppointments(myViewHolder, searchdetailList);
-                handleDonations(myViewHolder, searchdetailList);
+                handleAppointments(myViewHolder, searchdetailList, position);
+                handleDonations(myViewHolder, searchdetailList, position);
                 if (searchdetailList.getRating() != null) {
                     myViewHolder.rating.setRating(Float.valueOf(searchdetailList.getRating()));
                 }
-                if(flag_checkins || flag_appts || flag_dnts){
-                    myViewHolder.btnbookservice.setVisibility(View.VISIBLE);
-                    if(searchdetailList.getDepartments()!=null){
-                    myViewHolder.L_departments.setVisibility(View.VISIBLE);}
-                    else if(searchdetailList.getServices()!=null){
-                        myViewHolder.L_services.setVisibility(View.VISIBLE);
+            //    for(int k = 0;k<checkins_flag.size();k++) {
+                if (checkins_flag.get(position).equals(true) || appts_flag.get(position).equals(true) || dnts_flag.get(position).equals(true)) {
+                        myViewHolder.btnbookservice.setVisibility(View.VISIBLE);
+                        if (searchdetailList.getDepartments() != null) {
+                            myViewHolder.L_departments.setVisibility(View.VISIBLE);
+                        } else if (searchdetailList.getServices() != null) {
+                            myViewHolder.L_services.setVisibility(View.VISIBLE);
+                        }
+
+                    } else {
+                        myViewHolder.btnbookservice.setVisibility(View.GONE);
                     }
 
-                }
-                else{
-                    myViewHolder.btnbookservice.setVisibility(View.GONE);
-                }
-                myViewHolder.btnbookservice.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(), searchdetailList.getClaimable());
-                    }
-                });
+//                    int finalK = k;
+//                    int finalK1 = k;
+//                    int finalK2 = k;
+                    myViewHolder.btnbookservice.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (checkins_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && dnts_flag.get(position).equals(false) ) {
+                                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                                iCheckIn.putExtra("serviceId", Integer.parseInt(searchdetailList.getmLoc()));
+                                iCheckIn.putExtra("uniqueID", searchdetailList.getUniqueid());
+                                iCheckIn.putExtra("accountID", searchdetailList.getId());
+                                iCheckIn.putExtra("googlemap", searchdetailList.getLocation1());
+                                // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
+                                iCheckIn.putExtra("from", "checkin");
+                                iCheckIn.putExtra("title", searchdetailList.getTitle());
+                                iCheckIn.putExtra("place", searchdetailList.getPlace1());
+                                Config.logV("sector%%%%%%-------------" + searchdetailList.getSectorname());
+                                iCheckIn.putExtra("sector", searchdetailList.getSectorname());
+                                iCheckIn.putExtra("subsector", searchdetailList.getSub_sector());
+                                iCheckIn.putExtra("terminology", termilogy);
+                                iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
+                                iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                                context.startActivity(iCheckIn);
+                            } else if (appts_flag.get(position).equals(true) && checkins_flag.get(position).equals(false) && dnts_flag.get(position).equals(false)) {
+                                Intent iAppointment = new Intent(v.getContext(), Appointment.class);
+                                iAppointment.putExtra("serviceId", Integer.parseInt(searchdetailList.getaLoc()));
+                                iAppointment.putExtra("uniqueID", searchdetailList.getUniqueid());
+                                iAppointment.putExtra("accountID", searchdetailList.getId());
+                                iAppointment.putExtra("googlemap", searchdetailList.getLocation1());
+                                iAppointment.putExtra("from", "checkin");
+                                iAppointment.putExtra("title", searchdetailList.getTitle());
+                                iAppointment.putExtra("place", searchdetailList.getPlace1());
+                                iAppointment.putExtra("sector", searchdetailList.getSectorname());
+                                iAppointment.putExtra("subsector", searchdetailList.getSub_sector());
+                                iAppointment.putExtra("terminology", termilogy);
+                                iAppointment.putExtra("isshowtoken", searchdetailList.isShowToken());
+                                iAppointment.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                                context.startActivity(iAppointment);
+                            } else if (dnts_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && checkins_flag.get(position).equals(false)) {
+                                Intent iDonation = new Intent(v.getContext(), Donation.class);
+                                iDonation.putExtra("serviceId", Integer.parseInt(searchdetailList.getLocation_id1()));
+                                iDonation.putExtra("uniqueID", searchdetailList.getUniqueid());
+                                iDonation.putExtra("accountID", searchdetailList.getId());
+                                iDonation.putExtra("googlemap", searchdetailList.getLocation1());
+                                iDonation.putExtra("from", "checkin");
+                                iDonation.putExtra("title", searchdetailList.getTitle());
+                                iDonation.putExtra("place", searchdetailList.getPlace1());
+                                iDonation.putExtra("sector", searchdetailList.getSectorname());
+                                iDonation.putExtra("subsector", searchdetailList.getSub_sector());
+                                iDonation.putExtra("terminology", termilogy);
+                                iDonation.putExtra("isshowtoken", searchdetailList.isShowToken());
+                                iDonation.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                                context.startActivity(iDonation);
+
+                            } else {
+                                mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid(), searchdetailList.getClaimable());
+                            }
+                        }
+                    });
+              //  }
 
                 break;
             case LOADING:
@@ -596,7 +656,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         });
     }
-    public void handleDonations(MyViewHolder myViewHolder, final SearchListModel searchdetailList) {
+    public void handleDonations(MyViewHolder myViewHolder, final SearchListModel searchdetailList, int position) {
         Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.btndonations.setTypeface(tyface_confm);
@@ -623,12 +683,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (searchdetailList.getDonation_status().equals("1") && searchdetailList.getOnline_profile().equals("1")) {
                // myViewHolder.L_donation.setVisibility(View.VISIBLE);
               //  myViewHolder.L_donations.setVisibility(View.VISIBLE);
-                flag_dnts = true;
+                dnts_flag.add(position,true);
             } else {
+                dnts_flag.add(position,false);
                 myViewHolder.L_donation.setVisibility(View.GONE);
                 myViewHolder.L_donations.setVisibility(View.GONE);
             }
         } else {
+            dnts_flag.add(position,false);
             myViewHolder.L_donation.setVisibility(View.GONE);
             myViewHolder.L_donations.setVisibility(View.GONE);
         }
@@ -1156,11 +1218,13 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         disableCheckinFeature (myViewHolder);
         if(searchdetailList!=null && searchdetailList.getOnline_profile()!=null) {
             myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+
             if (searchdetailList.getOnline_profile().equalsIgnoreCase("1") && searchdetailList.isWaitlistEnabled()) {
+                checkins_flag.add(position,true);
               //  myViewHolder.L_checkin.setVisibility(View.VISIBLE);
               //  myViewHolder.L_services.setVisibility(View.VISIBLE);
              //   myViewHolder.btncheckin.setVisibility(View.VISIBLE);
-                flag_checkins = true;
+
                 if(searchdetailList.isShowToken()){
                     myViewHolder.btncheckin.setText("GET TOKEN");
                 }
@@ -1205,7 +1269,6 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             //Future Checkin
                             if(searchdetailList.getFuture_checkins()!=null && searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
                              //   myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
-                                flag_checkins = true;
                                 if (searchdetailList.isShowToken()) {
                                     myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
                                 } else {
@@ -1230,9 +1293,11 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
             } else {
+                checkins_flag.add(position,false);
                 disableCheckinFeature (myViewHolder);
             }
         } else {
+            checkins_flag.add(position,false);
             disableCheckinFeature (myViewHolder);
         }
         myViewHolder.btncheckin.setOnClickListener(new View.OnClickListener() {
@@ -1281,7 +1346,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
     }
 
-    public void handleAppointments (MyViewHolder myViewHolder, final SearchListModel searchdetailList) {
+    public void handleAppointments (MyViewHolder myViewHolder, final SearchListModel searchdetailList,int position) {
         Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.btnappointments.setTypeface(tyface_confm);
@@ -1383,13 +1448,16 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (searchdetailList.isCheckinAllowed() && searchdetailList.getOnline_profile().equals("1")) {
              //   myViewHolder.L_appoinment.setVisibility(View.VISIBLE);
             //    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
-                flag_appts = true;
+
+                appts_flag.add(position,true);
             } else {
+                appts_flag.add(position,false);
                 myViewHolder.L_appoinment.setVisibility(View.GONE);
                 myViewHolder.L_appointments.setVisibility(View.GONE);
             }
 
         } else {
+            appts_flag.add(position,false);
             myViewHolder.L_appoinment.setVisibility(View.GONE);
             myViewHolder.L_appointments.setVisibility(View.GONE);
         }

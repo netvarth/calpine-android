@@ -224,9 +224,9 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                                         } else if (date1.compareTo(date2) < 0) {
                                             myViewHolder.btn_checkin.setVisibility(View.VISIBLE);
                                             // myViewHolder.btn_checkin.setBackgroundColor(Color.parseColor("#cfcfcf"));
-                                            myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
-                                            myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
-                                            myViewHolder.btn_checkin.setEnabled(false);
+//                                            myViewHolder.btn_checkin.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+//                                            myViewHolder.btn_checkin.setTextColor(mContext.getResources().getColor(R.color.button_grey));
+//                                            myViewHolder.btn_checkin.setEnabled(false);
                                         }
                                     } else {
                                         myViewHolder.btn_checkin.setVisibility(View.GONE);
@@ -315,7 +315,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 });
 
                 if(mFavList.get(i).isFutureCheckin()){
-                    myViewHolder.tv_date.setVisibility(View.VISIBLE);
+                   // myViewHolder.tv_date.setVisibility(View.VISIBLE);
                 }else{
                     myViewHolder.tv_date.setVisibility(View.GONE);
                 }

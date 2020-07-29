@@ -712,9 +712,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         "yyyy-MM-dd", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 System.out.println("UTC time: " + sdf.format(currentTime));
-                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-                    ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                } else {
+//                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+//                    ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+//                } else {
                     if (selectedDateFormat != null) {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                         ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
@@ -722,7 +722,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
                         ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                     }
-                }
+               // }
                 isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
                 Config.logV("Payment------------" + isPrepayment);
                 if (isPrepayment) {
@@ -779,9 +779,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
         });
 
-        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-            LcheckinDatepicker.setVisibility(View.GONE);
-        } else {
+//        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+//            LcheckinDatepicker.setVisibility(View.GONE);
+//        } else {
             LcheckinDatepicker.setVisibility(View.VISIBLE);
 
             Date currentTime = new Date();
@@ -793,12 +793,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             //to convert Date to String, use format method of SimpleDateFormat class.
             String strDate = dateFormat.format(added_date);
             /* txt_date.setText(sdf.format(currentTime));*/
-            txt_date.setText(strDate);
+            txt_date.setText(sdf.format(currentTime));
             DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
             // selectedDateFormat = selecteddateParse.format(currentTime);
-            selectedDateFormat = selecteddateParse.format(added_date);
+            selectedDateFormat = selecteddateParse.format(currentTime);
             UpdateDAte(selectedDateFormat);
-        }
+       // }
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1114,7 +1114,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
 
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_YEAR, 1);
+            cal.add(Calendar.DAY_OF_YEAR, 0);
             // da.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
             da.getDatePicker().setMinDate(cal.getTimeInMillis());
 
@@ -1156,9 +1156,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, selectedDate, String.valueOf(isShowToken));
 
         Calendar cal = Calendar.getInstance();
+        Date today = cal.getTime();
         cal.add(Calendar.DAY_OF_YEAR, 1);
         Date tomorow = cal.getTime();
-        if (tomorow.before(selecteddate)) {
+        if (today.before(selecteddate)) {
             Config.logV("Date Enabled---------------");
             ic_cal_minus.setEnabled(true);
             ic_cal_minus.setImageResource(R.drawable.icon_minus_active);
@@ -1749,10 +1750,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                             //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
 
-                                            if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-                                                ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                                            } else {
+//                                            if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+//
+//                                                ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+//                                            } else {
                                                 if (selectedDateFormat != null) {
 
                                                     ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
@@ -1760,7 +1761,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                                     ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                                 }
-                                            }
+                                          //  }
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -1799,7 +1800,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 try {
                     if (response.code() == 200) {
                         doctResponse = response.body();
-                        Log.i("getUser123",new Gson().toJson(response.body()));
+                     //   Log.i("getUser123",new Gson().toJson(response.body()));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1895,7 +1896,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     if (response.code() == 200) {
                         phoneNumberValue.setText(response.body().getUserprofile().getPrimaryMobileNo());
                         phoneNumber = phoneNumberValue.getText().toString();
-                        Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
+                     //   Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
                         Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
                     } else {
                     }
@@ -1960,7 +1961,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
 
                         CheckSumModel response_data = response.body();
-                        Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
+                    //    Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
                     } else {
                         String responseerror = response.errorBody().string();
@@ -2001,13 +2002,13 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
         String formattedDate;
-        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            formattedDate = df.format(c);
-        } else {
+//        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
+//
+//            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//            formattedDate = df.format(c);
+//        } else {
             formattedDate = selectedDateFormat;
-        }
+ //       }
 
 
         JSONObject qjsonObj = new JSONObject();
@@ -2087,7 +2088,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         Log.i("QueueObj Checkin", queueobj.toString());
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
         Call<ResponseBody> call = apiService.Checkin(modifyAccountID, body);
-        Config.logV("JSON--------------" + new Gson().toJson(queueobj.toString()));
+     //   Config.logV("JSON--------------" + new Gson().toJson(queueobj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -2576,7 +2577,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
         Log.i("mani","here");
         try {
-            Log.i("Success1111",  new Gson().toJson(paymentData));
+        //    Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
             Toast.makeText(this.mContext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
@@ -2589,7 +2590,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
-            Log.i("here.....", new Gson().toJson(paymentData));
+         //   Log.i("here.....", new Gson().toJson(paymentData));
             Toast.makeText(this.mContext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);

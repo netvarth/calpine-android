@@ -156,6 +156,26 @@ public class SearchListModel implements Serializable {
 
     String url;
 
+    public String getCustom_id() {
+        return custom_id;
+    }
+
+    public void setCustom_id(String custom_id) {
+        this.custom_id = custom_id;
+    }
+
+    String custom_id;
+
+    public String getEnc_uid() {
+        return enc_uid;
+    }
+
+    public void setEnc_uid(String enc_uid) {
+        this.enc_uid = enc_uid;
+    }
+
+    String enc_uid;
+
 
     private String departmentName;
 

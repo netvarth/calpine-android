@@ -339,7 +339,7 @@ public class LiveTrackService extends Service implements SharedPreferences.OnSha
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> callLivetrack;
-        Log.i("ActiveCheckinInfo", new Gson().toJson(activeCheckin));
+      //  Log.i("ActiveCheckinInfo", new Gson().toJson(activeCheckin));
         callLivetrack = apiService.UpdateLatLong(activeCheckin.getYnwUuid(), activeCheckin.getProviderAccount().getId(), body);
         callLivetrack.enqueue(new Callback<ResponseBody>() {
             @Override

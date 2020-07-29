@@ -89,7 +89,12 @@ public class SearchListAdpter extends BaseAdapter implements Filterable {
         if (cell.getCategory().equalsIgnoreCase("Business Name as")) {
             domain.setVisibility(View.GONE);
             name.setText(highlight(text, "Business Name As " + cell.getMdisplayname()));
-        } else {
+        }
+        else if(cell.getCategory().equalsIgnoreCase("Business Id as")) {
+            domain.setVisibility(View.GONE);
+            name.setText(highlight(text, "Business Id As " + cell.getMdisplayname()));
+        }
+            else {
             domain.setVisibility(View.VISIBLE);
             domain.setText(cell.getCategory());
             name.setText(highlight(text, cell.getMdisplayname()));

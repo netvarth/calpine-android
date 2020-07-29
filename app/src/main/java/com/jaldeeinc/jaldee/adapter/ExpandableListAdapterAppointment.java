@@ -809,7 +809,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()), String.valueOf(Config.toTitleCase(activelist.getConsumer().getUserProfile().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getUserProfile().getLastName())),activelist.getConsumer().getId());
+                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()), String.valueOf(Config.toTitleCase(activelist.getAppmtFor().get(0).getFirstName()) + " " + Config.toTitleCase(activelist.getAppmtFor().get(0).getLastName())),activelist.getConsumer().getId());
             }
         });
 
@@ -1867,7 +1867,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             public void onClick(View v) {
 
                 // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
-                String consumer = Config.toTitleCase(activelist.getConsumer().getUserProfile().getFirstName()) + " " + Config.toTitleCase(activelist.getConsumer().getUserProfile().getLastName());
+                String consumer = Config.toTitleCase(activelist.getAppmtFor().get(0).getFirstName()) + " " + Config.toTitleCase(activelist.getAppmtFor().get(0).getLastName());
                 if (activelist.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
                     callbacks.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()), activelist.getAmountDue(),activelist.getConsumer().getId());
                 } else {

@@ -114,7 +114,8 @@
         android:gravity="center"
         android:text="@string/diff_date"
         android:textColor="@color/title_consu"
-        android:textSize="@dimen/txtsize_12"/>
+        android:textSize="@dimen/txtsize_12"
+        android:visibility="gone"/>
 
 
 

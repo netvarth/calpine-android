@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.FamilyListAdapter;
@@ -162,7 +161,7 @@ public class FamilyListFragment extends RootFragment implements FamilyAdapterCal
                     if (response.code() == 200) {
 
                         Config.logV("Response--Array size-------------------------" +response.body().size());
-                        Config.logV("Response--Array ----Family List---------------------" +new Gson().toJson(response.body()));
+                    //    Config.logV("Response--Array ----Family List---------------------" +new Gson().toJson(response.body()));
 
                         if(response.body().size()>0){
                             MuserProfileList.clear();

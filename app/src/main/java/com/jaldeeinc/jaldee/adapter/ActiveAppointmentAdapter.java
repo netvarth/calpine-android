@@ -371,7 +371,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         myViewHolder.btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String consumer = Config.toTitleCase(activelist.getConsumer().getUserProfile().getFirstName() )+ " " + Config.toTitleCase(activelist.getConsumer().getUserProfile().getLastName());
+                String consumer = Config.toTitleCase(activelist.getAppmtFor().get(0).getFirstName() )+ " " + Config.toTitleCase(activelist.getAppmtFor().get(0).getLastName());
                 if (activelist.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
                     callback.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()),activelist.getAmountDue(),activelist.getConsumer().getId());
                 }else {
@@ -390,7 +390,7 @@ public class ActiveAppointmentAdapter extends RecyclerView.Adapter<ActiveAppoint
         myViewHolder.icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String consumer = Config.toTitleCase(activelist.getConsumer().getUserProfile().getFirstName() )+ " " + Config.toTitleCase(activelist.getConsumer().getUserProfile().getLastName());
+                String consumer = Config.toTitleCase(activelist.getAppmtFor().get(0).getFirstName() )+ " " + Config.toTitleCase(activelist.getAppmtFor().get(0).getLastName());
 
                 callback.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getUid(), activelist.getProviderAccount().getBusinessName(), String.valueOf(activelist.getProviderAccount().getId()),consumer,activelist.getConsumer().getId());
             }

@@ -673,12 +673,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                                 //list.setAdapter(adapter);
                                 for (int i = 0; i < items.size(); i++) {
-                                    if (items.get(i).getCategory().equalsIgnoreCase("Business Name as")) {
+                                    if (items.get(i).getCategory().equalsIgnoreCase("Business Name as") || items.get(i).getCategory().equalsIgnoreCase("Business Id as") ) {
                                         items.remove(items.get(i));
                                     }
                                 }
-
+                                items.add(new ListCell(query, "Business Id as", mDomainSpinner, query));
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
+
 
                                /* searchSrcTextView.setAdapter(listadapter);*/
                                 listadapter.notifyDataSetChanged();
@@ -770,12 +771,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 //list.setAdapter(adapter);
                                 //searchSrcTextView.setThreshold(3);
                                 for (int i = 0; i < items.size(); i++) {
-                                    if (items.get(i).getCategory().equalsIgnoreCase("Business Name as")) {
+                                    if (items.get(i).getCategory().equalsIgnoreCase("Business Name as") || items.get(i).getCategory().equalsIgnoreCase("Business Id as")) {
                                         items.remove(items.get(i));
                                     }
                                 }
-
+                                items.add(new ListCell(query, "Business Id as", mDomainSpinner, query));
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
+
 
 
                                 // searchSrcTextView.setAdapter(listadapter);
@@ -909,6 +911,20 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         sub = "title:" + "'" + name + "'";
                         querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
                     }
+                }
+
+                if (cell.getCategory().equalsIgnoreCase("Business Id as")) {
+
+
+                    String name = cell.getName();
+                    if (name.contains("'")) {
+                        Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
+                        name = cell.getName().replace("'", "%5C%27");
+                    }
+                    Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + name);
+
+                    querycreate = "(or custom_id:" + "'" + name + "' enc_uid:" +  "'" + name + "')";
+
                 }
 
 
@@ -1791,11 +1807,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             if(query.equals("")) {
                 querycreate = "sector :'" + mDomainSpinner + "'";
             } else {
-                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "') sector :'" + mDomainSpinner + "'";
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query +  "' custom_id: " + "'" + query +  "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "') sector :'" + mDomainSpinner + "'";
             }
         } else {
             if(!query.equals("")) {
-                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "')";
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' custom_id: " + "'" + query +  "' enc_uid: " + "'" + query  + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "')";
             } else {
                 querycreate = "";
             }

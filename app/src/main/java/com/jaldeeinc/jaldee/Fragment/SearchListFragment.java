@@ -763,11 +763,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                                 //list.setAdapter(adapter);
                                 for (int i = 0; i < items.size(); i++) {
-                                    if (items.get(i).getCategory().equalsIgnoreCase("Business Name as")) {
+                                    if (items.get(i).getCategory().equalsIgnoreCase("Business Name as") || items.get(i).getCategory().equalsIgnoreCase("Business Id as")) {
                                         items.remove(items.get(i));
                                     }
                                 }
 
+
+                                items.add(new ListCell(query, "Business Id as", mDomainSpinner, query));
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
 
                                 /* searchSrcTextView.setAdapter(listadapter);*/
@@ -863,11 +865,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 //list.setAdapter(adapter);
                                 //searchSrcTextView.setThreshold(3);
                                 for (int i = 0; i < items.size(); i++) {
-                                    if (items.get(i).getCategory().equalsIgnoreCase("Business Name as")) {
+                                    if (items.get(i).getCategory().equalsIgnoreCase("Business Name as") || items.get(i).getCategory().equalsIgnoreCase("Business Id as") ) {
                                         items.remove(items.get(i));
                                     }
                                 }
 
+
+                                items.add(new ListCell(query, "Business Id as", mDomainSpinner, query));
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
 
                                 // searchSrcTextView.setAdapter(listadapter);
@@ -1040,6 +1044,21 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                         sub = "title:" + "'" + name + "'";
                         querycreate = "sector:" + "'" + mSector + "'" + " " + sub;
                     }
+                }
+
+                if (cell.getCategory().equalsIgnoreCase("Business Id as")) {
+
+                    String name = cell.getName();
+                    if (name.contains("'")) {
+                        Config.logV("Query@@@@@@@@@@@@%%%###DDDD%%%%%%%%-----------" + name);
+                        name = cell.getName().replace("'", "%5C%27");
+
+                    }
+                    Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + name);
+
+                    querycreate = "(or custom_id:" + "'" + name + "' enc_uid:" +  "'" + name + "')";
+
+
                 }
 
 
@@ -1302,6 +1321,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                 if (response.body().getHits().getHit().get(i).getFields().getFirstaid_location1() != null) {
                                     search.setFirstaid_location1(response.body().getHits().getHit().get(i).getFields().getFirstaid_location1());
                                 }
+
+                                if(response.body().getHits().getHit().get(i).getFields().getCustom_id() != null){
+                                    search.setCustom_id(response.body().getHits().getHit().get(i).getFields().getCustom_id());
+                                }
+                                if(response.body().getHits().getHit().get(i).getFields().getEnc_uid() != null){
+                                    search.setEnc_uid(response.body().getHits().getHit().get(i).getFields().getEnc_uid());
+                                }
+
                                 mSearchResp.add(search);
                                 if (response.body().getHits().getHit().get(i).getId() != null) {
                                     ids.add(response.body().getHits().getHit().get(i).getId());
@@ -1555,6 +1582,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     search.setFirstaid_location1(response.body().getHits().getHit().get(i).getFields().getFirstaid_location1());
                                 }
 
+                                if(response.body().getHits().getHit().get(i).getFields().getCustom_id() != null){
+                                    search.setCustom_id(response.body().getHits().getHit().get(i).getFields().getCustom_id());
+                                }
+                                if(response.body().getHits().getHit().get(i).getFields().getEnc_uid() != null){
+                                    search.setEnc_uid(response.body().getHits().getHit().get(i).getFields().getEnc_uid());
+                                }
+
                                 if (response.body().getHits().getHit().get(i).getId() != null) {
                                     ids.add(response.body().getHits().getHit().get(i).getId());
                                 }
@@ -1613,6 +1647,10 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
 
     }
+
+
+
+
 
     /**
      * Method to combine Cloud response with Estimated waiting time.
@@ -1764,6 +1802,13 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
                                         searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
                                     }
+                                    if(mSearchRespPass.get(i).getCustom_id() != null){
+                                        searchList.setCustom_id(mSearchRespPass.get(i).getCustom_id());
+                                    }
+                                    if(mSearchRespPass.get(i).getEnc_uid() != null){
+                                        searchList.setEnc_uid(mSearchRespPass.get(i).getEnc_uid());
+                                    }
+
                                     searchList.setQId(mSearchRespPass.get(i).getId());
                                     if (mQueueList.get(i).getMessage() != null) {
                                         searchList.setMessage(mQueueList.get(i).getMessage());
@@ -1921,6 +1966,12 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                                     }
                                     if (mSearchRespPass.get(i).getFirstaid_location1() != null) {
                                         searchList.setFirstaid_location1(mSearchRespPass.get(i).getFirstaid_location1());
+                                    }
+                                    if(mSearchRespPass.get(i).getCustom_id() != null){
+                                        searchList.setCustom_id(mSearchRespPass.get(i).getCustom_id());
+                                    }
+                                    if(mSearchRespPass.get(i).getEnc_uid() != null){
+                                        searchList.setEnc_uid(mSearchRespPass.get(i).getEnc_uid());
                                     }
 //                                    Log.i("mSearchResponse", new Gson().toJson(mSearchRespPass));
                                     searchList.setQId(mSearchRespPass.get(i).getId());

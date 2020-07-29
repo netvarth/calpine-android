@@ -88,7 +88,7 @@ public class PaymentGateway {
                         if (from.equalsIgnoreCase("checkin")) {
 
 
-                            Log.i("Response--Sucess----" , new Gson().toJson(response.body()));
+                          //  Log.i("Response--Sucess----" , new Gson().toJson(response.body()));
 
                             Config.logV("Response--Sucess----------@@@@---------------" + response.body().getPaymentEnv());
 

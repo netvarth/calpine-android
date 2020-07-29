@@ -335,7 +335,7 @@ public class FamilyMemberFragment extends RootFragment {
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), userProfile.toString());
         Call<ResponseBody> call = apiService.UpdateFamilyMEmber(body);
-        Config.logV("Request--BODY-------------------------" + new Gson().toJson(userProfile.toString()));
+      //  Config.logV("Request--BODY-------------------------" + new Gson().toJson(userProfile.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -347,7 +347,7 @@ public class FamilyMemberFragment extends RootFragment {
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-                    Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
+                 //   Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
 
 
@@ -427,7 +427,7 @@ public class FamilyMemberFragment extends RootFragment {
 
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), userProfile.toString());
         Call<ResponseBody> call = apiService.AddFamilyMEmber(body);
-        Config.logV("Request--BODY-------------------------" + new Gson().toJson(userProfile.toString()));
+      //  Config.logV("Request--BODY-------------------------" + new Gson().toJson(userProfile.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -439,7 +439,7 @@ public class FamilyMemberFragment extends RootFragment {
 
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-                    Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
+                  //  Config.logV("Request--BODY-------------------------" + new Gson().toJson(response.body()));
                     if (response.code() == 200) {
 
                         // if(response.body().string().equalsIgnoreCase("true")) {

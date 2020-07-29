@@ -69,7 +69,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
     }
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_businessname, tv_estTime, tv_place, tv_status, tv_check_in, tv_queueTime;
-        TextView icon_bill, tv_prepaid, tv_service,tv_makepay,tv_peopleahead;
+        TextView icon_bill, tv_prepaid, tv_service,tv_makepay,tv_peopleahead, tv_token;
         LinearLayout layout_btnpay,layout_activeCheckin;
         Button btn_pay;
         public MyViewHolder(View view) {
@@ -88,6 +88,7 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
             tv_check_in = (TextView) view.findViewById(R.id.txt_check_in);
             tv_queueTime = (TextView) view.findViewById(R.id.txt_queuetime);
             layout_activeCheckin = (LinearLayout) view.findViewById(R.id.activecheckin);
+            tv_token = (TextView) view.findViewById(R.id.txt_token);
         }
     }
     Activity activity;
@@ -206,6 +207,33 @@ public class ActiveCheckInAdapter extends RecyclerView.Adapter<ActiveCheckInAdap
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        if (activelist.getToken() != -1 && activelist.getToken() > 0) {
+         myViewHolder.tv_token.setVisibility(View.VISIBLE);
+            String firstWord = "Token # ";
+            Config.logV("Token------------" + activelist.getToken());
+            String secondWord = String.valueOf(activelist.getToken());
+            Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(),
+                    "fonts/Montserrat_Bold.otf");
+            Spannable spannable = new SpannableString(firstWord + secondWord);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.sec_title_grey)),
+                    0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            //  spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
+                    firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            myViewHolder.tv_token.setText(spannable);
+
+
+        } else {
+            myViewHolder.tv_token.setVisibility(View.GONE);
+
+        }
+
+
+
+
+
         if (activelist.getName() != null) {
             myViewHolder.tv_service.setVisibility(View.VISIBLE);
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),

@@ -38,6 +38,7 @@ public class MyJaldeeFragment extends RootFragment /*implements FragmentInterfac
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         View rootView = inflater.inflate(R.layout.fragment_myjaldee, container, false);
 
         firstViewPager = (ViewPager) rootView.findViewById(R.id.viewpager_content);

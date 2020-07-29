@@ -143,7 +143,7 @@ public class UpdateProfileFragment extends RootFragment {
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
+                    //    Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
                         Config.logV("Response--first-------------------------" + response.body().getUserprofile().getFirstName());
                         Config.logV("Response--name-------------------------" + response.body().getUserprofile().getLastName());
                         Config.logV("Response--dob-------------------------" + response.body().getUserprofile().getDob());
