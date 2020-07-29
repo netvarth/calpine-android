@@ -1,11 +1,15 @@
 package com.jaldeeinc.jaldee.activities;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
@@ -34,38 +38,24 @@ public class Home extends AppCompatActivity {
 
 
     Intent mLiveTrackClient;
-    private LiveTrackService liveTrackService;
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    private LiveTrackService liveTrackService = new LiveTrackService();
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-             detail = extras.getString("detail_id", "");
-             path = extras.getString("path", "");
+            detail = extras.getString("detail_id", "");
+            path = extras.getString("path", "");
             Log.i("detailsofDetail",detail);
             Log.i("detailsofDetail",path);
         }
 
         Config.logV("Home Screen@@@@@@@@@@@@@@@@@@@");
         mContext = this;
-        liveTrackService = new LiveTrackService();
         mLiveTrackClient = new Intent(Home.this, liveTrackService.getClass());
-        if (!isMyServiceRunning(liveTrackService.getClass())) {
-            Log.i("OnCreateHome?", true + "");
-            startService(mLiveTrackClient);
-        }
+        startService(mLiveTrackClient);
 
 
         if (savedInstanceState == null) {
@@ -204,24 +194,20 @@ public class Home extends AppCompatActivity {
             this.doubleBackToExitPressedOnce = true;
             Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
     protected void onDestroy() {
         Log.i("OnDestroyHome", true + "");
+        super.onDestroy();
         stopService(mLiveTrackClient);
 
-        super.onDestroy();
     }
 
     @Override
     protected void onStart() {
         Log.i("onStartHomeBefore", true + "");
-        if (!isMyServiceRunning(liveTrackService.getClass())) {
-            Log.i("OnStartHomeAter", true + "");
-            startService(mLiveTrackClient);
-        }
+        startService(mLiveTrackClient);
         super.onStart();
     }
 
@@ -229,13 +215,10 @@ public class Home extends AppCompatActivity {
     protected void onStop() {
         Log.i("onStopHome", true + "");
         super.onStop();
-        if (isMyServiceRunning(liveTrackService.getClass())) {
-            Log.i("OnStartHomeAter", true + "");
-            stopService(mLiveTrackClient);
-        } else {
-            startService(mLiveTrackClient);
-        }
-
+        Log.i("onStopHomeAfter", true + "");
+        mLiveTrackClient = new Intent(Home.this, liveTrackService.getClass());
+        stopService(mLiveTrackClient);
+        startService(mLiveTrackClient);
     }
 }
 

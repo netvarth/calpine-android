@@ -1374,7 +1374,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         final ApiInterface apiService =
                 ApiClient.getClientAWS(mContext).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         Map<String, String> query = new HashMap<>();
@@ -2678,7 +2678,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
 
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         Date currentTime = new Date();
@@ -2731,7 +2731,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     private void ApiCommunicate(String accountID, String message, final BottomSheetDialog mBottomDialog) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
         try {
@@ -2856,7 +2856,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         {
             final ApiInterface apiService =
                     ApiClient.getClient(getActivity()).create(ApiInterface.class);
-            final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+            final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
             mDialog.show();
             Call<ArrayList<Domain_Spinner>> call = apiService.getAllDomains();
             call.enqueue(new Callback<ArrayList<Domain_Spinner>>() {
@@ -2913,7 +2913,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     private void ApiFilters(final RecyclerView recycle_filter, final String domainSelect, final ArrayList<String> passedFormulaArray) {
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<RefinedFilters> call = apiService.getFilters();
         call.enqueue(new Callback<RefinedFilters>() {
@@ -3011,7 +3011,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Config.logV("show_subdomain @@@@@@@@@@@@@@" + show_subdomain);
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<RefinedFilters> call = apiService.getMoreFilters(subdomain);
         call.enqueue(new Callback<RefinedFilters>() {
@@ -3186,7 +3186,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
         Config.logV("URL----------SUBDOMAIN--@@@@@@@@@@@@@@@@@@");
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<RefinedFilters> call = apiService.getSubDomainMoreFilters(subdomain, domain);
         call.enqueue(new Callback<RefinedFilters>() {

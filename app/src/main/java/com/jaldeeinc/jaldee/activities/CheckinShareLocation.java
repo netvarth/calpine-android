@@ -506,7 +506,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
                     if (response.code() == 200) {
                         a = response.body();
                         Log.i("fghffghfgh", response.body().toString());
-                        Log.i("fghffghfgh", new Gson().toJson(response.body()));
+//                        Log.i("fghffghfgh", new Gson().toJson(response.body()));
                         shareSwitch.setText("Track me and share my arrival time with " + response.body().getProviderAccount().getBusinessName());
 
                       //  trackingText.setText(response.body().getProviderAccount().getBusinessName() + " won't know where you are and you can miss your turn. So Jaldee recommends to turn on sharing");
@@ -694,7 +694,7 @@ public class CheckinShareLocation extends AppCompatActivity implements
             call = apiService.PutTravelModes(uuid, Integer.parseInt(accountID), body);
 
 
-            Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+//            Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
 
             call.enqueue(new Callback<ShareLocation>() {
                 @Override

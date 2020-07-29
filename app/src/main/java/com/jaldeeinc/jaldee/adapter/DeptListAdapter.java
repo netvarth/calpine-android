@@ -2,28 +2,20 @@ package com.jaldeeinc.jaldee.adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
@@ -45,19 +36,12 @@ import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
-import com.jaldeeinc.jaldee.custom.CircleTransform;
-import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
-import com.jaldeeinc.jaldee.custom.ResizableCustomView;
-import com.jaldeeinc.jaldee.model.ContactModel;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
+import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
-import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchService;
-import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
-import com.jaldeeinc.jaldee.widgets.CustomDialog;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,8 +82,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView deptName;
-        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_count,tv_spec_more;
-        LinearLayout L_specialization, L_services, L_layout_type, L_checkin;
+        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_spec_more, tv_peopleahead,tv_qmessage;
+        LinearLayout L_specialization, L_services, L_layout_type, L_checkin,L_appointments;
 
         ImageView ic_jaldeeverifiedIcon;
         ImageView profile;
@@ -115,9 +99,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
             deptName = (TextView) view.findViewById(R.id.deptName);
             L_checkin = view.findViewById(R.id.checkinlayout);
+            L_appointments = view.findViewById(R.id.appointmentLayout);
             ic_jaldeeverifiedIcon = view.findViewById(R.id.ic_jaldeeverifiedIcon);
             tv_name = view.findViewById(R.id.name);
-            tv_count = view.findViewById(R.id.count_search);
             tv_claimable = view.findViewById(R.id.claimable);
             tv_branch_name = view.findViewById(R.id.branch_name);
             tv_location = view.findViewById(R.id.location);
@@ -127,11 +111,13 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             L_services = view.findViewById(R.id.service);
             tv_distance = view.findViewById(R.id.distance);
             btncheckin = view.findViewById(R.id.btncheckin);
-            btnappointment = view.findViewById(R.id.btnappointment);
+            btnappointment = view.findViewById(R.id.btnappointments);
             tv_Futuredate = view.findViewById(R.id.txt_diffdate);
             tv_WaitTime = view.findViewById(R.id.txtWaitTime);
             L_specialization = view.findViewById(R.id.Lspec);
             L_layout_type = view.findViewById(R.id.layout_type);
+            tv_qmessage = view.findViewById(R.id.qmessage);
+            tv_peopleahead = view.findViewById(R.id.txt_peopleahead);
             layout_row = view.findViewById(R.id.layout_row);
             tv_spec1 = view.findViewById(R.id.txtspec1);
             tv_spec2 = view.findViewById(R.id.txtspec2);
@@ -153,12 +139,20 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final DepartmentUserSearchModel searchdetailList = searchList.get(position);
-        Log.i("SearchDetailListUser", new Gson().toJson(searchdetailList));
+//        Log.i("SearchDetailListUser", new Gson().toJson(searchdetailList));
         final DeptListAdapter.MyViewHolder myViewHolder = (DeptListAdapter.MyViewHolder) holder;
         resetPage(myViewHolder);
         handleProfileInfo(myViewHolder, searchdetailList);
         handleCheckinInfo(myViewHolder, searchdetailList);
         handleAppointmentInfo(myViewHolder, searchdetailList);
+        handleServices(myViewHolder, searchdetailList);
+        LinearLayout parent = new LinearLayout(context);
+        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        parent.setOrientation(LinearLayout.HORIZONTAL);
+        parent.setLayoutParams(params1);
+        handleBusinesshours(myViewHolder, searchdetailList, parent, params1);
+        handleEnquiry(myViewHolder, searchdetailList,parent, params1);
+        myViewHolder.layout_type.addView(parent);
 
 //
 
@@ -1117,18 +1111,353 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
     }
 
+    private void handleEnquiry(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList, LinearLayout parent, LinearLayout.LayoutParams params1) {
+        TextView dynaText1 = new TextView(context);
+        Typeface tyface_5 = Typeface.createFromAsset(context.getAssets(),
+                "fonts/Montserrat_Regular.otf");
+        dynaText1.setTypeface(tyface_5);
+        dynaText1.setText("Enquiry");
+        dynaText1.setTextSize(13);
+        dynaText1.setTextColor(context.getResources().getColor(R.color.title_grey));
+        dynaText1.setPadding(5, 5, 5, 5);
+        dynaText1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_message_gray, 0, 0);
+        dynaText1.setMaxLines(1);
+        dynaText1.setLayoutParams(params1);
+        params1.setMargins(10, 7, 10, 7);
+        dynaText1.setGravity(Gravity.LEFT);
+        parent.addView(dynaText1);
+        dynaText1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdapterCallback.onMethodMessage(searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getSearchViewDetail().getId()), "dept");
+            }
+        });
+    }
+
+    private void handleServices(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList) {
+        if (searchdetailList.getServices() != null) {
+            final ArrayList serviceNames = new ArrayList();
+            serviceNames.clear();
+            for(int i =0;i<searchdetailList.getServices().size();i++) {
+                serviceNames.add(i, searchdetailList.getServices().get(i).getName());
+            }
+            if (searchdetailList.getServices().size() > 0) {
+                myViewHolder.L_services.setVisibility(View.VISIBLE);
+                myViewHolder.L_services.removeAllViews();
+                int size = 0;
+                if (searchdetailList.getServices().size() == 1) {
+                    size = 1;
+                } else {
+                    if (searchdetailList.getServices().size() == 2)
+                        size = 2;
+                    else
+                        size = 3;
+                }
+                for (int i = 0; i < size; i++) {
+                    TextView dynaText = new TextView(context);
+                    Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                            "fonts/Montserrat_Regular.otf");
+                    dynaText.setTypeface(tyface);
+                    dynaText.setText(searchdetailList.getServices().get(i).getName());
+                    dynaText.setTextSize(13);
+                    dynaText.setPadding(5, 0, 5, 0);
+                    dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+                    dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    dynaText.setMaxLines(1);
+                    if (size > 2) {
+                        dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                        dynaText.setMaxEms(10);
+                    }
+                    final int finalI = i;
+                    dynaText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ApiService(String.valueOf(searchdetailList.getSearchViewDetail().getId()), searchdetailList.getServices().get(finalI).getName(), searchdetailList.getSearchViewDetail().getBusinessName());
+
+                        }
+                    });
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0, 0, 20, 0);
+
+                    dynaText.setLayoutParams(params);
+                    myViewHolder.L_services.addView(dynaText);
+                }
+                if (size > 3) {
+                    TextView dynaText = new TextView(context);
+                    dynaText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mAdapterCallback.onMethodServiceCallback(serviceNames, searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getSearchViewDetail().getId()));
+                        }
+                    });
+                    dynaText.setGravity(Gravity.CENTER);
+                    dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
+                    dynaText.setText(" ... ");
+                    myViewHolder.L_services.addView(dynaText);
+                }
+            }else {
+                myViewHolder.L_services.setVisibility(View.GONE);
+            }
+//            try {
+//                // String serviceName = searchdetailList.getServices().toString();
+//                try {
+//                    JSONArray jsonArray = new JSONArray(searchdetailList.getServices());
+//                    String jsonArry = jsonArray.getString(0);
+//                    JSONArray jsonArray1 = new JSONArray(jsonArry);
+//                    for(int i =0;i<jsonArray1.length();i++){
+//                        JSONObject jsonObject = jsonArray1.getJSONObject(i);
+//                        String name = jsonObject.optString("name");
+//                        serviceNames.add(i,name);
+//                        Log.i("sar",serviceNames.toString());
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }catch (Exception e) {
+//                e.printStackTrace();
+//            }
+        }
+    }
+
     private void resetPage(MyViewHolder myViewHolder) {
 
     }
 
     private void handleAppointmentInfo(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList) {
-        searchdetailList.getSearchViewDetail();
+        Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        myViewHolder.btnappointment.setTypeface(tyface_confm);
+        myViewHolder.btnappointment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iAppointment = new Intent(v.getContext(), Appointment.class);
+                iAppointment.putExtra("serviceId", searchdetailList.getLocation().getId());
+                iAppointment.putExtra("uniqueID", searchdetailList.getParentSearchViewDetail().getUniqueId());
+                iAppointment.putExtra("accountID", searchdetailList.getParentSearchViewDetail().getId());
+                iAppointment.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
+                iAppointment.putExtra("from", "checkin");
+                iAppointment.putExtra("title", searchdetailList.getParentSearchViewDetail().getBusinessName());
+                iAppointment.putExtra("place", searchdetailList.getLocation().getPlace());
+                iAppointment.putExtra("sector", searchdetailList.getParentSearchViewDetail().getServiceSector().getDomain());
+                iAppointment.putExtra("subsector", searchdetailList.getParentSearchViewDetail().getServiceSubSector().getSubDomain());
+                iAppointment.putExtra("terminology", termilogy);
+//                iAppointment.putExtra("isshowtoken", searchdetailList.getQueueList().isShowToken());
+//                iAppointment.putExtra("getAvail_date", searchdetailList.getScheduleList().getAvailableSchedule().);
+                context.startActivity( iAppointment);
+            }
+        });
+        if (searchdetailList.getSearchViewDetail().isOnlinePresence()) {
+            if (searchdetailList.getScheduleList().getAvailableSchedule()!=null &&
+                    (searchdetailList.getScheduleList().getAvailableSchedule().isTodayAppt() ||
+            searchdetailList.getScheduleList().getAvailableSchedule().isFutureAppt())) {
+                    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+            } else {
+                myViewHolder.L_appointments.setVisibility(View.GONE);
+            }
+        } else {
+            myViewHolder.L_appointments.setVisibility(View.GONE);
+        }
+    }
+    public void disableCheckinFeature(MyViewHolder myViewHolder) {
+        myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+        disableCheckinButton(myViewHolder);
+        myViewHolder.btncheckin.setVisibility(View.GONE);
+        myViewHolder.L_checkin.setVisibility(View.GONE);
+        myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+        myViewHolder.tv_qmessage.setVisibility(View.GONE);
+        myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+//        myViewHolder.tv_count.setVisibility(View.GONE);
+    }
+    public void disableCheckinButton(MyViewHolder myViewHolder) {
+        myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
+        myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
+        myViewHolder.btncheckin.setEnabled(false);
+        myViewHolder.btncheckin.setVisibility(View.VISIBLE);
     }
 
+    public void enableCheckinButton(MyViewHolder myViewHolder) {
+        myViewHolder.btncheckin.setBackgroundColor(context.getResources().getColor(R.color.green));
+        myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.white));
+        myViewHolder.btncheckin.setEnabled(true);
+        myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+    }
     private void handleCheckinInfo(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList) {
+        Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        myViewHolder.btncheckin.setTypeface(tyface_confm);
+        disableCheckinFeature (myViewHolder);
+        myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+        if (searchdetailList.getQueueList().getNextAvailableQueue() != null) {
+            myViewHolder.L_checkin.setVisibility(View.VISIBLE);
+            myViewHolder.L_services.setVisibility(View.VISIBLE);
+            myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+//            Config.logV("1--" + searchLoclist.getId() + "  2--" + mQueueList.get(i).getNextAvailableQueue().getLocation().getId());
+            if (searchdetailList.getLocation().getId() == searchdetailList.getQueueList().getNextAvailableQueue().getLocation().getId()) {
+                //open Now
+//                if (searchdetailList.getQueueList().getNextAvailableQueue().isOpenNow()) {
+//                    myViewHolder.tv_open.setVisibility(View.VISIBLE);
+//                } else {
+//                    myViewHolder.tv_open.setVisibility(View.GONE);
+//                }
 
+                Date c = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String formattedDate = df.format(c);
+                System.out.println("Current time => " + formattedDate);
+
+                //Check-In Button
+                Date date1 = null, date2 = null;
+                try {
+                    date1 = df.parse(formattedDate);
+                    if (searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate() != null)
+                        date2 = df.parse(searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                if (searchdetailList.getSearchViewDetail().isOnlinePresence() && searchdetailList.getQueueList().getNextAvailableQueue().isWaitlistEnabled()) {
+                    enableCheckinButton(myViewHolder);
+                    if (searchdetailList.getQueueList().getNextAvailableQueue().isShowToken()) {
+                        myViewHolder.btncheckin.setText("GET TOKEN");
+                    } else {
+                        myViewHolder.btncheckin.setText("Check-in".toUpperCase());
+                    }
+                    if (searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate() != null) {
+                        if (searchdetailList.getQueueList().getNextAvailableQueue().isOnlineCheckIn() && searchdetailList.getQueueList().getNextAvailableQueue().isAvailableToday() && formattedDate.equalsIgnoreCase(searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate())) { //Today
+                            enableCheckinButton(myViewHolder);
+                            if (searchdetailList.getQueueList().getNextAvailableQueue().isShowToken()) {
+                                myViewHolder.btncheckin.setText("GET TOKEN");
+
+                                if (searchdetailList.getQueueList().getNextAvailableQueue().getCalculationMode().equalsIgnoreCase("NoCalc")) { // NoCalc without show waiting time
+                                    String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
+                                    myViewHolder.tv_WaitTime.setText(message);
+                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                                    myViewHolder.tv_peopleahead.setVisibility(View.GONE);
+                                } else { // Conventional (Token with Waiting time)
+                                    myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                                    showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(),null);
+//                                    myViewHolder.tv_WaitTime.setText(spannable);
+//                                    myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+//                                    String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
+//                                    myViewHolder.tv_peopleahead.setText(message);
+                                }
+                            } else { // Conventional/Fixed
+                                myViewHolder.btncheckin.setText("Check-in".toUpperCase());
+                                myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                                showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(),null);
+//                                String spannable = getWaitingTime(searchdetailList.getQueueList().getNextAvailableQueue());
+//                                myViewHolder.tv_WaitTime.setText(spannable);
+//                                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+//                                String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
+//                                myViewHolder.tv_peopleahead.setText(message);
+                            }
+                        }else{
+                            disableCheckinButton(myViewHolder);
+                        }
+                        if (date2 != null && date1.compareTo(date2) < 0) {
+                            myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
+                            showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(),"future");
+//                            String spannable = getWaitingTime(searchdetailList.getQueueList().getNextAvailableQueue());
+//                            myViewHolder.tv_WaitTime.setText(spannable);
+//                            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+//                            String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
+//                            myViewHolder.tv_peopleahead.setText(message);
+                        }
+                        //Future Checkin
+                        if (searchdetailList.getSettings().isFutureDateWaitlist() && searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate() != null) {
+                            myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
+                            if (searchdetailList.getQueueList().getNextAvailableQueue().isShowToken()) {
+                                myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
+                            } else {
+                                myViewHolder.tv_Futuredate.setText("Do you want to" + " Check-in for another day?");
+                            }
+                        } else {
+                            myViewHolder.tv_Futuredate.setVisibility(View.GONE);
+                        }
+                    }
+                } else {
+                    disableCheckinFeature(myViewHolder);
+                }
+            }
+        }
+        myViewHolder.btncheckin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                iCheckIn.putExtra("serviceId",searchdetailList.getLocation().getId());
+                iCheckIn.putExtra("uniqueID", searchdetailList.getSearchViewDetail().getId());
+                iCheckIn.putExtra("accountID", searchdetailList.getSearchViewDetail().getId());
+                iCheckIn.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
+                // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
+                iCheckIn.putExtra("from", "checkin");
+                iCheckIn.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                iCheckIn.putExtra("place", searchdetailList.getLocation().getPlace());
+                Config.logV("sector%%%%%%-------------" + searchdetailList.getSearchViewDetail().getServiceSector());
+//                iCheckIn.putExtra("sector",  searchdetailList.getSearchViewDetail().getServiceSector());
+                iCheckIn.putExtra("subsector", searchdetailList.getSearchViewDetail().getServiceSubSector().toString());
+                iCheckIn.putExtra("terminology", termilogy);
+                iCheckIn.putExtra("isshowtoken", searchdetailList.getQueueList().getNextAvailableQueue().isShowToken());
+                iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
+                context.startActivity(iCheckIn);
+            }
+        });
+        myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
+                if (searchdetailList.getLocation() != null) {
+                    iCheckIn.putExtra("serviceId", searchdetailList.getLocation().getId());
+                }
+                iCheckIn.putExtra("uniqueID", searchdetailList.getSearchViewDetail().getId());
+                iCheckIn.putExtra("accountID",searchdetailList.getSearchViewDetail().getId());
+                iCheckIn.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
+                // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
+                iCheckIn.putExtra("from", "future_date");
+                iCheckIn.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                iCheckIn.putExtra("place", searchdetailList.getLocation().getPlace());
+                Config.logV("sector%%%%%%-------------" + searchdetailList.getSearchViewDetail().getServiceSector());
+                iCheckIn.putExtra("sector", searchdetailList.getSearchViewDetail().getServiceSector().toString());
+                iCheckIn.putExtra("subsector", searchdetailList.getSearchViewDetail().getServiceSubSector().toString());
+                iCheckIn.putExtra("terminology", termilogy);
+                iCheckIn.putExtra("isshowtoken", searchdetailList.getQueueList().getNextAvailableQueue().isShowToken());
+                iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
+                context.startActivity(iCheckIn);
+            }
+        });
     }
-
+    public void showWaitingTime(MyViewHolder myViewHolder, NextAvailableQModel searchdetailList, String type) {
+        if(searchdetailList.getServiceTime()!= null){
+            String firstWord = "Next Available Time ";
+            String secondWord = "";
+            if (type != null) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = null;
+                try {
+                    date = format.parse(searchdetailList.getAvailableDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                String day = (String) DateFormat.format("dd", date);
+                String monthString = (String) DateFormat.format("MMM", date);
+                Typeface tyface1 = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Bold.otf");
+                secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
+            } else {
+                secondWord =  "\nToday, " + searchdetailList.getServiceTime();
+            }
+            Spannable spannable = new SpannableString(firstWord + secondWord);
+            // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            myViewHolder.tv_WaitTime.setText(spannable);
+        }
+        else{
+            //   myViewHolder.tv_WaitTime.setVisibility(View.GONE);
+            String firstWord = "Est wait time";
+            String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
+            myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
+        }
+        // myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+        String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
+        myViewHolder.tv_peopleahead.setText(message);
+    }
     public void setSpecializations(MyViewHolder myViewHolder, SearchViewDetail searchdetailList) {
         if (searchdetailList.getSpecialization() != null) {
             final List<String> list_spec = searchdetailList.getSpecialization();
@@ -1493,9 +1822,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //        tv_msg.setEnabled(true);
         myViewHolder.tv_name.setText(getBusinessData.getBusinessName());
         myViewHolder.rating.setRating(getBusinessData.getAvgRating());
-        if (getBusinessData.getServiceSector().getDisplayName() != null && getBusinessData.getServiceSubSector().getDisplayName() != null) {
-            myViewHolder.tv_domain.setText(getBusinessData.getServiceSector().getDisplayName() + " " + "(" + getBusinessData.getServiceSubSector().getDisplayName() + ")");
-        }
+//        if (getBusinessData.getServiceSector().getDisplayName() != null && getBusinessData.getServiceSubSector().getDisplayName() != null) {
+//            myViewHolder.tv_domain.setText(getBusinessData.getServiceSector().getDisplayName() + " " + "(" + getBusinessData.getServiceSubSector().getDisplayName() + ")");
+//        }
 //        if (getBusinessData.getBusinessDesc() != null) {
 //            myViewHolder.m.setVisibility(View.VISIBLE);
 //            tv_desc.setText(getBusinessData.getBusinessDesc());
@@ -1526,7 +1855,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
     }
 
-        private void ApiService(String uniqueID, final String serviceName, final String title) {
+    private void ApiService(String uniqueID, final String serviceName, final String title) {
 
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(context).create(ApiInterface.class);
@@ -1541,7 +1870,6 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         System.out.println("UTC time: " + sdf.format(currentTime));
 
         Call<ArrayList<SearchService>> call = apiService.getService(Integer.parseInt(uniqueID), sdf.format(currentTime));
-
         call.enqueue(new Callback<ArrayList<SearchService>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchService>> call, Response<ArrayList<SearchService>> response) {

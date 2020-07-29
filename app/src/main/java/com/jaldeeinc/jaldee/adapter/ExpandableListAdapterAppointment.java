@@ -606,7 +606,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 call = apiService.PutTravelModeAppointment(activelist.getUid(), activelist.getProviderAccount().getId(), body);
 
 
-                Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+//                Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
 
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -671,7 +671,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                 call = apiService.PutTravelModeAppointment(activelist.getUid(), activelist.getProviderAccount().getId(), body);
 
 
-                Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+//                Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
 
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override

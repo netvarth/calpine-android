@@ -222,7 +222,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
 
         final int consumerId = SharedPreference.getInstance(mContext).getIntValue("consumerId", 0);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext,mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ProfileModel> call = apiService.getProfileDetail(consumerId);
 
@@ -239,7 +239,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
 
-                        Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
+//                        Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
                         Config.logV("Response--first-------------------------" + response.body().getUserprofile().getFirstName());
                         Config.logV("Response--name-------------------------" + response.body().getUserprofile().getLastName());
                         Config.logV("Response--dob-------------------------" + response.body().getUserprofile().getDob());
@@ -336,7 +336,7 @@ public class EditProfileFragment extends RootFragment  /*implements DatePickerDi
 
         final int consumerId = SharedPreference.getInstance(getActivity()).getIntValue("consumerId", 0);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
         try {
@@ -377,7 +377,7 @@ Config.logV("FINAL DATE @@@@@@@@@@@@@@"+finalDate);
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.getEditProfileDetail(body);
-        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

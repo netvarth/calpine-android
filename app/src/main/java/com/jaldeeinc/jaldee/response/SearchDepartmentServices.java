@@ -5,7 +5,7 @@ import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SearchDepartmentServices {
+public class SearchDepartmentServices implements Serializable{
     String departmentName;
     String departmentId;
     String departmentCode;

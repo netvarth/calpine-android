@@ -3417,7 +3417,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                     if (response.code() == 200) {
                         doctResponse = response.body();
 
-                        Log.i("getUser123", new Gson().toJson(response.body()));
+//                        Log.i("getUser123", new Gson().toJson(response.body()));
 
 
                     }
@@ -3523,7 +3523,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                     if (response.code() == 200) {
                         phoneNumberValue.setText(response.body().getUserprofile().getPrimaryMobileNo());
                         phoneNumber = phoneNumberValue.getText().toString();
-                        Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
+//                        Config.logV("Response--BODY-------------------------" + new Gson().toJson(response));
                         Config.logV("Response--mob-------------------------" + response.body().getUserprofile().getPrimaryMobileNo());
 
                     } else {
@@ -3589,7 +3589,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
 
 
                         CheckSumModel response_data = response.body();
-                        Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Response--Sucess-------------------------" + new Gson().toJson(response.body()));
 
                     } else {
                         String responseerror = response.errorBody().string();
@@ -3711,7 +3711,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
         Log.i("QueueObj Checkin", queueobj.toString());
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), queueobj.toString());
         Call<ResponseBody> call = apiService.Donation(modifyAccountID, body);
-        Config.logV("JSON--------------" + new Gson().toJson(queueobj.toString()));
+//        Config.logV("JSON--------------" + new Gson().toJson(queueobj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -4223,7 +4223,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
     public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
         Log.i("mani","here");
         try {
-            Log.i("Success1111",  new Gson().toJson(paymentData));
+//            Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);
             new PaymentGateway(this.mContext, mActivity).sendPaymentStatus(razorpayModel, "SUCCESS");
                 Toast.makeText(this.mContext, "Payment Successful. Payment Id:" + razorpayPaymentID, Toast.LENGTH_LONG).show();
@@ -4237,7 +4237,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
-            Log.i("here.....", new Gson().toJson(paymentData));
+//            Log.i("here.....", new Gson().toJson(paymentData));
             Toast.makeText(this.mContext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);

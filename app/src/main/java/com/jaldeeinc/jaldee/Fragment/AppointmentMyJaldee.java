@@ -199,7 +199,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
             });
             alertDialog.show();
         }
-        mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         if (Config.isOnline(mContext)) {
             ApiFavList();
@@ -237,12 +237,12 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                         mAppointmentFutureList.clear();
                         mAppointmentTodayList.clear();
                         ArrayList<ActiveAppointment> mActiveAppointments = response.body();
-                        Log.i("appointment123today",new Gson().toJson(mActiveAppointments));
+//                        Log.i("appointment123today",new Gson().toJson(mActiveAppointments));
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mActiveAppointments.size(); i++) {
                             if (date.equalsIgnoreCase(mActiveAppointments.get(i).getAppmtDate())) {
                                 mAppointmentTodayList.add(mActiveAppointments.get(i));
-                                Log.i("appointment123456",new Gson().toJson(mAppointmentTodayList));
+//                                Log.i("appointment123456",new Gson().toJson(mAppointmentTodayList));
                             } else {
                                 mAppointmentFutureList.add(mActiveAppointments.get(i));
                             }
@@ -283,7 +283,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
                     if (response.code() == 200) {
                         mAppointmentOldList.clear();
                         mAppointmentOldList = response.body();
-                        Log.i("appointment123Old", new Gson().toJson(mAppointmentOldList));
+//                        Log.i("appointment123Old", new Gson().toJson(mAppointmentOldList));
                         setItemsAppointment();
                     } else {
                         // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
@@ -851,7 +851,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         } else {
             call = apiService.PutRating(accountID, body);
         }
-        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

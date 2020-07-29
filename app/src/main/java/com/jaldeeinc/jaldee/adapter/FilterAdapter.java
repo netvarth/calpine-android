@@ -116,7 +116,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.MyViewHold
                         if (filterList.getEnumeratedConstants() instanceof String) {
                             Config.logV("String ");
                         } else {
-                            Config.logV("Array " + new Gson().toJson(filterList.getEnumeratedConstants()));
+//                            Config.logV("Array " + new Gson().toJson(filterList.getEnumeratedConstants()));
                             final String resp = new Gson().toJson(filterList.getEnumeratedConstants());
                             //  keyFormula.add(filterList.getCloudSearchIndex().replace("*", "1"));
 

@@ -174,7 +174,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             });
             alertDialog.show();
         }
-        mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         if (Config.isOnline(mContext)) {
             ApiFavList();
@@ -868,7 +868,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         } else {
             call = apiService.PutRating(accountID, body);
         }
-        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

@@ -95,7 +95,7 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     public void onBindViewHolder(final FavouriteAdapter.MyViewHolder myViewHolder, final int position) {
         final FavouriteModel favList = mFavList.get(position);
 
-        Log.i("popopopo",new Gson().toJson(mFavList.get(position)));
+//        Log.i("popopopo",new Gson().toJson(mFavList.get(position)));
 
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");

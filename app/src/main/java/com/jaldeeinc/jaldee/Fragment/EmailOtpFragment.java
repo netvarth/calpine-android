@@ -110,7 +110,7 @@ public class EmailOtpFragment extends RootFragment {
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         Call<ResponseBody> call = apiService.ChangeEmail(mEmail);
@@ -165,7 +165,7 @@ public class EmailOtpFragment extends RootFragment {
         ApiInterface apiService =
                 ApiClient.getClient(getActivity()).create(ApiInterface.class);
 
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         JSONObject jsonObj = new JSONObject();
         try {
@@ -176,7 +176,7 @@ public class EmailOtpFragment extends RootFragment {
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call = apiService.ChngeEmailOtp(otp, body);
-        Config.logV("Request--BODY--Emil-----------------------" + new Gson().toJson(jsonObj.toString()));
+//        Config.logV("Request--BODY--Emil-----------------------" + new Gson().toJson(jsonObj.toString()));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

@@ -164,7 +164,7 @@
             </intent-filter>
         </service>
         <service android:name=".service.LocationUpdatesService" />
-        <service android:name=".service.LiveTrackService" />
+        <service android:name=".service.LiveTrackService"/>
     </application>
 
 </manifest>

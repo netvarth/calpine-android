@@ -301,12 +301,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         mCheckTodayFutureList.clear();
                         mCheckTodayList.clear();
                         mCheckTodayFutureList = response.body();
-                        Log.i("hgfhrty", new Gson().toJson(mCheckTodayFutureList));
+//                        Log.i("hgfhrty", new Gson().toJson(mCheckTodayFutureList));
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mCheckTodayFutureList.size(); i++) {
                             if (date.equalsIgnoreCase(mCheckTodayFutureList.get(i).getDate())) {
                                 mCheckTodayList.add(response.body().get(i));
-                                Log.i("hgfhrty22", new Gson().toJson(mCheckTodayList));
+//                                Log.i("hgfhrty22", new Gson().toJson(mCheckTodayList));
                             }
                         }
                         DatabaseHandler db = new DatabaseHandler(mContext);
@@ -359,12 +359,12 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                         mAppointmentTodayList.clear();
                         mCheckFutureListAppointment.clear();
                         ArrayList<ActiveAppointment> mActiveAppointments = response.body();
-                        Log.i("appointment123today", new Gson().toJson(mActiveAppointments));
+//                        Log.i("appointment123today", new Gson().toJson(mActiveAppointments));
                         String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
                         for (int i = 0; i < mActiveAppointments.size(); i++) {
                             if (date.equalsIgnoreCase(mActiveAppointments.get(i).getAppmtDate())) {
                                 mAppointmentTodayList.add(mActiveAppointments.get(i));
-                                Log.i("appointment123456", new Gson().toJson(mAppointmentTodayList));
+//                                Log.i("appointment123456", new Gson().toJson(mAppointmentTodayList));
                             } else {
                                 mAppointmentFutureList.add(mActiveAppointments.get(i));
                                 mCheckFutureListAppointment.add(mActiveAppointments.get(i));
@@ -407,7 +407,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
                     if (response.code() == 200) {
                         mAppointmentsHistory.clear();
                         mAppointmentsHistory = response.body();
-                        Log.i("appointment123Old", new Gson().toJson(mAppointmentsHistory));
+//                        Log.i("appointment123Old", new Gson().toJson(mAppointmentsHistory));
                         setItemsAppointment();
                     } else {
                         // Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
@@ -1227,7 +1227,7 @@ public class CheckinsFragmentCopy extends RootFragment implements HistoryAdapter
         } else {
             call = apiService.PutRating(accountID, body);
         }
-        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
+//        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

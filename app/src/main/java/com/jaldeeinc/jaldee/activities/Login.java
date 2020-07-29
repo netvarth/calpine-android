@@ -214,7 +214,7 @@ public class Login extends AppCompatActivity {
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Config.logV("JSON--------------" + jsonObj);
-        final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<LoginResponse> call = apiService.LoginResponse(body);
 
@@ -325,7 +325,7 @@ public class Login extends AppCompatActivity {
 
         final String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
 
-        final Dialog mDialog = Config.getProgressDialog(this, this.getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ResponseBody> call = apiService.ForgotPwdResponse(loginId);
 

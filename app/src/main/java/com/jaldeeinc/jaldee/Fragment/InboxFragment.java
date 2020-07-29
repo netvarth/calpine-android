@@ -134,7 +134,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
         Call<ArrayList<InboxModel>> call = apiService.getMessage();
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         final HashMap<String, List<InboxModel>> messagesMap = new HashMap<String, List<InboxModel>>();
 
@@ -153,7 +153,7 @@ public class InboxFragment extends RootFragment /*implements FragmentInterface*/
                     if (response.code() == 200) {
                         mInboxList.clear();
                         mInboxList = response.body();
-                        Log.i("mInboxList", new Gson().toJson(mInboxList));
+//                        Log.i("mInboxList", new Gson().toJson(mInboxList));
 
                         /*Collections.sort(mInboxList, new Comparator<InboxModel>() {
                             @Override

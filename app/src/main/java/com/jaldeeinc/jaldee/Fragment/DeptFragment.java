@@ -70,8 +70,9 @@ public class DeptFragment extends RootFragment {
     TextView tv_service;
     boolean online_presence;
     boolean donationFundRaising;
-    SearchViewDetail mBusinessDataList;
+    SearchViewDetail mBusinessDataListParent;
     List<SearchViewDetail> mBusinessDataLists = new ArrayList<SearchViewDetail>();
+    ArrayList<QueueList> mQueueLists = new ArrayList<>();
     SearchSetting mSearchSettings;
     SearchLocation location;
     List<SearchAWsResponse> mSearchList = new ArrayList<>();
@@ -79,10 +80,11 @@ public class DeptFragment extends RootFragment {
     List<DepartmentUserSearchModel> usersSearchList = new ArrayList<>();
     Dialog mDialog;
     DepartmentUserSearchModel userSearch;
-    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName ) {
+    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent) {
         this.departmentServices = departmentServices;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.businessName = businessName;
+        this.mBusinessDataListParent = mBusinessDataListParent;
     }
 
     @Nullable
@@ -98,7 +100,7 @@ public class DeptFragment extends RootFragment {
         tv_doctors = row.findViewById(R.id.txt_doctors);
         LServices = row.findViewById(R.id.Lservice);
         tv_service = row.findViewById(R.id.txtservice);
-        mBusinessDataList = new SearchViewDetail();
+//        mBusinessDataList = new SearchViewDetail();
 
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +141,7 @@ public class DeptFragment extends RootFragment {
         mSearchSettings = searchDetailViewFragment.mSearchSettings;
         for (int i = 0; i < departmentServices.getUsers().size(); i++) {
             idsCheckin.add(departmentServices.getUsers().get(i).getId()+"-"+location.getId());
-            idsAppt.add(searchDetailViewFragment.uniqueID+"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
+            idsAppt.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
         }
         ApiLoadQsAndSchedulesList(idsCheckin, idsAppt, mBusinessDataLists);;
         return row;
@@ -164,10 +166,11 @@ public class DeptFragment extends RootFragment {
 //                            Config.closeDialog(getActivity(), mDialog);
                         Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-----SearchViewID--------------------" + response.code());
-                        Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
                         if (response.code() == 200) {
                             ArrayList<ScheduleList> mSearchScheduleList = response.body();
-                            loadNextAvailableQs(idsAppt, idsCheckin, mSearchScheduleList);
+                            mQueueLists.clear();
+                            loadNextAvailableQs(idsAppt, idsCheckin, mSearchScheduleList, 0);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -182,6 +185,7 @@ public class DeptFragment extends RootFragment {
             });
         }
     }
+
     private void loadBusinessProfile(ArrayList<String> idAppts, ArrayList<ScheduleList> mSearchScheduleList, ArrayList<QueueList> mSearchQueueList, int sIndex) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(getActivity().getApplicationContext()).create(ApiInterface.class);
@@ -191,7 +195,7 @@ public class DeptFragment extends RootFragment {
         System.out.println("UTC time: " + sdf.format(currentTime));
         String accountId = idAppts.get(sIndex).split("-")[0];
         String userId = idAppts.get(sIndex).split("-")[2];
-        Call<SearchViewDetail> call1 = apiService.getUserBusinessProfile(Integer.parseInt(accountId), Integer.parseInt(userId), sdf.format(currentTime));
+        Call<SearchViewDetail> call1 = apiService.getUserBusinessProfile(Integer.parseInt(searchDetailViewFragment.uniqueID), Integer.parseInt(userId), sdf.format(currentTime));
         call1.enqueue(new Callback<SearchViewDetail>() {
             @Override
             public void onResponse(Call<SearchViewDetail> call, Response<SearchViewDetail> response) {
@@ -200,19 +204,11 @@ public class DeptFragment extends RootFragment {
                     Config.logV("Response--code------Setting-------------------" + response.code());
                     if (response.code() == 200) {
                         SearchViewDetail businessProfile = response.body();
-                        userSearch = new DepartmentUserSearchModel();
-                        QueueList queuelist = mSearchQueueList.get(sIndex);
-                        ScheduleList schedulelist = mSearchScheduleList.get(sIndex);
-                        userSearch.setQueueList(queuelist);
-                        userSearch.setScheduleList(schedulelist);
-                        userSearch.setLocation(location);
-                        userSearch.setSearchViewDetail(businessProfile);
-                        usersSearchList.add(userSearch);
-                        Log.i("ddddass", new Gson().toJson(usersSearchList));
+                        mBusinessDataLists.add(businessProfile);
                         if ((sIndex+1) < idAppts.size()) {
                             loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, (sIndex+1));
                         } else {
-                            loadUsersList();
+                            loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
                         }
                     }
                 } catch (Exception e) {
@@ -229,29 +225,88 @@ public class DeptFragment extends RootFragment {
             }
         });
     }
+
+    private void loadUserServices(ArrayList<String> idAppts, ArrayList<ScheduleList> mSearchScheduleList, ArrayList<QueueList> mSearchQueueList, List<SearchViewDetail> mBusinessDataLists, int sIndex) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(getActivity().getApplicationContext()).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        String accountId = idAppts.get(sIndex).split("-")[0];
+        String userId = idAppts.get(sIndex).split("-")[2];
+        Call<ArrayList<SearchDepartmentServices>> calluser = apiService.getUserServices(Integer.parseInt(searchDetailViewFragment.uniqueID), Integer.parseInt(userId), sdf.format(currentTime));
+        calluser.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
+                userSearch = new DepartmentUserSearchModel();
+                QueueList queuelist = mSearchQueueList.get(sIndex);
+                ScheduleList schedulelist = mSearchScheduleList.get(sIndex);
+                SearchViewDetail businessProfile = mBusinessDataLists.get(sIndex);
+                userSearch.setQueueList(queuelist);
+                userSearch.setScheduleList(schedulelist);
+                userSearch.setLocation(location);
+                userSearch.setSettings(searchDetailViewFragment.mSearchSettings);
+                userSearch.setSearchViewDetail(businessProfile);
+                userSearch.setParentSearchViewDetail(mBusinessDataListParent);
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        ArrayList<SearchDepartmentServices> serviceList = response.body();
+                        if(serviceList.size() > 0) {
+                            userSearch.setServices(serviceList.get(0).getServices());
+                        } else {
+                            userSearch.setServices(null);
+                        }
+                        usersSearchList.add(userSearch);
+                        if ((sIndex+1) < idAppts.size()) {
+                            loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex+1));
+                        } else {
+                            loadUsersList();
+                        }
+                    }
+                } catch (Exception e) {
+                    userSearch.setServices(null);
+                    usersSearchList.add(userSearch);
+                    if ((sIndex+1) < idAppts.size()) {
+                        loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex+1));
+                    } else {
+                        loadUsersList();
+                    }
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
+
     private void loadBusinessProfiles(ArrayList<QueueList> mSearchQueueList, ArrayList<ScheduleList> mSearchScheduleList, ArrayList<String> idAppts, ArrayList<String> idCheckins) {
         usersSearchList.clear();
-        mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-//        List<Observable> observableList = new ArrayList<>();
         if(idAppts.size() > 0) {
             loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, 0);
         }
-        //int count = 0;
-        //for (int sIndex = 0; sIndex < idAppts.size(); sIndex++) {
-
-//    }
     }
-    private void loadNextAvailableQs(final ArrayList<String> idAppts, ArrayList<String> idCheckins, final ArrayList<ScheduleList> mSearchScheduleList) {
+
+
+    private void loadNextAvailableQs(final ArrayList<String> idAppts, ArrayList<String> idCheckins, final ArrayList<ScheduleList> mSearchScheduleList, int sIndex) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-        String idPass = "";
-        for (int i = 0; i < idCheckins.size(); i++) {
-            idPass += idCheckins.get(i) + ",";
-        }
-        if (!idPass.equals("") && idPass != null) {
-            Config.logV("IDS_--------------------" + idPass);
-            Call<ArrayList<QueueList>> call = apiService.getSearchID(idPass);
+//        String idPass = "";
+//        for (int i = 0; i < idCheckins.size(); i++) {
+//            idPass += idCheckins.get(i) + ",";
+//        }
+//        if (!idPass.equals("") && idPass != null) {
+//            Config.logV("IDS_--------------------" + idPass);
+//            Call<ArrayList<QueueList>> call = apiService.getProviderAvailableQTime(idPass);
+        Call<ArrayList<QueueList>> call = apiService.getProviderAvailableQTime(idCheckins.get(sIndex));
             call.enqueue(new Callback<ArrayList<QueueList>>() {
                 @Override
                 public void onResponse(Call<ArrayList<QueueList>> call, Response<ArrayList<QueueList>> response) {
@@ -259,107 +314,15 @@ public class DeptFragment extends RootFragment {
                     try {
                         Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
                         Config.logV("Response--code-----SearchViewID--------------------" + response.code());
-                        Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
+//                        Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
                         if (response.code() == 200) {
                             mSearchQueueList = response.body();
-                            loadBusinessProfiles(mSearchQueueList, mSearchScheduleList, idAppts, idCheckins);
-//Log.i("Account_UserId", accountId+"_"+userId);
-//                                Observable<SearchViewDetail> observable = apiService.getUserBusinessProfiles(Integer.parseInt(accountId), Integer.parseInt(userId), sdf.format(currentTime));
-//                                observableList.add(observable);
-//                            }
-//                            Log.i("Account_UserIdfff", observableList.toString());
-//                            List<SearchViewDetail> result = new ArrayList<>();
-//                            Observable<List<SourceObject>> source = ...
-
-//                            Observable.fromIterable(observableList.iterator())
-//                                    .flatMap(list -> observableList.iterator().next())
-//                                    .subscribeOn(Schedulers.newThread())
-//                                    .observeOn(AndroidSchedulers.mainThread())
-//                                    .subscribe(
-//                                        result1 -> {
-//                                            Log.i("ddddddd" , new Gson().toJson(result1));
-//                                            // mBusinessDataLists.add((SearchViewDetail) result1);
-//                                            loadUsersList(idAppts, idCheckins, mBusinessDataLists);
-//
-//                                        }
-//                                    );
-
-//Observable.zip(observableList, new ArrayList<SearchViewDetail>)
-//        .subscribeOn(Schedulers.io())
-//        .observeOn(AndroidSchedulers.mainThread())
-//        .subscribe();
-
-//                            Observable<ArrayList<SearchViewDetail>> testDataObservable = Observable.zip(SearchViewDetail, new Func2<ArrayList<SearchViewDetail>, ArrayList<SearchViewDetail>>() {
-//                                @Override
-//                                public List<SearchViewDetail> call(SearchViewDetail businessList) {
-//                                    mBusinessDataLists.add(businessList);
-//                                    // process data from response responseOne & responseTwo
-//                                    return mBusinessDataLists;
-//                                }
-//                            })
-//                                    .subscribeOn(Schedulers.io())
-//                                    .observeOn(AndroidSchedulers.mainThread())
-//                                    .subscribe(new Subscriber<ArrayList<SearchViewDetail>>() {
-//
-//                                        @Override
-//                                        public void onSubscribe(Subscription s) {
-//
-//                                        }
-//
-//                                        @Override
-//                                        public void onNext(ArrayList<SearchViewDetail> testDataList) {
-//
-//                                        }
-//
-//                                        @Override
-//                                        public void onCompleted() {
-//                                            Log.d(TAG, "onCompleted" );
-//                                            // you can show alert here or do something when completed
-//                                        }
-//
-//                                        @Override
-//                                        public void onError(Throwable t) {
-//                                            Log.d(TAG, "onError Throwable: " + t.toString() );
-//                                        }
-//
-//                                        @Override
-//                                        public void onComplete() {
-//
-//                                        }
-//                                    });
-//                                    .subscribe(getObserver());
-//                            Observable.zip(observableList, (i)>)
-//                                    .subscribeOn(Schedulers.io())
-//                                    // Be notified on the main thread
-//                                    .observeOn(AndroidSchedulers.mainThread())
-//                                    .subscribe(getObserver());
-//                                });
-//
-
-//                                    Call<SearchViewDetail> call1 = apiService.getUserBusinessProfile(Integer.parseInt(accountId), Integer.parseInt(userId), sdf.format(currentTime));
-//                                    call1.enqueue(new Callback<SearchViewDetail>() {
-//                                    @Override
-//                                    public void onResponse(Call<SearchViewDetail> call, Response<SearchViewDetail> response) {
-//                                        try {
-//                                            Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
-//                                            Config.logV("Response--code------Setting-------------------" + response.code());
-//                                            if (response.code() == 200) {
-//                                                SearchViewDetail businessProfile = response.body();
-//                                                userSearch.setSearchViewDetail(businessProfile);
-//                                                usersSearchList.add(userSearch);
-//                                            }
-//                                        } catch (Exception e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailure(Call<SearchViewDetail> call, Throwable t) {
-//                                        // Log error here since request failed
-//                                        Config.logV("Fail---------------" + t.toString());
-//                                    }
-//                                });
-//                            }
+                            mQueueLists.add(mSearchQueueList.get(0));
+                            if ((sIndex+1) < idCheckins.size()) {
+                                loadNextAvailableQs(idAppts, idCheckins, mSearchScheduleList, (sIndex+1));
+                            } else {
+                                loadBusinessProfiles(mQueueLists, mSearchScheduleList, idAppts, idCheckins);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -370,11 +333,9 @@ public class DeptFragment extends RootFragment {
                 public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
                     // Log error here since request failed
                     Config.logV("Fail---------------" + t.toString());
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(getActivity(), mDialog);
                 }
             });
-        }
+//        }
     }
 
     private void loadUsersList() {

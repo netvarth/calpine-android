@@ -1,10 +1,12 @@
 package com.jaldeeinc.jaldee.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Mani on 20/7/2020.
  */
 
-public class ProviderUserModel {
+public class ProviderUserModel implements Serializable {
     public String getFirstName() {
         return firstName;
     }

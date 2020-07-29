@@ -19,6 +19,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
+import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 import java.text.SimpleDateFormat;
@@ -37,7 +38,7 @@ import retrofit2.Response;
  */
 
 public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.MyViewHolder> {
-    List<SearchDepartment> mSearchDepartmentList;
+    List<SearchDepartmentServices> mSearchDepartmentList;
     Context mContext;
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -56,7 +57,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     String title;
     String uniqueID;
     Activity activity;
-    public ServiceListAdapter(ArrayList<SearchService> mServiceList, Context mContext, String from, String title, String uniqueID, Activity mActivity, ArrayList<SearchDepartment> departmentList) {
+    public ServiceListAdapter(ArrayList<SearchService> mServiceList, Context mContext, String from, String title, String uniqueID, Activity mActivity, ArrayList<SearchDepartmentServices> departmentList) {
         this.mContext = mContext;
         this.mServiceList = mServiceList;
         Config.logV("ServiceList--------------"+mServiceList.size());
@@ -79,7 +80,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     public void onBindViewHolder(final ServiceListAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchService serviceList = mServiceList.get(position);
         String serviceName = serviceList.getName();
-        if(serviceList.getDepartment()!=0){
+        if(serviceList.getDepartment()!=0 && mSearchDepartmentList!=null){
             String deptName = getDepartmentName(serviceList.getDepartment());
             serviceName = serviceName.concat(" (").concat(deptName).concat(")");
         }
@@ -203,7 +204,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     public String getDepartmentName(int department) {
         Log.i("departments", new Gson().toJson(mSearchDepartmentList));
         for(int i=0;i<mSearchDepartmentList.size();i++){
-            if(mSearchDepartmentList.get(i).getDepartmentId()==department) {
+            if(Integer.parseInt(mSearchDepartmentList.get(i).getDepartmentId())==department) {
                 return mSearchDepartmentList.get(i).getDepartmentName();
             }
         }

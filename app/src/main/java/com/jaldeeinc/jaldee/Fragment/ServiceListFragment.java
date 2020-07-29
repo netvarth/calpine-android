@@ -15,6 +15,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.ServiceListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
+import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 
@@ -38,7 +39,7 @@ public class ServiceListFragment extends RootFragment {
     TextView tv_subtitle;
     RecyclerView mrecycle_service;
     ServiceListAdapter mAdapter;
-    ArrayList<SearchDepartment> departmentList;
+    ArrayList<SearchDepartmentServices> departmentList;
     String from;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -3,13 +3,44 @@ package com.jaldeeinc.jaldee.model;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchLocation;
+import com.jaldeeinc.jaldee.response.SearchService;
+import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
+
+import java.util.List;
 
 public class DepartmentUserSearchModel {
     private QueueList queueList;
     private ScheduleList scheduleList;
     private SearchViewDetail searchViewDetail;
+    private SearchViewDetail parentSearchViewDetail;
     private SearchLocation location;
+    private List<SearchService> services;
+    private SearchSetting settings;
+
+    public SearchViewDetail getParentSearchViewDetail() {
+        return parentSearchViewDetail;
+    }
+
+    public void setParentSearchViewDetail(SearchViewDetail parentSearchViewDetail) {
+        this.parentSearchViewDetail = parentSearchViewDetail;
+    }
+
+    public SearchSetting getSettings() {
+        return settings;
+    }
+
+    public void setSettings(SearchSetting settings) {
+        this.settings = settings;
+    }
+
+    public List<SearchService> getServices() {
+        return services;
+    }
+
+    public void setServices(List<SearchService> services) {
+        this.services = services;
+    }
 
     public SearchLocation getLocation() {
         return location;

@@ -231,7 +231,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
         final int consumerId = SharedPreference.getInstance(getActivity()).getIntValue("consumerId", 0);
 
         String mobno= SharedPreference.getInstance(mContext).getStringValue("mobno","");
-        final Dialog mDialog = Config.getProgressDialog(getActivity(), getActivity().getResources().getString(R.string.dialog_log_in));
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
         Call<ArrayList<FamilyArrayModel>> call = apiService.getFamilyList();
@@ -251,7 +251,7 @@ public class ProfileFragment extends RootFragment /*implements FragmentInterface
                     if (response.code() == 200) {
 
                         Config.logV("Response--Array size-------------------------" +response.body().size());
-                        Config.logV("Response--Array ----Family List---------------------" +new Gson().toJson(response.body()));
+//                        Config.logV("Response--Array ----Family List---------------------" +new Gson().toJson(response.body()));
 
                         if(response.body().size()>0){
                             MuserProfileList.clear();
