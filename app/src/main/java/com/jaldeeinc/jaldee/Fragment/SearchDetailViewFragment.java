@@ -413,11 +413,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
                         btn_send.setEnabled(true);
                         btn_send.setClickable(true);
-                        btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                        btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
                     } else {
                         btn_send.setEnabled(false);
                         btn_send.setClickable(false);
-                        btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                        btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
                     }
                 }
                 @Override
@@ -675,6 +675,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
 
     private void apiShowDepartmentsOrServices(final String uniqueID) {
         ApiInterface apiService =
@@ -1052,6 +1053,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     //  boolean expand =false;
     public void UpdateMainUI(final SearchViewDetail getBussinessData) {
         if (getBussinessData.getSpecialization() != null) {
+            for(int i =0;i<getBussinessData.getSpecialization().size();i++) {
+                if (getBussinessData.getSpecialization().get(i).equals("Not Applicabale") || getBussinessData.getSpecialization().get(i).equals("Not Applicable") ) {
+                    getBussinessData.getSpecialization().remove(i);
+                }
+            }
+
             if (getBussinessData.getSpecialization().size() > 0) {
                 tv_specializtion.setVisibility(View.VISIBLE);
                 mrecycle_specialisation.setVisibility(View.VISIBLE);
@@ -1068,7 +1075,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         if(getBussinessData.getSpecialization().get(0).toString()!=null){
                             tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString());
                         }
-                    } else {
+                    }
+                    else if(size == 2){
+                        mrecycle_specialisation.setVisibility(View.GONE);
+                        specialSeeAll.setVisibility(View.GONE);
+                        LSpecialization_2.setVisibility(View.VISIBLE);
+                        tv_spec1.setVisibility(View.VISIBLE);
+                        tv_spec2.setVisibility(View.GONE);
+                        tv_seeAll.setVisibility(View.GONE);
+                        if(getBussinessData.getSpecialization().get(0).toString()!=null){
+                            tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString() + ", " + getBussinessData.getSpecialization().get(1).toString());
+                        }
+                    }
+                    else {
                         mrecycle_specialisation.setVisibility(View.GONE);
                         specialSeeAll.setVisibility(View.GONE);
                         LSpecialization_2.setVisibility(View.VISIBLE);
@@ -2094,12 +2113,16 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     public void onMethodDepartment(SearchDepartmentServices departmentCode,  String businessName) {
         Log.i("qweqweq", "qweqweqwe");
-        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName, mBusinessDataList);
+        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName, mBusinessDataList,firstCouponAvailable, couponAvailable);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, deptFragment).commit();
     }
+
+
+
+
 
 
     public void onMethodJaldeeLogo(String ynw_verified, String providername) {
@@ -2134,11 +2157,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
                     btn_send.setEnabled(true);
                     btn_send.setClickable(true);
-                    btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                    btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
                 } else {
                     btn_send.setEnabled(false);
                     btn_send.setClickable(false);
-                    btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                    btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
                 }
             }
 
@@ -2153,7 +2176,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            String modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
+                String modifyAccountID;
+                if(from.equalsIgnoreCase("dept")){
+                     modifyAccountID = accountID;
+                }
+                else{
+             modifyAccountID = accountID.substring(0, accountID.indexOf("-"));}
             ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
             }
         });
@@ -2178,6 +2206,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         // Store the Fragment in stack
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, pfFragment).commit();
+    }
+
+    public void onMethodSpecialization(ArrayList Specialization_displayname, String businessName) {
+        SpecializationFragment specialFragment = new SpecializationFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putString("businessName", businessName);
+        bundle.putStringArrayList("Specialization_displayname", Specialization_displayname);
+        specialFragment.setArguments(bundle);
+
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, specialFragment).commit();
     }
 
     @Override

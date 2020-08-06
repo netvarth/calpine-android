@@ -105,8 +105,16 @@ public class SearchViewDetail {
         return specialization;
     }
 
+    public void setSpecialization(ArrayList specialization) {
+        this.specialization = specialization;
+    }
+
     ArrayList specialization;
 
+
+    public void setSocialMedia(ArrayList<SocialMediaModel> socialMedia) {
+        this.socialMedia = socialMedia;
+    }
 
     ArrayList<SocialMediaModel> socialMedia;
 
@@ -142,6 +150,10 @@ public class SearchViewDetail {
 
     public String getVerifyLevel() {
         return verifyLevel;
+    }
+
+    public void setVerifyLevel(String verifyLevel) {
+        this.verifyLevel = verifyLevel;
     }
 
     String verifyLevel;
@@ -206,6 +218,10 @@ public class SearchViewDetail {
     }
 
     String thumbUrl;
+
+    public void setSubDomain(String subDomain) {
+        this.subDomain = subDomain;
+    }
 
     String subDomain;
 
@@ -344,6 +360,16 @@ public class SearchViewDetail {
     }
 
     boolean virtualServices;
+
+    public String getClaimStatus() {
+        return claimStatus;
+    }
+
+    public void setClaimStatus(String claimStatus) {
+        this.claimStatus = claimStatus;
+    }
+
+    String claimStatus;
 
 
 }

@@ -149,6 +149,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static int mSpinnertext;
     boolean livetrack;
     static int deptSpinnertext;
+    static int userSpinnertext;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     static String modifyAccountID;
@@ -192,6 +193,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static String selectedDateFormat;
     String serviceSelected;
     String departmentSelected;
+    String userSelected;
     TextView tv_addnote, txtprepayamount;
     static TextView txtnocheckin;
     TextView tv_title;
@@ -560,7 +562,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 /* mFrom = extras.getString("from", "");*/
                 if (mFrom.equalsIgnoreCase("searchdetail_future") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
                     modifyAccountID = accountID;
-                } else {
+                }
+                else if(mFrom.equalsIgnoreCase("multiusercheckin")){
+                    modifyAccountID = accountID;
+                }
+                    else
+                {
                     modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
                 }
                 googlemap = extras.getString("googlemap", "");

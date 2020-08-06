@@ -1,5 +1,7 @@
 package com.jaldeeinc.jaldee.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class SearchAppoinment {
@@ -25,6 +27,8 @@ public class SearchAppoinment {
     String instructions;
     String callingMode;
     String value;
+    @SerializedName("provider")
+    private SearchAppoinment provider;
 
 
     public int getId() {
@@ -191,6 +195,13 @@ public class SearchAppoinment {
     @Override
     public String toString() {
         return this.name; // Value to be displayed in the Spinner
+    }
+    public SearchAppoinment getProvider() {
+        return provider;
+    }
+
+    public void setProvider(SearchAppoinment provider) {
+        this.provider = provider;
     }
 
 }

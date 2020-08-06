@@ -43,4 +43,8 @@ public class SearchUsers implements Serializable {
     public void setPrimaryMobileNo(String primaryMobileNo) {
         this.primaryMobileNo = primaryMobileNo;
     }
+    @Override
+    public String toString() {
+        return this.firstName + " " + lastName; // Value to be displayed in the Spinner
+    }
 }

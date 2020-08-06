@@ -881,11 +881,29 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 dynaText.setMaxEms(10);
                             }
                             final int finalI = i;
+                            int finalM = m;
                             dynaText.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
-                                }
+//                                    for (int i = 0; i < aServicesList.size(); i++) {
+//                                        for (int j = 0; j < aServicesList.get(i).getServices().size(); j++) {
+//                                            if (aServicesList.get(i).getServices().get(j).getName().toLowerCase().equalsIgnoreCase(aServicesList.get(finalI).getServices().get(j).getName().toLowerCase())) {
+//                                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+//                                                iService.putExtra("name", aServicesList.get(i).getServices().get(j).getName().toString());
+//                                                iService.putExtra("duration", String.valueOf(aServicesList.get(i).getServices().get(j).getServiceDuration()));
+//                                                iService.putExtra("price", String.valueOf(aServicesList.get(i).getServices().get(j).getTotalAmount()));
+//                                                iService.putExtra("desc", aServicesList.get(i).getServices().get(j).getDescription());
+//                                                iService.putExtra("servicegallery", aServicesList.get(i).getServices().get(j).getServicegallery());
+//                                                iService.putExtra("taxable", aServicesList.get(i).getServices().get(j).isTaxable());
+//                                                iService.putExtra("isPrePayment", aServicesList.get(i).getServices().get(j).isPrePayment());
+//                                                iService.putExtra("MinPrePaymentAmount", String.valueOf(aServicesList.get(i).getServices().get(j).getMinPrePaymentAmount()));
+//                                                iService.putExtra("from", "appt");
+//                                                mContext.startActivity(iService);
+//                                            }
+//                                        }  //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+//                                    }
+                               }
+
                             });
                             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             params.setMargins(0, 0, 20, 0);
@@ -1232,7 +1250,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     myViewHolder.txt_peopleahead.setText(message);
                                 }
                                 //Future Checkin
-                                if (mSearchSetting.isFutureDateWaitlist() && mQueueList.get(0).getNextAvailableQueue().getAvailableDate() != null) {
+                                if (mSearchSetting.isFutureDateWaitlist() && mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {
 //                                    myViewHolder.txt_diffdate.setVisibility(View.VISIBLE);
 //                                    myViewHolder.txt_diffdate_expand.setVisibility(View.VISIBLE);
                                     if (mQueueList.get(i).getNextAvailableQueue().isShowToken()) {
@@ -1284,8 +1302,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 }
                 String day = (String) DateFormat.format("dd", date);
                 String monthString = (String) DateFormat.format("MMM", date);
-                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                        "fonts/Montserrat_Bold.otf");
+//                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+//                        "fonts/Montserrat_Bold.otf");
                 secondWord = "\n" + monthString + " " + day + ", " + queue.getServiceTime();
 //                String outputDateStr = outputFormat.format(datechange);
 //                String yourDate = Config.getFormatedDate(outputDateStr);

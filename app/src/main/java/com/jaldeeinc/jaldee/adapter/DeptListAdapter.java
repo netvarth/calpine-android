@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -25,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.Fragment.SearchDetailViewFragment;
@@ -32,16 +34,20 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
+import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
+import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,6 +66,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class DeptListAdapter extends RecyclerView.Adapter {
@@ -72,11 +79,20 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     SearchDetailViewFragment searchDetailViewFragment;
     String termilogy;
     String countTerminology;
+    Boolean firstCouponAvailable, couponAvailable;
+    ArrayList<SearchViewDetail> mSearchGallery;
+    JdnResponse jdnList;
+    String jdnDiscount, jdnMaxvalue;
+    ImageView tv_jdn;
+    TextView mImageViewText;
 
-    public DeptListAdapter(FragmentActivity activity, List<DepartmentUserSearchModel> msearchList, SearchDetailViewFragment searchDetailViewFragment) {
+
+    public DeptListAdapter(FragmentActivity activity, List<DepartmentUserSearchModel> msearchList, SearchDetailViewFragment searchDetailViewFragment,Boolean firstCouponAvailable,Boolean couponAvailable) {
         this.searchList = msearchList;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.activity = activity;
+        this.couponAvailable = couponAvailable;
+        this.firstCouponAvailable = firstCouponAvailable;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -91,8 +107,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         TextView tv_claimable, tv_distance, tv_branch_name;
         Button btncheckin, btnappointment;
         LinearLayout layout_row;
-        TextView mImageViewText;
         LinearLayout layout_type;
+
 
         public MyViewHolder(View view) {
             super(view);
@@ -125,6 +141,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             tv_spec22 = view.findViewById(R.id.txtspec22);
             mImageViewText = view.findViewById(R.id.mImageViewText);
             layout_type = view.findViewById(R.id.layout_type);
+            tv_jdn = view.findViewById(R.id.txtjdn);
+
         }
     }
 
@@ -152,6 +170,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         parent.setLayoutParams(params1);
         handleBusinesshours(myViewHolder, searchdetailList, parent, params1);
         handleEnquiry(myViewHolder, searchdetailList,parent, params1);
+        handleCoupons(myViewHolder, searchdetailList,parent, params1);
         myViewHolder.layout_type.addView(parent);
 
 //
@@ -293,7 +312,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //        });
 //
 //
-//        if (searchdetailList.getBusiness_hours1() != null) {
+//        if (searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots() != null) {
 //            TextView dynaText = new TextView(context);
 //            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
 //                    "fonts/Montserrat_Regular.otf");
@@ -315,95 +334,89 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //            dynaText.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
-//                    if (searchdetailList.getBusiness_hours1() != null) {
+//                    if (searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots() != null) {
 //
-//                        if (searchdetailList.getBusiness_hours1() != null) {
+//                        if (searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots() != null) {
 //                            try {
-//                                String array_json = searchdetailList.getBusiness_hours1().toString();
+////                                String array_json = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).toString();
 //
 //
-//                                try {
+//                                //Get the instance of JSONArray that contains JSONObjects
+////                                    JSONArray jsonArray = new JSONArray(array_json);
+////                                    String jsonarry = jsonArray.getString(0);
+////                                    JSONArray jsonArray1 = new JSONArray(jsonarry);
+//
+//                                //Iterate the jsonArray and print the info of JSONObjects
+//
+//                                workingModelArrayList.clear();
+//
+//                                //  for (int i = 0; i < searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getRepeatIntervals().size(); i++) {
+//                                //  JSONObject jsonObject = jsonArray1.getJSONObject(i);
+//
+////                                        String id = jsonObject.optString("recurringType").toString();
+////                                        String repeatinterval = jsonObject.optString("repeatIntervals").toString();
+////                                        String timeslot = jsonObject.optString("timeSlots").toString();
+////                                        // String publish_date = jsonObject.optString("publish_date").toString();
+////                                        JSONArray jsonArray_time = new JSONArray(timeslot);
+////                                        JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
+//                                String sTime = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getsTime();
+//                                String eTime = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).geteTime();
 //
 //
-//                                    //Get the instance of JSONArray that contains JSONObjects
-//                                    JSONArray jsonArray = new JSONArray(array_json);
-//                                    String jsonarry = jsonArray.getString(0);
-//                                    JSONArray jsonArray1 = new JSONArray(jsonarry);
+//                                //  JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
 //
-//                                    //Iterate the jsonArray and print the info of JSONObjects
+//                                for (int k = 0; k < searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getRepeatIntervals().size(); k++) {
+//                                    String repeat = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getRepeatIntervals().get(k).toString();
 //
-//                                    workingModelArrayList.clear();
+//                                    WorkingModel work = new WorkingModel();
+//                                    if (repeat.equalsIgnoreCase("2")) {
 //
-//                                    for (int i = 0; i < jsonArray1.length(); i++) {
-//                                        JSONObject jsonObject = jsonArray1.getJSONObject(i);
+//                                        work.setDay("Monday");
+//                                        work.setTime_value(sTime + "-" + eTime);
 //
-//                                        String id = jsonObject.optString("recurringType").toString();
-//                                        String repeatinterval = jsonObject.optString("repeatIntervals").toString();
-//                                        String timeslot = jsonObject.optString("timeSlots").toString();
-//                                        // String publish_date = jsonObject.optString("publish_date").toString();
-//                                        JSONArray jsonArray_time = new JSONArray(timeslot);
-//                                        JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
-//                                        String sTime = jsonObject_time.optString("sTime").toString();
-//                                        String eTime = jsonObject_time.optString("eTime").toString();
-//
-//
-//                                        JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
-//
-//                                        for (int k = 0; k < jsonArray_repeat.length(); k++) {
-//                                            String repeat = jsonArray_repeat.getString(k);
-//
-//                                            WorkingModel work = new WorkingModel();
-//                                            if (repeat.equalsIgnoreCase("2")) {
-//
-//                                                work.setDay("Monday");
-//                                                work.setTime_value(sTime + "-" + eTime);
-//
-//                                            }
-//                                            if (repeat.equalsIgnoreCase("3")) {
-//
-//                                                work.setDay("Tuesday");
-//                                                work.setTime_value(sTime + "-" + eTime);
-//
-//                                            }
-//                                            if (repeat.equalsIgnoreCase("4")) {
-//                                                work.setDay("Wednesday");
-//                                                work.setTime_value(sTime + "-" + eTime);
-//                                            }
-//                                            if (repeat.equalsIgnoreCase("5")) {
-//
-//                                                work.setDay("Thursday");
-//                                                work.setTime_value(sTime + "-" + eTime);
-//                                            }
-//                                            if (repeat.equalsIgnoreCase("6")) {
-//
-//                                                work.setDay("Friday");
-//                                                work.setTime_value(sTime + "-" + eTime);
-//
-//                                            }
-//                                            if (repeat.equalsIgnoreCase("7")) {
-//
-//                                                work.setDay("Saturday");
-//                                                work.setTime_value(sTime + "-" + eTime);
-//
-//                                            }
-//                                            if (repeat.equalsIgnoreCase("1")) {
-//
-//                                                work.setDay("Sunday");
-//                                                work.setTime_value(sTime + "-" + eTime);
-//
-//                                            }
-//
-//                                            workingModelArrayList.add(work);
-//                                        }
 //                                    }
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
+//                                    if (repeat.equalsIgnoreCase("3")) {
+//
+//                                        work.setDay("Tuesday");
+//                                        work.setTime_value(sTime + "-" + eTime);
+//
+//                                    }
+//                                    if (repeat.equalsIgnoreCase("4")) {
+//                                        work.setDay("Wednesday");
+//                                        work.setTime_value(sTime + "-" + eTime);
+//                                    }
+//                                    if (repeat.equalsIgnoreCase("5")) {
+//
+//                                        work.setDay("Thursday");
+//                                        work.setTime_value(sTime + "-" + eTime);
+//                                    }
+//                                    if (repeat.equalsIgnoreCase("6")) {
+//
+//                                        work.setDay("Friday");
+//                                        work.setTime_value(sTime + "-" + eTime);
+//
+//                                    }
+//                                    if (repeat.equalsIgnoreCase("7")) {
+//
+//                                        work.setDay("Saturday");
+//                                        work.setTime_value(sTime + "-" + eTime);
+//
+//                                    }
+//                                    if (repeat.equalsIgnoreCase("1")) {
+//
+//                                        work.setDay("Sunday");
+//                                        work.setTime_value(sTime + "-" + eTime);
+//
+//                                    }
+//
+//                                    workingModelArrayList.add(work);
 //                                }
+//                                // }
 //                            } catch (Exception e) {
 //                                e.printStackTrace();
 //                            }
 //                        }
-//                        searchDetailViewFragment.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getUniqueid());
+//                        searchDetailViewFragment.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getSearchViewDetail().getUniqueId());
 //                        //   Config.logV("Working-----------" + workingModelArrayList.size() + "tt" + searchdetailList.getTitle());
 //                    }
 //                }
@@ -429,191 +442,216 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //                e.printStackTrace();
 //            }
 //        }
-//        if (searchdetailList.getParking_type_location1() != null) {
-//            if (searchdetailList.getParking_location1().equalsIgnoreCase("1")) {
-//                TextView dynaText = new TextView(context);
-//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-//                        "fonts/Montserrat_Regular.otf");
-//                dynaText.setTypeface(tyface);
-//                dynaText.setText(Config.toTitleCase(searchdetailList.getParking_type_location1()) + " Parking ");
-//                dynaText.setTextSize(13);
-//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-//                dynaText.setPadding(5, 5, 5, 5);
-//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_parking, 0, 0);
-//                dynaText.setMaxLines(1);
-//                params1.setMargins(10, 7, 10, 7);
-//                dynaText.setGravity(Gravity.LEFT);
-//                dynaText.setLayoutParams(params1);
-//                parent.addView(dynaText);
-//                dynaText.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Toast.makeText(activity, searchdetailList.getParking_type_location1() + " parking available", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        }
-//        if (searchdetailList.getAlways_open_location1() != null) {
-//            if (searchdetailList.getAlways_open_location1().equalsIgnoreCase("1")) {
-//                TextView dynaText = new TextView(context);
-//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-//                        "fonts/Montserrat_Regular.otf");
-//                dynaText.setTypeface(tyface);
-//                dynaText.setText("24 Hours");
-//                dynaText.setTextSize(13);
-//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-//                dynaText.setPadding(5, 5, 5, 5);
-//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_24hours, 0, 0);
-//                dynaText.setMaxLines(1);
-//                params1.setMargins(10, 7, 10, 7);
-//                dynaText.setGravity(Gravity.LEFT);
-//                dynaText.setLayoutParams(params1);
-//                parent.addView(dynaText);
-//
-//                dynaText.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Toast.makeText(activity, "Open 24 hours", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        }
-//        if (searchdetailList.getDentistemergencyservices_location1() != null) {
-//            if (searchdetailList.getDentistemergencyservices_location1().equalsIgnoreCase("1")) {
-//
-//                TextView dynaText = new TextView(context);
-//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-//                        "fonts/Montserrat_Regular.otf");
-//                dynaText.setTypeface(tyface);
-//                dynaText.setText("Emergency");
-//                dynaText.setTextSize(13);
-//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-//                dynaText.setPadding(5, 5, 5, 5);
-//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
-//                dynaText.setMaxLines(1);
-//
-//                dynaText.setLayoutParams(params1);
-//                params1.setMargins(10, 7, 10, 7);
-//                dynaText.setGravity(Gravity.LEFT);
-//                parent.addView(dynaText);
-//
-//                dynaText.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        }
-//        if (searchdetailList.getDocambulance_location1() != null) {
-//            if (searchdetailList.getDocambulance_location1().equalsIgnoreCase("1")) {
-//
-//                TextView dynaText = new TextView(context);
-//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-//                        "fonts/Montserrat_Regular.otf");
-//                dynaText.setTypeface(tyface);
-//                dynaText.setText("Ambulance");
-//                dynaText.setTextSize(13);
-//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-//                dynaText.setPadding(5, 5, 5, 5);
-//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_ambulance, 0, 0);
-//                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-//                dynaText.setMaxLines(1);
-//
-//                dynaText.setLayoutParams(params1);
-//                params1.setMargins(10, 7, 10, 7);
-//                dynaText.setGravity(Gravity.LEFT);
-//                parent.addView(dynaText);
-//
-//                dynaText.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Toast.makeText(activity, "Ambulance services available", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        }
-//        if (searchdetailList.getFirstaid_location1() != null) {
-//            if (searchdetailList.getFirstaid_location1().equalsIgnoreCase("1")) {
-//                TextView dynaText = new TextView(context);
-//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-//                        "fonts/Montserrat_Regular.otf");
-//                dynaText.setTypeface(tyface);
-//                dynaText.setText("First Aid");
-//                dynaText.setTextSize(13);
-//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-//                dynaText.setPadding(5, 5, 5, 5);
-//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_firstaid, 0, 0);
-//                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-//                dynaText.setMaxLines(1);
-//                dynaText.setLayoutParams(params1);
-//                params1.setMargins(10, 7, 10, 7);
-//                dynaText.setGravity(Gravity.LEFT);
-//                parent.addView(dynaText);
-//
-//                dynaText.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Toast.makeText(activity, "First aid services available", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        }
-//        if (searchdetailList.getPhysiciansemergencyservices_location1() != null) {
-//            if (searchdetailList.getPhysiciansemergencyservices_location1().equalsIgnoreCase("1")) {
-//                TextView dynaText = new TextView(context);
-//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-//                        "fonts/Montserrat_Regular.otf");
-//                dynaText.setTypeface(tyface);
-//                dynaText.setText("Emergency");
-//                dynaText.setTextSize(13);
-//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-//                dynaText.setPadding(5, 5, 5, 5);
-//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
-//                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-//                dynaText.setMaxLines(1);
-//                dynaText.setLayoutParams(params1);
-//                params1.setMargins(10, 7, 10, 7);
-//                dynaText.setGravity(Gravity.LEFT);
-//                parent.addView(dynaText);
-//
-//                dynaText.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        }
-//        if (searchdetailList.getTraumacentre_location1() != null) {
-//            if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
-//
-//                TextView dynaText = new TextView(context);
-//                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-//                        "fonts/Montserrat_Regular.otf");
-//                dynaText.setTypeface(tyface);
-//                dynaText.setText("Trauma");
-//                dynaText.setTextSize(13);
-//                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-//                dynaText.setPadding(5, 5, 5, 5);
-//                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_trauma, 0, 0);
-//                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-//                dynaText.setMaxLines(1);
-//
-//                dynaText.setLayoutParams(params1);
-//                params1.setMargins(10, 7, 10, 7);
-//                dynaText.setGravity(Gravity.LEFT);
-//                parent.addView(dynaText);
-//
-//                dynaText.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Toast.makeText(activity, "Trauma care available", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//            }
-//        }
+        if (searchdetailList.getLocation().getParkingType() != null) {
+       //     if (searchdetailList.getLocation().getParkingType().equalsIgnoreCase("1")) {
+                TextView dynaText = new TextView(context);
+                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                dynaText.setTypeface(tyface);
+                dynaText.setText(Config.toTitleCase(searchdetailList.getLocation().getParkingType()) + " Parking ");
+                dynaText.setTextSize(13);
+                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                dynaText.setPadding(5, 5, 5, 5);
+                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_parking, 0, 0);
+                dynaText.setMaxLines(1);
+                params1.setMargins(10, 7, 10, 7);
+                dynaText.setGravity(Gravity.LEFT);
+                dynaText.setLayoutParams(params1);
+                parent.addView(dynaText);
+                dynaText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(activity, searchdetailList.getLocation().getParkingType() + " parking available", Toast.LENGTH_SHORT).show();
+                    }
+                });
+          //  }
+        }
+        if (searchdetailList.getLocation().isOpen24hours()) {
+
+                TextView dynaText = new TextView(context);
+                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                dynaText.setTypeface(tyface);
+                dynaText.setText("24 Hours");
+                dynaText.setTextSize(13);
+                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                dynaText.setPadding(5, 5, 5, 5);
+                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_24hours, 0, 0);
+                dynaText.setMaxLines(1);
+                params1.setMargins(10, 7, 10, 7);
+                dynaText.setGravity(Gravity.LEFT);
+                dynaText.setLayoutParams(params1);
+                parent.addView(dynaText);
+
+                dynaText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(activity, "Open 24 hours", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        }
+        if (searchdetailList.getLocation().getLocationVirtualFields().getDentistemergencyservices() != null) {
+          //  if (searchdetailList.getDentistemergencyservices_location1().equalsIgnoreCase("1")) {
+
+                TextView dynaText = new TextView(context);
+                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                dynaText.setTypeface(tyface);
+                dynaText.setText("Emergency");
+                dynaText.setTextSize(13);
+                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                dynaText.setPadding(5, 5, 5, 5);
+                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+                dynaText.setMaxLines(1);
+
+                dynaText.setLayoutParams(params1);
+                params1.setMargins(10, 7, 10, 7);
+                dynaText.setGravity(Gravity.LEFT);
+                parent.addView(dynaText);
+
+                dynaText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
+                    }
+                });
+          //  }
+        }
+        if (searchdetailList.getLocation().getLocationVirtualFields().getDocambulance() != null) {
+          //  if (searchdetailList.getDocambulance_location1().equalsIgnoreCase("1")) {
+
+                TextView dynaText = new TextView(context);
+                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                dynaText.setTypeface(tyface);
+                dynaText.setText("Ambulance");
+                dynaText.setTextSize(13);
+                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                dynaText.setPadding(5, 5, 5, 5);
+                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_ambulance, 0, 0);
+                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                dynaText.setMaxLines(1);
+
+                dynaText.setLayoutParams(params1);
+                params1.setMargins(10, 7, 10, 7);
+                dynaText.setGravity(Gravity.LEFT);
+                parent.addView(dynaText);
+
+                dynaText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(activity, "Ambulance services available", Toast.LENGTH_SHORT).show();
+                    }
+                });
+          //  }
+        }
+        if (searchdetailList.getLocation().getLocationVirtualFields().getFirstaid() != null) {
+          //  if (searchdetailList.getFirstaid_location1().equalsIgnoreCase("1")) {
+                TextView dynaText = new TextView(context);
+                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                dynaText.setTypeface(tyface);
+                dynaText.setText("First Aid");
+                dynaText.setTextSize(13);
+                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                dynaText.setPadding(5, 5, 5, 5);
+                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_firstaid, 0, 0);
+                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                dynaText.setMaxLines(1);
+                dynaText.setLayoutParams(params1);
+                params1.setMargins(10, 7, 10, 7);
+                dynaText.setGravity(Gravity.LEFT);
+                parent.addView(dynaText);
+
+                dynaText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(activity, "First aid services available", Toast.LENGTH_SHORT).show();
+                    }
+                });
+          //  }
+        }
+        if (searchdetailList.getLocation().getLocationVirtualFields().getPhysiciansemergencyservices() != null) {
+         //   if (searchdetailList.getPhysiciansemergencyservices_location1().equalsIgnoreCase("1")) {
+                TextView dynaText = new TextView(context);
+                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                dynaText.setTypeface(tyface);
+                dynaText.setText("Emergency");
+                dynaText.setTextSize(13);
+                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                dynaText.setPadding(5, 5, 5, 5);
+                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                dynaText.setMaxLines(1);
+                dynaText.setLayoutParams(params1);
+                params1.setMargins(10, 7, 10, 7);
+                dynaText.setGravity(Gravity.LEFT);
+                parent.addView(dynaText);
+
+                dynaText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
+                    }
+                });
+          //  }
+        }
+
+        if (searchdetailList.getLocation().getLocationVirtualFields().getHosemergencyservices() != null) {
+
+                TextView dynaText = new TextView(context);
+                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                dynaText.setTypeface(tyface);
+                dynaText.setText("Emergency");
+                dynaText.setTextSize(13);
+                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                dynaText.setPadding(5, 5, 5, 5);
+                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+                dynaText.setMaxLines(1);
+                dynaText.setLayoutParams(params1);
+                params1.setMargins(10, 7, 10, 7);
+                dynaText.setGravity(Gravity.LEFT);
+                parent.addView(dynaText);
+                dynaText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        }
+        if (searchdetailList.getLocation().getTraumacentre()!= null) {
+         //   if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
+
+                TextView dynaText = new TextView(context);
+                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                        "fonts/Montserrat_Regular.otf");
+                dynaText.setTypeface(tyface);
+                dynaText.setText("Trauma");
+                dynaText.setTextSize(13);
+                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+                dynaText.setPadding(5, 5, 5, 5);
+                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_trauma, 0, 0);
+                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+                dynaText.setMaxLines(1);
+
+                dynaText.setLayoutParams(params1);
+                params1.setMargins(10, 7, 10, 7);
+                dynaText.setGravity(Gravity.LEFT);
+                parent.addView(dynaText);
+
+                dynaText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(activity, "Trauma care available", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+           // }
+        }
 //        myViewHolder.layout_type.addView(parent);
 //        //////////////////////////////////////////////////////////////
 //        Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
@@ -622,23 +660,23 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //        myViewHolder.btncheckin.setTypeface(tyface_confm);
 //        // myViewHolder.tv_Open.setTypeface(tyface_confm);
 //
-//        myViewHolder.tv_location.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                searchDetailViewFragment.onMethodOpenMap(searchdetailList.getLocation1());
-//            }
-//        });
-//        myViewHolder.layout_row.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Config.logV("UNIUE ID----------------" + searchdetailList.getUniqueid());
-//
-//                Config.logV("Popular Text__________@@@Dele");
-//                String unique_id = searchdetailList.getUniqueid();
-//                searchDetailViewFragment.onMethodCallback(searchdetailList.getUniqueid(),searchdetailList.getClaimable());
-//            }
-//        });
+        myViewHolder.tv_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchDetailViewFragment.onMethodOpenMap(searchdetailList.getLocation().getGoogleMapUrl());
+            }
+        });
+        myViewHolder.layout_row.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Config.logV("UNIUE ID----------------" + searchdetailList.getParentSearchViewDetail().getUniqueId());
+
+                Config.logV("Popular Text__________@@@Dele");
+                String unique_id = searchdetailList.getParentSearchViewDetail().getUniqueId();
+                searchDetailViewFragment.onMethodCallback(searchdetailList.getParentSearchViewDetail().getUniqueId(),searchdetailList.getParentSearchViewDetail().getClaimStatus());
+            }
+        });
 //
 //        if (searchdetailList.getAccountType() != null) {
 //            if (searchdetailList.getAccountType().equals("1")) {
@@ -675,22 +713,22 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //        } else {
 //            myViewHolder.tv_name.setText(searchdetailList.getTitle());
 //        }
-//        if (searchdetailList.getSector() != null) {
+//        if (searchdetailList.getLocation().getSector() != null) {
 //            myViewHolder.tv_domain.setVisibility(View.VISIBLE);
-//            myViewHolder.tv_domain.setText(searchdetailList.getSector());
+//            myViewHolder.tv_domain.setText(searchdetailList.getLocation().getSector());
 //        } else {
 //            myViewHolder.tv_domain.setVisibility(View.GONE);
 //        }
-//        if (searchdetailList.getPlace1() != null) {
-//            myViewHolder.tv_location.setVisibility(View.VISIBLE);
-//            // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
+        if (searchdetailList.getLocation().getPlace() != null) {
+            myViewHolder.tv_location.setVisibility(View.VISIBLE);
+            // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
 //            Config.logV("Place @@@@@@@@@@@@@@" + searchdetailList.getDistance());
 //            Double distance = Double.valueOf(searchdetailList.getDistance()) * 1.6;
-//
-//            myViewHolder.tv_location.setText(searchdetailList.getPlace1() + " ( " + String.format("%.2f", distance) + " km )");
-//        } else {
-//            myViewHolder.tv_location.setVisibility(View.GONE);
-//        }
+
+            myViewHolder.tv_location.setText(searchdetailList.getLocation().getPlace());// + " ( " + String.format("%.2f", distance) + " km )");
+        } else {
+            myViewHolder.tv_location.setVisibility(View.GONE);
+        }
 //        if (searchdetailList.getFuture_checkins() != null) {
 //            if (searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
 //                myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
@@ -1111,6 +1149,68 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
     }
 
+    private void handleCoupons(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList, LinearLayout parent, LinearLayout.LayoutParams params1) {
+        TextView firstCoupon = new TextView(context);
+        Typeface tyface_3 = Typeface.createFromAsset(context.getAssets(),
+                "fonts/Montserrat_Regular.otf");
+        firstCoupon.setTypeface(tyface_3);
+        firstCoupon.setText("SignUp Coupon");
+        firstCoupon.setText(context.getResources().getString(R.string.first_coupon));
+        firstCoupon.setTextSize(13);
+        firstCoupon.setTextColor(context.getResources().getColor(R.color.title_grey));
+        firstCoupon.setPadding(5, 5, 5, 5);
+        firstCoupon.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
+        firstCoupon.setVisibility(View.GONE);
+        firstCoupon.setMaxLines(2);
+        firstCoupon.setLayoutParams(params1);
+        params1.setMargins(10, 7, 10, 7);
+        firstCoupon.setGravity(Gravity.CENTER);
+        parent.addView(firstCoupon);
+        if (firstCouponAvailable) {
+            firstCoupon.setVisibility(View.VISIBLE);
+        }
+        firstCoupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchDetailViewFragment.onMethodFirstCoupn(searchdetailList.getParentSearchViewDetail().getUniqueId());
+            }
+        });
+        final TextView dynaText2 = new TextView(context);
+        Typeface tyface_2 = Typeface.createFromAsset(context.getAssets(),
+                "fonts/Montserrat_Regular.otf");
+        dynaText2.setTypeface(tyface_2);
+        dynaText2.setText("Coupons");
+        dynaText2.setTextSize(13);
+        dynaText2.setTextColor(context.getResources().getColor(R.color.title_grey));
+        dynaText2.setPadding(5, 5, 5, 5);
+        dynaText2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
+        dynaText2.setVisibility(View.GONE);
+        //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+        dynaText2.setMaxLines(1);
+        dynaText2.setLayoutParams(params1);
+        params1.setMargins(10, 7, 10, 7);
+        dynaText2.setGravity(Gravity.LEFT);
+        parent.addView(dynaText2);
+        if (couponAvailable) {
+            dynaText2.setVisibility(View.VISIBLE);
+        }
+        dynaText2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchDetailViewFragment.onMethodCoupn(searchdetailList.getParentSearchViewDetail().getUniqueId());
+            }
+        });
+        apiJDN(searchdetailList.getParentSearchViewDetail().getUniqueId());
+        tv_jdn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+               searchDetailViewFragment.onMethodJdn(searchdetailList.getParentSearchViewDetail().getUniqueId());
+
+            }
+        });
+    }
+
     private void handleEnquiry(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList, LinearLayout parent, LinearLayout.LayoutParams params1) {
         TextView dynaText1 = new TextView(context);
         Typeface tyface_5 = Typeface.createFromAsset(context.getAssets(),
@@ -1129,7 +1229,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         dynaText1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapterCallback.onMethodMessage(searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getSearchViewDetail().getId()), "dept");
+                searchDetailViewFragment.onMethodMessage(searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getSearchViewDetail().getId()), "dept");
             }
         });
     }
@@ -1172,8 +1272,23 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     dynaText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ApiService(String.valueOf(searchdetailList.getSearchViewDetail().getId()), searchdetailList.getServices().get(finalI).getName(), searchdetailList.getSearchViewDetail().getBusinessName());
+                          //  ApiService(String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()), searchdetailList.getServices().get(finalI).getName(), searchdetailList.getSearchViewDetail().getBusinessName());
+                           for(int i = 0;i<searchdetailList.getServices().size();i++) {
+                               if (searchdetailList.getServices().get(i).getName().toLowerCase().toString().equalsIgnoreCase(searchdetailList.getServices().get(finalI).getName())) {
+                                   Intent iService = new Intent(activity, SearchServiceActivity.class);
+                                   iService.putExtra("name", searchdetailList.getServices().get(i).getName());
+                                   iService.putExtra("duration", searchdetailList.getServices().get(i).getServiceDuration());
+                                   iService.putExtra("price", searchdetailList.getServices().get(i).getTotalAmount());
+                                   iService.putExtra("desc", searchdetailList.getServices().get(i).getDescription());
+                                   iService.putExtra("servicegallery", searchdetailList.getServices().get(i).getServicegallery());
+                                   iService.putExtra("taxable", searchdetailList.getServices().get(i).isTaxable());
+                                   iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                                   iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
+                                   iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
+                                   activity.startActivity(iService);
 
+                               }
+                           }
                         }
                     });
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -1232,18 +1347,19 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             public void onClick(View v) {
                 Intent iAppointment = new Intent(v.getContext(), Appointment.class);
                 iAppointment.putExtra("serviceId", searchdetailList.getLocation().getId());
-                iAppointment.putExtra("uniqueID", searchdetailList.getParentSearchViewDetail().getUniqueId());
-                iAppointment.putExtra("accountID", searchdetailList.getParentSearchViewDetail().getId());
+                iAppointment.putExtra("uniqueID", String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
+                iAppointment.putExtra("accountID",String.valueOf(searchdetailList.getParentSearchViewDetail().getId()));
                 iAppointment.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
-                iAppointment.putExtra("from", "checkin");
+                iAppointment.putExtra("from", "multiusercheckin");
                 iAppointment.putExtra("title", searchdetailList.getParentSearchViewDetail().getBusinessName());
                 iAppointment.putExtra("place", searchdetailList.getLocation().getPlace());
                 iAppointment.putExtra("sector", searchdetailList.getParentSearchViewDetail().getServiceSector().getDomain());
                 iAppointment.putExtra("subsector", searchdetailList.getParentSearchViewDetail().getServiceSubSector().getSubDomain());
                 iAppointment.putExtra("terminology", termilogy);
+                iAppointment.putExtra("userId",searchdetailList.getSearchViewDetail().getId());
 //                iAppointment.putExtra("isshowtoken", searchdetailList.getQueueList().isShowToken());
 //                iAppointment.putExtra("getAvail_date", searchdetailList.getScheduleList().getAvailableSchedule().);
-                context.startActivity( iAppointment);
+                v.getContext().startActivity( iAppointment);
             }
         });
         if (searchdetailList.getSearchViewDetail().isOnlinePresence()) {
@@ -1384,11 +1500,11 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             public void onClick(View v) {
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
                 iCheckIn.putExtra("serviceId",searchdetailList.getLocation().getId());
-                iCheckIn.putExtra("uniqueID", searchdetailList.getSearchViewDetail().getId());
-                iCheckIn.putExtra("accountID", searchdetailList.getSearchViewDetail().getId());
+                iCheckIn.putExtra("uniqueID", String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
+                iCheckIn.putExtra("accountID", String.valueOf(searchdetailList.getSearchViewDetail().getId()));
                 iCheckIn.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
                 // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
-                iCheckIn.putExtra("from", "checkin");
+                iCheckIn.putExtra("from", "multiusercheckin");
                 iCheckIn.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
                 iCheckIn.putExtra("place", searchdetailList.getLocation().getPlace());
                 Config.logV("sector%%%%%%-------------" + searchdetailList.getSearchViewDetail().getServiceSector());
@@ -1397,7 +1513,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iCheckIn.putExtra("terminology", termilogy);
                 iCheckIn.putExtra("isshowtoken", searchdetailList.getQueueList().getNextAvailableQueue().isShowToken());
                 iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
-                context.startActivity(iCheckIn);
+                v.getContext().startActivity(iCheckIn);
             }
         });
         myViewHolder.tv_Futuredate.setOnClickListener(new View.OnClickListener() {
@@ -1407,11 +1523,11 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 if (searchdetailList.getLocation() != null) {
                     iCheckIn.putExtra("serviceId", searchdetailList.getLocation().getId());
                 }
-                iCheckIn.putExtra("uniqueID", searchdetailList.getSearchViewDetail().getId());
-                iCheckIn.putExtra("accountID",searchdetailList.getSearchViewDetail().getId());
+                iCheckIn.putExtra("uniqueID",String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
+                iCheckIn.putExtra("accountID", String.valueOf(searchdetailList.getSearchViewDetail().getId()));
                 iCheckIn.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
                 // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
-                iCheckIn.putExtra("from", "future_date");
+                iCheckIn.putExtra("from", "multiusercheckin");
                 iCheckIn.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
                 iCheckIn.putExtra("place", searchdetailList.getLocation().getPlace());
                 Config.logV("sector%%%%%%-------------" + searchdetailList.getSearchViewDetail().getServiceSector());
@@ -1420,7 +1536,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iCheckIn.putExtra("terminology", termilogy);
                 iCheckIn.putExtra("isshowtoken", searchdetailList.getQueueList().getNextAvailableQueue().isShowToken());
                 iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
-                context.startActivity(iCheckIn);
+                v.getContext().startActivity(iCheckIn);
             }
         });
     }
@@ -1508,20 +1624,20 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 myViewHolder.tv_spec2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+                   //    searchDetailViewFragment.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
                     }
                 });
                 myViewHolder.tv_spec22.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+                    //   searchDetailViewFragment.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
 
                     }
                 });
                 myViewHolder.tv_spec_more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+                    //    searchDetailViewFragment.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
 
                     }
                 });
@@ -1565,17 +1681,21 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         }
     }
     public void handleBusinesshours(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList, LinearLayout parent, LinearLayout.LayoutParams params1) {
-        if (searchdetailList.getLocation().getbSchedule() != null) {
+        if (searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots() != null) {
             TextView dynaText = new TextView(context);
             Typeface tyface = Typeface.createFromAsset(context.getAssets(),
                     "fonts/Montserrat_Regular.otf");
             dynaText.setTypeface(tyface);
             dynaText.setText(context.getResources().getString(R.string.working_hours));
+
             dynaText.setTextSize(13);
             dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
             dynaText.setPadding(5, 5, 5, 5);
             dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_clock, 0, 0);
+            //dynaText.setEllipsize(TextUtils.TruncateAt.END);
             dynaText.setMaxLines(2);
+
+
             dynaText.setLayoutParams(params1);
             params1.setMargins(10, 7, 10, 7);
             dynaText.setGravity(Gravity.CENTER);
@@ -1583,72 +1703,90 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             dynaText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (searchdetailList.getLocation() != null) {
-                        if (searchdetailList.getLocation().getbSchedule() != null) {
+                    if (searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots() != null) {
+
+                        if (searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots() != null) {
                             try {
-                                String array_json = searchdetailList.getLocation().getbSchedule().toString();
-                                Log.i("terminos", array_json);
-                                try {
-                                    //Get the instance of JSONArray that contains JSONObjects
-                                    JSONArray jsonArray = new JSONArray(array_json);
-                                    String jsonarry = jsonArray.getString(0);
-                                    JSONArray jsonArray1 = new JSONArray(jsonarry);
-                                    //Iterate the jsonArray and print the info of JSONObjects
-                                    workingModelArrayList.clear();
-                                    for (int i = 0; i < jsonArray1.length(); i++) {
-                                        JSONObject jsonObject = jsonArray1.getJSONObject(i);
-                                        String id = jsonObject.optString("recurringType").toString();
-                                        String repeatinterval = jsonObject.optString("repeatIntervals").toString();
-                                        String timeslot = jsonObject.optString("timeSlots").toString();
-                                        // String publish_date = jsonObject.optString("publish_date").toString();
-                                        JSONArray jsonArray_time = new JSONArray(timeslot);
-                                        JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
-                                        String sTime = jsonObject_time.optString("sTime").toString();
-                                        String eTime = jsonObject_time.optString("eTime").toString();
-                                        JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
-                                        for (int k = 0; k < jsonArray_repeat.length(); k++) {
-                                            String repeat = jsonArray_repeat.getString(k);
-                                            WorkingModel work = new WorkingModel();
-                                            if (repeat.equalsIgnoreCase("2")) {
-                                                work.setDay("Monday");
-                                                work.setTime_value(sTime + "-" + eTime);
-                                            }
-                                            if (repeat.equalsIgnoreCase("3")) {
-                                                work.setDay("Tuesday");
-                                                work.setTime_value(sTime + "-" + eTime);
-                                            }
-                                            if (repeat.equalsIgnoreCase("4")) {
-                                                work.setDay("Wednesday");
-                                                work.setTime_value(sTime + "-" + eTime);
-                                            }
-                                            if (repeat.equalsIgnoreCase("5")) {
-                                                work.setDay("Thursday");
-                                                work.setTime_value(sTime + "-" + eTime);
-                                            }
-                                            if (repeat.equalsIgnoreCase("6")) {
-                                                work.setDay("Friday");
-                                                work.setTime_value(sTime + "-" + eTime);
-                                            }
-                                            if (repeat.equalsIgnoreCase("7")) {
-                                                work.setDay("Saturday");
-                                                work.setTime_value(sTime + "-" + eTime);
-                                            }
-                                            if (repeat.equalsIgnoreCase("1")) {
-                                                work.setDay("Sunday");
-                                                work.setTime_value(sTime + "-" + eTime);
-                                            }
-                                            workingModelArrayList.add(work);
-                                        }
+//                                String array_json = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).toString();
+
+
+                                //Get the instance of JSONArray that contains JSONObjects
+//                                    JSONArray jsonArray = new JSONArray(array_json);
+//                                    String jsonarry = jsonArray.getString(0);
+//                                    JSONArray jsonArray1 = new JSONArray(jsonarry);
+
+                                //Iterate the jsonArray and print the info of JSONObjects
+
+                                workingModelArrayList.clear();
+
+                                //  for (int i = 0; i < searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getRepeatIntervals().size(); i++) {
+                                //  JSONObject jsonObject = jsonArray1.getJSONObject(i);
+
+//                                        String id = jsonObject.optString("recurringType").toString();
+//                                        String repeatinterval = jsonObject.optString("repeatIntervals").toString();
+//                                        String timeslot = jsonObject.optString("timeSlots").toString();
+//                                        // String publish_date = jsonObject.optString("publish_date").toString();
+//                                        JSONArray jsonArray_time = new JSONArray(timeslot);
+//                                        JSONObject jsonObject_time = jsonArray_time.getJSONObject(0);
+                                String sTime = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots().get(0).getsTime();
+                                String eTime = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots().get(0).geteTime();
+
+
+                                //  JSONArray jsonArray_repeat = new JSONArray(repeatinterval);
+
+                                for (int k = 0; k < searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getRepeatIntervals().size(); k++) {
+                                    String repeat = searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getRepeatIntervals().get(k).toString();
+
+                                    WorkingModel work = new WorkingModel();
+                                    if (repeat.equalsIgnoreCase("2")) {
+
+                                        work.setDay("Monday");
+                                        work.setTime_value(sTime + "-" + eTime);
+
                                     }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    if (repeat.equalsIgnoreCase("3")) {
+
+                                        work.setDay("Tuesday");
+                                        work.setTime_value(sTime + "-" + eTime);
+
+                                    }
+                                    if (repeat.equalsIgnoreCase("4")) {
+                                        work.setDay("Wednesday");
+                                        work.setTime_value(sTime + "-" + eTime);
+                                    }
+                                    if (repeat.equalsIgnoreCase("5")) {
+
+                                        work.setDay("Thursday");
+                                        work.setTime_value(sTime + "-" + eTime);
+                                    }
+                                    if (repeat.equalsIgnoreCase("6")) {
+
+                                        work.setDay("Friday");
+                                        work.setTime_value(sTime + "-" + eTime);
+
+                                    }
+                                    if (repeat.equalsIgnoreCase("7")) {
+
+                                        work.setDay("Saturday");
+                                        work.setTime_value(sTime + "-" + eTime);
+
+                                    }
+                                    if (repeat.equalsIgnoreCase("1")) {
+
+                                        work.setDay("Sunday");
+                                        work.setTime_value(sTime + "-" + eTime);
+
+                                    }
+
+                                    workingModelArrayList.add(work);
                                 }
+                                // }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-//                        mAdapterCallback.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getSearchViewDetail().getBusinessName(),
-//                                searchdetailList.getSearchViewDetail().getId());
+                        searchDetailViewFragment.onMethodWorkingCallback(workingModelArrayList, searchdetailList.getSearchViewDetail().getBusinessName());
+                        //   Config.logV("Working-----------" + workingModelArrayList.size() + "tt" + searchdetailList.getTitle());
                     }
                 }
             });
@@ -1820,6 +1958,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //            tv_contact.setVisibility(View.GONE);
 //        }
 //        tv_msg.setEnabled(true);
+        Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        myViewHolder.tv_name.setTypeface(tyface_confm);
         myViewHolder.tv_name.setText(getBusinessData.getBusinessName());
         myViewHolder.rating.setRating(getBusinessData.getAvgRating());
 //        if (getBusinessData.getServiceSector().getDisplayName() != null && getBusinessData.getServiceSubSector().getDisplayName() != null) {
@@ -1843,6 +1984,160 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //        } else {
 //            tv_desc.setVisibility(View.GONE);
 //        }
+        Picasso.Builder builder = new Picasso.Builder(context);
+        builder.listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        if(searchdetailList.getSearchViewDetail().getLogo()!= null){
+        builder.build().load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);}
+        myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // Config.logV("Unique Id List", searchdetailList.getUniqueid());
+                ApiSearchGallery(searchdetailList.getParentSearchViewDetail().getUniqueId(), searchdetailList);
+            }
+
+
+        });
+
+//        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+//            if (searchdetailList.getGallery_thumb_nails().size() > 0) {
+//                myViewHolder.mImageViewText.setVisibility(View.VISIBLE);
+//                myViewHolder.mImageViewText.setText("+" + searchdetailList.getGallery_thumb_nails().size());
+//            } else {
+//                myViewHolder.mImageViewText.setVisibility(View.GONE);
+//            }
+//        } else {
+//            myViewHolder.mImageViewText.setVisibility(View.GONE);
+//        }
+
+    }
+
+    private void ApiSearchGallery(final String muniqueID, final DepartmentUserSearchModel searchdetailList) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(context).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Call<ArrayList<SearchViewDetail>> call = apiService.getSearchGallery(Integer.parseInt(muniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<SearchViewDetail>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchViewDetail>> call, Response<ArrayList<SearchViewDetail>> response) {
+                try {
+                    Config.logV("URL------100000---------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----gallery--------------------" + response.code());
+                    if (response.code() == 200) {
+                        mSearchGallery = response.body();
+                        UpdateGallery(mSearchGallery, searchdetailList);
+                    } else {
+                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+                            ArrayList<String> mGalleryList = new ArrayList<>();
+                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList,activity);
+                            if (mValue) {
+                                Intent intent = new Intent(context, SwipeGalleryImage.class);
+                                intent.putExtra("pos", 0);
+                                activity.startActivity(intent);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<SearchViewDetail>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
+    ImageView profile1, profile2, profile3;
+    public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery, final DepartmentUserSearchModel searchdetailList) {
+        Config.logV("Gallery--------------333-----" + mGallery.size());
+        try {
+            if (mGallery.size() > 0 || searchdetailList.getSearchViewDetail().getLogo() != null) {
+                Config.logV("Gallery------------------------------" + mGallery.size());
+                ArrayList<String> mGalleryList = new ArrayList<>();
+                if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+                    mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
+                }
+                for (int i = 0; i < mGallery.size(); i++) {
+                    mGalleryList.add(mGallery.get(i).getUrl());
+                }
+                mGallery.clear();
+                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, context);
+                if (mValue) {
+                    Intent intent = new Intent(context, SwipeGalleryImage.class);
+                    intent.putExtra("pos", 0);
+                    context.startActivity(intent);
+                }
+                profile2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
+                        }
+                        for (int i = 0; i < mGallery.size(); i++) {
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+                            Intent intent = new Intent(context, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 1);
+                            v.getContext().startActivity(intent);
+                        }
+                    }
+                });
+                profile3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+                            mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
+                        }
+                        for (int i = 0; i < mGallery.size(); i++) {
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+                            Intent intent = new Intent(context, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 2);
+                            v.getContext().startActivity(intent);
+                        }
+                    }
+                });
+            }
+            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+                Picasso.with(context).load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
+
+            } else {
+                Picasso.with(context).load(mGallery.get(0).getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(profile1);
+            }
+            if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+                if (mGallery.size() > 0) {
+                    mImageViewText.setVisibility(View.VISIBLE);
+                    mImageViewText.setText(" +" + String.valueOf(mGallery.size()));
+                }
+            } else if (searchdetailList.getSearchViewDetail().getLogo() == null) {
+                if (mGallery.size() > 0) {
+                    mImageViewText.setVisibility(View.VISIBLE);
+                    mImageViewText.setText(" +" + String.valueOf(mGallery.size()));
+                } else {
+                    mImageViewText.setVisibility(View.GONE);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -1855,54 +2150,98 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
     }
 
-    private void ApiService(String uniqueID, final String serviceName, final String title) {
+//    private void ApiService(String uniqueID, final String serviceName, final String title) {
+//
+//        ApiInterface apiService =
+//                ApiClient.getClientS3Cloud(activity).create(ApiInterface.class);
+//
+//        final Dialog mDialog = Config.getProgressDialog(activity, context.getResources().getString(R.string.dialog_log_in));
+//        mDialog.show();
+//
+//        Date currentTime = new Date();
+//        final SimpleDateFormat sdf = new SimpleDateFormat(
+//                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+//        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        System.out.println("UTC time: " + sdf.format(currentTime));
+//
+//        Call<ArrayList<SearchService>> call = apiService.getService(Integer.parseInt(uniqueID), sdf.format(currentTime));
+//        call.enqueue(new Callback<ArrayList<SearchService>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<SearchService>> call, Response<ArrayList<SearchService>> response) {
+//
+//                try {
+//
+//                    if (mDialog.isShowing())
+//                        Config.closeDialog(activity, mDialog);
+//
+//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
+//                    Config.logV("Response--code-------------------------" + response.code());
+//
+//                    if (response.code() == 200) {
+//
+//                        SearchService service1 = null;
+//                        ArrayList<SearchService> service = new ArrayList<>();
+//                        service = response.body();
+//                        for (int i = 0; i < service.size(); i++) {
+//                            Config.logV("Response--serviceid-------------------------" + serviceName);
+//
+//                            if (service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())) {
+//                                Intent iService = new Intent(activity, SearchServiceActivity.class);
+//                                iService.putExtra("name", service.get(i).getName());
+//                                iService.putExtra("duration", service.get(i).getServiceDuration());
+//                                iService.putExtra("price", service.get(i).getTotalAmount());
+//                                iService.putExtra("desc", service.get(i).getDescription());
+//                                iService.putExtra("servicegallery", service.get(i).getServicegallery());
+//                                iService.putExtra("taxable", service.get(i).isTaxable());
+//                                iService.putExtra("title", title);
+//                                iService.putExtra("isPrePayment", service.get(i).isPrePayment());
+//                                iService.putExtra("MinPrePaymentAmount", service.get(i).getMinPrePaymentAmount());
+//                                activity.startActivity(iService);
+//                            }
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<SearchService>> call, Throwable t) {
+//                // Log error here since request failed
+//                Config.logV("Fail---------------" + t.toString());
+//                if (mDialog.isShowing())
+//                    Config.closeDialog(activity, mDialog);
+//            }
+//        });
+//    }
 
+    private void apiJDN(String uniqueID) {
         ApiInterface apiService =
-                ApiClient.getClientS3Cloud(context).create(ApiInterface.class);
-
-        final Dialog mDialog = Config.getProgressDialog(context, context.getResources().getString(R.string.dialog_log_in));
+                ApiClient.getClientS3Cloud(activity).create(ApiInterface.class);
+        final Dialog mDialog = Config.getProgressDialog(activity, activity.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
         Date currentTime = new Date();
         final SimpleDateFormat sdf = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
-        Call<ArrayList<SearchService>> call = apiService.getService(Integer.parseInt(uniqueID), sdf.format(currentTime));
-        call.enqueue(new Callback<ArrayList<SearchService>>() {
+        Call<JdnResponse> call = apiService.getJdnList(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<JdnResponse>() {
             @Override
-            public void onResponse(Call<ArrayList<SearchService>> call, Response<ArrayList<SearchService>> response) {
-
+            public void onResponse(Call<JdnResponse> call, Response<JdnResponse> response) {
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(activity, mDialog);
-
-                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-                    Config.logV("Response--code-------------------------" + response.code());
-
+                    Config.logV("URL-----1111----------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----detail--------------------" + response.code());
                     if (response.code() == 200) {
-
-                        SearchService service1 = null;
-                        ArrayList<SearchService> service = new ArrayList<>();
-                        service = response.body();
-                        for (int i = 0; i < service.size(); i++) {
-                            Config.logV("Response--serviceid-------------------------" + serviceName);
-
-                            if (service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())) {
-                                Intent iService = new Intent(context, SearchServiceActivity.class);
-                                iService.putExtra("name", service.get(i).getName());
-                                iService.putExtra("duration", service.get(i).getServiceDuration());
-                                iService.putExtra("price", service.get(i).getTotalAmount());
-                                iService.putExtra("desc", service.get(i).getDescription());
-                                iService.putExtra("servicegallery", service.get(i).getServicegallery());
-                                iService.putExtra("taxable", service.get(i).isTaxable());
-                                iService.putExtra("title", title);
-                                iService.putExtra("isPrePayment", service.get(i).isPrePayment());
-                                iService.putExtra("MinPrePaymentAmount", service.get(i).getMinPrePaymentAmount());
-                                context.startActivity(iService);
-                            }
+                        jdnList = response.body();
+                        jdnDiscount = jdnList.getDiscPercentage();
+                        jdnMaxvalue = jdnList.getDiscMax();
+                        if (new Gson().toJson(jdnList).equals("{}")) {
+                            tv_jdn.setVisibility(View.GONE);
+                        } else {
+                            tv_jdn.setVisibility(View.VISIBLE);
                         }
                     }
                 } catch (Exception e) {
@@ -1911,7 +2250,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<SearchService>> call, Throwable t) {
+            public void onFailure(Call<JdnResponse> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
                 if (mDialog.isShowing())
@@ -1919,6 +2258,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             }
         });
     }
+
 
 
 }

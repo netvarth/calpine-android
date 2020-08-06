@@ -358,7 +358,7 @@
                 android:lineSpacingExtra="@dimen/padding3"
                 android:paddingLeft="@dimen/dimen_5dp"
                 android:paddingRight="@dimen/dimen_5dp"
-                android:text="Check-In Services"
+                android:text="Services"
                 android:textColor="@color/title_grey_light"
                 android:textSize="@dimen/txtsize_hint_11"
                 android:textStyle="bold"

@@ -80,17 +80,21 @@ public class DeptFragment extends RootFragment {
     List<DepartmentUserSearchModel> usersSearchList = new ArrayList<>();
     Dialog mDialog;
     DepartmentUserSearchModel userSearch;
-    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent) {
+    Boolean firstCouponAvailable, couponAvailable;
+    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent,Boolean firstCouponAvailable,Boolean couponAvailable) {
         this.departmentServices = departmentServices;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.businessName = businessName;
         this.mBusinessDataListParent = mBusinessDataListParent;
+        this.couponAvailable = couponAvailable;
+        this.firstCouponAvailable = firstCouponAvailable;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View row = inflater.inflate(R.layout.departmentview, container, false);
+        mContext = getActivity();
         mdepartment_searchresult = (RecyclerView) row.findViewById(R.id.department_searchresult);
         mservice_searchresult = (RecyclerView) row.findViewById(R.id.service_searchresult);
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
@@ -140,7 +144,7 @@ public class DeptFragment extends RootFragment {
         location = searchDetailViewFragment.mSearchLocList.get(0);
         mSearchSettings = searchDetailViewFragment.mSearchSettings;
         for (int i = 0; i < departmentServices.getUsers().size(); i++) {
-            idsCheckin.add(departmentServices.getUsers().get(i).getId()+"-"+location.getId());
+            idsCheckin.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
             idsAppt.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
         }
         ApiLoadQsAndSchedulesList(idsCheckin, idsAppt, mBusinessDataLists);;
@@ -342,7 +346,7 @@ public class DeptFragment extends RootFragment {
         if (mDialog.isShowing())
             Config.closeDialog(getActivity(), mDialog);
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        deptListAdapter = new DeptListAdapter(getActivity(), usersSearchList, searchDetailViewFragment);
+        deptListAdapter = new DeptListAdapter(getActivity(), usersSearchList, searchDetailViewFragment,firstCouponAvailable, couponAvailable);
         mdepartment_searchresult.setAdapter(deptListAdapter);
         mdepartment_searchresult.setLayoutManager(linearLayoutManager);
         deptListAdapter.notifyDataSetChanged();

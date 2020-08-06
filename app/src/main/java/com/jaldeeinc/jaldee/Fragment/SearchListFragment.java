@@ -2398,11 +2398,11 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                 if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
                     btn_send.setEnabled(true);
                     btn_send.setClickable(true);
-                    btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.roundedrect_blue));
+                    btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
                 } else {
                     btn_send.setEnabled(false);
                     btn_send.setClickable(false);
-                    btn_send.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
+                    btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
                 }
             }
 

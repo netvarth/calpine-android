@@ -489,10 +489,11 @@ public class FavouriteFragment extends RootFragment implements FavAdapterOnCallb
         mDialog.show();
 
         String idPass = "";
-        for (int i = 0; i < ids.size(); i++) {
-            idPass += mProviderid + "-" + ids.get(i) + ",";
-        }
+        List<String> idList = Arrays.asList(ids.get(0).split(","));
+        for (int i = 0; i < idList.size(); i++) {
 
+            idPass += mProviderid + "-" + idList.get(i) + ",";
+        }
         if (!idPass.equals("") && idPass != null) {
             Config.logV("IDS_--------------------" + idPass);
 

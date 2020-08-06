@@ -147,6 +147,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
     static int serviceId;
     ArrayList<SearchAppoinment> LServicesList = new ArrayList<>();
+    ArrayList<SearchUsers> LUsersList = new ArrayList<>();
     ArrayList<SearchAppoinment> gServiceList = new ArrayList<>();
     String uniqueID;
     String uuid;
@@ -157,6 +158,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     static String mAaptTime;
     String livetrack;
     static int deptSpinnertext;
+    static int userSpinnertext;
     static ArrayList<QueueTimeSlotModel> mQueueTimeSlotList = new ArrayList<>();
     ArrayList<PaymentModel> mPaymentData = new ArrayList<>();
     static String modifyAccountID;
@@ -205,6 +207,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     static String selectedDateFormat;
     String serviceSelected;
     String departmentSelected;
+    String userSelected;
     TextView tv_addnote, txtprepayamount;
     static TextView txtnocheckin;
     TextView tv_title;
@@ -218,7 +221,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     static RecyclerView recycle_family;
     static String dateTime;
     static String slotTime;
-
     static LinearLayout LSinglemember, Lbottomlayout;
     RecyclerView list;
     private CouponlistAdapter mAdapter;
@@ -610,7 +612,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 /* mFrom = extras.getString("from", "");*/
                 if (mFrom.equalsIgnoreCase("searchdetail_future") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
                     modifyAccountID = accountID;
-                } else {
+                }
+                else if(mFrom.equalsIgnoreCase("multiusercheckin")){
+                    modifyAccountID = accountID;
+                }
+                else {
                     modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
                 }
                 googlemap = extras.getString("googlemap", "");
@@ -876,9 +882,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                 departmentSelected = depResponse.getDepartments().get(position).getDepartmentName();
                 selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
-                ApiSearchUsers(selectedDepartment);
                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
                 ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
+                ArrayList<SearchUsers> userList = new ArrayList<>();
                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
 
                     for (int i = 0; i < gServiceList.size(); i++) {
@@ -889,6 +895,75 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     }
 
                 }
+                LServicesList.clear();
+                LServicesList.addAll(serviceList);
+                if (LServicesList.size() == 0) {
+                    mSpinnerService.setVisibility(View.GONE);
+                    btn_checkin.setVisibility(View.GONE);
+                    txt_chooseservice.setVisibility(View.GONE);
+                    Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                } else {
+                    CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    mSpinnerService.setAdapter(adapter);
+                    mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
+                    livetrack = LServicesList.get(0).getLivetrack();
+                    mSpinnerService.setVisibility(View.VISIBLE);
+                    txt_chooseservice.setVisibility(View.VISIBLE);
+                    btn_checkin.setVisibility(View.VISIBLE);
+
+                }
+
+                ApiSearchUsers(selectedDepartment);
+                LUsersList.clear();
+                LUsersList.addAll(doctResponse);
+                if (LUsersList.size() == 0) {
+                    mSpinnerDoctor.setVisibility(View.GONE);
+                  //  btn_checkin.setVisibility(View.GONE);
+                    txt_choosedoctor.setVisibility(View.GONE);
+                  //  Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                } else {
+                    ArrayAdapter<SearchUsers> adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item,LUsersList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    mSpinnerDoctor.setAdapter(adapter);
+                    userSpinnertext = ((SearchUsers) LUsersList.get(0)).getId();
+                  //  livetrack = LServicesList.get(0).getLivetrack();
+                    mSpinnerDoctor.setVisibility(View.VISIBLE);
+                    txt_choosedoctor.setVisibility(View.VISIBLE);
+                 //   btn_checkin.setVisibility(View.VISIBLE);
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+
+        });
+        mSpinnerDoctor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                userSpinnertext = doctResponse.get(position).getId();
+                Log.i("dfgdfg", String.valueOf(deptSpinnertext));
+
+                userSelected = doctResponse.get(position).getFirstName();
+               // selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
+                //  ApiSearchUsers(selectedDepartment);
+               // ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
+                ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
+
+
+                    for (int i = 0; i < gServiceList.size(); i++) {
+                        if(gServiceList.get(i).getProvider()!=null) {
+                            if (doctResponse.get(position).getId()==(gServiceList.get(i).getProvider().getId())) {
+                                serviceList.add(gServiceList.get(i));
+
+                            }
+                        }
+                    }
+
+
                 LServicesList.clear();
                 LServicesList.addAll(serviceList);
                 if (LServicesList.size() == 0) {
@@ -2662,6 +2737,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             mService.setInstructions(response.body().get(i).getInstructions());
                             mService.setCallingMode(response.body().get(i).getCallingMode());
                             mService.setValue(response.body().get(i).getValue());
+                            mService.setProvider(response.body().get(i).getProvider());
                             LServicesList.add(mService);
                             if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
                                 if (mBusinessDataList != null) {
@@ -2671,16 +2747,15 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                         }
                                     }
                                 }
-                            }
-                            else {
-                                    if (!virtualServices) {
-                                        if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
-                                            LServicesList.remove(mService);
-
-                                        }
+                            } else {
+                                if (!virtualServices) {
+                                    if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
+                                        LServicesList.remove(mService);
 
                                     }
+
                                 }
+                            }
 
                         }
                         gServiceList.addAll(LServicesList);
@@ -2704,17 +2779,18 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                 ArrayAdapter<SearchDepartment> adapter = new ArrayAdapter<SearchDepartment>(mActivity, android.R.layout.simple_spinner_dropdown_item, depResponse.getDepartments());
                                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                                 mSpinnerDepartment.setAdapter(adapter);
-                                                deptSpinnertext = depResponse.getDepartmentId();
+                                                deptSpinnertext = depResponse.getDepartments().get(0).getDepartmentId();
                                                 ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
                                                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
                                                 selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
+                                                ApiSearchUsers(selectedDepartment);
                                                 departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
                                                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
 
                                                     for (int i = 0; i < gServiceList.size(); i++) {
                                                         if (serviceIds.get(serviceIndex) == gServiceList.get(i).getId()) {
                                                             serviceList.add(gServiceList.get(i));
-                                                            break;
+
                                                         }
                                                     }
 
@@ -2727,7 +2803,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                 mSpinnerService.setVisibility(View.VISIBLE);
                                                 txt_chooseservice.setVisibility(View.VISIBLE);
                                                 Config.logV("mServicesList" + LServicesList.size());
-                                                CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity,android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                                 mSpinnerService.setAdapter(adapter);
                                                 mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
@@ -2791,14 +2867,14 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                             if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                                              //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                                //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                             } else {
                                                 if (selectedDateFormat != null) {
 
-                                                //    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                                                    //    ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
                                                 } else {
 
-                                                 //   ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
+                                                    //   ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                                 }
                                             }
                                         }
@@ -2815,14 +2891,18 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                             // Department Ends Here
 
+
                         }
 
+                    }
+                }
+                        catch(Exception e){
+                        e.printStackTrace();
+                    }
 
-                    }  } catch (Exception e) {
-                    e.printStackTrace();
                 }
 
-            }
+
 
             @Override
             public void onFailure(Call<ArrayList<SearchAppoinment>> call, Throwable t) {
@@ -2833,9 +2913,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
             }
         });
-
-
     }
+
+
+
 
 //    private void ApiSearchViewAppointmentId(final int id) {
 //
@@ -3357,35 +3438,118 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     }
 
     private void ApiSearchUsers(int deptId) {
+        ApiInterface  apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        if (selectedDepartment != 0) {
+            Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(selectedDepartment, Integer.parseInt(accountID.split("-")[0]));
 
-        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(deptId, Integer.parseInt(accountID.split("-")[0]));
-        call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
-            @Override
-            public void onResponse(Call<ArrayList<SearchUsers>> call, Response<ArrayList<SearchUsers>> response) {
-                try {
-                    if (response.code() == 200) {
-                        doctResponse = response.body();
+            call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
 
-                    //    Log.i("getUser123", new Gson().toJson(response.body()));
+                                @Override
+                                public void onResponse(Call<ArrayList<SearchUsers>> call, Response<ArrayList<SearchUsers>> response) {
+                                    try {
+                                        if (response.code() == 200) {
+                                            doctResponse = response.body();
+                                            if (doctResponse.size() > 0) {
+                                                mSpinnerDoctor.setVisibility(View.VISIBLE);
+                                                txt_choosedoctor.setVisibility(View.VISIBLE);
+                                                ArrayAdapter<SearchUsers> adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item, doctResponse);
+                                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                mSpinnerDoctor.setAdapter(adapter);
+                                                userSpinnertext = doctResponse.get(i).getId();
+                                                ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
+                                            ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
+                                            selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
+                                            departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
+                                                for (int serviceIndex = 0; serviceIndex < doctResponse.size(); serviceIndex++) {
+
+                                                    for (int i = 0; i < gServiceList.size(); i++) {
+                                                        if(gServiceList.get(i).getProvider()!=null) {
+                                                            if (doctResponse.get(serviceIndex).getId()==(gServiceList.get(i).getProvider().getId())) {
+                                                                serviceList.add(gServiceList.get(i));
+
+                                                            }
+                                                        }
+                                                    }
+
+                                                }
+                                                LServicesList.clear();
+                                                LServicesList.addAll(serviceList);
+
+                                            }
+                                            if (LServicesList.size() > 0) {
+                                                mSpinnerService.setVisibility(View.VISIBLE);
+                                                txt_chooseservice.setVisibility(View.VISIBLE);
+                                                Config.logV("mServicesList" + LServicesList.size());
+                                                CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, gServiceList);
+                                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                mSpinnerService.setAdapter(adapter);
+                                                mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                                                livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
+                                            } else {
+
+                                                mSpinnerService.setVisibility(View.GONE);
+                                                txt_chooseservice.setVisibility(View.GONE);
+
+                                                if (LServicesList.size() == 1) {
+                                                    // String firstWord = "Check-in for ";
+                                                    String firstWord = Word_Change;
+                                                    String secondWord = LServicesList.get(0).getName();
+
+                                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                                            "fonts/Montserrat_Bold.otf");
+                                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                    tv_checkin_service.setText(spannable);
+                                                    mSpinnertext = LServicesList.get(0).getId();
+                                                    livetrack = LServicesList.get(0).getLivetrack();
+                                                    serviceSelected = LServicesList.get(0).getName();
+                                                    selectedService = LServicesList.get(0).getId();
 
 
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<SearchUsers>> call, Throwable t) {
-
-            }
+                                                    Date currentTime = new Date();
+                                                    final SimpleDateFormat sdf = new SimpleDateFormat(
+                                                            "yyyy-MM-dd", Locale.US);
+                                                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                                    System.out.println("UTC time: " + sdf.format(currentTime));
+                                                    //ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
 
 
-        });
+                                                    isPrepayment = LServicesList.get(0).getIsPrePayment();
+                                                    Config.logV("Payment------------" + isPrepayment);
+                                                    if (isPrepayment.equalsIgnoreCase("true")) {
 
-        // Department Ends Here
 
+                                                        sAmountPay = LServicesList.get(0).getMinPrePaymentAmount();
+                                                        APIPayment(modifyAccountID);
+
+                                                        Config.logV("Payment----sAmountPay--------" + sAmountPay);
+
+                                                    } else {
+                                                        LservicePrepay.setVisibility(View.GONE);
+                                                    }
+
+                                                }
+                                          }
+//
+                                    }
+
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+
+                                @Override
+                                public void onFailure(Call<ArrayList<SearchUsers>> call, Throwable t) {
+
+                                }
+
+
+                            });
+                        }
     }
 
 
@@ -3600,6 +3764,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         JSONArray waitlistArray = new JSONArray();
         JSONObject sjsonobj = new JSONObject();
         JSONObject virtualService = new JSONObject();
+        JSONObject pjsonobj = new JSONObject();
 
 
         try {
@@ -3614,6 +3779,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             }
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("phonenumber", phoneNumber);
+            if(userSpinnertext!=0){
+                pjsonobj.put("id",userSpinnertext);
+            }
 
 
             if (callingMode != null && callingMode.equalsIgnoreCase("whatsapp")) {
@@ -3697,6 +3865,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             // queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("appmtFor", waitlistArray);
             queueobj.putOpt("schedule", sjsonobj);
+            queueobj.putOpt("provider",pjsonobj);
             if (selectedServiceType.equalsIgnoreCase("virtualService")) {
                 queueobj.putOpt("virtualService", virtualService);
             }
