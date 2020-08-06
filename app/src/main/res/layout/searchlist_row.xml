@@ -291,7 +291,7 @@
                     android:id="@+id/txtspec3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding5"
+                    android:layout_marginLeft="@dimen/padding2"
                     android:gravity="center"
                     android:text="..."
                     android:textColor="@color/title_grey"

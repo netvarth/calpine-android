@@ -1489,24 +1489,25 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     //    myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
                     myViewHolder.tv_spec1.setMaxLines(1);
                     if (list_spec.size() > 2) {
-                        myViewHolder.tv_spec1.setMaxEms(5);
-                        myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec1.setMaxEms(5);
+//                        myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
                         myViewHolder.tv_spec22.setText(list_spec.get(1) + " , ");
                         myViewHolder.tv_spec22.setTextSize(13);
                         myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
                         myViewHolder.tv_spec22.setMaxLines(1);
                         // myViewHolder.tv_spec22.setWidth(dpToPx(120));
-                        myViewHolder.tv_spec22.setMaxEms(8);
-                        myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
-                        myViewHolder.tv_spec2.setTextSize(13);
-                        myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
-                        myViewHolder.tv_spec2.setMaxLines(1);
+//                        myViewHolder.tv_spec22.setMaxEms(8);
+//                        myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
+//                        myViewHolder.tv_spec2.setTextSize(13);
+//                        myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
+//                        myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec2.setMaxLines(1);
                         //  myViewHolder.tv_spec2.setWidth(dpToPx(120));
-                        myViewHolder.tv_spec2.setMaxEms(8);
-                        myViewHolder.tv_spec_more.setText(" > ");
-                        myViewHolder.tv_spec_more.setTextSize(20);
+//                        myViewHolder.tv_spec2.setMaxEms(8);
+                        myViewHolder.tv_spec_more.setText("+"+ + list_spec.size() + " " + "more");
+                        myViewHolder.tv_spec_more.setGravity(Gravity.CENTER);
+                        myViewHolder.tv_spec_more.setTextSize(13);
                         myViewHolder.tv_spec_more.setVisibility(View.VISIBLE);
                     } else {
                         myViewHolder.tv_spec22.setText(list_spec.get(1));
