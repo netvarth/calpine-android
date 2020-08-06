@@ -5,18 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/padding3"
-    android:layout_marginTop="@dimen/padding7"
     android:layout_marginRight="@dimen/padding3"
-    card_view:cardCornerRadius="10dp"
-    card_view:cardUseCompatPadding="true">
+    android:layout_marginTop="@dimen/dimen_2dp"
+    android:layout_marginBottom="@dimen/padding5"
+    card_view:cardCornerRadius="8dp">
 
     <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/layout_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/app_background"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/padding7">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/mLayout"
@@ -326,7 +325,12 @@
                     android:background="@drawable/input_border_cyan_bg"
                     android:gravity="left"
                     android:orientation="horizontal"
-                    android:padding="@dimen/padding5"></LinearLayout>
+                    android:paddingLeft="@dimen/dimen_5dp"
+                    android:paddingRight="@dimen/dimen_5dp"
+                    android:paddingTop="@dimen/padding2"
+                    android:paddingBottom="@dimen/padding2">
+
+                </LinearLayout>
 
 
             </HorizontalScrollView>
@@ -356,7 +360,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/padding5"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginRight="@dimen/padding5"
                     android:gravity="left"
                     android:orientation="horizontal"
@@ -431,7 +435,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="@dimen/padding5"
                 android:gravity="left"
                 android:orientation="horizontal"
@@ -546,7 +550,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/default_padding"
             android:orientation="horizontal">
 
             <TextView
@@ -562,6 +565,7 @@
                 android:text="Est WaitTime"
                 android:textColor="@color/white"
                 android:textSize="@dimen/txtsize_12"
+                android:layout_marginTop="6dp"
                 android:visibility="gone" />
 
             <Button
@@ -579,6 +583,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/txtsize_12"
+                android:layout_marginTop="6dp"
                 android:visibility="gone"/>
 
             <!--  android:textSize="@dimen/txtsize_subtitle" />-->

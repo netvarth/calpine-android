@@ -561,7 +561,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.L_layout_type.setVisibility(View.GONE);
                 myViewHolder.tv_qmessage.setVisibility(View.GONE);
             } else {
-                myViewHolder.tv_claimable.setVisibility(View.INVISIBLE);
+                myViewHolder.tv_claimable.setVisibility(View.GONE);
                 myViewHolder.L_layout_type.setVisibility(View.VISIBLE);
             }
         }
@@ -596,8 +596,10 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         if (searchdetailList.getAccountType() != null) {
             if (searchdetailList.getAccountType().equals("1")) {
-                myViewHolder.tv_branch_name.setText(searchdetailList.getBranch_name());
-                myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
+                if (searchdetailList.getBranch_name()!= null) {
+                    myViewHolder.tv_branch_name.setText(searchdetailList.getBranch_name());
+                    myViewHolder.tv_branch_name.setVisibility(View.VISIBLE);
+                }
             } else if ((searchdetailList.getAccountType().equals("0"))) {
 //                myViewHolder.tv_count.setVisibility(View.VISIBLE);
             } else {
@@ -614,7 +616,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 "fonts/Montserrat_Regular.otf");
         dynaText1.setTypeface(tyface_5);
         dynaText1.setText("Enquiry");
-        dynaText1.setTextSize(13);
+        dynaText1.setTextSize(10);
         dynaText1.setTextColor(context.getResources().getColor(R.color.title_grey));
         dynaText1.setPadding(5, 5, 5, 5);
         dynaText1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_message_gray, 0, 0);
@@ -858,7 +860,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     "fonts/Montserrat_Regular.otf");
             dynaText.setTypeface(tyface);
             dynaText.setText(context.getResources().getString(R.string.working_hours));
-            dynaText.setTextSize(13);
+            dynaText.setTextSize(10);
             dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
             dynaText.setPadding(5, 5, 5, 5);
             dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_clock, 0, 0);
@@ -965,7 +967,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         firstCoupon.setTypeface(tyface_3);
         firstCoupon.setText("SignUp Coupon");
         firstCoupon.setText(context.getResources().getString(R.string.first_coupon));
-        firstCoupon.setTextSize(13);
+        firstCoupon.setTextSize(10);
         firstCoupon.setTextColor(context.getResources().getColor(R.color.title_grey));
         firstCoupon.setPadding(5, 5, 5, 5);
         firstCoupon.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
@@ -989,7 +991,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 "fonts/Montserrat_Regular.otf");
         dynaText2.setTypeface(tyface_2);
         dynaText2.setText("Coupons");
-        dynaText2.setTextSize(13);
+        dynaText2.setTextSize(10);
         dynaText2.setTextColor(context.getResources().getColor(R.color.title_grey));
         dynaText2.setPadding(5, 5, 5, 5);
         dynaText2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
@@ -1021,7 +1023,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     dynaText.setTypeface(tyface);
                     dynaText.setText(Config.toTitleCase(searchdetailList.getParking_type_location1()) + " Parking ");
-                    dynaText.setTextSize(13);
+                    dynaText.setTextSize(10);
                     dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                     dynaText.setPadding(5, 5, 5, 5);
                     dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_parking, 0, 0);
@@ -1046,7 +1048,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         "fonts/Montserrat_Regular.otf");
                 dynaText.setTypeface(tyface);
                 dynaText.setText("24 Hours");
-                dynaText.setTextSize(13);
+                dynaText.setTextSize(10);
                 dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                 dynaText.setPadding(5, 5, 5, 5);
                 dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_24hours, 0, 0);
@@ -1070,7 +1072,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         "fonts/Montserrat_Regular.otf");
                 dynaText.setTypeface(tyface);
                 dynaText.setText("Emergency");
-                dynaText.setTextSize(13);
+                dynaText.setTextSize(10);
                 dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                 dynaText.setPadding(5, 5, 5, 5);
                 dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
@@ -1094,7 +1096,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         "fonts/Montserrat_Regular.otf");
                 dynaText.setTypeface(tyface);
                 dynaText.setText("Ambulance");
-                dynaText.setTextSize(13);
+                dynaText.setTextSize(10);
                 dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                 dynaText.setPadding(5, 5, 5, 5);
                 dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_ambulance, 0, 0);
@@ -1118,7 +1120,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         "fonts/Montserrat_Regular.otf");
                 dynaText.setTypeface(tyface);
                 dynaText.setText("First Aid");
-                dynaText.setTextSize(13);
+                dynaText.setTextSize(10);
                 dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                 dynaText.setPadding(5, 5, 5, 5);
                 dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_firstaid, 0, 0);
@@ -1142,7 +1144,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         "fonts/Montserrat_Regular.otf");
                 dynaText.setTypeface(tyface);
                 dynaText.setText("Emergency");
-                dynaText.setTextSize(13);
+                dynaText.setTextSize(10);
                 dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                 dynaText.setPadding(5, 5, 5, 5);
                 dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
@@ -1168,7 +1170,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         "fonts/Montserrat_Regular.otf");
                 dynaText.setTypeface(tyface);
                 dynaText.setText("Emergency");
-                dynaText.setTextSize(13);
+                dynaText.setTextSize(10);
                 dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                 dynaText.setPadding(5, 5, 5, 5);
                 dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
@@ -1193,7 +1195,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         "fonts/Montserrat_Regular.otf");
                 dynaText.setTypeface(tyface);
                 dynaText.setText("Trauma");
-                dynaText.setTextSize(13);
+                dynaText.setTextSize(10);
                 dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
                 dynaText.setPadding(5, 5, 5, 5);
                 dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_trauma, 0, 0);
