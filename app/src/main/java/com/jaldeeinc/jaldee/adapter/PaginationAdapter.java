@@ -1505,7 +1505,8 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 //                        myViewHolder.tv_spec2.setMaxLines(1);
                         //  myViewHolder.tv_spec2.setWidth(dpToPx(120));
 //                        myViewHolder.tv_spec2.setMaxEms(8);
-                        myViewHolder.tv_spec_more.setText("+"+ + list_spec.size() + " " + "more");
+                        int count = list_spec.size() - 2;
+                        myViewHolder.tv_spec_more.setText("+"+ + count + " " + "more");
                         myViewHolder.tv_spec_more.setGravity(Gravity.CENTER);
                         myViewHolder.tv_spec_more.setTextSize(13);
                         myViewHolder.tv_spec_more.setVisibility(View.VISIBLE);
