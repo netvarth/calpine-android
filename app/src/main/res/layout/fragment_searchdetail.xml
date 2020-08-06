@@ -175,7 +175,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/padding3"
-            android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
+            android:nestedScrollingEnabled="false">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
 
         <ProgressBar
