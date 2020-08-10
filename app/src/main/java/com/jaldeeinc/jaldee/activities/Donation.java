@@ -3656,7 +3656,7 @@ public class Donation extends AppCompatActivity implements PaymentResultWithData
                 queueobj.put("date", formattedDate);
                 queueobj.put("donationAmount", tv_don_amount.getText().toString());
                 service.put("id", selectedService);
-              location.put("id", serviceId);
+                location.put("id", serviceId);
 
             // service.putOpt("serviceType",mServiceType);
 

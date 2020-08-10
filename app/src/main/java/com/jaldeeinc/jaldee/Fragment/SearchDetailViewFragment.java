@@ -1093,6 +1093,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         LSpecialization_2.setVisibility(View.VISIBLE);
                         tv_spec1.setVisibility(View.VISIBLE);
                         String specialization = getBussinessData.getSpecialization().get(0).toString() + ", " + getBussinessData.getSpecialization().get(1).toString() +", ";
+                        int remainingCount = size -2;
+                        tv_seeAll.setText("+" + remainingCount + " " + "more");
                         String more =  tv_seeAll.getText().toString();
                         final Spannable spannable1 = new SpannableString(specialization + " " +  more);
                         spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),

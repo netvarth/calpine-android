@@ -248,7 +248,7 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/dimen_5dp"
                 android:paddingRight="@dimen/dimen_5dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/txtworking"
@@ -262,7 +262,7 @@
                     android:textColor="@color/title_grey_light"
                     android:textSize="@dimen/txtsize_hint_11"
                     android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/txtopen"
@@ -278,7 +278,7 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/txtsize_title_term_small"
                     android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -313,7 +313,8 @@
                         android:text="Monday - "
                         android:textColor="@color/black"
                         android:textSize="@dimen/txtsize_12"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/txtwork1"
@@ -326,7 +327,8 @@
                         android:lineSpacingExtra="@dimen/padding3"
                         android:textColor="@color/black"
                         android:textSize="@dimen/txtsize_12"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
 
@@ -342,7 +344,8 @@
                     android:text="See All"
                     android:textColor="@color/title_consu"
                     android:textSize="@dimen/txtsize_title_term_small"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
             </LinearLayout>
 
 

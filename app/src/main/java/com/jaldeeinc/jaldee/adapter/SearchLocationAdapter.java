@@ -458,8 +458,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         });
         if (searchLoclist.getbSchedule() != null) {
             if (searchLoclist.getbSchedule().getTimespec().size() > 0) {
-                myViewHolder.txtworking.setVisibility(View.VISIBLE);
-                myViewHolder.LWorkinHrs.setVisibility(View.VISIBLE);
+                myViewHolder.txtworking.setVisibility(View.GONE); // Management asked to hide working hours
+                myViewHolder.LWorkinHrs.setVisibility(View.GONE);
                 String workingHrs = null;
                 Config.logV("---Place 3333-------" + searchLoclist.getbSchedule().getTimespec().size());
                 for (int k = 0; k < searchLoclist.getbSchedule().getTimespec().size(); k++) {
@@ -1152,7 +1152,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     if (searchLoclist.getId() == mQueueList.get(i).getNextAvailableQueue().getLocation().getId()) {
                         //open Now
                         if (mQueueList.get(i).getNextAvailableQueue().isOpenNow()) {
-                            myViewHolder.tv_open.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_open.setVisibility(View.GONE); // Management asked to hide open now
                         } else {
                             myViewHolder.tv_open.setVisibility(View.GONE);
                         }
@@ -1470,15 +1470,16 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         myViewHolder.btn_checkin_expand.setTextColor(mContext.getResources().getColor(R.color.white));
         myViewHolder.btn_checkin_expand.setEnabled(true);
         myViewHolder.btn_checkin_expand.setVisibility(View.VISIBLE);
-
         myViewHolder.LService_2.setVisibility(View.VISIBLE);
         myViewHolder.txtservices.setVisibility(View.VISIBLE);
     }
 
     private String getDepartmentName(int department) {
-        for (int i = 0; i < mSearchDepartmentList.size(); i++) {
-            if (Integer.parseInt(mSearchDepartmentList.get(i).getDepartmentId()) == department) {
-                return mSearchDepartmentList.get(i).getDepartmentName();
+        if(mSearchDepartmentList!=null) {
+            for (int i = 0; i < mSearchDepartmentList.size(); i++) {
+                if (Integer.parseInt(mSearchDepartmentList.get(i).getDepartmentId()) == department) {
+                    return mSearchDepartmentList.get(i).getDepartmentName();
+                }
             }
         }
         return "";

@@ -144,7 +144,7 @@ public class DeptFragment extends RootFragment {
         location = searchDetailViewFragment.mSearchLocList.get(0);
         mSearchSettings = searchDetailViewFragment.mSearchSettings;
         for (int i = 0; i < departmentServices.getUsers().size(); i++) {
-            idsCheckin.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
+            idsCheckin.add(departmentServices.getUsers().get(i).getId() +"-"+location.getId());
             idsAppt.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
         }
         ApiLoadQsAndSchedulesList(idsCheckin, idsAppt, mBusinessDataLists);;
