@@ -89,7 +89,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     String jdnDiscount, jdnMaxvalue;
     ImageView tv_jdn;
     TextView mImageViewText;
-    private boolean fromUser = false;
+
+    boolean from_user = false;
 
 
     public DeptListAdapter(FragmentActivity activity, List<DepartmentUserSearchModel> msearchList, SearchDetailViewFragment searchDetailViewFragment, Boolean firstCouponAvailable, Boolean couponAvailable,AdapterCallback mAdapterCallback) {
@@ -680,8 +681,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
                 Config.logV("Popular Text__________@@@Dele");
                 String unique_id = searchdetailList.getParentSearchViewDetail().getUniqueId();
-                fromUser = true;
-                searchDetailViewFragment.onMethodCallback(searchdetailList, fromUser,searchdetailList.getParentSearchViewDetail().getUniqueId());
+
+                from_user = true;
+                searchDetailViewFragment.onMethodCallback(searchdetailList, from_user, unique_id);
             }
         });
 //
@@ -730,6 +732,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         DatabaseHandler db = new DatabaseHandler(context);
         domainList = db.getSubDomainsByFilter(searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName(), searchdetailList.getSearchViewDetail().getUserSubdomain());
         myViewHolder.tv_domain.setText(domainList.getDisplayname());
+
 
         if (searchdetailList.getLocation().getPlace() != null) {
             myViewHolder.tv_location.setVisibility(View.VISIBLE);
@@ -1368,7 +1371,10 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iAppointment.putExtra("sector", searchdetailList.getParentSearchViewDetail().getServiceSector().getDomain());
                 iAppointment.putExtra("subsector", searchdetailList.getParentSearchViewDetail().getServiceSubSector().getSubDomain());
                 iAppointment.putExtra("terminology", termilogy);
-                iAppointment.putExtra("userId", searchdetailList.getSearchViewDetail().getId());
+
+                iAppointment.putExtra("userId",Integer.parseInt(searchdetailList.getScheduleList().getProvider().getId()));
+                iAppointment.putExtra("departmentId",String.valueOf(searchdetailList.getServices().get(0).getDepartment()));
+                iAppointment.putExtra("virtualServices",String.valueOf(searchdetailList.getSearchViewDetail().isVirtualServices()));
 //                iAppointment.putExtra("isshowtoken", searchdetailList.getQueueList().isShowToken());
 //                iAppointment.putExtra("getAvail_date", searchdetailList.getScheduleList().getAvailableSchedule().);
                 v.getContext().startActivity(iAppointment);

@@ -1095,6 +1095,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 //                            Log.i("All Popular Search ", new Gson().toJson(mPopularSearch));
 
                             db.insertPopularSearchInfo(mPopularSearch);
+                            db = new DatabaseHandler(mContext);
+                            db.DeleteSubDomain();
+                            db.insertSubDomainList(mSubDomain);
 //                            db.insertPopularSearchInfo();
 
                             db = new DatabaseHandler(mContext);
