@@ -615,15 +615,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 if (mFrom.equalsIgnoreCase("searchdetail_future") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
                     modifyAccountID = accountID;
                 }
-                else if(mFrom.equalsIgnoreCase("multiusercheckin")){
+                else if(mFrom.equalsIgnoreCase("multiusercheckin") || mFrom.equalsIgnoreCase("searchdetail_user")){
                     modifyAccountID = accountID;
                     userId = extras.getInt("userId");
                     departmentId = extras.getString("departmentId");
                     virtualService = extras.getString("virtualServices");
-
-
-
-
                 }
                 else {
                     modifyAccountID = accountID.substring(0, accountID.indexOf("-"));

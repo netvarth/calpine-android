@@ -251,7 +251,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
                 iCheckIn.putExtra("serviceId", userDetails.get(position).getLocation().getId());
                 iCheckIn.putExtra("uniqueID", userDetails.get(position).getParentSearchViewDetail().getUniqueId());
-                iCheckIn.putExtra("accountID", userDetails.get(position).getSearchViewDetail().getId());
+                iCheckIn.putExtra("accountID",String.valueOf(userDetails.get(position).getSearchViewDetail().getId()));
                 iCheckIn.putExtra("from", "searchdetail_future");
                 iCheckIn.putExtra("title", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 iCheckIn.putExtra("place", userDetails.get(position).getLocation().getPlace());
@@ -288,7 +288,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 Intent iAppointment = new Intent(v.getContext(), Appointment.class);
                 iAppointment.putExtra("serviceId", userDetails.get(position).getLocation().getId());
                 iAppointment.putExtra("uniqueID", userDetails.get(position).getParentSearchViewDetail().getUniqueId());
-                iAppointment.putExtra("accountID", userDetails.get(position).getSearchViewDetail().getId());
+                iAppointment.putExtra("accountID",String.valueOf(userDetails.get(position).getSearchViewDetail().getId()));
                 iAppointment.putExtra("from", "searchdetail_future");
                 iAppointment.putExtra("title", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 iAppointment.putExtra("place", userDetails.get(position).getLocation().getPlace());
