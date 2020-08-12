@@ -59,6 +59,7 @@ import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.model.ContactModel;
 import com.jaldeeinc.jaldee.model.DepartmentModal;
+import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.SocialMediaModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
@@ -86,6 +87,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -190,6 +192,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchAppointmentDepartmentServices> LaServicesList = new ArrayList<>();
     ArrayList<SearchDonation> gServiceList = new ArrayList<>();
     ArrayList<SearchAppointmentDepartmentServices> aServiceList = new ArrayList<>();
+    boolean from_user = false;
+    DepartmentUserSearchModel searchdetailList;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -239,6 +245,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         if (bundle != null) {
             home = bundle.getString("home");
             homeUniqueId = bundle.getString("homeUniqueId");
+            from_user = bundle.getBoolean("user");
+            searchdetailList = (DepartmentUserSearchModel) bundle.getSerializable("userdetail");
             if (home != null && home.equals("home")) {
                 if (homeUniqueId != null) {
 //                    apiFetchIdFromDeepLink(homeUniqueId);
@@ -1399,7 +1407,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             ic_jaldeeverifiedIcon.setVisibility(View.GONE);
         }
         tv_msg.setEnabled(true);
-        tv_busName.setText(getBussinessData.getBusinessName());
+        if(from_user){
+            tv_busName.setText(searchdetailList.getSearchViewDetail().getBusinessName());
+        }
+        else{
+        tv_busName.setText(getBussinessData.getBusinessName());}
         rating.setRating(getBussinessData.getAvgRating());
         if (getBussinessData.getServiceSector().getDisplayName() != null && getBussinessData.getServiceSubSector().getDisplayName() != null) {
             tv_domain.setText(getBussinessData.getServiceSector().getDisplayName() + " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
@@ -2293,11 +2305,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         dialog.dismiss();
         refreshList();
     }
-    public void onMethodCallback(String value, String claimable) {
+    public void onMethodCallback(DepartmentUserSearchModel searchdetailList,boolean from_user, String uniqueID) {
         Bundle bundle = new Bundle();
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
-        bundle.putString("uniqueID", value);
-        bundle.putString("claimable", claimable);
+        bundle.putSerializable("userdetail",  searchdetailList);
+        bundle.putBoolean("user", from_user);
+        bundle.putString("uniqueID",uniqueID);
         pfFragment.setArguments(bundle);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);

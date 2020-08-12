@@ -40,9 +40,12 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
+import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
+import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
+import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -85,6 +88,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     String jdnDiscount, jdnMaxvalue;
     ImageView tv_jdn;
     TextView mImageViewText;
+    boolean from_user = false;
+    SearchModel domainList = new SearchModel();
 
 
     public DeptListAdapter(FragmentActivity activity, List<DepartmentUserSearchModel> msearchList, SearchDetailViewFragment searchDetailViewFragment,Boolean firstCouponAvailable,Boolean couponAvailable) {
@@ -674,7 +679,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
                 Config.logV("Popular Text__________@@@Dele");
                 String unique_id = searchdetailList.getParentSearchViewDetail().getUniqueId();
-                searchDetailViewFragment.onMethodCallback(searchdetailList.getParentSearchViewDetail().getUniqueId(),searchdetailList.getParentSearchViewDetail().getClaimStatus());
+                from_user = true;
+                searchDetailViewFragment.onMethodCallback(searchdetailList, from_user, unique_id);
             }
         });
 //
@@ -719,6 +725,14 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //        } else {
 //            myViewHolder.tv_domain.setVisibility(View.GONE);
 //        }
+        DatabaseHandler db = new DatabaseHandler(context);
+        domainList = db.getSubDomainsByFilter(searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName(), searchdetailList.getSearchViewDetail().getUserSubdomain());
+        myViewHolder.tv_domain.setText(domainList.getDisplayname());
+
+
+
+
+
         if (searchdetailList.getLocation().getPlace() != null) {
             myViewHolder.tv_location.setVisibility(View.VISIBLE);
             // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
@@ -1356,7 +1370,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iAppointment.putExtra("sector", searchdetailList.getParentSearchViewDetail().getServiceSector().getDomain());
                 iAppointment.putExtra("subsector", searchdetailList.getParentSearchViewDetail().getServiceSubSector().getSubDomain());
                 iAppointment.putExtra("terminology", termilogy);
-                iAppointment.putExtra("userId",searchdetailList.getSearchViewDetail().getId());
+                iAppointment.putExtra("userId",Integer.parseInt(searchdetailList.getScheduleList().getProvider().getId()));
+                iAppointment.putExtra("departmentId",String.valueOf(searchdetailList.getServices().get(0).getDepartment()));
+                iAppointment.putExtra("virtualServices",String.valueOf(searchdetailList.getSearchViewDetail().isVirtualServices()));
 //                iAppointment.putExtra("isshowtoken", searchdetailList.getQueueList().isShowToken());
 //                iAppointment.putExtra("getAvail_date", searchdetailList.getScheduleList().getAvailableSchedule().);
                 v.getContext().startActivity( iAppointment);

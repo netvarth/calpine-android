@@ -371,5 +371,15 @@ public class SearchViewDetail {
 
     String claimStatus;
 
+    public int getUserSubdomain() {
+        return userSubdomain;
+    }
+
+    public void setUserSubdomain(int userSubdomain) {
+        this.userSubdomain = userSubdomain;
+    }
+
+    int userSubdomain;
+
 
 }
