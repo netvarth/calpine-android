@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.model;
 
-public class NextAvailableSchedule {
+import java.io.Serializable;
+
+public class NextAvailableSchedule implements Serializable {
 
     private LocationModel location;
     private String apptState;

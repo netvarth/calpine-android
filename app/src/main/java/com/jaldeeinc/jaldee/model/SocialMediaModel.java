@@ -1,10 +1,12 @@
 package com.jaldeeinc.jaldee.model;
 
+import java.io.Serializable;
+
 /**
  * Created by sharmila on 13/12/18.
  */
 
-public class SocialMediaModel {
+public class SocialMediaModel implements Serializable {
 
     String resource;
 

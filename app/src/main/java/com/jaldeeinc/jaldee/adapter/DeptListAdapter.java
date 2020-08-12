@@ -40,9 +40,12 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
+import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
+import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
+import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.JdnResponse;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -71,6 +74,7 @@ import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 public class DeptListAdapter extends RecyclerView.Adapter {
     List<DepartmentUserSearchModel> searchList;
+    SearchModel domainList = new SearchModel();
     private static final int ITEM = 0;
     private static final int LOADING = 1;
     private AdapterCallback mAdapterCallback;
@@ -85,21 +89,23 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     String jdnDiscount, jdnMaxvalue;
     ImageView tv_jdn;
     TextView mImageViewText;
+    private boolean fromUser = false;
 
 
-    public DeptListAdapter(FragmentActivity activity, List<DepartmentUserSearchModel> msearchList, SearchDetailViewFragment searchDetailViewFragment,Boolean firstCouponAvailable,Boolean couponAvailable) {
+    public DeptListAdapter(FragmentActivity activity, List<DepartmentUserSearchModel> msearchList, SearchDetailViewFragment searchDetailViewFragment, Boolean firstCouponAvailable, Boolean couponAvailable,AdapterCallback mAdapterCallback) {
         this.searchList = msearchList;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.activity = activity;
         this.couponAvailable = couponAvailable;
         this.firstCouponAvailable = firstCouponAvailable;
+        this.mAdapterCallback = mAdapterCallback;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView deptName;
-        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_spec_more, tv_peopleahead,tv_qmessage;
-        LinearLayout L_specialization, L_services, L_layout_type, L_checkin,L_appointments;
+        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_spec_more, tv_peopleahead, tv_qmessage;
+        LinearLayout L_specialization, L_services, L_layout_type, L_checkin, L_appointments;
 
         ImageView ic_jaldeeverifiedIcon;
         ImageView profile;
@@ -169,8 +175,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         parent.setOrientation(LinearLayout.HORIZONTAL);
         parent.setLayoutParams(params1);
         handleBusinesshours(myViewHolder, searchdetailList, parent, params1);
-        handleEnquiry(myViewHolder, searchdetailList,parent, params1);
-        handleCoupons(myViewHolder, searchdetailList,parent, params1);
+        handleEnquiry(myViewHolder, searchdetailList, parent, params1);
+        handleCoupons(myViewHolder, searchdetailList, parent, params1);
         myViewHolder.layout_type.addView(parent);
 
 //
@@ -443,214 +449,214 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //            }
 //        }
         if (searchdetailList.getLocation().getParkingType() != null) {
-       //     if (searchdetailList.getLocation().getParkingType().equalsIgnoreCase("1")) {
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText(Config.toTitleCase(searchdetailList.getLocation().getParkingType()) + " Parking ");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_parking, 0, 0);
-                dynaText.setMaxLines(1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                dynaText.setLayoutParams(params1);
-                parent.addView(dynaText);
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, searchdetailList.getLocation().getParkingType() + " parking available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-          //  }
+            //     if (searchdetailList.getLocation().getParkingType().equalsIgnoreCase("1")) {
+            TextView dynaText = new TextView(context);
+            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            dynaText.setTypeface(tyface);
+            dynaText.setText(Config.toTitleCase(searchdetailList.getLocation().getParkingType()) + " Parking ");
+            dynaText.setTextSize(11);
+            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+            dynaText.setPadding(5, 5, 5, 5);
+            dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_parking, 0, 0);
+            dynaText.setMaxLines(1);
+            params1.setMargins(10, 7, 10, 7);
+            dynaText.setGravity(Gravity.LEFT);
+            dynaText.setLayoutParams(params1);
+            parent.addView(dynaText);
+            dynaText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(activity, searchdetailList.getLocation().getParkingType() + " parking available", Toast.LENGTH_SHORT).show();
+                }
+            });
+            //  }
         }
         if (searchdetailList.getLocation().isOpen24hours()) {
 
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("24 Hours");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_24hours, 0, 0);
-                dynaText.setMaxLines(1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                dynaText.setLayoutParams(params1);
-                parent.addView(dynaText);
+            TextView dynaText = new TextView(context);
+            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            dynaText.setTypeface(tyface);
+            dynaText.setText("24 Hours");
+            dynaText.setTextSize(11);
+            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+            dynaText.setPadding(5, 5, 5, 5);
+            dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_24hours, 0, 0);
+            dynaText.setMaxLines(1);
+            params1.setMargins(10, 7, 10, 7);
+            dynaText.setGravity(Gravity.LEFT);
+            dynaText.setLayoutParams(params1);
+            parent.addView(dynaText);
 
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Open 24 hours", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            dynaText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(activity, "Open 24 hours", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
         if (searchdetailList.getLocation().getLocationVirtualFields().getDentistemergencyservices() != null) {
-          //  if (searchdetailList.getDentistemergencyservices_location1().equalsIgnoreCase("1")) {
+            //  if (searchdetailList.getDentistemergencyservices_location1().equalsIgnoreCase("1")) {
 
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("Emergency");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
-                dynaText.setMaxLines(1);
+            TextView dynaText = new TextView(context);
+            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            dynaText.setTypeface(tyface);
+            dynaText.setText("Emergency");
+            dynaText.setTextSize(11);
+            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+            dynaText.setPadding(5, 5, 5, 5);
+            dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+            dynaText.setMaxLines(1);
 
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
+            dynaText.setLayoutParams(params1);
+            params1.setMargins(10, 7, 10, 7);
+            dynaText.setGravity(Gravity.LEFT);
+            parent.addView(dynaText);
 
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-          //  }
+            dynaText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
+                }
+            });
+            //  }
         }
         if (searchdetailList.getLocation().getLocationVirtualFields().getDocambulance() != null) {
-          //  if (searchdetailList.getDocambulance_location1().equalsIgnoreCase("1")) {
+            //  if (searchdetailList.getDocambulance_location1().equalsIgnoreCase("1")) {
 
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("Ambulance");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_ambulance, 0, 0);
-                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                dynaText.setMaxLines(1);
+            TextView dynaText = new TextView(context);
+            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            dynaText.setTypeface(tyface);
+            dynaText.setText("Ambulance");
+            dynaText.setTextSize(10);
+            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+            dynaText.setPadding(5, 5, 5, 5);
+            dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_ambulance, 0, 0);
+            //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+            dynaText.setMaxLines(1);
 
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
+            dynaText.setLayoutParams(params1);
+            params1.setMargins(10, 7, 10, 7);
+            dynaText.setGravity(Gravity.LEFT);
+            parent.addView(dynaText);
 
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Ambulance services available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-          //  }
+            dynaText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(activity, "Ambulance services available", Toast.LENGTH_SHORT).show();
+                }
+            });
+            //  }
         }
         if (searchdetailList.getLocation().getLocationVirtualFields().getFirstaid() != null) {
-          //  if (searchdetailList.getFirstaid_location1().equalsIgnoreCase("1")) {
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("First Aid");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_firstaid, 0, 0);
-                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                dynaText.setMaxLines(1);
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
+            //  if (searchdetailList.getFirstaid_location1().equalsIgnoreCase("1")) {
+            TextView dynaText = new TextView(context);
+            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            dynaText.setTypeface(tyface);
+            dynaText.setText("First Aid");
+            dynaText.setTextSize(10);
+            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+            dynaText.setPadding(5, 5, 5, 5);
+            dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_firstaid, 0, 0);
+            //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+            dynaText.setMaxLines(1);
+            dynaText.setLayoutParams(params1);
+            params1.setMargins(10, 7, 10, 7);
+            dynaText.setGravity(Gravity.LEFT);
+            parent.addView(dynaText);
 
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "First aid services available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-          //  }
+            dynaText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(activity, "First aid services available", Toast.LENGTH_SHORT).show();
+                }
+            });
+            //  }
         }
         if (searchdetailList.getLocation().getLocationVirtualFields().getPhysiciansemergencyservices() != null) {
-         //   if (searchdetailList.getPhysiciansemergencyservices_location1().equalsIgnoreCase("1")) {
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("Emergency");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
-                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                dynaText.setMaxLines(1);
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
+            //   if (searchdetailList.getPhysiciansemergencyservices_location1().equalsIgnoreCase("1")) {
+            TextView dynaText = new TextView(context);
+            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            dynaText.setTypeface(tyface);
+            dynaText.setText("Emergency");
+            dynaText.setTextSize(10);
+            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+            dynaText.setPadding(5, 5, 5, 5);
+            dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+            //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+            dynaText.setMaxLines(1);
+            dynaText.setLayoutParams(params1);
+            params1.setMargins(10, 7, 10, 7);
+            dynaText.setGravity(Gravity.LEFT);
+            parent.addView(dynaText);
 
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
-                    }
-                });
-          //  }
+            dynaText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
+                }
+            });
+            //  }
         }
 
         if (searchdetailList.getLocation().getLocationVirtualFields().getHosemergencyservices() != null) {
 
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("Emergency");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
-                dynaText.setMaxLines(1);
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            TextView dynaText = new TextView(context);
+            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            dynaText.setTypeface(tyface);
+            dynaText.setText("Emergency");
+            dynaText.setTextSize(11);
+            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+            dynaText.setPadding(5, 5, 5, 5);
+            dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);
+            dynaText.setMaxLines(1);
+            dynaText.setLayoutParams(params1);
+            params1.setMargins(10, 7, 10, 7);
+            dynaText.setGravity(Gravity.LEFT);
+            parent.addView(dynaText);
+            dynaText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(activity, "Emergency services available", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
-        if (searchdetailList.getLocation().getTraumacentre()!= null) {
-         //   if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
+        if (searchdetailList.getLocation().getTraumacentre() != null) {
+            //   if (searchdetailList.getTraumacentre_location1().equalsIgnoreCase("1")) {
 
-                TextView dynaText = new TextView(context);
-                Typeface tyface = Typeface.createFromAsset(context.getAssets(),
-                        "fonts/Montserrat_Regular.otf");
-                dynaText.setTypeface(tyface);
-                dynaText.setText("Trauma");
-                dynaText.setTextSize(13);
-                dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
-                dynaText.setPadding(5, 5, 5, 5);
-                dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_trauma, 0, 0);
-                //dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                dynaText.setMaxLines(1);
+            TextView dynaText = new TextView(context);
+            Typeface tyface = Typeface.createFromAsset(context.getAssets(),
+                    "fonts/Montserrat_Regular.otf");
+            dynaText.setTypeface(tyface);
+            dynaText.setText("Trauma");
+            dynaText.setTextSize(11);
+            dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
+            dynaText.setPadding(5, 5, 5, 5);
+            dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_trauma, 0, 0);
+            //dynaText.setEllipsize(TextUtils.TruncateAt.END);
+            dynaText.setMaxLines(1);
 
-                dynaText.setLayoutParams(params1);
-                params1.setMargins(10, 7, 10, 7);
-                dynaText.setGravity(Gravity.LEFT);
-                parent.addView(dynaText);
+            dynaText.setLayoutParams(params1);
+            params1.setMargins(10, 7, 10, 7);
+            dynaText.setGravity(Gravity.LEFT);
+            parent.addView(dynaText);
 
-                dynaText.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(activity, "Trauma care available", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            dynaText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(activity, "Trauma care available", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-           // }
+            // }
         }
 //        myViewHolder.layout_type.addView(parent);
 //        //////////////////////////////////////////////////////////////
@@ -674,7 +680,8 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
                 Config.logV("Popular Text__________@@@Dele");
                 String unique_id = searchdetailList.getParentSearchViewDetail().getUniqueId();
-                searchDetailViewFragment.onMethodCallback(searchdetailList.getParentSearchViewDetail().getUniqueId(),searchdetailList.getParentSearchViewDetail().getClaimStatus());
+                fromUser = true;
+                searchDetailViewFragment.onMethodCallback(searchdetailList, fromUser,searchdetailList.getParentSearchViewDetail().getUniqueId());
             }
         });
 //
@@ -713,12 +720,17 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 //        } else {
 //            myViewHolder.tv_name.setText(searchdetailList.getTitle());
 //        }
-//        if (searchdetailList.getLocation().getSector() != null) {
+//        if (searchdetailList.getLocation().getService() != null) {
 //            myViewHolder.tv_domain.setVisibility(View.VISIBLE);
-//            myViewHolder.tv_domain.setText(searchdetailList.getLocation().getSector());
+//            myViewHolder.tv_domain.setText(searchdetailList.getLocation().getService());
 //        } else {
 //            myViewHolder.tv_domain.setVisibility(View.GONE);
 //        }
+
+        DatabaseHandler db = new DatabaseHandler(context);
+        domainList = db.getSubDomainsByFilter(searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName(), searchdetailList.getSearchViewDetail().getUserSubdomain());
+        myViewHolder.tv_domain.setText(domainList.getDisplayname());
+
         if (searchdetailList.getLocation().getPlace() != null) {
             myViewHolder.tv_location.setVisibility(View.VISIBLE);
             // myViewHolder.tv_location.setText(searchdetailList.getPlace1());
@@ -1156,7 +1168,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         firstCoupon.setTypeface(tyface_3);
         firstCoupon.setText("SignUp Coupon");
         firstCoupon.setText(context.getResources().getString(R.string.first_coupon));
-        firstCoupon.setTextSize(13);
+        firstCoupon.setTextSize(11);
         firstCoupon.setTextColor(context.getResources().getColor(R.color.title_grey));
         firstCoupon.setPadding(5, 5, 5, 5);
         firstCoupon.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
@@ -1180,7 +1192,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 "fonts/Montserrat_Regular.otf");
         dynaText2.setTypeface(tyface_2);
         dynaText2.setText("Coupons");
-        dynaText2.setTextSize(13);
+        dynaText2.setTextSize(11);
         dynaText2.setTextColor(context.getResources().getColor(R.color.title_grey));
         dynaText2.setPadding(5, 5, 5, 5);
         dynaText2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icc_coupon, 0, 0);
@@ -1205,7 +1217,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View view) {
 
-               searchDetailViewFragment.onMethodJdn(searchdetailList.getParentSearchViewDetail().getUniqueId());
+                searchDetailViewFragment.onMethodJdn(searchdetailList.getParentSearchViewDetail().getUniqueId());
 
             }
         });
@@ -1217,7 +1229,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 "fonts/Montserrat_Regular.otf");
         dynaText1.setTypeface(tyface_5);
         dynaText1.setText("Enquiry");
-        dynaText1.setTextSize(13);
+        dynaText1.setTextSize(11);
         dynaText1.setTextColor(context.getResources().getColor(R.color.title_grey));
         dynaText1.setPadding(5, 5, 5, 5);
         dynaText1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_message_gray, 0, 0);
@@ -1238,7 +1250,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         if (searchdetailList.getServices() != null) {
             final ArrayList serviceNames = new ArrayList();
             serviceNames.clear();
-            for(int i =0;i<searchdetailList.getServices().size();i++) {
+            for (int i = 0; i < searchdetailList.getServices().size(); i++) {
                 serviceNames.add(i, searchdetailList.getServices().get(i).getName());
             }
             if (searchdetailList.getServices().size() > 0) {
@@ -1259,7 +1271,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                             "fonts/Montserrat_Regular.otf");
                     dynaText.setTypeface(tyface);
                     dynaText.setText(searchdetailList.getServices().get(i).getName());
-                    dynaText.setTextSize(13);
+                    dynaText.setTextSize(11);
                     dynaText.setPadding(5, 0, 5, 0);
                     dynaText.setTextColor(context.getResources().getColor(R.color.title_consu));
                     dynaText.setPaintFlags(dynaText.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -1272,23 +1284,23 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     dynaText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                          //  ApiService(String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()), searchdetailList.getServices().get(finalI).getName(), searchdetailList.getSearchViewDetail().getBusinessName());
-                           for(int i = 0;i<searchdetailList.getServices().size();i++) {
-                               if (searchdetailList.getServices().get(i).getName().toLowerCase().toString().equalsIgnoreCase(searchdetailList.getServices().get(finalI).getName())) {
-                                   Intent iService = new Intent(activity, SearchServiceActivity.class);
-                                   iService.putExtra("name", searchdetailList.getServices().get(i).getName());
-                                   iService.putExtra("duration", searchdetailList.getServices().get(i).getServiceDuration());
-                                   iService.putExtra("price", searchdetailList.getServices().get(i).getTotalAmount());
-                                   iService.putExtra("desc", searchdetailList.getServices().get(i).getDescription());
-                                   iService.putExtra("servicegallery", searchdetailList.getServices().get(i).getServicegallery());
-                                   iService.putExtra("taxable", searchdetailList.getServices().get(i).isTaxable());
-                                   iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
-                                   iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
-                                   iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
-                                   activity.startActivity(iService);
+                            //  ApiService(String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()), searchdetailList.getServices().get(finalI).getName(), searchdetailList.getSearchViewDetail().getBusinessName());
+                            for (int i = 0; i < searchdetailList.getServices().size(); i++) {
+                                if (searchdetailList.getServices().get(i).getName().toLowerCase().toString().equalsIgnoreCase(searchdetailList.getServices().get(finalI).getName())) {
+                                    Intent iService = new Intent(activity, SearchServiceActivity.class);
+                                    iService.putExtra("name", searchdetailList.getServices().get(i).getName());
+                                    iService.putExtra("duration", searchdetailList.getServices().get(i).getServiceDuration());
+                                    iService.putExtra("price", searchdetailList.getServices().get(i).getTotalAmount());
+                                    iService.putExtra("desc", searchdetailList.getServices().get(i).getDescription());
+                                    iService.putExtra("servicegallery", searchdetailList.getServices().get(i).getServicegallery());
+                                    iService.putExtra("taxable", searchdetailList.getServices().get(i).isTaxable());
+                                    iService.putExtra("title", searchdetailList.getSearchViewDetail().getBusinessName());
+                                    iService.putExtra("isPrePayment", searchdetailList.getServices().get(i).isPrePayment());
+                                    iService.putExtra("MinPrePaymentAmount", searchdetailList.getServices().get(i).getMinPrePaymentAmount());
+                                    activity.startActivity(iService);
 
-                               }
-                           }
+                                }
+                            }
                         }
                     });
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -1310,7 +1322,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     dynaText.setText(" ... ");
                     myViewHolder.L_services.addView(dynaText);
                 }
-            }else {
+            } else {
                 myViewHolder.L_services.setVisibility(View.GONE);
             }
 //            try {
@@ -1348,7 +1360,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 Intent iAppointment = new Intent(v.getContext(), Appointment.class);
                 iAppointment.putExtra("serviceId", searchdetailList.getLocation().getId());
                 iAppointment.putExtra("uniqueID", String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
-                iAppointment.putExtra("accountID",String.valueOf(searchdetailList.getParentSearchViewDetail().getId()));
+                iAppointment.putExtra("accountID", String.valueOf(searchdetailList.getParentSearchViewDetail().getId()));
                 iAppointment.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
                 iAppointment.putExtra("from", "multiusercheckin");
                 iAppointment.putExtra("title", searchdetailList.getParentSearchViewDetail().getBusinessName());
@@ -1356,17 +1368,17 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iAppointment.putExtra("sector", searchdetailList.getParentSearchViewDetail().getServiceSector().getDomain());
                 iAppointment.putExtra("subsector", searchdetailList.getParentSearchViewDetail().getServiceSubSector().getSubDomain());
                 iAppointment.putExtra("terminology", termilogy);
-                iAppointment.putExtra("userId",searchdetailList.getSearchViewDetail().getId());
+                iAppointment.putExtra("userId", searchdetailList.getSearchViewDetail().getId());
 //                iAppointment.putExtra("isshowtoken", searchdetailList.getQueueList().isShowToken());
 //                iAppointment.putExtra("getAvail_date", searchdetailList.getScheduleList().getAvailableSchedule().);
-                v.getContext().startActivity( iAppointment);
+                v.getContext().startActivity(iAppointment);
             }
         });
         if (searchdetailList.getSearchViewDetail().isOnlinePresence()) {
-            if (searchdetailList.getScheduleList().getAvailableSchedule()!=null &&
+            if (searchdetailList.getScheduleList().getAvailableSchedule() != null &&
                     (searchdetailList.getScheduleList().getAvailableSchedule().isTodayAppt() ||
-            searchdetailList.getScheduleList().getAvailableSchedule().isFutureAppt())) {
-                    myViewHolder.L_appointments.setVisibility(View.VISIBLE);
+                            searchdetailList.getScheduleList().getAvailableSchedule().isFutureAppt())) {
+                myViewHolder.L_appointments.setVisibility(View.VISIBLE);
             } else {
                 myViewHolder.L_appointments.setVisibility(View.GONE);
             }
@@ -1374,6 +1386,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             myViewHolder.L_appointments.setVisibility(View.GONE);
         }
     }
+
     public void disableCheckinFeature(MyViewHolder myViewHolder) {
         myViewHolder.tv_WaitTime.setVisibility(View.GONE);
         disableCheckinButton(myViewHolder);
@@ -1384,6 +1397,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         myViewHolder.tv_Futuredate.setVisibility(View.GONE);
 //        myViewHolder.tv_count.setVisibility(View.GONE);
     }
+
     public void disableCheckinButton(MyViewHolder myViewHolder) {
         myViewHolder.btncheckin.setBackgroundColor(Color.parseColor("#cfcfcf"));
         myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.button_grey));
@@ -1397,11 +1411,12 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         myViewHolder.btncheckin.setEnabled(true);
         myViewHolder.btncheckin.setVisibility(View.VISIBLE);
     }
+
     private void handleCheckinInfo(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList) {
         Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.btncheckin.setTypeface(tyface_confm);
-        disableCheckinFeature (myViewHolder);
+        disableCheckinFeature(myViewHolder);
         myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
         if (searchdetailList.getQueueList().getNextAvailableQueue() != null) {
             myViewHolder.L_checkin.setVisibility(View.VISIBLE);
@@ -1450,7 +1465,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     myViewHolder.tv_peopleahead.setVisibility(View.GONE);
                                 } else { // Conventional (Token with Waiting time)
                                     myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                                    showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(),null);
+                                    showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), null);
 //                                    myViewHolder.tv_WaitTime.setText(spannable);
 //                                    myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
 //                                    String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
@@ -1459,19 +1474,19 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                             } else { // Conventional/Fixed
                                 myViewHolder.btncheckin.setText("Check-in".toUpperCase());
                                 myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                                showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(),null);
+                                showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), null);
 //                                String spannable = getWaitingTime(searchdetailList.getQueueList().getNextAvailableQueue());
 //                                myViewHolder.tv_WaitTime.setText(spannable);
 //                                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
 //                                String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
 //                                myViewHolder.tv_peopleahead.setText(message);
                             }
-                        }else{
+                        } else {
                             disableCheckinButton(myViewHolder);
                         }
                         if (date2 != null && date1.compareTo(date2) < 0) {
                             myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
-                            showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(),"future");
+                            showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), "future");
 //                            String spannable = getWaitingTime(searchdetailList.getQueueList().getNextAvailableQueue());
 //                            myViewHolder.tv_WaitTime.setText(spannable);
 //                            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
@@ -1499,7 +1514,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 Intent iCheckIn = new Intent(v.getContext(), CheckIn.class);
-                iCheckIn.putExtra("serviceId",searchdetailList.getLocation().getId());
+                iCheckIn.putExtra("serviceId", searchdetailList.getLocation().getId());
                 iCheckIn.putExtra("uniqueID", String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
                 iCheckIn.putExtra("accountID", String.valueOf(searchdetailList.getSearchViewDetail().getId()));
                 iCheckIn.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
@@ -1523,7 +1538,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 if (searchdetailList.getLocation() != null) {
                     iCheckIn.putExtra("serviceId", searchdetailList.getLocation().getId());
                 }
-                iCheckIn.putExtra("uniqueID",String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
+                iCheckIn.putExtra("uniqueID", String.valueOf(searchdetailList.getParentSearchViewDetail().getUniqueId()));
                 iCheckIn.putExtra("accountID", String.valueOf(searchdetailList.getSearchViewDetail().getId()));
                 iCheckIn.putExtra("googlemap", searchdetailList.getLocation().getGoogleMapUrl());
                 // iCheckIn.putExtra("waititme", myViewHolder.tv_WaitTime.getText().toString());
@@ -1540,8 +1555,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             }
         });
     }
+
     public void showWaitingTime(MyViewHolder myViewHolder, NextAvailableQModel searchdetailList, String type) {
-        if(searchdetailList.getServiceTime()!= null){
+        if (searchdetailList.getServiceTime() != null) {
             String firstWord = "Next Available Time ";
             String secondWord = "";
             if (type != null) {
@@ -1558,13 +1574,12 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                         "fonts/Montserrat_Bold.otf");
                 secondWord = "\n" + monthString + " " + day + ", " + searchdetailList.getServiceTime();
             } else {
-                secondWord =  "\nToday, " + searchdetailList.getServiceTime();
+                secondWord = "\nToday, " + searchdetailList.getServiceTime();
             }
             Spannable spannable = new SpannableString(firstWord + secondWord);
             // spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             myViewHolder.tv_WaitTime.setText(spannable);
-        }
-        else{
+        } else {
             //   myViewHolder.tv_WaitTime.setVisibility(View.GONE);
             String firstWord = "Est wait time";
             String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
@@ -1574,6 +1589,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
         myViewHolder.tv_peopleahead.setText(message);
     }
+
     public void setSpecializations(MyViewHolder myViewHolder, SearchViewDetail searchdetailList) {
         if (searchdetailList.getSpecialization() != null) {
             final List<String> list_spec = searchdetailList.getSpecialization();
@@ -1592,30 +1608,38 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     myViewHolder.tv_spec1.setTextSize(13);
                     myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
                     myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    //    myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
                     myViewHolder.tv_spec1.setMaxLines(1);
                     if (list_spec.size() > 2) {
-                        myViewHolder.tv_spec1.setMaxEms(5);
-                        myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec1.setMaxEms(5);
+//                        myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
                         myViewHolder.tv_spec22.setText(list_spec.get(1) + " , ");
                         myViewHolder.tv_spec22.setTextSize(13);
                         myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
                         myViewHolder.tv_spec22.setMaxLines(1);
-                        myViewHolder.tv_spec22.setMaxEms(8);
-                        myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
-                        myViewHolder.tv_spec2.setTextSize(13);
-                        myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
-                        myViewHolder.tv_spec2.setMaxLines(1);
-                        myViewHolder.tv_spec2.setMaxEms(8);
-                        myViewHolder.tv_spec_more.setText(" > ");
-                        myViewHolder.tv_spec_more.setTextSize(20);
+                        // myViewHolder.tv_spec22.setWidth(dpToPx(120));
+//                        myViewHolder.tv_spec22.setMaxEms(8);
+//                        myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
+//                        myViewHolder.tv_spec2.setTextSize(13);
+//                        myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
+//                        myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec2.setMaxLines(1);
+                        //  myViewHolder.tv_spec2.setWidth(dpToPx(120));
+//                        myViewHolder.tv_spec2.setMaxEms(8);
+                        int count = list_spec.size() - 2;
+                        myViewHolder.tv_spec_more.setText("+"+ + count + " " + "more");
+                        myViewHolder.tv_spec_more.setGravity(Gravity.CENTER);
+                        myViewHolder.tv_spec_more.setTextSize(13);
                         myViewHolder.tv_spec_more.setVisibility(View.VISIBLE);
                     } else {
                         myViewHolder.tv_spec22.setText(list_spec.get(1));
                         myViewHolder.tv_spec22.setTextSize(13);
                         myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
+                        //    myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
                         myViewHolder.tv_spec22.setMaxLines(1);
+                        //     myViewHolder.tv_spec22.setMaxEms(8);
+
                         myViewHolder.tv_spec2.setVisibility(View.GONE);
                         myViewHolder.tv_spec_more.setVisibility(View.GONE);
                     }
@@ -1624,20 +1648,25 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 myViewHolder.tv_spec2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                   //    searchDetailViewFragment.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+                        // mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
+                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+
                     }
                 });
                 myViewHolder.tv_spec22.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    //   searchDetailViewFragment.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+                        // mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
+                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
 
                     }
                 });
+
                 myViewHolder.tv_spec_more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    //    searchDetailViewFragment.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+                        // mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
+                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
 
                     }
                 });
@@ -1650,6 +1679,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             myViewHolder.L_specialization.setVisibility(View.GONE);
         }
     }
+
     private void handleJaldeeVerification(MyViewHolder myViewHolder, SearchViewDetail searchdetailList) {
         if (searchdetailList.getVerifyLevel() != null) {
             if (!searchdetailList.getVerifyLevel().equalsIgnoreCase("NONE")) {
@@ -1680,6 +1710,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             myViewHolder.ic_jaldeeverifiedIcon.setVisibility(View.INVISIBLE);
         }
     }
+
     public void handleBusinesshours(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList, LinearLayout parent, LinearLayout.LayoutParams params1) {
         if (searchdetailList.getLocation().getbSchedule().getTimespec().get(0).getTimeSlots() != null) {
             TextView dynaText = new TextView(context);
@@ -1688,7 +1719,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             dynaText.setTypeface(tyface);
             dynaText.setText(context.getResources().getString(R.string.working_hours));
 
-            dynaText.setTextSize(13);
+            dynaText.setTextSize(11);
             dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
             dynaText.setPadding(5, 5, 5, 5);
             dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_clock, 0, 0);
@@ -1792,6 +1823,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             });
         }
     }
+
     private void handleProfileInfo(MyViewHolder myViewHolder, DepartmentUserSearchModel searchdetailList) {
         SearchViewDetail getBusinessData = searchdetailList.getSearchViewDetail();
         handleJaldeeVerification(myViewHolder, getBusinessData);
@@ -1991,12 +2023,13 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 exception.printStackTrace();
             }
         });
-        if(searchdetailList.getSearchViewDetail().getLogo()!= null){
-        builder.build().load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);}
+        if (searchdetailList.getSearchViewDetail().getLogo() != null) {
+            builder.build().load(searchdetailList.getSearchViewDetail().getLogo().getUrl()).placeholder(R.drawable.icon_noimage).error(R.drawable.icon_noimage).transform(new CircleTransform()).fit().into(myViewHolder.profile);
+        }
         myViewHolder.profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Config.logV("Unique Id List", searchdetailList.getUniqueid());
+                // Config.logV("Unique Id List", searchdetailList.getUniqueid());
                 ApiSearchGallery(searchdetailList.getParentSearchViewDetail().getUniqueId(), searchdetailList);
             }
 
@@ -2038,7 +2071,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                         if (searchdetailList.getSearchViewDetail().getLogo() != null) {
                             ArrayList<String> mGalleryList = new ArrayList<>();
                             mGalleryList.add(searchdetailList.getSearchViewDetail().getLogo().getUrl());
-                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList,activity);
+                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, activity);
                             if (mValue) {
                                 Intent intent = new Intent(context, SwipeGalleryImage.class);
                                 intent.putExtra("pos", 0);
@@ -2050,6 +2083,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<SearchViewDetail>> call, Throwable t) {
                 // Log error here since request failed
@@ -2057,7 +2091,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             }
         });
     }
+
     ImageView profile1, profile2, profile3;
+
     public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery, final DepartmentUserSearchModel searchdetailList) {
         Config.logV("Gallery--------------333-----" + mGallery.size());
         try {
@@ -2258,7 +2294,6 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             }
         });
     }
-
 
 
 }

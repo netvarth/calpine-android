@@ -697,6 +697,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     //HEADER+SUBDOMAIN
                     mSubDomainSubSearch.clear();
 
+
                     for (int i = 0; i < mSubDomain.size(); i++) {
                         if (mSubDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
 
@@ -1095,6 +1096,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                             db.insertPopularSearchInfo(mPopularSearch);
 //                            db.insertPopularSearchInfo();
+
+                            db = new DatabaseHandler(mContext);
+                            db.DeleteSubDomain();
+                            db.insertSubDomainList(mSubDomain);
+
 
                             // db.insertPopularSearchInfo(mGLobalSearch);
                             // db.insertPopularSearchInfo(mSubDomain);

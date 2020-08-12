@@ -7,9 +7,10 @@ import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class DepartmentUserSearchModel {
+public class DepartmentUserSearchModel implements Serializable {
     private QueueList queueList;
     private ScheduleList scheduleList;
     private SearchViewDetail searchViewDetail;

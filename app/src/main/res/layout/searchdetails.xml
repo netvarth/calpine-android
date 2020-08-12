@@ -272,7 +272,8 @@
                                         android:text="Contact"
                                         android:textColor="@color/black"
                                         android:textSize="@dimen/txtsize_12"
-                                        android:textStyle="bold" />
+                                        android:textStyle="bold"
+                                        android:visibility="gone"/>
 
 
                                     <TextView
