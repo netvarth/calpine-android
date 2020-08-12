@@ -563,7 +563,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 if (mFrom.equalsIgnoreCase("searchdetail_future") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
                     modifyAccountID = accountID;
                 }
-                else if(mFrom.equalsIgnoreCase("multiusercheckin")){
+                else if(mFrom.equalsIgnoreCase("multiusercheckin") || mFrom.equalsIgnoreCase("searchdetail_user")){
                     modifyAccountID = accountID;
                 }
                     else
