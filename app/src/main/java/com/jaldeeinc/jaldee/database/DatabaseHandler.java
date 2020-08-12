@@ -1014,9 +1014,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         catch (Exception e){
              return null;
+
         }
-
-
 
     }
 

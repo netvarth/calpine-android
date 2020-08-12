@@ -88,6 +88,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -196,6 +197,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchAppointmentDepartmentServices> aServiceList = new ArrayList<>();
     boolean from_user = false;
     DepartmentUserSearchModel searchdetailList = new DepartmentUserSearchModel();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -1821,10 +1823,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             ic_jaldeeverifiedIcon.setVisibility(View.GONE);
         }
         tv_msg.setEnabled(true);
-
         rating.setRating(searchdetailList.getSearchViewDetail().getAvgRating());
 
         if (searchdetailList.getSearchViewDetail().getBusinessDesc() != null) {
+
             tv_desc.setVisibility(View.VISIBLE);
             tv_desc.setText(searchdetailList.getSearchViewDetail().getBusinessDesc());
             tv_desc.post(new Runnable() {
