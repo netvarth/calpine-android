@@ -24,7 +24,8 @@
                 layout="@layout/custom_toolbar" />
         </LinearLayout>
 
-        <androidx.core.widget.NestedScrollView xmlns:tools="http://schemas.android.com/tools"
+        <androidx.core.widget.NestedScrollView
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusableInTouchMode="true"
@@ -35,7 +36,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                <androidx.cardview.widget.CardView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/card"
                     android:layout_width="match_parent"
@@ -709,7 +711,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="#F4FAF4"
-                            android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
+                            android:nestedScrollingEnabled="false">
+
+                        </androidx.recyclerview.widget.RecyclerView>
 
 
                         <TextView
@@ -740,7 +744,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/white"
-                            android:nestedScrollingEnabled="false"></androidx.recyclerview.widget.RecyclerView>
+                            android:nestedScrollingEnabled="false">
+
+                        </androidx.recyclerview.widget.RecyclerView>
 
 
                         <LinearLayout

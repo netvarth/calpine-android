@@ -147,7 +147,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         location = searchDetailViewFragment.mSearchLocList.get(0);
         mSearchSettings = searchDetailViewFragment.mSearchSettings;
         for (int i = 0; i < departmentServices.getUsers().size(); i++) {
-            idsCheckin.add(departmentServices.getUsers().get(i).getId() +"-"+location.getId());
+            idsCheckin.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
             idsAppt.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
         }
         ApiLoadQsAndSchedulesList(idsCheckin, idsAppt, mBusinessDataLists);;

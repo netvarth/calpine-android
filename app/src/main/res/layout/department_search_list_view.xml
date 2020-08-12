@@ -15,8 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/app_background"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/padding7">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/mLayout"
@@ -239,7 +238,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginTop="@dimen/padding5"
                 android:layout_marginRight="@dimen/padding5"
                 android:orientation="horizontal"
                 android:visibility="gone">
@@ -292,7 +290,7 @@
                     android:id="@+id/txtspec3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding5"
+                    android:layout_marginLeft="@dimen/padding2"
                     android:gravity="center"
                     android:text="..."
                     android:textColor="@color/title_grey"
@@ -591,7 +589,7 @@
             android:id="@+id/txt_diffdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding2"
+            android:layout_marginTop="@dimen/padding5"
             android:layout_marginBottom="@dimen/padding2"
             android:gravity="center"
             android:paddingRight="@dimen/padding5"
@@ -675,7 +673,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/default_padding"
+            android:layout_marginTop="@dimen/padding5"
             android:orientation="horizontal"
             android:visibility="gone">
 

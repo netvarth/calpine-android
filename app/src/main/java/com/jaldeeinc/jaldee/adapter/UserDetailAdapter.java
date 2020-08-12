@@ -484,6 +484,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 holder.txtSeeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        servicesList.clear();
                         servicesList = SomeConstructor(userDetails.get(position).getServices());
                         if (servicesList != null) {
                             adaptercallback.onMethodServiceCallback(servicesList, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
@@ -562,8 +563,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                         @Override
                         public void onClick(View v) {
 
+                            apptList.clear();
                             apptList = ApptConstructor(userDetails.get(position).getServices());
                             if (apptList != null) {
+
                                 adaptercallback.onMethodServiceCallbackAppointment(apptList, userDetails.get(position).getSearchViewDetail().getBusinessName(), mSearchDepartmentList);
                             }
                         }

@@ -986,6 +986,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public SearchModel getSubDomainsByFilter(String domainName, int position) {
         try {
+            position = position-1;
             ArrayList<SearchModel> subDomainsList = new ArrayList<SearchModel>();
             SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
 

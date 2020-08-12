@@ -533,7 +533,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     "fonts/Montserrat_Regular.otf");
             dynaText.setTypeface(tyface);
             dynaText.setText("Ambulance");
-            dynaText.setTextSize(10);
+            dynaText.setTextSize(11);
             dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
             dynaText.setPadding(5, 5, 5, 5);
             dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_ambulance, 0, 0);
@@ -560,7 +560,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     "fonts/Montserrat_Regular.otf");
             dynaText.setTypeface(tyface);
             dynaText.setText("First Aid");
-            dynaText.setTextSize(10);
+            dynaText.setTextSize(11);
             dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
             dynaText.setPadding(5, 5, 5, 5);
             dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_firstaid, 0, 0);
@@ -586,7 +586,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                     "fonts/Montserrat_Regular.otf");
             dynaText.setTypeface(tyface);
             dynaText.setText("Emergency");
-            dynaText.setTextSize(10);
+            dynaText.setTextSize(11);
             dynaText.setTextColor(context.getResources().getColor(R.color.title_grey));
             dynaText.setPadding(5, 5, 5, 5);
             dynaText.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_emergency, 0, 0);

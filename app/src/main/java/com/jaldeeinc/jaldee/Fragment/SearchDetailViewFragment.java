@@ -58,10 +58,12 @@ import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CircleTransform;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
+import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.ContactModel;
 import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
+import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.SocialMediaModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.CoupnResponse;
@@ -109,6 +111,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 
 
 /**
@@ -197,6 +201,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchAppointmentDepartmentServices> aServiceList = new ArrayList<>();
     boolean from_user = false;
     DepartmentUserSearchModel searchdetailList = new DepartmentUserSearchModel();
+    SearchModel domainList = new SearchModel();
 
 
     @Override
@@ -777,35 +782,41 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         }
                         Log.i("deptMergedList", new Gson().toJson(deptMergedList));
                         if (deptMergedList.size() > 0) {
-                            mSearchDepartmentServices.clear();
-                            String responses = new Gson().toJson(response.body());
-                            Config.logV("Deapartnamesss---------------" + responses);
-                            for (int i = 0; i < deptMergedList.size(); i++) {
-                                departmentNameList.add(deptMergedList.get(i).getDepartmentName());
-                                departmentCodeList.add(deptMergedList.get(i).getDepartmentCode());
+
+                            if (from_user){
+                                mRecycleDepartment.setVisibility(View.GONE);
                             }
-                            mSearchDepartmentServices.addAll(deptMergedList);
-                            if (mSearchDepartmentServices != null) {
-                                if (mSearchDepartmentServices.size() == 1) {
-                                    departmentHeading.setVisibility(View.VISIBLE);
-                                    departmentHeading.setText("Department (1)");
-                                } else if (mSearchDepartmentServices.size() > 1) {
-                                    departmentHeading.setVisibility(View.VISIBLE);
-                                    departmentHeading.setText("Departments " + "(" + mSearchDepartmentServices.size() + ")");
+                            else {
+                                mSearchDepartmentServices.clear();
+                                String responses = new Gson().toJson(response.body());
+                                Config.logV("Deapartnamesss---------------" + responses);
+                                for (int i = 0; i < deptMergedList.size(); i++) {
+                                    departmentNameList.add(deptMergedList.get(i).getDepartmentName());
+                                    departmentCodeList.add(deptMergedList.get(i).getDepartmentCode());
                                 }
-                            } else {
-                                departmentHeading.setVisibility(View.GONE);
+                                mSearchDepartmentServices.addAll(deptMergedList);
+                                if (mSearchDepartmentServices != null) {
+                                    if (mSearchDepartmentServices.size() == 1) {
+                                        departmentHeading.setVisibility(View.VISIBLE);
+                                        departmentHeading.setText("Department (1)");
+                                    } else if (mSearchDepartmentServices.size() > 1) {
+                                        departmentHeading.setVisibility(View.VISIBLE);
+                                        departmentHeading.setText("Departments " + "(" + mSearchDepartmentServices.size() + ")");
+                                    }
+                                } else {
+                                    departmentHeading.setVisibility(View.GONE);
+                                }
+                                Log.i("departmentservice", new Gson().toJson(mSearchDepartmentServices));
+                                Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
+                                Config.logV("DepartmEntqweName --------------" + departmentNameList);
+                                Log.i("SizeofDepartments", String.valueOf(mSearchDepartmentServices.size()));
+                                RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
+                                mRecycleDepartment.setVisibility(View.VISIBLE);
+                                mRecycleDepartment.setLayoutManager(mDepartmentLayout);
+                                mDepartmentAdapter.setFields(deptMergedList, mBusinessDataList.getBusinessName());
+                                mRecycleDepartment.setAdapter(mDepartmentAdapter);
+                                mDepartmentAdapter.notifyDataSetChanged();
                             }
-                            Log.i("departmentservice", new Gson().toJson(mSearchDepartmentServices));
-                            Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
-                            Config.logV("DepartmEntqweName --------------" + departmentNameList);
-                            Log.i("SizeofDepartments", String.valueOf(mSearchDepartmentServices.size()));
-                            RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
-                            mRecycleDepartment.setVisibility(View.VISIBLE);
-                            mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-                            mDepartmentAdapter.setFields(deptMergedList, mBusinessDataList.getBusinessName());
-                            mRecycleDepartment.setAdapter(mDepartmentAdapter);
-                            mDepartmentAdapter.notifyDataSetChanged();
                         }
                     }
                 } catch (Exception e) {
@@ -1619,9 +1630,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
 
         tv_busName.setText(this.searchdetailList.getSearchViewDetail().getBusinessName());
-        if (searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName() != null && searchdetailList.getSearchViewDetail().getServiceSubSector().getDisplayName() != null) {
-            tv_domain.setText(searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName() + " " + "(" + searchdetailList.getSearchViewDetail().getServiceSubSector().getDisplayName() + ")");
-        }
+        DatabaseHandler db = new DatabaseHandler(context);
+        domainList = db.getSubDomainsByFilter(searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName(), searchdetailList.getSearchViewDetail().getUserSubdomain());
+        tv_domain.setText(domainList.getDisplayname());
+
         if (searchdetailList.getSearchViewDetail().getSocialMedia() != null) {
             if (searchdetailList.getSearchViewDetail().getSocialMedia().size() > 0) {
                 LsocialMedia.setVisibility(View.VISIBLE);
