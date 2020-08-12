@@ -4,13 +4,14 @@ import com.google.gson.annotations.SerializedName;
 import com.jaldeeinc.jaldee.model.LocationModel;
 import com.jaldeeinc.jaldee.model.SocialMediaModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by sharmila on 24/7/18.
  */
 
-public class SearchViewDetail {
+public class SearchViewDetail implements Serializable {
 
     String label;
     String resource;
@@ -370,6 +371,16 @@ public class SearchViewDetail {
     }
 
     String claimStatus;
+
+    public int getUserSubdomain() {
+        return userSubdomain;
+    }
+
+    public void setUserSubdomain(int userSubdomain) {
+        this.userSubdomain = userSubdomain;
+    }
+
+    int userSubdomain;
 
 
 }

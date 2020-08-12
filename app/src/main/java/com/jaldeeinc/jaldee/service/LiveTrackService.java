@@ -47,6 +47,16 @@ public class LiveTrackService extends Service{
         super();
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        myReceiver = new MyReceiver();
+        this.bindService(new Intent(this, LocationUpdatesService.class), mLTServiceConnection,
+                Context.BIND_AUTO_CREATE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
+                new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
+    }
+
     Date date1, date2;
     private MyReceiver myReceiver;
     private LocationUpdatesService mService = null;
@@ -112,11 +122,6 @@ public class LiveTrackService extends Service{
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
         super.onStartCommand(intent, flags, startId);
         Log.i("onStartCommandIn", "mServiceNull");
-        myReceiver = new MyReceiver();
-        this.bindService(new Intent(this, LocationUpdatesService.class), mLTServiceConnection,
-                Context.BIND_AUTO_CREATE);
-        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
-                new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
         return START_STICKY;
     }
 

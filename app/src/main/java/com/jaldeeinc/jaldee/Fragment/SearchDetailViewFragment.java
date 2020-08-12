@@ -46,6 +46,7 @@ import com.jaldeeinc.jaldee.adapter.DepartmentAdapter;
 import com.jaldeeinc.jaldee.adapter.LocationCheckinAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchLocationAdapter;
 import com.jaldeeinc.jaldee.adapter.SpecialisationAdapter;
+import com.jaldeeinc.jaldee.adapter.UserDetailAdapter;
 import com.jaldeeinc.jaldee.adapter.VirtualFieldAdapter;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
@@ -59,6 +60,7 @@ import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.ResizableCustomView;
 import com.jaldeeinc.jaldee.model.ContactModel;
 import com.jaldeeinc.jaldee.model.DepartmentModal;
+import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.SocialMediaModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
@@ -100,6 +102,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -146,12 +149,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     RecyclerView mRecyLocDetail, mRecycle_virtualfield, mRecycleDepartment, mrecycle_specialisation;
     SearchLocationAdapter mSearchLocAdapter;
     DepartmentAdapter mDepartmentAdapter;
+    UserDetailAdapter userDetailAdapter;
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
     int mProviderId;
     ArrayList<String> ids;
     String uniqueID;
     String customUniqueID;
-    String home, homeUniqueId,uniID;
+    String home, homeUniqueId, uniID;
     String claimable;
     TextView tv_ImageViewText, tv_Moredetails, tv_specializtion, tv_SocialMedia, tv_Gallery, tv_mImageViewTextnew, locationHeading;
     RatingBar rating;
@@ -190,6 +194,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchAppointmentDepartmentServices> LaServicesList = new ArrayList<>();
     ArrayList<SearchDonation> gServiceList = new ArrayList<>();
     ArrayList<SearchAppointmentDepartmentServices> aServiceList = new ArrayList<>();
+    boolean from_user = false;
+    DepartmentUserSearchModel searchdetailList = new DepartmentUserSearchModel();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -235,17 +241,20 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         tv_title.setVisibility(View.INVISIBLE);
         ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
+        initializations(row);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             home = bundle.getString("home");
             homeUniqueId = bundle.getString("homeUniqueId");
+            from_user = bundle.getBoolean("user");
+            searchdetailList = (DepartmentUserSearchModel) bundle.getSerializable("userdetail");
             if (home != null && home.equals("home")) {
                 if (homeUniqueId != null) {
 //                    apiFetchIdFromDeepLink(homeUniqueId);
                     uniqueID = homeUniqueId;
-                    Log.i("uniqueCutomIdSecond",uniqueID);
+                    Log.i("uniqueCutomIdSecond", uniqueID);
                 }
-            }else{
+            } else {
                 uniqueID = bundle.getString("uniqueID");
             }
             claimable = "0";
@@ -256,99 +265,64 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if(homeUniqueId==null){
-                getFragmentManager().popBackStack();
-            }else{
-                Intent intent = new Intent(mContext, Home.class);
-                startActivity(intent);
-            }
-            // what do you want here
+                if (homeUniqueId == null) {
+                    getFragmentManager().popBackStack();
+                } else {
+                    Intent intent = new Intent(mContext, Home.class);
+                    startActivity(intent);
+                }
+                // what do you want here
             }
         });
-        SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
-        mRecyLocDetail.setNestedScrollingEnabled(false);
-        tv_busName = (TextView) row.findViewById(R.id.txtbus_name);
-        tv_msg = (TextView) row.findViewById(R.id.txtmsg);
-        tv_domain = (TextView) row.findViewById(R.id.txt_domain);
-        mImgeProfile = (ImageView) row.findViewById(R.id.i_profile);
-        mImgthumbProfile = (ImageView) row.findViewById(R.id.iThumb_profile);
-        mImgthumbProfile2 = (ImageView) row.findViewById(R.id.iThumb_profile2);
-        tv_ImageViewText = (TextView) row.findViewById(R.id.mImageViewText);
-        tv_mImageViewTextnew = (TextView) row.findViewById(R.id.mImageViewTextnew);
-        locationHeading = (TextView) row.findViewById(R.id.locationHeading);
-        mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
-        tv_fav = (TextView) row.findViewById(R.id.txtfav);
-        tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
-        LsocialMedia = (LinearLayout) row.findViewById(R.id.LsocialMedia);
-        LSpecialization_2 = (LinearLayout) row.findViewById(R.id.LSpecialization_2);
-        layout_exapnd_moreDetails = (RelativeLayout) row.findViewById(R.id.layout_exapnd_moreDetails);
-        tv_spec1 = (TextView) row.findViewById(R.id.txtspec1);
-        tv_spec2 = (TextView) row.findViewById(R.id.txtspec2);
-        tv_seeAll = (TextView) row.findViewById(R.id.txtSeeAll);
-        ic_fac = (ImageView) row.findViewById(R.id.ic_fac);
-        ic_gplus = (ImageView) row.findViewById(R.id.ic_gplus);
-        ic_pin = (ImageView) row.findViewById(R.id.ic_pin);
-        ic_link = (ImageView) row.findViewById(R.id.ic_link);
-        ic_twitt = (ImageView) row.findViewById(R.id.ic_twitt);
-        ic_yout = (ImageView) row.findViewById(R.id.ic_yout);
-        ic_jaldeeverifiedIcon = (ImageView) row.findViewById(R.id.ic_jaldeeverifiedIcon);
-        //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
-        tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
-        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
-                "fonts/Montserrat_Bold.otf");
-        tv_busName.setTypeface(tyface);
-        tv_ImageViewText.setTypeface(tyface);
-        tv_mImageViewTextnew.setTypeface(tyface);
-        L_layout = row.findViewById(R.id.layout_type);
 
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if (!flag_more) {
-                flag_more = true;
-                mRecycle_virtualfield.setVisibility(View.VISIBLE);
-                Config.logV("Domain Size@@@@@@@@@@@@@" + domainVirtual.size());
-                Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
-                tv_Moredetails.setText("See Less");
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, domainVirtual.size());
-                mRecycle_virtualfield.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
-            } else {
-                flag_more = false;
-                tv_Moredetails.setText("See All");
-                int size = domainVirtual.size();
-                if (size == 1) {
-                    size = 1;
+                if (!flag_more) {
+                    flag_more = true;
+                    mRecycle_virtualfield.setVisibility(View.VISIBLE);
+                    Config.logV("Domain Size@@@@@@@@@@@@@" + domainVirtual.size());
+                    Config.logV("Subdomain Size@@@@@@@@@@@@@" + sub_domainVirtual.size());
+                    tv_Moredetails.setText("See Less");
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, domainVirtual.size());
+                    mRecycle_virtualfield.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 } else {
-                    size = 2;
+                    flag_more = false;
+                    tv_Moredetails.setText("See All");
+                    int size = domainVirtual.size();
+                    if (size == 1) {
+                        size = 1;
+                    } else {
+                        size = 2;
+                    }
+                    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                    mRecycle_virtualfield.setLayoutManager(mLayoutManager);
+                    mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
+                    mRecycle_virtualfield.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 }
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
-                mRecycle_virtualfield.setLayoutManager(mLayoutManager);
-                mAdapter = new VirtualFieldAdapter(domainVirtual, mContext, size);
-                mRecycle_virtualfield.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
-            }
             }
         });
         img_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             if (mRecycle_virtualfield.getVisibility() != View.VISIBLE) {
-                mRecycle_virtualfield.setVisibility(View.VISIBLE);
-                img_arrow.setImageResource(R.drawable.icon_angle_up);
-                int size = domainVirtual.size();
-                if (size > 2) {
-                    tv_Moredetails.setVisibility(View.VISIBLE);
+                if (mRecycle_virtualfield.getVisibility() != View.VISIBLE) {
+                    mRecycle_virtualfield.setVisibility(View.VISIBLE);
+                    img_arrow.setImageResource(R.drawable.icon_angle_up);
+                    int size = domainVirtual.size();
+                    if (size > 2) {
+                        tv_Moredetails.setVisibility(View.VISIBLE);
+                    } else {
+                        tv_Moredetails.setVisibility(View.GONE);
+                    }
                 } else {
+                    mRecycle_virtualfield.setVisibility(View.GONE);
+                    img_arrow.setImageResource(R.drawable.icon_angle_down);
                     tv_Moredetails.setVisibility(View.GONE);
                 }
-            } else {
-                mRecycle_virtualfield.setVisibility(View.GONE);
-                img_arrow.setImageResource(R.drawable.icon_angle_down);
-                tv_Moredetails.setVisibility(View.GONE);
-            }
             }
         });
         tv_jdn.setOnClickListener(new View.OnClickListener() {
@@ -396,67 +370,113 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Config.logV("Provider iD--------------" + String.valueOf(mProviderId));
-            final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
-            dialog.setContentView(R.layout.reply);
-            dialog.show();
-            final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
-            Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
-            final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-            TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
-            txtsendmsg.setVisibility(View.VISIBLE);
-            txtsendmsg.setText("Message to " + tv_busName.getText().toString());
-            btn_send.setText("SEND");
-            edt_message.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void afterTextChanged(Editable arg0) {
-                    if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
-                        btn_send.setEnabled(true);
-                        btn_send.setClickable(true);
-                        btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
-                    } else {
-                        btn_send.setEnabled(false);
-                        btn_send.setClickable(false);
-                        btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
+                Config.logV("Provider iD--------------" + String.valueOf(mProviderId));
+                final BottomSheetDialog dialog = new BottomSheetDialog(mContext, R.style.DialogStyle);
+                dialog.setContentView(R.layout.reply);
+                dialog.show();
+                final Button btn_send = (Button) dialog.findViewById(R.id.btn_send);
+                Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
+                final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
+                TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+                txtsendmsg.setVisibility(View.VISIBLE);
+                txtsendmsg.setText("Message to " + tv_busName.getText().toString());
+                btn_send.setText("SEND");
+                edt_message.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable arg0) {
+                        if (edt_message.getText().toString().length() >= 1 && !edt_message.getText().toString().trim().isEmpty()) {
+                            btn_send.setEnabled(true);
+                            btn_send.setClickable(true);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.blue));
+                        } else {
+                            btn_send.setEnabled(false);
+                            btn_send.setClickable(false);
+                            btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
+                        }
                     }
-                }
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-            });
-            btn_send.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String modifyAccountID = String.valueOf(mProviderId);
-                    ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
-                }
-            });
-            btn_cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+                });
+                btn_send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String modifyAccountID = String.valueOf(mProviderId);
+                        ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
+                    }
+                });
+                btn_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
         return row;
     }
 
+    private void initializations(View row) {
+
+        SharedPreference.getInstance(mContext).setValue("refreshcheckin", "false");
+        mRecyLocDetail.setNestedScrollingEnabled(false);
+        tv_busName = (TextView) row.findViewById(R.id.txtbus_name);
+        tv_msg = (TextView) row.findViewById(R.id.txtmsg);
+        tv_domain = (TextView) row.findViewById(R.id.txt_domain);
+        mImgeProfile = (ImageView) row.findViewById(R.id.i_profile);
+        mImgthumbProfile = (ImageView) row.findViewById(R.id.iThumb_profile);
+        mImgthumbProfile2 = (ImageView) row.findViewById(R.id.iThumb_profile2);
+        tv_ImageViewText = (TextView) row.findViewById(R.id.mImageViewText);
+        tv_mImageViewTextnew = (TextView) row.findViewById(R.id.mImageViewTextnew);
+        locationHeading = (TextView) row.findViewById(R.id.locationHeading);
+        mImgthumbProfile1 = (ImageView) row.findViewById(R.id.iThumb_profile1);
+        tv_fav = (TextView) row.findViewById(R.id.txtfav);
+        tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
+        LsocialMedia = (LinearLayout) row.findViewById(R.id.LsocialMedia);
+        LSpecialization_2 = (LinearLayout) row.findViewById(R.id.LSpecialization_2);
+        layout_exapnd_moreDetails = (RelativeLayout) row.findViewById(R.id.layout_exapnd_moreDetails);
+        tv_spec1 = (TextView) row.findViewById(R.id.txtspec1);
+        tv_spec2 = (TextView) row.findViewById(R.id.txtspec2);
+        tv_seeAll = (TextView) row.findViewById(R.id.txtSeeAll);
+        ic_fac = (ImageView) row.findViewById(R.id.ic_fac);
+        ic_gplus = (ImageView) row.findViewById(R.id.ic_gplus);
+        ic_pin = (ImageView) row.findViewById(R.id.ic_pin);
+        ic_link = (ImageView) row.findViewById(R.id.ic_link);
+        ic_twitt = (ImageView) row.findViewById(R.id.ic_twitt);
+        ic_yout = (ImageView) row.findViewById(R.id.ic_yout);
+        ic_jaldeeverifiedIcon = (ImageView) row.findViewById(R.id.ic_jaldeeverifiedIcon);
+        //  tv_exp = (TextView) row.findViewById(R.id.txt_expe);
+        tv_desc = (TextView) row.findViewById(R.id.txt_bus_desc);
+        Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                "fonts/Montserrat_Bold.otf");
+        tv_busName.setTypeface(tyface);
+        tv_ImageViewText.setTypeface(tyface);
+        tv_mImageViewTextnew.setTypeface(tyface);
+        L_layout = row.findViewById(R.id.layout_type);
+
+    }
+
+
     /**
      * Load every details for the search details page
+     *
      * @param uniqueID
      */
-    private void initSearchView (String uniqueID) {
+    private void initSearchView(String uniqueID) {
         apiJaldeeCoupon(uniqueID);
         apiJDN(uniqueID);
         apiSearchViewTerminology(uniqueID);
         apiVirtualFields(uniqueID);
         apiSettings_Details(uniqueID, mSearchResp);
+
 //        apiSearchViewDetail(uniqueID, mSearchResp);
     }
+
     private void apiSettings_Details(final String muniqueID, final List<SearchAWsResponse> mSearchResp) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
@@ -491,6 +511,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<SearchSetting> call, Throwable t) {
                 // Log error here since request failed
@@ -500,6 +521,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     private void apiSearchViewDetail(final String muniqueID, final List<SearchAWsResponse> mSearchRespPass) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
@@ -535,7 +557,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         if (response.body().getId() != 0) {
                             mProviderId = response.body().getId();
                         }
-                        UpdateMainUI(mBusinessDataList);
+
+                        if (from_user) {
+                            UpdateMainUIForUser(searchdetailList);
+
+                        } else {
+                            UpdateMainUI(mBusinessDataList);
+                        }
+
                         apiSearchGallery(uniqueID);
 //                        if(homeUniqueId==null){
 
@@ -574,6 +603,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     /**
      * Api to load Jaldee Coupons available of a particular account
+     *
      * @param uniqueID unique Id of the account
      */
     private void apiJaldeeCoupon(String uniqueID) {
@@ -630,6 +660,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     /**
      * api to load JDN (Jaldee Discount Network) details of a particular account
+     *
      * @param uniqueID unique id of the account
      */
     private void apiJDN(String uniqueID) {
@@ -696,12 +727,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                        Log.i("DepartmentProviders", new Gson().toJson(response.body()));
                         mSearchDepartmentList = response.body();
                         ApiSearchViewLocation(uniqueID);
-                        apiIntegrateWithUsers (uniqueID, response.body());
+                        apiIntegrateWithUsers(uniqueID, response.body());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
                 // Log error here since request failed
@@ -730,10 +762,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //                        Log.i("DepartmentProviders", new Gson().toJson(response.body()));
                         ArrayList<SearchDepartmentServices> deptProviders = response.body();
                         if (deptServices != null && deptServices.size() > 0) {
-                            for (int dsIndex=0; dsIndex < deptServices.size(); dsIndex++) {
-                                for (int dpIndex=0; dpIndex < deptProviders.size(); dpIndex++) {
+                            for (int dsIndex = 0; dsIndex < deptServices.size(); dsIndex++) {
+                                for (int dpIndex = 0; dpIndex < deptProviders.size(); dpIndex++) {
                                     if (deptServices.get(dsIndex).getDepartmentId().equalsIgnoreCase(deptProviders.get(dpIndex).getDepartmentId())) {
-                                        SearchDepartmentServices merged_S_P =  deptServices.get(dpIndex);
+                                        SearchDepartmentServices merged_S_P = deptServices.get(dpIndex);
                                         merged_S_P.setUsers(deptProviders.get(dpIndex).getUsers());
                                         deptMergedList.add(merged_S_P);
                                         break;
@@ -746,38 +778,39 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             mSearchDepartmentServices.clear();
                             String responses = new Gson().toJson(response.body());
                             Config.logV("Deapartnamesss---------------" + responses);
-                                for (int i = 0; i < deptMergedList.size(); i++) {
-                                    departmentNameList.add(deptMergedList.get(i).getDepartmentName());
-                                    departmentCodeList.add(deptMergedList.get(i).getDepartmentCode());
+                            for (int i = 0; i < deptMergedList.size(); i++) {
+                                departmentNameList.add(deptMergedList.get(i).getDepartmentName());
+                                departmentCodeList.add(deptMergedList.get(i).getDepartmentCode());
+                            }
+                            mSearchDepartmentServices.addAll(deptMergedList);
+                            if (mSearchDepartmentServices != null) {
+                                if (mSearchDepartmentServices.size() == 1) {
+                                    departmentHeading.setVisibility(View.VISIBLE);
+                                    departmentHeading.setText("Department (1)");
+                                } else if (mSearchDepartmentServices.size() > 1) {
+                                    departmentHeading.setVisibility(View.VISIBLE);
+                                    departmentHeading.setText("Departments " + "(" + mSearchDepartmentServices.size() + ")");
                                 }
-                                mSearchDepartmentServices.addAll(deptMergedList);
-                                if (mSearchDepartmentServices != null) {
-                                    if (mSearchDepartmentServices.size() == 1) {
-                                        departmentHeading.setVisibility(View.VISIBLE);
-                                        departmentHeading.setText("Department (1)");
-                                    } else if (mSearchDepartmentServices.size() > 1) {
-                                        departmentHeading.setVisibility(View.VISIBLE);
-                                        departmentHeading.setText("Departments " + "(" + mSearchDepartmentServices.size() + ")");
-                                    }
-                                } else {
-                                    departmentHeading.setVisibility(View.GONE);
-                                }
-                                Log.i("departmentservice", new Gson().toJson(mSearchDepartmentServices));
-                                Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
-                                Config.logV("DepartmEntqweName --------------" + departmentNameList);
-                                Log.i("SizeofDepartments", String.valueOf(mSearchDepartmentServices.size()));
-                                RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
-                                mRecycleDepartment.setVisibility(View.VISIBLE);
-                                mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-                                mDepartmentAdapter.setFields(deptMergedList, mBusinessDataList.getBusinessName());
-                                mRecycleDepartment.setAdapter(mDepartmentAdapter);
-                                mDepartmentAdapter.notifyDataSetChanged();
+                            } else {
+                                departmentHeading.setVisibility(View.GONE);
+                            }
+                            Log.i("departmentservice", new Gson().toJson(mSearchDepartmentServices));
+                            Config.logV("DepartmEntqweCode --------------" + departmentCodeList);
+                            Config.logV("DepartmEntqweName --------------" + departmentNameList);
+                            Log.i("SizeofDepartments", String.valueOf(mSearchDepartmentServices.size()));
+                            RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
+                            mRecycleDepartment.setVisibility(View.VISIBLE);
+                            mRecycleDepartment.setLayoutManager(mDepartmentLayout);
+                            mDepartmentAdapter.setFields(deptMergedList, mBusinessDataList.getBusinessName());
+                            mRecycleDepartment.setAdapter(mDepartmentAdapter);
+                            mDepartmentAdapter.notifyDataSetChanged();
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
                 // Log error here since request failed
@@ -827,6 +860,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     private void ApiAppointmentServices(String muniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
@@ -849,7 +883,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     if (response.code() == 200) {
                         LaServicesList.clear();
                         aServiceList.clear();
-                        for(int i = 0;i<response.body().size();i++) {
+                        for (int i = 0; i < response.body().size(); i++) {
                             if (response.body().get(i).getServices() == null) {
                                 SearchAppointmentDepartmentServices mService = new SearchAppointmentDepartmentServices();
                                 mService.setName(response.body().get(i).getName());
@@ -864,8 +898,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mService.setThumbUrl(response.body().get(i).getThumbUrl());
 
                                 LaServicesList.add(mService);
-                            }
-                            else{
+                            } else {
                                 SearchAppointmentDepartmentServices mService = new SearchAppointmentDepartmentServices();
                                 mService.setDepartmentName(response.body().get(i).getDepartmentName());
                                 mService.setServices(response.body().get(i).getServices());
@@ -898,6 +931,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<SearchAppointmentDepartmentServices>> call, Throwable t) {
                 // Log error here since request failed
@@ -907,6 +941,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     private void ApiDonationServices(final int id) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -942,7 +977,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         }
                         gServiceList.addAll(LServicesList);
                         // Department Section Starts
-                    }  } catch (Exception e) {
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -956,6 +992,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     public void UpdateGallery(final ArrayList<SearchViewDetail> mGallery) {
         //  Picasso.with(this).load(mGallery.get(0).getUrl()).fit().into(mImgeProfile);
         Config.logV("Gallery--------------333-----" + mGallery.size());
@@ -964,58 +1001,58 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 mImgeProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    Config.logV("Gallery------------------------------" + mGallery.size());
-                    ArrayList<String> mGalleryList = new ArrayList<>();
-                    if (mBusinessDataList.getLogo() != null) {
-                        mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                    }
-                    for (int i = 0; i < mGallery.size(); i++) {
-                        mGalleryList.add(mGallery.get(i).getUrl());
-                    }
-                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                    if (mValue) {
-                        Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                        intent.putExtra("pos", 0);
-                        startActivity(intent);
-                    }
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        if (mBusinessDataList.getLogo() != null) {
+                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                        }
+                        for (int i = 0; i < mGallery.size(); i++) {
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 0);
+                            startActivity(intent);
+                        }
                     }
                 });
                 mImgthumbProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    Config.logV("Gallery------------------------------" + mGallery.size());
-                    ArrayList<String> mGalleryList = new ArrayList<>();
-                    if (mBusinessDataList.getLogo() != null) {
-                        mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                    }
-                    for (int i = 0; i < mGallery.size(); i++) {
-                        mGalleryList.add(mGallery.get(i).getUrl());
-                    }
-                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                    if (mValue) {
-                        Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                        intent.putExtra("pos", 1);
-                        startActivity(intent);
-                    }
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        if (mBusinessDataList.getLogo() != null) {
+                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                        }
+                        for (int i = 0; i < mGallery.size(); i++) {
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 1);
+                            startActivity(intent);
+                        }
                     }
                 });
                 mImgthumbProfile1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    Config.logV("Gallery------------------------------" + mGallery.size());
-                    ArrayList<String> mGalleryList = new ArrayList<>();
-                    if (mBusinessDataList.getLogo() != null) {
-                        mGalleryList.add(mBusinessDataList.getLogo().getUrl());
-                    }
-                    for (int i = 0; i < mGallery.size(); i++) {
-                        mGalleryList.add(mGallery.get(i).getUrl());
-                    }
-                    boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                    if (mValue) {
-                        Intent intent = new Intent(mContext, SwipeGalleryImage.class);
-                        intent.putExtra("pos", 2);
-                        startActivity(intent);
-                    }
+                        Config.logV("Gallery------------------------------" + mGallery.size());
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        if (mBusinessDataList.getLogo() != null) {
+                            mGalleryList.add(mBusinessDataList.getLogo().getUrl());
+                        }
+                        for (int i = 0; i < mGallery.size(); i++) {
+                            mGalleryList.add(mGallery.get(i).getUrl());
+                        }
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+                            Intent intent = new Intent(mContext, SwipeGalleryImage.class);
+                            intent.putExtra("pos", 2);
+                            startActivity(intent);
+                        }
                     }
                 });
             } /*else {
@@ -1045,16 +1082,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             e.printStackTrace();
         }
     }
+
     /*  ArrayList<SearchViewDetail> emails = new ArrayList<>();
       ArrayList<SearchViewDetail> phoneNumber = new ArrayList<>();*/
     ArrayList<ContactModel> contactDetail = new ArrayList<>();
     boolean isContact = false;
     ArrayList<SocialMediaModel> socialMedia = new ArrayList<>();
+
     //  boolean expand =false;
     public void UpdateMainUI(final SearchViewDetail getBussinessData) {
         if (getBussinessData.getSpecialization() != null) {
-            for(int i =0;i<getBussinessData.getSpecialization().size();i++) {
-                if (getBussinessData.getSpecialization().get(i).equals("Not Applicabale") || getBussinessData.getSpecialization().get(i).equals("Not Applicable") ) {
+            for (int i = 0; i < getBussinessData.getSpecialization().size(); i++) {
+                if (getBussinessData.getSpecialization().get(i).equals("Not Applicabale") || getBussinessData.getSpecialization().get(i).equals("Not Applicable")) {
                     getBussinessData.getSpecialization().remove(i);
                 }
             }
@@ -1072,29 +1111,29 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         tv_spec1.setVisibility(View.VISIBLE);
                         tv_spec2.setVisibility(View.GONE);
                         tv_seeAll.setVisibility(View.GONE);
-                        if(getBussinessData.getSpecialization().get(0).toString()!=null){
+                        if (getBussinessData.getSpecialization().get(0).toString() != null) {
                             tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString());
                         }
-                    }
-                    else if(size == 2){
+                    } else if (size == 2) {
                         mrecycle_specialisation.setVisibility(View.GONE);
                         specialSeeAll.setVisibility(View.GONE);
                         LSpecialization_2.setVisibility(View.VISIBLE);
                         tv_spec1.setVisibility(View.VISIBLE);
                         tv_spec2.setVisibility(View.GONE);
                         tv_seeAll.setVisibility(View.GONE);
-                        if(getBussinessData.getSpecialization().get(0).toString()!=null){
+                        if (getBussinessData.getSpecialization().get(0).toString() != null) {
                             tv_spec1.setText(getBussinessData.getSpecialization().get(0).toString() + ", " + getBussinessData.getSpecialization().get(1).toString());
                         }
-                    }
-                    else {
+                    } else {
                         mrecycle_specialisation.setVisibility(View.GONE);
                         specialSeeAll.setVisibility(View.GONE);
                         LSpecialization_2.setVisibility(View.VISIBLE);
                         tv_spec1.setVisibility(View.VISIBLE);
-                        String specialization = getBussinessData.getSpecialization().get(0).toString() + ", " + getBussinessData.getSpecialization().get(1).toString() +", ";
-                        String more =  tv_seeAll.getText().toString();
-                        final Spannable spannable1 = new SpannableString(specialization + " " +  more);
+                        String specialization = getBussinessData.getSpecialization().get(0).toString() + ", " + getBussinessData.getSpecialization().get(1).toString() + ", ";
+                        int remainingCount = size - 2;
+                        tv_seeAll.setText("+" + remainingCount + " " + "more");
+                        String more = tv_seeAll.getText().toString();
+                        final Spannable spannable1 = new SpannableString(specialization + " " + more);
                         spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
                                 0, more.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         final Spannable seeAll = new SpannableString(spannable1);
@@ -1184,7 +1223,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 LSpecialization.addView(parent1);
                             }
                         };
-                        seeAll.setSpan(clickableSpan,specialization.length(),specialization.length() + more.length() + 1,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        seeAll.setSpan(clickableSpan, specialization.length(), specialization.length() + more.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         seeAll.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)),
                                 specialization.length(), specialization.length() + more.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         tv_spec1.setText(seeAll);
@@ -1399,7 +1438,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             ic_jaldeeverifiedIcon.setVisibility(View.GONE);
         }
         tv_msg.setEnabled(true);
+
         tv_busName.setText(getBussinessData.getBusinessName());
+
         rating.setRating(getBussinessData.getAvgRating());
         if (getBussinessData.getServiceSector().getDisplayName() != null && getBussinessData.getServiceSubSector().getDisplayName() != null) {
             tv_domain.setText(getBussinessData.getServiceSector().getDisplayName() + " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
@@ -1423,6 +1464,387 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             tv_desc.setVisibility(View.GONE);
         }
     }
+
+    public void UpdateMainUIForUser(DepartmentUserSearchModel searchdetailList) {
+        if (searchdetailList.getSearchViewDetail().getSpecialization() != null) {
+            for (int i = 0; i < searchdetailList.getSearchViewDetail().getSpecialization().size(); i++) {
+                if (searchdetailList.getSearchViewDetail().getSpecialization().get(i).equals("Not Applicabale") || searchdetailList.getSearchViewDetail().getSpecialization().get(i).equals("Not Applicable")) {
+                    searchdetailList.getSearchViewDetail().getSpecialization().remove(i);
+                }
+            }
+
+            if (searchdetailList.getSearchViewDetail().getSpecialization().size() > 0) {
+                tv_specializtion.setVisibility(View.VISIBLE);
+                mrecycle_specialisation.setVisibility(View.VISIBLE);
+                specialSeeAll.setVisibility(View.VISIBLE);
+                int size = searchdetailList.getSearchViewDetail().getSpecialization().size();
+                if (size > 0) {
+                    if (size == 1) {
+                        mrecycle_specialisation.setVisibility(View.GONE);
+                        specialSeeAll.setVisibility(View.GONE);
+                        LSpecialization_2.setVisibility(View.VISIBLE);
+                        tv_spec1.setVisibility(View.VISIBLE);
+                        tv_spec2.setVisibility(View.GONE);
+                        tv_seeAll.setVisibility(View.GONE);
+                        if (searchdetailList.getSearchViewDetail().getSpecialization().get(0).toString() != null) {
+                            tv_spec1.setText(searchdetailList.getSearchViewDetail().getSpecialization().get(0).toString());
+                        }
+                    } else if (size == 2) {
+                        mrecycle_specialisation.setVisibility(View.GONE);
+                        specialSeeAll.setVisibility(View.GONE);
+                        LSpecialization_2.setVisibility(View.VISIBLE);
+                        tv_spec1.setVisibility(View.VISIBLE);
+                        tv_spec2.setVisibility(View.GONE);
+                        tv_seeAll.setVisibility(View.GONE);
+                        if (searchdetailList.getSearchViewDetail().getSpecialization().get(0).toString() != null) {
+                            tv_spec1.setText(searchdetailList.getSearchViewDetail().getSpecialization().get(0).toString() + ", " + searchdetailList.getSearchViewDetail().getSpecialization().get(1).toString());
+                        }
+                    } else {
+                        mrecycle_specialisation.setVisibility(View.GONE);
+                        specialSeeAll.setVisibility(View.GONE);
+                        LSpecialization_2.setVisibility(View.VISIBLE);
+                        tv_spec1.setVisibility(View.VISIBLE);
+                        String specialization = searchdetailList.getSearchViewDetail().getSpecialization().get(0).toString() + ", " + searchdetailList.getSearchViewDetail().getSpecialization().get(1).toString() + ", ";
+                        int remainingCount = size - 2;
+                        tv_seeAll.setText("+" + remainingCount + " " + "more");
+                        String more = tv_seeAll.getText().toString();
+                        final Spannable spannable1 = new SpannableString(specialization + " " + more);
+                        spannable1.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.black)),
+                                0, more.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        final Spannable seeAll = new SpannableString(spannable1);
+                        ClickableSpan clickableSpan = new ClickableSpan() {
+                            @Override
+                            public void onClick(@NonNull View widget) {
+                                LSpecialization_2.setVisibility(View.GONE);
+                                mrecycle_specialisation.setVisibility(View.VISIBLE);
+                                specialSeeAll.setVisibility(View.VISIBLE);
+                                LSpecialization.removeAllViews();
+                                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+                                mrecycle_specialisation.setLayoutManager(mLayoutManager);
+                                sAdapter = new SpecialisationAdapter(searchdetailList.getSearchViewDetail());
+                                mrecycle_specialisation.setAdapter(sAdapter);
+                                sAdapter.notifyDataSetChanged();
+                                SpannableString spanStr = new SpannableString("See less");
+                                spanStr.setSpan(new UnderlineSpan(), 0, spanStr.length(), 0);
+                                specialSeeAll.setText(spanStr);
+                                specialSeeAll.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        LSpecialization_2.setVisibility(View.VISIBLE);
+                                        LSpecialization.setVisibility(View.GONE);
+                                        tv_spec1.setVisibility(View.VISIBLE);
+                                        tv_seeAll.setVisibility(View.VISIBLE);
+                                        tv_spec1.setText(seeAll);
+                                        mrecycle_specialisation.setVisibility(View.GONE);
+                                        specialSeeAll.setVisibility(View.GONE);
+                                    }
+                                });
+                                LinearLayout parent1 = new LinearLayout(mContext);
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                parent1.setOrientation(LinearLayout.VERTICAL);
+                                parent1.setLayoutParams(params);
+                                for (int i = 0; i < searchdetailList.getSearchViewDetail().getSpecialization().size(); i++) {
+                                    TextView dynaText = new TextView(mContext);
+                                    dynaText.setText(searchdetailList.getSearchViewDetail().getSpecialization().get(i).toString());
+                                    dynaText.getLineSpacingExtra();
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        dynaText.getJustificationMode();
+                                    }
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        dynaText.getLetterSpacing();
+                                    }
+                                    dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+                                    dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+                                    //  dynaText.setPadding(5, 5, 5, 5);
+                                    dynaText.setMaxLines(1);
+                                    dynaText.setLayoutParams(params);
+                                    params.setMargins(0, 10, 0, 0);
+                                    dynaText.setGravity(Gravity.LEFT);
+                                    parent1.addView(dynaText);
+                                }
+                                TextView dynaText = new TextView(mContext);
+                                Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
+                                        "fonts/Montserrat_Regular.otf");
+                                dynaText.setTypeface(tyface);
+                                dynaText.setText("See Less");
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    dynaText.getJustificationMode();
+                                }
+                                dynaText.getLineSpacingExtra();
+                                dynaText.getLineSpacingExtra();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    dynaText.getLetterSpacing();
+                                }
+                                dynaText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                                dynaText.setTextColor(mContext.getResources().getColor(R.color.title_consu));
+                                // dynaText.setPadding(5, 5, 5, 5);
+                                dynaText.setMaxLines(1);
+                                dynaText.setLayoutParams(params);
+                                params.setMargins(0, 10, 0, 0);
+                                dynaText.setGravity(Gravity.LEFT);
+                                parent1.addView(dynaText);
+                                dynaText.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        LSpecialization_2.setVisibility(View.VISIBLE);
+                                        LSpecialization.setVisibility(View.GONE);
+                                        tv_spec1.setVisibility(View.VISIBLE);
+                                        tv_spec2.setVisibility(View.VISIBLE);
+                                        tv_seeAll.setVisibility(View.VISIBLE);
+                                        tv_spec1.setText(searchdetailList.getSearchViewDetail().getSpecialization().get(0).toString() + ", ");
+                                        tv_spec2.setText(searchdetailList.getSearchViewDetail().getSpecialization().get(1).toString());
+                                    }
+                                });
+                                LSpecialization.addView(parent1);
+                            }
+                        };
+                        seeAll.setSpan(clickableSpan, specialization.length(), specialization.length() + more.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        seeAll.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)),
+                                specialization.length(), specialization.length() + more.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        tv_spec1.setText(seeAll);
+                        tv_spec1.setMovementMethod(LinkMovementMethod.getInstance());
+                    }
+                }
+            } else {
+                tv_specializtion.setVisibility(View.GONE);
+                LSpecialization.setVisibility(View.GONE);
+                LSpecialization_2.setVisibility(View.GONE);
+            }
+        } else {
+            tv_specializtion.setVisibility(View.GONE);
+            LSpecialization.setVisibility(View.GONE);
+            LSpecialization_2.setVisibility(View.GONE);
+        }
+
+        tv_busName.setText(this.searchdetailList.getSearchViewDetail().getBusinessName());
+        if (searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName() != null && searchdetailList.getSearchViewDetail().getServiceSubSector().getDisplayName() != null) {
+            tv_domain.setText(searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName() + " " + "(" + searchdetailList.getSearchViewDetail().getServiceSubSector().getDisplayName() + ")");
+        }
+        if (searchdetailList.getSearchViewDetail().getSocialMedia() != null) {
+            if (searchdetailList.getSearchViewDetail().getSocialMedia().size() > 0) {
+                LsocialMedia.setVisibility(View.VISIBLE);
+                for (int i = 0; i < searchdetailList.getSearchViewDetail().getSocialMedia().size(); i++) {
+                    if (searchdetailList.getSearchViewDetail().getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ic_fac.setVisibility(View.VISIBLE);
+                        final int finalI = i;
+                        ic_fac.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(searchdetailList.getSearchViewDetail().getSocialMedia().get(finalI).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (searchdetailList.getSearchViewDetail().getSocialMedia().get(i).getResource().equalsIgnoreCase("googleplus")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ic_gplus.setVisibility(View.VISIBLE);
+                        final int finalI3 = i;
+                        ic_gplus.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(searchdetailList.getSearchViewDetail().getSocialMedia().get(finalI3).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (searchdetailList.getSearchViewDetail().getSocialMedia().get(i).getResource().equalsIgnoreCase("twitter")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ic_twitt.setVisibility(View.VISIBLE);
+                        final int finalI1 = i;
+                        ic_twitt.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(searchdetailList.getSearchViewDetail().getSocialMedia().get(finalI1).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (searchdetailList.getSearchViewDetail().getSocialMedia().get(i).getResource().equalsIgnoreCase("linkedin")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ic_link.setVisibility(View.VISIBLE);
+                        final int finalI5 = i;
+                        ic_link.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(searchdetailList.getSearchViewDetail().getSocialMedia().get(finalI5).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (searchdetailList.getSearchViewDetail().getSocialMedia().get(i).getResource().equalsIgnoreCase("pinterest")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ic_pin.setVisibility(View.VISIBLE);
+                        final int finalI4 = i;
+                        ic_pin.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(searchdetailList.getSearchViewDetail().getSocialMedia().get(finalI4).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                    if (searchdetailList.getSearchViewDetail().getSocialMedia().get(i).getResource().equalsIgnoreCase("youtube")) {
+//                        tv_SocialMedia.setVisibility(View.VISIBLE);
+                        ic_yout.setVisibility(View.VISIBLE);
+                        final int finalI2 = i;
+                        ic_yout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(searchdetailList.getSearchViewDetail().getSocialMedia().get(finalI2).getValue()));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    Toast.makeText(mContext, "No application can handle this request."
+                                            + " Please install a webbrowser", Toast.LENGTH_LONG).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                }
+            } else {
+                LsocialMedia.setVisibility(View.GONE);
+                tv_SocialMedia.setVisibility(View.GONE);
+            }
+        } else {
+            LsocialMedia.setVisibility(View.GONE);
+            tv_SocialMedia.setVisibility(View.GONE);
+        }
+        contactDetail.clear();
+        if (searchdetailList.getSearchViewDetail().getPhoneNumbers() != null && searchdetailList.getSearchViewDetail().getPhoneNumbers().size() > 0) {
+            for (int i = 0; i < searchdetailList.getSearchViewDetail().getPhoneNumbers().size(); i++) {
+                Config.logV("Phone @@@@@@@@@@@@" + searchdetailList.getSearchViewDetail().getPhoneNumbers().get(i).getInstance());
+                ContactModel contact = new ContactModel();
+                contact.setInstance(searchdetailList.getSearchViewDetail().getPhoneNumbers().get(i).getInstance());
+                contact.setResource(searchdetailList.getSearchViewDetail().getPhoneNumbers().get(i).getResource());
+                contact.setLabel(searchdetailList.getSearchViewDetail().getPhoneNumbers().get(i).getLabel());
+                contactDetail.add(contact);
+            }
+        }
+        if (searchdetailList.getSearchViewDetail().getEmails() != null && searchdetailList.getSearchViewDetail().getEmails().size() > 0) {
+            for (int i = 0; i < searchdetailList.getSearchViewDetail().getEmails().size(); i++) {
+                ContactModel contact = new ContactModel();
+                contact.setInstance(searchdetailList.getSearchViewDetail().getEmails().get(i).getInstance());
+                contact.setResource(searchdetailList.getSearchViewDetail().getEmails().get(i).getResource());
+                contact.setLabel(searchdetailList.getSearchViewDetail().getEmails().get(i).getLabel());
+                contactDetail.add(contact);
+            }
+        }
+
+        if (searchdetailList.getSearchViewDetail().getPhoneNumbers() != null) {
+
+            if (searchdetailList.getSearchViewDetail().getPhoneNumbers().size() > 0 || searchdetailList.getSearchViewDetail().getEmails().size() > 0 && contactDetail.size() > 0) {
+                tv_contact.setVisibility(View.VISIBLE);
+                tv_contact.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!isContact) {
+                            Config.logV("Open");
+                            isContact = true;
+                            tv_contact.setText("Contact");
+                            tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.contact_selected, 0, 0);
+                            BottomSheetContactDialog();
+                        } else {
+                            Config.logV("CLosed");
+                        }
+                    }
+                });
+            } else {
+                tv_contact.setVisibility(View.GONE);
+            }
+        }
+
+        if (searchdetailList.getSearchViewDetail().getVerifyLevel() != null) {
+            if (!searchdetailList.getSearchViewDetail().getVerifyLevel().equalsIgnoreCase("NONE")) {
+                ic_jaldeeverifiedIcon.setVisibility(View.VISIBLE);
+                if (searchdetailList.getSearchViewDetail().getVerifyLevel().equalsIgnoreCase("BASIC_PLUS")) {
+                    ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basicplus);
+                }
+                if (searchdetailList.getSearchViewDetail().getVerifyLevel().equalsIgnoreCase("BASIC")) {
+                    ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_basic);
+                }
+                if (searchdetailList.getSearchViewDetail().getVerifyLevel().equalsIgnoreCase("PREMIUM") || searchdetailList.getSearchViewDetail().getVerifyLevel().equalsIgnoreCase("ADVANCED")) {
+                    ic_jaldeeverifiedIcon.setImageResource(R.drawable.jaldee_adv);
+                }
+            } else {
+                ic_jaldeeverifiedIcon.setVisibility(View.GONE);
+            }
+
+            ic_jaldeeverifiedIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String ynw_verified = null;
+                    if (searchdetailList.getSearchViewDetail().getVerifyLevel().equalsIgnoreCase("BASIC"))
+                        ynw_verified = "2";
+                    else if (searchdetailList.getSearchViewDetail().getVerifyLevel().equalsIgnoreCase("BASIC_PLUS"))
+                        ynw_verified = "3";
+                    else if (searchdetailList.getSearchViewDetail().getVerifyLevel().equalsIgnoreCase("PREMIUM") || searchdetailList.getSearchViewDetail().getVerifyLevel().equalsIgnoreCase("ADVANCED"))
+                        ynw_verified = "4";
+                    Config.logV("YNW VERIFIED@@@@@@@@@@@@" + ynw_verified);
+                    CustomDialog cdd = new CustomDialog(mContext, ynw_verified, searchdetailList.getSearchViewDetail().getBusinessName());
+                    cdd.setCanceledOnTouchOutside(true);
+                    cdd.show();
+                }
+            });
+        } else {
+            ic_jaldeeverifiedIcon.setVisibility(View.GONE);
+        }
+        tv_msg.setEnabled(true);
+
+        rating.setRating(searchdetailList.getSearchViewDetail().getAvgRating());
+
+        if (searchdetailList.getSearchViewDetail().getBusinessDesc() != null) {
+            tv_desc.setVisibility(View.VISIBLE);
+            tv_desc.setText(searchdetailList.getSearchViewDetail().getBusinessDesc());
+            tv_desc.post(new Runnable() {
+                @Override
+                public void run() {
+                    int lineCount = tv_desc.getLineCount();
+                    //Config.logV("No of line---------------" + lineCount + "Name" + inboxList.getUserName());
+                    if (lineCount > 3) {
+                        ResizableCustomView.doResizeTextView(mContext, tv_desc, 3, "..more", true);
+                    } else {
+                    }
+                    // Use lineCount here
+                }
+            });
+        } else {
+            tv_desc.setVisibility(View.GONE);
+        }
+
+    }
+
 
     private void apiSearchGallery(final String muniqueID) {
         ApiInterface apiService =
@@ -1469,7 +1891,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     int count = 0;
+
     private void ApiSearchViewLocation(final String muniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
@@ -1531,7 +1955,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     BottomSheetDialog bdialog;
+
     public void BottomSheetContactDialog() {
         bdialog = new BottomSheetDialog(mContext);
         bdialog.setContentView(R.layout.contact_list);
@@ -1554,25 +1980,27 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
         bdialog.setOnCancelListener(
-            new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    //When you touch outside of dialog bounds,
-                    //the dialog gets canceled and this method executes.
-                    Config.logV("CANCEL @@@@@@@@@@@");
-                    isContact = false;
-                    tv_contact.setText("Contact");
-                    tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_contact, 0, 0);
-                    bdialog.dismiss();
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        //When you touch outside of dialog bounds,
+                        //the dialog gets canceled and this method executes.
+                        Config.logV("CANCEL @@@@@@@@@@@");
+                        isContact = false;
+                        tv_contact.setText("Contact");
+                        tv_contact.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_contact, 0, 0);
+                        bdialog.dismiss();
+                    }
                 }
-            }
         );
         contactlist.setLayoutManager(mLayoutManager);
         ContactDetailAdapter checkAdapter = new ContactDetailAdapter(contactDetail, mContext, getActivity(), mInterfaceContact);
         contactlist.setAdapter(checkAdapter);
         checkAdapter.notifyDataSetChanged();
     }
+
     BottomSheetDialog dialog;
+
     private void ApiCheckInMessage(final int mLocid, final String from, final String loc) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1650,6 +2078,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     // Need to change
     private void ApiSearchViewServiceID(final int id) {
         ApiInterface apiService =
@@ -1695,7 +2124,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
-//
+
+    //
 //    /**
 //     * To show departments and its doctors/services
 //     * @param uniqueID
@@ -1871,14 +2301,25 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     } finally {
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                         mRecyLocDetail.setLayoutManager(mLayoutManager);
-                        if(homeUniqueId==null){
+                        if (homeUniqueId == null) {
                             uniID = uniqueID;
-                        }else{
+                        } else {
                             uniID = homeUniqueId;
                         }
-                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence,donationFundRaising,gServiceList,LaServicesList, virtualServices);
-                        mRecyLocDetail.setAdapter(mSearchLocAdapter);
-                        mSearchLocAdapter.notifyDataSetChanged();
+
+                        if (from_user) {
+
+                            ArrayList<DepartmentUserSearchModel> userDetails = new ArrayList<DepartmentUserSearchModel>();
+                            userDetails.add(searchdetailList);
+                            userDetailAdapter = new UserDetailAdapter(mContext, userDetails, mSearchAWSResponse, mSearchDepartmentList, terminology, mInterface,mSearchmCheckMessageList);
+                            mRecyLocDetail.setAdapter(userDetailAdapter);
+                            userDetailAdapter.notifyDataSetChanged();
+                        } else {
+
+                            mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList, online_presence, donationFundRaising, gServiceList, LaServicesList, virtualServices);
+                            mRecyLocDetail.setAdapter(mSearchLocAdapter);
+                            mSearchLocAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
 
@@ -1892,6 +2333,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             });
         }
     }
+
     private void ApiSearchScheduleViewID(int mProviderid, final ArrayList<String> ids) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1965,6 +2407,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchVirtualFields> domainVirtual = new ArrayList<>();
     ArrayList<SearchVirtualFields> sub_domainVirtual = new ArrayList<>();
     ArrayList<SearchVirtualFields> mergeResult = new ArrayList<>();
+
     private void apiVirtualFields(String muniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
@@ -2029,6 +2472,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     private void apiSearchViewTerminology(String muniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
@@ -2067,6 +2511,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     public void onMethodNewSearch(String uniqueID) {
         NewSearchFragment nsfFragment = new NewSearchFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -2111,18 +2556,14 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.replace(R.id.mainlayout, cffFragment).commit();
     }
 
-    public void onMethodDepartment(SearchDepartmentServices departmentCode,  String businessName) {
+    public void onMethodDepartment(SearchDepartmentServices departmentCode, String businessName) {
         Log.i("qweqweq", "qweqweqwe");
-        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName, mBusinessDataList,firstCouponAvailable, couponAvailable);
+        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, deptFragment).commit();
     }
-
-
-
-
 
 
     public void onMethodJaldeeLogo(String ynw_verified, String providername) {
@@ -2177,12 +2618,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             @Override
             public void onClick(View v) {
                 String modifyAccountID;
-                if(from.equalsIgnoreCase("dept")){
-                     modifyAccountID = accountID;
+                if (from.equalsIgnoreCase("dept")) {
+                    modifyAccountID = accountID;
+                } else {
+                    modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
                 }
-                else{
-             modifyAccountID = accountID.substring(0, accountID.indexOf("-"));}
-            ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
+                ApiCommunicate(modifyAccountID, edt_message.getText().toString(), dialog);
             }
         });
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -2267,9 +2708,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, pfFragment).commit();
     }
+
     @Override
     public void onMethodServiceCallbackDonation(ArrayList<SearchDonation> searchService, String value) {
-        ServiceListDonationFragment pfFragment = new  ServiceListDonationFragment();
+        ServiceListDonationFragment pfFragment = new ServiceListDonationFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putSerializable("servicelist", searchService);
@@ -2287,17 +2729,20 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     public void onMethodCheckinCallback(int locID, String from, String location) {
         ApiCheckInMessage(locID, from, location);
     }
+
     @Override
     public void onMethodCallback() {
         Toast.makeText(mContext, terminology + " cancelled successfully", Toast.LENGTH_LONG).show();
         dialog.dismiss();
         refreshList();
     }
-    public void onMethodCallback(String value, String claimable) {
+
+    public void onMethodCallback(DepartmentUserSearchModel searchdetailList, boolean fromUser, String uniqueID) {
         Bundle bundle = new Bundle();
         SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
-        bundle.putString("uniqueID", value);
-        bundle.putString("claimable", claimable);
+        bundle.putSerializable("userdetail", searchdetailList);
+        bundle.putBoolean("user", fromUser);
+        bundle.putString("uniqueID", uniqueID);
         pfFragment.setArguments(bundle);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
@@ -2306,6 +2751,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.add(R.id.mainlayout, pfFragment).commit();
 
     }
+
     public void refreshList() {
         Config.logV("Refresh $$$$$@@@@@@@@@@@@@@@@@@");
         count = 0;
@@ -2322,18 +2768,19 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         mSearchmCheckMessageList = new ArrayList<>();
         ids = new ArrayList<>();
         contactDetail = new ArrayList<>();
-        if(homeUniqueId==null){
+        if (homeUniqueId == null) {
             apiSearchViewDetail(uniqueID, mSearchResp);
-        }else{
+        } else {
             apiSearchViewDetail(homeUniqueId, mSearchResp);
         }
         //ApiSearchGallery(uniqueID);
-        if(homeUniqueId==null){
+        if (homeUniqueId == null) {
             apiSearchViewTerminology(uniqueID);
-        }else{
+        } else {
             apiSearchViewTerminology(homeUniqueId);
         }
     }
+
     private void ApiAddFavo(int providerID) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -2358,6 +2805,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -2367,8 +2815,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     boolean favFlag = false;
     ArrayList<FavouriteModel> mFavList = new ArrayList<>();
+
     private void ApiFavList(final List<SearchAWsResponse> mSearchRespPass, final String claimable) {
         Config.logV("API Call");
         final ApiInterface apiService =
@@ -2429,6 +2879,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<FavouriteModel>> call, Throwable t) {
                 // Log error here since request failed
@@ -2436,6 +2887,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     private void ApiRemoveFavo(int providerID) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -2460,6 +2912,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -2469,6 +2922,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -2477,6 +2931,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             refreshList();
         }
     }
+
     @Override
     public void onMethodContactCallback(String type, String value) {
         if (type.equalsIgnoreCase("Phoneno")) {
@@ -2494,8 +2949,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         }
     }
+
     private final int CALL_REQUEST = 100;
     String phoneNumber;
+
     public void callPhoneNumber(String phNo) {
         try {
             phoneNumber = phNo;
@@ -2520,7 +2977,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             ex.printStackTrace();
         }
     }
-//    private void listDoctorsByDepartment() {
+
+    //    private void listDoctorsByDepartment() {
 //        final ApiInterface apiService =
 //                ApiClient.getClientAWS(mContext).create(ApiInterface.class);
 //        Map<String, String> query = new HashMap<>();

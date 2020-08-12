@@ -79,9 +79,9 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
         holder.deptName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//            if (searchDepartmentServices.getDepartmentName() != null) {
-//                onItemClickListener.departmentClicked(searchDepartmentServices, businessName );
-//            }
+            if (searchDepartmentServices.getDepartmentName() != null) {
+                onItemClickListener.departmentClicked(searchDepartmentServices, businessName );
+            }
             }
         });
     }

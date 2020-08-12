@@ -116,7 +116,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
     public void onBindViewHolder(final FavLocationAdapter.MyViewHolder myViewHolder, final int position) {
         final QueueList queueList = mQueueList.get(position);
         final ScheduleList scheduleList = mScheduleList.get(position);
-        final FavouriteModel favouriteList = mFavList.get(position);
+
 
 
 
@@ -212,8 +212,8 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                     }
                 }
 
-                if(queueList.getNextAvailableQueue()!=null && favouriteList.getOnlinePresence()!=null) {
-                    if (favouriteList.getOnlinePresence().equals("true") && queueList.getNextAvailableQueue().isWaitlistEnabled()) {
+                if(queueList.getNextAvailableQueue()!=null && mFavList.get(i).getOnlinePresence()!=null) {
+                    if (mFavList.get(i).getOnlinePresence().equals("true") && queueList.getNextAvailableQueue().isWaitlistEnabled()) {
                         disableCheckinFeature(myViewHolder);
                         if (queueList.getNextAvailableQueue().isShowToken()) {
                             myViewHolder.btn_checkin.setText("GET TOKEN");
@@ -419,7 +419,7 @@ public class FavLocationAdapter extends RecyclerView.Adapter<FavLocationAdapter.
                 "fonts/Montserrat_Bold.otf");
         myViewHolder.tv_Open.setTypeface(tyface);
         if(queueList.getNextAvailableQueue()!=null && queueList.getNextAvailableQueue().isOpenNow()){
-            myViewHolder.tv_Open.setVisibility(View.VISIBLE);
+            myViewHolder.tv_Open.setVisibility(View.GONE); // Management asked to hide open now
             Config.logV("Open Now----------------");
         }else{
            // Config.logV("Open Now-------3333---------"+queueList.getNextAvailableQueue().isOpenNow());

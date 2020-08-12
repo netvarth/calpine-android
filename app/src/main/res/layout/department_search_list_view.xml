@@ -113,7 +113,7 @@
                             <TextView
                                 android:id="@+id/name"
                                 android:layout_width="wrap_content"
-                                android:layout_height="34dp"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="left"
                                 android:text="Name"
@@ -326,7 +326,9 @@
                     android:background="@drawable/input_border_cyan_bg"
                     android:gravity="left"
                     android:orientation="horizontal"
-                    android:padding="@dimen/padding5"></LinearLayout>
+                    android:padding="@dimen/padding5">
+
+                </LinearLayout>
 
 
             </HorizontalScrollView>

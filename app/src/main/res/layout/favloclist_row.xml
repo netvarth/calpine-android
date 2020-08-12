@@ -25,16 +25,16 @@
             android:textSize="@dimen/txtsize_hint" />
 
         <TextView
-            android:layout_marginLeft="@dimen/dimen_2dp"
-            android:textStyle="bold"
             android:id="@+id/txtOpen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
+            android:layout_marginLeft="@dimen/dimen_2dp"
             android:text="Open Now"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/txtsize_10"
-            android:visibility="visible" />
+            android:textStyle="bold"
+            android:visibility="gone" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.model;
 
-public class LocationModel {
+import java.io.Serializable;
+
+public class LocationModel implements Serializable {
     private String longitude;
     private String lattitude;
     private String place;

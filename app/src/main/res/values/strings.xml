@@ -70,6 +70,8 @@
     <string name="db_table_inbox">table_inbox</string>
     <string name="db_table_popularsearch">POPULARSEARCH_TB</string>
     <string name="db_table_domain">DOMAIN_TB</string>
+    <string name="db_table_subdomain">TB_SUBDOMAIN</string>
+
 
 
     <string name="mobile">Phone Number</string>

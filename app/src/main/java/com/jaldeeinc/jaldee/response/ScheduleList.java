@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.model.NextAvailableSchedule;
 
-public class ScheduleList {
+import java.io.Serializable;
+
+public class ScheduleList implements Serializable {
     public boolean isCheckinAllowed() {
         return isCheckinAllowed;
     }

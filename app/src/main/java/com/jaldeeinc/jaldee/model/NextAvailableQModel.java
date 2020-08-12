@@ -1,6 +1,8 @@
 package com.jaldeeinc.jaldee.model;
 
-public class NextAvailableQModel {
+import java.io.Serializable;
+
+public class NextAvailableQModel implements Serializable {
 
     public int getId() {
         return id;

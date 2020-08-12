@@ -2,13 +2,14 @@ package com.jaldeeinc.jaldee.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by sharmila on 30/7/18.
  */
 
-public class SearchLocation {
+public class SearchLocation implements Serializable {
 
     public String getGoogleMapUrl() {
         return googleMapUrl;

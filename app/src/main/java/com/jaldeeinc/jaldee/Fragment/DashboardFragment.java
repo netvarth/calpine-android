@@ -103,7 +103,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     }
 
     static Context mContext;
-    RecyclerView mRecycleActive,mRecycleAppointment;
+    RecyclerView mRecycleActive, mRecycleAppointment;
     Fragment active;
     TextView txtUsername;
     Toolbar toolbar;
@@ -113,7 +113,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     Spinner mSpinnerDomain;
     String AWS_URL = "";
     String query1 = "";
-
 
 
     ArrayList<Domain_Spinner> domainList = new ArrayList<>();
@@ -144,8 +143,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     static double latitude;
     static double longitude;
 
-    TextView tv_activechkin,tv_activeappt, tv_popular;
-    LinearLayout LpopularSearch, LActiveCheckin,LActiveAppointment, LinearPopularSearch,LMore,LinearMorePopularSearch;
+    TextView tv_activechkin, tv_activeappt, tv_popular;
+    LinearLayout LpopularSearch, LActiveCheckin, LActiveAppointment, LinearPopularSearch, LMore, LinearMorePopularSearch;
     TextView tv_More;
     boolean is_MoreClick = false;
     LinearLayout Lhome_mainlayout;
@@ -162,21 +161,22 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     double distance;
 
     String subdomainquery, subdomainName;
+    private boolean fromBusinessId = false;
 
     public void funPopulateSearchList(final ArrayList<SearchModel> mPopularSearchList) {
         if (mPopularSearchList.size() > 0) {
             is_MoreClick = false;
             LpopularSearch.setVisibility(View.VISIBLE);
             LinearPopularSearch.setVisibility(View.VISIBLE);
-           LinearMorePopularSearch.setVisibility(View.GONE);
+            LinearMorePopularSearch.setVisibility(View.GONE);
             LinearPopularSearch.removeAllViews();
             if (mPopularSearchList.size() > 6) {
-               tv_More.setVisibility(View.VISIBLE);
+                tv_More.setVisibility(View.VISIBLE);
                 LMore.setVisibility(View.VISIBLE);
             } else {
-               tv_More.setVisibility(View.GONE);
-               LMore.setVisibility(View.GONE);
-           }
+                tv_More.setVisibility(View.GONE);
+                LMore.setVisibility(View.GONE);
+            }
             int k = 0;
             int rowsize = 0;
 
@@ -235,8 +235,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 LinearPopularSearch.addView(parent1);
             }
 
-        }
-        else{
+        } else {
             LpopularSearch.setVisibility(View.GONE);
             LinearPopularSearch.setVisibility(View.GONE);
         }
@@ -319,7 +318,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             mlocName = SharedPreference.getInstance(mContext).getStringValue("locnme", "");
             mtyp = SharedPreference.getInstance(mContext).getStringValue("typ", "");
 
-            UpdateLocation(latitude, longitude, mlocName,mtyp);
+            UpdateLocation(latitude, longitude, mlocName, mtyp);
 
 
         } else {
@@ -377,11 +376,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
         if (Config.isOnline(getActivity())) {
             APiSearchList();
-        }else{
+        } else {
             DatabaseHandler db = new DatabaseHandler(mContext);
 
             domainList.clear();
-            domainList=db.getDomain();
+            domainList = db.getDomain();
             ArrayAdapter<Domain_Spinner> adapter = new ArrayAdapter<Domain_Spinner>(getActivity(), R.layout.spinner_item, domainList);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mSpinnerDomain.setAdapter(adapter);
@@ -473,7 +472,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 tv_More.setText("More");
                 mPopularSearchList.clear();
                 if (mDomainSpinner.equalsIgnoreCase("All")) {
-                    db=new DatabaseHandler(mContext);
+                    db = new DatabaseHandler(mContext);
                     mPopular_AllSearchList = db.getPopularSearch("All");
                     // mPopular_AllSearchList.addAll(mGLobalSearch);
                     mPopularSearchList = mPopular_AllSearchList;
@@ -617,7 +616,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                     Config.logV("mGLobalSearch" + mGLobalSearch.size());
 
-                               /* ArrayList<ListCell>*/
+                    /* ArrayList<ListCell>*/
                     items = new ArrayList<ListCell>();
                     for (int i = 0; i < mGLobalSearch.size(); i++) {
 
@@ -638,7 +637,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     }
 
 
-                           /*     *******************************************************************/
+                    /*     *******************************************************************/
 
                     listadapter = new SearchListAdpter("search", getActivity(), items, latitude, longitude, getParentFragment(), mSearchView);
                     searchSrcTextView.setAdapter(listadapter);
@@ -673,7 +672,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                                 //list.setAdapter(adapter);
                                 for (int i = 0; i < items.size(); i++) {
-                                    if (items.get(i).getCategory().equalsIgnoreCase("Business Name as") || items.get(i).getCategory().equalsIgnoreCase("Business Id as") ) {
+                                    if (items.get(i).getCategory().equalsIgnoreCase("Business Name as") || items.get(i).getCategory().equalsIgnoreCase("Business Id as")) {
                                         items.remove(items.get(i));
                                     }
                                 }
@@ -681,7 +680,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
 
 
-                               /* searchSrcTextView.setAdapter(listadapter);*/
+                                /* searchSrcTextView.setAdapter(listadapter);*/
                                 listadapter.notifyDataSetChanged();
                                 listadapter.getFilter().filter(query);
                             }
@@ -697,6 +696,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     items = new ArrayList<ListCell>();
                     //HEADER+SUBDOMAIN
                     mSubDomainSubSearch.clear();
+
 
                     for (int i = 0; i < mSubDomain.size(); i++) {
                         if (mSubDomain.get(i).getSector().equalsIgnoreCase(mDomainSpinner)) {
@@ -777,7 +777,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                 }
                                 items.add(new ListCell(query, "Business Id as", mDomainSpinner, query));
                                 items.add(new ListCell(query, "Business Name as", mDomainSpinner, query));
-
 
 
                                 // searchSrcTextView.setAdapter(listadapter);
@@ -861,10 +860,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 Config.logV("Popular Text__________@@@Dele111");
                 mSearchView.setQuery("", false);
 
-                if(mtyp==null){
+                if (mtyp == null) {
                     mtyp = "city";
                 }
-                LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
+                LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
                 double upperLeftLat = Lanlong.getUpperLeftLat();
                 double upperLeftLon = Lanlong.getUpperLeftLon();
                 double lowerRightLat = Lanlong.getLowerRightLat();
@@ -923,7 +922,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     }
                     Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + name);
 
-                    querycreate = "(or custom_id:" + "'" + name + "' enc_uid:" +  "'" + name + "')";
+                    querycreate = "(or custom_id:" + "'" + name + "' enc_uid:" + "'" + name + "')";
+                    fromBusinessId = true;
 
                 }
 
@@ -944,11 +944,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 //VALID QUERY PASS
                 bundle.putString("subdomainquery", subdomainquery);
                 bundle.putString("subdomainName", subdomainName);
-
-                bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+                if (fromBusinessId) {
+                    bundle.putString("query", querycreate);
+                } else {
+                    bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
+                }
                 bundle.putString("url", pass);
 
-                if(Config.isOnline(getActivity())) {
+                if (Config.isOnline(mContext)) {
                     SearchListFragment pfFragment = new SearchListFragment();
 
                     bundle.putString("subdomain_select", "true");
@@ -1031,7 +1034,6 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             mSubDomain.clear();
 
 
-
                             JsonArray lstPopularSearchLabel = response.body().getPopularSearchLabels().get("all").getAsJsonObject().get("labels").getAsJsonArray();
                             for (int k = 0; k < lstPopularSearchLabel.size(); k++) {
                                 search = new SearchModel();
@@ -1046,9 +1048,9 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                             for (int i = 0; i < response.body().getSectorLevelLabels().size(); i++) {
                                 int mSectorSize = response.body().getSectorLevelLabels().get(i).getSubSectorLevelLabels().size();
-                                Log.i("Sector",response.body().getSectorLevelLabels().get(i).getName());
+                                Log.i("Sector", response.body().getSectorLevelLabels().get(i).getName());
 //                                Log.i("KeyString",new Gson().toJson(response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName())));
-                                if(response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName())==null)
+                                if (response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName()) == null)
                                     continue;
                                 lstPopularSearchLabel = response.body().getPopularSearchLabels().get(response.body().getSectorLevelLabels().get(i).getName()).getAsJsonObject().get("labels").getAsJsonArray();
 
@@ -1058,7 +1060,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                                     search.setDisplayname(lstPopularSearchLabel.get(l).getAsJsonObject().get("displayname").getAsString());
                                     search.setQuery(lstPopularSearchLabel.get(l).getAsJsonObject().get("query").getAsString());
                                     search.setSector(response.body().getSectorLevelLabels().get(i).getName());
-                                     mPopularSearch.add(search);
+                                    mPopularSearch.add(search);
                                 }
 
                                 for (int k = 0; k < mSectorSize; k++) {
@@ -1094,6 +1096,11 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                             db.insertPopularSearchInfo(mPopularSearch);
 //                            db.insertPopularSearchInfo();
+
+                            db = new DatabaseHandler(mContext);
+                            db.DeleteSubDomain();
+                            db.insertSubDomainList(mSubDomain);
+
 
                             // db.insertPopularSearchInfo(mGLobalSearch);
                             // db.insertPopularSearchInfo(mSubDomain);
@@ -1285,7 +1292,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         if (response.body().size() > 0) {
                             txt_sorry.setVisibility(View.GONE);
                             MActiveList.clear();
-                                MActiveList = response.body();
+                            MActiveList = response.body();
 //                                Log.i("fghhgf",new Gson().toJson(MActiveList));
                             Config.logV("MActiveList----------------------" + MActiveList.size());
                             if (MActiveList.size() > 0) {
@@ -1332,6 +1339,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             }
         });
     }
+
     private void ApiTodayAppointmentList() {
         Config.logV("API TODAY Call");
         final ApiInterface apiService =
@@ -1360,7 +1368,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                             } else {
                                 LActiveAppointment.setVisibility(View.VISIBLE);
                             }
-                         } else {
+                        } else {
                             mRecycleAppointment.setVisibility(View.GONE);
                             tv_activeappt.setText("Active Appointments ");
                             txt_sorry_appointment.setVisibility(View.VISIBLE);
@@ -1381,16 +1389,17 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             }
         });
     }
-    public LanLong getLocationNearBy(double lant, double longt,String typ) {
-        if(typ.equalsIgnoreCase("state")){
+
+    public LanLong getLocationNearBy(double lant, double longt, String typ) {
+        if (typ.equalsIgnoreCase("state")) {
             distance = 300;
-        }else if(typ.equalsIgnoreCase("city")){
+        } else if (typ.equalsIgnoreCase("city")) {
             distance = 40;
-        }else if(typ.equalsIgnoreCase("area")){
+        } else if (typ.equalsIgnoreCase("area")) {
             distance = 5;
-        }else if(typ.equalsIgnoreCase("metro")){
+        } else if (typ.equalsIgnoreCase("metro")) {
             distance = 10;
-        }else if(typ.equalsIgnoreCase("capital")){
+        } else if (typ.equalsIgnoreCase("capital")) {
             distance = 20;
         }
         double distInDegree = distance / 111;
@@ -1408,12 +1417,13 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         lan.setLowerRightLon(lowerRightLon);
         return lan;
     }
+
     public void FunPopularSearch(String sector, String category, String name) {
         String mSector;
-        if(mtyp==null){
+        if (mtyp == null) {
             mtyp = "city";
         }
-        LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
+        LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();
@@ -1433,7 +1443,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             subdomainquery = "sub_sector:'" + name + "'";
             subdomainName = name;
         }
-        if(sector.indexOf("sub_sector_displayname")!=-1) {
+        if (sector.indexOf("sub_sector_displayname") != -1) {
             querycreate = sector;
         } else {
             if (category.equalsIgnoreCase("Suggested Search")) {
@@ -1459,7 +1469,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
        /* bundle.putString("query", "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")");
         bundle.putString("url", pass);*/
         //VALID QUERY PASS
-        if(sector.indexOf("sub_sector_displayname")!=-1) { // if keyw
+        if (sector.indexOf("sub_sector_displayname") != -1) { // if keyw
             String requiredString = sector.substring(sector.indexOf("]") + 1, sector.indexOf("))"));
             Config.logV("Second---------" + requiredString);
             querycreate = requiredString + ")";
@@ -1468,7 +1478,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         bundle.putString("url", pass);
         Config.logV("Popular Text__________@@@Del111e");
         mSearchView.setQuery("", false);
-        if(Config.isOnline(getActivity())) {
+        if (Config.isOnline(getActivity())) {
             SearchListFragment pfFragment = new SearchListFragment();
             bundle.putString("locName", mCurrentLoc.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
@@ -1493,10 +1503,12 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             mSearchView.clearFocus();
         }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -1586,8 +1598,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             longitude = mylocation.getLongitude();
             SharedPreference.getInstance(mContext).setValue("latitudes", latitude);
             SharedPreference.getInstance(mContext).setValue("longitudes", longitude);
-            Log.i("latlatlat",String.valueOf(latitude));
-            Log.i("latlatlat",String.valueOf(longitude));
+            Log.i("latlatlat", String.valueOf(latitude));
+            Log.i("latlatlat", String.valueOf(longitude));
             Config.logV("Update Location Changed Connected---------------------11111------" + location.getLatitude());
             Config.logV("Latitude-------------" + latitude);
 
@@ -1597,7 +1609,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 mCurrentLoc.setVisibility(View.VISIBLE);
                 mCurrentLoc.setText(addresses.get(0).getLocality());
 
-                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude), String.valueOf(longitude), addresses.get(0).getLocality(),mtyp);
+                SearchListFragment.UpdateLocationSearch(String.valueOf(latitude), String.valueOf(longitude), addresses.get(0).getLocality(), mtyp);
                 //   Config.logV("Latitude-----11111--------"+addresses.get(0).getAddressLine(0));
             } catch (Exception e) {
 
@@ -1706,6 +1718,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 break;
         }
     }
+
     private void checkPermissions() {
         int permissionLocation = ContextCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
@@ -1762,15 +1775,17 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             DefaultLocation();
         }
     }
+
     public static Fragment getHomeFragment() {
         return home;
     }
+
     public void QuerySubmitCLick(String query) {
         mSearchView.setQuery("", false);
-        if(mtyp==null){
+        if (mtyp == null) {
             mtyp = "city";
         }
-        LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
+        LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();
@@ -1796,14 +1811,14 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + query);
         String querycreate = "";
         if (!mDomainSpinner.equalsIgnoreCase("All")) {
-            if(query.equals("")) {
+            if (query.equals("")) {
                 querycreate = "sector :'" + mDomainSpinner + "'";
             } else {
-                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query +  "' custom_id: " + "'" + query +  "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "') sector :'" + mDomainSpinner + "'";
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' custom_id: " + "'" + query + "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "') sector :'" + mDomainSpinner + "'";
             }
         } else {
-            if(!query.equals("")) {
-                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' custom_id: " + "'" + query +  "' enc_uid: " + "'" + query  + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "')";
+            if (!query.equals("")) {
+                querycreate = "(or sub_sector_displayname: " + "'" + query + "' sub_sector: " + "'" + query + "' specialization: " + "'" + query + "' specialization_displayname: " + "'" + query + "' title: " + "'" + query + "' services: " + "'" + query + "' custom_id: " + "'" + query + "' enc_uid: " + "'" + query + "' qualification: " + "'" + query + "' adwords: " + "'" + query1 + "')";
             } else {
                 querycreate = "";
             }
@@ -1816,7 +1831,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         //VALID QUERY PASS
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
-        if(Config.isOnline(getActivity())) {
+        if (Config.isOnline(mContext)) {
             SearchListFragment pfFragment = new SearchListFragment();
             bundle.putString("locName", mCurrentLoc.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
@@ -1843,10 +1858,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
     public void SpinnerItemCLick() {
         mSearchView.setQuery("", false);
-        if(mtyp==null){
+        if (mtyp == null) {
             mtyp = "city";
         }
-        LanLong Lanlong = getLocationNearBy(latitude, longitude,mtyp);
+        LanLong Lanlong = getLocationNearBy(latitude, longitude, mtyp);
         double upperLeftLat = Lanlong.getUpperLeftLat();
         double upperLeftLon = Lanlong.getUpperLeftLon();
         double lowerRightLat = Lanlong.getLowerRightLat();
@@ -1867,7 +1882,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         //VALID QUERY PASS
         bundle.putString("query", "(and location1:" + locationRange + querycreate + ")");
         bundle.putString("url", pass);
-        if(Config.isOnline(getActivity())) {
+        if (Config.isOnline(mContext)) {
             SearchListFragment pfFragment = new SearchListFragment();
             bundle.putString("locName", mCurrentLoc.getText().toString());
             bundle.putString("latitude", String.valueOf(latitude));
@@ -1888,7 +1903,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }
 
-    public static boolean UpdateLocation(Double mlatitude, Double mlongitude, String locNme,String typ) {
+    public static boolean UpdateLocation(Double mlatitude, Double mlongitude, String locNme, String typ) {
         Config.logV("UpdateLocation 3333333333----" + mlatitude + " " + mlongitude + "" + locNme);
         try {
             latitude = mlatitude;
@@ -1923,6 +1938,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
         return true;
     }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -1935,6 +1951,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             }
         }
     }
+
     @Override
     public void onMethodActiveCallback(String value) {
         Bundle bundle = new Bundle();
@@ -1957,14 +1974,15 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         iBill.putExtra("accountID", accountID);
         iBill.putExtra("payStatus", payStatus);
         iBill.putExtra("consumer", consumer);
-        iBill.putExtra("purpose",Constants.PURPOSE_BILLPAYMENT);
-        if(MActiveList!=null) {
+        iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
+        if (MActiveList != null) {
             for (int i = 0; i < MActiveList.size(); i++) {
                 iBill.putExtra("customerId", MActiveList.get(i).getConsumer().getId());
             }
         }
         startActivity(iBill);
     }
+
     @Override
     public void onMethodActivePayIconCallback(String payStatus, final String ynwUUID, String provider, final String accountID, final double amountDue, int customerId) {
         Log.i("Purpose: ", "prePayment");
@@ -1974,10 +1992,10 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         i.putExtra("accountID", accountID);
         i.putExtra("amountDue", amountDue);
         i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
-        if(MActiveList!=null){
-        for(int j =0;j<MActiveList.size();j++){
-        i.putExtra("customerId",MActiveList.get(j).getConsumer().getId());
-        }
+        if (MActiveList != null) {
+            for (int j = 0; j < MActiveList.size(); j++) {
+                i.putExtra("customerId", MActiveList.get(j).getConsumer().getId());
+            }
         }
         startActivity(i);
     }

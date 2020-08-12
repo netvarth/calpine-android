@@ -170,7 +170,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 handleCouponsAndDiscounts(myViewHolder, searchdetailList, parent, params1);
                 handleEnquiry(myViewHolder, searchdetailList,parent, params1);
                 setTerminologies(searchdetailList);
-                handleBusinesshours(myViewHolder, searchdetailList, parent, params1);
+             //   handleBusinesshours(myViewHolder, searchdetailList, parent, params1); // Management asked to hide working hours
                 handleLocationAmenities(myViewHolder, searchdetailList, parent, params1);
                 //////////////////////////////////////////////////////////////
                 Typeface tyface_confm = Typeface.createFromAsset(context.getAssets(),

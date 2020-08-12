@@ -708,29 +708,31 @@ public class Tab1Fragment extends RootFragment implements HistoryAdapterCallback
             }
 
         } else if (requestCode == CAMERA) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            //      imageview.setImageBitmap(bitmap);
-            path = saveImage(bitmap);
-            // imagePathList.add(bitmap.toString());
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            if (data != null) {
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                //      imageview.setImageBitmap(bitmap);
+                path = saveImage(bitmap);
+                // imagePathList.add(bitmap.toString());
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 //            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
-            if (path != null) {
-                mImageUri = Uri.parse(path);
-                imagePathList.add(mImageUri.toString());
-            }
-            try {
-                bytes.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
-            recycle_image_attachment.setLayoutManager(mLayoutManager);
-            recycle_image_attachment.setAdapter(mDetailFileAdapter);
-            mDetailFileAdapter.notifyDataSetChanged();
-            if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
-                Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                if (path != null) {
+                    mImageUri = Uri.parse(path);
+                    imagePathList.add(mImageUri.toString());
+                }
+                try {
+                    bytes.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
+                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
+                recycle_image_attachment.setLayoutManager(mLayoutManager);
+                recycle_image_attachment.setAdapter(mDetailFileAdapter);
+                mDetailFileAdapter.notifyDataSetChanged();
+                if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
+                    Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

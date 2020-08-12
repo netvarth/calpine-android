@@ -3,11 +3,13 @@ package com.jaldeeinc.jaldee.response;
 import com.google.gson.annotations.SerializedName;
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 
+import java.io.Serializable;
+
 /**
  * Created by sharmila on 25/7/18.
  */
 
-public class QueueList  {
+public class QueueList implements Serializable {
 
     boolean waitlistEnabled;
 

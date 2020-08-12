@@ -116,6 +116,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
     private int PAGE_START = 0;
     private boolean isLoading = false;
     private boolean isLastPage = false;
+    private boolean fromBusinessId = false;
     // limiting to 5 for this tutorial, since total pages in actual API is very large. Feel free to modify.
     private int TOTAL_PAGES = 0;
     private int currentPage = PAGE_START;
@@ -1057,6 +1058,7 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
                     Config.logV("Query@@@@@@@@@@@@%%%%%%%%%%%-----------" + name);
 
                     querycreate = "(or custom_id:" + "'" + name + "' enc_uid:" +  "'" + name + "')";
+                    fromBusinessId = true;
 
 
                 }
@@ -1093,9 +1095,14 @@ public class SearchListFragment extends RootFragment implements AdapterCallback 
 
                 Config.logV("Query-----------" + querycreate);
 
-                // final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
 
-                final String query1 = "(and location1:" + locationRange + querycreate + ")";
+                // final String query1 = "(and location1:['11.751416900900901,75.3701820990991','9.9496150990991,77.171983900900'] " + querycreate + ")";
+                final String query1;
+                if(fromBusinessId){
+                    query1 = querycreate;
+               }
+               else{
+                 query1 = "(and location1:" + locationRange + querycreate + ")";}
                 //  final String pass1 = "haversin(11.751416900900901,75.3701820990991, location1.latitude, location1.longitude)";
                 final String pass1 = "haversin(" + latitude + "," + longitude + ", location1.latitude, location1.longitude)";
 

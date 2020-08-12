@@ -182,7 +182,7 @@ public class Home extends AppCompatActivity {
 //                    super.onBackPressed();
                     System.exit(0);
                 }
-                this.doubleBackToExitPressedOnce = true;
+                doubleBackToExitPressedOnce = true;
                 Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
             } else {
             }
@@ -191,7 +191,7 @@ public class Home extends AppCompatActivity {
 //                    super.onBackPressed();
                 System.exit(0);
             }
-            this.doubleBackToExitPressedOnce = true;
+            doubleBackToExitPressedOnce = true;
             Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
         }
     }
@@ -207,7 +207,7 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onStart() {
         Log.i("onStartHomeBefore", true + "");
-        startService(mLiveTrackClient);
+       // startService(mLiveTrackClient);
         super.onStart();
     }
 
@@ -216,9 +216,9 @@ public class Home extends AppCompatActivity {
         Log.i("onStopHome", true + "");
         super.onStop();
         Log.i("onStopHomeAfter", true + "");
-        mLiveTrackClient = new Intent(Home.this, liveTrackService.getClass());
-        stopService(mLiveTrackClient);
-        startService(mLiveTrackClient);
+//        mLiveTrackClient = new Intent(Home.this, liveTrackService.getClass());
+//        stopService(mLiveTrackClient);
+//        startService(mLiveTrackClient);
     }
 }
 

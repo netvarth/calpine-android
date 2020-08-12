@@ -16,11 +16,13 @@ import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.DeptListAdapter;
 import com.jaldeeinc.jaldee.adapter.ServicesListAdapter;
+import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
+import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
@@ -40,6 +42,7 @@ import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -48,7 +51,7 @@ import retrofit2.Response;
 
 
 @SuppressLint("ValidFragment")
-public class DeptFragment extends RootFragment {
+public class DeptFragment extends RootFragment implements AdapterCallback {
 
     Context mContext;
     SearchDepartment departments;
@@ -144,7 +147,7 @@ public class DeptFragment extends RootFragment {
         location = searchDetailViewFragment.mSearchLocList.get(0);
         mSearchSettings = searchDetailViewFragment.mSearchSettings;
         for (int i = 0; i < departmentServices.getUsers().size(); i++) {
-            idsCheckin.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
+            idsCheckin.add(departmentServices.getUsers().get(i).getId() +"-"+location.getId());
             idsAppt.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
         }
         ApiLoadQsAndSchedulesList(idsCheckin, idsAppt, mBusinessDataLists);;
@@ -346,7 +349,7 @@ public class DeptFragment extends RootFragment {
         if (mDialog.isShowing())
             Config.closeDialog(getActivity(), mDialog);
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        deptListAdapter = new DeptListAdapter(getActivity(), usersSearchList, searchDetailViewFragment,firstCouponAvailable, couponAvailable);
+        deptListAdapter = new DeptListAdapter(getActivity(), usersSearchList, searchDetailViewFragment,firstCouponAvailable, couponAvailable,this);
         mdepartment_searchresult.setAdapter(deptListAdapter);
         mdepartment_searchresult.setLayoutManager(linearLayoutManager);
         deptListAdapter.notifyDataSetChanged();
@@ -385,6 +388,90 @@ public class DeptFragment extends RootFragment {
 
             }
         });
+
+    }
+
+    @Override
+    public void onMethodCallback(String value, String claimable) {
+
+    }
+
+    @Override
+    public void onMethodWorkingCallback(ArrayList<WorkingModel> workingModel, String value, String UniqueID) {
+
+    }
+
+    @Override
+    public void onMethodServiceCallback(ArrayList services, String value, String uniqueID) {
+
+    }
+
+    @Override
+    public void onMethodOpenMap(String location) {
+
+    }
+
+    @Override
+    public void onMethodMessage(String provider, String accountID, String from) {
+
+    }
+
+    @Override
+    public void onMethodCoupn(String uniqueID) {
+
+    }
+
+    @Override
+    public void onMethodJaldeeLogo(String ynw_verified, String provider) {
+
+    }
+
+    @Override
+    public void onMethodFilterRefined(String passformula, RecyclerView recyclepopup, String domainame) {
+
+    }
+
+    @Override
+    public void onMethodSubDomainFilter(String passformula, RecyclerView recyclepopup, String subdomainame, String domainName, String displayNameSubdomain) {
+
+    }
+
+    @Override
+    public void onMethodQuery(ArrayList<String> formula, ArrayList<String> key) {
+
+    }
+
+    @Override
+    public void onMethodFirstCoupn(String uniqueid) {
+
+    }
+
+    @Override
+    public void onMethodJdn(String uniqueid) {
+
+    }
+
+    @Override
+    public void onMethodSpecialization(ArrayList Specialization_displayname, String title) {
+
+        SpecializationFragment specialFragment = new SpecializationFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("businessName", businessName);
+        bundle.putStringArrayList("Specialization_displayname", Specialization_displayname);
+        specialFragment.setArguments(bundle);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.mainlayout, specialFragment).commit();
+    }
+
+    @Override
+    public void onMethodDepartmentList(ArrayList<String> Departments, String businessName) {
+
+    }
+
+    @Override
+    public void onMethodForceUpdate() {
 
     }
 }

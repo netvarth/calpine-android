@@ -71,7 +71,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         createTableDomain(db);
         createTableInbox(db);
         createTableCheckin(db);
-
+        createTableSubDomain(db);
         createTableFavour(db);
         createTableMyCheckin(db);
         createTableFavID(db);
@@ -94,6 +94,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_mycheckin));
 
         db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_mfavID));
+
+        db.execSQL("DROP TABLE IF EXISTS " + mContext.getString(R.string.db_table_subdomain));
+
         // Create tables again
         onCreate(db);
     }
@@ -152,6 +155,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(tblCreateStr);
     }
 
+    private void createTableSubDomain(SQLiteDatabase db) {
+        String tblFields, tblCreateStr;
+
+        tblFields = "( sector TEXT,"
+                + "displayname TEXT)";
+
+        //create table
+        tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_subdomain) + tblFields;
+        db.execSQL(tblCreateStr);
+    }
+
     private void createTableFavour(SQLiteDatabase db) {
         String tblFields, tblCreateStr;
 
@@ -163,8 +177,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "place TEXT,"
                 + "onlinePresence TEXT,"
                 + "donationServiceStatus TEXT)";
-
-
 
 
         //create table
@@ -187,7 +199,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put("isRevelPhoneno", favorite.isRevealPhoneNumber());
             values.put("place", favorite.getPlace());
             values.put("onlinePresence", favorite.getOnlinePresence());
-            values.put("donationServiceStatus",favorite.getDonationServiceStatus());
+            values.put("donationServiceStatus", favorite.getDonationServiceStatus());
 
 
             db.insert(mContext.getString(R.string.db_table_fav), null, values);
@@ -254,6 +266,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public void insertSubDomainList(List<SearchModel> subDomainList) {
+
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (SearchModel subDomain : subDomainList) {
+                ContentValues values = new ContentValues();
+                values.put("sector", subDomain.getSector());
+                values.put("displayname", subDomain.getDisplayname());
+
+
+                db.insert(mContext.getString(R.string.db_table_subdomain), null, values);
+            }
+
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+
+
+    }
+
     public void insertPopularSearchInfo(List<SearchModel> popularSearchModel) {
 
         SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
@@ -286,8 +323,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<FavouriteModel> favData = new ArrayList<FavouriteModel>();
         String table = mContext.getString(R.string.db_table_fav);
         /* String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message","receiverName", "messageStatus","waitlistId"};*/
-        String[] columns = {"id","businessname","locid","uniqueid","isRevelPhoneno","place","onlinePresence","donationServiceStatus"};
-
+        String[] columns = {"id", "businessname", "locid", "uniqueid", "isRevelPhoneno", "place", "onlinePresence", "donationServiceStatus"};
 
 
         //String timestamp="timestamp";
@@ -451,12 +487,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void insertCheckinInfo(List<ActiveCheckIn> activeCheckInModel) {
-        Config.logV("InsertCheckinDetails"+activeCheckInModel.size());
+        Config.logV("InsertCheckinDetails" + activeCheckInModel.size());
         SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
         db.beginTransaction();
         try {
             for (ActiveCheckIn activeCheckIn : activeCheckInModel) {
-                Config.logV("InsertCheckinDetails"+activeCheckIn.getProviderAccount().getId());
+                Config.logV("InsertCheckinDetails" + activeCheckIn.getProviderAccount().getId());
                 ContentValues values = new ContentValues();
                 values.put("id", activeCheckIn.getProviderAccount().getId());
                 values.put("businessName", activeCheckIn.getProviderAccount().getBusinessName());
@@ -481,17 +517,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("personsAhead", activeCheckIn.getPersonsAhead());
                 values.put("serviceTime", activeCheckIn.getServiceTime());
                 values.put("statusUpdatedTime", activeCheckIn.getStatusUpdatedTime());
-                values.put("checkInTime",activeCheckIn.getCheckInTime());
-                values.put("token",activeCheckIn.getToken());
-                values.put("batchName",activeCheckIn.getBatchName());
-                values.put("parentUUid",activeCheckIn.getParentUuid());
-                values.put("lattitude",activeCheckIn.getQueue().getLocation().getLattitude());
-                values.put("longitude",activeCheckIn.getQueue().getLocation().getLongitude());
-                values.put("primaryMobileNo",activeCheckIn.getWaitlistingFor().get(0).getPhoneNo());
-                values.put("calculationMode",activeCheckIn.getCalculationMode());
-                values.put("livetrack",activeCheckIn.getService().getLivetrack());
-                values.put("showToken",activeCheckIn.getShowToken());
-                values.put("consumer",(new Gson().toJson(activeCheckIn.getConsumer())));
+                values.put("checkInTime", activeCheckIn.getCheckInTime());
+                values.put("token", activeCheckIn.getToken());
+                values.put("batchName", activeCheckIn.getBatchName());
+                values.put("parentUUid", activeCheckIn.getParentUuid());
+                values.put("lattitude", activeCheckIn.getQueue().getLocation().getLattitude());
+                values.put("longitude", activeCheckIn.getQueue().getLocation().getLongitude());
+                values.put("primaryMobileNo", activeCheckIn.getWaitlistingFor().get(0).getPhoneNo());
+                values.put("calculationMode", activeCheckIn.getCalculationMode());
+                values.put("livetrack", activeCheckIn.getService().getLivetrack());
+                values.put("showToken", activeCheckIn.getShowToken());
+                values.put("consumer", (new Gson().toJson(activeCheckIn.getConsumer())));
 
 
                 db.insert(mContext.getString(R.string.db_table_checkin), null, values);
@@ -516,7 +552,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_checkin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating","checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "queueEndTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "checkInTime", "token", "batchName", "parentUuid", "lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack", "showToken", "consumer"};
 
         db.beginTransaction();
 
@@ -553,7 +589,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setStatusUpdatedTime(cursor.getString(22));
                 activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(23), JaldeeWaitlistDistanceTime.class));
                 activeModel.setJaldeeStartTimeType(cursor.getString(24));
-                activeModel.setRating(new Gson().fromJson(cursor.getString(25),ActiveCheckIn.class));
+                activeModel.setRating(new Gson().fromJson(cursor.getString(25), ActiveCheckIn.class));
                 activeModel.setCheckInTime(cursor.getString(26));
                 activeModel.setToken(cursor.getInt(27));
                 activeModel.setBatchName(cursor.getString(28));
@@ -609,19 +645,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("serviceTime", activeCheckIn.getServiceTime());
                 values.put("statusUpdatedTime", activeCheckIn.getStatusUpdatedTime());
                 values.put("distance", new Gson().toJson(activeCheckIn.getJaldeeWaitlistDistanceTime()));
-                values.put("jaldeeStartTimeType",activeCheckIn.getJaldeeStartTimeType());
+                values.put("jaldeeStartTimeType", activeCheckIn.getJaldeeStartTimeType());
                 values.put("rating", new Gson().toJson(activeCheckIn.getRating()));
-                values.put("queueEndTime",activeCheckIn.getQueue().getQueueEndTime());
-                values.put("checkInTime",activeCheckIn.getCheckInTime());
-                values.put("token",activeCheckIn.getToken());
-                values.put("batchName",activeCheckIn.getBatchName());
-                values.put("parentUuid",activeCheckIn.getParentUuid());
-                values.put("lattitude",activeCheckIn.getQueue().getLocation().getLattitude());
-                values.put("longitude",activeCheckIn.getQueue().getLocation().getLongitude());
-                values.put("primaryMobileNo",activeCheckIn.getWaitlistingFor().get(0).getPhoneNo());
-                values.put("calculationMode",activeCheckIn.getCalculationMode());
-                values.put("livetrack",activeCheckIn.getService().getLivetrack());
-                values.put("showToken",activeCheckIn.getShowToken());
+                values.put("queueEndTime", activeCheckIn.getQueue().getQueueEndTime());
+                values.put("checkInTime", activeCheckIn.getCheckInTime());
+                values.put("token", activeCheckIn.getToken());
+                values.put("batchName", activeCheckIn.getBatchName());
+                values.put("parentUuid", activeCheckIn.getParentUuid());
+                values.put("lattitude", activeCheckIn.getQueue().getLocation().getLattitude());
+                values.put("longitude", activeCheckIn.getQueue().getLocation().getLongitude());
+                values.put("primaryMobileNo", activeCheckIn.getWaitlistingFor().get(0).getPhoneNo());
+                values.put("calculationMode", activeCheckIn.getCalculationMode());
+                values.put("livetrack", activeCheckIn.getService().getLivetrack());
+                values.put("showToken", activeCheckIn.getShowToken());
                 values.put("consumer", new Gson().toJson(activeCheckIn.getConsumer()));
                 db.insert(mContext.getString(R.string.db_table_mycheckin), null, values);
             }
@@ -645,7 +681,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_mycheckin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid", "lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack", "showToken", "consumer"};
         String selection = "";
         String[] selectionArgs = null;
         selectionArgs = new String[]{Config.getTodaysDateString()};
@@ -688,7 +724,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setStatusUpdatedTime(cursor.getString(21));
                 activeModel.setJaldeeWaitlistDistanceTime(new Gson().fromJson(cursor.getString(22), JaldeeWaitlistDistanceTime.class));
                 activeModel.setJaldeeStartTimeType(cursor.getString(23));
-                activeModel.setRating(new Gson().fromJson(cursor.getString(24),ActiveCheckIn.class));
+                activeModel.setRating(new Gson().fromJson(cursor.getString(24), ActiveCheckIn.class));
                 activeModel.setQueueEndTime(cursor.getString(25));
                 activeModel.setCheckInTime(cursor.getString(26));
                 activeModel.setToken(cursor.getInt(27));
@@ -850,6 +886,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return searchModelList;
     }
 
+
     public ArrayList<Domain_Spinner> getDomain() {
         ArrayList<Domain_Spinner> domainSpinnerList = new ArrayList<Domain_Spinner>();
         SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
@@ -876,6 +913,109 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
         return domainSpinnerList;
+
+
+    }
+
+    public ArrayList<SearchModel> getSubDomains() {
+        ArrayList<SearchModel> subDomainsList = new ArrayList<SearchModel>();
+        SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+
+        String table = mContext.getString(R.string.db_table_subdomain);
+        String[] columns = {"sector", "displayname"};
+
+        db.beginTransaction();
+
+        Cursor cursor = db.query(table, columns, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                SearchModel subDomain = new SearchModel();
+                subDomain.setSector(cursor.getString(0));
+                subDomain.setDisplayname(cursor.getString(1));
+
+
+                subDomainsList.add(subDomain);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
+
+        return subDomainsList;
+
+
+    }
+
+
+    public Domain_Spinner getDomainByPosition(int position) {
+
+        try {
+
+            ArrayList<Domain_Spinner> domainSpinnerList = new ArrayList<Domain_Spinner>();
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+
+            String table = mContext.getString(R.string.db_table_domain);
+            String[] columns = {"domain", "displayname"};
+
+            db.beginTransaction();
+
+            Cursor cursor = db.query(table, columns, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    Domain_Spinner domain = new Domain_Spinner();
+                    domain.setDomain(cursor.getString(0));
+                    domain.setDisplayName(cursor.getString(1));
+
+
+                    domainSpinnerList.add(domain);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return domainSpinnerList.get(position);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public SearchModel getSubDomainsByFilter(String domainName, int position) {
+        try {
+            ArrayList<SearchModel> subDomainsList = new ArrayList<SearchModel>();
+            SQLiteDatabase db = new DatabaseHandler(mContext).getReadableDatabase();
+
+            String table = mContext.getString(R.string.db_table_subdomain);
+            String[] columns = {"sector", "displayname"};
+
+            db.beginTransaction();
+
+            Cursor cursor = db.query(table, columns, "lower(sector)=?", new String[]{domainName.toLowerCase()}, null, null, null);
+            if (cursor.moveToFirst()) {
+                do {
+                    SearchModel subDomain = new SearchModel();
+                    subDomain.setSector(cursor.getString(0));
+                    subDomain.setDisplayname(cursor.getString(1));
+
+
+                    subDomainsList.add(subDomain);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            return subDomainsList.get(position);
+        }
+        catch (Exception e){
+             return null;
+        }
+
 
 
     }
@@ -1031,6 +1171,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void DeleteSubDomain() {
+        SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
+        db.execSQL("delete from " + mContext.getString(R.string.db_table_subdomain));
+        db.close();
+    }
+
     public void DeleteFAVID() {
         SQLiteDatabase db = new DatabaseHandler(mContext).getWritableDatabase();
         db.execSQL("delete from " + mContext.getString(R.string.db_table_mfavID));
@@ -1106,7 +1252,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 inbox.setMessageStatus(cursor.getString(6));
                 inbox.setWaitlistId(cursor.getString(7));
                 Gson gson = new Gson();
-                Type type = new TypeToken<List<FileAttachment>>() {}.getType();
+                Type type = new TypeToken<List<FileAttachment>>() {
+                }.getType();
                 List<FileAttachment> attachments = gson.fromJson(cursor.getString(8), type);
 //
 //                ChannelSearchEnum[] enums = gson.fromJson(yourJson, ChannelSearchEnum[].class);
@@ -1159,7 +1306,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 inboxModel.setMessageStatus(cursor.getString(6));
                 inboxModel.setWaitlistId(cursor.getString(7));
                 Gson gson = new Gson();
-                Type type = new TypeToken<List<FileAttachment>>() {}.getType();
+                Type type = new TypeToken<List<FileAttachment>>() {
+                }.getType();
                 List<FileAttachment> attachments = gson.fromJson(cursor.getString(8), type);
                 inboxModel.setAttachments(attachments);
                 inbox.add(inboxModel);
