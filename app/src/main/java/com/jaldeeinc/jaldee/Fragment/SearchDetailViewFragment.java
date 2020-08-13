@@ -102,6 +102,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -205,6 +206,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     DepartmentUserSearchModel searchdetailList = new DepartmentUserSearchModel();
     SearchModel domainList = new SearchModel();
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
+    private CardView cvUsers;
 
 
     @Override
@@ -228,6 +230,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_contact = (TextView) row.findViewById(R.id.txtcontact);
         tv_jdn = (ImageView) row.findViewById(R.id.txtjdn);
         tv_coupon = (TextView) row.findViewById(R.id.txtcoupon);
+        cvUsers = row.findViewById(R.id.cv_users);
         tv_first_ccoupon = (TextView) row.findViewById(R.id.txtFirstCoupon);
         specialSeeAll = (TextView) row.findViewById(R.id.specialSeeAll);
         departmentHeading = (TextView) row.findViewById(R.id.departmentHeading);
@@ -863,21 +866,29 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                     if (usersList != null) {
                                         if (usersList.size() == 1) {
                                             departmentHeading.setVisibility(View.VISIBLE);
-                                            departmentHeading.setText("Users (1)");
+                                            departmentHeading.setText("Service Providers (1)");
                                         } else if (usersList.size() > 1) {
                                             departmentHeading.setVisibility(View.VISIBLE);
-                                            departmentHeading.setText("Users " + "(" + usersList.size() + ")");
+                                            departmentHeading.setText("Service Providers " + "(" + usersList.size() + ")");
                                         }
                                     } else {
                                         departmentHeading.setVisibility(View.GONE);
                                     }
 
-                                    RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
-                                    mRecycleDepartment.setVisibility(View.VISIBLE);
-                                    mRecycleDepartment.setLayoutManager(mDepartmentLayout);
-                                    usersAdapter.setFields(usersList,mBusinessDataList.getBusinessName());
-                                    mRecycleDepartment.setAdapter(usersAdapter);
-                                    usersAdapter.notifyDataSetChanged();
+                                    cvUsers.setVisibility(View.VISIBLE);
+                                    cvUsers.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            onMethodUsersClick(usersList,mBusinessDataList.getBusinessName());
+                                        }
+                                    });
+//                                    RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
+//                                    mRecycleDepartment.setVisibility(View.GONE);
+//                                    mRecycleDepartment.setLayoutManager(mDepartmentLayout);
+//                                    usersAdapter.setFields(usersList,mBusinessDataList.getBusinessName());
+//                                    mRecycleDepartment.setAdapter(usersAdapter);
+//                                    usersAdapter.notifyDataSetChanged();
                                 }
                             }
                         }
