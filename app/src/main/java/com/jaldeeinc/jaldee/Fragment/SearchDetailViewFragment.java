@@ -770,7 +770,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ArrayList<SearchDepartmentServices> deptProviders = response.body();
                         if (deptServices != null && deptServices.size() > 0) {
                             for (int dsIndex = 0; dsIndex < deptServices.size(); dsIndex++) {
-                                for (int dpIndex = 0; dpIndex < deptProviders.size(); dpIndex++) {
+                                for ( int dpIndex = 0; dpIndex < deptProviders.size(); dpIndex++) {
                                     if (deptServices.get(dsIndex).getDepartmentId().equalsIgnoreCase(deptProviders.get(dpIndex).getDepartmentId())) {
                                         SearchDepartmentServices merged_S_P = deptServices.get(dpIndex);
                                         merged_S_P.setUsers(deptProviders.get(dpIndex).getUsers());
