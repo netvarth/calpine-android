@@ -5,6 +5,7 @@ import com.jaldeeinc.jaldee.model.BillModel;
 import com.jaldeeinc.jaldee.model.CheckSumModelTest;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.TestModel;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
@@ -249,6 +250,11 @@ public interface ApiInterface {
 
     @GET("{uniqueId}/departmentProviders.json")
     Call<ArrayList<SearchDepartmentServices>> getUserandDepartments(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+
+    // to get only users when there are no departments
+    @GET("{uniqueId}/departmentProviders.json")
+    Call<ArrayList<ProviderUserModel>> getUsers(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
+
 
     @GET("{uniqueId}/services.json")
     Call<ArrayList<SearchService>> getService(@Path("uniqueId") int uniqueId, @Query("modifiedDate") String mDate);
