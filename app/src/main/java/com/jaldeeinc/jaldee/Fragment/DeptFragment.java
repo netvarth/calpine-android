@@ -100,6 +100,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         this.firstCouponAvailable = firstCouponAvailable;
         this.mSearchLocList = searchLocation;
         this.mSearchSettings = mSearchSettings;
+
     }
 
     public DeptFragment(ArrayList<ProviderUserModel> usersList, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataList, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings, Boolean fromDoctors) {
@@ -141,10 +142,10 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         tv_title.setText(mBusinessDataListParent.getBusinessName());
 
         if (fromDoctors) {
-
             tv_departmentName.setVisibility(View.GONE);
             tv_departmentCode.setVisibility(View.GONE);
             tv_services.setVisibility(View.GONE);
+            tv_doctors.setVisibility(View.GONE);
         } else {
             tv_departmentCode.setText(departmentServices.getDepartmentCode());
             tv_departmentName.setText(departmentServices.getDepartmentName());
