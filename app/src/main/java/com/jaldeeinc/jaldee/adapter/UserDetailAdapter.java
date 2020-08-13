@@ -220,6 +220,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iCheckIn.putExtra("sector", Domain);
                 iCheckIn.putExtra("subsector", domainList.getDisplayname());
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("userId",Integer.parseInt(userDetails.get(position).getQueueList().getProvider().getId()));
+                if(userDetails.get(position).getServices().size()!=0){
+                iCheckIn.putExtra("departmentId",String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));}
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
                 context.startActivity(iCheckIn);
             }
@@ -239,6 +242,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iCheckIn.putExtra("sector", Domain);
                 iCheckIn.putExtra("subsector", domainList.getDisplayname());
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("userId",Integer.parseInt(userDetails.get(position).getQueueList().getProvider().getId()));
+                if(userDetails.get(position).getServices().size()!=0){
+                    iCheckIn.putExtra("departmentId",String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));}
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
                 context.startActivity(iCheckIn);
             }
@@ -259,6 +265,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iCheckIn.putExtra("sector", Domain);
                 iCheckIn.putExtra("subsector", domainList.getDisplayname());
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("userId",Integer.parseInt(userDetails.get(position).getQueueList().getProvider().getId()));
+                if(userDetails.get(position).getServices().size()!=0){
+                    iCheckIn.putExtra("departmentId",String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));}
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
                 context.startActivity(iCheckIn);
             }
@@ -278,6 +287,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iCheckIn.putExtra("sector", Domain);
                 iCheckIn.putExtra("subsector", domainList.getDisplayname());
                 iCheckIn.putExtra("terminology", terminology);
+                iCheckIn.putExtra("userId",Integer.parseInt(userDetails.get(position).getQueueList().getProvider().getId()));
+                if(userDetails.get(position).getServices().size()!=0){
+                    iCheckIn.putExtra("departmentId",String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));}
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
                 context.startActivity(iCheckIn);
             }
@@ -296,6 +308,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iAppointment.putExtra("sector", Domain);
                 iAppointment.putExtra("subsector", domainList.getDisplayname());
                 iAppointment.putExtra("terminology", terminology);
+                iAppointment.putExtra("userId",Integer.parseInt(userDetails.get(position).getScheduleList().getProvider().getId()));
+                if(userDetails.get(position).getServices().size()!=0){
+                iAppointment.putExtra("departmentId",String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));}
                 iAppointment.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
                 context.startActivity(iAppointment);
             }

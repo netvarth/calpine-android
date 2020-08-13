@@ -1,5 +1,7 @@
 package com.jaldeeinc.jaldee.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -32,6 +34,8 @@ public class SearchService implements Serializable {
     String instructions;
     String callingMode;
     String value;
+    @SerializedName("provider")
+    private SearchService provider;
 
     public boolean isLivetrack() {
         return livetrack;
@@ -237,6 +241,13 @@ public class SearchService implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+    public SearchService getProvider() {
+        return provider;
+    }
+
+    public void setProvider(SearchService provider) {
+        this.provider = provider;
     }
 
 }
