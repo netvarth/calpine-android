@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -106,12 +107,12 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
         public TextView deptName;
         public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_spec_more, tv_peopleahead, tv_qmessage;
-        LinearLayout L_specialization, L_services, L_layout_type, L_checkin, L_appointments;
-
+        LinearLayout L_services, L_layout_type, L_checkin, L_appointments;
+        RelativeLayout L_specialization;
         ImageView ic_jaldeeverifiedIcon;
         ImageView profile;
         RatingBar rating;
-        TextView tv_claimable, tv_distance, tv_branch_name;
+        TextView tv_claimable, tv_distance, tv_branch_name, tvSpecializations;
         Button btncheckin, btnappointment;
         LinearLayout layout_row;
         LinearLayout layout_type;
@@ -137,6 +138,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             btnappointment = view.findViewById(R.id.btnappointments);
             tv_Futuredate = view.findViewById(R.id.txt_diffdate);
             tv_WaitTime = view.findViewById(R.id.txtWaitTime);
+            tvSpecializations = view.findViewById(R.id.txt_specializations);
             L_specialization = view.findViewById(R.id.Lspec);
             L_layout_type = view.findViewById(R.id.layout_type);
             tv_qmessage = view.findViewById(R.id.qmessage);
@@ -1609,88 +1611,101 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         if (searchdetailList.getSpecialization() != null) {
             final List<String> list_spec = searchdetailList.getSpecialization();
             if (list_spec.size() > 0) {
-                if (list_spec.size() == 1) {
-                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_spec1.setText(list_spec.get(0));
-                    myViewHolder.tv_spec1.setTextSize(13);
-                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_spec2.setVisibility(View.GONE);
-                    myViewHolder.tv_spec_more.setVisibility(View.GONE);
-                    myViewHolder.tv_spec22.setVisibility(View.GONE);
-                } else {
-                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_spec1.setText(list_spec.get(0) + " , ");
-                    myViewHolder.tv_spec1.setTextSize(13);
-                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
-                    myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-                    //    myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
-                    myViewHolder.tv_spec1.setMaxLines(1);
-                    if (list_spec.size() > 2) {
-//                        myViewHolder.tv_spec1.setMaxEms(5);
-//                        myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
-                        myViewHolder.tv_spec22.setText(list_spec.get(1) + " , ");
-                        myViewHolder.tv_spec22.setTextSize(13);
-                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
-//                        myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
-                        myViewHolder.tv_spec22.setMaxLines(1);
-                        // myViewHolder.tv_spec22.setWidth(dpToPx(120));
-//                        myViewHolder.tv_spec22.setMaxEms(8);
-//                        myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
-//                        myViewHolder.tv_spec2.setTextSize(13);
-//                        myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
-//                        myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
-//                        myViewHolder.tv_spec2.setMaxLines(1);
-                        //  myViewHolder.tv_spec2.setWidth(dpToPx(120));
-//                        myViewHolder.tv_spec2.setMaxEms(8);
-                        int count = list_spec.size() - 2;
-                        myViewHolder.tv_spec_more.setText("+"+ + count + " " + "more");
-                        myViewHolder.tv_spec_more.setGravity(Gravity.CENTER);
-                        myViewHolder.tv_spec_more.setTextSize(13);
-                        myViewHolder.tv_spec_more.setVisibility(View.VISIBLE);
-                    } else {
-                        myViewHolder.tv_spec22.setText(list_spec.get(1));
-                        myViewHolder.tv_spec22.setTextSize(13);
-                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
-                        //    myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
-                        myViewHolder.tv_spec22.setMaxLines(1);
-                        //     myViewHolder.tv_spec22.setMaxEms(8);
 
-                        myViewHolder.tv_spec2.setVisibility(View.GONE);
-                        myViewHolder.tv_spec_more.setVisibility(View.GONE);
-                    }
-
-                }
-                myViewHolder.tv_spec2.setOnClickListener(new View.OnClickListener() {
+                myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+                myViewHolder.tvSpecializations.setVisibility(View.VISIBLE);
+                myViewHolder.tvSpecializations.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
                         mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
-
-                    }
-                });
-                myViewHolder.tv_spec22.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
-                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
-
                     }
                 });
 
-                myViewHolder.tv_spec_more.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
-                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
-
-                    }
-                });
+//                if (list_spec.size() == 1) {
+//                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_spec1.setText(list_spec.get(0));
+//                    myViewHolder.tv_spec1.setTextSize(13);
+//                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_spec2.setVisibility(View.GONE);
+//                    myViewHolder.tv_spec_more.setVisibility(View.GONE);
+//                    myViewHolder.tv_spec22.setVisibility(View.GONE);
+//                }
+//                else {
+//                    myViewHolder.L_specialization.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_spec1.setText(list_spec.get(0) + " , ");
+//                    myViewHolder.tv_spec1.setTextSize(13);
+//                    myViewHolder.tv_spec1.setVisibility(View.VISIBLE);
+//                    myViewHolder.tv_spec1.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+//                    //    myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+//                    myViewHolder.tv_spec1.setMaxLines(1);
+//                    if (list_spec.size() > 2) {
+////                        myViewHolder.tv_spec1.setMaxEms(5);
+////                        myViewHolder.tv_spec1.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec22.setText(list_spec.get(1) + " , ");
+//                        myViewHolder.tv_spec22.setTextSize(13);
+//                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
+////                        myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec22.setMaxLines(1);
+//                        // myViewHolder.tv_spec22.setWidth(dpToPx(120));
+////                        myViewHolder.tv_spec22.setMaxEms(8);
+////                        myViewHolder.tv_spec2.setText(list_spec.get(2) + " , ");
+////                        myViewHolder.tv_spec2.setTextSize(13);
+////                        myViewHolder.tv_spec2.setVisibility(View.VISIBLE);
+////                        myViewHolder.tv_spec2.setEllipsize(TextUtils.TruncateAt.END);
+////                        myViewHolder.tv_spec2.setMaxLines(1);
+//                        //  myViewHolder.tv_spec2.setWidth(dpToPx(120));
+////                        myViewHolder.tv_spec2.setMaxEms(8);
+//                        int count = list_spec.size() - 2;
+//                        myViewHolder.tv_spec_more.setText("+"+ + count + " " + "more");
+//                        myViewHolder.tv_spec_more.setGravity(Gravity.CENTER);
+//                        myViewHolder.tv_spec_more.setTextSize(13);
+//                        myViewHolder.tv_spec_more.setVisibility(View.VISIBLE);
+//                    } else {
+//                        myViewHolder.tv_spec22.setText(list_spec.get(1));
+//                        myViewHolder.tv_spec22.setTextSize(13);
+//                        myViewHolder.tv_spec22.setVisibility(View.VISIBLE);
+//                        //    myViewHolder.tv_spec22.setEllipsize(TextUtils.TruncateAt.END);
+//                        myViewHolder.tv_spec22.setMaxLines(1);
+//                        //     myViewHolder.tv_spec22.setMaxEms(8);
+//
+//                        myViewHolder.tv_spec2.setVisibility(View.GONE);
+//                        myViewHolder.tv_spec_more.setVisibility(View.GONE);
+//                    }
+//
+//                }
+//                myViewHolder.tv_spec2.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        // mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
+//                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+//
+//                    }
+//                });
+//                myViewHolder.tv_spec22.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        // mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
+//                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+//
+//                    }
+//                });
+//
+//                myViewHolder.tv_spec_more.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        // mAdapterCallback.onMethodCallback(searchdetailList.getUniqueid());
+//                        mAdapterCallback.onMethodSpecialization(searchdetailList.getSpecialization(), searchdetailList.getBusinessName());
+//
+//                    }
+//                });
             }
         } else {
             myViewHolder.tv_spec1.setVisibility(View.GONE);
             myViewHolder.tv_spec2.setVisibility(View.GONE);
             myViewHolder.tv_spec_more.setVisibility(View.GONE);
             myViewHolder.tv_spec22.setVisibility(View.GONE);
+            myViewHolder.tvSpecializations.setVisibility(View.GONE);
             myViewHolder.L_specialization.setVisibility(View.GONE);
         }
     }

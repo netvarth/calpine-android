@@ -85,7 +85,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     List<DepartmentUserSearchModel> usersSearchList = new ArrayList<>();
     Dialog mDialog;
     DepartmentUserSearchModel userSearch;
-    Boolean firstCouponAvailable, couponAvailable, fromDoctors;
+    Boolean firstCouponAvailable, couponAvailable;
+    Boolean fromDoctors = false;
     ArrayList<ProviderUserModel> usersList;
 
     public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent, Boolean firstCouponAvailable, Boolean couponAvailable, Boolean fromDoctors) {

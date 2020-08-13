@@ -233,7 +233,7 @@
             android:layout_marginTop="@dimen/padding7"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/Lspec"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -242,6 +242,31 @@
                 android:layout_marginRight="@dimen/padding5"
                 android:orientation="horizontal"
                 android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txt_specializations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
+                    android:background="@color/spinnerbg"
+                    android:gravity="center"
+                    android:drawableLeft="@drawable/drawableleft_iconsize"
+                    android:drawableTint="@color/dark_blue"
+                    android:drawablePadding="10dp"
+                    android:paddingTop="@dimen/dimen_4dp"
+                    android:paddingBottom="@dimen/dimen_4dp"
+                    android:paddingLeft="@dimen/dimen_5dp"
+                    android:paddingRight="@dimen/dimen_10dp"
+                    android:text="Specializations"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="@dimen/txtsize_hint_11"
+                    android:textStyle="bold"
+                    android:visibility="visible"
+                    />
+
 
                 <TextView
                     android:id="@+id/txtspec1"
@@ -300,7 +325,8 @@
                     android:visibility="gone"
 
                     />
-            </LinearLayout>
+
+            </RelativeLayout>
 
             <!--<android.support.v7.widget.RecyclerView
                 android:id="@+id/mRecycleTypes"
