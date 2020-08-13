@@ -2636,7 +2636,8 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     public void onMethodDepartment(SearchDepartmentServices departmentCode, String businessName) {
         Log.i("qweqweq", "qweqweqwe");
-        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable);
+        boolean fromDoctors = false;
+        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable, fromDoctors);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);

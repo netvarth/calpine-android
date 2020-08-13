@@ -1736,6 +1736,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                         }
                                     }
                                 }
+                            }else if(mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
+                                    if (virtualService != null && virtualService.equalsIgnoreCase("false")) {
+                                        LServicesList.remove(mService);
+                                    }
+                                }
                             }
                             else {
                                 if (!virtualServices) {

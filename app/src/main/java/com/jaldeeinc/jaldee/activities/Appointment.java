@@ -2773,9 +2773,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                         }
                                     }
                                 }
-                            } else if(mFrom.equalsIgnoreCase("multiusercheckin")){
-                                if(virtualService!= null && virtualService.equalsIgnoreCase("false")){
-                                    LServicesList.remove(mService);
+                            } else if(mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
+                                    if (virtualService != null && virtualService.equalsIgnoreCase("false")) {
+                                        LServicesList.remove(mService);
+                                    }
                                 }
                             }
                             else {
@@ -3531,13 +3533,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                         }
 //                                                        else{
 //                                                            globalServicesList.add(gServiceList.get(i));
-//                                                            SearchUsers globalservices = new SearchUsers();
-//                                                            doctResponse.add(doctResponse.size() -1,globalservices);
-//                                                            mSpinnerDoctor.setVisibility(View.VISIBLE);
-//                                                            txt_choosedoctor.setVisibility(View.VISIBLE);
-//                                                            adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item, doctResponse);
-//                                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                                                            mSpinnerDoctor.setAdapter(adapter);
 //
 //                                                        }
                                                     }
@@ -3603,6 +3598,67 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                                 }
                                           }
+//                                            if (globalServicesList.size() > 0) {
+//                                                SearchUsers globalServices = new SearchUsers();
+//                                                globalServices.setFirstName("Global");
+//                                                globalServices.setLastName("Services");
+//                                                doctResponse.add(doctResponse.size() -1,globalServices);
+//                                                mSpinnerService.setVisibility(View.VISIBLE);
+//                                                txt_chooseservice.setVisibility(View.VISIBLE);
+//                                                Config.logV("mServicesList" + LServicesList.size());
+//                                                CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, globalServicesList);
+//                                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                                                mSpinnerService.setAdapter(adapter);
+//                                                mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+//                                                livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
+//                                            } else {
+//
+//                                                mSpinnerService.setVisibility(View.GONE);
+//                                                txt_chooseservice.setVisibility(View.GONE);
+//
+//                                                if (globalServicesList.size() == 1) {
+//                                                    // String firstWord = "Check-in for ";
+//                                                    String firstWord = Word_Change;
+//                                                    String secondWord = globalServicesList.get(0).getName();
+//
+//                                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+//                                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+//                                                            "fonts/Montserrat_Bold.otf");
+//                                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                                                    tv_checkin_service.setText(spannable);
+//                                                    mSpinnertext = globalServicesList.get(0).getId();
+//                                                    livetrack = globalServicesList.get(0).getLivetrack();
+//                                                    serviceSelected = globalServicesList.get(0).getName();
+//                                                    selectedService = globalServicesList.get(0).getId();
+//
+//
+//                                                    Date currentTime = new Date();
+//                                                    final SimpleDateFormat sdf = new SimpleDateFormat(
+//                                                            "yyyy-MM-dd", Locale.US);
+//                                                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//                                                    System.out.println("UTC time: " + sdf.format(currentTime));
+//                                                    //ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+//
+//
+//                                                    isPrepayment = globalServicesList.get(0).getIsPrePayment();
+//                                                    Config.logV("Payment------------" + isPrepayment);
+//                                                    if (isPrepayment.equalsIgnoreCase("true")) {
+//
+//
+//                                                        sAmountPay = globalServicesList.get(0).getMinPrePaymentAmount();
+//                                                        APIPayment(modifyAccountID);
+//
+//                                                        Config.logV("Payment----sAmountPay--------" + sAmountPay);
+//
+//                                                    } else {
+//                                                        LservicePrepay.setVisibility(View.GONE);
+//                                                    }
+//
+//                                                }
+//                                            }
+
 //
                                     }
 

@@ -88,13 +88,14 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     Boolean firstCouponAvailable, couponAvailable, fromDoctors;
     ArrayList<ProviderUserModel> usersList;
 
-    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent, Boolean firstCouponAvailable, Boolean couponAvailable) {
+    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent, Boolean firstCouponAvailable, Boolean couponAvailable, Boolean fromDoctors) {
         this.departmentServices = departmentServices;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.businessName = businessName;
         this.mBusinessDataListParent = mBusinessDataListParent;
         this.couponAvailable = couponAvailable;
         this.firstCouponAvailable = firstCouponAvailable;
+        this.fromDoctors = fromDoctors;
     }
 
     public DeptFragment(ArrayList<ProviderUserModel> usersList, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataList, Boolean firstCouponAvailable, Boolean couponAvailable , Boolean fromDoctors) {
@@ -134,10 +135,10 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         tv_title.setText(mBusinessDataListParent.getBusinessName());
 
         if (fromDoctors) {
-
             tv_departmentName.setVisibility(View.GONE);
             tv_departmentCode.setVisibility(View.GONE);
             tv_services.setVisibility(View.GONE);
+            tv_doctors.setVisibility(View.GONE);
         } else {
             tv_departmentCode.setText(departmentServices.getDepartmentCode());
             tv_departmentName.setText(departmentServices.getDepartmentName());
