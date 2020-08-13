@@ -250,19 +250,39 @@
                         android:text="Active Check-in"
                         android:textColor="#1E4079" />
 
-                    <TextView
-                        android:id="@+id/txt_sorry"
+                    <LinearLayout
+                        android:id="@+id/ll_sorry"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding5"
-                        android:text=" No Active Check-ins "
-                        android:textColor="@color/title_grey"
-                        android:visibility="gone" />
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="@dimen/dimen_10dp"
+                            android:src="@drawable/confused">
+
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/txt_sorry"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/padding5"
+                            android:text=" No Active Check-ins "
+                            android:textColor="@color/title_grey"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
+
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycleActive"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:visibility="visible">
 
                     </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
@@ -287,14 +307,32 @@
                         android:text="Active Appointments"
                         android:textColor="#1E4079" />
 
-                    <TextView
-                        android:id="@+id/txt_sorry_appointment"
+                    <LinearLayout
+                        android:id="@+id/ll_sorry_appointment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding5"
-                        android:text=" No Active Appointments "
-                        android:textColor="@color/title_grey"
-                        android:visibility="gone" />
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="@dimen/dimen_10dp"
+                            android:src="@drawable/confused">
+
+                        </ImageView>
+                        <TextView
+                            android:id="@+id/txt_sorry_appointment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/padding5"
+                            android:text=" No Active Appointments "
+                            android:textColor="@color/title_grey"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycleActiveAppointment"

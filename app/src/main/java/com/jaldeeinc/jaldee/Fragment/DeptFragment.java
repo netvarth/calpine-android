@@ -21,6 +21,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
+import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
@@ -45,6 +46,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,14 +85,25 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     List<DepartmentUserSearchModel> usersSearchList = new ArrayList<>();
     Dialog mDialog;
     DepartmentUserSearchModel userSearch;
-    Boolean firstCouponAvailable, couponAvailable;
-    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent,Boolean firstCouponAvailable,Boolean couponAvailable) {
+    Boolean firstCouponAvailable, couponAvailable, fromDoctors;
+    ArrayList<ProviderUserModel> usersList;
+
+    public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent, Boolean firstCouponAvailable, Boolean couponAvailable) {
         this.departmentServices = departmentServices;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.businessName = businessName;
         this.mBusinessDataListParent = mBusinessDataListParent;
         this.couponAvailable = couponAvailable;
         this.firstCouponAvailable = firstCouponAvailable;
+    }
+
+    public DeptFragment(ArrayList<ProviderUserModel> usersList, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataList, Boolean firstCouponAvailable, Boolean couponAvailable , Boolean fromDoctors) {
+        this.usersList = usersList;
+        this.searchDetailViewFragment = searchDetailViewFragment;
+        this.mBusinessDataListParent = mBusinessDataList;
+        this.firstCouponAvailable = firstCouponAvailable;
+        this.couponAvailable = couponAvailable;
+        this.fromDoctors = fromDoctors;
     }
 
     @Nullable
@@ -117,42 +130,61 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                 getFragmentManager().popBackStack();
             }
         });
-        tv_title.setText(this.businessName);
-        tv_departmentCode.setText(departmentServices.getDepartmentCode());
-        tv_departmentName.setText(departmentServices.getDepartmentName());
-        if (departmentServices.getUsers().size() > 0) {
-            tv_doctors.setVisibility(View.VISIBLE);
-            tv_doctors.setText("Doctors : " + departmentServices.getUsers().size());
+
+        tv_title.setText(mBusinessDataListParent.getBusinessName());
+
+        if (fromDoctors) {
+
+            tv_departmentName.setVisibility(View.GONE);
+            tv_departmentCode.setVisibility(View.GONE);
             tv_services.setVisibility(View.GONE);
         } else {
-            tv_doctors.setVisibility(View.GONE);
-            tv_services.setVisibility(View.VISIBLE);
-            tv_services.setText("Services >");
-        }
-        tv_services.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-                mServicesList = departmentServices.getServices();
-                servicesListAdapter = new ServicesListAdapter(getActivity(),mServicesList,departmentServices);
-                mservice_searchresult.setAdapter(servicesListAdapter);
-                mservice_searchresult.setLayoutManager(linearLayoutManager);
-                servicesListAdapter.notifyDataSetChanged();
+            tv_departmentCode.setText(departmentServices.getDepartmentCode());
+            tv_departmentName.setText(departmentServices.getDepartmentName());
+            if (departmentServices.getUsers().size() > 0) {
+                tv_doctors.setVisibility(View.VISIBLE);
+                tv_doctors.setText("Doctors : " + departmentServices.getUsers().size());
+                tv_services.setVisibility(View.GONE);
+            } else {
+                tv_doctors.setVisibility(View.GONE);
+                tv_services.setVisibility(View.VISIBLE);
+                tv_services.setText("Services >");
             }
+            tv_services.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+                    mServicesList = departmentServices.getServices();
+                    servicesListAdapter = new ServicesListAdapter(getActivity(), mServicesList, departmentServices);
+                    mservice_searchresult.setAdapter(servicesListAdapter);
+                    mservice_searchresult.setLayoutManager(linearLayoutManager);
+                    servicesListAdapter.notifyDataSetChanged();
+                }
 
-        });
+            });
+        }
 
         ArrayList<String> idsCheckin = new ArrayList<>();
         ArrayList<String> idsAppt = new ArrayList<>();
         location = searchDetailViewFragment.mSearchLocList.get(0);
         mSearchSettings = searchDetailViewFragment.mSearchSettings;
-        for (int i = 0; i < departmentServices.getUsers().size(); i++) {
-            idsCheckin.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
-            idsAppt.add(searchDetailViewFragment.mProviderId +"-"+location.getId()+"-"+departmentServices.getUsers().get(i).getId());
+
+        if (fromDoctors) {
+            for (int i = 0; i < usersList.size(); i++) {
+                idsCheckin.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + usersList.get(i).getId());
+                idsAppt.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + usersList.get(i).getId());
+            }
+        } else  {
+            for (int i = 0; i < departmentServices.getUsers().size(); i++) {
+                idsCheckin.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + departmentServices.getUsers().get(i).getId());
+                idsAppt.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + departmentServices.getUsers().get(i).getId());
+            }
         }
-        ApiLoadQsAndSchedulesList(idsCheckin, idsAppt, mBusinessDataLists);;
+
+        ApiLoadQsAndSchedulesList(idsCheckin, idsAppt, mBusinessDataLists);
         return row;
     }
+
     private void ApiLoadQsAndSchedulesList(final ArrayList<String> idsCheckin, final ArrayList<String> idsAppt, List<SearchViewDetail> mBusinessDataLists) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -212,8 +244,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     if (response.code() == 200) {
                         SearchViewDetail businessProfile = response.body();
                         mBusinessDataLists.add(businessProfile);
-                        if ((sIndex+1) < idAppts.size()) {
-                            loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, (sIndex+1));
+                        if ((sIndex + 1) < idAppts.size()) {
+                            loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, (sIndex + 1));
                         } else {
                             loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
                         }
@@ -261,14 +293,14 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     Config.logV("Response--code------Setting-------------------" + response.code());
                     if (response.code() == 200) {
                         ArrayList<SearchDepartmentServices> serviceList = response.body();
-                        if(serviceList.size() > 0) {
+                        if (serviceList.size() > 0) {
                             userSearch.setServices(serviceList.get(0).getServices());
                         } else {
                             userSearch.setServices(null);
                         }
                         usersSearchList.add(userSearch);
-                        if ((sIndex+1) < idAppts.size()) {
-                            loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex+1));
+                        if ((sIndex + 1) < idAppts.size()) {
+                            loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
                         } else {
                             loadUsersList();
                         }
@@ -276,8 +308,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                 } catch (Exception e) {
                     userSearch.setServices(null);
                     usersSearchList.add(userSearch);
-                    if ((sIndex+1) < idAppts.size()) {
-                        loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex+1));
+                    if ((sIndex + 1) < idAppts.size()) {
+                        loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
                     } else {
                         loadUsersList();
                     }
@@ -295,9 +327,9 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
 
     private void loadBusinessProfiles(ArrayList<QueueList> mSearchQueueList, ArrayList<ScheduleList> mSearchScheduleList, ArrayList<String> idAppts, ArrayList<String> idCheckins) {
         usersSearchList.clear();
-        mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog = Config.getProgressDialog(getActivity(), mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-        if(idAppts.size() > 0) {
+        if (idAppts.size() > 0) {
             loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, 0);
         }
     }
@@ -314,34 +346,34 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
 //            Config.logV("IDS_--------------------" + idPass);
 //            Call<ArrayList<QueueList>> call = apiService.getProviderAvailableQTime(idPass);
         Call<ArrayList<QueueList>> call = apiService.getProviderAvailableQTime(idCheckins.get(sIndex));
-            call.enqueue(new Callback<ArrayList<QueueList>>() {
-                @Override
-                public void onResponse(Call<ArrayList<QueueList>> call, Response<ArrayList<QueueList>> response) {
-                    final ArrayList<QueueList> mSearchQueueList;
-                    try {
-                        Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
-                        Config.logV("Response--code-----SearchViewID--------------------" + response.code());
+        call.enqueue(new Callback<ArrayList<QueueList>>() {
+            @Override
+            public void onResponse(Call<ArrayList<QueueList>> call, Response<ArrayList<QueueList>> response) {
+                final ArrayList<QueueList> mSearchQueueList;
+                try {
+                    Config.logV("URL---66666----SEARCH--------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code-----SearchViewID--------------------" + response.code());
 //                        Config.logV("Response--code-----SearchViewID12--------------------" + new Gson().toJson(response.body()));
-                        if (response.code() == 200) {
-                            mSearchQueueList = response.body();
-                            mQueueLists.add(mSearchQueueList.get(0));
-                            if ((sIndex+1) < idCheckins.size()) {
-                                loadNextAvailableQs(idAppts, idCheckins, mSearchScheduleList, (sIndex+1));
-                            } else {
-                                loadBusinessProfiles(mQueueLists, mSearchScheduleList, idAppts, idCheckins);
-                            }
+                    if (response.code() == 200) {
+                        mSearchQueueList = response.body();
+                        mQueueLists.add(mSearchQueueList.get(0));
+                        if ((sIndex + 1) < idCheckins.size()) {
+                            loadNextAvailableQs(idAppts, idCheckins, mSearchScheduleList, (sIndex + 1));
+                        } else {
+                            loadBusinessProfiles(mQueueLists, mSearchScheduleList, idAppts, idCheckins);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            }
 
-                @Override
-                public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
-                    // Log error here since request failed
-                    Config.logV("Fail---------------" + t.toString());
-                }
-            });
+            @Override
+            public void onFailure(Call<ArrayList<QueueList>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
 //        }
     }
 
@@ -349,7 +381,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         if (mDialog.isShowing())
             Config.closeDialog(getActivity(), mDialog);
         linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        deptListAdapter = new DeptListAdapter(getActivity(), usersSearchList, searchDetailViewFragment,firstCouponAvailable, couponAvailable,this);
+        deptListAdapter = new DeptListAdapter(getActivity(), usersSearchList, searchDetailViewFragment, firstCouponAvailable, couponAvailable, this);
         mdepartment_searchresult.setAdapter(deptListAdapter);
         mdepartment_searchresult.setLayoutManager(linearLayoutManager);
         deptListAdapter.notifyDataSetChanged();

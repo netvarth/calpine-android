@@ -109,6 +109,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
     Toolbar toolbar;
     static Fragment home;
     static TextView mCurrentLoc;
+    LinearLayout llSorry, llSorryAppointments;
 
     Spinner mSpinnerDomain;
     String AWS_URL = "";
@@ -241,8 +242,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         }
     }
 
-    TextView txt_sorry;
-    TextView txt_sorry_appointment;
+
     boolean activeCheckin = false;
     ImageView ic_refinedFilter;
     static Activity mActivity;
@@ -276,8 +276,8 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
         Home.doubleBackToExitPressedOnce = false;
         mActivity = getActivity();
 
-        txt_sorry = (TextView) row.findViewById(R.id.txt_sorry);
-        txt_sorry_appointment = (TextView) row.findViewById(R.id.txt_sorry_appointment);
+        llSorry = row.findViewById(R.id.ll_sorry);
+        llSorryAppointments = row.findViewById(R.id.ll_sorry_appointment);
         mainlayout = (FrameLayout) row.findViewById(R.id.mainlayout);
         mCurrentLoc = (TextView) row.findViewById(R.id.currentloc);
 
@@ -429,7 +429,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
 
                 mRecycleActive.setVisibility(View.GONE);
                 tv_activechkin.setText("Active Check-ins ");
-                txt_sorry.setVisibility(View.VISIBLE);
+                llSorry.setVisibility(View.VISIBLE);
                 LActiveCheckin.setVisibility(View.VISIBLE);
             }
 
@@ -1293,7 +1293,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                     if (response.code() == 200) {
                         Config.logV("Response--Array size--Active-----------------------" + response.body());
                         if (response.body().size() > 0) {
-                            txt_sorry.setVisibility(View.GONE);
+                            llSorry.setVisibility(View.GONE);
                             MActiveList.clear();
                             MActiveList = response.body();
 //                                Log.i("fghhgf",new Gson().toJson(MActiveList));
@@ -1322,7 +1322,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         } else {
                             mRecycleActive.setVisibility(View.GONE);
                             tv_activechkin.setText("Active Check-ins ");
-                            txt_sorry.setVisibility(View.VISIBLE);
+                            llSorry.setVisibility(View.VISIBLE);
                             LActiveCheckin.setVisibility(View.VISIBLE);
                         }
                     } else {
@@ -1356,7 +1356,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                 try {
                     if (response.code() == 200) {
                         if (response.body().size() > 0) {
-                            txt_sorry_appointment.setVisibility(View.GONE);
+                            llSorryAppointments.setVisibility(View.GONE);
                             MActiveListAppointment = response.body();
                             if (MActiveListAppointment.size() > 0) {
                                 tv_activeappt.setText("Active Appointments " + "(" + MActiveListAppointment.size() + ")");
@@ -1374,7 +1374,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
                         } else {
                             mRecycleAppointment.setVisibility(View.GONE);
                             tv_activeappt.setText("Active Appointments ");
-                            txt_sorry_appointment.setVisibility(View.VISIBLE);
+                            llSorryAppointments.setVisibility(View.VISIBLE);
                             LActiveAppointment.setVisibility(View.VISIBLE);
                         }
                     } else {
@@ -1552,7 +1552,7 @@ public class DashboardFragment extends RootFragment implements GoogleApiClient.C
             } else {
                 mRecycleActive.setVisibility(View.GONE);
                 tv_activechkin.setText("Active Check-ins ");
-                txt_sorry.setVisibility(View.VISIBLE);
+                llSorry.setVisibility(View.VISIBLE);
                 LActiveCheckin.setVisibility(View.VISIBLE);
             }
         }

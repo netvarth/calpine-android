@@ -47,6 +47,7 @@ import com.jaldeeinc.jaldee.adapter.LocationCheckinAdapter;
 import com.jaldeeinc.jaldee.adapter.SearchLocationAdapter;
 import com.jaldeeinc.jaldee.adapter.SpecialisationAdapter;
 import com.jaldeeinc.jaldee.adapter.UserDetailAdapter;
+import com.jaldeeinc.jaldee.adapter.UsersAdapter;
 import com.jaldeeinc.jaldee.adapter.VirtualFieldAdapter;
 import com.jaldeeinc.jaldee.callback.AdapterCallback;
 import com.jaldeeinc.jaldee.callback.ContactAdapterCallback;
@@ -62,6 +63,7 @@ import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.model.ContactModel;
 import com.jaldeeinc.jaldee.model.DepartmentModal;
 import com.jaldeeinc.jaldee.model.DepartmentUserSearchModel;
+import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.SearchListModel;
 import com.jaldeeinc.jaldee.model.SearchModel;
 import com.jaldeeinc.jaldee.model.SocialMediaModel;
@@ -90,7 +92,6 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -120,7 +121,7 @@ import static com.jaldeeinc.jaldee.connection.ApiClient.context;
  */
 
 
-public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback, DepartmentAdapter.OnItemClickListener {
+public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback, DepartmentAdapter.OnItemClickListener,UsersAdapter.OnItemClickListener {
     Context mContext;
     ListView deptListview;
     SearchViewDetail mBusinessDataList;
@@ -154,6 +155,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     RecyclerView mRecyLocDetail, mRecycle_virtualfield, mRecycleDepartment, mrecycle_specialisation;
     SearchLocationAdapter mSearchLocAdapter;
     DepartmentAdapter mDepartmentAdapter;
+    UsersAdapter usersAdapter;
     UserDetailAdapter userDetailAdapter;
     ImageView mImgeProfile, mImgthumbProfile, mImgthumbProfile2, mImgthumbProfile1;
     int mProviderId;
@@ -202,11 +204,13 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     boolean from_user = false;
     DepartmentUserSearchModel searchdetailList = new DepartmentUserSearchModel();
     SearchModel domainList = new SearchModel();
+    ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mDepartmentAdapter = new DepartmentAdapter(this);
+        usersAdapter = new UsersAdapter(this);
         View row = inflater.inflate(R.layout.searchdetails, container, false);
         mContext = getActivity();
         mRecyLocDetail = (RecyclerView) row.findViewById(R.id.mSearchLoc);
@@ -509,6 +513,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         if (mSearchSettings.isFilterByDept()) {
                             apiShowDepartmentsOrServices(muniqueID);
                         } else {
+                            apiGetUsers(muniqueID);
                             ApiSearchViewLocation(muniqueID);
                         }
                         Config.logV("Location Adapter-----------------------");
@@ -528,6 +533,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
         });
     }
+
 
     private void apiSearchViewDetail(final String muniqueID, final List<SearchAWsResponse> mSearchRespPass) {
         ApiInterface apiService =
@@ -770,9 +776,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         ArrayList<SearchDepartmentServices> deptProviders = response.body();
                         if (deptServices != null && deptServices.size() > 0) {
                             for (int dsIndex = 0; dsIndex < deptServices.size(); dsIndex++) {
-                                for ( int dpIndex = 0; dpIndex < deptProviders.size(); dpIndex++) {
+                                for (int dpIndex = 0; dpIndex < deptProviders.size(); dpIndex++) {
                                     if (deptServices.get(dsIndex).getDepartmentId().equalsIgnoreCase(deptProviders.get(dpIndex).getDepartmentId())) {
-                                        SearchDepartmentServices merged_S_P = deptServices.get(dpIndex);
+                                        SearchDepartmentServices merged_S_P = deptServices.get(dsIndex);
                                         merged_S_P.setUsers(deptProviders.get(dpIndex).getUsers());
                                         deptMergedList.add(merged_S_P);
                                         break;
@@ -783,10 +789,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         Log.i("deptMergedList", new Gson().toJson(deptMergedList));
                         if (deptMergedList.size() > 0) {
 
-                            if (from_user){
+                            if (from_user) {
                                 mRecycleDepartment.setVisibility(View.GONE);
-                            }
-                            else {
+                            } else {
                                 mSearchDepartmentServices.clear();
                                 String responses = new Gson().toJson(response.body());
                                 Config.logV("Deapartnamesss---------------" + responses);
@@ -830,6 +835,65 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 Config.logV("Fail---------------" + t.toString());
             }
         });
+    }
+
+    private void apiGetUsers(String muniqueID) {
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Call<ArrayList<ProviderUserModel>> call = apiService.getUsers(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<ProviderUserModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ProviderUserModel>> call, Response<ArrayList<ProviderUserModel>> response) {
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        if (response.body() != null) {
+                            usersList.clear();
+                            usersList = response.body();
+                            if (usersList.size() > 0) {
+                                if (from_user) {
+                                    mRecycleDepartment.setVisibility(View.GONE);
+                                } else {
+                                    if (usersList != null) {
+                                        if (usersList.size() == 1) {
+                                            departmentHeading.setVisibility(View.VISIBLE);
+                                            departmentHeading.setText("Users (1)");
+                                        } else if (usersList.size() > 1) {
+                                            departmentHeading.setVisibility(View.VISIBLE);
+                                            departmentHeading.setText("Users " + "(" + usersList.size() + ")");
+                                        }
+                                    } else {
+                                        departmentHeading.setVisibility(View.GONE);
+                                    }
+
+                                    RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
+                                    mRecycleDepartment.setVisibility(View.VISIBLE);
+                                    mRecycleDepartment.setLayoutManager(mDepartmentLayout);
+                                    usersAdapter.setFields(usersList,mBusinessDataList.getBusinessName());
+                                    mRecycleDepartment.setAdapter(usersAdapter);
+                                    usersAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ProviderUserModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+
     }
 
 
@@ -2325,7 +2389,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                             ArrayList<DepartmentUserSearchModel> userDetails = new ArrayList<DepartmentUserSearchModel>();
                             userDetails.add(searchdetailList);
-                            userDetailAdapter = new UserDetailAdapter(mContext, userDetails, mSearchAWSResponse, mSearchDepartmentList, terminology, mInterface,mSearchmCheckMessageList);
+                            userDetailAdapter = new UserDetailAdapter(mContext, userDetails, mSearchAWSResponse, mSearchDepartmentList, terminology, mInterface, mSearchmCheckMessageList);
                             mRecyLocDetail.setAdapter(userDetailAdapter);
                             userDetailAdapter.notifyDataSetChanged();
                         } else {
@@ -2577,6 +2641,18 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
         transaction.add(R.id.mainlayout, deptFragment).commit();
+    }
+
+    private void onMethodUsersClick(ArrayList<ProviderUserModel> usersList, String businessName) {
+
+        boolean fromDoctors = true;
+
+        DeptFragment deptFragment = new DeptFragment(usersList, this,businessName, mBusinessDataList, firstCouponAvailable, couponAvailable,fromDoctors);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+        transaction.addToBackStack(null);
+        transaction.add(R.id.mainlayout, deptFragment).commit();
+
     }
 
 
@@ -3545,4 +3621,10 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     public void departmentClicked(SearchDepartmentServices searchDepartment, String businessName) {
         onMethodDepartment(searchDepartment, businessName);
     }
+
+    @Override
+    public void usersClick(ArrayList<ProviderUserModel> usersList, String businessName) {
+        onMethodUsersClick(usersList,businessName);
+    }
+
 }
