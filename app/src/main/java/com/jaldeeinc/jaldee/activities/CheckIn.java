@@ -140,6 +140,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
     static int locationId;
     ArrayList<SearchService> LServicesList = new ArrayList<>();
+    ArrayList<SearchUsers> LUsersList = new ArrayList<>();
     ArrayList<SearchService> gServiceList = new ArrayList<>();
     ArrayList<SearchUsers>   doctResponse = new ArrayList<>();
     String uniqueID;
@@ -233,6 +234,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     File file;
     EditText edt_message;
     boolean virtualServices;
+    int userId;
+    String departmentId, virtualService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -565,6 +568,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 }
                 else if(mFrom.equalsIgnoreCase("multiusercheckin") || mFrom.equalsIgnoreCase("searchdetail_user")){
                     modifyAccountID = accountID;
+                    userId = extras.getInt("userId");
+                    departmentId = extras.getString("departmentId");
+                    virtualService = extras.getString("virtualServices");
                 }
                     else
                 {
@@ -750,7 +756,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 Log.i("dfgdfg", String.valueOf(deptSpinnertext));
                 departmentSelected = depResponse.getDepartments().get(position).getDepartmentName();
                 selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
-                ApiSearchUsers(selectedDepartment);
+
                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
                 ArrayList<SearchService> serviceList = new ArrayList<>();
                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
@@ -779,11 +785,91 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     txt_chooseservice.setVisibility(View.VISIBLE);
                     btn_checkin.setVisibility(View.VISIBLE);
                 }
+                ApiSearchUsers(selectedDepartment);
+                LUsersList.clear();
+                LUsersList.addAll(doctResponse);
+                if (LUsersList.size() == 0) {
+                    mSpinnerDoctor.setVisibility(View.GONE);
+                    //  btn_checkin.setVisibility(View.GONE);
+                    txt_choosedoctor.setVisibility(View.GONE);
+                    //  Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                } else {
+                    ArrayAdapter<SearchUsers> adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item,LUsersList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    mSpinnerDoctor.setAdapter(adapter);
+//                    if(mFrom.equalsIgnoreCase("multiusercheckin")){
+//                        userSpinnertext = userId;
+//                    }
+//                    else{
+                    userSpinnertext = ((SearchUsers) LUsersList.get(0)).getId();
+//                }
+                    //  livetrack = LServicesList.get(0).getLivetrack();
+                    mSpinnerDoctor.setVisibility(View.VISIBLE);
+                    txt_choosedoctor.setVisibility(View.VISIBLE);
+                    //   btn_checkin.setVisibility(View.VISIBLE);
+
+                }
+
+
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
+        });
+        mSpinnerDoctor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                if(mFrom.equalsIgnoreCase("multiusercheckin")){
+//                    userSpinnertext = userId;
+//                }
+//                else{
+                userSpinnertext = doctResponse.get(position).getId();
+//            }
+                Log.i("dfgdfg", String.valueOf(deptSpinnertext));
+                userSelected = doctResponse.get(position).getFirstName();
+                // selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
+                //  ApiSearchUsers(selectedDepartment);
+                // ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
+                ArrayList<SearchService> serviceList = new ArrayList<>();
+
+
+                for (int i = 0; i < gServiceList.size(); i++) {
+                    if(gServiceList.get(i).getProvider()!=null) {
+                        if (doctResponse.get(position).getId()==(gServiceList.get(i).getProvider().getId())) {
+                            serviceList.add(gServiceList.get(i));
+
+                        }
+                    }
+                }
+
+
+                LServicesList.clear();
+                LServicesList.addAll(serviceList);
+                if (LServicesList.size() == 0) {
+                    mSpinnerService.setVisibility(View.GONE);
+                    btn_checkin.setVisibility(View.GONE);
+                    txt_chooseservice.setVisibility(View.GONE);
+                    Toast.makeText(CheckIn.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                } else {
+                    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    mSpinnerService.setAdapter(adapter);
+                    mSpinnertext = ((SearchService) LServicesList.get(0)).getId();
+                    livetrack = LServicesList.get(0).isLivetrack();
+                    mSpinnerService.setVisibility(View.VISIBLE);
+                    txt_chooseservice.setVisibility(View.VISIBLE);
+                    btn_checkin.setVisibility(View.VISIBLE);
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+
         });
 
 //        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
@@ -1639,6 +1725,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             mService.setServiceType(response.body().get(i).getServiceType());
                             mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
                             mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
+                            mService.setProvider(response.body().get(i).getProvider());
                             LServicesList.add(mService);
 
                             if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
@@ -1681,6 +1768,24 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                 deptSpinnertext = depResponse.getDepartmentId();
                                                 ArrayList<SearchService> serviceList = new ArrayList<>();
                                                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
+                                                if(mFrom.equalsIgnoreCase("multiusercheckin")){
+                                                    selectedDepartment =  Integer.parseInt(departmentId);
+                                                    deptSpinnertext =  Integer.parseInt(departmentId);
+
+                                                    for(int k =0;k<depResponse.getDepartments().size();k++){
+                                                        if(selectedDepartment == depResponse.getDepartments().get(k).getDepartmentId()){
+                                                            departmentSelected = depResponse.getDepartments().get(k).getDepartmentName();
+                                                            mSpinnerDepartment.setSelection(k);
+                                                        }
+                                                    }
+
+
+                                                }
+                                                else{
+                                                    selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
+                                                    departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
+                                                    deptSpinnertext = depResponse.getDepartments().get(0).getDepartmentId();}
+                                                ApiSearchUsers(selectedDepartment);
                                                 selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
                                                 departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
                                                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
@@ -1799,25 +1904,132 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     }
 
     private void ApiSearchUsers(int deptId) {
-        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-        Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(deptId,Integer.parseInt(accountID.split("-")[0]));
-        call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
-            @Override
-            public void onResponse(Call<ArrayList<SearchUsers>> call, Response<ArrayList<SearchUsers>> response) {
-                try {
-                    if (response.code() == 200) {
-                        doctResponse = response.body();
-//                        Log.i("getUser123",new Gson().toJson(response.body()));
+        ApiInterface  apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        if (selectedDepartment != 0) {
+            Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(selectedDepartment, Integer.parseInt(accountID.split("-")[0]));
+
+            call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
+
+                @Override
+                public void onResponse(Call<ArrayList<SearchUsers>> call, Response<ArrayList<SearchUsers>> response) {
+                    try {
+                        if (response.code() == 200) {
+                            doctResponse = response.body();
+                            if (doctResponse.size() > 0) {
+                                mSpinnerDoctor.setVisibility(View.VISIBLE);
+                                txt_choosedoctor.setVisibility(View.VISIBLE);
+                                ArrayAdapter<SearchUsers> adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item, doctResponse);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinnerDoctor.setAdapter(adapter);
+                                if(mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                    userSpinnertext = userId;
+                                    for (int k = 0; k < doctResponse.size(); k++) {
+                                        if (userSpinnertext == doctResponse.get(k).getId()) {
+                                            userSelected = doctResponse.get(k).getFirstName() + " " + doctResponse.get(k).getLastName();
+                                            mSpinnerDoctor.setSelection(k);
+                                        }
+                                    }
+                                }
+                                else{
+                                    userSpinnertext = doctResponse.get(i).getId();}
+                                ArrayList<SearchService> serviceList = new ArrayList<>();
+                                ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
+                                if(mFrom.equalsIgnoreCase("multiusercheckin")){
+                                    selectedDepartment =  Integer.parseInt(departmentId);
+                                }
+                                else{
+                                    selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();}
+                                departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
+                                for (int serviceIndex = 0; serviceIndex < doctResponse.size(); serviceIndex++) {
+
+                                    for (int i = 0; i < gServiceList.size(); i++) {
+                                        if(gServiceList.get(i).getProvider()!=null) {
+                                            if (doctResponse.get(serviceIndex).getId()==(gServiceList.get(i).getProvider().getId())) {
+                                                serviceList.add(gServiceList.get(i));
+
+                                            }
+                                        }
+                                    }
+
+                                }
+                                LServicesList.clear();
+                                LServicesList.addAll(serviceList);
+
+                            }
+                            if (LServicesList.size() > 0) {
+                                mSpinnerService.setVisibility(View.VISIBLE);
+                                txt_chooseservice.setVisibility(View.VISIBLE);
+                                Config.logV("mServicesList" + LServicesList.size());
+                                CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinnerService.setAdapter(adapter);
+                                mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                                livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
+                            } else {
+
+                                mSpinnerService.setVisibility(View.GONE);
+                                txt_chooseservice.setVisibility(View.GONE);
+
+                                if (LServicesList.size() == 1) {
+                                    // String firstWord = "Check-in for ";
+                                    String firstWord = Word_Change;
+                                    String secondWord = LServicesList.get(0).getName();
+
+                                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                                            "fonts/Montserrat_Bold.otf");
+                                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                    tv_checkin_service.setText(spannable);
+                                    mSpinnertext = LServicesList.get(0).getId();
+                                    livetrack = LServicesList.get(0).isLivetrack();
+                                    serviceSelected = LServicesList.get(0).getName();
+                                    selectedService = LServicesList.get(0).getId();
+
+
+                                    Date currentTime = new Date();
+                                    final SimpleDateFormat sdf = new SimpleDateFormat(
+                                            "yyyy-MM-dd", Locale.US);
+                                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                    System.out.println("UTC time: " + sdf.format(currentTime));
+                                    //ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+
+
+                                    isPrepayment = LServicesList.get(0).isPrePayment();
+                                    Config.logV("Payment------------" + isPrepayment);
+                                    if (isPrepayment) {
+
+
+                                        sAmountPay = LServicesList.get(0).getMinPrePaymentAmount();
+                                        APIPayment(modifyAccountID);
+
+                                        Config.logV("Payment----sAmountPay--------" + sAmountPay);
+
+                                    } else {
+                                        LservicePrepay.setVisibility(View.GONE);
+                                    }
+
+                                }
+                            }
+//
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-            @Override
-            public void onFailure(Call<ArrayList<SearchUsers>> call, Throwable t) {
-            }
-        });
-        // Department Ends Here
+
+
+                @Override
+                public void onFailure(Call<ArrayList<SearchUsers>> call, Throwable t) {
+
+                }
+
+
+            });
+        }
     }
     SearchTerminology mSearchTerminology;
 
@@ -2024,12 +2236,16 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         JSONObject service = new JSONObject();
         JSONArray waitlistArray = new JSONArray();
         JSONObject virtualService = new JSONObject();
+        JSONObject pjsonobj = new JSONObject();
         try {
 
             qjsonObj.put("id", queueId);
             queueobj.put("date", formattedDate);
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("waitlistPhonenumber", phoneNumber);
+            if(userSpinnertext!=0){
+                pjsonobj.put("id",userSpinnertext);
+            }
             if(callingMode!=null && callingMode.equalsIgnoreCase("whatsapp")){
                 virtualService.put("WhatsApp", et_virtualId.getText());
             }else if(callingMode!= null && callingMode.equalsIgnoreCase("GoogleMeet")) {
@@ -2084,6 +2300,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             queueobj.putOpt("service", selectedService);
             queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("waitlistingFor", waitlistArray);
+            if(userSpinnertext!=0){
+                queueobj.putOpt("provider",pjsonobj);}
             if(selectedServiceType!=null && selectedServiceType.equalsIgnoreCase("virtualService")){
                 queueobj.putOpt("virtualService",virtualService);
             }
