@@ -149,6 +149,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     ArrayList<SearchAppoinment> LServicesList = new ArrayList<>();
     ArrayList<SearchUsers> LUsersList = new ArrayList<>();
     ArrayList<SearchAppoinment> gServiceList = new ArrayList<>();
+    ArrayList<SearchAppoinment> globalServicesList = new ArrayList<>();
     String uniqueID;
     String uuid;
     TextView tv_addmember, tv_editphone;
@@ -3487,7 +3488,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         ApiInterface  apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         if (selectedDepartment != 0) {
             Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(selectedDepartment, Integer.parseInt(accountID.split("-")[0]));
-
             call1.enqueue(new Callback<ArrayList<SearchUsers>>() {
 
                                 @Override
@@ -3513,7 +3513,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                 else{
                                                 userSpinnertext = doctResponse.get(i).getId();}
                                                 ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
-                                            ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
+                                                ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
                                                 if(mFrom.equalsIgnoreCase("multiusercheckin")){
                                                     selectedDepartment =  Integer.parseInt(departmentId);
                                                 }
@@ -3529,6 +3529,17 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                                             }
                                                         }
+//                                                        else{
+//                                                            globalServicesList.add(gServiceList.get(i));
+//                                                            SearchUsers globalservices = new SearchUsers();
+//                                                            doctResponse.add(doctResponse.size() -1,globalservices);
+//                                                            mSpinnerDoctor.setVisibility(View.VISIBLE);
+//                                                            txt_choosedoctor.setVisibility(View.VISIBLE);
+//                                                            adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item, doctResponse);
+//                                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                                                            mSpinnerDoctor.setAdapter(adapter);
+//
+//                                                        }
                                                     }
 
                                                 }

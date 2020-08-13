@@ -509,6 +509,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         if (mSearchSettings.isFilterByDept()) {
                             apiShowDepartmentsOrServices(muniqueID);
                         } else {
+                            apiShowDepartmentsOrServices(muniqueID);
                             ApiSearchViewLocation(muniqueID);
                         }
                         Config.logV("Location Adapter-----------------------");
