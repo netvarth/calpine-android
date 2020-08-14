@@ -89,6 +89,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     Boolean fromDoctors = false;
     ArrayList<ProviderUserModel> usersList;
     ArrayList<SearchLocation> mSearchLocList;
+    public DeptFragment() {
+    }
 
 
 
@@ -107,7 +109,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     public DeptFragment(ArrayList<ProviderUserModel> usersList, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataList, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings, Boolean fromDoctors) {
         this.usersList = usersList;
         this.searchDetailViewFragment = searchDetailViewFragment;
-        this.mBusinessDataListParent = mBusinessDataList;
+        this.businessName = businessName;
         this.firstCouponAvailable = firstCouponAvailable;
         this.couponAvailable = couponAvailable;
         this.mSearchLocList = searchLocation;
@@ -140,7 +142,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
             }
         });
 
-        tv_title.setText(mBusinessDataListParent.getBusinessName());
+        tv_title.setText(businessName);
 
         if (fromDoctors) {
             tv_departmentName.setVisibility(View.GONE);
@@ -148,50 +150,57 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
             tv_services.setVisibility(View.GONE);
             tv_doctors.setVisibility(View.GONE);
         } else {
-            tv_departmentCode.setText(departmentServices.getDepartmentCode());
-            tv_departmentName.setText(departmentServices.getDepartmentName());
-            if (departmentServices.getUsers().size() > 0) {
-                tv_doctors.setVisibility(View.VISIBLE);
-                tv_doctors.setText("Doctors : " + departmentServices.getUsers().size());
-                tv_services.setVisibility(View.GONE);
-            } else {
-                tv_doctors.setVisibility(View.GONE);
-                tv_services.setVisibility(View.VISIBLE);
-                tv_services.setText("Services >");
-            }
-            tv_services.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-                    mServicesList = departmentServices.getServices();
-                    servicesListAdapter = new ServicesListAdapter(getActivity(), mServicesList, departmentServices);
-                    mservice_searchresult.setAdapter(servicesListAdapter);
-                    mservice_searchresult.setLayoutManager(linearLayoutManager);
-                    servicesListAdapter.notifyDataSetChanged();
+                if(departmentServices!=null) {
+                    tv_departmentCode.setText(departmentServices.getDepartmentCode());
+                    tv_departmentName.setText(departmentServices.getDepartmentName());
+                    if (departmentServices.getUsers().size() > 0) {
+                        tv_doctors.setVisibility(View.VISIBLE);
+                        tv_doctors.setText("Doctors : " + departmentServices.getUsers().size());
+                        tv_services.setVisibility(View.GONE);
+                    } else {
+                        tv_doctors.setVisibility(View.GONE);
+                        tv_services.setVisibility(View.VISIBLE);
+                        tv_services.setText("Services >");
+                    }
+                    tv_services.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+                            mServicesList = departmentServices.getServices();
+                            servicesListAdapter = new ServicesListAdapter(getActivity(), mServicesList, departmentServices);
+                            mservice_searchresult.setAdapter(servicesListAdapter);
+                            mservice_searchresult.setLayoutManager(linearLayoutManager);
+                            servicesListAdapter.notifyDataSetChanged();
+                        }
+
+                    });
+
                 }
-
-            });
         }
 
-        ArrayList<String> idsCheckin = new ArrayList<>();
-        ArrayList<String> idsAppt = new ArrayList<>();
-        location = mSearchLocList.get(0);
+            ArrayList<String> idsCheckin = new ArrayList<>();
+            ArrayList<String> idsAppt = new ArrayList<>();
+            location = mSearchLocList.get(0);
 
-        if (fromDoctors) {
-            for (int i = 0; i < usersList.size(); i++) {
-                idsCheckin.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + usersList.get(i).getId());
-                idsAppt.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + usersList.get(i).getId());
+            if (fromDoctors) {
+                for (int i = 0; i < usersList.size(); i++) {
+                    idsCheckin.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + usersList.get(i).getId());
+                    idsAppt.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + usersList.get(i).getId());
+                }
+            } else {
+                for (int i = 0; i < departmentServices.getUsers().size(); i++) {
+                    idsCheckin.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + departmentServices.getUsers().get(i).getId());
+                    idsAppt.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + departmentServices.getUsers().get(i).getId());
+                }
             }
-        } else  {
-            for (int i = 0; i < departmentServices.getUsers().size(); i++) {
-                idsCheckin.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + departmentServices.getUsers().get(i).getId());
-                idsAppt.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + departmentServices.getUsers().get(i).getId());
-            }
-        }
 
-        ApiLoadQsAndSchedulesList(idsCheckin, idsAppt, mBusinessDataLists);
-        return row;
-    }
+            ApiLoadQsAndSchedulesList(idsCheckin, idsAppt, mBusinessDataLists);
+            return row;
+
+
+          }
+
+
 
     private void ApiLoadQsAndSchedulesList(final ArrayList<String> idsCheckin, final ArrayList<String> idsAppt, List<SearchViewDetail> mBusinessDataLists) {
         ApiInterface apiService =
