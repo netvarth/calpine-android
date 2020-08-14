@@ -269,16 +269,18 @@ public class SearchServiceActivity extends AppCompatActivity {
                             }
                         } else {
                             ArrayList<String> mGalleryList = new ArrayList<>();
-                            for (int i = 0; i < mGallery.size(); i++) {
-                                mGalleryList.add(mGallery.get(i).getUrl());
-                            }
+                            if (mGallery != null) {
+                                for (int i = 0; i < mGallery.size(); i++) {
+                                    mGalleryList.add(mGallery.get(i).getUrl());
+                                }
 
 
-                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                            if (mValue) {
+                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                                if (mValue) {
 
-                                Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
-                                startActivity(intent);
+                                    Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
+                                    startActivity(intent);
+                                }
                             }
                         }
                     }

@@ -26,6 +26,8 @@
     <color name="tab_checked">#084c61</color>
     <color name="tab_unchecked">#3E4A59</color>
     <color name="button_background">#7a7a7a</color>
+    <color name="fadedgrey">#E9E8E5</color>
+
 
     <!--   Login screen-->
 

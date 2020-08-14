@@ -92,6 +92,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     ArrayList<Boolean> checkins_flag;
     ArrayList<Boolean> appts_flag;
     ArrayList<Boolean> dnts_flag;
+    boolean isLoading;
 
     public PaginationAdapter(Activity activity, SearchView searchview, Context context, Fragment mFragment, AdapterCallback callback, String uniqueID, List<QueueList> mQueueList) {
         this.context = context;
@@ -105,6 +106,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.activity = activity;
         this.uniqueID = uniqueID;
         this.mQueueList = mQueueList;
+        this.isLoading = isLoading;
     }
 
     private static Date parseDate(String date) {
