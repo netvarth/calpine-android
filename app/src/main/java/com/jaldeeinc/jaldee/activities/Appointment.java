@@ -1420,173 +1420,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
     }
 
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        if (resultCode == this.RESULT_CANCELED) {
-//            return;
-//        }
-//        if (requestCode == GALLERY) {
-//            if (data != null) {
-//                try {
-//                    if (data.getData() != null) {
-//                        Uri uri = data.getData();
-//                        String filepath = "";//default fileName
-//                        //Uri filePathUri = uri;
-//                        File file;
-//                        String mimeType = this.mContext.getContentResolver().getType(uri);
-//                        String uriString = uri.toString();
-//                        String extension = "";
-//                        if (uriString.contains(".")) {
-//                            extension = uriString.substring(uriString.lastIndexOf(".") + 1);
-//                        }
-//
-//                        if (Arrays.asList(imgExtsSupported).contains(extension)) {
-//                            try {
-//                                file = new File(new URI(uri.toString()));
-//                                if (file.exists())
-//                                    filepath = file.getAbsolutePath();
-//
-//                            } catch (URISyntaxException e) {
-//                                e.printStackTrace();
-//                            }
-//                        } else {
-//                            extension = mimeType.substring(mimeType.lastIndexOf("/") + 1);
-//                            if (Arrays.asList(fileExtsSupported).contains(extension)) {
-//                                filepath = getFilePathFromURI(this.mContext, uri, extension);
-//                            } else {
-//                                Toast.makeText(mContext, "File type not supported", Toast.LENGTH_SHORT).show();
-//                                return;
-//                            }
-//                        }
-//
-////                        if (uri.getScheme().toString().compareTo("external/images/media") == 0) {
-////
-//////                            String[] projection = { MediaStore.Images.Media.DATA };
-//////                            Cursor cursor = this.mContext.getContentResolver().query(uri, projection, null, null, null);
-//////                            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//////
-//////                            cursor.moveToFirst();
-//////                            String mImagePath = cursor.getString(column_index);
-//////                            cursor.close();
-//////                            }
-////                            filepath = getFilePathFromURI(this.mContext, uri);
-////                        } else if (uri.getScheme().compareTo("file") == 0) {
-////                            try {
-////                                file = new File(new URI(uri.toString()));
-////                                if (file.exists())
-////                                    filepath = file.getAbsolutePath();
-////
-////                            } catch (URISyntaxException e) {
-////                                e.printStackTrace();
-////                            }
-////                        }  else {
-////                            filepath = uri.getPath();
-////                        }
-//                        imagePathList.add(filepath);
-////                        Uri mImageUri = data.getData();
-////                        filePath = data.getData().getPath();
-////                        String ext1 = FilenameUtils.getExtension(filePath);
-////
-////
-////                        imagePathList.add(mImageUri.toString());
-////             //         bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
-////                       // if(bitmap!=null){
-////                    //    path = saveImage(bitmap);}
-////
-////                      //  else{
-////                            path = getRealFilePath(mImageUri);
-////                     //   }
-//
-//
-//                        DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-//                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-//                        recycle_image_attachment.setLayoutManager(mLayoutManager);
-//                        recycle_image_attachment.setAdapter(mDetailFileAdapter);
-//
-//                        mDetailFileAdapter.notifyDataSetChanged();
-//
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//        } else if (requestCode == CAMERA) {
-//            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//            //      imageview.setImageBitmap(bitmap);
-//            path = saveImage(bitmap);
-//            // imagePathList.add(bitmap.toString());
-//            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//            String paths = MediaStore.Images.Media.insertImage(mContext.getContentResolver(), bitmap, "Pic from camera", null);
-//            mImageUri = Uri.parse(paths);
-//            float size = getImageSize(mContext, mImageUri);
-//            imagePathList.add(mImageUri.toString());
-//
-//            DetailFileAdapter mDetailFileAdapter = new DetailFileAdapter(imagePathList, mContext);
-//            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-//            recycle_image_attachment.setLayoutManager(mLayoutManager);
-//            recycle_image_attachment.setAdapter(mDetailFileAdapter);
-//            mDetailFileAdapter.notifyDataSetChanged();
-//
-//        }
-//
-//       else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
-//
-//
-//            TransactionResponse transactionResponse = data.getParcelableExtra(PayUmoneyFlowManager.INTENT_EXTRA_TRANSACTION_RESPONSE);
-//            ResultModel resultModel = data.getParcelableExtra(PayUmoneyFlowManager.ARG_RESULT);
-//
-//            if (transactionResponse != null && transactionResponse.getPayuResponse() != null) {
-//
-//                if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.SUCCESSFUL)) {
-//                    showAlert("Payment Successful");
-//                    finish();
-//                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.CANCELLED)) {
-//                    showAlert("Payment Cancelled");
-//                } else if (transactionResponse.getTransactionStatus().equals(TransactionResponse.TransactionStatus.FAILED)) {
-//                    showAlert("Payment Failed");
-//                }
-//
-//            } else if (resultModel != null && resultModel.getError() != null) {
-//                Toast.makeText(this, "Error check log", Toast.LENGTH_SHORT).show();
-//            } else {
-//                //  Toast.makeText(this, "Both objects are null", Toast.LENGTH_SHORT).show();
-//            }
-//        } else if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_CANCELED) {
-//            showAlert("Payment Cancelled");
-//        }
-//    }
-//
-//    public String saveImage(Bitmap myBitmap) {
-//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-//        File wallpaperDirectory = new File(
-//                Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY);
-//        // have the object build the directory structure, if needed.
-//        if (!wallpaperDirectory.exists()) {
-//            wallpaperDirectory.mkdirs();
-//        }
-//
-//        try {
-//            f = new File(wallpaperDirectory, Calendar.getInstance()
-//                    .getTimeInMillis() + ".jpg");
-//            f.createNewFile();
-//            FileOutputStream fo = new FileOutputStream(f);
-//            fo.write(bytes.toByteArray());
-//            MediaScannerConnection.scanFile(this,
-//                    new String[]{f.getPath()},
-//                    new String[]{"image/jpeg"}, null);
-//            fo.close();
-//            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath());
-//
-//            return f.getAbsolutePath();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        }
-//        return "";
-//    }
-//
+
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
                 .withPermissions(
@@ -1635,49 +1469,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         }
         return 0;
     }
-//
-//    public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
-//        //copy file and send new file path
-//        String fileName = getFileNameInfo(contentUri);
-//        if (!TextUtils.isEmpty(fileName)) {
-//            String ext = "";
-//            if (fileName.contains(".")) {
-//            } else {
-//                ext = "." + extension;
-//            }
-//            File wallpaperDirectoryFile = new File(
-//                    Environment.getExternalStorageDirectory() + IMAGE_DIRECTORY + File.separator + fileName + ext);
-//            copy(context, contentUri, wallpaperDirectoryFile);
-//            return wallpaperDirectoryFile.getAbsolutePath();
-//        }
-//        return null;
-//    }
-//
-//    protected static String getFileNameInfo(Uri uri) {
-//        if (uri == null) {
-//            return null;
-//        }
-//        String fileName = null;
-//        String path = uri.getPath();
-//        int cut = path.lastIndexOf('/');
-//        if (cut != -1) {
-//            fileName = path.substring(cut + 1);
-//        }
-//        return fileName;
-//    }
-//
-//    public static void copy(Context context, Uri srcUri, File dstFile) {
-//        try {
-//            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);
-//            if (inputStream == null) return;
-//            OutputStream outputStream = new FileOutputStream(dstFile);
-//            IOUtils.copy(inputStream, outputStream);
-//            inputStream.close();
-//            outputStream.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 
     public void setCouponList(ArrayList couponArraylistNew) {
@@ -1693,13 +1484,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         return cal.getTime();
     }
 
-    /**
-     * subtract days to date in java
-     *
-     * @param date
-     * @param days
-     * @return
-     */
     public Date subtractDays(Date date, int days) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -2753,32 +2537,21 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
     private void ApiSearchViewServiceID(final int id) {
 
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
 
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
-
-
         Call<ArrayList<SearchAppoinment>> call = apiService.getSearchAppointment(id);
-
         call.enqueue(new Callback<ArrayList<SearchAppoinment>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchAppoinment>> call, Response<ArrayList<SearchAppoinment>> response) {
-
                 try {
-
                     if (mDialog.isShowing())
                         Config.closeDialog(getParent(), mDialog);
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
-
                     if (response.code() == 200) {
-
-
                         for (int i = 0; i < response.body().size(); i++) {
                             SearchAppoinment mService = new SearchAppoinment();
                             mService.setName(response.body().get(i).getName());
@@ -2996,9 +2769,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         });
     }
 
-
-
-
 //    private void ApiSearchViewAppointmentId(final int id) {
 //
 //
@@ -3207,12 +2977,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 //
 //    }
 
-
     private void ApiSchedule(String serviceId, String spinnerText, final String mDate, final String accountIDs) {
 
 
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
-
 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
@@ -3667,25 +3435,17 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                                 }
                                           }
-
-
-
-
-
                                     }
-
 
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                 }
 
-
                                 @Override
                                 public void onFailure(Call<ArrayList<SearchUsers>> call, Throwable t) {
 
                                 }
-
 
                             });
                         }

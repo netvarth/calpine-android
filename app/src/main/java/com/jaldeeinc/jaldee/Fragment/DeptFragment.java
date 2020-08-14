@@ -91,6 +91,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     ArrayList<SearchLocation> mSearchLocList;
 
 
+
     public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings) {
         this.departmentServices = departmentServices;
         this.searchDetailViewFragment = searchDetailViewFragment;
