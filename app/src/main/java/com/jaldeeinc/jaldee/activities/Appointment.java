@@ -3597,7 +3597,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                 doctResponse.add(doctResponse.size(),globalServices);
 
                                                 ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
-                                                ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
+                                                ArrayList<Integer> serviceIds =new ArrayList<>();
+                                                for(int k = 0;k<depResponse.getDepartments().size();k++){
+                                                    if(selectedDepartment == depResponse.getDepartments().get(k).getDepartmentId()){
+                                                     serviceIds = depResponse.getDepartments().get(k).getServiceIds();}
+                                                }
+
                                                 for (int serviceIndex = 0; serviceIndex < serviceIds.size(); serviceIndex++) {
 
                                                     for (int i = 0; i < gServiceList.size(); i++) {
