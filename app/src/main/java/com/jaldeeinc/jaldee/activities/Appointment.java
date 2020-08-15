@@ -2591,10 +2591,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                         LServicesList.remove(mService);
 
                                     }
-
                                 }
                             }
-
                         }
                         gServiceList.addAll(LServicesList);
                         // Department Section Starts
@@ -2630,7 +2628,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                             mSpinnerDepartment.setSelection(k);
                                                         }
                                                     }
-
 
                                                 }
                                                 else{
@@ -2745,7 +2742,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                             // Department Ends Here
 
-
                         }
 
                     }
@@ -2755,9 +2751,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     }
 
                 }
-
-
-
             @Override
             public void onFailure(Call<ArrayList<SearchAppoinment>> call, Throwable t) {
                 // Log error here since request failed

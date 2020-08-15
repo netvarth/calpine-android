@@ -180,7 +180,9 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
 
             ArrayList<String> idsCheckin = new ArrayList<>();
             ArrayList<String> idsAppt = new ArrayList<>();
-            location = mSearchLocList.get(0);
+            if (mSearchLocList != null) {
+                location = mSearchLocList.get(0);
+            }
 
             if (fromDoctors) {
                 for (int i = 0; i < usersList.size(); i++) {
