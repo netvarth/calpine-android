@@ -187,12 +187,12 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
 
             if (fromDoctors) {
                 for (int i = 0; i < usersList.size(); i++) {
-                    idsCheckin.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + usersList.get(i).getId());
+                    idsCheckin.add(usersList.get(i).getId() + "-" + location.getId());
                     idsAppt.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + usersList.get(i).getId());
                 }
             } else {
                 for (int i = 0; i < departmentServices.getUsers().size(); i++) {
-                    idsCheckin.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + departmentServices.getUsers().get(i).getId());
+                    idsCheckin.add(usersList.get(i).getId() + "-" + location.getId());
                     idsAppt.add(searchDetailViewFragment.mProviderId + "-" + location.getId() + "-" + departmentServices.getUsers().get(i).getId());
                 }
             }
