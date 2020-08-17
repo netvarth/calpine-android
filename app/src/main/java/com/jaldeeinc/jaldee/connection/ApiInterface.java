@@ -231,7 +231,11 @@ public interface ApiInterface {
     Call<SearchViewDetail> getUserBusinessProfile(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
 
     @GET("{uniqueId}/{userId}/providerservices.json")
-    Call<ArrayList<SearchDepartmentServices>> getUserServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+    Call<ArrayList<SearchDepartmentServices>> getDepartmentServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+
+    @GET("{uniqueId}/{userId}/providerservices.json")
+    Call<ArrayList<SearchService>> getUserServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+
 
     @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
     Observable<SearchViewDetail> getUserBusinessProfiles(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);

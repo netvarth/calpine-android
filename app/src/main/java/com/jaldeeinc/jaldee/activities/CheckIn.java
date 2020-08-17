@@ -20,8 +20,11 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+
 import androidx.annotation.RequiresApi;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
@@ -29,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -143,7 +147,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     ArrayList<SearchService> LServicesList = new ArrayList<>();
     ArrayList<SearchUsers> LUsersList = new ArrayList<>();
     ArrayList<SearchService> gServiceList = new ArrayList<>();
-    ArrayList<SearchUsers>   doctResponse = new ArrayList<>();
+    ArrayList<SearchUsers> doctResponse = new ArrayList<>();
     String uniqueID;
     String uuid;
     TextView tv_addmember, tv_editphone;
@@ -167,7 +171,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     ImageView img_calender_checkin;
     LinearLayout LcheckinDatepicker;
     static String mFrom;
-    String title, place, terminology,calcMode;
+    String title, place, terminology, calcMode;
     static String isShowToken;
     TextView tv_titlename, tv_place, tv_checkin_service, txtprepay;
     static ImageView ic_left, ic_right;
@@ -175,7 +179,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     //    static TextView tv_queuename;
     static LinearLayout queuelayout;
     String toastMessage;
-    TextView txt_chooseservice, txt_choosedepartment,txt_choosedoctor;
+    TextView txt_chooseservice, txt_choosedepartment, txt_choosedoctor;
     static int i = 0;
     static ImageView ic_cal_minus;
     ImageView ic_cal_add;
@@ -231,7 +235,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     TextView tv_enterInstructions;
     EditText et_virtualId;
     String selectedServiceType;
-    String callingMode,valueNumber,serviceInstructions;
+    String callingMode, valueNumber, serviceInstructions;
     File file;
     EditText edt_message;
     boolean virtualServices;
@@ -417,7 +421,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     }
 
                 });
-                if(imagePathList.size()>0 && edt_message.getText().toString().equals("") ){
+                if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
                     Toast.makeText(CheckIn.this, "Please enter add note", Toast.LENGTH_SHORT).show();
                 }
                 btn_send.setOnClickListener(new View.OnClickListener() {
@@ -568,15 +572,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 /* mFrom = extras.getString("from", "");*/
                 if (mFrom.equalsIgnoreCase("searchdetail_future") || mFrom.equalsIgnoreCase("searchdetail_checkin")) {
                     modifyAccountID = accountID;
-                }
-                else if(mFrom.equalsIgnoreCase("multiusercheckin") || mFrom.equalsIgnoreCase("searchdetail_user")){
+                } else if (mFrom.equalsIgnoreCase("multiusercheckin") || mFrom.equalsIgnoreCase("searchdetail_user")) {
                     modifyAccountID = accountID;
                     userId = extras.getInt("userId");
                     departmentId = extras.getString("departmentId");
                     virtualService = extras.getString("virtualServices");
-                }
-                    else
-                {
+                } else {
                     modifyAccountID = accountID.substring(0, accountID.indexOf("-"));
                 }
                 googlemap = extras.getString("googlemap", "");
@@ -635,7 +636,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             public void onClick(View v) {
                 // ApiGenerateHash();
                 if (phoneNumberValue.length() < 10) {
-                    Toast.makeText(mContext, "Mobile number should have 10 digits" + "",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Mobile number should have 10 digits" + "", Toast.LENGTH_SHORT).show();
                 } else {
 
                     if (enableparty) {
@@ -675,59 +676,60 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         mSpinnerService.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
-                livetrack = (((SearchService) mSpinnerService.getSelectedItem()).isLivetrack());
-                selectedServiceType =(((SearchService)  mSpinnerService.getSelectedItem()).getServiceType());
-                Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
-                Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
+                if (LServicesList.size() != 0) {
 
-                serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
-                selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                    mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                    livetrack = (((SearchService) mSpinnerService.getSelectedItem()).isLivetrack());
+                    selectedServiceType = (((SearchService) mSpinnerService.getSelectedItem()).getServiceType());
+                    Log.i("vbnvbnvbn", String.valueOf(mSpinnertext));
+                    Log.i("lkjjkllkjjkl", String.valueOf(livetrack));
 
-                if(selectedServiceType.equalsIgnoreCase("virtualService")) {
-                    callingMode = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
-                    valueNumber = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
-                    if (callingMode.equalsIgnoreCase("WhatsApp")) {
-                        serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                        tv_enterInstructions.setVisibility(View.VISIBLE);
-                        tv_enterInstructions.setText(serviceInstructions);
-                        et_virtualId.setText(phoneNumber);
-                        et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp,0,0,0);
-                        et_virtualId.setVisibility(View.VISIBLE);
-                    }else if(callingMode.equalsIgnoreCase("Phone")){
-                        serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                        tv_enterInstructions.setVisibility(View.VISIBLE);
-                        tv_enterInstructions.setText(serviceInstructions);
-                        et_virtualId.setText(phoneNumber);
-                        et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps,0,0,0);
-                        et_virtualId.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                        tv_enterInstructions.setVisibility(View.VISIBLE);
-                        tv_enterInstructions.setText(serviceInstructions);
+                    serviceSelected = ((SearchService) mSpinnerService.getSelectedItem()).getName();
+                    selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+
+                    if (selectedServiceType.equalsIgnoreCase("virtualService")) {
+                        callingMode = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
+                        valueNumber = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
+                        if (callingMode.equalsIgnoreCase("WhatsApp")) {
+                            serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                            tv_enterInstructions.setVisibility(View.VISIBLE);
+                            tv_enterInstructions.setText(serviceInstructions);
+                            et_virtualId.setText(phoneNumber);
+                            et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                            et_virtualId.setVisibility(View.VISIBLE);
+                        } else if (callingMode.equalsIgnoreCase("Phone")) {
+                            serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                            tv_enterInstructions.setVisibility(View.VISIBLE);
+                            tv_enterInstructions.setText(serviceInstructions);
+                            et_virtualId.setText(phoneNumber);
+                            et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
+                            et_virtualId.setVisibility(View.VISIBLE);
+                        } else {
+                            serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                            tv_enterInstructions.setVisibility(View.VISIBLE);
+                            tv_enterInstructions.setText(serviceInstructions);
+                            et_virtualId.setVisibility(View.GONE);
+                        }
+                    } else {
+                        tv_enterInstructions.setVisibility(View.GONE);
                         et_virtualId.setVisibility(View.GONE);
                     }
-                }else{
-                    tv_enterInstructions.setVisibility(View.GONE);
-                    et_virtualId.setVisibility(View.GONE);
-                }
 
-                // String firstWord = "Check-in for ";
-                String firstWord = Word_Change;
-                String secondWord = ((SearchService) mSpinnerService.getSelectedItem()).getName();
-                Spannable spannable = new SpannableString(firstWord + secondWord);
-                Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
-                        "fonts/Montserrat_Bold.otf");
-                spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                tv_checkin_service.setText(spannable);
-                Date currentTime = new Date();
-                final SimpleDateFormat sdf = new SimpleDateFormat(
-                        "yyyy-MM-dd", Locale.US);
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                System.out.println("UTC time: " + sdf.format(currentTime));
+                    // String firstWord = "Check-in for ";
+                    String firstWord = Word_Change;
+                    String secondWord = ((SearchService) mSpinnerService.getSelectedItem()).getName();
+                    Spannable spannable = new SpannableString(firstWord + secondWord);
+                    Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
+                            "fonts/Montserrat_Bold.otf");
+                    spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    tv_checkin_service.setText(spannable);
+                    Date currentTime = new Date();
+                    final SimpleDateFormat sdf = new SimpleDateFormat(
+                            "yyyy-MM-dd", Locale.US);
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    System.out.println("UTC time: " + sdf.format(currentTime));
 //                if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 //                    ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
 //                } else {
@@ -738,17 +740,19 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
                         ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                     }
-               // }
-                isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
-                Config.logV("Payment------------" + isPrepayment);
-                if (isPrepayment) {
-                    sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
-                    Config.logV("Payment----sAmountPay--------" + sAmountPay);
-                    APIPayment(modifyAccountID);
-                } else {
-                    LservicePrepay.setVisibility(View.GONE);
+                    // }
+                    isPrepayment = ((SearchService) mSpinnerService.getSelectedItem()).isPrePayment();
+                    Config.logV("Payment------------" + isPrepayment);
+                    if (isPrepayment) {
+                        sAmountPay = ((SearchService) mSpinnerService.getSelectedItem()).getMinPrePaymentAmount();
+                        Config.logV("Payment----sAmountPay--------" + sAmountPay);
+                        APIPayment(modifyAccountID);
+                    } else {
+                        LservicePrepay.setVisibility(View.GONE);
+                    }
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -779,7 +783,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     txt_chooseservice.setVisibility(View.GONE);
                     Toast.makeText(CheckIn.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
                 } else {
-                    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity,android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                     adapter.setDropDownViewResource(R.layout.spinner_layout);
                     mSpinnerService.setAdapter(adapter);
                     mSpinnertext = ((SearchService) LServicesList.get(0)).getId();
@@ -828,7 +832,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         });
         mSpinnerDoctor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                 if (doctResponse.get(position).getId() != 0) {
+                if (doctResponse.get(position).getId() != 0) {
                     userSpinnertext = doctResponse.get(position).getId();
                     Log.i("dfgdfg", String.valueOf(deptSpinnertext));
                     userSelected = doctResponse.get(position).getFirstName();
@@ -900,8 +904,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 } else {
 
                     ArrayList<SearchService> globalServiceList = new ArrayList<>();
-                    ArrayList<SearchService> serviceList = new ArrayList<>();
-                    ArrayList<SearchService> globalServsList = new ArrayList<>();
 
                     globalServiceList.clear();
                     if (globalServList.size() > 0) {
@@ -913,40 +915,24 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         }
                     }
 
-                    globalServsList.clear();
-                    for (int i = 0; i < globalServiceList.size(); i++) {
-                        if (globalServiceList.get(i).getProvider() != null) {
-                            if (doctResponse.get(position).getId() == (globalServiceList.get(i).getProvider().getId())) {
-                                serviceList.add(globalServiceList.get(i));
-
-                            }
-                        } else {
-                            globalServsList.add(globalServiceList.get(i));
-                        }
-                    }
-
-
                     LServicesList.clear();
-                    LServicesList.addAll(serviceList);
+                    LServicesList.addAll(globalServiceList);
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
-                    if (doctResponse.get(position).getId() == 0) {
+                    Config.logV("mServicesList" + LServicesList.size());
+                    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    mSpinnerService.setAdapter(adapter);
+                    if (LServicesList.size() != 0) {
+                        mSpinnertext = LServicesList.get(0).getId();
+                    }
+                    else {
 
-                        Config.logV("mServicesList" + LServicesList.size());
-                        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, globalServsList);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinnerService.setAdapter(adapter);
-                        mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
-
-                    } else {
-
-                        Config.logV("mServicesList" + LServicesList.size());
-                        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        mSpinnerService.setAdapter(adapter);
-                        mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                        mSpinnerService.setVisibility(View.GONE);
+                        txt_chooseservice.setVisibility(View.GONE);
                     }
                 }
+
             }
 
             @Override
@@ -960,23 +946,23 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 //            LcheckinDatepicker.setVisibility(View.GONE);
 //        } else {
-            LcheckinDatepicker.setVisibility(View.VISIBLE);
+        LcheckinDatepicker.setVisibility(View.VISIBLE);
 
-            Date currentTime = new Date();
-            final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy");
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-            System.out.println("UTC time: " + sdf.format(currentTime));
-            Date added_date = addDays(currentTime, 1);
-            DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-            //to convert Date to String, use format method of SimpleDateFormat class.
-            String strDate = dateFormat.format(added_date);
-            /* txt_date.setText(sdf.format(currentTime));*/
-            txt_date.setText(sdf.format(currentTime));
-            DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-            // selectedDateFormat = selecteddateParse.format(currentTime);
-            selectedDateFormat = selecteddateParse.format(currentTime);
-            UpdateDAte(selectedDateFormat);
-       // }
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        Date added_date = addDays(currentTime, 1);
+        DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+        //to convert Date to String, use format method of SimpleDateFormat class.
+        String strDate = dateFormat.format(added_date);
+        /* txt_date.setText(sdf.format(currentTime));*/
+        txt_date.setText(sdf.format(currentTime));
+        DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+        // selectedDateFormat = selecteddateParse.format(currentTime);
+        selectedDateFormat = selecteddateParse.format(currentTime);
+        UpdateDAte(selectedDateFormat);
+        // }
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1055,6 +1041,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
         });
     }
+
     public static String getFilePathFromURI(Context context, Uri contentUri, String extension) {
         //copy file and send new file path
         String fileName = getFileNameInfo(contentUri);
@@ -1071,6 +1058,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         }
         return null;
     }
+
     protected static String getFileNameInfo(Uri uri) {
         if (uri == null) {
             return null;
@@ -1114,6 +1102,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         // cursor.close();
         return null;
     }
+
     public String saveImage(Bitmap myBitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         if (myBitmap != null) {
@@ -1144,6 +1133,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         }
         return "";
     }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public String getPDFPath(Uri uri) {
 
@@ -1186,6 +1176,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         String fileName = pathArray[pathArray.length - 1];
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName;
     }
+
     private void requestMultiplePermissions() {
         Dexter.withActivity(this)
                 .withPermissions(
@@ -1222,6 +1213,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 .onSameThread()
                 .check();
     }
+
     //
     public static float getImageSize(Context context, Uri uri) {
         Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
@@ -1234,6 +1226,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         }
         return 0;
     }
+
     public void setCouponList(ArrayList couponArraylistNew) {
         this.couponArraylist = couponArraylistNew;
         Log.i("cooooooo", couponArraylist.toString());
@@ -1396,7 +1389,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             calcMode = response.body().getCalculationMode();
                             isShow = response.body().isShowTokenId();
 
-                            if ( response.body().isShowTokenId()) {
+                            if (response.body().isShowTokenId()) {
                                 isShowToken = String.valueOf(response.body().isShowTokenId());
                                 tv_title.setText("Get Token");
                                 Word_Change = "Token for ";
@@ -1562,6 +1555,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
     static SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
     private static Date dateCompareOne;
+
     private static void ApiQueueTimeSlot(String locationId, String subSeriveID, String accountID, String mDate, final String isShowToken) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1594,7 +1588,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             tv_queue.setText("Choose the time window");
                         }
                         if (mQueueTimeSlotList.size() > 0) {
-                            i=0;
+                            i = 0;
                             Lbottomlayout.setVisibility(View.VISIBLE);
                             tv_queuetime.setVisibility(View.VISIBLE);
                             tv_waittime.setVisibility(View.VISIBLE);
@@ -1659,80 +1653,82 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     }
                                 }
                                 if (i < mQueueTimeSlotList.size()) {
-                                ic_right.setEnabled(true);
-                                ic_right.setImageResource(R.drawable.icon_right_angle_active);
-                            } else {
-                                ic_right.setEnabled(false);
-                                ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
-                            }
+                                    ic_right.setEnabled(true);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_active);
+                                } else {
+                                    ic_right.setEnabled(false);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                                }
 
                                 if (i <= 0) {
-                                ic_left.setEnabled(false);
-                                ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
-                            } else {
-
-                                ic_left.setEnabled(true);
-                                ic_left.setImageResource(R.drawable.icon_left_angle_active);
-                            }
-
-                        }
-                    });
-
-                    ic_right.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (i < 0) {
-                                i = 0;
-                            }
-                            i++;
-                            Config.logV("Right Click----1111--------------" + i);
-                            if (i < mQueueTimeSlotList.size()) {
-                                tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
-                                tv_personahead.setVisibility(View.VISIBLE);
-                                tv_personahead.setText(Config.getPersonsAheadText(mQueueTimeSlotList.get(i).getQueueSize()));
-                                if (mQueueTimeSlotList.get(i).getId() != 0) {
-                                    queueId = mQueueTimeSlotList.get(i).getId();
-                                }
-                                if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc")) {
-                                    tv_waittime.setVisibility(View.GONE);
+                                    ic_left.setEnabled(false);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
                                 } else {
-                                    tv_waittime.setVisibility(View.VISIBLE);
-                                    tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(i)));
+
+                                    ic_left.setEnabled(true);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                                }
+
+                            }
+                        });
+
+                        ic_right.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (i < 0) {
+                                    i = 0;
+                                }
+                                i++;
+                                Config.logV("Right Click----1111--------------" + i);
+                                if (i < mQueueTimeSlotList.size()) {
+                                    tv_queuetime.setText(mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).getsTime() + "- " + mQueueTimeSlotList.get(i).getQueueSchedule().getTimeSlots().get(0).geteTime());
+                                    tv_personahead.setVisibility(View.VISIBLE);
+                                    tv_personahead.setText(Config.getPersonsAheadText(mQueueTimeSlotList.get(i).getQueueSize()));
+                                    if (mQueueTimeSlotList.get(i).getId() != 0) {
+                                        queueId = mQueueTimeSlotList.get(i).getId();
+                                    }
+                                    if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc")) {
+                                        tv_waittime.setVisibility(View.GONE);
+                                    } else {
+                                        tv_waittime.setVisibility(View.VISIBLE);
+                                        tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(i)));
+                                    }
+                                }
+                                if (i >= 0) {
+                                    ic_left.setEnabled(true);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                                } else {
+                                    ic_left.setEnabled(false);
+                                    ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                                }
+
+                                Config.logV("Queuesize---------------" + mQueueTimeSlotList.size() + "position" + i);
+                                if (i == mQueueTimeSlotList.size() - 1) {
+
+                                    ic_right.setEnabled(false);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                                } else {
+                                    ic_right.setEnabled(true);
+                                    ic_right.setImageResource(R.drawable.icon_right_angle_active);
                                 }
                             }
-                            if (i >= 0) {
-                                ic_left.setEnabled(true);
-                                ic_left.setImageResource(R.drawable.icon_left_angle_active);
-                            } else {
-                                ic_left.setEnabled(false);
-                                ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
-                            }
-
-                            Config.logV("Queuesize---------------" + mQueueTimeSlotList.size() + "position" + i);
-                            if (i == mQueueTimeSlotList.size() - 1) {
-
-                                ic_right.setEnabled(false);
-                                ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
-                            } else {
-                                ic_right.setEnabled(true);
-                                ic_right.setImageResource(R.drawable.icon_right_angle_active);
-                            }
-                        }
-                    });
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-        }
-        @Override
-        public void onFailure(Call<ArrayList<QueueTimeSlotModel>> call, Throwable t) {
-            // Log error here since request failed
-            Config.logV("Fail---------------" + t.toString());
-            if (mDialog.isShowing())
-                Config.closeDialog(mActivity, mDialog);
-        }
-    });
-}
+
+            @Override
+            public void onFailure(Call<ArrayList<QueueTimeSlotModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+                if (mDialog.isShowing())
+                    Config.closeDialog(mActivity, mDialog);
+            }
+        });
+    }
+
     public static Spannable getWaitingTime(QueueTimeSlotModel queue) {
         String firstWord = "";
         String secondWord = "";
@@ -1752,7 +1748,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         if (date2 != null && date1.compareTo(date2) < 0) {
             type = "future";
         }
-        if(queue.getServiceTime()!= null){
+        if (queue.getServiceTime() != null) {
             firstWord = "Next Available Time ";
             if (type != null) {
                 DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -1768,15 +1764,14 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 String yourDate = Config.getFormatedDate(outputDateStr);
                 secondWord = yourDate + ", " + queue.getServiceTime();
             } else {
-                secondWord =  "\nToday, " + queue.getServiceTime();
+                secondWord = "\nToday, " + queue.getServiceTime();
             }
-        }
-        else{
+        } else {
             firstWord = "Est wait time";
             secondWord = "\n" + Config.getTimeinHourMinutes(queue.getQueueWaitingTime());
         }
         Spannable spannable = new SpannableString(firstWord + secondWord);
-        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(), "fonts/Montserrat_Bold.otf");
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -1821,14 +1816,13 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                         }
                                     }
                                 }
-                            }else if(mFrom.equalsIgnoreCase("multiusercheckin")) {
+                            } else if (mFrom.equalsIgnoreCase("multiusercheckin")) {
                                 if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
                                     if (virtualService != null && virtualService.equalsIgnoreCase("false")) {
                                         LServicesList.remove(mService);
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 if (!virtualServices) {
                                     if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
                                         LServicesList.remove(mService);
@@ -1859,23 +1853,23 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                 deptSpinnertext = depResponse.getDepartmentId();
                                                 ArrayList<SearchService> serviceList = new ArrayList<>();
                                                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
-                                                if(mFrom.equalsIgnoreCase("multiusercheckin")){
-                                                    selectedDepartment =  Integer.parseInt(departmentId);
-                                                    deptSpinnertext =  Integer.parseInt(departmentId);
+                                                if (mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                                    selectedDepartment = Integer.parseInt(departmentId);
+                                                    deptSpinnertext = Integer.parseInt(departmentId);
 
-                                                    for(int k =0;k<depResponse.getDepartments().size();k++){
-                                                        if(selectedDepartment == depResponse.getDepartments().get(k).getDepartmentId()){
+                                                    for (int k = 0; k < depResponse.getDepartments().size(); k++) {
+                                                        if (selectedDepartment == depResponse.getDepartments().get(k).getDepartmentId()) {
                                                             departmentSelected = depResponse.getDepartments().get(k).getDepartmentName();
                                                             mSpinnerDepartment.setSelection(k);
                                                         }
                                                     }
 
 
-                                                }
-                                                else{
+                                                } else {
                                                     selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
                                                     departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
-                                                    deptSpinnertext = depResponse.getDepartments().get(0).getDepartmentId();}
+                                                    deptSpinnertext = depResponse.getDepartments().get(0).getDepartmentId();
+                                                }
 //                                                ApiSearchUsers(selectedDepartment);
 //                                                selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
 //                                                departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
@@ -1944,14 +1938,14 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //                                                }
 //                                            }
 
-                                            Date currentTime = new Date();
-                                            final SimpleDateFormat sdf = new SimpleDateFormat(
-                                                    "yyyy-MM-dd", Locale.US);
-                                            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                            System.out.println("UTC time: " + sdf.format(currentTime));
-                                            Config.logV("SELECTED &&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                                                Date currentTime = new Date();
+                                                final SimpleDateFormat sdf = new SimpleDateFormat(
+                                                        "yyyy-MM-dd", Locale.US);
+                                                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                                System.out.println("UTC time: " + sdf.format(currentTime));
+                                                Config.logV("SELECTED &&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-                                            //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                                                //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
 
 //                                            if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 //
@@ -1978,7 +1972,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             });
                             // Department Ends Here
                         }
-                    }  } catch (Exception e) {
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -1995,7 +1990,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     }
 
     private void ApiSearchUsers(int deptId) {
-        ApiInterface  apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         if (selectedDepartment != 0) {
             Call<ArrayList<SearchUsers>> call1 = apiService.getUsers(selectedDepartment, Integer.parseInt(accountID.split("-")[0]));
 
@@ -2012,7 +2007,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 ArrayAdapter<SearchUsers> adapter = new ArrayAdapter<SearchUsers>(mActivity, android.R.layout.simple_spinner_dropdown_item, doctResponse);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 mSpinnerDoctor.setAdapter(adapter);
-                                if(mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                if (mFrom.equalsIgnoreCase("multiusercheckin")) {
                                     userSpinnertext = userId;
                                     for (int k = 0; k < doctResponse.size(); k++) {
                                         if (userSpinnertext == doctResponse.get(k).getId()) {
@@ -2020,16 +2015,16 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                             mSpinnerDoctor.setSelection(k);
                                         }
                                     }
+                                } else {
+                                    userSpinnertext = doctResponse.get(i).getId();
                                 }
-                                else{
-                                    userSpinnertext = doctResponse.get(i).getId();}
                                 ArrayList<SearchService> serviceList = new ArrayList<>();
                                 ArrayList<Integer> serviceIds = depResponse.getDepartments().get(0).getServiceIds();
-                                if(mFrom.equalsIgnoreCase("multiusercheckin")){
-                                    selectedDepartment =  Integer.parseInt(departmentId);
+                                if (mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                    selectedDepartment = Integer.parseInt(departmentId);
+                                } else {
+                                    selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
                                 }
-                                else{
-                                    selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();}
                                 departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
                                 departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
                                 globalServList.clear();
@@ -2071,8 +2066,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     doctResponse.add(doctResponse.size(), globalServices);
 
                                 }
-                            }
-                            else {
+                            } else {
                                 mSpinnerDoctor.setVisibility(View.GONE);
                                 txt_choosedoctor.setVisibility(View.GONE);
                                 userSpinnertext = 0;
@@ -2109,8 +2103,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 mSpinnerService.setAdapter(adapter);
-                                mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
-                                livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
+//                                mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+//                                livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
                             } else {
 
                                 mSpinnerService.setVisibility(View.GONE);
@@ -2177,6 +2171,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             });
         }
     }
+
     SearchTerminology mSearchTerminology;
 
     private void ApiSearchViewTerminology(String muniqueID) {
@@ -2372,8 +2367,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 //            formattedDate = df.format(c);
 //        } else {
-            formattedDate = selectedDateFormat;
- //       }
+        formattedDate = selectedDateFormat;
+        //       }
 
 
         JSONObject qjsonObj = new JSONObject();
@@ -2389,17 +2384,16 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             queueobj.put("date", formattedDate);
             queueobj.put("consumerNote", txt_addnote);
             queueobj.put("waitlistPhonenumber", phoneNumber);
-            if(userSpinnertext!=0){
-                pjsonobj.put("id",userSpinnertext);
+            if (userSpinnertext != 0) {
+                pjsonobj.put("id", userSpinnertext);
             }
-            if(callingMode!=null && callingMode.equalsIgnoreCase("whatsapp")){
+            if (callingMode != null && callingMode.equalsIgnoreCase("whatsapp")) {
                 virtualService.put("WhatsApp", et_virtualId.getText());
-            }else if(callingMode!= null && callingMode.equalsIgnoreCase("GoogleMeet")) {
+            } else if (callingMode != null && callingMode.equalsIgnoreCase("GoogleMeet")) {
                 virtualService.put("GoogleMeet", valueNumber);
-            }
-            else if(callingMode!=null && callingMode.equalsIgnoreCase("Zoom")){
+            } else if (callingMode != null && callingMode.equalsIgnoreCase("Zoom")) {
                 virtualService.put("Zoom", valueNumber);
-            }else if(callingMode!=null && callingMode.equalsIgnoreCase("Phone")){
+            } else if (callingMode != null && callingMode.equalsIgnoreCase("Phone")) {
                 virtualService.put("Phone", et_virtualId.getText());
             }
 
@@ -2435,7 +2429,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     waitlistArray.put(waitobj1);
                 }
             } else {
-                if(familyMEmID == consumerID){
+                if (familyMEmID == consumerID) {
                     familyMEmID = 0;
                 }
                 waitobj.put("id", familyMEmID);
@@ -2446,10 +2440,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             queueobj.putOpt("service", selectedService);
             queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("waitlistingFor", waitlistArray);
-            if(userSpinnertext!=0){
-                queueobj.putOpt("provider",pjsonobj);}
-            if(selectedServiceType!=null && selectedServiceType.equalsIgnoreCase("virtualService")){
-                queueobj.putOpt("virtualService",virtualService);
+            if (userSpinnertext != 0) {
+                queueobj.putOpt("provider", pjsonobj);
+            }
+            if (selectedServiceType != null && selectedServiceType.equalsIgnoreCase("virtualService")) {
+                queueobj.putOpt("virtualService", virtualService);
             }
 
         } catch (JSONException e) {
@@ -2530,10 +2525,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                             // new PaymentGateway(mContext, mActivity).ApiGenerateHashTest(value, sAmountPay, accountID, "checkin");
 
                                             Config.logV("Account ID --------------" + modifyAccountID);
-                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin",familyMEmID,Constants.SOURCE_PAYMENT);
+                                            new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
                                             dialog.dismiss();
-                                            if(imagePathList.size()>0){
-                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);}
+                                            if (imagePathList.size() > 0) {
+                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);
+                                            }
                                         }
                                     });
 
@@ -2544,12 +2540,13 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                             Config.logV("Account ID --------Paytm------" + modifyAccountID);
                                             PaytmPayment payment = new PaytmPayment(mContext);
-                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "",familyMEmID);
+                                            payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
                                             //payment.generateCheckSum(sAmountPay);
                                             dialog.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
-                                            if(imagePathList.size()>0){
-                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);}
+                                            if (imagePathList.size() > 0) {
+                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);
+                                            }
                                         }
                                     });
                                 } catch (Exception e) {
@@ -2559,13 +2556,14 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
 
                         } else {
-                            if(imagePathList.size()>0){
-                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);}
+                            if (imagePathList.size() > 0) {
+                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);
+                            }
                             Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
                             finish();
                         }
 
-                        if(livetrack){
+                        if (livetrack) {
                             Intent checkinShareLocations = new Intent(mContext, CheckinShareLocation.class);
                             checkinShareLocations.putExtra("waitlistPhonenumber", phoneNumber);
                             checkinShareLocations.putExtra("uuid", value);
@@ -2573,9 +2571,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             checkinShareLocations.putExtra("title", title);
                             checkinShareLocations.putExtra("terminology", terminology);
                             checkinShareLocations.putExtra("calcMode", calcMode);
-                            checkinShareLocations.putExtra("queueStartTime",mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
-                            checkinShareLocations.putExtra("queueEndTime",mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
-                            checkinShareLocations.putExtra("from","checkin");
+                            checkinShareLocations.putExtra("queueStartTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).getsTime());
+                            checkinShareLocations.putExtra("queueEndTime", mQueueTimeSlotList.get(0).getQueueSchedule().getTimeSlots().get(0).geteTime());
+                            checkinShareLocations.putExtra("from", "checkin");
                             startActivity(checkinShareLocations);
                         }
 
@@ -2683,6 +2681,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+
     private static Double convertStringToDouble(String str) {
         return Double.parseDouble(str);
     }
@@ -2699,7 +2698,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         });
         alertDialog.show();
     }
+
     static ArrayList<FamilyArrayModel> MultiplefamilyList = new ArrayList<>();
+
     public static void refreshMultipleMEmList(ArrayList<FamilyArrayModel> familyList) {
         MultiplefamilyList.clear();
         MultiplefamilyList.addAll(familyList);
@@ -2711,7 +2712,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         mFamilyAdpater.notifyDataSetChanged();
         LSinglemember.setVisibility(View.GONE);
     }
+
     SearchViewDetail mBusinessDataList;
+
     private void ApiSearchViewDetail(final String muniqueID) {
         ApiInterface apiService =
                 ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
@@ -2775,9 +2778,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         s3couponList = response.body();
                         Log.i("CouponResponse", s3couponList.toString());
 
-                        if(s3couponList.size()!=0){
+                        if (s3couponList.size() != 0) {
                             coupon_link.setVisibility(View.VISIBLE);
-                        }else {
+                        } else {
                             coupon_link.setVisibility(View.GONE);
                         }
                     }
@@ -2794,6 +2797,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
         });
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //   mTxvBuy.setEnabled(true);
         if (requestCode == PayUmoneyFlowManager.REQUEST_CODE_PAYMENT && resultCode == RESULT_OK && data != null) {
@@ -2847,7 +2851,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
-                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                        if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
                             Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -2886,6 +2890,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
         }
     }
+
     private void ApiCommunicateCheckin(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
@@ -2936,6 +2941,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -2943,12 +2949,14 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
         });
     }
+
     public void paymentFinished() {
         finish();
     }
+
     @Override
     public void onPaymentSuccess(String razorpayPaymentID, PaymentData paymentData) {
-        Log.i("mani","here");
+        Log.i("mani", "here");
         try {
 //            Log.i("Success1111",  new Gson().toJson(paymentData));
             RazorpayModel razorpayModel = new RazorpayModel(paymentData);

@@ -1064,14 +1064,18 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         }
                     }
 
+                    LServicesList.clear();
+                    LServicesList.addAll(globalServiceList);
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
 
                     Config.logV("mServicesList" + LServicesList.size());
-                    CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, globalServiceList);
+                    CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     mSpinnerService.setAdapter(adapter);
-                    mSpinnertext = globalServiceList.get(0).getId();
+                    if (LServicesList.size() != 0) {
+                        mSpinnertext = LServicesList.get(0).getId();
+                    }
                 }
             }
 

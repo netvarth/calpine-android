@@ -267,7 +267,13 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                         if ((sIndex + 1) < idAppts.size()) {
                             loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, (sIndex + 1));
                         } else {
-                            loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
+                            if (fromDoctors){
+                                loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
+
+                            }
+                            else {
+                                loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
+                            }
                         }
                     }
 //                    else if (response.code() == 404){
@@ -299,7 +305,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         System.out.println("UTC time: " + sdf.format(currentTime));
         String accountId = idAppts.get(sIndex).split("-")[0];
         String userId = idAppts.get(sIndex).split("-")[2];
-        Call<ArrayList<SearchDepartmentServices>> calluser = apiService.getUserServices(Integer.parseInt(searchDetailViewFragment.uniqueID), Integer.parseInt(userId), sdf.format(currentTime));
+        Call<ArrayList<SearchDepartmentServices>> calluser = apiService.getDepartmentServices(Integer.parseInt(searchDetailViewFragment.uniqueID), Integer.parseInt(userId), sdf.format(currentTime));
         calluser.enqueue(new Callback<ArrayList<SearchDepartmentServices>>() {
             @Override
             public void onResponse(Call<ArrayList<SearchDepartmentServices>> call, Response<ArrayList<SearchDepartmentServices>> response) {
@@ -415,6 +421,71 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         mdepartment_searchresult.setLayoutManager(linearLayoutManager);
         deptListAdapter.notifyDataSetChanged();
     }
+
+    private void loadIndividualUserServices(ArrayList<String> idAppts, ArrayList<ScheduleList> mSearchScheduleList, ArrayList<QueueList> mSearchQueueList, List<SearchViewDetail> mBusinessDataLists, int sIndex) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(getActivity().getApplicationContext()).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        String accountId = idAppts.get(sIndex).split("-")[0];
+        String userId = idAppts.get(sIndex).split("-")[2];
+        Call<ArrayList<SearchService>> calluser = apiService.getUserServices(Integer.parseInt(searchDetailViewFragment.uniqueID), Integer.parseInt(userId), sdf.format(currentTime));
+        calluser.enqueue(new Callback<ArrayList<SearchService>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchService>> call, Response<ArrayList<SearchService>> response) {
+                userSearch = new DepartmentUserSearchModel();
+                QueueList queuelist = mSearchQueueList.get(sIndex);
+                ScheduleList schedulelist = mSearchScheduleList.get(sIndex);
+                SearchViewDetail businessProfile = mBusinessDataLists.get(sIndex);
+                userSearch.setQueueList(queuelist);
+                userSearch.setScheduleList(schedulelist);
+                userSearch.setLocation(location);
+                userSearch.setSettings(searchDetailViewFragment.mSearchSettings);
+                userSearch.setSearchViewDetail(businessProfile);
+                userSearch.setParentSearchViewDetail(mBusinessDataListParent);
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        ArrayList<SearchService> serviceList = response.body();
+                        if (serviceList.size() > 0) {
+                            userSearch.setServices(serviceList);
+                        } else {
+                            userSearch.setServices(null);
+                        }
+                        usersSearchList.add(userSearch);
+                        if ((sIndex + 1) < idAppts.size()) {
+                            loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
+                        } else {
+                            loadUsersList();
+                        }
+                    }
+                    else if (response.code() == 404){
+
+
+                    }
+                } catch (Exception e) {
+                    userSearch.setServices(null);
+                    usersSearchList.add(userSearch);
+                    if ((sIndex + 1) < idAppts.size()) {
+                        loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
+                    } else {
+                        loadUsersList();
+                    }
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchService>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
+
 
     private void ApiSearchViewServiceID(final int department) {
         ApiInterface apiService =
