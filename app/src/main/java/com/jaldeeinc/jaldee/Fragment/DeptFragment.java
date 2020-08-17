@@ -110,6 +110,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
         this.usersList = usersList;
         this.searchDetailViewFragment = searchDetailViewFragment;
         this.businessName = businessName;
+        mBusinessDataListParent = mBusinessDataList;
         this.firstCouponAvailable = firstCouponAvailable;
         this.couponAvailable = couponAvailable;
         this.mSearchLocList = searchLocation;
@@ -269,6 +270,11 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                             loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
                         }
                     }
+//                    else if (response.code() == 404){
+//
+//                        loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, (sIndex + 1));
+//
+//                    }
                 } catch (Exception e) {
                     if (mDialog.isShowing())
                         Config.closeDialog(getActivity(), mDialog);
@@ -323,6 +329,10 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                         } else {
                             loadUsersList();
                         }
+                    }
+                    else if (response.code() == 404){
+
+
                     }
                 } catch (Exception e) {
                     userSearch.setServices(null);
