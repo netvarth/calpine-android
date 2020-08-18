@@ -47,11 +47,11 @@ public class ProviderUserModel implements Serializable {
         this.email = email;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -60,6 +60,11 @@ public class ProviderUserModel implements Serializable {
     String mobileNo;
     String deptId;
     String email;
-    String id;
+    int id;
+
+    @Override
+    public String toString() {
+        return this.firstName + " " + lastName; // Value to be displayed in the Spinner
+    }
 
 }
