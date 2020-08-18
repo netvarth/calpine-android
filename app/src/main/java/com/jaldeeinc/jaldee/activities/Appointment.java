@@ -681,7 +681,13 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
         tv_place.setText(place);
 
-        tv_titlename.setText(title);
+        if (mFrom.equalsIgnoreCase("multiusercheckin")) {
+            tv_titlename.setText(userName);
+        }
+        else if (mFrom.equalsIgnoreCase("searchdetail_checkin")){
+            tv_titlename.setText(title);
+
+        }
 
 
         btn_checkin.setOnClickListener(new View.OnClickListener() {

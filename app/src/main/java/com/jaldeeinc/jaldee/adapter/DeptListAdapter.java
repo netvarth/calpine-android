@@ -814,6 +814,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iCheckIn.putExtra("isshowtoken", searchdetailList.getQueueList().getNextAvailableQueue().isShowToken());
                 iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
                 iCheckIn.putExtra("userId",Integer.parseInt(searchdetailList.getQueueList().getProvider().getId()));
+                iCheckIn.putExtra("userName",searchdetailList.getSearchViewDetail().getBusinessName());
                 if(searchdetailList.getServices().size()!=0){
                 iCheckIn.putExtra("departmentId",String.valueOf(searchdetailList.getServices().get(0).getDepartment()));}
                 iCheckIn.putExtra("virtualServices",String.valueOf(searchdetailList.getSearchViewDetail().isVirtualServices()));
@@ -841,6 +842,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 iCheckIn.putExtra("isshowtoken", searchdetailList.getQueueList().getNextAvailableQueue().isShowToken());
                 iCheckIn.putExtra("getAvail_date", searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate());
                 iCheckIn.putExtra("userId",Integer.parseInt(searchdetailList.getQueueList().getProvider().getId()));
+                iCheckIn.putExtra("userName",searchdetailList.getSearchViewDetail().getBusinessName());
                 if(searchdetailList.getServices().size()!=0){
                 iCheckIn.putExtra("departmentId",String.valueOf(searchdetailList.getServices().get(0).getDepartment()));}
                 iCheckIn.putExtra("virtualServices",String.valueOf(searchdetailList.getSearchViewDetail().isVirtualServices()));

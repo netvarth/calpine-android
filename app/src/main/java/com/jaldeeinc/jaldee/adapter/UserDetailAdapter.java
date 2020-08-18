@@ -221,6 +221,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iCheckIn.putExtra("subsector", domainList.getDisplayname());
                 iCheckIn.putExtra("terminology", terminology);
                 iCheckIn.putExtra("userId",Integer.parseInt(userDetails.get(position).getQueueList().getProvider().getId()));
+                iCheckIn.putExtra("userName", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 if(userDetails.get(position).getServices().size()!=0){
                 iCheckIn.putExtra("departmentId",String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));}
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
@@ -243,6 +244,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iCheckIn.putExtra("subsector", domainList.getDisplayname());
                 iCheckIn.putExtra("terminology", terminology);
                 iCheckIn.putExtra("userId",Integer.parseInt(userDetails.get(position).getQueueList().getProvider().getId()));
+                iCheckIn.putExtra("userName", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 if(userDetails.get(position).getServices().size()!=0){
                     iCheckIn.putExtra("departmentId",String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));}
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
@@ -258,7 +260,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iCheckIn.putExtra("serviceId", userDetails.get(position).getLocation().getId());
                 iCheckIn.putExtra("uniqueID", userDetails.get(position).getParentSearchViewDetail().getUniqueId());
                 iCheckIn.putExtra("accountID",String.valueOf(userDetails.get(position).getSearchViewDetail().getId()));
-                iCheckIn.putExtra("from", "searchdetail_future");
+                iCheckIn.putExtra("from", "multiusercheckin");
                 iCheckIn.putExtra("title", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 iCheckIn.putExtra("place", userDetails.get(position).getLocation().getPlace());
                 iCheckIn.putExtra("googlemap", userDetails.get(position).getLocation().getGoogleMapUrl());
@@ -266,6 +268,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iCheckIn.putExtra("subsector", domainList.getDisplayname());
                 iCheckIn.putExtra("terminology", terminology);
                 iCheckIn.putExtra("userId",Integer.parseInt(userDetails.get(position).getQueueList().getProvider().getId()));
+                iCheckIn.putExtra("userName", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 if(userDetails.get(position).getServices().size()!=0){
                     iCheckIn.putExtra("departmentId",String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));}
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
@@ -280,7 +283,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iCheckIn.putExtra("serviceId", userDetails.get(position).getLocation().getId());
                 iCheckIn.putExtra("uniqueID", userDetails.get(position).getParentSearchViewDetail().getUniqueId());
                 iCheckIn.putExtra("accountID", userDetails.get(position).getSearchViewDetail().getId());
-                iCheckIn.putExtra("from", "searchdetail_future");
+                iCheckIn.putExtra("from", "multiusercheckin");
                 iCheckIn.putExtra("title", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 iCheckIn.putExtra("place", userDetails.get(position).getLocation().getPlace());
                 iCheckIn.putExtra("googlemap", userDetails.get(position).getLocation().getGoogleMapUrl());
@@ -288,6 +291,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iCheckIn.putExtra("subsector", domainList.getDisplayname());
                 iCheckIn.putExtra("terminology", terminology);
                 iCheckIn.putExtra("userId",Integer.parseInt(userDetails.get(position).getQueueList().getProvider().getId()));
+                iCheckIn.putExtra("userName", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 if(userDetails.get(position).getServices().size()!=0){
                     iCheckIn.putExtra("departmentId",String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));}
                 iCheckIn.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());
@@ -301,7 +305,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iAppointment.putExtra("serviceId", userDetails.get(position).getLocation().getId());
                 iAppointment.putExtra("uniqueID", userDetails.get(position).getParentSearchViewDetail().getUniqueId());
                 iAppointment.putExtra("accountID",String.valueOf(userDetails.get(position).getSearchViewDetail().getId()));
-                iAppointment.putExtra("from", "searchdetail_future");
+                iAppointment.putExtra("from", "multiusercheckin");
                 iAppointment.putExtra("title", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 iAppointment.putExtra("place", userDetails.get(position).getLocation().getPlace());
                 iAppointment.putExtra("googlemap", userDetails.get(position).getLocation().getGoogleMapUrl());
@@ -309,6 +313,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 iAppointment.putExtra("subsector", domainList.getDisplayname());
                 iAppointment.putExtra("terminology", terminology);
                 iAppointment.putExtra("userId",Integer.parseInt(userDetails.get(position).getScheduleList().getProvider().getId()));
+                iAppointment.putExtra("userName", userDetails.get(position).getSearchViewDetail().getBusinessName());
                 if(userDetails.get(position).getServices().size()!=0){
                 iAppointment.putExtra("departmentId",String.valueOf(userDetails.get(position).getServices().get(0).getDepartment()));}
                 iAppointment.putExtra("virtualservices", userDetails.get(position).getSearchViewDetail().isVirtualServices());

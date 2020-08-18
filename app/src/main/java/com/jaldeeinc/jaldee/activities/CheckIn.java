@@ -56,6 +56,7 @@ import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapter;
+import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapterAppointment;
 import com.jaldeeinc.jaldee.adapter.DetailFileImageAdapter;
 import com.jaldeeinc.jaldee.adapter.MultipleFamilyMemberAdapter;
 import com.jaldeeinc.jaldee.common.Config;
@@ -63,6 +64,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.model.FamilyArrayModel;
+import com.jaldeeinc.jaldee.model.ProviderUserModel;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.payment.PaymentGateway;
 import com.jaldeeinc.jaldee.payment.PaytmPayment;
@@ -145,6 +147,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
     static int locationId;
     ArrayList<SearchService> LServicesList = new ArrayList<>();
+    ArrayList<SearchService> spServicesList = new ArrayList<>();
     ArrayList<SearchUsers> LUsersList = new ArrayList<>();
     ArrayList<SearchService> gServiceList = new ArrayList<>();
     ArrayList<SearchUsers> doctResponse = new ArrayList<>();
@@ -232,7 +235,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     Bitmap bitmap;
     Boolean isShow;
     String deptId;
-    TextView tv_enterInstructions;
+    TextView tv_enterInstructions,tvselectedHint, tvSelectedProvider;
     EditText et_virtualId;
     String selectedServiceType;
     String callingMode, valueNumber, serviceInstructions;
@@ -240,9 +243,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     EditText edt_message;
     boolean virtualServices;
     int userId;
+    String userName;
     String departmentId, virtualService;
     ArrayList<SearchService> globalServList = new ArrayList<>();
     ArrayList<SearchService> globalServicesList = new ArrayList<>();
+    ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -298,6 +303,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
         tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
         et_virtualId = findViewById(R.id.virtual_id);
+        tvselectedHint = findViewById(R.id.txt_selectedHint);
+        tvSelectedProvider = findViewById(R.id.tv_selectedProvider);
 
         tv_addnote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -575,6 +582,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 } else if (mFrom.equalsIgnoreCase("multiusercheckin") || mFrom.equalsIgnoreCase("searchdetail_user")) {
                     modifyAccountID = accountID;
                     userId = extras.getInt("userId");
+                    userName = extras.getString("userName");
                     departmentId = extras.getString("departmentId");
                     virtualService = extras.getString("virtualServices");
                 } else {
@@ -628,8 +636,14 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
         tv_place.setText(place);
 
-        tv_titlename.setText(title);
 
+        if (mFrom.equalsIgnoreCase("multiusercheckin")) {
+            tv_titlename.setText(userName);
+        }
+        else if (mFrom.equalsIgnoreCase("searchdetail_checkin")){
+            tv_titlename.setText(title);
+
+        }
 
         btn_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1870,6 +1884,49 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                     departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
                                                     deptSpinnertext = depResponse.getDepartments().get(0).getDepartmentId();
                                                 }
+                                            }
+                                            else {
+
+                                                // in case of individual sp's without departments
+                                                tvselectedHint.setVisibility(View.VISIBLE);
+                                                tvSelectedProvider.setVisibility(View.VISIBLE);
+                                                if (mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                                    ArrayList<SearchService> doctorServices = new ArrayList<>();
+                                                    ArrayList<SearchService> globalServsList = new ArrayList<>();
+                                                    globalServsList.clear();
+
+                                                    for (int i = 0; i < gServiceList.size(); i++) {
+                                                        if (gServiceList.get(i).getProvider() != null) {
+                                                            if (userId == (gServiceList.get(i).getProvider().getId())) {
+                                                                doctorServices.add(gServiceList.get(i));
+
+                                                            }
+                                                        } else {
+                                                            globalServsList.add(gServiceList.get(i));
+                                                        }
+                                                    }
+
+                                                    tvSelectedProvider.setText(userName);
+                                                    spServicesList.clear();
+                                                    spServicesList.addAll(doctorServices);
+                                                    if (spServicesList != null) {
+                                                        if (spServicesList.size() > 0) {
+                                                            mSpinnerService.setVisibility(View.VISIBLE);
+                                                            txt_chooseservice.setVisibility(View.VISIBLE);
+                                                            Config.logV("mServicesList" + LServicesList.size());
+                                                            CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, spServicesList);
+                                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                            mSpinnerService.setAdapter(adapter);
+                                                            mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                                                            livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
+                                                        }
+                                                    }
+
+                                                } else {
+
+                                                    apiGetUsers(uniqueID);
+                                                }
+                                            }
 //                                                ApiSearchUsers(selectedDepartment);
 //                                                selectedDepartment = depResponse.getDepartments().get(0).getDepartmentId();
 //                                                departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
@@ -1937,7 +1994,6 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //
 //                                                }
 //                                            }
-
                                                 Date currentTime = new Date();
                                                 final SimpleDateFormat sdf = new SimpleDateFormat(
                                                         "yyyy-MM-dd", Locale.US);
@@ -1959,7 +2015,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                     ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                                 }
                                             }
-                                        }
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -1988,6 +2044,46 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
         });
     }
+
+    private void apiGetUsers(String muniqueID) {
+
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(mContext).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Call<ArrayList<ProviderUserModel>> call = apiService.getUsers(Integer.parseInt(uniqueID), sdf.format(currentTime));
+        call.enqueue(new Callback<ArrayList<ProviderUserModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<ProviderUserModel>> call, Response<ArrayList<ProviderUserModel>> response) {
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        if (response.body() != null) {
+                            usersList.clear();
+                            usersList = response.body();
+                            if (usersList.size() > 0) {
+
+
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<ProviderUserModel>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+
+    }
+
 
     private void ApiSearchUsers(int deptId) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
