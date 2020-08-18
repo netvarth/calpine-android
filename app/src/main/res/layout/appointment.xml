@@ -260,6 +260,19 @@
 
                             </Spinner>
 
+                            <Spinner
+                                android:id="@+id/spinner_individualUsers"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:layout_marginLeft="@dimen/default_padding"
+                                android:layout_marginTop="@dimen/dimen_8dp"
+                                android:layout_marginRight="@dimen/default_padding"
+                                android:layout_marginBottom="@dimen/padding5"
+                                android:background="@drawable/gridview_bg"
+                                android:visibility="gone">
+
+                            </Spinner>
+
                             <TextView
                                 android:textStyle="bold"
                                 android:id="@+id/txt_selectedHint"

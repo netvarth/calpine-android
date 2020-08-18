@@ -144,13 +144,14 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static TextView tv_personahead;
     static Context mContext;
     static Activity mActivity;
-    Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
+    Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor,mSpinnerIndividualUsers;
     static int locationId;
     ArrayList<SearchService> LServicesList = new ArrayList<>();
     ArrayList<SearchService> spServicesList = new ArrayList<>();
     ArrayList<SearchUsers> LUsersList = new ArrayList<>();
     ArrayList<SearchService> gServiceList = new ArrayList<>();
     ArrayList<SearchUsers> doctResponse = new ArrayList<>();
+    ArrayList<ProviderUserModel> userResponse = new ArrayList<>();
     String uniqueID;
     String uuid;
     TextView tv_addmember, tv_editphone;
@@ -301,6 +302,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         mSpinnerDepartment = findViewById(R.id.spinnerdepartment);
         txt_choosedoctor = findViewById(R.id.txt_choosedoctor);
         mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
+        mSpinnerIndividualUsers = findViewById(R.id.spinner_individualUsers);
         tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
         et_virtualId = findViewById(R.id.virtual_id);
         tvselectedHint = findViewById(R.id.txt_selectedHint);
@@ -956,6 +958,100 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
 
         });
+
+        mSpinnerIndividualUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (userResponse.size() != 0) {
+                    if (userResponse.get(position).getId() != 0) {
+                        userSpinnertext = userResponse.get(position).getId();
+                        Log.i("dfgdfg", String.valueOf(deptSpinnertext));
+                        userSelected = userResponse.get(position).getFirstName();
+                        // selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
+                        //  ApiSearchUsers(selectedDepartment);
+                        // ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
+                        ArrayList<SearchService> serviceList = new ArrayList<>();
+                        ArrayList<SearchService> globalServsList = new ArrayList<>();
+                        globalServsList.clear();
+
+
+                        for (int i = 0; i < gServiceList.size(); i++) {
+                            if (gServiceList.get(i).getProvider() != null) {
+                                if (userResponse.get(position).getId() == (gServiceList.get(i).getProvider().getId())) {
+                                    serviceList.add(gServiceList.get(i));
+
+                                }
+                            } else {
+                                globalServsList.add(gServiceList.get(i));
+                            }
+                        }
+
+
+                        LServicesList.clear();
+                        LServicesList.addAll(serviceList);
+                        if (LServicesList.size() == 0) {
+                            mSpinnerService.setVisibility(View.GONE);
+                            btn_checkin.setVisibility(View.GONE);
+                            txt_chooseservice.setVisibility(View.GONE);
+                            Toast.makeText(CheckIn.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                        } else {
+                            CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinnerService.setAdapter(adapter);
+                            mSpinnertext = ((SearchService) LServicesList.get(0)).getId();
+                            livetrack = LServicesList.get(0).isLivetrack();
+                            mSpinnerService.setVisibility(View.VISIBLE);
+                            txt_chooseservice.setVisibility(View.VISIBLE);
+                            btn_checkin.setVisibility(View.VISIBLE);
+
+                        }
+                        if (userSelected.equalsIgnoreCase("Global")) {
+
+                            if (globalServsList.size() == 0) {
+                                mSpinnerService.setVisibility(View.GONE);
+                                btn_checkin.setVisibility(View.GONE);
+                                txt_chooseservice.setVisibility(View.GONE);
+                                Toast.makeText(CheckIn.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                            } else {
+                                CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, globalServsList);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinnerService.setAdapter(adapter);
+                                mSpinnertext = ((SearchService) globalServsList.get(0)).getId();
+                                livetrack = globalServsList.get(0).isLivetrack();
+                                mSpinnerService.setVisibility(View.VISIBLE);
+                                txt_chooseservice.setVisibility(View.VISIBLE);
+                                btn_checkin.setVisibility(View.VISIBLE);
+
+                            }
+                        }
+
+                    } else {
+
+                        // directly adding all the services when there are no doctors to filter
+                        LServicesList.clear();
+                        LServicesList.addAll(globalServList);
+                        mSpinnerService.setVisibility(View.VISIBLE);
+                        txt_chooseservice.setVisibility(View.VISIBLE);
+
+                        Config.logV("mServicesList" + LServicesList.size());
+                        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mSpinnerService.setAdapter(adapter);
+                        if (LServicesList.size() != 0) {
+                            mSpinnertext = LServicesList.get(0).getId();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+
+        });
+
 
 //        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 //            LcheckinDatepicker.setVisibility(View.GONE);
@@ -1888,9 +1984,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                             else {
 
                                                 // in case of individual sp's without departments
-                                                tvselectedHint.setVisibility(View.VISIBLE);
-                                                tvSelectedProvider.setVisibility(View.VISIBLE);
                                                 if (mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                                    tvselectedHint.setVisibility(View.VISIBLE);
+                                                    tvSelectedProvider.setVisibility(View.VISIBLE);
                                                     ArrayList<SearchService> doctorServices = new ArrayList<>();
                                                     ArrayList<SearchService> globalServsList = new ArrayList<>();
                                                     globalServsList.clear();
@@ -2062,11 +2158,77 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     Config.logV("Response--code------Setting-------------------" + response.code());
                     if (response.code() == 200) {
                         if (response.body() != null) {
-                            usersList.clear();
-                            usersList = response.body();
-                            if (usersList.size() > 0) {
+                            userResponse = response.body();
+                            if (userResponse.size() > 0) {
+                                mSpinnerIndividualUsers.setVisibility(View.VISIBLE);
+                                txt_choosedoctor.setVisibility(View.VISIBLE);
+                                ArrayAdapter<ProviderUserModel> adapter = new ArrayAdapter<ProviderUserModel>(mActivity, android.R.layout.simple_spinner_dropdown_item, userResponse);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinnerIndividualUsers.setAdapter(adapter);
+                                userSpinnertext = userResponse.get(i).getId();
+                                userSelected = userResponse.get(i).getFirstName() + " " + userResponse.get(i).getLastName();
+                                ArrayList<SearchService> serviceList = new ArrayList<>();
 
+                                globalServList.clear();
+                                // Adding global services to a new list
+                                for (int i = 0; i < gServiceList.size(); i++) {
+                                    if (gServiceList.get(i).getProvider() == null) {
 
+                                        globalServList.add(gServiceList.get(i));
+                                    }
+                                }
+
+                                // Adding all doctor services
+                                for (int serviceIndex = 0; serviceIndex < doctResponse.size(); serviceIndex++) {
+
+                                    for (int i = 0; i < gServiceList.size(); i++) {
+                                        if (gServiceList.get(i).getProvider() != null) {
+                                            if (userResponse.get(serviceIndex).getId() == (gServiceList.get(i).getProvider().getId())) {
+                                                serviceList.add(gServiceList.get(i));
+
+                                            }
+                                        }
+                                    }
+
+                                }
+                                LServicesList.clear();
+                                LServicesList.addAll(serviceList);
+                                if (globalServList.size() > 0) {
+                                    ProviderUserModel providerModel = new ProviderUserModel();
+                                    providerModel.setFirstName("Global");
+                                    providerModel.setLastName("Services");
+                                    userResponse.add(userResponse.size(), providerModel);
+                                }
+
+                            } else {
+
+                                mSpinnerIndividualUsers.setVisibility(View.GONE);
+                                txt_choosedoctor.setVisibility(View.GONE);
+                                userSpinnertext = 0;
+//                                                SearchUsers globalServices = new SearchUsers();
+//                                                globalServices.setFirstName("Global");
+//                                                globalServices.setLastName("Services");
+//                                                doctResponse.add(doctResponse.size(),globalServices);
+
+                                ArrayList<SearchService> globalList = new ArrayList<>();
+                                globalList.clear();
+                                for (int i = 0; i < gServiceList.size(); i++) {
+                                    if (gServiceList.get(i).getProvider() == null) {
+
+                                        globalList.add(gServiceList.get(i));
+                                    }
+                                }
+
+                                LServicesList.clear();
+                                LServicesList.addAll(globalList);
+                            }
+                            if (LServicesList.size() > 0) {
+                                mSpinnerService.setVisibility(View.VISIBLE);
+                                txt_chooseservice.setVisibility(View.VISIBLE);
+                                Config.logV("mServicesList" + LServicesList.size());
+                                CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinnerService.setAdapter(adapter);
                             }
                         }
                     }

@@ -149,7 +149,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     static TextView tv_personahead;
     static Context mContext;
     static Activity mActivity;
-    Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor;
+    Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor, mSpinnerIndividualUsers;
     static int serviceId;
     ArrayList<SearchAppoinment> LServicesList = new ArrayList<>();
     ArrayList<SearchAppoinment> spServicesList = new ArrayList<>();
@@ -254,6 +254,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     static TextView txtWaitTime;
     String selectDate;
     ArrayList<SearchUsers> doctResponse = new ArrayList<>();
+    ArrayList<ProviderUserModel> userResponse = new ArrayList<>();
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
     TextView tv_enterInstructions, tvselectedHint, tvSelectedProvider;
     EditText et_vitualId;
@@ -326,6 +327,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         earliestAvailable = findViewById(R.id.earliestAvailable);
         txt_choosedoctor = findViewById(R.id.txt_choosedoctor);
         mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
+        mSpinnerIndividualUsers = findViewById(R.id.spinner_individualUsers);
         tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
         et_vitualId = findViewById(R.id.virtual_id);
         tvselectedHint = findViewById(R.id.txt_selectedHint);
@@ -683,8 +685,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
         if (mFrom.equalsIgnoreCase("multiusercheckin")) {
             tv_titlename.setText(userName);
-        }
-        else if (mFrom.equalsIgnoreCase("searchdetail_checkin")){
+        } else if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
             tv_titlename.setText(title);
 
         }
@@ -1081,6 +1082,99 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     mSpinnerService.setAdapter(adapter);
                     if (LServicesList.size() != 0) {
                         mSpinnertext = LServicesList.get(0).getId();
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+
+        });
+
+        mSpinnerIndividualUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (userResponse.size() != 0) {
+                    if (userResponse.get(position).getId() != 0) {
+                        userSpinnertext = userResponse.get(position).getId();
+                        Log.i("dfgdfg", String.valueOf(deptSpinnertext));
+                        userSelected = userResponse.get(position).getFirstName();
+                        // selectedDepartment = depResponse.getDepartments().get(position).getDepartmentId();
+                        //  ApiSearchUsers(selectedDepartment);
+                        // ArrayList<Integer> serviceIds = depResponse.getDepartments().get(position).getServiceIds();
+                        ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
+                        ArrayList<SearchAppoinment> globalServsList = new ArrayList<>();
+                        globalServsList.clear();
+
+
+                        for (int i = 0; i < gServiceList.size(); i++) {
+                            if (gServiceList.get(i).getProvider() != null) {
+                                if (userResponse.get(position).getId() == (gServiceList.get(i).getProvider().getId())) {
+                                    serviceList.add(gServiceList.get(i));
+
+                                }
+                            } else {
+                                globalServsList.add(gServiceList.get(i));
+                            }
+                        }
+
+
+                        LServicesList.clear();
+                        LServicesList.addAll(serviceList);
+                        if (LServicesList.size() == 0) {
+                            mSpinnerService.setVisibility(View.GONE);
+                            btn_checkin.setVisibility(View.GONE);
+                            txt_chooseservice.setVisibility(View.GONE);
+                            Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                        } else {
+                            CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            mSpinnerService.setAdapter(adapter);
+                            mSpinnertext = ((SearchAppoinment) LServicesList.get(0)).getId();
+                            livetrack = LServicesList.get(0).getLivetrack();
+                            mSpinnerService.setVisibility(View.VISIBLE);
+                            txt_chooseservice.setVisibility(View.VISIBLE);
+                            btn_checkin.setVisibility(View.VISIBLE);
+
+                        }
+                        if (userSelected.equalsIgnoreCase("Global")) {
+
+                            if (globalServsList.size() == 0) {
+                                mSpinnerService.setVisibility(View.GONE);
+                                btn_checkin.setVisibility(View.GONE);
+                                txt_chooseservice.setVisibility(View.GONE);
+                                Toast.makeText(Appointment.this, "The selected department doesn't contain any services for this location", Toast.LENGTH_SHORT).show();
+                            } else {
+                                CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, globalServsList);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinnerService.setAdapter(adapter);
+                                mSpinnertext = ((SearchAppoinment) globalServsList.get(0)).getId();
+                                livetrack = globalServsList.get(0).getLivetrack();
+                                mSpinnerService.setVisibility(View.VISIBLE);
+                                txt_chooseservice.setVisibility(View.VISIBLE);
+                                btn_checkin.setVisibility(View.VISIBLE);
+
+                            }
+                        }
+
+                    } else {
+
+                        // directly adding all the services when there are no doctors to filter
+                        LServicesList.clear();
+                        LServicesList.addAll(globalServList);
+                        mSpinnerService.setVisibility(View.VISIBLE);
+                        txt_chooseservice.setVisibility(View.VISIBLE);
+
+                        Config.logV("mServicesList" + LServicesList.size());
+                        CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mSpinnerService.setAdapter(adapter);
+                        if (LServicesList.size() != 0) {
+                            mSpinnertext = LServicesList.get(0).getId();
+                        }
                     }
                 }
             }
@@ -2656,9 +2750,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                             } else {
 
                                                 // in case of individual sp's without departments
-                                                tvselectedHint.setVisibility(View.VISIBLE);
-                                                tvSelectedProvider.setVisibility(View.VISIBLE);
+
                                                 if (mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                                    tvselectedHint.setVisibility(View.VISIBLE);
+                                                    tvSelectedProvider.setVisibility(View.VISIBLE);
                                                     ArrayList<SearchAppoinment> doctorServices = new ArrayList<>();
                                                     ArrayList<SearchAppoinment> globalServsList = new ArrayList<>();
                                                     globalServsList.clear();
@@ -2824,11 +2919,77 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     Config.logV("Response--code------Setting-------------------" + response.code());
                     if (response.code() == 200) {
                         if (response.body() != null) {
-                            usersList.clear();
-                            usersList = response.body();
-                            if (usersList.size() > 0) {
+                            userResponse = response.body();
+                            if (userResponse.size() > 0) {
+                                mSpinnerIndividualUsers.setVisibility(View.VISIBLE);
+                                txt_choosedoctor.setVisibility(View.VISIBLE);
+                                ArrayAdapter<ProviderUserModel> adapter = new ArrayAdapter<ProviderUserModel>(mActivity, android.R.layout.simple_spinner_dropdown_item, userResponse);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinnerIndividualUsers.setAdapter(adapter);
+                                userSpinnertext = userResponse.get(i).getId();
+                                userSelected = userResponse.get(i).getFirstName() + " " + userResponse.get(i).getLastName();
+                                ArrayList<SearchAppoinment> serviceList = new ArrayList<>();
 
+                                globalServList.clear();
+                                // Adding global services to a new list
+                                for (int i = 0; i < gServiceList.size(); i++) {
+                                    if (gServiceList.get(i).getProvider() == null) {
 
+                                        globalServList.add(gServiceList.get(i));
+                                    }
+                                }
+
+                                // Adding all doctor services
+                                for (int serviceIndex = 0; serviceIndex < doctResponse.size(); serviceIndex++) {
+
+                                    for (int i = 0; i < gServiceList.size(); i++) {
+                                        if (gServiceList.get(i).getProvider() != null) {
+                                            if (userResponse.get(serviceIndex).getId() == (gServiceList.get(i).getProvider().getId())) {
+                                                serviceList.add(gServiceList.get(i));
+
+                                            }
+                                        }
+                                    }
+
+                                }
+                                LServicesList.clear();
+                                LServicesList.addAll(serviceList);
+                                if (globalServList.size() > 0) {
+                                    ProviderUserModel providerModel = new ProviderUserModel();
+                                    providerModel.setFirstName("Global");
+                                    providerModel.setLastName("Services");
+                                    userResponse.add(userResponse.size(), providerModel);
+                                }
+
+                            } else {
+
+                                mSpinnerIndividualUsers.setVisibility(View.GONE);
+                                txt_choosedoctor.setVisibility(View.GONE);
+                                userSpinnertext = 0;
+//                                                SearchUsers globalServices = new SearchUsers();
+//                                                globalServices.setFirstName("Global");
+//                                                globalServices.setLastName("Services");
+//                                                doctResponse.add(doctResponse.size(),globalServices);
+
+                                ArrayList<SearchAppoinment> globalList = new ArrayList<>();
+                                globalList.clear();
+                                for (int i = 0; i < gServiceList.size(); i++) {
+                                    if (gServiceList.get(i).getProvider() == null) {
+
+                                        globalList.add(gServiceList.get(i));
+                                    }
+                                }
+
+                                LServicesList.clear();
+                                LServicesList.addAll(globalList);
+                            }
+                            if (LServicesList.size() > 0) {
+                                mSpinnerService.setVisibility(View.VISIBLE);
+                                txt_chooseservice.setVisibility(View.VISIBLE);
+                                Config.logV("mServicesList" + LServicesList.size());
+                                CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                mSpinnerService.setAdapter(adapter);
                             }
                         }
                     }
