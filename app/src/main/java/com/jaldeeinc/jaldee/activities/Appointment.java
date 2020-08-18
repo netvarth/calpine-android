@@ -3769,7 +3769,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             queueobj.put("phonenumber", phoneNumber);
             if (userSpinnertext != 0) {
                 pjsonobj.put("id", userSpinnertext);
-                userSpinnertext = 0;
             }
 
 
