@@ -2433,9 +2433,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             userDetailAdapter.notifyDataSetChanged();
                         } else {
 
-                            mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList, online_presence, donationFundRaising, gServiceList, LaServicesList, virtualServices);
-                            mRecyLocDetail.setAdapter(mSearchLocAdapter);
-                            mSearchLocAdapter.notifyDataSetChanged();
+                            if (mBusinessDataList != null){
+                                mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList, online_presence, donationFundRaising, gServiceList, LaServicesList, virtualServices);
+                                mRecyLocDetail.setAdapter(mSearchLocAdapter);
+                                mSearchLocAdapter.notifyDataSetChanged();
+                            }
                         }
                     }
                 }
