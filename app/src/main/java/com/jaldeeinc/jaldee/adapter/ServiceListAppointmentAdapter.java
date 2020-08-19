@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +21,8 @@ import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.AppointmentServiceInfoDialog;
+import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -43,6 +47,7 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
     List<SearchDepartment> mSearchDepartmentList;
     Context mContext;
     ArrayList<String> servicesList = new ArrayList<>();
+    AppointmentServiceInfoDialog appointmentServiceInfoDialog;
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_service;
@@ -96,32 +101,42 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
 
 
                 final int finalI = i;
+                SearchAppointmentDepartmentServices appointmentServices = serviceList.getServices().get(i);
+
                 myViewHolder.serviceList.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (from.equalsIgnoreCase("searchdetail")) {
-                            final String mServicename = serviceList.getServices().get(finalI).getName();
-                            final String mServiceprice = String.valueOf(serviceList.getServices().get(finalI).getTotalAmount());
-                            final String mServicedesc = serviceList.getServices().get(finalI).getDescription();
-                            final String mServiceduration = String.valueOf(serviceList.getServices().get(finalI).getServiceDuration());
-                            final boolean mTaxable = serviceList.getServices().get(finalI).isTaxable();
-                            final ArrayList<SearchAppointmentDepartmentServices> mServiceGallery = serviceList.getServicegallery();
 
-                            final boolean isPrepayment = serviceList.getServices().get(finalI).isPrePayment();
-                            final String minPrepayment = String.valueOf(serviceList.getServices().get(finalI).getMinPrePaymentAmount());
+//                            final String mServicename = serviceList.getServices().get(finalI).getName();
+//                            final String mServiceprice = String.valueOf(serviceList.getServices().get(finalI).getTotalAmount());
+//                            final String mServicedesc = serviceList.getServices().get(finalI).getDescription();
+//                            final String mServiceduration = String.valueOf(serviceList.getServices().get(finalI).getServiceDuration());
+//                            final boolean mTaxable = serviceList.getServices().get(finalI).isTaxable();
+//                            final ArrayList<SearchAppointmentDepartmentServices> mServiceGallery = serviceList.getServicegallery();
+//
+//                            final boolean isPrepayment = serviceList.getServices().get(finalI).isPrePayment();
+//                            final String minPrepayment = String.valueOf(serviceList.getServices().get(finalI).getMinPrePaymentAmount());
+//
+//                            Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+//                            iService.putExtra("name", mServicename);
+//                            iService.putExtra("duration", mServiceduration);
+//                            iService.putExtra("price", mServiceprice);
+//                            iService.putExtra("desc", mServicedesc);
+//                            iService.putExtra("servicegallery", mServiceGallery);
+//                            iService.putExtra("title", title);
+//                            iService.putExtra("taxable", mTaxable);
+//                            iService.putExtra("isPrePayment", isPrepayment);
+//                            iService.putExtra("MinPrePaymentAmount", minPrepayment);
+//                            iService.putExtra("from","appt");
+//                            mContext.startActivity(iService)
+                            appointmentServiceInfoDialog = new AppointmentServiceInfoDialog(v.getContext(),appointmentServices);
+                            appointmentServiceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            appointmentServiceInfoDialog.show();
+                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                            int width = (int) (metrics.widthPixels * 1);
+                            appointmentServiceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                            Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                            iService.putExtra("name", mServicename);
-                            iService.putExtra("duration", mServiceduration);
-                            iService.putExtra("price", mServiceprice);
-                            iService.putExtra("desc", mServicedesc);
-                            iService.putExtra("servicegallery", mServiceGallery);
-                            iService.putExtra("title", title);
-                            iService.putExtra("taxable", mTaxable);
-                            iService.putExtra("isPrePayment", isPrepayment);
-                            iService.putExtra("MinPrePaymentAmount", minPrepayment);
-                            iService.putExtra("from","appt");
-                            mContext.startActivity(iService);
                         } else {
 
                             Config.logV("Service ID pass------------" + serviceList.getName());
@@ -146,28 +161,36 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                 @Override
                 public void onClick(View v) {
                     if (from.equalsIgnoreCase("searchdetail")) {
-                        final String mServicename = serviceList.getName();
-                        final String mServiceprice = String.valueOf(serviceList.getTotalAmount());
-                        final String mServicedesc = serviceList.getDescription();
-                        final String mServiceduration = String.valueOf(serviceList.getServiceDuration());
-                        final boolean mTaxable = serviceList.isTaxable();
-                        final ArrayList<SearchAppointmentDepartmentServices> mServiceGallery = serviceList.getServicegallery();
+//                        final String mServicename = serviceList.getName();
+//                        final String mServiceprice = String.valueOf(serviceList.getTotalAmount());
+//                        final String mServicedesc = serviceList.getDescription();
+//                        final String mServiceduration = String.valueOf(serviceList.getServiceDuration());
+//                        final boolean mTaxable = serviceList.isTaxable();
+//                        final ArrayList<SearchAppointmentDepartmentServices> mServiceGallery = serviceList.getServicegallery();
+//
+//                        final boolean isPrepayment = serviceList.isPrePayment();
+//                        final String minPrepayment = String.valueOf(serviceList.getMinPrePaymentAmount());
+//
+//                        Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+//                        iService.putExtra("name", mServicename);
+//                        iService.putExtra("duration", mServiceduration);
+//                        iService.putExtra("price", mServiceprice);
+//                        iService.putExtra("desc", mServicedesc);
+//                        iService.putExtra("servicegallery", mServiceGallery);
+//                        iService.putExtra("title", title);
+//                        iService.putExtra("taxable", mTaxable);
+//                        iService.putExtra("isPrePayment", isPrepayment);
+//                        iService.putExtra("MinPrePaymentAmount", minPrepayment);
+//                        iService.putExtra("from","appt");
+//                        mContext.startActivity(iService);
 
-                        final boolean isPrepayment = serviceList.isPrePayment();
-                        final String minPrepayment = String.valueOf(serviceList.getMinPrePaymentAmount());
+                        appointmentServiceInfoDialog = new AppointmentServiceInfoDialog(v.getContext(),serviceList);
+                        appointmentServiceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        appointmentServiceInfoDialog.show();
+                        DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                        int width = (int) (metrics.widthPixels * 1);
+                        appointmentServiceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                        Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                        iService.putExtra("name", mServicename);
-                        iService.putExtra("duration", mServiceduration);
-                        iService.putExtra("price", mServiceprice);
-                        iService.putExtra("desc", mServicedesc);
-                        iService.putExtra("servicegallery", mServiceGallery);
-                        iService.putExtra("title", title);
-                        iService.putExtra("taxable", mTaxable);
-                        iService.putExtra("isPrePayment", isPrepayment);
-                        iService.putExtra("MinPrePaymentAmount", minPrepayment);
-                        iService.putExtra("from","appt");
-                        mContext.startActivity(iService);
                     } else {
 
                         Config.logV("Service ID pass------------" + serviceList.getName());
@@ -234,12 +257,7 @@ public class ServiceListAppointmentAdapter extends RecyclerView.Adapter<ServiceL
                             }
                         }
 
-
-
-
-
                     }
-
 
                 } catch (Exception e) {
                     e.printStackTrace();

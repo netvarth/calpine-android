@@ -32,6 +32,7 @@ import com.jaldeeinc.jaldee.activities.Donation;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.custom.AppointmentServiceInfoDialog;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
 import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
@@ -70,6 +71,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     ArrayList serviceNames = new ArrayList();
     ArrayList serviceDonationNames = new ArrayList();
     ServiceInfoDialog serviceInfoDialog;
+    AppointmentServiceInfoDialog appServInfoDialog;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate, txt_msg, txt_peopleahead;
@@ -689,6 +691,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         }
 
+        // Checkin Services
 
         for (int i = 0; i < mSearchServiceList.size(); i++) {
             Config.logV("1--" + searchLoclist.getId() + "  2--" + mSearchServiceList.get(i).getLocid());
@@ -817,6 +820,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 }
             }
         }
+
         if (mScheduleList != null) {
             if (online_presence) {
                 if (mScheduleList.get(position).isCheckinAllowed()) {
@@ -835,6 +839,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 myViewHolder.txt_apptservices.setVisibility(View.GONE);
                 myViewHolder.txtapptSeeAll.setVisibility(View.GONE);
             }
+            // appointment services list
             for (int m = 0; m < aServicesList.size(); m++) {
                 if (aServicesList.get(m).getServices() != null) {
                     if (aServicesList.size() > 0) {
@@ -945,22 +950,19 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 dynaText.setMaxEms(10);
                             }
                             final int finalI = i;
+
                             dynaText.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     for (int i = 0; i < aServicesList.size(); i++) {
                                         if (aServicesList.get(i).getName().toLowerCase().equalsIgnoreCase(aServicesList.get(finalI).getName().toLowerCase())) {
-                                            Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                                            iService.putExtra("name", aServicesList.get(i).getName().toString());
-                                            iService.putExtra("duration",String.valueOf(aServicesList.get(i).getServiceDuration()));
-                                            iService.putExtra("price", String.valueOf(aServicesList.get(i).getTotalAmount()));
-                                            iService.putExtra("desc", aServicesList.get(i).getDescription());
-                                            iService.putExtra("servicegallery", aServicesList.get(i).getServicegallery());
-                                            iService.putExtra("taxable", aServicesList.get(i).isTaxable());
-                                            iService.putExtra("isPrePayment",  aServicesList.get(i).isPrePayment());
-                                            iService.putExtra("MinPrePaymentAmount", String.valueOf(aServicesList.get(i).getMinPrePaymentAmount()));
-                                            iService.putExtra("from","appt");
-                                            mContext.startActivity(iService);
+
+                                            appServInfoDialog = new AppointmentServiceInfoDialog(v.getContext(), aServicesList.get(i));
+                                            appServInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                            appServInfoDialog.show();
+                                            DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                            int width = (int) (metrics.widthPixels * 1);
+                                            appServInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                                         }
                                     }
                                     //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());

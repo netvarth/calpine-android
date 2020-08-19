@@ -23,7 +23,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class ServiceInfoDialog extends Dialog {
+public class AppointmentServiceInfoDialog extends Dialog {
 
     private SearchService searchService;
     Context context;
@@ -34,20 +34,20 @@ public class ServiceInfoDialog extends Dialog {
     ArrayList<SearchDonation> dGallery;
     ArrayList<SearchAppointmentDepartmentServices> aGallery;
     ImageView i_servicegallery;
-    String title,from;
+    String title, from;
     TextView tv_toolbartitle, tv_descVal;
     ImageView i_backpress;
     boolean isTaxable, isPrepayment;
     LinearLayout Lprepayment, LserviceLayout, LminAmountlayout, LmaxAmountlayout, Lmultilayout, Ldurationlayout;
     TextView txtpreVal;
-    String MinPrePaymentAmount, maxDonationAmount,minDonationAmount;
+    String MinPrePaymentAmount, maxDonationAmount, minDonationAmount;
     SearchAppointmentDepartmentServices appointmentServices;
-    String Name;
 
-    public ServiceInfoDialog(@NonNull Context context, SearchService searchService) {
+
+    public AppointmentServiceInfoDialog(Context context, SearchAppointmentDepartmentServices searchAppointmentDepartmentServices) {
         super(context);
         this.context = context;
-        this.searchService = searchService;
+        this.appointmentServices = searchAppointmentDepartmentServices;
     }
 
     @Override
@@ -57,34 +57,30 @@ public class ServiceInfoDialog extends Dialog {
 
         initializations();
 
-        if (searchService.getName() != null) {
+        if (appointmentServices.getName() != null) {
             tv_toolbartitle.setVisibility(View.VISIBLE);
-            tv_toolbartitle.setText(searchService.getName());
+            tv_toolbartitle.setText(appointmentServices.getName());
         } else {
             tv_toolbartitle.setVisibility(View.GONE);
         }
 
-        if (searchService.getTotalAmount() != null) {
-            if (!searchService.getTotalAmount().equals("0.0")) {
-                tv_price.setVisibility(View.VISIBLE);
-                LserviceLayout.setVisibility(View.VISIBLE);
-                if (searchService.isTaxable()) {
-                    tv_price.setText("₹ " + searchService.getTotalAmount() + " (Tax Applicable)");
-                } else {
-                    tv_price.setText("₹ " + searchService.getTotalAmount());
-                }
+        if (appointmentServices.getTotalAmount() != 0) {
+            tv_price.setVisibility(View.VISIBLE);
+            LserviceLayout.setVisibility(View.VISIBLE);
+            if (appointmentServices.isTaxable()) {
+                tv_price.setText("₹ " + appointmentServices.getTotalAmount() + " (Tax Applicable)");
             } else {
-                tv_price.setVisibility(View.GONE);
-                LserviceLayout.setVisibility(View.GONE);
+                tv_price.setText("₹ " + appointmentServices.getTotalAmount());
             }
+
         } else {
             tv_price.setVisibility(View.GONE);
             LserviceLayout.setVisibility(View.GONE);
         }
 
-        if (searchService.getServiceDuration() != null) {
+        if (appointmentServices.getServiceDuration() != 0) {
             tv_duration.setVisibility(View.VISIBLE);
-            tv_duration.setText(searchService.getServiceDuration() + " mins");
+            tv_duration.setText(appointmentServices.getServiceDuration() + " mins");
             Ldurationlayout.setVisibility(View.VISIBLE);
         } else {
             tv_duration.setVisibility(View.GONE);
@@ -92,55 +88,55 @@ public class ServiceInfoDialog extends Dialog {
 
         }
 
-        if(minDonationAmount!=null){
+        if (minDonationAmount != null) {
             tv_minvalue.setVisibility(View.VISIBLE);
             tv_minvalue.setText("₹ " + minDonationAmount);
             LminAmountlayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             tv_minvalue.setVisibility(View.GONE);
             LminAmountlayout.setVisibility(View.GONE);
         }
 
-        if(maxDonationAmount!=null){
+        if (maxDonationAmount != null) {
             tv_maxvalue.setVisibility(View.VISIBLE);
             tv_maxvalue.setText("₹ " + maxDonationAmount);
             LmaxAmountlayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             tv_maxvalue.setVisibility(View.GONE);
             LmaxAmountlayout.setVisibility(View.GONE);
         }
 
-        if(multiples!=null){
+        if (multiples != null) {
             tv_multiples.setVisibility(View.VISIBLE);
             tv_multiples.setText(multiples);
             Lmultilayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             tv_multiples.setVisibility(View.GONE);
             Lmultilayout.setVisibility(View.GONE);
         }
 
-        if (searchService.isPrePayment()) {
+        if (appointmentServices.isPrePayment()) {
             Lprepayment.setVisibility(View.VISIBLE);
-            txtpreVal.setText("₹ " + Config.getAmountinTwoDecimalPoints(Double.parseDouble(searchService.getMinPrePaymentAmount())));
+            txtpreVal.setText("₹ " + Config.getAmountinTwoDecimalPoints(appointmentServices.getMinPrePaymentAmount()));
         } else {
             Lprepayment.setVisibility(View.GONE);
         }
 
-        if (searchService.getDescription() != null && searchService.getDescription().length() > 0 && !searchService.getDescription().equalsIgnoreCase("")) {
+        if (appointmentServices.getDescription() != null && appointmentServices.getDescription().length() > 0 && !appointmentServices.getDescription().equalsIgnoreCase("")) {
             tv_desc.setVisibility(View.VISIBLE);
             tv_descVal.setVisibility(View.VISIBLE);
 //            Typeface tyfacedesc = Typeface.createFromAsset(getAssets(),
 //                    "fonts/Montserrat_Bold.otf");
 //            tv_descVal.setTypeface(tyfacedesc);
-            tv_descVal.setText(searchService.getDescription());
+            tv_descVal.setText(appointmentServices.getDescription());
         } else {
             tv_desc.setVisibility(View.GONE);
             tv_descVal.setVisibility(View.GONE);
         }
 
-        if (from!=null) {
-            if(from.equalsIgnoreCase("dnt")){
-                if(dGallery!=null) {
+        if (from != null) {
+            if (from.equalsIgnoreCase("dnt")) {
+                if (dGallery != null) {
                     if (dGallery.size() > 0) {
                         i_servicegallery.setVisibility(View.VISIBLE);
                         try {
@@ -151,20 +147,20 @@ public class ServiceInfoDialog extends Dialog {
                         }
                     }
                 }
-            }
-            else if(from.equalsIgnoreCase("appt")){
-                if(aGallery!=null){
-                    if(aGallery.size()>0){
+            } else if (from.equalsIgnoreCase("appt")) {
+                if (aGallery != null) {
+                    if (aGallery.size() > 0) {
                         i_servicegallery.setVisibility(View.VISIBLE);
                         try {
                             Picasso.with(context).setLoggingEnabled(true);
                             Picasso.with(context).load(aGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }}}
-            }
-            else {
-                if(mGallery!=null) {
+                        }
+                    }
+                }
+            } else {
+                if (mGallery != null) {
                     if (mGallery.size() > 0) {
                         Config.logV("SERVICE GALLERY" + mGallery.get(0).getUrl());
                         i_servicegallery.setVisibility(View.VISIBLE);
@@ -261,3 +257,4 @@ public class ServiceInfoDialog extends Dialog {
         tv_price.setTypeface(tyface);
     }
 }
+
