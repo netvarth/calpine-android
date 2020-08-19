@@ -89,10 +89,11 @@ public class Splash extends AppCompatActivity {
 
             if (host.equals("test.jaldee.com")) {
                 Log.i("retert","ertert");
-                Intent intent = new Intent(this, Home.class);
+                Intent intent = new Intent(this, LinkRedirectionActivity.class);
                 intent.putExtra("detail_id", (param));  // URL query values as string, you need to parse string to long.
                 intent.putExtra("path", (path));  // URL query values as string, you need to parse string to long.
                 startActivity(intent);
+                finish();
             }
 
         } else {

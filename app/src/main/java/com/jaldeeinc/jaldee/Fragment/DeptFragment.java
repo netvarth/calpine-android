@@ -89,9 +89,9 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     Boolean fromDoctors = false;
     ArrayList<ProviderUserModel> usersList;
     ArrayList<SearchLocation> mSearchLocList;
+
     public DeptFragment() {
     }
-
 
 
     public DeptFragment(SearchDepartmentServices departmentServices, SearchDetailViewFragment searchDetailViewFragment, String businessName, SearchViewDetail mBusinessDataListParent, Boolean firstCouponAvailable, Boolean couponAvailable, ArrayList<SearchLocation> searchLocation, SearchSetting mSearchSettings) {
@@ -151,37 +151,39 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
             tv_services.setVisibility(View.GONE);
             tv_doctors.setVisibility(View.GONE);
         } else {
-                if(departmentServices!=null) {
-                    tv_departmentCode.setText(departmentServices.getDepartmentCode());
-                    tv_departmentName.setText(departmentServices.getDepartmentName());
-                    if (departmentServices.getUsers().size() > 0) {
-                        tv_doctors.setVisibility(View.VISIBLE);
-                        tv_doctors.setText("Doctors : " + departmentServices.getUsers().size());
-                        tv_services.setVisibility(View.GONE);
-                    } else {
-                        tv_doctors.setVisibility(View.GONE);
-                        tv_services.setVisibility(View.VISIBLE);
-                        tv_services.setText("Services >");
-                    }
-                    tv_services.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-                            mServicesList = departmentServices.getServices();
-                            servicesListAdapter = new ServicesListAdapter(getActivity(), mServicesList, departmentServices);
-                            mservice_searchresult.setAdapter(servicesListAdapter);
-                            mservice_searchresult.setLayoutManager(linearLayoutManager);
-                            servicesListAdapter.notifyDataSetChanged();
-                        }
-
-                    });
-
+            if (departmentServices != null) {
+                tv_departmentCode.setText(departmentServices.getDepartmentCode());
+                tv_departmentName.setText(departmentServices.getDepartmentName());
+                if (departmentServices.getUsers().size() > 0) {
+                    tv_doctors.setVisibility(View.VISIBLE);
+                    tv_doctors.setText("Doctors : " + departmentServices.getUsers().size());
+                    tv_services.setVisibility(View.GONE);
+                } else {
+                    tv_doctors.setVisibility(View.GONE);
+                    tv_services.setVisibility(View.VISIBLE);
+                    tv_services.setText("Services >");
                 }
+                tv_services.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+                        mServicesList = departmentServices.getServices();
+                        servicesListAdapter = new ServicesListAdapter(getActivity(), mServicesList, departmentServices);
+                        mservice_searchresult.setAdapter(servicesListAdapter);
+                        mservice_searchresult.setLayoutManager(linearLayoutManager);
+                        servicesListAdapter.notifyDataSetChanged();
+                    }
+
+                });
+
+            }
         }
+
+        try {
 
             ArrayList<String> idsCheckin = new ArrayList<>();
             ArrayList<String> idsAppt = new ArrayList<>();
-            if (mSearchLocList != null && mSearchLocList.size() >0) {
+            if (mSearchLocList != null && mSearchLocList.size() > 0) {
                 location = mSearchLocList.get(0);
             }
 
@@ -199,10 +201,11 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
 
             ApiLoadQsAndSchedulesList(idsCheckin, idsAppt, mBusinessDataLists);
             return row;
+        } catch (Exception e) {
 
-
-          }
-
+            return null;
+        }
+    }
 
 
     private void ApiLoadQsAndSchedulesList(final ArrayList<String> idsCheckin, final ArrayList<String> idsAppt, List<SearchViewDetail> mBusinessDataLists) {
@@ -267,11 +270,10 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                         if ((sIndex + 1) < idAppts.size()) {
                             loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, (sIndex + 1));
                         } else {
-                            if (fromDoctors){
+                            if (fromDoctors) {
                                 loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
 
-                            }
-                            else {
+                            } else {
                                 loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
                             }
                         }
@@ -335,8 +337,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                         } else {
                             loadUsersList();
                         }
-                    }
-                    else if (response.code() == 404){
+                    } else if (response.code() == 404) {
 
 
                     }
@@ -461,8 +462,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                         } else {
                             loadUsersList();
                         }
-                    }
-                    else if (response.code() == 404){
+                    } else if (response.code() == 404) {
 
 
                     }

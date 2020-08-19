@@ -35,20 +35,29 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <activity android:name=".activities.LinkRedirectionActivity"></activity>
         <activity
             android:name=".activities.Splash"
+            android:launchMode="singleTask"
             android:screenOrientation="unspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.VIEW" /> -->
-            <!-- <category android:name="android.intent.category.DEFAULT"/> -->
-            <!-- <category android:name="android.intent.category.BROWSABLE"/> -->
-            <!-- <data android:scheme="https" -->
-            <!-- android:host="test.jaldee.com"/> -->
-            <!-- </intent-filter> -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="test.jaldee.com"
+                    android:scheme="https" />
+            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.Home"/>
         </activity>
         <activity
             android:name=".activities.Register"

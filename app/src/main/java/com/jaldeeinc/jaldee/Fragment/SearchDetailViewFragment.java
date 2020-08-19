@@ -122,7 +122,7 @@ import static com.jaldeeinc.jaldee.connection.ApiClient.context;
  */
 
 
-public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback, DepartmentAdapter.OnItemClickListener,UsersAdapter.OnItemClickListener {
+public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback, DepartmentAdapter.OnItemClickListener, UsersAdapter.OnItemClickListener {
     Context mContext;
     ListView deptListview;
     SearchViewDetail mBusinessDataList;
@@ -207,6 +207,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     SearchModel domainList = new SearchModel();
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
     private CardView cvUsers;
+    private boolean throughLink = false;
 
 
     @Override
@@ -264,9 +265,9 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             searchdetailList = (DepartmentUserSearchModel) bundle.getSerializable("userdetail");
             if (home != null && home.equals("home")) {
                 if (homeUniqueId != null) {
-//                    apiFetchIdFromDeepLink(homeUniqueId);
-                    uniqueID = homeUniqueId;
-                    Log.i("uniqueCutomIdSecond", uniqueID);
+                    apiFetchIdFromDeepLink(homeUniqueId);
+//                    uniqueID = homeUniqueId;
+//                    Log.i("uniqueCutomIdSecond", uniqueID);
                 }
             } else {
                 uniqueID = bundle.getString("uniqueID");
@@ -274,6 +275,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             claimable = "0";
             if (uniqueID != null) {
                 initSearchView(uniqueID);
+
             }
         }
         iBackPress.setOnClickListener(new View.OnClickListener() {
@@ -345,7 +347,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 //            if(homeUniqueId==null){
                 onMethodJdn(uniqueID);
 //            }else{
-//                onMethodJdn(homeUniqueId);
+                onMethodJdn(homeUniqueId);
 //            }
             }
         });
@@ -475,6 +477,32 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     }
 
+
+    private void apiFetchIdFromDeepLink(String customID) {
+        ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
+        Call<String> call = apiService.getUniqueID(customID);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                try {
+                    if (response.code() == 200) {
+                        homeUniqueId = response.body();
+                        Log.i("sadf", homeUniqueId);
+                        uniqueID = homeUniqueId;
+                        throughLink = true;
+                        initSearchView(uniqueID);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(mContext,"Something went wrong",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     /**
      * Load every details for the search details page
@@ -880,7 +908,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                         @Override
                                         public void onClick(View v) {
 
-                                            onMethodUsersClick(usersList,mBusinessDataList.getBusinessName());
+                                            onMethodUsersClick(usersList, mBusinessDataList.getBusinessName());
                                         }
                                     });
 //                                    RecyclerView.LayoutManager mDepartmentLayout = new LinearLayoutManager(mContext);
@@ -2648,7 +2676,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     public void onMethodDepartment(SearchDepartmentServices departmentCode, String businessName) {
         Log.i("qweqweq", "qweqweqwe");
 
-        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable,mSearchLocList,mSearchSettings);
+        DeptFragment deptFragment = new DeptFragment(departmentCode, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable, mSearchLocList, mSearchSettings);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
@@ -2658,7 +2686,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     private void onMethodUsersClick(ArrayList<ProviderUserModel> usersList, String businessName) {
 
         boolean fromDoctors = true;
-        DeptFragment deptFragment = new DeptFragment(usersList, this,businessName, mBusinessDataList, firstCouponAvailable, couponAvailable,mSearchLocList,mSearchSettings,fromDoctors);
+        DeptFragment deptFragment = new DeptFragment(usersList, this, businessName, mBusinessDataList, firstCouponAvailable, couponAvailable, mSearchLocList, mSearchSettings, fromDoctors);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
         transaction.addToBackStack(null);
@@ -3635,7 +3663,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
     @Override
     public void usersClick(ArrayList<ProviderUserModel> usersList, String businessName) {
-        onMethodUsersClick(usersList,businessName);
+        onMethodUsersClick(usersList, businessName);
     }
 
+    @Override
+    public boolean onBackPressed() {
+
+        return super.onBackPressed();
+    }
 }

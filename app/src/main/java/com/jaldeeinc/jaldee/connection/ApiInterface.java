@@ -309,7 +309,7 @@ public interface ApiInterface {
 
 
     @GET("provider/business/{id}")
-    Call<ResponseBody> getUniqueID(@Path("id") String id);
+    Call<String> getUniqueID(@Path("id") String id);
 
 
     @GET(" provider/waitlist/queues/waitingTime/{queueId}")
