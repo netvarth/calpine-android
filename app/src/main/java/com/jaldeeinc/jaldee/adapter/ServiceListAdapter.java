@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +22,7 @@ import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchService;
@@ -40,6 +45,8 @@ import retrofit2.Response;
 public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.MyViewHolder> {
     List<SearchDepartmentServices> mSearchDepartmentList;
     Context mContext;
+    ServiceInfoDialog serviceInfoDialog;
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_service;
@@ -48,24 +55,26 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
         public MyViewHolder(View view) {
             super(view);
             tv_service = (TextView) view.findViewById(R.id.tv_service);
-            serviceList=(LinearLayout)view.findViewById(R.id.serviceList);
+            serviceList = (LinearLayout) view.findViewById(R.id.serviceList);
 
         }
     }
+
     ArrayList<SearchService> mServiceList;
     String from;
     String title;
     String uniqueID;
     Activity activity;
+
     public ServiceListAdapter(ArrayList<SearchService> mServiceList, Context mContext, String from, String title, String uniqueID, Activity mActivity, ArrayList<SearchDepartmentServices> departmentList) {
         this.mContext = mContext;
         this.mServiceList = mServiceList;
-        Config.logV("ServiceList--------------"+mServiceList.size());
-        this.from=from;
-        this.title=title;
-        this.uniqueID=uniqueID;
-        activity=mActivity;
-    this.mSearchDepartmentList = departmentList;
+        Config.logV("ServiceList--------------" + mServiceList.size());
+        this.from = from;
+        this.title = title;
+        this.uniqueID = uniqueID;
+        activity = mActivity;
+        this.mSearchDepartmentList = departmentList;
     }
 
     @Override
@@ -80,7 +89,7 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
     public void onBindViewHolder(final ServiceListAdapter.MyViewHolder myViewHolder, final int position) {
         final SearchService serviceList = mServiceList.get(position);
         String serviceName = serviceList.getName();
-        if(serviceList.getDepartment()!=0 && mSearchDepartmentList!=null){
+        if (serviceList.getDepartment() != 0 && mSearchDepartmentList != null) {
             String deptName = getDepartmentName(serviceList.getDepartment());
             serviceName = serviceName.concat(" (").concat(deptName).concat(")");
         }
@@ -88,40 +97,48 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
         myViewHolder.serviceList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(from.equalsIgnoreCase("searchdetail")) {
-                    final String mServicename = serviceList.getName();
-                    final String mServiceprice = serviceList.getTotalAmount();
-                    final String mServicedesc = serviceList.getDescription();
-                    final String mServiceduration = serviceList.getServiceDuration();
-                    final boolean mTaxable = serviceList.isTaxable();
-                    final ArrayList<SearchService> mServiceGallery = serviceList.getServicegallery();
+                if (from.equalsIgnoreCase("searchdetail")) {
+//                    final String mServicename = serviceList.getName();
+//                    final String mServiceprice = serviceList.getTotalAmount();
+//                    final String mServicedesc = serviceList.getDescription();
+//                    final String mServiceduration = serviceList.getServiceDuration();
+//                    final boolean mTaxable = serviceList.isTaxable();
+//                    final ArrayList<SearchService> mServiceGallery = serviceList.getServicegallery();
+//
+//                    final boolean isPrepayment = serviceList.isPrePayment();
+//                    final String minPrepayment = serviceList.getMinPrePaymentAmount();
 
-                    final boolean isPrepayment = serviceList.isPrePayment();
-                    final String minPrepayment = serviceList.getMinPrePaymentAmount();
+                    serviceInfoDialog = new ServiceInfoDialog(v.getContext(), mServiceList.get(position));
+                    serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    serviceInfoDialog.show();
+                    DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                    int width = (int) (metrics.widthPixels * 1);
+                    serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                    iService.putExtra("name", mServicename);
-                    iService.putExtra("duration", mServiceduration);
-                    iService.putExtra("price", mServiceprice);
-                    iService.putExtra("desc", mServicedesc);
-                    iService.putExtra("servicegallery", mServiceGallery);
-                    iService.putExtra("title", title);
-                    iService.putExtra("taxable", mTaxable);
-                    iService.putExtra("isPrePayment", isPrepayment);
-                    iService.putExtra("MinPrePaymentAmount",minPrepayment);
-                    iService.putExtra("from", "chk");
-                    mContext.startActivity(iService);
-                }else{
+//                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+//                    iService.putExtra("name", mServicename);
+//                    iService.putExtra("duration", mServiceduration);
+//                    iService.putExtra("price", mServiceprice);
+//                    iService.putExtra("desc", mServicedesc);
+//                    iService.putExtra("servicegallery", mServiceGallery);
+//                    iService.putExtra("title", title);
+//                    iService.putExtra("taxable", mTaxable);
+//                    iService.putExtra("isPrePayment", isPrepayment);
+//                    iService.putExtra("MinPrePaymentAmount",minPrepayment);
+//                    iService.putExtra("from", "chk");
+//                    mContext.startActivity(iService);
+                } else {
 
-                    Config.logV("Service ID pass------------"+serviceList.getName());
-                    ApiService(uniqueID,serviceList.getName(),title);
+                    Config.logV("Service ID pass------------" + serviceList.getName());
+                    ApiService(uniqueID, serviceList.getName(), title);
                 }
             }
         });
 
 
     }
-    private void ApiService(String uniqueID , final String serviceName, final String title) {
+
+    private void ApiService(String uniqueID, final String serviceName, final String title) {
 
 
         ApiInterface apiService =
@@ -155,12 +172,12 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
                     if (response.code() == 200) {
 
                         SearchService service1 = null;
-                        ArrayList<SearchService> service=new ArrayList<>();
-                        service=response.body();
-                        for(int i=0;i<service.size();i++){
+                        ArrayList<SearchService> service = new ArrayList<>();
+                        service = response.body();
+                        for (int i = 0; i < service.size(); i++) {
                             Config.logV("Response--serviceid-------------------------" + serviceName);
 
-                            if(service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())){
+                            if (service.get(i).getName().toLowerCase().equalsIgnoreCase(serviceName.toLowerCase())) {
                                 Intent iService = new Intent(mContext, SearchServiceActivity.class);
                                 iService.putExtra("name", service.get(i).getName());
                                 iService.putExtra("duration", service.get(i).getServiceDuration());
@@ -175,9 +192,6 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
 
                             }
                         }
-
-
-
 
 
                     }
@@ -201,15 +215,17 @@ public class ServiceListAdapter extends RecyclerView.Adapter<ServiceListAdapter.
 
 
     }
+
     public String getDepartmentName(int department) {
         Log.i("departments", new Gson().toJson(mSearchDepartmentList));
-        for(int i=0;i<mSearchDepartmentList.size();i++){
-            if(Integer.parseInt(mSearchDepartmentList.get(i).getDepartmentId())==department) {
+        for (int i = 0; i < mSearchDepartmentList.size(); i++) {
+            if (Integer.parseInt(mSearchDepartmentList.get(i).getDepartmentId()) == department) {
                 return mSearchDepartmentList.get(i).getDepartmentName();
             }
         }
         return "";
     }
+
     @Override
     public int getItemCount() {
         return mServiceList.size();

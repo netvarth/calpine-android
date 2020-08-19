@@ -13,10 +13,12 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +33,7 @@ import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.callback.SearchLocationAdpterCallback;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
+import com.jaldeeinc.jaldee.custom.ServiceInfoDialog;
 import com.jaldeeinc.jaldee.model.NextAvailableQModel;
 import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
@@ -66,6 +69,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
     String secondWord, firstWord;
     ArrayList serviceNames = new ArrayList();
     ArrayList serviceDonationNames = new ArrayList();
+    ServiceInfoDialog serviceInfoDialog;
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_place, tv_working, tv_open, tv_waittime, txt_diffdate, txt_msg, txt_peopleahead;
         Button btn_checkin;
@@ -703,32 +708,18 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         myViewHolder.txtSeeAll.setVisibility(View.GONE);
                         myViewHolder.txtservice1.setText(mSearchServiceList.get(i).getmAllService().get(0).getName());
 
-                        final String mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
-                        final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
-                        final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
-                        final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
-                        final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(0).isTaxable();
-                        final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(0).getServicegallery();
-                        final int mDepartmentCode = mSearchServiceList.get(i).getmAllService().get(0).getDepartment();
+                        SearchService serviceDetails = mSearchServiceList.get(i).getmAllService().get(0);
 
-                        final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(0).isPrePayment();
-                        final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(0).getMinPrePaymentAmount();
                         myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                                iService.putExtra("name", mServicename);
-                                iService.putExtra("duration", mServiceduration);
-                                iService.putExtra("price", mServiceprice);
-                                iService.putExtra("desc", mServicedesc);
-                                iService.putExtra("servicegallery", mServiceGallery);
-                                iService.putExtra("taxable", mTaxable);
-                                iService.putExtra("title", mTitle);
-                                iService.putExtra("isPrePayment", isPrepayment);
-                                iService.putExtra("MinPrePaymentAmount", minPrepayment);
-                                iService.putExtra("departmentName", mDepartmentCode);
-                                iService.putExtra("from", "chk");
-                                mContext.startActivity(iService);
+
+                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), serviceDetails);
+                                serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                serviceInfoDialog.show();
+                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                int width = (int) (metrics.widthPixels * 1);
+                                serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
                         });
 
@@ -759,73 +750,67 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                 adaptercallback.onMethodServiceCallback(mSearchServiceList.get(finalI).getmAllService(), mTitle, mSearchDepartmentList);
                             }
                         });
-                        String mServicename;
-                        if (mSearchServiceList.get(i).getmAllService().get(0).getDepartment() != 0) {
-                            String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(0).getDepartment());
-                            mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName().concat(" (").concat(deptName1).concat(")");
-                        } else {
-                            mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
-                        }
+//                        String mServicename;
+//                        if (mSearchServiceList.get(i).getmAllService().get(0).getDepartment() != 0) {
+//                            String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(0).getDepartment());
+//                            mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName().concat(" (").concat(deptName1).concat(")");
+//                        } else {
+//                            mServicename = mSearchServiceList.get(i).getmAllService().get(0).getName();
+//                        }
+//
+//                        final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
+//                        final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
+//                        final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
+//                        final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(0).isTaxable();
+//                        final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(0).getServicegallery();
+//
+//                        final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(0).isPrePayment();
+//                        final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(0).getMinPrePaymentAmount();
+//                        final String serviceName1 = mServicename;
 
-                        final String mServiceprice = mSearchServiceList.get(i).getmAllService().get(0).getTotalAmount();
-                        final String mServicedesc = mSearchServiceList.get(i).getmAllService().get(0).getDescription();
-                        final String mServiceduration = mSearchServiceList.get(i).getmAllService().get(0).getServiceDuration();
-                        final boolean mTaxable = mSearchServiceList.get(i).getmAllService().get(0).isTaxable();
-                        final ArrayList<SearchService> mServiceGallery = mSearchServiceList.get(i).getmAllService().get(0).getServicegallery();
-
-                        final boolean isPrepayment = mSearchServiceList.get(i).getmAllService().get(0).isPrePayment();
-                        final String minPrepayment = mSearchServiceList.get(i).getmAllService().get(0).getMinPrePaymentAmount();
-                        final String serviceName1 = mServicename;
+                        SearchService serviceDetails = mSearchServiceList.get(i).getmAllService().get(0);
                         myViewHolder.txtservice1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                                iService.putExtra("name", serviceName1);
-                                iService.putExtra("duration", mServiceduration);
-                                iService.putExtra("price", mServiceprice);
-                                iService.putExtra("desc", mServicedesc);
-                                iService.putExtra("servicegallery", mServiceGallery);
-                                iService.putExtra("taxable", mTaxable);
-                                iService.putExtra("title", mTitle);
-                                iService.putExtra("isPrePayment", isPrepayment);
-                                iService.putExtra("MinPrePaymentAmount", minPrepayment);
-                                iService.putExtra("from","chk");
-                                mContext.startActivity(iService);
+
+                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), serviceDetails);
+                                serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                serviceInfoDialog.show();
+                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                int width = (int) (metrics.widthPixels * 1);
+                                serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
                         });
-                        String servicename1;
-                        if (mSearchServiceList.get(i).getmAllService().get(1).getDepartment() != 0) {
-                            String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
-                            servicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName1).concat(")");
-                        } else {
-                            servicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName();
-                        }
-                        final String mServicename1 = servicename1;
-//                        String deptName = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
-//                        final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName).concat(")");
-                        final String mServiceprice1 = mSearchServiceList.get(i).getmAllService().get(1).getTotalAmount();
-                        final String mServicedesc1 = mSearchServiceList.get(i).getmAllService().get(1).getDescription();
-                        final String mServiceduration1 = mSearchServiceList.get(i).getmAllService().get(1).getServiceDuration();
-                        final boolean mTaxable1 = mSearchServiceList.get(i).getmAllService().get(1).isTaxable();
-                        final ArrayList<SearchService> mServiceGallery1 = mSearchServiceList.get(i).getmAllService().get(1).getServicegallery();
+//                        String servicename1;
+//                        if (mSearchServiceList.get(i).getmAllService().get(1).getDepartment() != 0) {
+//                            String deptName1 = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
+//                            servicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName1).concat(")");
+//                        } else {
+//                            servicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName();
+//                        }
+//                        final String mServicename1 = servicename1;
+////                        String deptName = getDepartmentName(mSearchServiceList.get(i).getmAllService().get(1).getDepartment());
+////                        final String mServicename1 = mSearchServiceList.get(i).getmAllService().get(1).getName().concat(" (").concat(deptName).concat(")");
+//                        final String mServiceprice1 = mSearchServiceList.get(i).getmAllService().get(1).getTotalAmount();
+//                        final String mServicedesc1 = mSearchServiceList.get(i).getmAllService().get(1).getDescription();
+//                        final String mServiceduration1 = mSearchServiceList.get(i).getmAllService().get(1).getServiceDuration();
+//                        final boolean mTaxable1 = mSearchServiceList.get(i).getmAllService().get(1).isTaxable();
+//                        final ArrayList<SearchService> mServiceGallery1 = mSearchServiceList.get(i).getmAllService().get(1).getServicegallery();
+//
+//                        final boolean isPrepayment1 = mSearchServiceList.get(i).getmAllService().get(1).isPrePayment();
+//                        final String minPrepayment1 = mSearchServiceList.get(i).getmAllService().get(1).getMinPrePaymentAmount();
 
-                        final boolean isPrepayment1 = mSearchServiceList.get(i).getmAllService().get(1).isPrePayment();
-                        final String minPrepayment1 = mSearchServiceList.get(i).getmAllService().get(1).getMinPrePaymentAmount();
+                        SearchService serviceDetails2 = mSearchServiceList.get(i).getmAllService().get(1);
                         myViewHolder.txtservice2.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                                iService.putExtra("name", mServicename1);
-                                iService.putExtra("duration", mServiceduration1);
-                                iService.putExtra("price", mServiceprice1);
-                                iService.putExtra("desc", mServicedesc1);
-                                iService.putExtra("servicegallery", mServiceGallery1);
-                                iService.putExtra("taxable", mTaxable1);
-                                iService.putExtra("title", mTitle);
-                                iService.putExtra("isPrePayment", isPrepayment1);
-                                iService.putExtra("MinPrePaymentAmount", minPrepayment1);
-                                iService.putExtra("from", "chk");
-                                mContext.startActivity(iService);
+
+                                serviceInfoDialog = new ServiceInfoDialog(v.getContext(), serviceDetails2);
+                                serviceInfoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                serviceInfoDialog.show();
+                                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                                int width = (int) (metrics.widthPixels * 1);
+                                serviceInfoDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
                             }
                         });
                     }
