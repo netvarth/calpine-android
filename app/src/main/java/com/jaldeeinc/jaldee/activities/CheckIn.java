@@ -892,6 +892,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                     }
                     if (userSelected.equalsIgnoreCase("Global")) {
+                        userSpinnertext = 0;
                         globalServiceList.clear();
                         for (int j = 0; j < globalServsList.size(); j++) {
                             if (deptSpinnertext == globalServsList.get(j).getDepartment()) {
@@ -918,7 +919,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     }
 
                 } else {
-
+                    userSpinnertext = 0;
                     ArrayList<SearchService> globalServiceList = new ArrayList<>();
 
                     globalServiceList.clear();
@@ -1006,6 +1007,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                         }
                         if (userSelected.equalsIgnoreCase("Global")) {
+                            userSpinnertext = 0;
 
                             if (globalServsList.size() == 0) {
                                 mSpinnerService.setVisibility(View.GONE);
@@ -1028,6 +1030,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     } else {
 
                         // directly adding all the services when there are no doctors to filter
+                        userSpinnertext = 0;
                         LServicesList.clear();
                         LServicesList.addAll(globalServList);
                         mSpinnerService.setVisibility(View.VISIBLE);
@@ -1916,6 +1919,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             mService.setVirtualServiceType(response.body().get(i).getVirtualServiceType());
                             mService.setVirtualCallingModes(response.body().get(i).getVirtualCallingModes());
                             mService.setProvider(response.body().get(i).getProvider());
+                            mService.setDepartment(response.body().get(i).getDepartment());
                             LServicesList.add(mService);
 
                             if (mFrom.equalsIgnoreCase("favourites") || mFrom.equalsIgnoreCase("favourites_date")) {
@@ -1985,6 +1989,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                                 // in case of individual sp's without departments
                                                 if (mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                                    userSpinnertext = userId;
                                                     tvselectedHint.setVisibility(View.VISIBLE);
                                                     tvSelectedProvider.setVisibility(View.VISIBLE);
                                                     ArrayList<SearchService> doctorServices = new ArrayList<>();
@@ -2645,6 +2650,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             if (userSpinnertext != 0) {
                 pjsonobj.put("id", userSpinnertext);
             }
+            else if(mFrom.equalsIgnoreCase("multiusercheckin") && userSpinnertext!=0){
+                pjsonobj.put("id",userId);
+            }
             if (callingMode != null && callingMode.equalsIgnoreCase("whatsapp")) {
                 virtualService.put("WhatsApp", et_virtualId.getText());
             } else if (callingMode != null && callingMode.equalsIgnoreCase("GoogleMeet")) {
@@ -2699,6 +2707,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             queueobj.putOpt("queue", qjsonObj);
             queueobj.putOpt("waitlistingFor", waitlistArray);
             if (userSpinnertext != 0) {
+                queueobj.putOpt("provider", pjsonobj);
+            }
+            else if(mFrom.equalsIgnoreCase("multiusercheckin") && userSpinnertext!=0){
                 queueobj.putOpt("provider", pjsonobj);
             }
             if (selectedServiceType != null && selectedServiceType.equalsIgnoreCase("virtualService")) {

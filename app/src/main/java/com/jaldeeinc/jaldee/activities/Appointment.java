@@ -1032,6 +1032,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     }
                     if (userSelected.equalsIgnoreCase("Global")) {
                         globalServiceList.clear();
+                        userSpinnertext = 0;
                         for (int j = 0; j < globalServsList.size(); j++) {
                             if (deptSpinnertext == globalServsList.get(j).getDepartment()) {
                                 globalServiceList.add(globalServsList.get(j));
@@ -1057,7 +1058,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     }
 
                 } else {
-
+                    userSpinnertext = 0;
                     ArrayList<SearchAppoinment> globalServiceList = new ArrayList<>();
 
 
@@ -1141,6 +1142,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                         }
                         if (userSelected.equalsIgnoreCase("Global")) {
+                            userSpinnertext = 0;
 
                             if (globalServsList.size() == 0) {
                                 mSpinnerService.setVisibility(View.GONE);
@@ -1163,6 +1165,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     } else {
 
                         // directly adding all the services when there are no doctors to filter
+                        userSpinnertext = 0;
                         LServicesList.clear();
                         LServicesList.addAll(globalServList);
                         mSpinnerService.setVisibility(View.VISIBLE);
@@ -2752,6 +2755,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                 // in case of individual sp's without departments
 
                                                 if (mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                                    userSpinnertext = userId;
                                                     tvselectedHint.setVisibility(View.VISIBLE);
                                                     tvSelectedProvider.setVisibility(View.VISIBLE);
                                                     ArrayList<SearchAppoinment> doctorServices = new ArrayList<>();
@@ -3930,6 +3934,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             queueobj.put("phonenumber", phoneNumber);
             if (userSpinnertext != 0) {
                 pjsonobj.put("id", userSpinnertext);
+
+            }
+            else if(mFrom.equalsIgnoreCase("multiusercheckin") && userSpinnertext!=0){
+                pjsonobj.put("id", userId);
             }
 
 
@@ -4016,6 +4024,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             queueobj.putOpt("schedule", sjsonobj);
 
             if (userSpinnertext != 0) {
+                queueobj.putOpt("provider", pjsonobj);
+            }
+            else if(mFrom.equalsIgnoreCase("multiusercheckin") && userSpinnertext!=0){
                 queueobj.putOpt("provider", pjsonobj);
             }
             if (selectedServiceType.equalsIgnoreCase("virtualService")) {
