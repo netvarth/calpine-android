@@ -2023,7 +2023,46 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                         }
                                                     }
 
-                                                } else {
+                                                }
+                                                else if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+
+                                                    if (LServicesList.size() > 0) {
+                                                        mSpinnerService.setVisibility(View.VISIBLE);
+                                                        txt_chooseservice.setVisibility(View.VISIBLE);
+                                                        Config.logV("mServicesList" + LServicesList.size());
+                                                        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                        mSpinnerService.setAdapter(adapter);
+                                                        mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                                                        livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
+                                                    }
+                                                }
+                                                else if (mFrom.equalsIgnoreCase("checkin")) {
+
+                                                    if (LServicesList.size() > 0) {
+                                                        mSpinnerService.setVisibility(View.VISIBLE);
+                                                        txt_chooseservice.setVisibility(View.VISIBLE);
+                                                        Config.logV("mServicesList" + LServicesList.size());
+                                                        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                        mSpinnerService.setAdapter(adapter);
+                                                        mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                                                        livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
+                                                    }
+                                                }
+                                                else if (mFrom.equalsIgnoreCase("favourites")) {
+
+                                                    if (LServicesList.size() > 0) {
+                                                        mSpinnerService.setVisibility(View.VISIBLE);
+                                                        txt_chooseservice.setVisibility(View.VISIBLE);
+                                                        Config.logV("mServicesList" + LServicesList.size());
+                                                        CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                        mSpinnerService.setAdapter(adapter);
+                                                        mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                                                        livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
+                                                    }
+                                                }else {
 
                                                     apiGetUsers(uniqueID);
                                                 }

@@ -18,6 +18,7 @@ public class LinkRedirectionActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +47,14 @@ public class LinkRedirectionActivity extends AppCompatActivity {
             startActivity(homeIntent);
             finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent homeIntent = new Intent(LinkRedirectionActivity.this,Home.class);
+        startActivity(homeIntent);
+        finish();
     }
 
 }
