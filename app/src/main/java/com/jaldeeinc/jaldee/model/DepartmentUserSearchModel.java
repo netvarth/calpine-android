@@ -19,6 +19,16 @@ public class DepartmentUserSearchModel implements Serializable {
     private List<SearchService> services;
     private SearchSetting settings;
 
+    public String getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    String departmentId;
+
     public SearchViewDetail getParentSearchViewDetail() {
         return parentSearchViewDetail;
     }

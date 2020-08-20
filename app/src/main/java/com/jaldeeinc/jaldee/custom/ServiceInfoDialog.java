@@ -92,29 +92,29 @@ public class ServiceInfoDialog extends Dialog {
 
         }
 
-        if(minDonationAmount!=null){
+        if (minDonationAmount != null) {
             tv_minvalue.setVisibility(View.VISIBLE);
             tv_minvalue.setText("₹ " + minDonationAmount);
             LminAmountlayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             tv_minvalue.setVisibility(View.GONE);
             LminAmountlayout.setVisibility(View.GONE);
         }
 
-        if(maxDonationAmount!=null){
+        if (maxDonationAmount != null) {
             tv_maxvalue.setVisibility(View.VISIBLE);
             tv_maxvalue.setText("₹ " + maxDonationAmount);
             LmaxAmountlayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             tv_maxvalue.setVisibility(View.GONE);
             LmaxAmountlayout.setVisibility(View.GONE);
         }
 
-        if(multiples!=null){
+        if (multiples != null) {
             tv_multiples.setVisibility(View.VISIBLE);
             tv_multiples.setText(multiples);
             Lmultilayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             tv_multiples.setVisibility(View.GONE);
             Lmultilayout.setVisibility(View.GONE);
         }
@@ -138,99 +138,42 @@ public class ServiceInfoDialog extends Dialog {
             tv_descVal.setVisibility(View.GONE);
         }
 
-        if (from!=null) {
-            if(from.equalsIgnoreCase("dnt")){
-                if(dGallery!=null) {
-                    if (dGallery.size() > 0) {
-                        i_servicegallery.setVisibility(View.VISIBLE);
-                        try {
-                            Picasso.with(context).setLoggingEnabled(true);
-                            Picasso.with(context).load(dGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+        if (searchService.getServicegallery() != null) {
+            if (searchService.getServicegallery().size() > 0) {
+                i_servicegallery.setVisibility(View.VISIBLE);
+                try {
+                    Picasso.with(context).setLoggingEnabled(true);
+                    Picasso.with(context).load(searchService.getServicegallery().get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-            else if(from.equalsIgnoreCase("appt")){
-                if(aGallery!=null){
-                    if(aGallery.size()>0){
-                        i_servicegallery.setVisibility(View.VISIBLE);
-                        try {
-                            Picasso.with(context).setLoggingEnabled(true);
-                            Picasso.with(context).load(aGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }}}
-            }
-            else {
-                if(mGallery!=null) {
-                    if (mGallery.size() > 0) {
-                        Config.logV("SERVICE GALLERY" + mGallery.get(0).getUrl());
-                        i_servicegallery.setVisibility(View.VISIBLE);
-                        try {
-                            Picasso.with(context).setLoggingEnabled(true);
-                            Picasso.with(context).load(mGallery.get(0).getUrl()).fit().placeholder(R.drawable.icon_noimage).into(i_servicegallery);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-            i_servicegallery.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (from != null) {
-
-                        if (from.equalsIgnoreCase("dnt")) {
-                            ArrayList<String> mGalleryList = new ArrayList<>();
-                            for (int i = 0; i < dGallery.size(); i++) {
-                                mGalleryList.add(dGallery.get(i).getUrl());
-                            }
-
-
-                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                            if (mValue) {
-
-                                Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
-                                context.startActivity(intent);
-                            }
-                        } else if (from.equalsIgnoreCase("appt")) {
-                            ArrayList<String> mGalleryList = new ArrayList<>();
-                            for (int i = 0; i < aGallery.size(); i++) {
-                                mGalleryList.add(aGallery.get(i).getUrl());
-                            }
-
-
-                            boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                            if (mValue) {
-
-                                Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
-                                context.startActivity(intent);
-                            }
-                        } else {
-                            ArrayList<String> mGalleryList = new ArrayList<>();
-                            if (mGallery != null) {
-                                for (int i = 0; i < mGallery.size(); i++) {
-                                    mGalleryList.add(mGallery.get(i).getUrl());
-                                }
-
-
-                                boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
-                                if (mValue) {
-
-                                    Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
-                                    context.startActivity(intent);
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        } else {
-            i_servicegallery.setVisibility(View.VISIBLE);
         }
+
+
+        i_servicegallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (searchService.getServicegallery() != null) {
+                    if (searchService.getServicegallery().size() > 0) {
+                        ArrayList<String> mGalleryList = new ArrayList<>();
+                        for (int i = 0; i < searchService.getServicegallery().size(); i++) {
+                            mGalleryList.add(searchService.getServicegallery().get(i).getUrl());
+                        }
+
+
+                        boolean mValue = SwipeGalleryImage.SetGalleryList(mGalleryList, v.getContext());
+                        if (mValue) {
+
+                            Intent intent = new Intent(v.getContext(), SwipeGalleryImage.class);
+                            context.startActivity(intent);
+                        }
+                    }
+                }
+            }
+        });
     }
+
 
     private void initializations() {
 

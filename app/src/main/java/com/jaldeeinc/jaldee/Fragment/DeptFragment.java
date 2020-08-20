@@ -328,6 +328,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                         ArrayList<SearchDepartmentServices> serviceList = response.body();
                         if (serviceList.size() > 0) {
                             userSearch.setServices(serviceList.get(0).getServices());
+                            userSearch.setDepartmentId(serviceList.get(0).getDepartmentId());
                         } else {
                             userSearch.setServices(null);
                         }

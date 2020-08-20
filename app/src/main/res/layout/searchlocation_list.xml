@@ -846,7 +846,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@color/green"
+                    android:background="@color/dark_yellow"
                     android:gravity="center"
                     android:paddingLeft="@dimen/padding3"
                     android:paddingRight="@dimen/padding3"
