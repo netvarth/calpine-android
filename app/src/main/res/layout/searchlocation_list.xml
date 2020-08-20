@@ -102,61 +102,27 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginRight="@dimen/dimen_5dp">
 
-                        <LinearLayout
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:layout_weight="0.5"
+                        android:gravity="right|center"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:id="@+id/img_arrow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/dimen_5dp"
-                            android:layout_gravity="right"
-                            android:orientation="horizontal">
-
-
-                            <ImageView
-                                android:id="@+id/img_arrow"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="@dimen/dimen_5dp"
-                                android:src="@drawable/icon_angle_down" />
-
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/txtlocation_amentites"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:justificationMode="inter_word"
-                            android:letterSpacing="0.03"
-                            android:lineSpacingExtra="@dimen/padding3"
-                            android:background="@color/spinnerbg"
-                            android:drawableLeft="@drawable/icon_location_lightgray"
-                            android:drawableTint="@color/dark_blue"
-                            android:drawablePadding="5dp"
-                            android:paddingTop="@dimen/dimen_4dp"
-                            android:paddingBottom="@dimen/dimen_4dp"
-                            android:paddingLeft="@dimen/dimen_10dp"
-                            android:paddingRight="@dimen/dimen_10dp"
-                            android:text="Amenities"
-                            android:textColor="@color/dark_blue"
-                            android:textSize="@dimen/txtsize_12"
-                            android:textStyle="bold"
-                            android:visibility="gone"
-                            />
+                            android:src="@drawable/icon_angle_down" />
 
 
                     </LinearLayout>
 
-
-
-
                 </LinearLayout>
-
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -382,6 +348,25 @@
                     android:visibility="gone"/>
             </LinearLayout>
 
+
+            <TextView
+                android:id="@+id/txtservices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
+                android:text="Services"
+                android:textColor="@color/title_grey_light"
+                android:textSize="@dimen/txtsize_hint_11"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/lServicelayout"
                 android:layout_width="match_parent"
@@ -482,27 +467,21 @@
 
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/txtlocation_amentites"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginRight="@dimen/dimen_2dp"
                 android:justificationMode="inter_word"
                 android:letterSpacing="0.03"
                 android:lineSpacingExtra="@dimen/padding3"
-                android:background="@color/spinnerbg"
-                android:gravity="center"
-                android:drawableLeft="@drawable/icon_location_lightgray"
-                android:drawableTint="@color/dark_blue"
-                android:drawablePadding="10dp"
-                android:paddingTop="@dimen/dimen_4dp"
-                android:paddingBottom="@dimen/dimen_4dp"
-                android:paddingLeft="@dimen/dimen_10dp"
-                android:paddingRight="@dimen/dimen_10dp"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
                 android:text="Location Amenities"
-                android:textColor="@color/dark_blue"
-                android:textSize="@dimen/txtsize_12"
-                android:textStyle="bold"
-                android:visibility="gone"
-                />
-
+                android:textColor="@color/title_grey_light"
+                android:textSize="@dimen/txtsize_hint_11"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycle_parking"
@@ -511,8 +490,7 @@
                 android:layout_marginLeft="@dimen/dimen_2dp"
                 android:layout_marginRight="@dimen/dimen_2dp"
                 android:paddingLeft="@dimen/dimen_5dp"
-                android:paddingRight="@dimen/dimen_5dp"
-                android:visibility="gone">
+                android:paddingRight="@dimen/dimen_5dp">
 
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -531,8 +509,7 @@
                 android:text="See All"
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_title_term_small"
-                android:textStyle="bold"
-                android:visibility="gone"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txt_msg"
@@ -554,61 +531,23 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
-            <LinearLayout
-                android:id="@+id/rlCheckInServices"
+            <TextView
+                android:id="@+id/txt_PeopleAhead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginTop="@dimen/padding5"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/txtservices"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:justificationMode="inter_word"
-                    android:letterSpacing="0.03"
-                    android:lineSpacingExtra="@dimen/padding3"
-                    android:background="@color/spinnerbg"
-                    android:gravity="center"
-                    android:layout_weight="0.5"
-                    android:drawableLeft="@drawable/checkin_sized"
-                    android:drawableTint="@color/dark_blue"
-                    android:drawablePadding="10dp"
-                    android:paddingTop="@dimen/dimen_4dp"
-                    android:paddingBottom="@dimen/dimen_4dp"
-                    android:paddingLeft="@dimen/dimen_10dp"
-                    android:paddingRight="@dimen/dimen_20dp"
-                    android:layout_marginEnd="3dp"
-                    android:text="CheckIn Services"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="@dimen/txtsize_hint_11"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    />
-
-                <TextView
-                    android:id="@+id/txt_PeopleAhead"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_2dp"
-                    android:layout_weight="0.5"
-                    android:layout_alignRight="@id/txtservices"
-                    android:layout_alignParentRight="true"
-                    android:justificationMode="inter_word"
-                    android:layout_gravity="bottom"
-                    android:lineSpacingExtra="@dimen/padding3"
-                    android:paddingLeft="@dimen/dimen_5dp"
-                    android:paddingRight="@dimen/dimen_5dp"
-                    android:text=""
-                    android:textColor="@color/title_grey"
-                    android:textSize="@dimen/txtsize_12"
-                    android:textStyle="bold" />
-
-
-            </LinearLayout>
-
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginTop="@dimen/default_padding"
+                android:layout_marginBottom="1dp"
+                android:gravity="left"
+                android:justificationMode="inter_word"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding3"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
+                android:text=""
+                android:textColor="@color/title_grey"
+                android:textSize="@dimen/txtsize_12"
+                android:textStyle="bold" />
 
 
             <!--<View
@@ -630,7 +569,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@color/dark_yellow"
+                    android:background="@color/blue"
                     android:gravity="center"
                     android:justificationMode="inter_word"
                     android:letterSpacing="0.03"
@@ -650,7 +589,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@color/dark_blue"
+                    android:background="@color/green"
                     android:gravity="center"
                     android:justificationMode="inter_word"
                     android:letterSpacing="0.03"
@@ -687,7 +626,7 @@
 
             <RelativeLayout
                 android:id="@+id/rlAppServices"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/padding5"
                 android:layout_marginTop="@dimen/padding5"
@@ -704,7 +643,7 @@
                     android:lineSpacingExtra="@dimen/padding3"
                     android:background="@color/spinnerbg"
                     android:gravity="center"
-                    android:drawableLeft="@drawable/appointmenticon_sized"
+                    android:drawableLeft="@drawable/drawableleft_iconsize"
                     android:drawableTint="@color/dark_blue"
                     android:drawablePadding="10dp"
                     android:paddingTop="@dimen/dimen_4dp"
@@ -715,7 +654,7 @@
                     android:textColor="@color/dark_blue"
                     android:textSize="@dimen/txtsize_hint_11"
                     android:textStyle="bold"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     />
 
 
@@ -754,10 +693,8 @@
             <LinearLayout
                 android:id="@+id/appoinmentLayouts"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/dimen_25dp"
-                android:layout_marginEnd="@dimen/dimen_25dp"
                 android:layout_marginTop="@dimen/padding5"
                 android:orientation="horizontal"
                 android:visibility="gone">
@@ -765,11 +702,12 @@
 
                 <Button
                     android:id="@+id/btnappointments"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/dimen_50dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@drawable/button_custom_layer"
+                    android:background="@color/green"
                     android:gravity="center"
                     android:paddingLeft="@dimen/padding3"
                     android:paddingRight="@dimen/padding3"

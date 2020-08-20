@@ -89,7 +89,7 @@
                 android:id="@+id/Lprice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_20dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
