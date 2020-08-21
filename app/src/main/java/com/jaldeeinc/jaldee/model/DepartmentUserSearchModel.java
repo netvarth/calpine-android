@@ -2,6 +2,7 @@ package com.jaldeeinc.jaldee.model;
 
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
+import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchLocation;
 import com.jaldeeinc.jaldee.response.SearchService;
 import com.jaldeeinc.jaldee.response.SearchSetting;
@@ -17,6 +18,16 @@ public class DepartmentUserSearchModel implements Serializable {
     private SearchViewDetail parentSearchViewDetail;
     private SearchLocation location;
     private List<SearchService> services;
+
+    public List<SearchAppointmentDepartmentServices> getAppointmentServices() {
+        return appointmentServices;
+    }
+
+    public void setAppointmentServices(List<SearchAppointmentDepartmentServices> appointmentServices) {
+        this.appointmentServices = appointmentServices;
+    }
+
+    private List<SearchAppointmentDepartmentServices> appointmentServices;
     private SearchSetting settings;
 
     public String getDepartmentId() {

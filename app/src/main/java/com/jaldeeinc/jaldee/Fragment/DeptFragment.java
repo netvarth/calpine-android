@@ -27,6 +27,7 @@ import com.jaldeeinc.jaldee.model.WorkingModel;
 import com.jaldeeinc.jaldee.response.QueueList;
 import com.jaldeeinc.jaldee.response.ScheduleList;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
+import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchLocation;
@@ -89,6 +90,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
     Boolean fromDoctors = false;
     ArrayList<ProviderUserModel> usersList;
     ArrayList<SearchLocation> mSearchLocList;
+    ArrayList<SearchAppointmentDepartmentServices> userAppointmentServices = new ArrayList<>();
 
     public DeptFragment() {
     }
@@ -275,6 +277,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
 
                             } else {
                                 loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
+                                loadUserAppointmentServices(idAppts,0);
                             }
                         }
                     }
@@ -332,9 +335,16 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                         } else {
                             userSearch.setServices(null);
                         }
+                        if(userAppointmentServices.size()>0){
+                            userSearch.setAppointmentServices(userAppointmentServices.get(0).getServices());
+                        }
+                        else{
+                            userSearch.setAppointmentServices(null);
+                        }
                         usersSearchList.add(userSearch);
                         if ((sIndex + 1) < idAppts.size()) {
                             loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
+                            loadUserAppointmentServices(idAppts,sIndex + 1);
                         } else {
                             loadUsersList();
                         }
@@ -347,6 +357,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     usersSearchList.add(userSearch);
                     if ((sIndex + 1) < idAppts.size()) {
                         loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
+                        loadUserAppointmentServices(idAppts,sIndex + 1);
                     } else {
                         loadUsersList();
                     }
@@ -356,6 +367,41 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
 
             @Override
             public void onFailure(Call<ArrayList<SearchDepartmentServices>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+            }
+        });
+    }
+
+
+    private void loadUserAppointmentServices(ArrayList<String> idAppts,int sIndex) {
+        ApiInterface apiService =
+                ApiClient.getClientS3Cloud(getActivity().getApplicationContext()).create(ApiInterface.class);
+        Date currentTime = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        System.out.println("UTC time: " + sdf.format(currentTime));
+        String accountId = idAppts.get(sIndex).split("-")[0];
+        String userId = idAppts.get(sIndex).split("-")[2];
+        Call<ArrayList<SearchAppointmentDepartmentServices>> calluser = apiService.getAppointmentServices(Integer.parseInt(searchDetailViewFragment.uniqueID), Integer.parseInt(userId), sdf.format(currentTime));
+        calluser.enqueue(new Callback<ArrayList<SearchAppointmentDepartmentServices>>() {
+            @Override
+            public void onResponse(Call<ArrayList<SearchAppointmentDepartmentServices>> call, Response<ArrayList<SearchAppointmentDepartmentServices>> response) {
+
+                try {
+                    Config.logV("URL--7777-------------" + response.raw().request().url().toString().trim());
+                    Config.logV("Response--code------Setting-------------------" + response.code());
+                    if (response.code() == 200) {
+                        userAppointmentServices = response.body();
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<SearchAppointmentDepartmentServices>> call, Throwable t) {
                 // Log error here since request failed
                 Config.logV("Fail---------------" + t.toString());
             }
