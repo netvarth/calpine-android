@@ -1274,6 +1274,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                                     myViewHolder.txt_peopleahead.setVisibility(View.VISIBLE);
                                     String message = Config.getPersonsAheadText(mQueueList.get(i).getNextAvailableQueue().getPersonAhead());
                                     myViewHolder.txt_peopleahead.setText(message);
+
                                 }
                                 //Future Checkin
                                 if (mSearchSetting.isFutureDateWaitlist() && mQueueList.get(i).getNextAvailableQueue().getAvailableDate() != null) {

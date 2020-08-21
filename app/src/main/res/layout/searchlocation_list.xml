@@ -616,10 +616,12 @@
                     android:justificationMode="inter_word"
                     android:lineSpacingExtra="@dimen/padding3"
                     android:paddingLeft="@dimen/dimen_5dp"
-                    android:paddingRight="@dimen/dimen_5dp"
+                    android:paddingRight="@dimen/dimen_15dp"
                     android:text=""
-                    android:textColor="@color/title_grey"
+                    android:visibility="gone"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/txtsize_12"
+                    android:background="@drawable/text_multicolor_gradient"
                     android:textStyle="bold"
                     />
 
