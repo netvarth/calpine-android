@@ -2792,6 +2792,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                 } else if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
                                                     apiGetUsers(uniqueID);
                                                     if(LUsersList.size()==0) {
+                                                        userSpinnertext = 0;
                                                         if (LServicesList.size() > 0) {
                                                             mSpinnerService.setVisibility(View.VISIBLE);
                                                             txt_chooseservice.setVisibility(View.VISIBLE);
@@ -2807,6 +2808,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                 else if (mFrom.equalsIgnoreCase("checkin")) {
                                                     apiGetUsers(uniqueID);
                                                     if(LUsersList.size()==0) {
+                                                        userSpinnertext = 0;
                                                         if (LServicesList.size() > 0) {
                                                             mSpinnerService.setVisibility(View.VISIBLE);
                                                             txt_chooseservice.setVisibility(View.VISIBLE);
@@ -2822,6 +2824,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                 else if (mFrom.equalsIgnoreCase("favourites")) {
                                                     apiGetUsers(uniqueID);
                                                     if(LUsersList.size()==0) {
+                                                        userSpinnertext = 0;
                                                         if (LServicesList.size() > 0) {
                                                             mSpinnerService.setVisibility(View.VISIBLE);
                                                             txt_chooseservice.setVisibility(View.VISIBLE);
