@@ -2790,42 +2790,48 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                     }
 
                                                 } else if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
-
-                                                    if (LServicesList.size() > 0) {
-                                                        mSpinnerService.setVisibility(View.VISIBLE);
-                                                        txt_chooseservice.setVisibility(View.VISIBLE);
-                                                        Config.logV("mServicesList" + LServicesList.size());
-                                                        CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                                        mSpinnerService.setAdapter(adapter);
-                                                        mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
-                                                        livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
+                                                    apiGetUsers(uniqueID);
+                                                    if(LUsersList.size()==0) {
+                                                        if (LServicesList.size() > 0) {
+                                                            mSpinnerService.setVisibility(View.VISIBLE);
+                                                            txt_chooseservice.setVisibility(View.VISIBLE);
+                                                            Config.logV("mServicesList" + LServicesList.size());
+                                                            CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                            mSpinnerService.setAdapter(adapter);
+                                                            mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                                                            livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
+                                                        }
                                                     }
                                                 }
                                                 else if (mFrom.equalsIgnoreCase("checkin")) {
-
-                                                    if (LServicesList.size() > 0) {
-                                                        mSpinnerService.setVisibility(View.VISIBLE);
-                                                        txt_chooseservice.setVisibility(View.VISIBLE);
-                                                        Config.logV("mServicesList" + LServicesList.size());
-                                                        CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                                        mSpinnerService.setAdapter(adapter);
-                                                        mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
-                                                        livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
+                                                    apiGetUsers(uniqueID);
+                                                    if(LUsersList.size()==0) {
+                                                        if (LServicesList.size() > 0) {
+                                                            mSpinnerService.setVisibility(View.VISIBLE);
+                                                            txt_chooseservice.setVisibility(View.VISIBLE);
+                                                            Config.logV("mServicesList" + LServicesList.size());
+                                                            CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                            mSpinnerService.setAdapter(adapter);
+                                                            mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                                                            livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
+                                                        }
                                                     }
                                                 }
                                                 else if (mFrom.equalsIgnoreCase("favourites")) {
-
-                                                    if (LServicesList.size() > 0) {
-                                                        mSpinnerService.setVisibility(View.VISIBLE);
-                                                        txt_chooseservice.setVisibility(View.VISIBLE);
-                                                        Config.logV("mServicesList" + LServicesList.size());
-                                                        CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                                                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                                        mSpinnerService.setAdapter(adapter);
-                                                        mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
-                                                        livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
+                                                    apiGetUsers(uniqueID);
+                                                    if(LUsersList.size()==0) {
+                                                        if (LServicesList.size() > 0) {
+                                                            mSpinnerService.setVisibility(View.VISIBLE);
+                                                            txt_chooseservice.setVisibility(View.VISIBLE);
+                                                            Config.logV("mServicesList" + LServicesList.size());
+                                                            CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                            mSpinnerService.setAdapter(adapter);
+                                                            mSpinnertext = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getId();
+                                                            livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
+                                                        }
                                                     }
                                                 }
                                                 else {
