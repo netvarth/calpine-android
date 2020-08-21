@@ -125,7 +125,7 @@ import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback, DepartmentAdapter.OnItemClickListener, UsersAdapter.OnItemClickListener {
     Context mContext;
     ListView deptListview;
-    SearchViewDetail mBusinessDataList;
+    SearchViewDetail mBusinessDataList ;
     ArrayList<CoupnResponse> couponResponse = new ArrayList<>();
     ArrayList<SearchViewDetail> mSearchGallery;
     ArrayList<SearchLocation> mSearchLocList;
@@ -2426,17 +2426,21 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         if (from_user) {
 
-                            ArrayList<DepartmentUserSearchModel> userDetails = new ArrayList<DepartmentUserSearchModel>();
-                            userDetails.add(searchdetailList);
-                            userDetailAdapter = new UserDetailAdapter(mContext, userDetails, mSearchAWSResponse, mSearchDepartmentList, terminology, mInterface, mSearchmCheckMessageList);
-                            mRecyLocDetail.setAdapter(userDetailAdapter);
-                            userDetailAdapter.notifyDataSetChanged();
+                            if (searchdetailList!= null) {
+                                ArrayList<DepartmentUserSearchModel> userDetails = new ArrayList<DepartmentUserSearchModel>();
+                                userDetails.add(searchdetailList);
+                                userDetailAdapter = new UserDetailAdapter(mContext, userDetails, mSearchAWSResponse, mSearchDepartmentList, terminology, mInterface, mSearchmCheckMessageList);
+                                mRecyLocDetail.setAdapter(userDetailAdapter);
+                                userDetailAdapter.notifyDataSetChanged();
+                            }
                         } else {
 
-                            if (mBusinessDataList != null){
-                                mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList, online_presence, donationFundRaising, gServiceList, LaServicesList, virtualServices);
-                                mRecyLocDetail.setAdapter(mSearchLocAdapter);
-                                mSearchLocAdapter.notifyDataSetChanged();
+                            if (mBusinessDataList != null && mSearchSettings != null){
+                                if (mBusinessDataList.getServiceSector() != null && mBusinessDataList.getServiceSubSector() != null) {
+                                    mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList, online_presence, donationFundRaising, gServiceList, LaServicesList, virtualServices);
+                                    mRecyLocDetail.setAdapter(mSearchLocAdapter);
+                                    mSearchLocAdapter.notifyDataSetChanged();
+                                }
                             }
                         }
                     }

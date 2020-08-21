@@ -690,7 +690,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     }
 
     public void enableCheckinButton(MyViewHolder myViewHolder) {
-        myViewHolder.btncheckin.setBackgroundColor(context.getResources().getColor(R.color.green));
+        myViewHolder.btncheckin.setBackgroundColor(context.getResources().getColor(R.color.dark_blue));
         myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.white));
         myViewHolder.btncheckin.setEnabled(true);
         myViewHolder.btncheckin.setVisibility(View.VISIBLE);

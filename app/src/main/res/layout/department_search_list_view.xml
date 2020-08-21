@@ -559,7 +559,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding5"
             android:layout_gravity="center"
-            android:background="@color/green"
+            android:background="@color/dark_blue"
             android:gravity="center"
             android:paddingLeft="@dimen/padding3"
             android:paddingRight="@dimen/padding3"
@@ -576,8 +576,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/default_padding"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <TextView
                 android:id="@+id/txtWaitTime"
@@ -585,12 +585,12 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@color/blue"
+                android:background="@color/spinnerbg"
                 android:gravity="center"
                 android:paddingLeft="@dimen/padding3"
                 android:paddingRight="@dimen/padding3"
                 android:text="Est WaitTime"
-                android:textColor="@color/white"
+                android:textColor="@color/dark_blue"
                 android:textSize="@dimen/txtsize_12"
                 android:visibility="gone" />
 
@@ -601,7 +601,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@color/green"
+                android:background="@color/dark_blue"
                 android:gravity="center"
                 android:paddingLeft="@dimen/padding3"
                 android:paddingRight="@dimen/padding3"
@@ -714,12 +714,12 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@color/blue"
+                android:background="@color/spinnerbg"
                 android:gravity="center"
                 android:paddingLeft="@dimen/padding3"
                 android:paddingRight="@dimen/padding3"
                 android:text="Est WaitTime"
-                android:textColor="@color/white"
+                android:textColor="@color/dark_blue"
                 android:textSize="@dimen/txtsize_12"
                 android:visibility="gone" />
             <Button
@@ -729,7 +729,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@color/green"
+                android:background="@color/dark_blue"
                 android:gravity="center"
                 android:paddingLeft="@dimen/padding3"
                 android:paddingRight="@dimen/padding3"
