@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +21,8 @@ import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
+import com.jaldeeinc.jaldee.custom.AppointmentServiceInfoDialog;
+import com.jaldeeinc.jaldee.custom.DonationServiceDialog;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
 import com.jaldeeinc.jaldee.response.SearchDonation;
@@ -42,6 +46,7 @@ import retrofit2.Response;
 
 public class ServiceListDonationAdapter extends RecyclerView.Adapter<ServiceListDonationAdapter.MyViewHolder> {
     Context mContext;
+    DonationServiceDialog donationServiceDialog;
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_service;
@@ -97,18 +102,26 @@ public class ServiceListDonationAdapter extends RecyclerView.Adapter<ServiceList
         myViewHolder.tv_service.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < mServiceList.size(); i++) {
-                    if (mServiceList.get(i).toString().toLowerCase().equalsIgnoreCase(mServiceList.get(position).toString().toLowerCase())) {
-                        Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                        iService.putExtra("name", mServiceList.get(i).toString());
-                        iService.putExtra("minamount", String.valueOf(mServiceList.get(i).getMinDonationAmount()));
-                        iService.putExtra("maxamount", String.valueOf(mServiceList.get(i).getMaxDonationAmount()));
-                        iService.putExtra("multiples", String.valueOf(mServiceList.get(i).getMultiples()));
-                        iService.putExtra("servicegallery",mServiceList.get(i).getServicegallery());
-                        iService.putExtra("from","dnt");
-                        mContext.startActivity(iService);
-                    }
-                }
+
+                donationServiceDialog = new DonationServiceDialog(v.getContext(),mServiceList.get(position));
+                donationServiceDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                donationServiceDialog.show();
+                DisplayMetrics metrics = v.getContext().getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                donationServiceDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+//                for (int i = 0; i < mServiceList.size(); i++) {
+//                    if (mServiceList.get(i).toString().toLowerCase().equalsIgnoreCase(mServiceList.get(position).toString().toLowerCase())) {
+//                        Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+//                        iService.putExtra("name", mServiceList.get(i).toString());
+//                        iService.putExtra("minamount", String.valueOf(mServiceList.get(i).getMinDonationAmount()));
+//                        iService.putExtra("maxamount", String.valueOf(mServiceList.get(i).getMaxDonationAmount()));
+//                        iService.putExtra("multiples", String.valueOf(mServiceList.get(i).getMultiples()));
+//                        iService.putExtra("servicegallery",mServiceList.get(i).getServicegallery());
+//                        iService.putExtra("from","dnt");
+//                        mContext.startActivity(iService);
+//                    }
+//                }
 
             }
         });

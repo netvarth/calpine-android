@@ -140,7 +140,7 @@ public class ServiceInfoDialog extends Dialog {
 
         if (from!=null) {
             if(from.equalsIgnoreCase("dnt")){
-                if(dGallery!=null) {
+                if(searchService.getServicegallery()!=null) {
                     if (dGallery.size() > 0) {
                         i_servicegallery.setVisibility(View.VISIBLE);
                         try {
