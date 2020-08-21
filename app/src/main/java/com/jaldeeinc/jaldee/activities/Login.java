@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import kotlin.Unit;
 import okhttp3.Headers;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -45,6 +46,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.jaldeeinc.jaldee.utils.DialogUtilsKt.showUIDialog;
 
 /**
  * Created by sharmila on 3/7/18.
@@ -311,6 +314,13 @@ public class Login extends AppCompatActivity {
       //  if (validatePassword()) {
             ApiLogin(loginId, edtpassword_login.getText().toString());
       //  }
+
+//        showUIDialog(Login.this, "", "Payment successful", () -> {
+//            Intent intent = new Intent(Login.this, Register.class);
+//            startActivity(intent);
+//            finish();
+//            return Unit.INSTANCE;
+//        });
     }
 
     public void ForgotPwd(View view) {

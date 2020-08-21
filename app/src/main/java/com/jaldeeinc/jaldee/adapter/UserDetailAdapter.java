@@ -553,9 +553,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 holder.txtapptSeeAll.setVisibility(View.GONE);
             }
 
-            List<SearchService> apptServices = userDetails.get(position).getServices();
+            List<SearchAppointmentDepartmentServices> apptServices = userDetails.get(position).getAppointmentServices();
 
-            apptServices = apptServices == null ? new ArrayList<SearchService>():apptServices;
+            apptServices = apptServices == null ? new ArrayList<SearchAppointmentDepartmentServices>():apptServices;
             // aServiceslist = userDetails
             // aServiceslist.get(m).getServices = apptServices;
 

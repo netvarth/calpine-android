@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <TextView
+            android:id="@+id/mTitle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Success"
+            android:textSize="@dimen/dimen_16sp"
+            android:textColor="@color/dark_blue"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+        <TextView
+            android:id="@+id/mMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/txtsize_14"
+            android:layout_marginTop="15dp"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eu erat tincidunt lacus fermentum rutrum."
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+
+
+        <RelativeLayout
+            android:id="@+id/rl_positive"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/curved_button"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/login_img_ok"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:paddingLeft="3dp"
+                android:src="@mipmap/ynw_logo">
+
+            </ImageView>
+
+            <TextView
+                android:id="@+id/buttonOk"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="Yes"
+                android:textAllCaps="true"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingRight="20dp"
+                android:layout_toRightOf="@id/login_img_ok"
+                android:textSize="@dimen/txtsize_12"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

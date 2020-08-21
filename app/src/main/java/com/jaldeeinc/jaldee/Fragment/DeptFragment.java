@@ -274,12 +274,12 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                             loadBusinessProfile(idAppts, mSearchScheduleList, mSearchQueueList, (sIndex + 1));
                         } else {
                             if (fromDoctors) {
-                                loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
                                 loadIndividualUserAppointmentServices(idAppts,0);
+                                loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
 
                             } else {
-                                loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
                                 loadUserAppointmentServices(idAppts,0);
+                                loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, 0);
                             }
                         }
                     }
@@ -548,8 +548,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
 
                         usersSearchList.add(userSearch);
                         if ((sIndex + 1) < idAppts.size()) {
+                            loadIndividualUserAppointmentServices(idAppts,(sIndex+1));
                             loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
-                            loadIndividualUserAppointmentServices(idAppts,0);
                         } else {
                             loadUsersList();
                         }
@@ -562,7 +562,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     usersSearchList.add(userSearch);
                     if ((sIndex + 1) < idAppts.size()) {
                         loadIndividualUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
-                        loadIndividualUserAppointmentServices(idAppts,0);
+                        loadIndividualUserAppointmentServices(idAppts,(sIndex+1));
                     } else {
                         loadUsersList();
                     }

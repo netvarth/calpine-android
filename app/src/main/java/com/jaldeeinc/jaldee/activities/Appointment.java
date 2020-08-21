@@ -812,27 +812,29 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
 
                     if (selectedServiceType.equalsIgnoreCase("virtualService")) {
-                        callingMode = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
-                        valueNumber = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
-                        if (callingMode.equalsIgnoreCase("WhatsApp")) {
-                            serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                            tv_enterInstructions.setVisibility(View.VISIBLE);
-                            tv_enterInstructions.setText(serviceInstructions);
-                            et_vitualId.setText(phoneNumber);
-                            et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
-                            et_vitualId.setVisibility(View.VISIBLE);
-                        } else if (callingMode.equalsIgnoreCase("Phone")) {
-                            serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                            tv_enterInstructions.setVisibility(View.VISIBLE);
-                            tv_enterInstructions.setText(serviceInstructions);
-                            et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
-                            et_vitualId.setText(phoneNumber);
-                            et_vitualId.setVisibility(View.VISIBLE);
-                        } else {
-                            serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                            tv_enterInstructions.setVisibility(View.VISIBLE);
-                            tv_enterInstructions.setText(serviceInstructions);
-                            et_vitualId.setVisibility(View.GONE);
+                        if (((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().size() > 0) {
+                            callingMode = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
+                            valueNumber = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
+                            if (callingMode.equalsIgnoreCase("WhatsApp")) {
+                                serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                                tv_enterInstructions.setVisibility(View.VISIBLE);
+                                tv_enterInstructions.setText(serviceInstructions);
+                                et_vitualId.setText(phoneNumber);
+                                et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                                et_vitualId.setVisibility(View.VISIBLE);
+                            } else if (callingMode.equalsIgnoreCase("Phone")) {
+                                serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                                tv_enterInstructions.setVisibility(View.VISIBLE);
+                                tv_enterInstructions.setText(serviceInstructions);
+                                et_vitualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
+                                et_vitualId.setText(phoneNumber);
+                                et_vitualId.setVisibility(View.VISIBLE);
+                            } else {
+                                serviceInstructions = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                                tv_enterInstructions.setVisibility(View.VISIBLE);
+                                tv_enterInstructions.setText(serviceInstructions);
+                                et_vitualId.setVisibility(View.GONE);
+                            }
                         }
                     } else {
                         tv_enterInstructions.setVisibility(View.GONE);
@@ -1076,7 +1078,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     LServicesList.addAll(globalServiceList);
                     mSpinnerService.setVisibility(View.VISIBLE);
                     txt_chooseservice.setVisibility(View.VISIBLE);
-
+                    btn_checkin.setVisibility(View.VISIBLE);
                     Config.logV("mServicesList" + LServicesList.size());
                     CustomSpinnerAdapterAppointment adapter = new CustomSpinnerAdapterAppointment(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -2791,7 +2793,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                                 } else if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
                                                     apiGetUsers(uniqueID);
-                                                    if(LUsersList.size()==0) {
+                                                    if (LUsersList.size() == 0) {
                                                         userSpinnertext = 0;
                                                         if (LServicesList.size() > 0) {
                                                             mSpinnerService.setVisibility(View.VISIBLE);
@@ -2804,10 +2806,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                             livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
                                                         }
                                                     }
-                                                }
-                                                else if (mFrom.equalsIgnoreCase("checkin")) {
+                                                } else if (mFrom.equalsIgnoreCase("checkin")) {
                                                     apiGetUsers(uniqueID);
-                                                    if(LUsersList.size()==0) {
+                                                    if (LUsersList.size() == 0) {
                                                         userSpinnertext = 0;
                                                         if (LServicesList.size() > 0) {
                                                             mSpinnerService.setVisibility(View.VISIBLE);
@@ -2820,10 +2821,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                             livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
                                                         }
                                                     }
-                                                }
-                                                else if (mFrom.equalsIgnoreCase("favourites")) {
+                                                } else if (mFrom.equalsIgnoreCase("favourites")) {
                                                     apiGetUsers(uniqueID);
-                                                    if(LUsersList.size()==0) {
+                                                    if (LUsersList.size() == 0) {
                                                         userSpinnertext = 0;
                                                         if (LServicesList.size() > 0) {
                                                             mSpinnerService.setVisibility(View.VISIBLE);
@@ -2836,8 +2836,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                                             livetrack = ((SearchAppoinment) mSpinnerService.getSelectedItem()).getLivetrack();
                                                         }
                                                     }
-                                                }
-                                                else {
+                                                } else {
 
                                                     apiGetUsers(uniqueID);
                                                 }
