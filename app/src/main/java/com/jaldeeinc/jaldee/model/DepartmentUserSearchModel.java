@@ -19,6 +19,16 @@ public class DepartmentUserSearchModel implements Serializable {
     private SearchLocation location;
     private List<SearchService> services;
 
+    public List<SearchService> getUserAppointmentServices() {
+        return userAppointmentServices;
+    }
+
+    public void setUserAppointmentServices(List<SearchService> userAppointmentServices) {
+        this.userAppointmentServices = userAppointmentServices;
+    }
+
+    private List<SearchService> userAppointmentServices;
+
     public List<SearchAppointmentDepartmentServices> getAppointmentServices() {
         return appointmentServices;
     }

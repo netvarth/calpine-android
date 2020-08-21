@@ -239,6 +239,9 @@ public interface ApiInterface {
     @GET("{uniqueId}/{userId}/providerApptServices.json")
     Call<ArrayList<SearchAppointmentDepartmentServices>> getAppointmentServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
 
+    @GET("{uniqueId}/{userId}/providerApptServices.json")
+    Call<ArrayList<SearchService>> getUserAppointmentServices(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
+
 
     @GET("{uniqueId}/{userId}/providerBusinessProfile.json")
     Observable<SearchViewDetail> getUserBusinessProfiles(@Path("uniqueId") int uniqueId, @Path("userId") int userId, @Query("modifiedDate") String mDate);
