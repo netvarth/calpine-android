@@ -20,6 +20,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.ScheduleId;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,6 +67,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
     static TextView txtnocheckin;
     String id = " ";
     static ImageView ic_left, ic_right;
+    String changedDate = "";
 
 
 
@@ -152,8 +154,9 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(last_date), accountId);
-                Appointment.timeslotdates(sdf.format(last_date));
+                changedDate = sdf.format(last_date);
+                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), changedDate, accountId);
+                Appointment.timeslotdates(changedDate);
             }
         });
 
@@ -196,7 +199,9 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
 
                 if (response.code() == 200) {
                     schedResponse = response.body();
-                  if(schedResponse.size()!=0) {
+                    SharedPreference.getInstance(AppointmentDate.this).setValue("selectedDate",changedDate);
+
+                    if(schedResponse.size()!=0) {
 
                       if (schedResponse.size() > 0) {
                           i = 0;

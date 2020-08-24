@@ -258,6 +258,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     EditText edt_message;
     boolean virtualServices;
     String virtualserviceStatus;
+    String changedDate = null;
+
+
 
 
     @Override
@@ -317,6 +320,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
         tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
         et_vitualId = findViewById(R.id.virtual_id);
+        // to Empty previous selected date in pref's
+        SharedPreference.getInstance(Appointment.this).setValue("selectedDate","");
 
 
 
@@ -4547,7 +4552,22 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
             Log.e("TAG", "Exception in onPaymentError..", e);
         }
     }
+
+    @Override
+    protected void onResume() {
+
+        changedDate = SharedPreference.getInstance(Appointment.this).getStringValue("selectedDate","");
+        if (changedDate != null){
+            if (!changedDate.equalsIgnoreCase("")){
+
+                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), changedDate, modifyAccountID);
+            }
+        }
+        SharedPreference.getInstance(Appointment.this).setValue("selectedDate","");
+        super.onResume();
+    }
 }
+
 
 
 
