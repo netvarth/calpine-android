@@ -51,6 +51,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:paddingLeft="3dp"
+                android:visibility="gone"
                 android:src="@mipmap/ynw_logo">
 
             </ImageView>
@@ -59,11 +60,11 @@
                 android:id="@+id/buttonOk"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:text="Yes"
+                android:text="OK"
                 android:textAllCaps="true"
-                android:paddingStart="12dp"
+                android:paddingStart="@dimen/padding20"
                 android:paddingTop="6dp"
-                android:paddingRight="20dp"
+                android:paddingRight="@dimen/padding20"
                 android:layout_toRightOf="@id/login_img_ok"
                 android:textSize="@dimen/txtsize_12"
                 android:textColor="@color/white" />

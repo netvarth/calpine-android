@@ -424,7 +424,10 @@ public class DeptListAdapter extends RecyclerView.Adapter {
 
         DatabaseHandler db = new DatabaseHandler(context);
         domainList = db.getSubDomainsByFilter(searchdetailList.getSearchViewDetail().getServiceSector().getDisplayName(), searchdetailList.getSearchViewDetail().getUserSubdomain());
-        myViewHolder.tv_domain.setText(domainList.getDisplayname());
+        if (domainList != null) {
+
+            myViewHolder.tv_domain.setText(domainList.getDisplayname());
+        }
 
 
         if (searchdetailList.getLocation().getPlace() != null) {

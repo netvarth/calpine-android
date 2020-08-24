@@ -3,6 +3,7 @@ package com.jaldeeinc.jaldee.common;
 /**
  * Created by sharmila on 2/7/18.
  */
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -16,7 +17,9 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+
 import androidx.core.content.ContextCompat;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,7 @@ import android.widget.ProgressBar;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.activities.Register;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.LoginResponse;
@@ -76,13 +80,14 @@ public class Config {
             Log.v(APP_TAG, message);
         }
     }
+
     public static void logE(String message) {
         if (is_log_enabled) {
-            if(message.contains("start"))
+            if (message.contains("start"))
                 taskCount++;
-            else if(message.contains("stop"))
+            else if (message.contains("stop"))
                 taskCount--;
-            Log.e(APP_TAG, message+"   >>  "+taskCount);
+            Log.e(APP_TAG, message + "   >>  " + taskCount);
         }
     }
 
@@ -91,23 +96,26 @@ public class Config {
         Calendar cal = Calendar.getInstance();
         return dateFormat.format(cal.getTime());
     }
+
     public static String getYesterdayDateString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         return dateFormat.format(cal.getTime());
     }
+
     public static void logV(String title, String message) {
         if (is_log_enabled) {
             Log.v(title, message);
         }
     }
+
     public static String getMacAddress(Activity activity) {
         WifiManager manager = (WifiManager) activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = manager.getConnectionInfo();
         String address = info.getMacAddress();
-        if(address==null)
-            address="";
+        if (address == null)
+            address = "";
 
         return address;
     }
@@ -133,7 +141,7 @@ public class Config {
 
     public static String getPersonsAheadText(int personAhead) {
         String message = "";
-        if(personAhead <= 0) {
+        if (personAhead <= 0) {
             message = "Be the first in line";
         } else if (personAhead == 1) {
             message = "1 Person waiting in line";
@@ -168,20 +176,20 @@ public class Config {
 
     public static String getTimeinHourMinutes(int minutes) {
         String hour_minutes = "";
-        if(minutes == 0) {
+        if (minutes == 0) {
             return "0 minute";
         }
-        int hours = minutes/ 60; //since both are ints, you get an int
+        int hours = minutes / 60; //since both are ints, you get an int
         int mins = minutes % 60;
-        if(hours == 1) {
+        if (hours == 1) {
             hour_minutes += "1 hour";
-        } else if(hours >1) {
+        } else if (hours > 1) {
             hour_minutes += hours + " hours";
         }
-        if(hours > 0) {
+        if (hours > 0) {
             hour_minutes += " ";
         }
-        if(mins == 1) {
+        if (mins == 1) {
             hour_minutes += "1 minute";
         } else if (mins > 1) {
             hour_minutes += mins + " minutes";
@@ -190,18 +198,18 @@ public class Config {
         return hour_minutes;
     }
 
-    public static String getAmountinTwoDecimalPoints(double amount){
+    public static String getAmountinTwoDecimalPoints(double amount) {
         return String.format("%.2f", amount);
     }
-    public static String getAmountinSingleDecimalPoints(double amount){
+
+    public static String getAmountinSingleDecimalPoints(double amount) {
         return String.format("%.1f", amount);
     }
 
-   public static String convert12(String str)
-    {
+    public static String convert12(String str) {
 // Get Hours
-        int h1 = (int)str.charAt(0) - '0';
-        int h2 = (int)str.charAt(1)- '0';
+        int h1 = (int) str.charAt(0) - '0';
+        int h2 = (int) str.charAt(1) - '0';
 
         int hh = h1 * 10 + h2;
 
@@ -210,8 +218,7 @@ public class Config {
         String Meridien;
         if (hh < 12) {
             Meridien = "AM";
-        }
-        else
+        } else
             Meridien = "PM";
 
         hh %= 12;
@@ -224,8 +231,7 @@ public class Config {
             for (int i = 2; i < 8; ++i) {
                 System.out.print(str.charAt(i));
             }
-        }
-        else {
+        } else {
             System.out.print(hh);
             // Printing minutes and seconds
             for (int i = 2; i < 8; ++i) {
@@ -235,25 +241,24 @@ public class Config {
 
         // After time is printed
         // cout Meridien
-        System.out.println(" "+Meridien);
+        System.out.println(" " + Meridien);
         return Meridien;
     }
 
-    public static String convert24(String time){
-    SimpleDateFormat code12Hours = new SimpleDateFormat("hh:mm"); // 12 hour format
+    public static String convert24(String time) {
+        SimpleDateFormat code12Hours = new SimpleDateFormat("hh:mm"); // 12 hour format
 
-    Date dateCode12 = null;
-    String formatTwelve;
-    String results;
-      try {
-        dateCode12 = code12Hours.parse(time); // 12 hour
-    } catch (ParseException e) {
-        e.printStackTrace();
+        Date dateCode12 = null;
+        String formatTwelve;
+        String results;
+        try {
+            dateCode12 = code12Hours.parse(time); // 12 hour
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        formatTwelve = code12Hours.format(dateCode12);
+        return formatTwelve;
     }
-    formatTwelve = code12Hours.format(dateCode12);
-    return formatTwelve;
-    }
-
 
 
     public static void ApiSessionResetLogin(String loginId, String password, final Context context) {
@@ -264,8 +269,8 @@ public class Config {
 
         SharedPreferences pref = context.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
-        Config.logV("REGISTARION ID______RENEW________@@@@@@@___"+regId);
-        LogUtil.writeLogTest("REG ID @@@@@@@@@@@"+regId);
+        Config.logV("REGISTARION ID______RENEW________@@@@@@@___" + regId);
+        LogUtil.writeLogTest("REG ID @@@@@@@@@@@" + regId);
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("loginId", loginId);
@@ -277,21 +282,17 @@ public class Config {
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Config.logV("JSON--------------" + jsonObj);
-
         Call<LoginResponse> call = apiService.LoginResponse(body);
-
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, retrofit2.Response<LoginResponse> response) {
 
                 try {
 
-
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response-- LOGIN RESERT code-------------------------" + response.code());
 
-                    LogUtil.writeLogTest("REG ID RESP CODE@@@@@@@@@@@"+response.code());
+                    LogUtil.writeLogTest("REG ID RESP CODE@@@@@@@@@@@" + response.code());
                     if (response.code() == 200) {
                         Config.logV("Response--code-------------------------" + response.body().getFirstName());
 
@@ -302,9 +303,9 @@ public class Config {
                         List<String> cookiess = response.headers().values("Set-Cookie");
                         StringBuffer Cookie_header = new StringBuffer();
 
-                        for(String key : cookiess){
+                        for (String key : cookiess) {
                             String Cookiee = key.substring(0, key.indexOf(";"));
-                            Cookie_header.append(Cookiee +';');
+                            Cookie_header.append(Cookiee + ';');
                         }
 
                         Config.logV("Response--Cookie config-------------------------" + cookiess);
@@ -315,7 +316,7 @@ public class Config {
                             SharedPreference.getInstance(context).setValue("PREF_COOKIES", String.valueOf(Cookie_header));
                             Config.logV("Set Cookie sharedpref_config------------" + Cookie_header);
 
-                            LogUtil.writeLogTest("****Login Cookie****"+Cookie_header);
+                            LogUtil.writeLogTest("****Login Cookie****" + Cookie_header);
 
                         }
 
@@ -338,11 +339,11 @@ public class Config {
                         Intent iReg = new Intent(context, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(iReg);
-                       // ((Activity)context).finish();
+                        // ((Activity)context).finish();
                         Config.logV("App@@@ ForeBackGround Sucess");
 
-                    }else{
-                       // Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();
+                    } else {
+                        // Toast.makeText(context,response.errorBody().string(),Toast.LENGTH_LONG).show();
                         Config.logV("App@@@ ForeBackGround fail");
                        /* Intent iReg = new Intent(context, Home.class);
                         iReg.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -366,6 +367,7 @@ public class Config {
         });
 
     }
+
     public static void ApiUpdateToken(final Context context) {
 
         ApiInterface apiService =
@@ -374,7 +376,7 @@ public class Config {
 
         SharedPreferences pref = context.getSharedPreferences(Config.SHARED_PREF, 0);
         String regId = pref.getString("regId", null);
-        LogUtil.writeLogTest("REG ID @@@@@@@@@@@"+regId);
+        LogUtil.writeLogTest("REG ID @@@@@@@@@@@" + regId);
         JSONObject jsonObj = new JSONObject();
         try {
             jsonObj.put("token", regId);
@@ -395,13 +397,12 @@ public class Config {
                 try {
 
 
-
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
 
                     if (response.code() == 200) {
 
 
-                    }else{
+                    } else {
 
                     }
 
@@ -422,11 +423,12 @@ public class Config {
         });
 
     }
-    public static void closeDialog(Activity mActivity,Dialog mDialog) {
+
+    public static void closeDialog(Activity mActivity, Dialog mDialog) {
 
         try {
             try {
-                if (mActivity!=null) {
+                if (mActivity != null) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                         if (mActivity.isDestroyed()) { // or call isFinishing() if min sdk version < 17
                             return;
@@ -441,9 +443,7 @@ public class Config {
             if (mDialog != null && mDialog.isShowing()) {
                 mDialog.dismiss();
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             Config.logV(e.getMessage());
         }
@@ -467,7 +467,7 @@ public class Config {
                         alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, mContext.getResources().getString(R.string.layout_button_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                              alertDialog.dismiss();
+                                alertDialog.dismiss();
                             }
                         });
                         //Add dialog to vector collection of dialogs
@@ -477,9 +477,7 @@ public class Config {
                     }
                 }
             });
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             Config.logV(e.toString());
         }
@@ -492,13 +490,14 @@ public class Config {
     }
 
     public static String ChangeDateFormat(String datepass) throws ParseException {
-        SimpleDateFormat spf=new SimpleDateFormat("yyyy-mm-dd");
-        Date newDate=spf.parse(datepass);
-        spf= new SimpleDateFormat("dd-mm-yyyy");
+        SimpleDateFormat spf = new SimpleDateFormat("yyyy-mm-dd");
+        Date newDate = spf.parse(datepass);
+        spf = new SimpleDateFormat("dd-mm-yyyy");
         String convertdate = spf.format(newDate);
-        return  convertdate;
+        return convertdate;
 
     }
+
     public static String toTitleCase(String str) {
 
         if (str == null) {

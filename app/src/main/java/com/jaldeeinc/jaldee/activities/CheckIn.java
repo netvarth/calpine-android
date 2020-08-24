@@ -144,7 +144,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static TextView tv_personahead;
     static Context mContext;
     static Activity mActivity;
-    Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor,mSpinnerIndividualUsers;
+    Spinner mSpinnerService, mSpinnerDepartment, mSpinnerDoctor, mSpinnerIndividualUsers;
     static int locationId;
     ArrayList<SearchService> LServicesList = new ArrayList<>();
     ArrayList<SearchService> spServicesList = new ArrayList<>();
@@ -236,7 +236,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     Bitmap bitmap;
     Boolean isShow;
     String deptId;
-    TextView tv_enterInstructions,tvselectedHint, tvSelectedProvider;
+    TextView tv_enterInstructions, tvselectedHint, tvSelectedProvider;
     EditText et_virtualId;
     String selectedServiceType;
     String callingMode, valueNumber, serviceInstructions;
@@ -641,8 +641,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
         if (mFrom.equalsIgnoreCase("multiusercheckin")) {
             tv_titlename.setText(userName);
-        }
-        else if (mFrom.equalsIgnoreCase("searchdetail_checkin")){
+        } else if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
             tv_titlename.setText(title);
 
         }
@@ -704,27 +703,30 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     selectedService = ((SearchService) mSpinnerService.getSelectedItem()).getId();
 
                     if (selectedServiceType.equalsIgnoreCase("virtualService")) {
-                        callingMode = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
-                        valueNumber = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
-                        if (callingMode.equalsIgnoreCase("WhatsApp")) {
-                            serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                            tv_enterInstructions.setVisibility(View.VISIBLE);
-                            tv_enterInstructions.setText(serviceInstructions);
-                            et_virtualId.setText(phoneNumber);
-                            et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
-                            et_virtualId.setVisibility(View.VISIBLE);
-                        } else if (callingMode.equalsIgnoreCase("Phone")) {
-                            serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                            tv_enterInstructions.setVisibility(View.VISIBLE);
-                            tv_enterInstructions.setText(serviceInstructions);
-                            et_virtualId.setText(phoneNumber);
-                            et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
-                            et_virtualId.setVisibility(View.VISIBLE);
-                        } else {
-                            serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
-                            tv_enterInstructions.setVisibility(View.VISIBLE);
-                            tv_enterInstructions.setText(serviceInstructions);
-                            et_virtualId.setVisibility(View.GONE);
+                        if (((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().size() > 0) {
+
+                            callingMode = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getCallingMode();
+                            valueNumber = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getValue();
+                            if (callingMode.equalsIgnoreCase("WhatsApp")) {
+                                serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                                tv_enterInstructions.setVisibility(View.VISIBLE);
+                                tv_enterInstructions.setText(serviceInstructions);
+                                et_virtualId.setText(phoneNumber);
+                                et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.whatsapp, 0, 0, 0);
+                                et_virtualId.setVisibility(View.VISIBLE);
+                            } else if (callingMode.equalsIgnoreCase("Phone")) {
+                                serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                                tv_enterInstructions.setVisibility(View.VISIBLE);
+                                tv_enterInstructions.setText(serviceInstructions);
+                                et_virtualId.setText(phoneNumber);
+                                et_virtualId.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_phone_iphone_black_24dps, 0, 0, 0);
+                                et_virtualId.setVisibility(View.VISIBLE);
+                            } else {
+                                serviceInstructions = ((SearchService) mSpinnerService.getSelectedItem()).getVirtualCallingModes().get(0).getInstructions();
+                                tv_enterInstructions.setVisibility(View.VISIBLE);
+                                tv_enterInstructions.setText(serviceInstructions);
+                                et_virtualId.setVisibility(View.GONE);
+                            }
                         }
                     } else {
                         tv_enterInstructions.setVisibility(View.GONE);
@@ -942,8 +944,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                     mSpinnerService.setAdapter(adapter);
                     if (LServicesList.size() != 0) {
                         mSpinnertext = LServicesList.get(0).getId();
-                    }
-                    else {
+                    } else {
 
                         mSpinnerService.setVisibility(View.GONE);
                         txt_chooseservice.setVisibility(View.GONE);
@@ -1984,8 +1985,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                     departmentSelected = depResponse.getDepartments().get(0).getDepartmentName();
                                                     deptSpinnertext = depResponse.getDepartments().get(0).getDepartmentId();
                                                 }
-                                            }
-                                            else {
+                                            } else {
 
                                                 // in case of individual sp's without departments
                                                 if (mFrom.equalsIgnoreCase("multiusercheckin")) {
@@ -2023,26 +2023,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                         }
                                                     }
 
-                                                }
-                                                else if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
+                                                } else if (mFrom.equalsIgnoreCase("searchdetail_checkin")) {
                                                     apiGetUsers(uniqueID);
-                                                    if(LUsersList.size()==0) {
-                                                        userSpinnertext =0;
-                                                        if (LServicesList.size() > 0) {
-                                                            mSpinnerService.setVisibility(View.VISIBLE);
-                                                            txt_chooseservice.setVisibility(View.VISIBLE);
-                                                            Config.logV("mServicesList" + LServicesList.size());
-                                                            CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
-                                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                                            mSpinnerService.setAdapter(adapter);
-                                                            mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
-                                                            livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
-                                                        }
-                                                    }
-                                                }
-                                                else if (mFrom.equalsIgnoreCase("checkin")) {
-                                                    apiGetUsers(uniqueID);
-                                                    if(LUsersList.size()==0) {
+                                                    if (LUsersList.size() == 0) {
                                                         userSpinnertext = 0;
                                                         if (LServicesList.size() > 0) {
                                                             mSpinnerService.setVisibility(View.VISIBLE);
@@ -2055,11 +2038,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                             livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
                                                         }
                                                     }
-                                                }
-                                                else if (mFrom.equalsIgnoreCase("favourites")) {
+                                                } else if (mFrom.equalsIgnoreCase("checkin")) {
                                                     apiGetUsers(uniqueID);
-                                                    if(LUsersList.size()==0) {
-                                                        userSpinnertext =0;
+                                                    if (LUsersList.size() == 0) {
+                                                        userSpinnertext = 0;
                                                         if (LServicesList.size() > 0) {
                                                             mSpinnerService.setVisibility(View.VISIBLE);
                                                             txt_chooseservice.setVisibility(View.VISIBLE);
@@ -2071,7 +2053,22 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                                             livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
                                                         }
                                                     }
-                                                }else {
+                                                } else if (mFrom.equalsIgnoreCase("favourites")) {
+                                                    apiGetUsers(uniqueID);
+                                                    if (LUsersList.size() == 0) {
+                                                        userSpinnertext = 0;
+                                                        if (LServicesList.size() > 0) {
+                                                            mSpinnerService.setVisibility(View.VISIBLE);
+                                                            txt_chooseservice.setVisibility(View.VISIBLE);
+                                                            Config.logV("mServicesList" + LServicesList.size());
+                                                            CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, LServicesList);
+                                                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                            mSpinnerService.setAdapter(adapter);
+                                                            mSpinnertext = ((SearchService) mSpinnerService.getSelectedItem()).getId();
+                                                            livetrack = ((SearchService) mSpinnerService.getSelectedItem()).isLivetrack();
+                                                        }
+                                                    }
+                                                } else {
 
                                                     apiGetUsers(uniqueID);
                                                 }
@@ -2143,27 +2140,27 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //
 //                                                }
 //                                            }
-                                                Date currentTime = new Date();
-                                                final SimpleDateFormat sdf = new SimpleDateFormat(
-                                                        "yyyy-MM-dd", Locale.US);
-                                                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                                System.out.println("UTC time: " + sdf.format(currentTime));
-                                                Config.logV("SELECTED &&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                                            Date currentTime = new Date();
+                                            final SimpleDateFormat sdf = new SimpleDateFormat(
+                                                    "yyyy-MM-dd", Locale.US);
+                                            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                            System.out.println("UTC time: " + sdf.format(currentTime));
+                                            Config.logV("SELECTED &&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-                                                //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
+                                            //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime));
 
 //                                            if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 //
 //                                                ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
 //                                            } else {
-                                                if (selectedDateFormat != null) {
+                                            if (selectedDateFormat != null) {
 
-                                                    ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
-                                                } else {
+                                                ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
+                                            } else {
 
-                                                    ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                                                }
+                                                ApiQueueTimeSlot(String.valueOf(locationId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
                                             }
+                                        }
 
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -2697,9 +2694,8 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             queueobj.put("waitlistPhonenumber", phoneNumber);
             if (userSpinnertext != 0) {
                 pjsonobj.put("id", userSpinnertext);
-            }
-            else if(mFrom.equalsIgnoreCase("multiusercheckin") && userSpinnertext!=0){
-                pjsonobj.put("id",userId);
+            } else if (mFrom.equalsIgnoreCase("multiusercheckin") && userSpinnertext != 0) {
+                pjsonobj.put("id", userId);
             }
             if (callingMode != null && callingMode.equalsIgnoreCase("whatsapp")) {
                 virtualService.put("WhatsApp", et_virtualId.getText());
@@ -2756,8 +2752,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             queueobj.putOpt("waitlistingFor", waitlistArray);
             if (userSpinnertext != 0) {
                 queueobj.putOpt("provider", pjsonobj);
-            }
-            else if(mFrom.equalsIgnoreCase("multiusercheckin") && userSpinnertext!=0){
+            } else if (mFrom.equalsIgnoreCase("multiusercheckin") && userSpinnertext != 0) {
                 queueobj.putOpt("provider", pjsonobj);
             }
             if (selectedServiceType != null && selectedServiceType.equalsIgnoreCase("virtualService")) {

@@ -154,7 +154,6 @@ public class ResponseInteceptor implements Interceptor {
 
                         // get header value
 
-
                         String cookie ="" ;
                         List<String> cookiess = response.headers().values("Set-Cookie");
                         StringBuffer Cookie_header = new StringBuffer();

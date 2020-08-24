@@ -92,6 +92,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -2863,6 +2864,22 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     @Override
     public void onMethodCheckinCallback(int locID, String from, String location) {
         ApiCheckInMessage(locID, from, location);
+    }
+
+    @Override
+    public void onUserAppointmentServices(List<SearchService> apptServices, String businessName, ArrayList<SearchDepartmentServices> mSearchDepartmentList) {
+
+        ServiceListAppointmentFragment pfFragment = new ServiceListAppointmentFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("apptList", (Serializable) apptServices);
+        bundle.putString("title", businessName);
+        bundle.putString("from", "individualUsers");
+        bundle.putString("uniqueID", uniqueID);
+        pfFragment.setArguments(bundle);
+        // Store the Fragment in stack
+        transaction.addToBackStack(null);
+        transaction.add(R.id.mainlayout, pfFragment).commit();
     }
 
     @Override

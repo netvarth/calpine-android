@@ -10,6 +10,7 @@ public class SearchDepartment implements Serializable {
     String departmentName;
 
     String businessName;
+    String isSelected = "";
 
     public String getDepartmentStatus() {
         return departmentStatus;
@@ -96,4 +97,12 @@ public class SearchDepartment implements Serializable {
         this.businessName = businessName;
     }
 
+
+    public String getIsSelected() {
+        return isSelected;
+    }
+
+    public void setIsSelected(String isSelected) {
+        this.isSelected = isSelected;
+    }
 }

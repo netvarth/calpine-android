@@ -7,6 +7,7 @@ import com.jaldeeinc.jaldee.response.SearchDonation;
 import com.jaldeeinc.jaldee.response.SearchService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sharmila on 13/9/18.
@@ -26,4 +27,5 @@ public interface SearchLocationAdpterCallback {
     void onMethodCheckinCallback(int locID,String from,String location);
 
 
+    void onUserAppointmentServices(List<SearchService> apptServices, String businessName, ArrayList<SearchDepartmentServices> mSearchDepartmentList);
 }

@@ -116,6 +116,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -2713,6 +2714,18 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                             depResponse = response.body();
                                             if (depResponse.isFilterByDept() && depResponse.getDepartments().size() > 0) {
+
+//                                                if (departmentId != null) {
+//                                                    for (int i = 0; i < depResponse.getDepartments().size(); i++) {
+//                                                        if (departmentId.equals(String.valueOf(depResponse.getDepartments().get(i).getDepartmentId()))) {
+//
+//                                                            depResponse.getDepartments().get(i).setIsSelected("a");
+//                                                        }
+//                                                    }
+//                                                    Collections.sort(depResponse.getDepartments(),
+//                                                            (o1, o2) -> o1.getIsSelected().compareTo(o2.getIsSelected()));
+//                                                }
+
                                                 mSpinnerDepartment.setVisibility(View.VISIBLE);
                                                 txt_choosedepartment.setVisibility(View.VISIBLE);
                                                 ArrayAdapter<SearchDepartment> adapter = new ArrayAdapter<SearchDepartment>(mActivity, android.R.layout.simple_spinner_dropdown_item, depResponse.getDepartments());

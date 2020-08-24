@@ -861,12 +861,12 @@
                                     android:layout_gravity="right"
                                     android:layout_margin="@dimen/default_padding"
                                     android:layout_marginTop="@dimen/default_padding"
-                                    android:background="@drawable/button_gradient_checkin"
+                                    android:background="@color/dark_blue"
                                     android:fontFamily="@font/customfont"
                                     android:gravity="center"
                                     android:text=""
                                     android:textAllCaps="true"
-                                    android:textColor="@color/app_background"
+                                    android:textColor="@color/white"
                                     android:textSize="@dimen/txtsize_subtitle"
                                     android:textStyle="bold" />
                             </LinearLayout>

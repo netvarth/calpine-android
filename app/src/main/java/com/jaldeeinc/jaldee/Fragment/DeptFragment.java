@@ -332,7 +332,7 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     if (response.code() == 200) {
                         ArrayList<SearchDepartmentServices> serviceList = response.body();
                         if (serviceList.size() > 0) {
-                            userSearch.setServices(serviceList.get(0).getServices());
+                            userSearch.setServices(serviceList.get(sIndex).getServices());
                             userSearch.setDepartmentId(serviceList.get(sIndex).getDepartmentId());
                         } else {
                             userSearch.setServices(null);
@@ -345,8 +345,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                         }
                         usersSearchList.add(userSearch);
                         if ((sIndex + 1) < idAppts.size()) {
-                            loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
                             loadUserAppointmentServices(idAppts,sIndex + 1);
+                            loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
                         } else {
                             loadUsersList();
                         }
@@ -358,8 +358,8 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     userSearch.setServices(null);
                     usersSearchList.add(userSearch);
                     if ((sIndex + 1) < idAppts.size()) {
-                        loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
                         loadUserAppointmentServices(idAppts,sIndex + 1);
+                        loadUserServices(idAppts, mSearchScheduleList, mSearchQueueList, mBusinessDataLists, (sIndex + 1));
                     } else {
                         loadUsersList();
                     }

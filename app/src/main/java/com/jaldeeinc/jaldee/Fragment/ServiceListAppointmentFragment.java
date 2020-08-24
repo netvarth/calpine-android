@@ -15,11 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.ServiceListAppointmentAdapter;
+import com.jaldeeinc.jaldee.adapter.UserAppointmentsListAdapter;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.response.SearchAppointmentDepartmentServices;
 import com.jaldeeinc.jaldee.response.SearchDepartment;
+import com.jaldeeinc.jaldee.response.SearchService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,14 +40,17 @@ public class ServiceListAppointmentFragment extends RootFragment {
 
 
     Context mContext;
-    String title,uniqueid;
+    String title, uniqueid;
     ArrayList serviceList;
     ArrayList<SearchAppointmentDepartmentServices> serviceList_Detail;
+    List<SearchService> userAppointmentsServices;
     TextView tv_subtitle;
     RecyclerView mrecycle_service;
     ServiceListAppointmentAdapter mAdapter;
+    UserAppointmentsListAdapter userAppAdapter;
     ArrayList<SearchDepartment> departmentList;
     String from;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,37 +58,40 @@ public class ServiceListAppointmentFragment extends RootFragment {
 
         mContext = getActivity();
         Bundle bundle = this.getArguments();
-        serviceList_Detail=new ArrayList<>();
-        departmentList=new ArrayList<>();
+        serviceList_Detail = new ArrayList<>();
+        departmentList = new ArrayList<>();
         if (bundle != null) {
             title = bundle.getString("title", "");
             from = bundle.getString("from", "");
             if (from.equalsIgnoreCase("searchdetail")) {
-                serviceList_Detail=(ArrayList)getArguments().getSerializable("servicelist");
-                departmentList = (ArrayList)getArguments().getSerializable("departmentlist");
-                Config.logV("Service List-----11111----------"+serviceList_Detail.size());
-            }else{
-                serviceList = (ArrayList)getArguments().getSerializable("servicelist");
-                departmentList = (ArrayList)getArguments().getSerializable("departmentlist");
-                for(int i=0;i<serviceList.size();i++){
+                serviceList_Detail = (ArrayList) getArguments().getSerializable("servicelist");
+                departmentList = (ArrayList) getArguments().getSerializable("departmentlist");
+                Config.logV("Service List-----11111----------" + serviceList_Detail.size());
+            } else if (from.equalsIgnoreCase("individualUsers")) {
+
+                userAppointmentsServices = (ArrayList) getArguments().getSerializable("apptList");
+            } else {
+                serviceList = (ArrayList) getArguments().getSerializable("servicelist");
+                departmentList = (ArrayList) getArguments().getSerializable("departmentlist");
+                for (int i = 0; i < serviceList.size(); i++) {
                     SearchAppointmentDepartmentServices data = new SearchAppointmentDepartmentServices();
                     data.setName(serviceList.get(i).toString());
                     serviceList_Detail.add(data);
                 }
             }
 
-            uniqueid=bundle.getString("uniqueID", "");
+            uniqueid = bundle.getString("uniqueID", "");
         }
-        mrecycle_service=(RecyclerView)row.findViewById(R.id.mrecycle_service) ;
+        mrecycle_service = (RecyclerView) row.findViewById(R.id.mrecycle_service);
 
-        Config.logV("Service List---------------"+serviceList_Detail.size());
+        Config.logV("Service List---------------" + serviceList_Detail.size());
 
         TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         tv_title.setTypeface(tyface1);
 
-        ImageView iBackPress=(ImageView)row.findViewById(R.id.backpress) ;
+        ImageView iBackPress = (ImageView) row.findViewById(R.id.backpress);
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +101,7 @@ public class ServiceListAppointmentFragment extends RootFragment {
         });
 
         tv_title.setText("Services");
-        tv_subtitle=(TextView)row.findViewById(R.id.txttitle) ;
+        tv_subtitle = (TextView) row.findViewById(R.id.txttitle);
         tv_subtitle.setText(title);
         tv_subtitle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +110,7 @@ public class ServiceListAppointmentFragment extends RootFragment {
 
                 SearchDetailViewFragment pfFragment = new SearchDetailViewFragment();
 
-                bundle.putString("uniqueID",uniqueid);
+                bundle.putString("uniqueID", uniqueid);
                 pfFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -113,9 +122,20 @@ public class ServiceListAppointmentFragment extends RootFragment {
         });
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         mrecycle_service.setLayoutManager(mLayoutManager);
-        mAdapter = new ServiceListAppointmentAdapter(serviceList_Detail, mContext,from,title,uniqueid,getActivity(), departmentList);
-        mrecycle_service.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+        if (from.equalsIgnoreCase("individualUsers")) {
+
+            if (userAppointmentsServices != null) {
+                userAppAdapter = new UserAppointmentsListAdapter(userAppointmentsServices, mContext, from, title, uniqueid, getActivity());
+                mrecycle_service.setAdapter(userAppAdapter);
+                userAppAdapter.notifyDataSetChanged();
+            }
+        } else {
+            if (serviceList_Detail != null) {
+                mAdapter = new ServiceListAppointmentAdapter(serviceList_Detail, mContext, from, title, uniqueid, getActivity(), departmentList);
+                mrecycle_service.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            }
+        }
 
         return row;
     }
