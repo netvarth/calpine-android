@@ -119,13 +119,13 @@ public class Register extends AppCompatActivity {
         spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_terms.setText(spannable);
         String text1 = "Are you a ";
-        String text2 = "Provider? ";
+        String text2 = "Service Provider? ";
         Spannable spannable_txt = new SpannableString(text1 + text2);
         spannable_txt.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext1), 0, text1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable_txt.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), text1.length(), text1.length() + text2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv_provider.setText(spannable_txt);
         String text_1 = "Download ";
-        String text_2 = "Jaldee Provider App ";
+        String text_2 = "Jaldee for Business App ";
         //  <font color='#00AEF2'><b>Terms and Conditions
         Spannable spannable_txt1 = new SpannableString(text_1 + text_2);
         spannable_txt1.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.title_consu)), text_1.length(), text_1.length() + text_2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

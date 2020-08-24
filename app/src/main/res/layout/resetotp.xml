@@ -79,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/pls_enterotp"
+                    android:text="OTP has been sent to +91 1234567890"
                     android:textColor="@color/title_grey"
                     android:textSize="@dimen/txtsize_title_small" />
 

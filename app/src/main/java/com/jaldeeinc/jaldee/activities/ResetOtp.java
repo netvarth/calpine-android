@@ -74,7 +74,9 @@ public class ResetOtp extends AppCompatActivity {
         img_indicator.setVisibility(View.GONE);
         txtproceed = (TextView) findViewById(R.id.txtproceed);
 
+        final String loginId = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
 
+       // txtproceed.setText("OTP has been sent to " + loginId);
         Typeface tyface_p = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         txtproceed.setTypeface(tyface_p);
@@ -123,8 +125,11 @@ public class ResetOtp extends AppCompatActivity {
         otpverify.setTypeface(tyface_btn);
 
 
-        String firstWord = "Please enter ";
-        String secondWord = "OTP";
+//        String firstWord = "Please enter ";
+//        String secondWord = "OTP";
+
+        String firstWord = "OTP has been sent to ";
+        String secondWord = loginId;
 
         txt_enterotp = (TextView) findViewById(R.id.txt_enterotp);
         Spannable spannable = new SpannableString(firstWord + secondWord);
@@ -138,7 +143,8 @@ public class ResetOtp extends AppCompatActivity {
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-        txt_enterotp.setText(spannable);
+       // txt_enterotp.setText(spannable);
+        txtproceed.setText(spannable);
 
 
         /*SmsBroadcastReceiver.bindListener(new SmsListener() {

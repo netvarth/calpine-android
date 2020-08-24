@@ -341,6 +341,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
                 iCheckIn.putExtra("virtualservices",virtualServices);
+                if(mQueueList.get(position).getNextAvailableQueue()!=null){
+                iCheckIn.putExtra("getAvail_date",mQueueList.get(position).getNextAvailableQueue().getAvailableDate());}
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -360,6 +362,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
                 iCheckIn.putExtra("virtualservices",virtualServices);
+                if(mQueueList.get(position).getNextAvailableQueue()!=null){
+                    iCheckIn.putExtra("getAvail_date",mQueueList.get(position).getNextAvailableQueue().getAvailableDate());}
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -379,6 +383,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
                 iCheckIn.putExtra("virtualservices",virtualServices);
+                if(mQueueList.get(position).getNextAvailableQueue()!=null){
+                    iCheckIn.putExtra("getAvail_date",mQueueList.get(position).getNextAvailableQueue().getAvailableDate());}
                 mContext.startActivity(iCheckIn);
             }
         });
@@ -398,6 +404,8 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 iCheckIn.putExtra("subsector", subsector);
                 iCheckIn.putExtra("terminology", terminology);
                 iCheckIn.putExtra("virtualservices",virtualServices);
+                if(mQueueList.get(position).getNextAvailableQueue()!=null){
+                    iCheckIn.putExtra("getAvail_date",mQueueList.get(position).getNextAvailableQueue().getAvailableDate());}
                 mContext.startActivity(iCheckIn);
             }
         });
