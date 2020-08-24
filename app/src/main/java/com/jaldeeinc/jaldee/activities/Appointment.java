@@ -257,6 +257,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     static String schdId;
     EditText edt_message;
     boolean virtualServices;
+    String virtualserviceStatus;
 
 
     @Override
@@ -628,6 +629,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 isShowToken = extras.getString("isShowToken", "");
                 getAvail_date = extras.getString("getAvail_date", "");
                 virtualServices = extras.getBoolean("virtualservices");
+                virtualserviceStatus = extras.getString("virtualservice");
 
             }
         }
@@ -2229,7 +2231,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
                             earliestAvailable.setText("Timeslots not available");
                         }
 
@@ -2747,13 +2749,21 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                         }
                                     }
                                 }
-                            } else {
+                            } else if(mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("multiusercheckin")) {
                                 if (!virtualServices) {
                                     if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
                                         LServicesList.remove(mService);
 
                                     }
 
+                                }
+                            }
+                            else{
+                                if(virtualserviceStatus!=null && virtualserviceStatus.equalsIgnoreCase("0")){
+                                    if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
+                                        LServicesList.remove(mService);
+
+                                    }
                                 }
                             }
 
@@ -3201,7 +3211,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
                             earliestAvailable.setText("Time slots not available");
                         }
 
@@ -4333,7 +4343,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdf.format(currentTime));
-
 
         Call<SearchViewDetail> call = apiService.getSearchViewDetail(Integer.parseInt(muniqueID), sdf.format(currentTime));
 

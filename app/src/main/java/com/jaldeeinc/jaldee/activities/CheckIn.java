@@ -233,6 +233,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     File file;
     EditText edt_message;
     boolean virtualServices;
+    String virtualserviceStatus;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -579,6 +580,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 isShowToken = extras.getString("isShowToken", "");
                 getAvail_date = extras.getString("getAvail_date", "");
                 virtualServices = extras.getBoolean("virtualservices");
+                virtualserviceStatus = extras.getString("virtualservice");
 
             }
         }
@@ -1451,7 +1453,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
                         }
                         if (mQueueTimeSlotList.size() > 1) {
                             ic_right.setVisibility(View.VISIBLE);
@@ -1650,13 +1652,21 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     }
                                 }
                             }
-                            else {
+                            else if(mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("multiusercheckin")) {
                                 if (!virtualServices) {
                                     if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
                                         LServicesList.remove(mService);
 
                                     }
 
+                                }
+                            }
+                            else{
+                                if(virtualserviceStatus!=null && virtualserviceStatus.equalsIgnoreCase("0")){
+                                    if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
+                                        LServicesList.remove(mService);
+
+                                    }
                                 }
                             }
                         }
