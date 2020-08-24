@@ -2229,7 +2229,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
                             earliestAvailable.setText("Timeslots not available");
                         }
 
@@ -3201,7 +3201,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                             tv_waittime.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
-                            txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
+                            txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
                             earliestAvailable.setText("Time slots not available");
                         }
 
