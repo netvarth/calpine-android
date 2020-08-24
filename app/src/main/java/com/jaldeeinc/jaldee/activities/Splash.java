@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jaldeeinc.jaldee.R;
@@ -19,10 +22,12 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 public class Splash extends AppCompatActivity {
 
-    private static final int SPLASH_DELAY = 1000;
+    private static final int SPLASH_DELAY = 3000;
 
     private final Handler mHandler = new Handler();
     private final Launcher mLauncher = new Launcher();
+    private ImageView ivLogo;
+    Animation animation;
 
     @Override
     protected void onStart() {
@@ -34,11 +39,14 @@ public class Splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
+        ivLogo = findViewById(R.id.iv_logo);
         TextView txtlogo = findViewById(R.id.txtlogo);
         Typeface tyface = Typeface.createFromAsset(this.getAssets(),
                 "fonts/Montserrat_Bold.otf");
         txtlogo.setTypeface(tyface);
 
+        animation = AnimationUtils.loadAnimation(Splash.this, R.anim.sample);
+        ivLogo.startAnimation(animation);
         Config.logV("SPLASH @@@@@@@@@@@");
     }
 

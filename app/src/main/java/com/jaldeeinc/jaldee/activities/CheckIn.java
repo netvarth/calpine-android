@@ -793,20 +793,38 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //        } else {
             LcheckinDatepicker.setVisibility(View.VISIBLE);
 
-            Date currentTime = new Date();
-            final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy");
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-            System.out.println("UTC time: " + sdf.format(currentTime));
-            Date added_date = addDays(currentTime, 1);
-            DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-            //to convert Date to String, use format method of SimpleDateFormat class.
-            String strDate = dateFormat.format(added_date);
-            /* txt_date.setText(sdf.format(currentTime));*/
-            txt_date.setText(sdf.format(currentTime));
-            DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-            // selectedDateFormat = selecteddateParse.format(currentTime);
-            selectedDateFormat = selecteddateParse.format(currentTime);
-            UpdateDAte(selectedDateFormat);
+        Date date = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date = format.parse(getAvail_date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+//        Date added_date = subtractDays(date, 1);
+        DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+        //to convert Date to String, use format method of SimpleDateFormat class.
+        String strDate = dateFormat.format(date);
+        txt_date.setText(strDate);
+        DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+        selectedDateFormat = selecteddateParse.format(date);
+        UpdateDAte(selectedDateFormat);
+
+//            Date currentTime = new Date();
+//            final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy");
+//            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+//            System.out.println("UTC time: " + sdf.format(currentTime));
+//            Date added_date = addDays(currentTime, 1);
+//            DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+//            //to convert Date to String, use format method of SimpleDateFormat class.
+//            String strDate = dateFormat.format(added_date);
+//            /* txt_date.setText(sdf.format(currentTime));*/
+//            txt_date.setText(sdf.format(currentTime));
+//            DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+//            // selectedDateFormat = selecteddateParse.format(currentTime);
+//            selectedDateFormat = selecteddateParse.format(currentTime);
+//            UpdateDAte(selectedDateFormat);
        // }
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
