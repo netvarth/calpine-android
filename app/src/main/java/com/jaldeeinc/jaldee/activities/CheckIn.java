@@ -48,7 +48,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.adapter.CouponlistAdapter;
 import com.jaldeeinc.jaldee.adapter.CustomSpinnerAdapter;
@@ -159,7 +158,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static TextView tv_name;
     String mFirstName, mLastName;
     int consumerID;
-    static TextView tv_waittime;
+    static TextView tv_waittime,tvTimeHint;
     static TextView tv_queue;
     static TextView txt_date;
     ImageView img_calender_checkin;
@@ -273,6 +272,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         txtnocheckin = findViewById(R.id.txtnocheckin);
         tv_name = findViewById(R.id.txtname);
         tv_waittime = findViewById(R.id.txt_waittime);
+        tvTimeHint = findViewById(R.id.txt_timeHint);
         txt_date = findViewById(R.id.txt_date);
         img_calender_checkin = findViewById(R.id.calender_checkin);
         LcheckinDatepicker = findViewById(R.id.checkinDatepicker);
@@ -1447,6 +1447,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             Lbottomlayout.setVisibility(View.VISIBLE);
                             tv_queuetime.setVisibility(View.VISIBLE);
                             tv_waittime.setVisibility(View.VISIBLE);
+                            tvTimeHint.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
                             if (mQueueTimeSlotList.get(i).getId() != 0) {
                                 queueId = mQueueTimeSlotList.get(i).getId();
@@ -1458,9 +1459,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             tv_personahead.setText(Config.getPersonsAheadText(mQueueTimeSlotList.get(0).getQueueSize()));
                             if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                 tv_waittime.setVisibility(View.GONE);
+                                tvTimeHint.setVisibility(View.GONE);
                             } else {
                                 tv_waittime.setVisibility(View.VISIBLE);
-                                tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(0)));
+                                tvTimeHint.setVisibility(View.VISIBLE);
+                                getWaitingTime(mQueueTimeSlotList.get(0));
                             }
                         } else {
                             Config.logV("No Checkins-------------------" + mQueueTimeSlotList.size());
@@ -1469,6 +1472,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //                            tv_queuename.setVisibility(View.GONE);
                             tv_queuetime.setVisibility(View.GONE);
                             tv_waittime.setVisibility(View.GONE);
+                            tvTimeHint.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
                             txtnocheckin.setText(Word_Change + " this service is not available at the moment. Please try for a different time or date");
@@ -1502,9 +1506,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     }
                                     if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                         tv_waittime.setVisibility(View.GONE);
+                                        tvTimeHint.setVisibility(View.GONE);
                                     } else {
                                         tv_waittime.setVisibility(View.VISIBLE);
-                                        tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(i)));
+                                        tvTimeHint.setVisibility(View.VISIBLE);
+                                        getWaitingTime(mQueueTimeSlotList.get(i));
                                     }
                                 }
                                 if (i < mQueueTimeSlotList.size()) {
@@ -1544,9 +1550,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                 }
                                 if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                     tv_waittime.setVisibility(View.GONE);
+                                    tvTimeHint.setVisibility(View.GONE);
                                 } else {
                                     tv_waittime.setVisibility(View.VISIBLE);
-                                    tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(i)));
+                                    tvTimeHint.setVisibility(View.VISIBLE);
+                                    getWaitingTime(mQueueTimeSlotList.get(i));
                                 }
                             }
                             if (i >= 0) {
@@ -1582,7 +1590,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         }
     });
 }
-    public static Spannable getWaitingTime(QueueTimeSlotModel queue) {
+    public static void getWaitingTime(QueueTimeSlotModel queue) {
         String firstWord = "";
         String secondWord = "";
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -1622,14 +1630,19 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         }
         else{
             firstWord = "Est wait time";
-            secondWord = "\n" + Config.getTimeinHourMinutes(queue.getQueueWaitingTime());
+            secondWord =  Config.getTimeinHourMinutes(queue.getQueueWaitingTime());
         }
-        Spannable spannable = new SpannableString(firstWord + secondWord);
-        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
-        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannable;
+
+        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(), "fonts/Montserrat_Bold.otf");
+//        Typeface tyface2 = Typeface.createFromAsset(mContext.getAssets(), "fonts/Montserrat_normal.otf");
+        tv_waittime.setText(firstWord);
+        tvTimeHint.setTypeface(tyface1);
+        tvTimeHint.setText(secondWord);
+//        Spannable spannable = new SpannableString(firstWord + secondWord);
+//        Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
+//        spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.violet)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void ApiSearchViewServiceID(final int id) {

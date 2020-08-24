@@ -493,66 +493,70 @@
                                     android:orientation="horizontal"
                                     android:visibility="visible">
 
-                                    <ImageView
-                                        android:visibility="invisible"
-                                        android:layout_width="0dp"
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:layout_weight="0.2"
-                                        android:src="@drawable/icon_left_angle_disabled" />
-
-                                    <LinearLayout
-                                        android:paddingLeft="@dimen/default_padding"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1.5"
-                                        android:orientation="horizontal"
                                         android:paddingTop="@dimen/padding3"
                                         android:paddingBottom="@dimen/padding3">
 
-                                        <TextView
 
-                                            android:gravity="left"
-                                            android:layout_weight="0.5"
-                                            android:text="Person ahead"
-                                            android:id="@+id/txt_personahead"
-                                            android:layout_width="match_parent"
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
+                                            android:layout_marginEnd="@dimen/dimen_5dp"
+                                            android:layout_alignParentStart="true">
+
+                                        <TextView
+                                            android:text="personAhead"
+                                            android:id="@+id/txt_personahead"
+                                            android:layout_width="150dp"
+                                            android:gravity="center"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginEnd="@dimen/dimen_5dp"
                                             android:layout_marginTop="@dimen/padding5"
                                             android:textColor="@color/title_grey"
                                             android:textSize="@dimen/txtsize_hint"
                                             android:visibility="visible" />
 
-                                        <TextView
+                                        </LinearLayout>
 
-                                            android:gravity="left"
-                                            android:layout_weight="0.5"
-                                            android:text="waitTime"
-                                            android:id="@+id/txt_waittime"
-                                            android:layout_width="match_parent"
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginTop="@dimen/padding5"
-                                            android:textColor="@color/title_grey"
-                                            android:textSize="@dimen/txtsize_hint" />
-                                    </LinearLayout>
+                                            android:layout_alignParentEnd="true"
+                                            android:orientation="vertical">
 
-                                    <ImageView
-                                        android:visibility="invisible"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:layout_weight="0.2"
-                                        android:src="@drawable/icon_right_angle_active" />
+
+                                            <TextView
+                                                android:text="waitTime"
+                                                android:id="@+id/txt_waittime"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center"
+                                                android:layout_marginTop="@dimen/padding5"
+                                                android:textColor="@color/title_grey"
+                                                android:textSize="@dimen/txtsize_hint" />
+
+                                            <TextView
+                                                android:text=""
+                                                android:id="@+id/txt_timeHint"
+                                                android:layout_width="150dp"
+                                                android:layout_height="wrap_content"
+                                                android:gravity="center"
+                                                android:textStyle="bold"
+                                                android:textColor="@color/violet"
+                                                android:textSize="@dimen/txtsize_hint" />
+
+
+                                        </LinearLayout>
+
+
+                                    </RelativeLayout>
+
+
                                 </LinearLayout>
 
-
-
-
-
-
                             </LinearLayout>
-
-
 
                             <LinearLayout
                                 android:id="@+id/LservicePrepay"
