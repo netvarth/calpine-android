@@ -664,6 +664,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
         final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
         TextView txtsendmsg = (TextView) dialog.findViewById(R.id.txtsendmsg);
+        txtsendmsg.setText("Do you want to cancel this Appointment?");
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
