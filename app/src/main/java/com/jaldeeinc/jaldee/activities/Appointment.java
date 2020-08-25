@@ -264,6 +264,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String virtualserviceStatus;
     String changedDate = null;
     BottomSheetDialog dialogPayment;
+    LinearLayout llCoupons;
+    TextView tvNoServiceMessage;
 
 
     @Override
@@ -323,6 +325,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         mSpinnerDoctor = findViewById(R.id.spinnerdoctor);
         tv_enterInstructions = findViewById(R.id.txt_enterinstructions);
         et_vitualId = findViewById(R.id.virtual_id);
+        llCoupons = findViewById(R.id.ll_coupouns);
+        tvNoServiceMessage = findViewById(R.id.tv_noServiceMessage);
         // to Empty previous selected date in pref's
         SharedPreference.getInstance(Appointment.this).setValue("selectedDate", "");
 
@@ -3409,8 +3413,14 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                             if (timeslotsFormat.size() > 0) {
                                 earliestAvailable.setText("Earliest available\n" + timeslotsFormat.get(0));
+                                llCoupons.setVisibility(View.VISIBLE);
+                                btn_checkin.setVisibility(View.VISIBLE);
+                                tvNoServiceMessage.setVisibility(View.GONE);
                             } else {
                                 earliestAvailable.setText("Timeslots not available");
+                                llCoupons.setVisibility(View.GONE);
+                                btn_checkin.setVisibility(View.GONE);
+                                tvNoServiceMessage.setVisibility(View.VISIBLE);
                             }
 
 
