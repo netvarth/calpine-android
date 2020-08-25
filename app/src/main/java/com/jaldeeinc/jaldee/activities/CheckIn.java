@@ -803,14 +803,20 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             e.printStackTrace();
         }
 
-//        Date added_date = subtractDays(date, 1);
-        DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-        //to convert Date to String, use format method of SimpleDateFormat class.
-        String strDate = dateFormat.format(date);
-        txt_date.setText(strDate);
-        DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-        selectedDateFormat = selecteddateParse.format(date);
-        UpdateDAte(selectedDateFormat);
+        try {
+            //        Date added_date = subtractDays(date, 1);
+            DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+            //to convert Date to String, use format method of SimpleDateFormat class.
+            String strDate = dateFormat.format(date);
+            txt_date.setText(strDate);
+            DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+            selectedDateFormat = selecteddateParse.format(date);
+            UpdateDAte(selectedDateFormat);
+
+        }
+        catch (Exception e){
+
+        }
 
 //            Date currentTime = new Date();
 //            final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy");
@@ -2661,6 +2667,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 alertDialog.show();
             }
             else {
+
                 Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
                 dialogPayment.show();
             }
