@@ -4539,7 +4539,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
-            if (SharedPreference.getInstance(Appointment.this).getBoolanValue("prePayment", false)) {
+            if (response.contains("Payment failed")) {
                 AlertDialog alertDialog = new AlertDialog.Builder(Appointment.this).create();
                 alertDialog.setTitle("Payment Failed");
                 alertDialog.setMessage("Unable to process your request.Please try again after some time");

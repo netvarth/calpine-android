@@ -2641,7 +2641,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
 
-            if (SharedPreference.getInstance(CheckIn.this).getBoolanValue("prePayment",false)){
+            if (response.contains("Payment failed")){
                 AlertDialog alertDialog = new AlertDialog.Builder(CheckIn.this).create();
                 alertDialog.setTitle("Payment Failed");
                 alertDialog.setMessage("Unable to process your request.Please try again after some time");
