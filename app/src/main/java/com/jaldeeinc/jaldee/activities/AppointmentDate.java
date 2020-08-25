@@ -1,6 +1,7 @@
 package com.jaldeeinc.jaldee.activities;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.response.AppointmentSchedule;
 import com.jaldeeinc.jaldee.response.ScheduleId;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,24 +41,24 @@ import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
  */
 
 public class AppointmentDate<mAdapter> extends AppCompatActivity {
-     ArrayList timeslot = new ArrayList();
-     ArrayList timeslotFormat = new ArrayList();
-     RecyclerView recycle_timeslots;
-     TimeSlotsAdapter sAdapter;
-     TextView  tv_noavail_slot;
-     CalendarView cv;
-     Button btn_confirm;
-     String selectedDate;
-     TextView tv_title;
-     static int serviceId;
-     static int mSpinnertext;
-     static String accountId;
-     static String schdId;
+    ArrayList timeslot = new ArrayList();
+    ArrayList timeslotFormat = new ArrayList();
+    RecyclerView recycle_timeslots;
+    TimeSlotsAdapter sAdapter;
+    TextView tv_noavail_slot;
+    CalendarView cv;
+    Button btn_confirm;
+    String selectedDate;
+    TextView tv_title;
+    static int serviceId;
+    static int mSpinnertext;
+    static String accountId;
+    static String schdId;
     ArrayList<AppointmentSchedule> schedResponse = new ArrayList<>();
-    static ArrayList<String> timeslots= new ArrayList<>();
-    static ArrayList<String> timeslotsFormat= new ArrayList<>();
-    static ArrayList<String> timeslotsMeridian= new ArrayList<>();
-    Date last_date =new Date();
+    static ArrayList<String> timeslots = new ArrayList<>();
+    static ArrayList<String> timeslotsFormat = new ArrayList<>();
+    static ArrayList<String> timeslotsMeridian = new ArrayList<>();
+    Date last_date = new Date();
     static String selectDate;
     static int i = 0;
     static TextView tv_queue;
@@ -66,8 +68,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
     static TextView txtnocheckin;
     String id = " ";
     static ImageView ic_left, ic_right;
-
-
+    String changedDate = "";
 
 
     @Override
@@ -80,7 +81,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
         btn_confirm = (Button) findViewById(R.id.btn_confirm);
         tv_title = findViewById(R.id.toolbartitle);
         tv_title.setText("Time Slots");
-        tv_noavail_slot =findViewById(R.id.noavailableslot);
+        tv_noavail_slot = findViewById(R.id.noavailableslot);
         tv_queue = findViewById(R.id.txt_queue);
         tv_queuetime = findViewById(R.id.txt_queuetime);
         queuelayout = findViewById(R.id.queuelayout);
@@ -116,44 +117,44 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
         try {
             cv.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(selectDate).getTime(), true, true);
             ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, accountId);
-           // ApiScheduleId(schdId, selectDate, accountId);
+            // ApiScheduleId(schdId, selectDate, accountId);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if(!timeslot.isEmpty()){
+        if (!timeslot.isEmpty()) {
             tv_noavail_slot.setVisibility(View.GONE);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
-        recycle_timeslots.setLayoutManager(mLayoutManager);
-        sAdapter = new TimeSlotsAdapter(timeslotFormat,timeslot);
-        recycle_timeslots.setAdapter(sAdapter);
-        sAdapter.notifyDataSetChanged();
-        } else{
+            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 3);
+            recycle_timeslots.setLayoutManager(mLayoutManager);
+            sAdapter = new TimeSlotsAdapter(timeslotFormat, timeslot);
+            recycle_timeslots.setAdapter(sAdapter);
+            sAdapter.notifyDataSetChanged();
+        } else {
             tv_noavail_slot.setVisibility(View.VISIBLE);
-            Appointment.timeslotdate("Time Slots not available","");
+            Appointment.timeslotdate("Time Slots not available", "");
             Toast.makeText(this, "Time Slots not available", Toast.LENGTH_SHORT).show();
 
         }
 
 
-
         cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override
-            public void onSelectedDayChange(CalendarView arg0, int year, int month ,
+            public void onSelectedDayChange(CalendarView arg0, int year, int month,
                                             int date) {
-                month= month + 1;
-                Toast.makeText(getApplicationContext(),date+ "/"+ month  +"/"+year,Toast.LENGTH_LONG).show();
-                selectedDate = year+ "-"+ month  +"-"+date;
+                month = month + 1;
+                Toast.makeText(getApplicationContext(), date + "/" + month + "/" + year, Toast.LENGTH_LONG).show();
+                selectedDate = year + "-" + month + "-" + date;
                 SimpleDateFormat sdf = new SimpleDateFormat(
                         "yyyy-MM-dd");
 
                 try {
-                     last_date = new SimpleDateFormat("yyyy-MM-dd").parse(selectedDate);
+                    last_date = new SimpleDateFormat("yyyy-MM-dd").parse(selectedDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(last_date), accountId);
-                Appointment.timeslotdates(sdf.format(last_date));
+                changedDate = sdf.format(last_date);
+                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), changedDate, accountId);
+                Appointment.timeslotdates(changedDate);
             }
         });
 
@@ -165,234 +166,235 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 
     }
 
-//    @Override
+    //    @Override
 //    public void onBackPressed() {
 //        Log.d("CDA", "onBackPressed Called");
 //        Intent iAppointment = new Intent(this,Appointment.class);
 //        iAppointment.putExtra("selectedDate",selectedDate);
 //        startActivity(iAppointment);
 //    }
-private void ApiSchedule(String serviceId, String spinnerText, final String mDate, final String accountIDs) {
+    private void ApiSchedule(String serviceId, String spinnerText, final String mDate, final String accountIDs) {
 
 
-    ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
+        ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
 
 
 //    final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-  //  mDialog.show();
+        //  mDialog.show();
 
 
-    Call<ArrayList<AppointmentSchedule>> call = apiService.getAppointmentSchedule(serviceId, spinnerText, mDate, accountIDs);
+        Call<ArrayList<AppointmentSchedule>> call = apiService.getAppointmentSchedule(serviceId, spinnerText, mDate, accountIDs);
 
-    call.enqueue(new Callback<ArrayList<AppointmentSchedule>>() {
-        @Override
-        public void onResponse(Call<ArrayList<AppointmentSchedule>> call, Response<ArrayList<AppointmentSchedule>> response) {
+        call.enqueue(new Callback<ArrayList<AppointmentSchedule>>() {
+            @Override
+            public void onResponse(Call<ArrayList<AppointmentSchedule>> call, Response<ArrayList<AppointmentSchedule>> response) {
 
-            try {
+                try {
 
 //                if (mDialog.isShowing())
 //                    Config.closeDialog(getParent(), mDialog);
 
 
-                if (response.code() == 200) {
-                    schedResponse = response.body();
-                  if(schedResponse.size()!=0) {
+                    if (response.code() == 200) {
+                        schedResponse = response.body();
+                        SharedPreference.getInstance(AppointmentDate.this).setValue("selectedDate",changedDate);
 
-                      if (schedResponse.size() > 0) {
-                          i = 0;
-                      }
+                        if (schedResponse.size() != 0) {
 
-                      if (schedResponse.size() == 1) {
-                          tv_queue.setText("Time window");
-                      } else {
-                          tv_queue.setText("Choose the time window");
-                      }
+                            if (schedResponse.size() > 0) {
+                                i = 0;
+                            }
 
-                      if (schedResponse.size() == 1) {
-                          tv_queue.setText("Time window");
-                      } else {
-                          tv_queue.setText("Choose the time window");
-                      }
+                            if (schedResponse.size() == 1) {
+                                tv_queue.setText("Time window");
+                            } else {
+                                tv_queue.setText("Choose the time window");
+                            }
 
-                      if (schedResponse.size() > 0) {
+                            if (schedResponse.size() == 1) {
+                                tv_queue.setText("Time window");
+                            } else {
+                                tv_queue.setText("Choose the time window");
+                            }
+
+                            if (schedResponse.size() > 0) {
 
 //                            tv_queuename.setVisibility(View.GONE);
-                          tv_queuetime.setVisibility(View.VISIBLE);
-                          tv_queue.setVisibility(View.VISIBLE);
-                          queuelayout.setVisibility(View.VISIBLE);
-                          //  tv_waittime.setVisibility(View.VISIBLE);
-                          //   txtnocheckin.setVisibility(View.GONE);
-                          if (schedResponse.get(i).getId() != 0) {
-                              id = String.valueOf(schedResponse.get(i).getId());
-                          }
+                                tv_queuetime.setVisibility(View.VISIBLE);
+                                tv_queue.setVisibility(View.VISIBLE);
+                                queuelayout.setVisibility(View.VISIBLE);
+                                //  tv_waittime.setVisibility(View.VISIBLE);
+                                //   txtnocheckin.setVisibility(View.GONE);
+                                if (schedResponse.get(i).getId() != 0) {
+                                    id = String.valueOf(schedResponse.get(i).getId());
+                                }
 
 
 //                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
-                          tv_queuetime.setText(schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).geteTime());
+                                tv_queuetime.setText(schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
-                          if (schedResponse.get(i).getId() != 0) {
-                              id = String.valueOf(schedResponse.get(i).getId());
-                              ApiScheduleId(id, mDate, accountIDs);
-                              Appointment.schedid(id);
-                          }
+                                if (schedResponse.get(i).getId() != 0) {
+                                    id = String.valueOf(schedResponse.get(i).getId());
+                                    ApiScheduleId(id, mDate, accountIDs);
+                                    Appointment.schedid(id);
+                                }
 
 
-                      } else {
+                            } else {
 
 
-                          tv_queue.setVisibility(View.GONE);
-                          queuelayout.setVisibility(View.GONE);
+                                tv_queue.setVisibility(View.GONE);
+                                queuelayout.setVisibility(View.GONE);
 //                            tv_queuename.setVisibility(View.GONE);
-                          tv_queuetime.setVisibility(View.GONE);
-                          //  tv_waittime.setVisibility(View.GONE);
-                          //   txtnocheckin.setVisibility(View.VISIBLE);
-                          //    txtnocheckin.setText("Appointment "+ " this service is not available at the moment. Please try for a different time or date");
-                      }
+                                tv_queuetime.setVisibility(View.GONE);
+                                //  tv_waittime.setVisibility(View.GONE);
+                                //   txtnocheckin.setVisibility(View.VISIBLE);
+                                //    txtnocheckin.setText("Appointment "+ " this service is not available at the moment. Please try for a different time or date");
+                            }
 
 
-                      if (schedResponse.size() > 1) {
+                            if (schedResponse.size() > 1) {
 
-                          ic_right.setVisibility(View.VISIBLE);
-                          ic_left.setVisibility(View.VISIBLE);
-                          ic_right.setImageResource(R.drawable.icon_right_angle_active);
-                          ic_right.setEnabled(true);
-
-
-                      } else {
-                          ic_right.setVisibility(View.INVISIBLE);
-                          ic_left.setVisibility(View.INVISIBLE);
-                      }
-
-                      if (i > 0) {
-                          ic_left.setEnabled(true);
-                          ic_left.setImageResource(R.drawable.icon_left_angle_active);
-                      } else {
-                          ic_left.setEnabled(false);
-                          ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
-                      }
+                                ic_right.setVisibility(View.VISIBLE);
+                                ic_left.setVisibility(View.VISIBLE);
+                                ic_right.setImageResource(R.drawable.icon_right_angle_active);
+                                ic_right.setEnabled(true);
 
 
-                      ic_left.setOnClickListener(new View.OnClickListener() {
-                          @Override
-                          public void onClick(View v) {
+                            } else {
+                                ic_right.setVisibility(View.INVISIBLE);
+                                ic_left.setVisibility(View.INVISIBLE);
+                            }
 
-                              i--;
-                              Config.logV("Left Click------------------**" + i);
-                              if (i >= 0) {
-
-//                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
-                                  tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
-
-
-                                  if (schedResponse.get(i).getId() != 0) {
-                                      id = String.valueOf(schedResponse.get(i).getId());
-                                      ApiScheduleId(id, mDate, accountIDs);
-                                      Appointment.schedid(id);
-
-                                  }
-
-                              }
+                            if (i > 0) {
+                                ic_left.setEnabled(true);
+                                ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                            } else {
+                                ic_left.setEnabled(false);
+                                ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                            }
 
 
-                              if (i < schedResponse.size()) {
-                                  ic_right.setEnabled(true);
-                                  ic_right.setImageResource(R.drawable.icon_right_angle_active);
-                              } else {
-                                  ic_right.setEnabled(false);
-                                  ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
-                              }
+                            ic_left.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                              if (i <= 0) {
-                                  ic_left.setEnabled(false);
-                                  ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
-                              } else {
-
-                                  ic_left.setEnabled(true);
-                                  ic_left.setImageResource(R.drawable.icon_left_angle_active);
-                              }
-
-                          }
-                      });
-
-                      ic_right.setOnClickListener(new View.OnClickListener() {
-                          @Override
-                          public void onClick(View v) {
-
-                              if (i < 0) {
-                                  i = 0;
-                              }
-                              i++;
-                              Config.logV("Right Click----1111--------------" + i);
-                              if (i < schedResponse.size()) {
+                                    i--;
+                                    Config.logV("Left Click------------------**" + i);
+                                    if (i >= 0) {
 
 //                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
-                                  tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
+                                        tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
-                                  if (schedResponse.get(i).getId() != 0) {
-                                      id = String.valueOf(schedResponse.get(i).getId());
-                                      ApiScheduleId(id, mDate, accountIDs);
-                                      Appointment.schedid(id);
+                                        if (schedResponse.get(i).getId() != 0) {
+                                            id = String.valueOf(schedResponse.get(i).getId());
+                                            ApiScheduleId(id, mDate, accountIDs);
+                                            Appointment.schedid(id);
 
-                                  }
+                                        }
 
-                              }
-
-                              if (i >= 0) {
-                                  ic_left.setEnabled(true);
-                                  ic_left.setImageResource(R.drawable.icon_left_angle_active);
-                              } else {
-                                  ic_left.setEnabled(false);
-                                  ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
-                              }
+                                    }
 
 
-                              if (i == schedResponse.size() - 1) {
+                                    if (i < schedResponse.size()) {
+                                        ic_right.setEnabled(true);
+                                        ic_right.setImageResource(R.drawable.icon_right_angle_active);
+                                    } else {
+                                        ic_right.setEnabled(false);
+                                        ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                                    }
 
-                                  ic_right.setEnabled(false);
-                                  ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
-                              } else {
-                                  ic_right.setEnabled(true);
-                                  ic_right.setImageResource(R.drawable.icon_right_angle_active);
-                              }
+                                    if (i <= 0) {
+                                        ic_left.setEnabled(false);
+                                        ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                                    } else {
 
-                          }
-                      });
+                                        ic_left.setEnabled(true);
+                                        ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                                    }
 
-                  }
-                  else{
-                      tv_queuetime.setVisibility(View.GONE);
-                      tv_queue.setVisibility(View.GONE);
-                      queuelayout.setVisibility(View.GONE);
-                      tv_noavail_slot.setVisibility(View.VISIBLE);
-                      recycle_timeslots.setAlpha(0);
-                      Toast.makeText(AppointmentDate.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
-                      Appointment.schedid(String.valueOf(response.body().size()));
-                  }
+                                }
+                            });
+
+                            ic_right.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    if (i < 0) {
+                                        i = 0;
+                                    }
+                                    i++;
+                                    Config.logV("Right Click----1111--------------" + i);
+                                    if (i < schedResponse.size()) {
+
+//                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
+                                        tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
+
+
+                                        if (schedResponse.get(i).getId() != 0) {
+                                            id = String.valueOf(schedResponse.get(i).getId());
+                                            ApiScheduleId(id, mDate, accountIDs);
+                                            Appointment.schedid(id);
+
+                                        }
+
+                                    }
+
+                                    if (i >= 0) {
+                                        ic_left.setEnabled(true);
+                                        ic_left.setImageResource(R.drawable.icon_left_angle_active);
+                                    } else {
+                                        ic_left.setEnabled(false);
+                                        ic_left.setImageResource(R.drawable.icon_left_angle_disabled);
+                                    }
+
+
+                                    if (i == schedResponse.size() - 1) {
+
+                                        ic_right.setEnabled(false);
+                                        ic_right.setImageResource(R.drawable.icon_right_angle_disabled);
+                                    } else {
+                                        ic_right.setEnabled(true);
+                                        ic_right.setImageResource(R.drawable.icon_right_angle_active);
+                                    }
+
+                                }
+                            });
+
+                        } else {
+                            tv_queuetime.setVisibility(View.GONE);
+                            tv_queue.setVisibility(View.GONE);
+                            queuelayout.setVisibility(View.GONE);
+                            tv_noavail_slot.setVisibility(View.VISIBLE);
+                            recycle_timeslots.setAlpha(0);
+                            Toast.makeText(AppointmentDate.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
+                            Appointment.schedid(String.valueOf(response.body().size()));
+                        }
 
                     }
 
 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
-        }
-
-        @Override
-        public void onFailure(Call<ArrayList<AppointmentSchedule>> call, Throwable t) {
-            // Log error here since request failed
-            Config.logV("Fail---------------" + t.toString());
+            @Override
+            public void onFailure(Call<ArrayList<AppointmentSchedule>> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
 //            if (mDialog.isShowing())
 //                Config.closeDialog(getParent(), mDialog);
 
-        }
-    });
+            }
+        });
 
 
-}
+    }
+
     private void ApiScheduleId(String id, final String mDate, final String accountIDs) {
 
 
@@ -419,8 +421,8 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                         timeslots.clear();
                         timeslotsFormat.clear();
                         timeslotsMeridian.clear();
-                        if(response.body().getAvailableSlots()!=null){
-                        int availableslots = response.body().getAvailableSlots().size();
+                        if (response.body().getAvailableSlots() != null) {
+                            int availableslots = response.body().getAvailableSlots().size();
 
                             for (int i = 0; i < availableslots; i++) {
                                 if (response.body().getAvailableSlots().get(i).getActive().equalsIgnoreCase("true") && !response.body().getAvailableSlots().get(i).getNoOfAvailbleSlots().equalsIgnoreCase("0")) {
@@ -429,7 +431,7 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
 
 
                             }
-                            for(int j = 0;j<timeslots.size();j++){
+                            for (int j = 0; j < timeslots.size(); j++) {
                                 timeslotsMeridian.add(Config.convert12(timeslots.get(j)));
                             }
                             SimpleDateFormat code12Hours = new SimpleDateFormat("hh:mm"); // 12 hour format
@@ -440,7 +442,7 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                             String results;
 
 
-                            for (int i = 0;i<timeslots.size();i++) {
+                            for (int i = 0; i < timeslots.size(); i++) {
 
                                 try {
                                     dateCode12 = code12Hours.parse(timeslots.get(i)); // 12 hour
@@ -454,14 +456,14 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                             }
 
 
-                            if(timeslots.size()==0){
+                            if (timeslots.size() == 0) {
                                 tv_noavail_slot.setVisibility(View.VISIBLE);
+                            } else {
+                                tv_noavail_slot.setVisibility(View.GONE);
                             }
-                            else{
-                            tv_noavail_slot.setVisibility(View.GONE);}
                             RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
                             recycle_timeslots.setLayoutManager(mLayoutManager);
-                            sAdapter = new TimeSlotsAdapter(timeslotsFormat,timeslots);
+                            sAdapter = new TimeSlotsAdapter(timeslotsFormat, timeslots);
                             recycle_timeslots.setAdapter(sAdapter);
                             sAdapter.notifyDataSetChanged();
                             recycle_timeslots.setAlpha(1);
@@ -470,15 +472,12 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                             }
 
 
-
-                        }
-                        else{
+                        } else {
                             tv_noavail_slot.setVisibility(View.VISIBLE);
                             recycle_timeslots.setAlpha(0);
                             Toast.makeText(AppointmentDate.this, "Appointment for this service is not available at the moment. Please try for a different time or date", Toast.LENGTH_SHORT).show();
                         }
                     }
-
 
 
                 } catch (Exception e) {
@@ -499,11 +498,12 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
 
 
     }
+
     public static void timeslot(String timeSlot) {
-        if(timeSlot.equalsIgnoreCase("") && timeslots.size()!=0){
+        if (timeSlot.equalsIgnoreCase("") && timeslots.size() != 0) {
             earliestAvailable.setText("Timeslot not picked");
         }
     }
 
 
-    }
+}

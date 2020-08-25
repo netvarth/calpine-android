@@ -169,7 +169,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static TextView tv_name;
     String mFirstName, mLastName;
     int consumerID;
-    static TextView tv_waittime;
+    static TextView tv_waittime,tvTimeHint;
     static TextView tv_queue;
     static TextView txt_date;
     ImageView img_calender_checkin;
@@ -288,6 +288,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         txtnocheckin = findViewById(R.id.txtnocheckin);
         tv_name = findViewById(R.id.txtname);
         tv_waittime = findViewById(R.id.txt_waittime);
+        tvTimeHint = findViewById(R.id.txt_timeHint);
         txt_date = findViewById(R.id.txt_date);
         img_calender_checkin = findViewById(R.id.calender_checkin);
         LcheckinDatepicker = findViewById(R.id.checkinDatepicker);
@@ -1057,26 +1058,27 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         });
 
 
-//        if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
-//            LcheckinDatepicker.setVisibility(View.GONE);
-//        } else {
         LcheckinDatepicker.setVisibility(View.VISIBLE);
 
-        Date currentTime = new Date();
-        final SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy");
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        System.out.println("UTC time: " + sdf.format(currentTime));
-        Date added_date = addDays(currentTime, 1);
+        Date date = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date = format.parse(getAvail_date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+//        Date added_date = subtractDays(date, 1);
         DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
         //to convert Date to String, use format method of SimpleDateFormat class.
-        String strDate = dateFormat.format(added_date);
-        /* txt_date.setText(sdf.format(currentTime));*/
-        txt_date.setText(sdf.format(currentTime));
+        String strDate = dateFormat.format(date);
+        txt_date.setText(strDate);
         DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-        // selectedDateFormat = selecteddateParse.format(currentTime);
-        selectedDateFormat = selecteddateParse.format(currentTime);
+        selectedDateFormat = selecteddateParse.format(date);
         UpdateDAte(selectedDateFormat);
-        // }
+
+
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1706,6 +1708,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             Lbottomlayout.setVisibility(View.VISIBLE);
                             tv_queuetime.setVisibility(View.VISIBLE);
                             tv_waittime.setVisibility(View.VISIBLE);
+                            tvTimeHint.setVisibility(View.VISIBLE);
                             txtnocheckin.setVisibility(View.GONE);
                             if (mQueueTimeSlotList.get(i).getId() != 0) {
                                 queueId = mQueueTimeSlotList.get(i).getId();
@@ -1717,8 +1720,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             tv_personahead.setText(Config.getPersonsAheadText(mQueueTimeSlotList.get(0).getQueueSize()));
                             if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(0).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                 tv_waittime.setVisibility(View.GONE);
+                                tvTimeHint.setVisibility(View.GONE);
+
                             } else {
                                 tv_waittime.setVisibility(View.VISIBLE);
+                                tvTimeHint.setVisibility(View.VISIBLE);
                                 tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(0)));
                             }
                         } else {
@@ -1728,6 +1734,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 //                            tv_queuename.setVisibility(View.GONE);
                             tv_queuetime.setVisibility(View.GONE);
                             tv_waittime.setVisibility(View.GONE);
+                            tvTimeHint.setVisibility(View.GONE);
                             Lbottomlayout.setVisibility(View.GONE);
                             txtnocheckin.setVisibility(View.VISIBLE);
                             txtnocheckin.setText(Word_Change + " for this service is not available at the moment. Please try for a different time or date");
@@ -1761,8 +1768,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     }
                                     if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                         tv_waittime.setVisibility(View.GONE);
+                                        tvTimeHint.setVisibility(View.GONE);
+
                                     } else {
                                         tv_waittime.setVisibility(View.VISIBLE);
+                                        tvTimeHint.setVisibility(View.VISIBLE);
                                         tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(i)));
                                     }
                                 }
@@ -1803,8 +1813,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     }
                                     if (isShowToken.equalsIgnoreCase("true") && mQueueTimeSlotList.get(i).getCalculationMode().equalsIgnoreCase("NoCalc")) {
                                         tv_waittime.setVisibility(View.GONE);
+                                        tvTimeHint.setVisibility(View.GONE);
                                     } else {
                                         tv_waittime.setVisibility(View.VISIBLE);
+                                        tvTimeHint.setVisibility(View.VISIBLE);
                                         tv_waittime.setText(getWaitingTime(mQueueTimeSlotList.get(i)));
                                     }
                                 }
