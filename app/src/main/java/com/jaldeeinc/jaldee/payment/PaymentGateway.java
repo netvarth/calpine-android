@@ -9,11 +9,15 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Appointment;
+import com.jaldeeinc.jaldee.activities.CheckIn;
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.model.RazorpayModel;
 import com.jaldeeinc.jaldee.response.CheckSumModel;
+import com.jaldeeinc.jaldee.utils.SharedPreference;
 import com.razorpay.Checkout;
 
 import org.json.JSONException;
@@ -48,6 +52,7 @@ public class PaymentGateway {
         mDialog.show();
 
         //  String uniqueID = UUID.randomUUID().toString();
+        SharedPreference.getInstance(mCOntext).setValue("prePayment",false);
         JSONObject jsonObj = new JSONObject();
         try {
 
@@ -84,6 +89,14 @@ public class PaymentGateway {
 
                         CheckSumModel response_data = response.body();
                         response_data.setAmount(Config.getAmountinTwoDecimalPoints(Double.parseDouble(response_data.getAmount())));
+                        if (jsonObj.get("purpose").equals(Constants.PURPOSE_PREPAYMENT)){
+                            response_data.setRetry(false);
+                            SharedPreference.getInstance(mCOntext).setValue("prePayment",true);
+                        }
+                        else {
+                            response_data.setRetry(true);
+                        }
+
 
                         if (from.equalsIgnoreCase("checkin")) {
 

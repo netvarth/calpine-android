@@ -2640,8 +2640,28 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
-//            Log.i("here.....", new Gson().toJson(paymentData));
-            Toast.makeText(this.mContext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
+
+            if (SharedPreference.getInstance(CheckIn.this).getBoolanValue("prePayment",false)){
+                AlertDialog alertDialog = new AlertDialog.Builder(CheckIn.this).create();
+                alertDialog.setTitle("Payment Failed");
+                alertDialog.setMessage("Unable to process your request.Please try again after some time");
+                alertDialog.setCancelable(false);
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                                Intent homeIntent = new Intent(CheckIn.this,Home.class);
+                                startActivity(homeIntent);
+                                finish();
+
+                            }
+                        });
+                alertDialog.show();
+            }
+            else {
+                Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
+            }
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }

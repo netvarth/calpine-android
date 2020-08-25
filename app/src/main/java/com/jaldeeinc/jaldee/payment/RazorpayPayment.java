@@ -51,6 +51,7 @@ public class RazorpayPayment{
 //            options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
             options.put("currency", "INR");
             options.put("amount", order.getAmount());
+            options.put("retry",order.isRetry());
             options.put("order_id", order.getOrderId());
 //            options.put("key", order.getRazorpayId());
             JSONObject preFill = new JSONObject();
