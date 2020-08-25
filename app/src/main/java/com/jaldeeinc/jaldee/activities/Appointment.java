@@ -263,6 +263,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     boolean virtualServices;
     String virtualserviceStatus;
     String changedDate = null;
+    BottomSheetDialog dialogPayment;
 
 
     @Override
@@ -3924,9 +3925,9 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
                             } else {
                                 try {
-                                    final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
-                                    dialog.setContentView(R.layout.prepayment);
-                                    dialog.show();
+                                    dialogPayment = new BottomSheetDialog(mContext);
+                                    dialogPayment.setContentView(R.layout.prepayment);
+                                    dialogPayment.show();
 
 
                                     Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
@@ -3961,10 +3962,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                                             Config.logV("Account ID --------------" + modifyAccountID);
                                             new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-                                            dialog.dismiss();
+                                            dialogPayment.dismiss();
                                             //  txt_message ="Please find the attachment from Consumer with this message";
                                             if (imagePathList.size() > 0) {
-                                                ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);
+                                                ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                                             }
                                         }
                                     });
@@ -3978,11 +3979,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                             PaytmPayment payment = new PaytmPayment(mContext);
                                             payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
                                             //payment.generateCheckSum(sAmountPay);
-                                            dialog.dismiss();
+                                            dialogPayment.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
                                             //   txt_message ="Please find the attachment from Consumer with this message";
                                             if (imagePathList.size() > 0) {
-                                                ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);
+                                                ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                                             }
                                         }
                                     });
@@ -3995,7 +3996,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                         } else {
                             //  txt_message ="Please find the attachment from Consumer with this message";
                             if (imagePathList.size() > 0) {
-                                ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialog);
+                                ApiCommunicateAppointment(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                             }
                             Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
                             finish();
@@ -4558,6 +4559,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 alertDialog.show();
             } else {
                 Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
+                dialogPayment.show();
             }
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
