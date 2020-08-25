@@ -193,12 +193,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     static int i = 0;
     static ImageView ic_cal_minus;
     ImageView ic_cal_add;
-    Button btn_checkin;
+    static Button btn_checkin;
     static int queueId = 0;
     EditText couponEdit, phoneNumberValue;
     Button applycouponbtn;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
-    TextView coupon_link;
+    static  TextView coupon_link;
     String couponEntered;
     TextView mtermsandCond;
     TextView mtxtTermsandCondition;
@@ -264,8 +264,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String virtualserviceStatus;
     String changedDate = null;
     BottomSheetDialog dialogPayment;
-    LinearLayout llCoupons;
-    TextView tvNoServiceMessage;
+    static LinearLayout llCoupons;
+    static TextView tvNoServiceMessage;
 
 
     @Override
@@ -3864,10 +3864,18 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 waitobj.put("lastName", mLastName);
 
                 if (earliestAvailable.getText().toString().contains("Earliest available")) {
+
                     if (timeslots.size() > 0) {
                         waitobj.put("apptTime", timeslots.get(0));
                     }
-                } else {
+                }
+                else if (dateTime != null && dateTime.trim().length() == 0){
+
+                    Toast.makeText(Appointment.this,"Please select time slot",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+
                     waitobj.put("apptTime", dateTime);
                 }
             }

@@ -32,7 +32,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.jaldeeinc.jaldee.activities.Appointment.btn_checkin;
+import static com.jaldeeinc.jaldee.activities.Appointment.coupon_link;
+import static com.jaldeeinc.jaldee.activities.Appointment.dateTime;
 import static com.jaldeeinc.jaldee.activities.Appointment.earliestAvailable;
+import static com.jaldeeinc.jaldee.activities.Appointment.llCoupons;
+import static com.jaldeeinc.jaldee.activities.Appointment.tvNoServiceMessage;
 import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
 
 /**
@@ -505,9 +510,18 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
 
     }
     public static void timeslot(String timeSlot) {
+
         if(timeSlot.equalsIgnoreCase("") && timeslots.size()!=0){
             earliestAvailable.setText("Timeslot not picked");
+            dateTime = "";
+//            llCoupons.setVisibility(View.GONE);
+//            btn_checkin.setVisibility(View.GONE);
         }
+//        else {
+//            coupon_link.setVisibility(View.VISIBLE);
+//            llCoupons.setVisibility(View.VISIBLE);
+//            btn_checkin.setVisibility(View.VISIBLE);
+//        }
     }
 
 
