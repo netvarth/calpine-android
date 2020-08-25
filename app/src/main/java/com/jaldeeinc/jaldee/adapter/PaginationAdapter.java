@@ -590,7 +590,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.tv_count.setVisibility(View.VISIBLE);
                 myViewHolder.tv_count.setText(searchdetailList.getProviders().size() + " " + Config.toTitleCase(countTerminology) + "s");
             } else {
-                myViewHolder.tv_count.setVisibility(View.VISIBLE);
+                myViewHolder.tv_count.setVisibility(View.GONE);
                 myViewHolder.tv_count.setText(searchdetailList.getProviders().size() + " " + Config.toTitleCase(countTerminology));
             }
         } else {
