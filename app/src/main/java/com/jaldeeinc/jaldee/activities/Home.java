@@ -207,7 +207,6 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onStart() {
         Log.i("onStartHomeBefore", true + "");
-       // startService(mLiveTrackClient);
         super.onStart();
     }
 
@@ -216,9 +215,7 @@ public class Home extends AppCompatActivity {
         Log.i("onStopHome", true + "");
         super.onStop();
         Log.i("onStopHomeAfter", true + "");
-//        mLiveTrackClient = new Intent(Home.this, liveTrackService.getClass());
-//        stopService(mLiveTrackClient);
-//        startService(mLiveTrackClient);
+
     }
 }
 

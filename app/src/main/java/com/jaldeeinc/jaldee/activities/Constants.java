@@ -10,6 +10,9 @@ public class Constants {
     public static final String MERCHANT_ID = "4934580";
     public static final boolean DEBUG = true;
 
+    public static final String PREFS = "com.jaldeeinc.jaldee";
+
+
     public static final String FIRST_NAME = "Debajyoti";
     public static final String MOBILE = "7204342561";
     public static final String EMAIL = "d.basak.db@gmail.com";

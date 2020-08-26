@@ -50,7 +50,7 @@ public class HomeTabFragment extends Fragment {
 
     MenuItem prevMenuItem;
     static Fragment hometabFragment;
-
+    String message;
     String tab;
 
     @Override
@@ -75,6 +75,11 @@ public class HomeTabFragment extends Fragment {
         }
         if (bundle != null) {
             sforceupdate = bundle.getString("forceupdate", "");
+        }
+
+        if (bundle != null){
+
+            message = bundle.getString("message");
         }
 
         if (sforceupdate != null) {
@@ -103,8 +108,6 @@ public class HomeTabFragment extends Fragment {
                                 viewPager.setCurrentItem(0);
                                 item.setIcon(getResources().getDrawable(R.drawable.selected_home));
                                 Config.logV("Page SLECTED&&&&&&&&&&&&&&&&&&&&&&");
-
-
                                 break;
                             case R.id.action_checkin:
                                 viewPager.setCurrentItem(1);

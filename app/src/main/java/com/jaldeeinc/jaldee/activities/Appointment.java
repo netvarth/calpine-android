@@ -740,7 +740,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
         final Date currentTimess = new Date();
         final SimpleDateFormat sdfs = new SimpleDateFormat(
-                "dd-MM-yyyy", Locale.US);
+                "yyyy-MM-dd", Locale.US);
         sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdfs.format(currentTimess));
         txtWaitTime.setText("Today\n" + sdfs.format(currentTimess));
@@ -839,25 +839,30 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tv_checkin_service.setText(spannable);
 
-                Date currentTime = new Date();
-                final SimpleDateFormat sdf = new SimpleDateFormat(
-                        "yyyy-MM-dd", Locale.US);
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                System.out.println("UTC time: " + sdf.format(currentTime));
+                Date date = null;
+                String selectDate = null;
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                try {
+                    String selectedDate = txtWaitTime.getText().toString().replace("Today\n","");
+                    date = format.parse(selectedDate);
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    //to convert Date to String, use format method of SimpleDateFormat class.
+                     selectDate = dateFormat.format(date);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
                 if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
-                    //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                    ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
+                    ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
                 } else {
                     if (selectedDateFormat != null) {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                        //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
-                        ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
+                        ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
                     } else {
                         Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
-                        //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                        ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
+                        ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
                     }
                 }
 

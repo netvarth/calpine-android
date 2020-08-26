@@ -232,13 +232,24 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                           queuelayout.setVisibility(View.VISIBLE);
                           //  tv_waittime.setVisibility(View.VISIBLE);
                           //   txtnocheckin.setVisibility(View.GONE);
+
+                          // to set selected time window.
+                          for (int j=0; j<schedResponse.size();j++){
+
+                              if (schedResponse.get(j).getId() == Integer.parseInt(schdId)){
+
+                                  i =j;
+                                  break;
+                              }
+                          }
+
                           if (schedResponse.get(i).getId() != 0) {
                               id = String.valueOf(schedResponse.get(i).getId());
                           }
 
 
 //                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
-                          tv_queuetime.setText(schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).geteTime());
+                          tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
                           if (schedResponse.get(i).getId() != 0) {
@@ -291,7 +302,6 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                               Config.logV("Left Click------------------**" + i);
                               if (i >= 0) {
 
-//                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                   tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
@@ -336,7 +346,6 @@ private void ApiSchedule(String serviceId, String spinnerText, final String mDat
                               Config.logV("Right Click----1111--------------" + i);
                               if (i < schedResponse.size()) {
 
-//                                    tv_queuename.setText(mQueueTimeSlotList.get(i).getName());
                                   tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
