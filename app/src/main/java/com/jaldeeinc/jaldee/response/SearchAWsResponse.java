@@ -52,6 +52,16 @@ public class SearchAWsResponse {
 
     String donation_status;
 
+    public String getVirtual_service_status() {
+        return virtual_service_status;
+    }
+
+    public void setVirtual_service_status(String virtual_service_status) {
+        this.virtual_service_status = virtual_service_status;
+    }
+
+    String virtual_service_status;
+
     public String getOnline_profile() {
         return online_profile;
     }

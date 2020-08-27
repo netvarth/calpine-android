@@ -249,6 +249,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     ArrayList<SearchService> globalServList = new ArrayList<>();
     ArrayList<SearchService> globalServicesList = new ArrayList<>();
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
+    String virtualserviceStatus;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -599,6 +600,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 isShowToken = extras.getString("isShowToken", "");
                 getAvail_date = extras.getString("getAvail_date", "");
                 virtualServices = extras.getBoolean("virtualservices");
+                virtualserviceStatus = extras.getString("virtualservice");
 
             }
         }
@@ -1931,19 +1933,21 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                         }
                                     }
                                 }
-                            } else if (mFrom.equalsIgnoreCase("multiusercheckin")) {
-                                if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
-                                    if (virtualService != null && virtualService.equalsIgnoreCase("false")) {
-                                        LServicesList.remove(mService);
-                                    }
-                                }
-                            } else {
+                            } else if(mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("multiusercheckin")) {
                                 if (!virtualServices) {
                                     if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
                                         LServicesList.remove(mService);
 
                                     }
 
+                                }
+                            }
+                            else{
+                                if(virtualserviceStatus!=null && virtualserviceStatus.equalsIgnoreCase("0")){
+                                    if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
+                                        LServicesList.remove(mService);
+
+                                    }
                                 }
                             }
                         }

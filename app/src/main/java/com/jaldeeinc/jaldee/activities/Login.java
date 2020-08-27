@@ -351,7 +351,7 @@ public class Login extends AppCompatActivity {
                     Config.logV("URL---------------" + response.raw().request().url().toString().trim());
                     Config.logV("Response--code-------------------------" + response.code());
                     if (response.code() == 200) {
-                        Toast.makeText(mContext, "Otp has been send to " + loginId, Toast.LENGTH_LONG).show();
+                      //  Toast.makeText(mContext, "Otp has been send to " + loginId, Toast.LENGTH_LONG).show();
                         Intent iReg = new Intent(mContext, ResetOtp.class);
                         startActivity(iReg);
 
