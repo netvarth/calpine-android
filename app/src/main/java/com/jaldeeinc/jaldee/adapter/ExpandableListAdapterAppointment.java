@@ -1899,7 +1899,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             @Override
             public void onClick(View v) {
 
-                callback.onMethodRating(String.valueOf(activelist.getId()), activelist.getUid(), mTodayFlag, mFutureFlag, mOldFlag);
+                callback.onMethodRating(String.valueOf(activelist.getProviderAccount().getId()), activelist.getUid(), mTodayFlag, mFutureFlag, mOldFlag);
             }
         });
 
