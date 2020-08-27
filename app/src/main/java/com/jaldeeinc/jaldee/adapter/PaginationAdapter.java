@@ -463,6 +463,17 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } else {
                         myViewHolder.btnbookservice.setVisibility(View.GONE);
                     }
+                if (checkins_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && dnts_flag.get(position).equals(false) ) {
+                    myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                    myViewHolder.L_checkin.setVisibility(View.VISIBLE);
+                    myViewHolder.btnbookservice.setVisibility(View.GONE);
+                }
+                if (appts_flag.get(position).equals(true) && checkins_flag.get(position).equals(false) && dnts_flag.get(position).equals(false)) {
+                    myViewHolder.btnbookservice.setText("APPOINTMENT");
+                }
+                if (dnts_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && checkins_flag.get(position).equals(false)) {
+                    myViewHolder.btnbookservice.setText("DONATE");
+                }
 
 //                    int finalK = k;
 //                    int finalK1 = k;
@@ -486,6 +497,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                 iCheckIn.putExtra("terminology", termilogy);
                                 iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
                                 iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                                iCheckIn.putExtra("virtualservice",searchdetailList.getVirtual_service_status());
                                 context.startActivity(iCheckIn);
                             } else if (appts_flag.get(position).equals(true) && checkins_flag.get(position).equals(false) && dnts_flag.get(position).equals(false)) {
                                 Intent iAppointment = new Intent(v.getContext(), Appointment.class);
@@ -591,7 +603,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 myViewHolder.tv_count.setVisibility(View.VISIBLE);
                 myViewHolder.tv_count.setText(searchdetailList.getProviders().size() + " " + Config.toTitleCase(countTerminology) + "s");
             } else {
-                myViewHolder.tv_count.setVisibility(View.VISIBLE);
+                myViewHolder.tv_count.setVisibility(View.GONE);
                 myViewHolder.tv_count.setText(searchdetailList.getProviders().size() + " " + Config.toTitleCase(countTerminology));
             }
         } else {
@@ -1326,6 +1338,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 iCheckIn.putExtra("terminology", termilogy);
                 iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
                 iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                iCheckIn.putExtra("virtualservice",searchdetailList.getVirtual_service_status());
                 context.startActivity(iCheckIn);
             }
         });
@@ -1349,6 +1362,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 iCheckIn.putExtra("terminology", termilogy);
                 iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
                 iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                iCheckIn.putExtra("virtualservice",searchdetailList.getVirtual_service_status());
                 context.startActivity(iCheckIn);
             }
         });
@@ -1623,7 +1637,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void enableCheckinButton(MyViewHolder myViewHolder) {
-        myViewHolder.btncheckin.setBackgroundColor(context.getResources().getColor(R.color.green));
+        myViewHolder.btncheckin.setBackgroundColor(context.getResources().getColor(R.color.dark_blue));
         myViewHolder.btncheckin.setTextColor(context.getResources().getColor(R.color.white));
         myViewHolder.btncheckin.setEnabled(true);
         myViewHolder.btncheckin.setVisibility(View.VISIBLE);

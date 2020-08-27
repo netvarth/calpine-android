@@ -86,6 +86,7 @@ public class VerifyOtp extends AppCompatActivity {
         Typeface tyface_p = Typeface.createFromAsset(getAssets(),
                 "fonts/Montserrat_Light.otf");
         txtproceed.setTypeface(tyface_p);
+        final String mobno = SharedPreference.getInstance(mContext).getStringValue("mobno", "");
 
         mContext = this;
 
@@ -141,8 +142,11 @@ public class VerifyOtp extends AppCompatActivity {
         });*/
 
 
-        String firstWord = "Please enter ";
-        String secondWord = "OTP";
+//        String firstWord = "Please enter ";
+//        String secondWord = "OTP";
+
+        String firstWord = "OTP has been sent to ";
+        String secondWord = mobno;
 
 
         Spannable spannable = new SpannableString(firstWord+secondWord);
@@ -156,7 +160,8 @@ public class VerifyOtp extends AppCompatActivity {
         spannable.setSpan( new CustomTypefaceSpan("sans-serif",tyface_edittext2), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-        txt_enterotp.setText( spannable );
+       // txt_enterotp.setText( spannable );
+        txtproceed.setText(spannable);
 
         /*SmsBroadcastReceiver.bindListener(new SmsListener() {
             @Override

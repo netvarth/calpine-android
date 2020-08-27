@@ -271,6 +271,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String userName;
     String departmentId, virtualService;
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
+    String virtualserviceStatus;
     String changedDate = null;
     static LinearLayout llCoupons;
     static TextView tvNoServiceMessage;
@@ -651,7 +652,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 isShowToken = extras.getString("isShowToken", "");
                 getAvail_date = extras.getString("getAvail_date", "");
                 virtualServices = extras.getBoolean("virtualservices");
-
+                virtualserviceStatus = extras.getString("virtualservice");
             }
         }
         if (sector != null && subsector != null) {
@@ -2697,14 +2698,16 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                         }
                                     }
                                 }
-                            } else if (mFrom.equalsIgnoreCase("multiusercheckin")) {
-                                if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
-                                    if (virtualService != null && virtualService.equalsIgnoreCase("false")) {
+                            }else if (mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("multiusercheckin")) {
+                                if (!virtualServices) {
+                                    if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
                                         LServicesList.remove(mService);
+
                                     }
+
                                 }
                             } else {
-                                if (!virtualServices) {
+                                if (virtualserviceStatus != null && virtualserviceStatus.equalsIgnoreCase("0")) {
                                     if (mService.getServiceType().equalsIgnoreCase("virtualService")) {
                                         LServicesList.remove(mService);
 

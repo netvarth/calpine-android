@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/padding30"
         android:gravity="center"
-        android:text="@string/ynw"
+        android:text=""
         android:textColor="@color/title_grey"
         android:textSize="@dimen/txtsize_title" />
 

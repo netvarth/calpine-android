@@ -176,6 +176,16 @@ public class SearchListModel implements Serializable {
 
     String enc_uid;
 
+    public String getVirtual_service_status() {
+        return virtual_service_status;
+    }
+
+    public void setVirtual_service_status(String virtual_service_status) {
+        this.virtual_service_status = virtual_service_status;
+    }
+
+    String virtual_service_status;
+
 
     private String departmentName;
 

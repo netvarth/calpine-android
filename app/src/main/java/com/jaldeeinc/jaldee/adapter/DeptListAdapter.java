@@ -782,7 +782,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                         }
                         //Future Checkin
                         if (searchdetailList.getSettings().isFutureDateWaitlist() && searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate() != null) {
-                            myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
+                          //  myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
                             if (searchdetailList.getQueueList().getNextAvailableQueue().isShowToken()) {
                                 myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
                             } else {
