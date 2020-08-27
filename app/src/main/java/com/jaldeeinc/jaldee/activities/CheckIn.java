@@ -250,6 +250,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     ArrayList<SearchService> globalServicesList = new ArrayList<>();
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
     String virtualserviceStatus;
+    BottomSheetDialog dialogPayment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -2808,7 +2809,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                         System.out.println("VALUE: " + "------>" + value);
                         // finish();
                         Config.logV("Response--isPrepayment------------------" + isPrepayment);
-                        final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+                         dialogPayment = new BottomSheetDialog(mContext);
                         if (isPrepayment) {
                             if (!showPaytmWallet && !showPayU) {
 
@@ -2816,12 +2817,12 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                             } else {
                                 try {
 
-                                    dialog.setContentView(R.layout.prepayment);
-                                    dialog.show();
+                                    dialogPayment.setContentView(R.layout.prepayment);
+                                    dialogPayment.show();
 
 
-                                    Button btn_paytm = (Button) dialog.findViewById(R.id.btn_paytm);
-                                    Button btn_payu = (Button) dialog.findViewById(R.id.btn_payu);
+                                    Button btn_paytm = (Button) dialogPayment.findViewById(R.id.btn_paytm);
+                                    Button btn_payu = (Button) dialogPayment.findViewById(R.id.btn_payu);
                                     if (showPaytmWallet) {
                                         btn_paytm.setVisibility(View.VISIBLE);
                                     } else {
@@ -2832,10 +2833,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                     } else {
                                         btn_payu.setVisibility(View.GONE);
                                     }
-                                    final EditText edt_message = (EditText) dialog.findViewById(R.id.edt_message);
-                                    TextView txtamt = (TextView) dialog.findViewById(R.id.txtamount);
+                                    final EditText edt_message = (EditText) dialogPayment.findViewById(R.id.edt_message);
+                                    TextView txtamt = (TextView) dialogPayment.findViewById(R.id.txtamount);
 
-                                    TextView txtprepayment = (TextView) dialog.findViewById(R.id.txtprepayment);
+                                    TextView txtprepayment = (TextView) dialogPayment.findViewById(R.id.txtprepayment);
 
                                     txtprepayment.setText("Prepayment Amount ");
 
@@ -2852,9 +2853,9 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                                             Config.logV("Account ID --------------" + modifyAccountID);
                                             new PaymentGateway(mContext, mActivity).ApiGenerateHash1(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, "checkin", familyMEmID, Constants.SOURCE_PAYMENT);
-                                            dialog.dismiss();
+                                            dialogPayment.dismiss();
                                             if (imagePathList.size() > 0) {
-                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);
+                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                                             }
                                         }
                                     });
@@ -2868,10 +2869,10 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                                             PaytmPayment payment = new PaytmPayment(mContext);
                                             payment.ApiGenerateHashPaytm(value, sAmountPay, modifyAccountID, Constants.PURPOSE_PREPAYMENT, mContext, mActivity, "", familyMEmID);
                                             //payment.generateCheckSum(sAmountPay);
-                                            dialog.dismiss();
+                                            dialogPayment.dismiss();
                                             //ApiGenerateHash(value, sAmountPay, accountID);
                                             if (imagePathList.size() > 0) {
-                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);
+                                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                                             }
                                         }
                                     });
@@ -2883,7 +2884,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
 
                         } else {
                             if (imagePathList.size() > 0) {
-                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialog);
+                                ApiCommunicateCheckin(value, String.valueOf(accountID), txt_addnote, dialogPayment);
                             }
                             Toast.makeText(mContext, toastMessage, Toast.LENGTH_LONG).show();
                             finish();
@@ -3316,6 +3317,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
                 alertDialog.show();
             } else {
                 Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
+                dialogPayment.show();
             }
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);

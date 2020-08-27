@@ -4173,7 +4173,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                                 //Toast.makeText(mContext,"Pay amount by Cash",Toast.LENGTH_LONG).show();
                             } else {
                                 try {
-                                    final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
+                                    dialog = new BottomSheetDialog(mContext);
                                     dialog.setContentView(R.layout.prepayment);
                                     dialog.show();
 
@@ -4808,6 +4808,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                 alertDialog.show();
             } else {
                 Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
+                dialog.show();
             }
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
