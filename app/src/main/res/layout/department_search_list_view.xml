@@ -352,7 +352,8 @@
                     android:background="@drawable/input_border_cyan_bg"
                     android:gravity="left"
                     android:orientation="horizontal"
-                    android:padding="@dimen/padding5">
+                    android:padding="@dimen/padding5"
+                    android:visibility="gone">
 
                 </LinearLayout>
 
