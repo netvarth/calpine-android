@@ -272,6 +272,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String departmentId, virtualService;
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
     String virtualserviceStatus;
+    String changedDate = null;
 
 
     @Override
@@ -4768,6 +4769,20 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }
+    }
+
+    @Override
+    protected void onResume() {
+
+        changedDate = SharedPreference.getInstance(Appointment.this).getStringValue("selectedDate","");
+        if (changedDate != null){
+            if (!changedDate.equalsIgnoreCase("")){
+
+                ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), changedDate, modifyAccountID);
+            }
+        }
+        SharedPreference.getInstance(Appointment.this).setValue("selectedDate","");
+        super.onResume();
     }
 }
 
