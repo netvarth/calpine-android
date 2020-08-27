@@ -156,6 +156,27 @@ public class ActiveAppointment {
     String apptTakenTime;
     String batchName;
 
+    public ActiveAppointment getRating() {
+        return rating;
+    }
+
+    public void setRating(ActiveAppointment rating) {
+        this.rating = rating;
+    }
+
+    @SerializedName("rating")
+    private ActiveAppointment rating;
+
+    public String getStars() {
+        return stars;
+    }
+
+    public void setStars(String stars) {
+        this.stars = stars;
+    }
+
+    String stars;
+
     public String getBatchName() {
         return batchName;
     }

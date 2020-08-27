@@ -1880,28 +1880,28 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         /*if(header.equalsIgnoreCase("old")) {*/
         if (activelist.getApptStatus().
 
-                equalsIgnoreCase("done")) {
+                equalsIgnoreCase("Completed")) {
             icon_rate.setVisibility(View.VISIBLE);
         } else {
             icon_rate.setVisibility(View.GONE);
         }
 
         icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_star_line, 0, 0);
-//        if (activelist.getRating() != null) {
-//            if (Integer.parseInt(activelist.getRating().getStars()) > 0) {
-//
-//                icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.star_full, 0, 0);
-//            } else {
-//                icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_star_line, 0, 0);
-//            }
-//        }
-//        icon_rate.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                callback.onMethodRating(String.valueOf(activelist.getId()), activelist.getUid(), mTodayFlag, mFutureFlag, mOldFlag);
-//            }
-//        });
+        if (activelist.getRating() != null) {
+            if (Integer.parseInt(activelist.getRating().getStars()) > 0) {
+
+                icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.star_full, 0, 0);
+            } else {
+                icon_rate.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_star_line, 0, 0);
+            }
+        }
+        icon_rate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                callback.onMethodRating(String.valueOf(activelist.getId()), activelist.getUid(), mTodayFlag, mFutureFlag, mOldFlag);
+            }
+        });
 
         if (header.equalsIgnoreCase("old")) {
             travelDetailsLayout.setVisibility(View.GONE);
