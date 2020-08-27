@@ -164,6 +164,10 @@
             android:name=".activities.BillActivity"
             android:screenOrientation="unspecified" />
 
+        <activity
+            android:name=".activities.CouponActivity"
+            android:screenOrientation="unspecified" />
+
         <service android:name=".service.FirebaseService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

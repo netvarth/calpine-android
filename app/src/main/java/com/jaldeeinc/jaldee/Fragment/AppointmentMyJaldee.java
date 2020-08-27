@@ -743,7 +743,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Map<String, String> query = new HashMap<>();
-        query.put("account", accountID);
+        query.put("account-eq", accountID);
         query.put("uId-eq", UUID);
         Call<ArrayList<RatingResponse>> call = apiService.getRatingApp(query);
         Config.logV("Location-----###########@@@@@@" + query);
