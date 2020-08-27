@@ -745,7 +745,7 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         Map<String, String> query = new HashMap<>();
         query.put("account", accountID);
         query.put("uId-eq", UUID);
-        Call<ArrayList<RatingResponse>> call = apiService.getRating(query);
+        Call<ArrayList<RatingResponse>> call = apiService.getRatingApp(query);
         Config.logV("Location-----###########@@@@@@" + query);
         call.enqueue(new Callback<ArrayList<RatingResponse>>() {
             @Override
@@ -850,9 +850,9 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
         Call<ResponseBody> call;
         if (firstTimerate) {
-            call = apiService.PostRating(accountID, body);
+            call = apiService.PostRatingApp(accountID, body);
         } else {
-            call = apiService.PutRating(accountID, body);
+            call = apiService.PutRatingApp(accountID, body);
         }
 //        Config.logV("Request--BODY-------------------------" + new Gson().toJson(jsonObj.toString()));
         call.enqueue(new Callback<ResponseBody>() {
