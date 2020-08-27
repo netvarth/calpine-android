@@ -52,6 +52,7 @@ public class RazorpayPayment{
             options.put("currency", "INR");
             options.put("amount", order.getAmount());
             options.put("order_id", order.getOrderId());
+            options.put("retry",order.isRetry());
 //            options.put("key", order.getRazorpayId());
             JSONObject preFill = new JSONObject();
             preFill.put("email", order.getConsumerEmail());

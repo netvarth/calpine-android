@@ -26,6 +26,7 @@ public class CheckSumModel implements Serializable {
     String description;
     String orderId;
     String ConsumerEmail;
+    boolean isRetry = false;
 
     public String getConsumerEmail() {
         return ConsumerEmail;
@@ -147,4 +148,12 @@ public class CheckSumModel implements Serializable {
     }
 
     String paymentEnv;
+
+    public boolean isRetry() {
+        return isRetry;
+    }
+
+    public void setRetry(boolean retry) {
+        isRetry = retry;
+    }
 }

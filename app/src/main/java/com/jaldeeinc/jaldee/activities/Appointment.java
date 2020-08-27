@@ -198,12 +198,12 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     static int i = 0;
     static ImageView ic_cal_minus;
     ImageView ic_cal_add;
-    Button btn_checkin;
+    static Button btn_checkin;
     static int queueId = 0;
     EditText couponEdit, phoneNumberValue;
     Button applycouponbtn;
     ArrayList<CoupnResponse> s3couponList = new ArrayList<>();
-    TextView coupon_link;
+    static  TextView coupon_link;
     String couponEntered;
     TextView mtermsandCond;
     TextView mtxtTermsandCondition;
@@ -272,6 +272,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     String departmentId, virtualService;
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
     String changedDate = null;
+    static LinearLayout llCoupons;
+    static TextView tvNoServiceMessage;
 
 
     @Override
@@ -334,7 +336,10 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
         et_vitualId = findViewById(R.id.virtual_id);
         tvselectedHint = findViewById(R.id.txt_selectedHint);
         tvSelectedProvider = findViewById(R.id.tv_selectedProvider);
-
+        llCoupons = findViewById(R.id.ll_coupouns);
+        tvNoServiceMessage = findViewById(R.id.tv_noServiceMessage);
+        // to Empty previous selected date in pref's
+        SharedPreference.getInstance(Appointment.this).setValue("selectedDate","");
 
         tv_addnote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -753,7 +758,7 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
         final Date currentTimess = new Date();
         final SimpleDateFormat sdfs = new SimpleDateFormat(
-                "dd-MM-yyyy", Locale.US);
+                "yyyy-MM-dd", Locale.US);
         sdfs.setTimeZone(TimeZone.getTimeZone("UTC"));
         System.out.println("UTC time: " + sdfs.format(currentTimess));
         txtWaitTime.setText("Today\n" + sdfs.format(currentTimess));
@@ -855,25 +860,33 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     tv_checkin_service.setText(spannable);
 
-                    Date currentTime = new Date();
-                    final SimpleDateFormat sdf = new SimpleDateFormat(
-                            "yyyy-MM-dd", Locale.US);
-                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                    System.out.println("UTC time: " + sdf.format(currentTime));
+                    Date date = null;
+                    String selectDate = null;
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        String selectedDate = txtWaitTime.getText().toString().replace("Today\n","");
+                        date = format.parse(selectedDate);
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        //to convert Date to String, use format method of SimpleDateFormat class.
+                        selectDate = dateFormat.format(date);
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
                     if (mFrom.equalsIgnoreCase("checkin") || mFrom.equalsIgnoreCase("searchdetail_checkin") || mFrom.equalsIgnoreCase("favourites")) {
 
                         //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                        ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
+                        ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
                     } else {
                         if (selectedDateFormat != null) {
                             Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                             //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, selectedDateFormat, isShowToken);
-                            ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
+                            ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
                         } else {
                             Config.logV("SELECTED @@@@@@@@@@@@@@@@@@@@@@@@@@@@************");
                             //  ApiQueueTimeSlot(String.valueOf(serviceId), String.valueOf(mSpinnertext), modifyAccountID, sdf.format(currentTime), isShowToken);
-                            ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), sdf.format(currentTime), modifyAccountID);
+                            ApiSchedule(String.valueOf(serviceId), String.valueOf(mSpinnertext), selectDate, modifyAccountID);
                         }
                     }
 
@@ -3557,8 +3570,14 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 
                             if (timeslotsFormat.size() > 0) {
                                 earliestAvailable.setText("Earliest available\n" + timeslotsFormat.get(0));
+                                llCoupons.setVisibility(View.VISIBLE);
+                                btn_checkin.setVisibility(View.VISIBLE);
+                                tvNoServiceMessage.setVisibility(View.GONE);
                             } else {
                                 earliestAvailable.setText("Timeslots not available");
+                                llCoupons.setVisibility(View.GONE);
+                                btn_checkin.setVisibility(View.GONE);
+                                tvNoServiceMessage.setVisibility(View.VISIBLE);
                             }
 
 
@@ -4072,7 +4091,13 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     if (timeslots.size() > 0) {
                         waitobj.put("apptTime", timeslots.get(0));
                     }
-                } else {
+                }
+                else if (dateTime != null && dateTime.trim().length() == 0){
+
+                    Toast.makeText(Appointment.this,"Please select time slot",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
                     waitobj.put("apptTime", dateTime);
                 }
             }
@@ -4761,8 +4786,26 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
-            //    Log.i("here.....", new Gson().toJson(paymentData));
-            Toast.makeText(this.mContext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
+            if (response.contains("Payment failed")) {
+                AlertDialog alertDialog = new AlertDialog.Builder(Appointment.this).create();
+                alertDialog.setTitle("Payment Failed");
+                alertDialog.setMessage("Unable to process your request.Please try again after some time");
+                alertDialog.setCancelable(false);
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                                Intent homeIntent = new Intent(Appointment.this, Home.class);
+                                startActivity(homeIntent);
+                                finish();
+
+                            }
+                        });
+                alertDialog.show();
+            } else {
+                Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
+            }
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }
@@ -4784,91 +4827,6 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
 }
 
 
-//    private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
-//
-//        ApiInterface apiService =
-//                ApiClient.getClient(mContext).create(ApiInterface.class);
-//        MediaType type = MediaType.parse("*/*");
-//        MultipartBody.Builder mBuilder = new MultipartBody.Builder();
-//        mBuilder.setType(MultipartBody.FORM);
-//        mBuilder.addFormDataPart("message", message);
-//        for (int i = 0; i < imagePathList.size(); i++) {
-////            if(imagePathList.contains("content://")) {
-////                Uri imageUri = Uri.parse(imagePathList.get(i));
-////                File file = new File(String.valueOf(imageUri));
-////                mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
-////            }
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(mContext.getApplicationContext().getContentResolver(), Uri.parse(imagePathList.get(i)));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            if (bitmap != null) {
-//                path = saveImage(bitmap);
-//            }
-////            else{
-////                path = getRealFilePath(Uri.parse(imagePathList.get(0)));
-////            }
-//
-//            File file = new File(imagePathList.get(i));
-//            mBuilder.addFormDataPart("attachments", file.getName(), RequestBody.create(type, file));
-//        }
-//        RequestBody requestBody = mBuilder.build();
-//
-//
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//        JSONObject jsonObj = new JSONObject();
-//        try {
-//            jsonObj.put("communicationMessage", message);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonObj.toString());
-//
-//        Call<ResponseBody> call = apiService.WaitListMessage(waitListId, String.valueOf(accountID), requestBody);
-//
-//        call.enqueue(new Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                try {
-//
-//                    if (mDialog.isShowing())
-//                        Config.closeDialog(Appointment.this, mDialog);
-//
-//                    Config.logV("URL---------------" + response.raw().request().url().toString().trim());
-//                    Config.logV("Response--code-------------------------" + response.code());
-//
-//                    if (response.code() == 200) {
-//                        Toast.makeText(mContext, "Message sent successfully", Toast.LENGTH_LONG).show();
-//                        imagePathList.clear();
-//                        dialog.dismiss();
-//
-//
-//                    } else {
-//                        if (response.code() == 422) {
-//                            Toast.makeText(mContext, response.errorBody().string(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseBody> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//                if (mDialog.isShowing())
-//                    Config.closeDialog( Appointment.this, mDialog);
-//
-//            }
-//        });
-//    }
-//}
+
 
 

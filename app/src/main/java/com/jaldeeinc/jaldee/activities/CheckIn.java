@@ -169,7 +169,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     static TextView tv_name;
     String mFirstName, mLastName;
     int consumerID;
-    static TextView tv_waittime,tvTimeHint;
+    static TextView tv_waittime, tvTimeHint;
     static TextView tv_queue;
     static TextView txt_date;
     ImageView img_calender_checkin;
@@ -1064,19 +1064,17 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         try {
             date = format.parse(getAvail_date);
+            DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
+            //to convert Date to String, use format method of SimpleDateFormat class.
+            String strDate = dateFormat.format(date);
+            txt_date.setText(strDate);
+            DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
+            selectedDateFormat = selecteddateParse.format(date);
+            UpdateDAte(selectedDateFormat);
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-//        Date added_date = subtractDays(date, 1);
-        DateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy");
-        //to convert Date to String, use format method of SimpleDateFormat class.
-        String strDate = dateFormat.format(date);
-        txt_date.setText(strDate);
-        DateFormat selecteddateParse = new SimpleDateFormat("yyyy-MM-dd");
-        selectedDateFormat = selecteddateParse.format(date);
-        UpdateDAte(selectedDateFormat);
 
 
         img_calender_checkin.setOnClickListener(new View.OnClickListener() {
@@ -3295,8 +3293,26 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
     @Override
     public void onPaymentError(int code, String response, PaymentData paymentData) {
         try {
-//            Log.i("here.....", new Gson().toJson(paymentData));
-            Toast.makeText(this.mContext, "Payment failed: " + code + " " + response, Toast.LENGTH_SHORT).show();
+            if (response.contains("Payment failed")) {
+                AlertDialog alertDialog = new AlertDialog.Builder(CheckIn.this).create();
+                alertDialog.setTitle("Payment Failed");
+                alertDialog.setMessage("Unable to process your request.Please try again after some time");
+                alertDialog.setCancelable(false);
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                                Intent homeIntent = new Intent(CheckIn.this, Home.class);
+                                startActivity(homeIntent);
+                                finish();
+
+                            }
+                        });
+                alertDialog.show();
+            } else {
+                Toast.makeText(this.mContext, "Payment failed", Toast.LENGTH_SHORT).show();
+            }
         } catch (Exception e) {
             Log.e("TAG", "Exception in onPaymentError..", e);
         }

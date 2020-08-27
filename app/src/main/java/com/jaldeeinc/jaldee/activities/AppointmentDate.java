@@ -33,6 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.jaldeeinc.jaldee.activities.Appointment.dateTime;
 import static com.jaldeeinc.jaldee.activities.Appointment.earliestAvailable;
 import static com.jaldeeinc.jaldee.common.MyApplication.getContext;
 
@@ -166,13 +167,7 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
 
     }
 
-    //    @Override
-//    public void onBackPressed() {
-//        Log.d("CDA", "onBackPressed Called");
-//        Intent iAppointment = new Intent(this,Appointment.class);
-//        iAppointment.putExtra("selectedDate",selectedDate);
-//        startActivity(iAppointment);
-//    }
+
     private void ApiSchedule(String serviceId, String spinnerText, final String mDate, final String accountIDs) {
 
 
@@ -225,13 +220,24 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
                                 queuelayout.setVisibility(View.VISIBLE);
                                 //  tv_waittime.setVisibility(View.VISIBLE);
                                 //   txtnocheckin.setVisibility(View.GONE);
+
+                                // to set selected time window.
+                                for (int j=0; j<schedResponse.size();j++){
+
+                                    if (schedResponse.get(j).getId() == Integer.parseInt(schdId)){
+
+                                        i =j;
+                                        break;
+                                    }
+                                }
+
                                 if (schedResponse.get(i).getId() != 0) {
                                     id = String.valueOf(schedResponse.get(i).getId());
                                 }
 
 
 //                            tv_queuename.setText(mQueueTimeSlotList.get(0).getName());
-                                tv_queuetime.setText(schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(0).getApptSchedule().getTimeSlots().get(0).geteTime());
+                                tv_queuetime.setText(schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).getsTime() + "- " + schedResponse.get(i).getApptSchedule().getTimeSlots().get(0).geteTime());
 
 
                                 if (schedResponse.get(i).getId() != 0) {
@@ -502,6 +508,8 @@ public class AppointmentDate<mAdapter> extends AppCompatActivity {
     public static void timeslot(String timeSlot) {
         if (timeSlot.equalsIgnoreCase("") && timeslots.size() != 0) {
             earliestAvailable.setText("Timeslot not picked");
+            dateTime = "";
+
         }
     }
 
