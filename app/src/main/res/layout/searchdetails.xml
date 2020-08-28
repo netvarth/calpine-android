@@ -91,8 +91,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="@dimen/padding5"
+                                    android:visibility="gone"
                                     android:progressDrawable="@drawable/rating_display" />
-
 
                             </LinearLayout>
 
@@ -232,6 +232,19 @@
 
                                 </LinearLayout>
                             </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tv_noRR"
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/mProfile"
+                                android:layout_marginLeft="@dimen/default_padding"
+                                android:layout_alignParentBottom="true"
+                                android:text="No Ratings or reviews"
+                                android:textSize="@dimen/dimen_10dp">
+
+                            </TextView>
 
                         </RelativeLayout>
 

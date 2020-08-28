@@ -126,7 +126,7 @@ import static com.jaldeeinc.jaldee.connection.ApiClient.context;
 public class SearchDetailViewFragment extends RootFragment implements SearchLocationAdpterCallback, LocationCheckinCallback, ContactAdapterCallback, DepartmentAdapter.OnItemClickListener, UsersAdapter.OnItemClickListener {
     Context mContext;
     ListView deptListview;
-    SearchViewDetail mBusinessDataList ;
+    SearchViewDetail mBusinessDataList;
     ArrayList<CoupnResponse> couponResponse = new ArrayList<>();
     ArrayList<SearchViewDetail> mSearchGallery;
     ArrayList<SearchLocation> mSearchLocList;
@@ -209,6 +209,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<ProviderUserModel> usersList = new ArrayList<ProviderUserModel>();
     private CardView cvUsers;
     private boolean throughLink = false;
+    TextView tvNoRatings;
 
 
     @Override
@@ -236,6 +237,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_first_ccoupon = (TextView) row.findViewById(R.id.txtFirstCoupon);
         specialSeeAll = (TextView) row.findViewById(R.id.specialSeeAll);
         departmentHeading = (TextView) row.findViewById(R.id.departmentHeading);
+        tvNoRatings = row.findViewById(R.id.tv_noRR);
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         List<CoupnResponse> couponResponse;
@@ -500,7 +502,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(mContext,"Something went wrong",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -1359,7 +1361,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
         if (getBussinessData.getSocialMedia() != null) {
             if (getBussinessData.getSocialMedia().size() > 0) {
-                LsocialMedia.setVisibility(View.VISIBLE);
+                LsocialMedia.setVisibility(View.GONE);
                 for (int i = 0; i < getBussinessData.getSocialMedia().size(); i++) {
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
 //                        tv_SocialMedia.setVisibility(View.VISIBLE);
@@ -1558,9 +1560,22 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         tv_busName.setText(getBussinessData.getBusinessName());
 
-        rating.setRating(getBussinessData.getAvgRating());
+        String rate = String.valueOf(getBussinessData.getAvgRating());
+        if (rate.equalsIgnoreCase("0.0")){
+
+            tvNoRatings.setVisibility(View.VISIBLE);
+        }
+        else {
+            tvNoRatings.setVisibility(View.GONE);
+            rating.setVisibility(View.VISIBLE);
+            rating.setRating(getBussinessData.getAvgRating());
+        }
         if (getBussinessData.getServiceSector().getDisplayName() != null && getBussinessData.getServiceSubSector().getDisplayName() != null) {
-            tv_domain.setText(getBussinessData.getServiceSector().getDisplayName() + " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
+            if (getBussinessData.getServiceSector().getDisplayName().equalsIgnoreCase("Other / Miscellaneous")) {
+                tv_domain.setVisibility(View.GONE);
+            } else {
+                tv_domain.setText(getBussinessData.getServiceSector().getDisplayName() + " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
+            }
         }
         if (getBussinessData.getBusinessDesc() != null) {
             tv_desc.setVisibility(View.VISIBLE);
@@ -1740,7 +1755,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
         if (searchdetailList.getSearchViewDetail().getSocialMedia() != null) {
             if (searchdetailList.getSearchViewDetail().getSocialMedia().size() > 0) {
-                LsocialMedia.setVisibility(View.VISIBLE);
+                LsocialMedia.setVisibility(View.GONE);
                 for (int i = 0; i < searchdetailList.getSearchViewDetail().getSocialMedia().size(); i++) {
                     if (searchdetailList.getSearchViewDetail().getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
 //                        tv_SocialMedia.setVisibility(View.VISIBLE);
@@ -2427,7 +2442,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
 
                         if (from_user) {
 
-                            if (searchdetailList!= null) {
+                            if (searchdetailList != null) {
                                 ArrayList<DepartmentUserSearchModel> userDetails = new ArrayList<DepartmentUserSearchModel>();
                                 userDetails.add(searchdetailList);
                                 userDetailAdapter = new UserDetailAdapter(mContext, userDetails, mSearchAWSResponse, mSearchDepartmentList, terminology, mInterface, mSearchmCheckMessageList);
@@ -2436,7 +2451,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             }
                         } else {
 
-                            if (mBusinessDataList != null && mSearchSettings != null){
+                            if (mBusinessDataList != null && mSearchSettings != null) {
                                 if (mBusinessDataList.getServiceSector() != null && mBusinessDataList.getServiceSubSector() != null) {
                                     mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList, online_presence, donationFundRaising, gServiceList, LaServicesList, virtualServices);
                                     mRecyLocDetail.setAdapter(mSearchLocAdapter);
