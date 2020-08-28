@@ -1102,6 +1102,11 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
                     if (LServicesList.size() != 0) {
                         mSpinnertext = LServicesList.get(0).getId();
                     }
+                    else {
+
+                        mSpinnerService.setVisibility(View.GONE);
+                        txt_chooseservice.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -2658,10 +2663,8 @@ public class Appointment extends AppCompatActivity implements PaymentResultWithD
     }
 
     private void ApiSearchViewServiceID(final int id) {
-
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
-
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
         Call<ArrayList<SearchAppoinment>> call = apiService.getSearchAppointment(id);
