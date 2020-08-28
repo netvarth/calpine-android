@@ -45,13 +45,19 @@ public class SpecializationFragment extends RootFragment {
             from = bundle.getString("from", "");
             specialization = bundle.getStringArrayList("Specialization_displayname");
 
-            if(specialization !=null && specialization.size() > 0) {
-                for (int i = 0; i < specialization.size(); i++) {
-                    SearchViewDetail data = new SearchViewDetail();
-                    data.setName(specialization.get(i).toString());
-                    specializationList_Detail.add(data);
+            try {
+
+                if(specialization !=null && specialization.size() > 0) {
+                    for (int i = 0; i < specialization.size(); i++) {
+                        SearchViewDetail data = new SearchViewDetail();
+                        data.setName(specialization.get(i).toString());
+                        specializationList_Detail.add(data);
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
             mrecycle_specialization = (RecyclerView) row.findViewById(R.id.mrecycle_specialization);
             TextView tv_title = (TextView) row.findViewById(R.id.toolbartitle);
             Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),
