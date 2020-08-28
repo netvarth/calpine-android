@@ -57,6 +57,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -431,6 +432,7 @@ public interface ApiInterface {
 
     @GET("consumer/waitlist/rating")
     Call<ArrayList<RatingResponse>> getRating(@QueryMap(encoded = true) Map<String, String> query);
+
 
     @GET("consumer/appointment/rating")
     Call<ArrayList<RatingResponse>> getRatingApp(@QueryMap(encoded = true) Map<String, String> query);

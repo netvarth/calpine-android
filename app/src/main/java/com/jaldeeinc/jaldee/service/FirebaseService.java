@@ -1,40 +1,42 @@
 
 
-        package com.jaldeeinc.jaldee.service;
+package com.jaldeeinc.jaldee.service;
 
 
-        import android.app.Notification;
-        import android.app.NotificationChannel;
-        import android.app.NotificationManager;
-        import android.app.PendingIntent;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.SharedPreferences;
-        import android.graphics.Color;
-        import android.media.RingtoneManager;
-        import android.net.Uri;
-        import android.os.Build;
-        import androidx.core.app.NotificationCompat;
-        import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-        import android.text.TextUtils;
-        import android.util.Log;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 
-        import com.google.firebase.messaging.FirebaseMessagingService;
-        import com.google.firebase.messaging.RemoteMessage;
-        import com.jaldeeinc.jaldee.R;
-        import com.jaldeeinc.jaldee.activities.Home;
-        import com.jaldeeinc.jaldee.common.Config;
-        import com.jaldeeinc.jaldee.utils.NotificationUtils;
+import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.text.TextUtils;
+import android.util.Log;
 
-        import org.json.JSONException;
-        import org.json.JSONObject;
-
-        import java.util.Random;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
+import com.jaldeeinc.jaldee.R;
+import com.jaldeeinc.jaldee.activities.Home;
+import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.utils.NotificationUtils;
 
 
-        import static android.app.Notification.DEFAULT_SOUND;
-        import static android.app.Notification.DEFAULT_VIBRATE;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Random;
+
+
+import static android.app.Notification.DEFAULT_SOUND;
+import static android.app.Notification.DEFAULT_VIBRATE;
 
 
 public class FirebaseService extends FirebaseMessagingService {
@@ -66,7 +68,7 @@ public class FirebaseService extends FirebaseMessagingService {
 
         // Notify UI that registration has completed, so the progress indicator can be hidden.
 
-        Config.logV("TOKEN REFRESH #################__________________"+refreshedToken);
+        Config.logV("TOKEN REFRESH #################__________________" + refreshedToken);
         //LogUtil.writeLogTest("Token@@"+refreshedToken);
 
         Config.ApiUpdateToken(this);
@@ -84,6 +86,7 @@ public class FirebaseService extends FirebaseMessagingService {
         editor.putString("regId", token);
         editor.commit();
     }
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "From: " + remoteMessage.getFrom());
@@ -95,7 +98,7 @@ public class FirebaseService extends FirebaseMessagingService {
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
+            sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
             // handleNotification(remoteMessage.getNotification().getBody());
         }
 
@@ -109,7 +112,6 @@ public class FirebaseService extends FirebaseMessagingService {
             //    sendNotification(remoteMessage.getData().get("title").toString(),remoteMessage.getData().get("message").toString());
         }
     }
-
 
 
     private void handleDataMessage(JSONObject json) {
@@ -179,8 +181,8 @@ public class FirebaseService extends FirebaseMessagingService {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         notificationUtils.showNotificationMessage(title, message, timeStamp, intent, imageUrl);
     }
-    public static final String NOTIFICATION_CHANNEL_ID = "10001";
 
+    public static final String NOTIFICATION_CHANNEL_ID = "10001";
 
 
     private void sendNotification(String title, String messageBody) {
@@ -207,7 +209,6 @@ public class FirebaseService extends FirebaseMessagingService {
         /*RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notif_custom_view);
         remoteViews.setTextViewText(R.id.txttitle,title);
         remoteViews.setTextViewText(R.id.txtnotify,messageBody);*/
-
 
 
         notificationBuilder.setContentTitle(TextUtils.isEmpty(title) ? getString(R.string.app_name) : title)
@@ -239,7 +240,6 @@ public class FirebaseService extends FirebaseMessagingService {
         final Intent notificationIntent = new Intent(Config.NOTIFICATION_EVENT);
         LocalBroadcastManager.getInstance(this).sendBroadcast(notificationIntent);
     }
-
 
 
 }

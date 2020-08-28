@@ -51,7 +51,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-//import kotlin.Unit;
+import kotlin.Unit;
 
 import static com.jaldeeinc.jaldee.adapter.SearchLocationAdapter.getWaitingTime;
 import static com.jaldeeinc.jaldee.connection.ApiClient.context;
@@ -543,10 +543,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     @Override
                     public void onClick(View v) {
 
-//                        showUIDialog(context, "", "No Services available", () -> {
-//
-//                            return Unit.INSTANCE;
-//                        });
+                        showUIDialog(context, "", "No services available", () -> {
+                            return Unit.INSTANCE;
+                        });
                     }
                 });
             }
