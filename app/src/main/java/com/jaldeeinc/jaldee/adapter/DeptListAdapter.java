@@ -106,7 +106,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public TextView deptName;
-        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_spec_more, tv_peopleahead, tv_qmessage;
+        public TextView tv_name, tv_location, tv_domain, tv_Futuredate, tv_WaitTime, tv_spec1, tv_spec2, tv_spec3, tv_spec22, tv_spec_more, tv_peopleahead, tv_qmessage, tv_enquiry;
         LinearLayout L_services, L_layout_type, L_checkin, L_appointments;
         RelativeLayout L_specialization;
         ImageView ic_jaldeeverifiedIcon;
@@ -151,6 +151,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             mImageViewText = view.findViewById(R.id.mImageViewText);
             layout_type = view.findViewById(R.id.layout_type);
             tv_jdn = view.findViewById(R.id.txtjdn);
+            tv_enquiry = view.findViewById(R.id.txt_enquiry);
 
         }
     }
@@ -522,7 +523,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
         params1.setMargins(10, 7, 10, 7);
         dynaText1.setGravity(Gravity.LEFT);
         parent.addView(dynaText1);
-        dynaText1.setOnClickListener(new View.OnClickListener() {
+        myViewHolder.tv_enquiry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchDetailViewFragment.onMethodMessage(searchdetailList.getSearchViewDetail().getBusinessName(), String.valueOf(searchdetailList.getSearchViewDetail().getId()), "dept");
@@ -769,7 +770,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                 myViewHolder.tv_peopleahead.setText(message);
                             }
                         } else {
-                            disableCheckinButton(myViewHolder);
+                          //  disableCheckinButton(myViewHolder);
                         }
                         if (date2 != null && date1.compareTo(date2) < 0) {
                             myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
