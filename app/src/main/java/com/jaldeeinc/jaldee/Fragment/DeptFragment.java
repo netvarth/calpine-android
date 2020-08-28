@@ -332,13 +332,29 @@ public class DeptFragment extends RootFragment implements AdapterCallback {
                     if (response.code() == 200) {
                         ArrayList<SearchDepartmentServices> serviceList = response.body();
                         if (serviceList.size() > 0) {
-                            userSearch.setServices(serviceList.get(sIndex).getServices());
-                            userSearch.setDepartmentId(serviceList.get(sIndex).getDepartmentId());
+
+                            for (int i = 0; i<serviceList.size();i++){
+
+                                if (tv_departmentCode.getText().toString().equalsIgnoreCase(serviceList.get(i).getDepartmentCode())){
+
+                                    userSearch.setServices(serviceList.get(i).getServices());
+                                    userSearch.setDepartmentId(serviceList.get(i).getDepartmentId());
+
+                                }
+                            }
                         } else {
                             userSearch.setServices(null);
                         }
                         if(userAppointmentServices.size()>0){
-                            userSearch.setAppointmentServices(userAppointmentServices.get(sIndex).getServices());
+
+                            for (int i = 0; i<userAppointmentServices.size();i++){
+
+                                if (tv_departmentCode.getText().toString().equalsIgnoreCase(userAppointmentServices.get(i).getDepartmentCode())){
+
+                                    userSearch.setAppointmentServices(userAppointmentServices.get(i).getServices());
+                                }
+                            }
+
                         }
                         else{
                             userSearch.setAppointmentServices(null);
