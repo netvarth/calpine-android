@@ -661,7 +661,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 v.getContext().startActivity(iAppointment);
             }
         });
-        if (searchdetailList.getSearchViewDetail().isOnlinePresence()) {
+        if (searchdetailList.getParentSearchViewDetail().isOnlinePresence()) {
             if (searchdetailList.getScheduleList().getAvailableSchedule() != null &&
                     (searchdetailList.getScheduleList().getAvailableSchedule().isTodayAppt() ||
                             searchdetailList.getScheduleList().getAvailableSchedule().isFutureAppt())) {
@@ -732,7 +732,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if (searchdetailList.getSearchViewDetail().isOnlinePresence() && searchdetailList.getQueueList().getNextAvailableQueue().isWaitlistEnabled()) {
+                if (searchdetailList.getParentSearchViewDetail().isOnlinePresence() && searchdetailList.getQueueList().getNextAvailableQueue().isWaitlistEnabled()) {
                     enableCheckinButton(myViewHolder);
                     if (searchdetailList.getQueueList().getNextAvailableQueue().isShowToken()) {
                         myViewHolder.btncheckin.setText("GET TOKEN");
