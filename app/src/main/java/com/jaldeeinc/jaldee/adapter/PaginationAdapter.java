@@ -1295,6 +1295,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             //Future Checkin
                             if(searchdetailList.getFuture_checkins()!=null && searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
                              //   myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
+                                enableCheckinButton(myViewHolder);
                                 if (searchdetailList.isShowToken()) {
                                     myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
                                 } else {
