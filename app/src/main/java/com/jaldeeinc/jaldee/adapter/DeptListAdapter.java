@@ -754,9 +754,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                     myViewHolder.tv_WaitTime.setVisibility(View.VISIBLE);
                                     showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), null);
 //                                    myViewHolder.tv_WaitTime.setText(spannable);
-//                                    myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-//                                    String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
-//                                    myViewHolder.tv_peopleahead.setText(message);
+                                    myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+                                    String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
+                                    myViewHolder.tv_peopleahead.setText(message);
                                 }
                             } else { // Conventional/Fixed
                                 myViewHolder.btncheckin.setText("Check-in".toUpperCase());
@@ -764,9 +764,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                                 showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), null);
 //                                String spannable = getWaitingTime(searchdetailList.getQueueList().getNextAvailableQueue());
 //                                myViewHolder.tv_WaitTime.setText(spannable);
-//                                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-//                                String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
-//                                myViewHolder.tv_peopleahead.setText(message);
+                                myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+                                String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
+                                myViewHolder.tv_peopleahead.setText(message);
                             }
                         } else {
                             disableCheckinButton(myViewHolder);
@@ -776,9 +776,9 @@ public class DeptListAdapter extends RecyclerView.Adapter {
                             showWaitingTime(myViewHolder, searchdetailList.getQueueList().getNextAvailableQueue(), "future");
 //                            String spannable = getWaitingTime(searchdetailList.getQueueList().getNextAvailableQueue());
 //                            myViewHolder.tv_WaitTime.setText(spannable);
-//                            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
-//                            String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
-//                            myViewHolder.tv_peopleahead.setText(message);
+                            myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+                            String message = Config.getPersonsAheadText(searchdetailList.getQueueList().getNextAvailableQueue().getPersonAhead());
+                            myViewHolder.tv_peopleahead.setText(message);
                         }
                         //Future Checkin
                         if (searchdetailList.getSettings().isFutureDateWaitlist() && searchdetailList.getQueueList().getNextAvailableQueue().getAvailableDate() != null) {
@@ -880,7 +880,7 @@ public class DeptListAdapter extends RecyclerView.Adapter {
             String secondWord = "\n" + Config.getTimeinHourMinutes(searchdetailList.getQueueWaitingTime());
             myViewHolder.tv_WaitTime.setText(firstWord + secondWord);
         }
-        // myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
+        myViewHolder.tv_peopleahead.setVisibility(View.VISIBLE);
         String message = Config.getPersonsAheadText(searchdetailList.getPersonAhead());
         myViewHolder.tv_peopleahead.setText(message);
     }

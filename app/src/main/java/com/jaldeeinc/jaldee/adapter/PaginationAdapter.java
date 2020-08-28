@@ -35,6 +35,7 @@ import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
 import com.jaldeeinc.jaldee.activities.CouponActivity;
+import com.jaldeeinc.jaldee.activities.CouponFirstActivity;
 import com.jaldeeinc.jaldee.activities.Donation;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
@@ -999,7 +1000,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         firstCoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAdapterCallback.onMethodFirstCoupn(searchdetailList.getUniqueid());
+                Intent iCouponsFirst = new Intent(view.getContext(), CouponFirstActivity.class);
+                context.startActivity(iCouponsFirst);
+               // mAdapterCallback.onMethodFirstCoupn(searchdetailList.getUniqueid());
             }
         });
         final TextView dynaText2 = new TextView(context);
