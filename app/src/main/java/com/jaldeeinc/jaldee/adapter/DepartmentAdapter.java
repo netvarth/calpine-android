@@ -65,13 +65,13 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.My
         final SearchDepartmentServices searchDepartmentServices = mSearchDepartmentServices.get(position);
         int count = mSearchDepartmentServices.get(position).getUsers().size();
         if(count == 0){
-            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + "No Doctors" + ")" );
+            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + "No Service Providers" + ")" );
         }
         else if(count == 1) {
-            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + count + " Doctor" + ")");
+            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + count + " Service Providers" + ")");
         }
         else{
-            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + count + " Doctors" + ")");
+            holder.deptName.setText(searchDepartmentServices.getDepartmentName() + " " + "(" + count + " Service Providers" + ")");
         }
         if (searchDepartmentServices.getDepartmentName() == null) {
         holder.deptName.setVisibility(View.GONE);
