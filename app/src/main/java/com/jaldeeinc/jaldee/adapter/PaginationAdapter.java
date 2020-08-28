@@ -1288,6 +1288,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     showWaitingTime(myViewHolder, searchdetailList, null);
                                 }
                             }
+                            else{
+                                enableCheckinButton(myViewHolder);
+                            }
                             if (date2 != null && date1.compareTo(date2) < 0) {
                                 showWaitingTime(myViewHolder, searchdetailList, "future");
                             }
@@ -1295,7 +1298,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             //Future Checkin
                             if(searchdetailList.getFuture_checkins()!=null && searchdetailList.getFuture_checkins().equalsIgnoreCase("1")) {
                              //   myViewHolder.tv_Futuredate.setVisibility(View.VISIBLE);
-                                enableCheckinButton(myViewHolder);
+
                                 if (searchdetailList.isShowToken()) {
                                     myViewHolder.tv_Futuredate.setText("Do you want to Get Token for another day?");
                                 } else {
