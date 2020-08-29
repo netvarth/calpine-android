@@ -416,13 +416,20 @@ public interface ApiInterface {
     @GET("consumer/waitlist/rating")
     Call<ArrayList<RatingResponse>> getRating(@QueryMap(encoded = true) Map<String, String> query);
 
+    @GET("consumer/appointment/rating")
+    Call<ArrayList<RatingResponse>> getRatingApp(@QueryMap(encoded = true) Map<String, String> query);
+
     @PUT("consumer/waitlist/rating")
     Call<ResponseBody> PutRating(@Query("account") String account, @Body RequestBody jsonObj);
 
-
+    @PUT("consumer/appointment/rating")
+    Call<ResponseBody> PutRatingApp(@Query("account") String account, @Body RequestBody jsonObj);
 
     @POST("consumer/waitlist/rating")
     Call<ResponseBody> PostRating(@Query("account") String account, @Body RequestBody jsonObj);
+
+    @POST("consumer/appointment/rating")
+    Call<ResponseBody> PostRatingApp(@Query("account") String account, @Body RequestBody jsonObj);
 
     @GET("ynwConf/refinedFilters")
     Call<RefinedFilters> getFilters();

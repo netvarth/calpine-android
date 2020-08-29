@@ -36,6 +36,8 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity android:name=".activities.NotificationActivity"></activity>
+        <activity android:name=".activities.CouponFirstActivity"></activity>
+
         <activity
             android:name=".activities.Splash"
             android:screenOrientation="unspecified">
