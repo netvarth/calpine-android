@@ -700,7 +700,8 @@
                     android:text="Service1"
                     android:textColor="@color/black"
                     android:textSize="@dimen/txtsize_12"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tv_appservice2"
@@ -714,7 +715,8 @@
                     android:text="Service2"
                     android:textColor="@color/black"
                     android:textSize="@dimen/txtsize_12"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tv_appSeeAll"
@@ -728,7 +730,8 @@
                     android:layout_marginStart="@dimen/dimen_5dp"
                     android:textColor="@color/title_consu"
                     android:textSize="@dimen/txtsize_title_term_small"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
             </LinearLayout>
 
 

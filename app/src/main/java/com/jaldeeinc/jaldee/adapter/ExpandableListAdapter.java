@@ -752,7 +752,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
 
         tv_businessname.setText(Config.toTitleCase(activelist.getBusinessName()));
-     //   apiGetMeetingDetails(activelist.getYnwUuid(),activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getId());
+       // apiGetMeetingDetails(activelist.getYnwUuid(),activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getId());
 
 
         icon_cancel.setOnClickListener(new View.OnClickListener() {

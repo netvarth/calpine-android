@@ -804,7 +804,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                         }
                     });
 
-                    Toast.makeText(mContext, "set text with comma seperated without seemore", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(mContext, "set text with comma seperated without seemore", Toast.LENGTH_SHORT).show();
 
                 } else {
                     myViewHolder.txtservice1.setVisibility(View.VISIBLE);
@@ -859,7 +859,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             adaptercallback.onMethodServiceCallback(checkInServicesList, mTitle, mSearchDepartmentList);
                         }
                     });
-                    Toast.makeText(mContext, "set text with comma seperated with seemore", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(mContext, "set text with comma seperated with seemore", Toast.LENGTH_SHORT).show();
                 }
             } else {
 
@@ -897,7 +897,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                             }
                         });
 
-                        Toast.makeText(mContext, "set single line and see more", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(mContext, "set single line and see more", Toast.LENGTH_SHORT).show();
                         break;
                     }
 
@@ -1076,10 +1076,10 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
 
             ArrayList<SearchAppointmentDepartmentServices> apptServicesList = new ArrayList<>();
             for (int i = 0; i < aServicesList.size(); i++) {
-
-                apptServicesList.addAll(aServicesList.get(i).getServices());
-
-        }
+                if(aServicesList.get(i).getServices()!=null){
+                    apptServicesList.addAll(aServicesList.get(i).getServices());
+                }
+            }
 
         if (apptServicesList.size() > 0) {
 
