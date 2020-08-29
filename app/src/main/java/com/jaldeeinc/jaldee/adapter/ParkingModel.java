@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by sharmila on 10/9/18.
  */
 
-class ParkingModel {
+public class ParkingModel {
     public String getTypename() {
         return typename;
     }

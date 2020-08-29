@@ -22,27 +22,34 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
+
 import androidx.annotation.RequiresApi;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +68,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
+import com.jaldeeinc.jaldee.custom.NotificationDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
@@ -131,12 +139,22 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
     private Uri mImageUri;
     EditText edt_message;
     Dialog mDialog;
+    public boolean toHome = false;
+    public String message = null;
+    NotificationDialog notificationDialog;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View row = inflater.inflate(R.layout.tokens_myjaldee, container, false);
+        // checking bundle if it's from notification.
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            toHome = bundle.getBoolean("toHome");
+            message = bundle.getString("message");
+        }
         mContext = getActivity();
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
@@ -155,7 +173,14 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().popBackStack();
+                if (toHome) {
+
+                    Intent home = new Intent(mContext, Home.class);
+                    startActivity(home);
+                    getActivity().finish();
+                } else {
+                    getFragmentManager().popBackStack();
+                }
             }
         });
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -197,6 +222,18 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
         mFutureFlag = false;
         mTodayFlag = false;
         mOldFlag = false;
+
+        if (message != null){
+
+            notificationDialog = new NotificationDialog(mContext,message);
+            notificationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            notificationDialog.show();
+            notificationDialog.setCancelable(false);
+            DisplayMetrics metrics =mContext.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            notificationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        }
         return row;
     }
 
@@ -405,9 +442,11 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                     btn_send.setBackground(mContext.getResources().getDrawable(R.color.button_grey));
                 }
             }
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
@@ -599,6 +638,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                             Toast.makeText(mContext, "You Denied the Permissions", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                     @Override
                     public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
@@ -823,9 +863,11 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                                 }
                             }
+
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                             }
+
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
                             }
@@ -860,6 +902,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
             }
         });
     }
+
     private void ApiPUTRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -901,6 +944,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -910,6 +954,7 @@ public class TokensMyJaldee extends RootFragment implements HistoryAdapterCallba
             }
         });
     }
+
     private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);

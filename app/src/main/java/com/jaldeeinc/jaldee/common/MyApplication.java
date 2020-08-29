@@ -2,7 +2,9 @@ package com.jaldeeinc.jaldee.common;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.custom.FontOverride;
 import com.jaldeeinc.jaldee.utils.SharedPreference;
 
@@ -13,11 +15,13 @@ import com.jaldeeinc.jaldee.utils.SharedPreference;
 public class MyApplication extends Application implements AppLifeCycleHandler.AppLifeCycleCallback{
 
     private static MyApplication s_instance;
+    public SharedPreferences sharedPreferences;
     @Override
     public void onCreate() {
 
         super.onCreate();
         FontOverride.setDefaultFont(this, "SERIF", "fonts/Montserrat_Regular.otf");
+        sharedPreferences = getSharedPreferences(Constants.PREFS, Context.MODE_PRIVATE);
 
         Config.logV("APP APplication---------------------------");
 
@@ -29,7 +33,7 @@ public class MyApplication extends Application implements AppLifeCycleHandler.Ap
 
 
 
-    public static Context getContext() {
+    public static MyApplication getContext() {
         return s_instance;
     }
 

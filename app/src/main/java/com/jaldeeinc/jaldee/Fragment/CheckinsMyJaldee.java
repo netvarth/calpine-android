@@ -21,27 +21,34 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
+
 import androidx.annotation.RequiresApi;
+
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +67,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
+import com.jaldeeinc.jaldee.custom.NotificationDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.ActiveCheckIn;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
@@ -95,15 +103,18 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCallback, ActiveAdapterOnCallback {
     String[] imgExtsSupported = new String[]{"jpg", "jpeg", "png"};
     String[] fileExtsSupported = new String[]{"jpg", "jpeg", "png", "pdf"};
+
     public CheckinsMyJaldee() {
         // Required empty public constructor
     }
+
     boolean firstTimeRating = false;
     Context mContext;
     Activity mActivity;
@@ -126,11 +137,22 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
     private Uri mImageUri;
     EditText edt_message;
     Dialog mDialog;
+    public boolean toHome = false;
+    public String message = null;
+    NotificationDialog notificationDialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View row = inflater.inflate(R.layout.chekins_myjaldee, container, false);
+        // checking bundle if it's from notification.
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            toHome = bundle.getBoolean("toHome");
+            message = bundle.getString("message");
+
+        }
         mContext = getActivity();
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
@@ -149,7 +171,14 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().popBackStack();
+                if (toHome) {
+
+                    Intent home = new Intent(mContext, Home.class);
+                    startActivity(home);
+                    getActivity().finish();
+                } else {
+                    getFragmentManager().popBackStack();
+                }
             }
         });
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -191,13 +220,25 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         mFutureFlag = false;
         mTodayFlag = false;
         mOldFlag = false;
+
+        if (message != null){
+
+            notificationDialog = new NotificationDialog(mContext,message);
+            notificationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            notificationDialog.show();
+            notificationDialog.setCancelable(false);
+            DisplayMetrics metrics =mContext.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            notificationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        }
         return row;
     }
 
     /*
      * To get Active Checkins [Both Today and Future]
      */
-    private void getActiveCheckins () {
+    private void getActiveCheckins() {
 
         final ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -228,6 +269,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
                 // Log error here since request failed
@@ -239,7 +281,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
     private ArrayList<ActiveCheckIn> getActiveCheckinsOnly(ArrayList<ActiveCheckIn> activeTokensAndCheckins) {
         ArrayList<ActiveCheckIn> activeCheckins = new ArrayList<>();
         for (int i = 0; i < activeTokensAndCheckins.size(); i++) {
-            if (activeTokensAndCheckins.get(i).getShowToken()!=null && activeTokensAndCheckins.get(i).getShowToken().equalsIgnoreCase("false")) {
+            if (activeTokensAndCheckins.get(i).getShowToken() != null && activeTokensAndCheckins.get(i).getShowToken().equalsIgnoreCase("false")) {
                 activeCheckins.add(activeTokensAndCheckins.get(i));
             }
         }
@@ -274,6 +316,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<ActiveCheckIn>> call, Throwable t) {
                 // Log error here since request failed
@@ -281,6 +324,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
     }
+
     @Override
     public void onMethodMessageCallback(final String ynwuuid, final String accountID, String providerNAme, final String from) {
         imagePathList.clear();
@@ -509,7 +553,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                         recycle_image_attachment.setLayoutManager(mLayoutManager);
                         recycle_image_attachment.setAdapter(mDetailFileAdapter);
                         mDetailFileAdapter.notifyDataSetChanged();
-                        if(imagePathList.size()>0 &&  edt_message.getText().toString().equals("")){
+                        if (imagePathList.size() > 0 && edt_message.getText().toString().equals("")) {
                             Toast.makeText(mContext, "Please enter add note", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -655,7 +699,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
     }
 
     @Override
-    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName,int customerId) {
+    public void onMethodBillIconCallback(String payStatus, String value, String provider, String accountID, String CustomerName, int customerId) {
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
         iBill.putExtra("provider", provider);
@@ -695,6 +739,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
     }
+
     @Override
     public void onMethodActiveCallback(String value) {
         Bundle bundle = new Bundle();
@@ -707,8 +752,9 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         transaction.addToBackStack(null);
         transaction.replace(R.id.mainlayout, pfFragment).commit();
     }
+
     @Override
-    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer,int customerId) {
+    public void onMethodActiveBillIconCallback(String payStatus, String value, String provider, String accountID, String consumer, int customerId) {
         Log.i("Purpose: ", "billPayment");
         Intent iBill = new Intent(mContext, BillActivity.class);
         iBill.putExtra("ynwUUID", value);
@@ -719,8 +765,9 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         iBill.putExtra("purpose", Constants.PURPOSE_BILLPAYMENT);
         startActivity(iBill);
     }
+
     @Override
-    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue,int customerId) {
+    public void onMethodActivePayIconCallback(String payStatus, String value, String provider, String accountID, double amountDue, int customerId) {
         Log.i("Purpose: ", "prePayment");
         // APIPayment(accountID, ynwUUID, amountDue);
         Intent i = new Intent(mContext, PaymentActivity.class);
@@ -730,6 +777,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         i.putExtra("purpose", Constants.PURPOSE_PREPAYMENT);
         startActivity(i);
     }
+
     @Override
     public void onMethodAddFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
         mOldFlag = oldFlag;
@@ -737,6 +785,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         mTodayFlag = todayFlag;
         ApiAddFavo(value);
     }
+
     @Override
     public void onMethodDeleteFavourite(int value, boolean todayFlag, boolean futFlag, boolean oldFlag) {
         mOldFlag = oldFlag;
@@ -744,6 +793,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         mTodayFlag = todayFlag;
         ApiRemoveFavo(value);
     }
+
     @Override
     public void onMethodRating(String accountID, String UUID, boolean todayFlag, boolean futFlag, boolean oldFlag) {
         mOldFlag = oldFlag;
@@ -751,9 +801,11 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
         mTodayFlag = todayFlag;
         ApiRating(accountID, UUID);
     }
+
     BottomSheetDialog dialog;
     float rate = 0;
     String comment = "";
+
     private void ApiRating(final String accountID, final String UUID) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -813,9 +865,11 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                                     btn_rate.setBackground(mContext.getResources().getDrawable(R.drawable.btn_checkin_grey));
                                 }
                             }
+
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                             }
+
                             @Override
                             public void onTextChanged(CharSequence s, int start, int before, int count) {
                             }
@@ -840,6 +894,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<RatingResponse>> call, Throwable t) {
                 // Log error here since request failed
@@ -849,6 +904,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
     }
+
     private void ApiPUTRating(final int stars, final String UUID, String feedback, String accountID, final BottomSheetDialog dialog, boolean firstTimerate) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -890,6 +946,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -899,6 +956,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
     }
+
     private void ApiCommunicate(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -952,6 +1010,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -961,6 +1020,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
     }
+
     private void ApiCommunicateAppointment(String waitListId, String accountID, String message, final BottomSheetDialog dialog) {
         ApiInterface apiService = ApiClient.getClient(mContext).create(ApiInterface.class);
         MediaType type = MediaType.parse("*/*");
@@ -1013,6 +1073,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -1022,6 +1083,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
     }
+
     private void ApiDeleteCheckin(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1051,6 +1113,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -1060,6 +1123,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
     }
+
     private void ApiDeleteAppointment(String ynwuuid, String accountID, final BottomSheetDialog dialog) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1089,6 +1153,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -1098,11 +1163,13 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
     }
+
     @Override
     public void onResume() {
         super.onResume();
 
     }
+
     private void ApiAddFavo(int providerID) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1127,6 +1194,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -1136,7 +1204,9 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
     }
+
     ArrayList<FavouriteModel> mFavList = new ArrayList<>();
+
     private void ApiFavList() {
         Config.logV("API FAV Call");
         final ApiInterface apiService =
@@ -1161,6 +1231,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ArrayList<FavouriteModel>> call, Throwable t) {
                 // Log error here since request failed
@@ -1168,6 +1239,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
             }
         });
     }
+
     private void ApiRemoveFavo(int providerID) {
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
@@ -1192,6 +1264,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 // Log error here since request failed
@@ -1204,6 +1277,7 @@ public class CheckinsMyJaldee extends RootFragment implements HistoryAdapterCall
 
     ExpandableListAdapter adapter;
     boolean mTodayFlag = false, mOldFlag = false, mFutureFlag = false;
+
     void setItems() {
         mCheckTodayList.clear();
         mCheckOldList.clear();

@@ -21,4 +21,8 @@ public class Constants {
     public static final  String PURPOSE_DONATIONPAYMENT = "donation";
     public static final  String SOURCE_PAYMENT = "Android";
 
+    public static final String APPOINTMENT = "appointment";
+    public static final String CHECKIN = "checkIn";
+
+
 }
