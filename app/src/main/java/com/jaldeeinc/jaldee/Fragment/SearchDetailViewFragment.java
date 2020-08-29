@@ -165,7 +165,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ImageView ic_pin, ic_yout, ic_fac, ic_gplus, ic_twitt, ic_link, ic_jaldeeverifiedIcon;
     LinearLayout LsocialMedia;
     LinearLayout LSpecialization, LSpecialization_2;
-    RelativeLayout layout_exapnd_moreDetails;
     TextView tv_spec1, tv_spec2, tv_seeAll, tv_contact, tv_coupon, tv_first_ccoupon, specialSeeAll;
     ImageView tv_jdn;
     List<SearchDepartment> departmentList;
@@ -190,6 +189,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
     ArrayList<SearchAppointmentDepartmentServices> LaServicesList = new ArrayList<>();
     ArrayList<SearchDonation> gServiceList = new ArrayList<>();
     ArrayList<SearchAppointmentDepartmentServices> aServiceList = new ArrayList<>();
+    private LinearLayout llMDetails;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -214,6 +214,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_first_ccoupon = (TextView) row.findViewById(R.id.txtFirstCoupon);
         specialSeeAll = (TextView) row.findViewById(R.id.specialSeeAll);
         departmentHeading = (TextView) row.findViewById(R.id.departmentHeading);
+        llMDetails = row.findViewById(R.id.locationlayout);
         count = 0;
         mBusinessDataList = new SearchViewDetail();
         List<CoupnResponse> couponResponse;
@@ -281,7 +282,6 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_Moredetails = (TextView) row.findViewById(R.id.txtMoredetails);
         LsocialMedia = (LinearLayout) row.findViewById(R.id.LsocialMedia);
         LSpecialization_2 = (LinearLayout) row.findViewById(R.id.LSpecialization_2);
-        layout_exapnd_moreDetails = (RelativeLayout) row.findViewById(R.id.layout_exapnd_moreDetails);
         tv_spec1 = (TextView) row.findViewById(R.id.txtspec1);
         tv_spec2 = (TextView) row.findViewById(R.id.txtspec2);
         tv_seeAll = (TextView) row.findViewById(R.id.txtSeeAll);
@@ -332,12 +332,12 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
             }
             }
         });
-        img_arrow.setOnClickListener(new View.OnClickListener() {
+        llMDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
              if (mRecycle_virtualfield.getVisibility() != View.VISIBLE) {
                 mRecycle_virtualfield.setVisibility(View.VISIBLE);
-                img_arrow.setImageResource(R.drawable.icon_angle_up);
+//                img_arrow.setImageResource(R.drawable.icon_angle_up);
                 int size = domainVirtual.size();
                 if (size > 2) {
                     tv_Moredetails.setVisibility(View.VISIBLE);
@@ -346,7 +346,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                 }
             } else {
                 mRecycle_virtualfield.setVisibility(View.GONE);
-                img_arrow.setImageResource(R.drawable.icon_angle_down);
+//                img_arrow.setImageResource(R.drawable.icon_angle_down);
                 tv_Moredetails.setVisibility(View.GONE);
             }
             }
@@ -2010,7 +2010,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                             sub_domainVirtual = response.body().getSubdomain();
                             domainVirtual.addAll(sub_domainVirtual);
                             if (domainVirtual.size() > 0) {
-                                layout_exapnd_moreDetails.setVisibility(View.VISIBLE);
+                                llMDetails.setVisibility(View.VISIBLE);
                                 txtMore.setVisibility(View.VISIBLE);
                                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
                                 mRecycle_virtualfield.setLayoutManager(mLayoutManager);
@@ -2024,7 +2024,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                                 mRecycle_virtualfield.setAdapter(mAdapter);
                                 mAdapter.notifyDataSetChanged();
                             } else {
-                                layout_exapnd_moreDetails.setVisibility(View.GONE);
+                                llMDetails.setVisibility(View.GONE);
                             }
                         } else {
                             tv_Moredetails.setVisibility(View.GONE);
