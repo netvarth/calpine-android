@@ -43,6 +43,7 @@ import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.response.SearchVirtualFields;
 import com.jaldeeinc.jaldee.response.SectorCheckin;
 import com.jaldeeinc.jaldee.response.ShareLocation;
+import com.jaldeeinc.jaldee.response.TeleServiceCheckIn;
 
 
 import java.util.ArrayList;
@@ -466,6 +467,10 @@ public interface ApiInterface {
 
     @GET("consumer/waitlist/providerByDepartmentId/{departmentId}")
     Call<ArrayList<SearchUsers>> getUsers(@Path("departmentId")  int departmentId, @Query("account") int account);
+
+    @GET("consumer/waitlist/{uuid}/meetingDetails/{mode}")
+    Call<TeleServiceCheckIn> getMeetingDetails(@Path("uuid") String uuid, @Path("domain") String mode, @Query("account") int account);
+
 
 
 }

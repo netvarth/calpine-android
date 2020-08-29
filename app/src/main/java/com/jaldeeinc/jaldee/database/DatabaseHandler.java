@@ -9,11 +9,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.common.Config;
@@ -26,8 +23,7 @@ import com.jaldeeinc.jaldee.response.JaldeeWaitlistDistanceTime;
 import com.jaldeeinc.jaldee.response.ProfileModel;
 import com.jaldeeinc.jaldee.model.Domain_Spinner;
 import com.jaldeeinc.jaldee.model.SearchModel;
-
-import org.json.JSONObject;
+import com.jaldeeinc.jaldee.response.ServiceDetails;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -398,7 +394,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "calculationMode TEXT,"
                 + "livetrack TEXT,"
                 + "showToken TEXT,"
-                + "consumer TEXT)";
+                + "consumer TEXT,"
+                + "service TEXT)";
 
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_checkin) + tblFields;
@@ -444,7 +441,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + "calculationMode TEXT,"
                 + "livetrack TEXT,"
                 + "showToken TEXT,"
-                + "consumer TEXT)";
+                + "consumer TEXT,"
+                + "service TEXT)";
+
         //create table
         tblCreateStr = "CREATE TABLE IF NOT EXISTS " + mContext.getString(R.string.db_table_mycheckin) + tblFields;
         db.execSQL(tblCreateStr);
@@ -492,6 +491,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("livetrack",activeCheckIn.getService().getLivetrack());
                 values.put("showToken",activeCheckIn.getShowToken());
                 values.put("consumer",(new Gson().toJson(activeCheckIn.getConsumer())));
+                values.put("service",(new Gson().toJson(activeCheckIn.getService())));
+
 
 
                 db.insert(mContext.getString(R.string.db_table_checkin), null, values);
@@ -516,7 +517,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_checkin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating","checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue","personsAhead","serviceTime","queueEndTime", "statusUpdatedTime","distance","jaldeeStartTimeType","rating","checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer", "service"};
 
         db.beginTransaction();
 
@@ -565,6 +566,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setLivetrack((cursor.getString(34)));
                 activeModel.setShowToken((cursor.getString(35)));
                 activeModel.setConsumer(new Gson().fromJson(cursor.getString(36), ConsumerDetails.class));
+                activeModel.setService(new Gson().fromJson(cursor.getString(37), ServiceDetails.class));
+
 
 
                 checkin.add(activeModel);
@@ -623,6 +626,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put("livetrack",activeCheckIn.getService().getLivetrack());
                 values.put("showToken",activeCheckIn.getShowToken());
                 values.put("consumer", new Gson().toJson(activeCheckIn.getConsumer()));
+                values.put("service", new Gson().toJson(activeCheckIn.getService()));
                 db.insert(mContext.getString(R.string.db_table_mycheckin), null, values);
             }
 
@@ -645,7 +649,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String table = mContext.getString(R.string.db_table_mycheckin);
         // String[] columns = {"provider", "service", "id", "timestamp", "uniqueID","receiverID","message", "receiverName", "messageStatus","waitlistId"};
 
-        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer"};
+        String[] columns = {"id", "businessName", "uniqueId", "date", "waitlistStatus", "servicename", "partySize", "appxWaitingTime", "place", "googleMapUrl", "queueStartTime", "firstName", "lastName", "ynwUuid", "paymentStatus", "billViewStatus", "billStatus", "amountPaid", "amountDue", "personsAhead", "serviceTime", "statusUpdatedTime", "distance", "jaldeeStartTimeType", "rating", "queueEndTime", "checkInTime", "token", "batchName", "parentUuid","lattitude", "longitude", "primaryMobileNo", "calculationMode", "livetrack","showToken","consumer","service"};
         String selection = "";
         String[] selectionArgs = null;
         selectionArgs = new String[]{Config.getTodaysDateString()};
@@ -701,6 +705,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 activeModel.setLivetrack((cursor.getString(34)));
                 activeModel.setShowToken((cursor.getString(35)));
                 activeModel.setConsumer(new Gson().fromJson(cursor.getString(36), ConsumerDetails.class));
+                activeModel.setService(new Gson().fromJson(cursor.getString(37),  ServiceDetails.class));
 
                 checkin.add(activeModel);
             } while (cursor.moveToNext());

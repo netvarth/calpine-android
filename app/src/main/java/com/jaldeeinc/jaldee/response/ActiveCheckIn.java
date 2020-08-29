@@ -42,8 +42,29 @@ public class ActiveCheckIn {
     boolean email_verified;
     int parent;
     int jaldeeConsumer;
+
+    public ServiceDetails getService() {
+        return service;
+    }
+
+    public void setService(ServiceDetails service) {
+        this.service = service;
+    }
+
     @SerializedName("service")
-    private ActiveCheckIn service;
+    private ServiceDetails service;
+
+
+    public ArrayList<ServiceDetails> getVirtualCallingModes() {
+        return virtualCallingModes;
+    }
+
+    public void setVirtualCallingModes(ArrayList<ServiceDetails> virtualCallingModes) {
+        this.virtualCallingModes = virtualCallingModes;
+    }
+
+    @SerializedName("virtualCallingModes")
+    private ArrayList<ServiceDetails> virtualCallingModes;
     String name;
     int department;
     String deptName;
@@ -315,14 +336,6 @@ public class ActiveCheckIn {
 
     public void setJaldeeConsumer(int jaldeeConsumer) {
         this.jaldeeConsumer = jaldeeConsumer;
-    }
-
-    public ActiveCheckIn getService() {
-        return service;
-    }
-
-    public void setService(ActiveCheckIn service) {
-        this.service = service;
     }
 
     public String getName() {

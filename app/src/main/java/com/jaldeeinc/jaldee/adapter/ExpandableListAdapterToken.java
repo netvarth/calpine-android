@@ -892,6 +892,14 @@ public class ExpandableListAdapterToken extends BaseExpandableListAdapter implem
             tv_batchName.setVisibility(View.GONE);
         }
 
+//        if(activelist.getService()!=null) {
+//            if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+//                Toast.makeText(mContext,"You took an appointment for virtual service",Toast.LENGTH_SHORT).show();
+//            }
+//        }
+
+
+
         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
             DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
