@@ -31,15 +31,18 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -60,6 +63,7 @@ import com.jaldeeinc.jaldee.common.Config;
 import com.jaldeeinc.jaldee.connection.ApiClient;
 import com.jaldeeinc.jaldee.connection.ApiInterface;
 import com.jaldeeinc.jaldee.custom.CustomTypefaceSpan;
+import com.jaldeeinc.jaldee.custom.NotificationDialog;
 import com.jaldeeinc.jaldee.database.DatabaseHandler;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.FavouriteModel;
@@ -145,12 +149,22 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
     public final static int REQUEST_CHECK_SETTINGS_GPS = 0x1;
     EditText edt_message;
     Dialog mDialog;
+    public boolean toHome = false;
+    public String message = null;
+    NotificationDialog notificationDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View row = inflater.inflate(R.layout.appointment_myjaldee, container, false);
+
+        // checking bundle if it's from notification.
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            toHome = bundle.getBoolean("toHome");
+            message = bundle.getString("message");
+        }
         mContext = getActivity();
         mActivity = getActivity();
         mInterface = (HistoryAdapterCallback) this;
@@ -169,7 +183,16 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
         iBackPress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().popBackStack();
+
+                if (toHome){
+
+                    Intent home = new Intent(mContext,Home.class);
+                    startActivity(home);
+                    getActivity().finish();
+                }
+                else {
+                    getFragmentManager().popBackStack();
+                }
             }
         });
 
@@ -215,6 +238,19 @@ public class AppointmentMyJaldee extends RootFragment implements HistoryAdapterC
             //ApiTodayAppointmentList();
             getActiveAppointments();
         }
+
+        if (message != null){
+
+            notificationDialog = new NotificationDialog(mContext,message);
+            notificationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            notificationDialog.show();
+            notificationDialog.setCancelable(false);
+            DisplayMetrics metrics =mContext.getResources().getDisplayMetrics();
+            int width = (int) (metrics.widthPixels * 1);
+            notificationDialog.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        }
+
         return row;
     }
 

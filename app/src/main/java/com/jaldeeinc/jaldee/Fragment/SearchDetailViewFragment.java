@@ -1205,7 +1205,7 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
         if (getBussinessData.getSocialMedia() != null) {
             if (getBussinessData.getSocialMedia().size() > 0) {
-                LsocialMedia.setVisibility(View.VISIBLE);
+                LsocialMedia.setVisibility(View.GONE);
                 for (int i = 0; i < getBussinessData.getSocialMedia().size(); i++) {
                     if (getBussinessData.getSocialMedia().get(i).getResource().equalsIgnoreCase("facebook")) {
 //                        tv_SocialMedia.setVisibility(View.VISIBLE);
@@ -1402,7 +1402,22 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
         tv_msg.setEnabled(true);
         tv_busName.setText(getBussinessData.getBusinessName());
-        rating.setRating(getBussinessData.getAvgRating());
+
+        try {
+
+            int rate = Math.round(getBussinessData.getAvgRating());
+            if (rate <4 ){
+                rating.setVisibility(View.GONE);
+            }
+            else {
+                rating.setVisibility(View.VISIBLE);
+                rating.setRating(getBussinessData.getAvgRating());
+            }
+        }
+        catch (Exception e){
+
+        }
+
         if (getBussinessData.getServiceSector().getDisplayName() != null && getBussinessData.getServiceSubSector().getDisplayName() != null) {
             tv_domain.setText(getBussinessData.getServiceSector().getDisplayName() + " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
         }

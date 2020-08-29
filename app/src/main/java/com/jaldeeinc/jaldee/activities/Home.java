@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,10 +36,12 @@ public class Home extends AppCompatActivity {
     Context mContext;
     String detail;
     String path;
+    String message = null;
 
 
     Intent mLiveTrackClient;
     private LiveTrackService liveTrackService = new LiveTrackService();
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +51,9 @@ public class Home extends AppCompatActivity {
         if (extras != null) {
             detail = extras.getString("detail_id", "");
             path = extras.getString("path", "");
-            Log.i("detailsofDetail",detail);
-            Log.i("detailsofDetail",path);
+            message = extras.getString("message", "");
+            Log.i("detailsofDetail", detail);
+            Log.i("detailsofDetail", path);
         }
 
         Config.logV("Home Screen@@@@@@@@@@@@@@@@@@@");
@@ -110,41 +114,41 @@ public class Home extends AppCompatActivity {
     }
 
 
-
     private void initScreen() {
         // Creating the ViewPager container fragment once
 
+        if (message != null) {
 
-        if(detail!=null){
-            if(path.contains("status")){
-//                Log.i("ghjghjgj","pathhh");
-//                checkinsFragmentCopy = new CheckinsFragmentCopy();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("homeUniqueId", detail);
-//                checkinsFragmentCopy.setArguments(bundle);
-//                final FragmentManager fragmentManager = getSupportFragmentManager();
-//                fragmentManager.beginTransaction().replace(R.id.container, checkinsFragmentCopy).commit();
+            Intent notifyIntent = new Intent(Home.this,NotificationActivity.class);
+            notifyIntent.putExtra("message",message);
+            startActivity(notifyIntent);
+
+        }
+        else {
+            if (detail != null) {
+                if (path.contains("status")) {
+                    mHomeTab = new HomeTabFragment();
+                    final FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container, mHomeTab)
+                            .commit();
+                } else {
+                    Log.i("ghjghjgj", "detaillll");
+                    searchDetailViewFragment = new SearchDetailViewFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("homeUniqueId", detail);
+                    bundle.putString("home", "home");
+                    searchDetailViewFragment.setArguments(bundle);
+                    final FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
+                }
+            } else {
                 mHomeTab = new HomeTabFragment();
                 final FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.container, mHomeTab)
                         .commit();
-            }else{
-                Log.i("ghjghjgj","detaillll");
-                searchDetailViewFragment = new SearchDetailViewFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("homeUniqueId", detail);
-                bundle.putString("home", "home");
-                searchDetailViewFragment.setArguments(bundle);
-                final FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.container, searchDetailViewFragment).commit();
             }
-        }else{
-            mHomeTab = new HomeTabFragment();
-            final FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, mHomeTab)
-                    .commit();
         }
     }
 
@@ -158,6 +162,7 @@ public class Home extends AppCompatActivity {
             mHomeTab = new HomeTabFragment();
             Bundle bundle = new Bundle();
             bundle.putString("tab", "1");
+            bundle.putString("message", message);
             mHomeTab.setArguments(bundle);
             final FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
@@ -175,7 +180,7 @@ public class Home extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if(mHomeTab!=null){
+        if (mHomeTab != null) {
             if (!mHomeTab.onBackPressed()) {
                 Config.logV("Home Back Presss-------------");
                 if (doubleBackToExitPressedOnce) {
@@ -186,7 +191,7 @@ public class Home extends AppCompatActivity {
                 Toast.makeText(this, "Press back button twice to exit from the application", Toast.LENGTH_SHORT).show();
             } else {
             }
-        }else{
+        } else {
             if (doubleBackToExitPressedOnce) {
 //                    super.onBackPressed();
                 System.exit(0);

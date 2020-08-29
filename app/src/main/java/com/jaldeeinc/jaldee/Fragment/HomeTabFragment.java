@@ -18,9 +18,11 @@ import android.view.ViewGroup;
 
 import com.jaldeeinc.jaldee.R;
 
+import com.jaldeeinc.jaldee.activities.Constants;
 import com.jaldeeinc.jaldee.activities.Home;
 import com.jaldeeinc.jaldee.adapter.ViewPagerAdapter;
 import com.jaldeeinc.jaldee.common.Config;
+import com.jaldeeinc.jaldee.utils.AppPreferences;
 import com.jaldeeinc.jaldee.utils.CustomViewPager;
 
 /**
@@ -80,6 +82,7 @@ public class HomeTabFragment extends Fragment {
         if (bundle != null){
 
             message = bundle.getString("message");
+
         }
 
         if (sforceupdate != null) {
