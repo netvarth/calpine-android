@@ -35,21 +35,23 @@
         android:theme="@style/MyMaterialTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-
+        <activity android:name=".activities.CouponFirstActivity"></activity>
+        <activity android:name=".activities.CouponActivity" />
         <activity
             android:name=".activities.Splash"
             android:screenOrientation="unspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-<!--                <category android:name="android.intent.category.DEFAULT"/>-->
-<!--                <category android:name="android.intent.category.BROWSABLE"/>-->
-<!--                <data android:scheme="https"-->
-<!--                    android:host="scale.jaldee.com"/>-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.VIEW" /> -->
+            <!-- <category android:name="android.intent.category.DEFAULT"/> -->
+            <!-- <category android:name="android.intent.category.BROWSABLE"/> -->
+            <!-- <data android:scheme="https" -->
+            <!-- android:host="scale.jaldee.com"/> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".activities.Register"
@@ -60,8 +62,7 @@
         <activity
             android:name=".activities.Donation"
             android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize"
-             />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.Signup"
             android:screenOrientation="unspecified" />
@@ -106,19 +107,18 @@
             android:screenOrientation="unspecified" />
         <activity
             android:name=".activities.CheckIn"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.Appointment"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="unspecified"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.PaymentDetail"
             android:screenOrientation="unspecified"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".activities.CheckinShareLocation"
             android:screenOrientation="unspecified" />
@@ -164,7 +164,7 @@
             </intent-filter>
         </service>
         <service android:name=".service.LocationUpdatesService" />
-        <service android:name=".service.LiveTrackService"/>
+        <service android:name=".service.LiveTrackService" />
     </application>
 
 </manifest>

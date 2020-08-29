@@ -33,6 +33,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.Appointment;
 import com.jaldeeinc.jaldee.activities.CheckIn;
+import com.jaldeeinc.jaldee.activities.CouponActivity;
+import com.jaldeeinc.jaldee.activities.CouponFirstActivity;
 import com.jaldeeinc.jaldee.activities.Donation;
 import com.jaldeeinc.jaldee.activities.SearchServiceActivity;
 import com.jaldeeinc.jaldee.activities.SwipeGalleryImage;
@@ -460,6 +462,17 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } else {
                         myViewHolder.btnbookservice.setVisibility(View.GONE);
                     }
+                if (checkins_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && dnts_flag.get(position).equals(false) ) {
+                    myViewHolder.btncheckin.setVisibility(View.VISIBLE);
+                    myViewHolder.L_checkin.setVisibility(View.VISIBLE);
+                    myViewHolder.btnbookservice.setVisibility(View.GONE);
+                }
+                if (appts_flag.get(position).equals(true) && checkins_flag.get(position).equals(false) && dnts_flag.get(position).equals(false)) {
+                    myViewHolder.btnbookservice.setText("APPOINTMENT");
+                }
+                if (dnts_flag.get(position).equals(true) && appts_flag.get(position).equals(false) && checkins_flag.get(position).equals(false)) {
+                    myViewHolder.btnbookservice.setText("DONATE");
+                }
 
 //                    int finalK = k;
 //                    int finalK1 = k;
@@ -985,7 +998,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         firstCoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAdapterCallback.onMethodFirstCoupn(searchdetailList.getUniqueid());
+                Intent iCouponsFirst = new Intent(view.getContext(), CouponFirstActivity.class);
+                context.startActivity(iCouponsFirst);
+                //mAdapterCallback.onMethodFirstCoupn(searchdetailList.getUniqueid());
             }
         });
         final TextView dynaText2 = new TextView(context);
@@ -1010,7 +1025,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         dynaText2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
+                Intent iCoupons = new Intent(v.getContext(), CouponActivity.class);
+                context.startActivity(iCoupons);
+               // mAdapterCallback.onMethodCoupn(searchdetailList.getUniqueid());
             }
         });
     }
@@ -1269,6 +1286,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                                     showWaitingTime(myViewHolder, searchdetailList, null);
                                 }
                             }
+                            else{
+                                enableCheckinButton(myViewHolder);
+                            }
                             if (date2 != null && date1.compareTo(date2) < 0) {
                                 showWaitingTime(myViewHolder, searchdetailList, "future");
                             }
@@ -1325,6 +1345,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 iCheckIn.putExtra("terminology", termilogy);
                 iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
                 iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                iCheckIn.putExtra("virtualservice",searchdetailList.getVirtual_service_status());
                 context.startActivity(iCheckIn);
             }
         });
@@ -1348,6 +1369,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 iCheckIn.putExtra("terminology", termilogy);
                 iCheckIn.putExtra("isshowtoken", searchdetailList.isShowToken());
                 iCheckIn.putExtra("getAvail_date", searchdetailList.getAvail_date());
+                iCheckIn.putExtra("virtualservice",searchdetailList.getVirtual_service_status());
                 context.startActivity(iCheckIn);
             }
         });
