@@ -471,6 +471,9 @@ public interface ApiInterface {
     @GET("consumer/waitlist/{uuid}/meetingDetails/{mode}")
     Call<TeleServiceCheckIn> getMeetingDetails(@Path("uuid") String uuid, @Path("mode") String mode, @Query("account") int account);
 
+    @GET("consumer/appointment/{uuid}/meetingDetails/{mode}")
+    Call<TeleServiceCheckIn> getMeetingDetailsAppointment(@Path("uuid") String uuid, @Path("mode") String mode, @Query("account") int account);
+
 
 
 }
