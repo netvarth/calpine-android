@@ -1906,9 +1906,24 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
                         }else{
                             uniID = homeUniqueId;
                         }
-                        mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList,online_presence,donationFundRaising,gServiceList,LaServicesList, virtualServices);
-                        mRecyLocDetail.setAdapter(mSearchLocAdapter);
-                        mSearchLocAdapter.notifyDataSetChanged();
+
+                        try {
+
+                            if (mBusinessDataList != null) {
+                                if (mBusinessDataList.getServiceSector() != null) {
+                                    if (mBusinessDataList.getServiceSector().getDomain() != null) {
+                                            mSearchLocAdapter = new SearchLocationAdapter(mBusinessDataList.getServiceSector().getDomain(), mBusinessDataList.getServiceSubSector().getSubDomain(), String.valueOf(mProviderId), uniID, mInterface, mBusinessDataList.getBusinessName(), mSearchSettings, mSearchLocList, mContext, mServicesList, mSearchQueueList, mSearchmCheckMessageList, mSearchSettings.getCalculationMode(), terminology, mSearchSettings.isShowTokenId(), mSearchDepartmentList, mSearchRespDetail, mSearchAWSResponse, mSearchScheduleList, online_presence, donationFundRaising, gServiceList, LaServicesList, virtualServices);
+                                            mRecyLocDetail.setAdapter(mSearchLocAdapter);
+                                            mSearchLocAdapter.notifyDataSetChanged();
+
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception e){
+
+                        }
+
                     }
                 }
 

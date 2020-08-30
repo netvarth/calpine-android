@@ -43,7 +43,9 @@ public class MeetingDetailsWindow extends Dialog {
 
 
         if (serviceName != null){
-            tvServiceName.setText(serviceName);
+            String name = serviceName;
+            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            tvServiceName.setText(name);
         }
 
         if (time != null){

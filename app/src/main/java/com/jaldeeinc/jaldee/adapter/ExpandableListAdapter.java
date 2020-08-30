@@ -2016,7 +2016,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn") || activelist.getWaitlistStatus().equalsIgnoreCase("arrived") || activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
                 if (activelist.getService() != null) {
                     if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
-                        apiGetMeetingDetails(activelist.getYnwUuid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getId(),cvGmeetDetails,cvWhatsppDetails,cvZoomDetails,cvPhoneDetails);
+                        apiGetMeetingDetails(activelist.getYnwUuid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getId());
 
                         if (activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
                             cvGmeetDetails.setVisibility(View.VISIBLE);
@@ -2201,7 +2201,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         });
     }
 
-    private void apiGetMeetingDetails(String uuid, String mode, int accountID, CardView cvGmeetDetails, CardView cvWhatsppDetails, CardView cvZoomDetails, CardView cvPhoneDetails) {
+    private void apiGetMeetingDetails(String uuid, String mode, int accountID) {
 
         ApiInterface apiService =
                 ApiClient.getClient(mContext).create(ApiInterface.class);
