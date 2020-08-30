@@ -60,6 +60,18 @@ public class MeetingDetailsWindow extends Dialog {
 
                 tvLink.setText(teleServiceCheckInResponse.getStartingUl());
             }
+
+            tvLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intent.setData(Uri.parse(tvLink.getText().toString()));
+                    context.startActivity(intent);
+                }
+            });
         }
 
         btJoin.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +81,7 @@ public class MeetingDetailsWindow extends Dialog {
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setData(Uri.parse(teleServiceCheckInResponse.getJoiningUrl()));
+                intent.setData(Uri.parse(tvLink.getText().toString()));
                 context.startActivity(intent);
             }
         });
