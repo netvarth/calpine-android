@@ -36,6 +36,16 @@ public class ScheduleList {
 
     String availableDate;
 
+    public boolean isOpenNow() {
+        return openNow;
+    }
+
+    public void setOpenNow(boolean openNow) {
+        this.openNow = openNow;
+    }
+
+    boolean openNow;
+
     public ScheduleList getProvider() {
         return provider;
     }

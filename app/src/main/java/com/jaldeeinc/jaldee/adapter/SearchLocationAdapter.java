@@ -1060,7 +1060,12 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             if (online_presence) {
                 if (mScheduleList.get(position).isCheckinAllowed()) {
                     myViewHolder.LAppointment.setVisibility(View.VISIBLE);
-                    myViewHolder.tvAvailDate.setText("Available on " + "\n" +  mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
+                    if(mScheduleList.get(position).getAvailableSchedule().isOpenNow()){
+                        myViewHolder.tvAvailDate.setText("Available Today");
+                    }
+                    else {
+                        myViewHolder.tvAvailDate.setText("Available on " + "\n" + mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
+                    }
                     myViewHolder.tvAvailDate.setVisibility(View.VISIBLE);
                     myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
                     myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
