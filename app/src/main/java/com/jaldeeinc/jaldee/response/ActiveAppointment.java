@@ -1037,6 +1037,26 @@ public class ActiveAppointment {
         this.batchId = batchId;
     }
 
+    public ArrayList<ActiveAppointment> getVirtualCallingModes() {
+        return virtualCallingModes;
+    }
+
+    public void setVirtualCallingModes(ArrayList<ActiveAppointment> virtualCallingModes) {
+        this.virtualCallingModes = virtualCallingModes;
+    }
+
+    @SerializedName("service")
+    private ArrayList<ActiveAppointment> virtualCallingModes;
+
+    public String getCallingMode() {
+        return callingMode;
+    }
+
+    public void setCallingMode(String callingMode) {
+        this.callingMode = callingMode;
+    }
+
+    String callingMode;
 
 
 
