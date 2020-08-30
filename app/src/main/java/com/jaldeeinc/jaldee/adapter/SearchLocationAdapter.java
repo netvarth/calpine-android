@@ -1224,7 +1224,6 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 for (int i = 0; i < apptServicesList.size(); i++) {
 
                     if (i == 0) {
-
                         myViewHolder.tvAppService1.setVisibility(View.VISIBLE);
                         String name1 = apptServicesList.get(0).getName();
                         name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();

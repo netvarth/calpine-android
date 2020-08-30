@@ -936,10 +936,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_batchName.setVisibility(View.GONE);
         }
 
-
-        if (activelist.getService() != null) {
-            if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
-                apiGetMeetingDetails(activelist.getYnwUuid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getId());
+        if(header.equalsIgnoreCase("today") && !activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
+            if (activelist.getService() != null) {
+                if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+                    apiGetMeetingDetails(activelist.getYnwUuid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getId());
+                }
             }
         }
 
