@@ -96,6 +96,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     String latitude,longitude;
     boolean isChecked = true;
     int accountID;
+    TeleServiceCheckIn teleServiceCheckIn;
 
 
 //    // Used in checking for runtime permissions.
@@ -752,7 +753,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
 
         tv_businessname.setText(Config.toTitleCase(activelist.getBusinessName()));
-       // apiGetMeetingDetails(activelist.getYnwUuid(),activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getId());
+     //   apiGetMeetingDetails(activelist.getYnwUuid(),activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getId());
 
 
         icon_cancel.setOnClickListener(new View.OnClickListener() {
@@ -937,11 +938,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_batchName.setVisibility(View.GONE);
         }
 
-//        if(activelist.getService()!=null) {
-//            if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
-//                Toast.makeText(mContext,"You took an appointment for virtual service",Toast.LENGTH_SHORT).show();
-//            }
-//        }
+        if(activelist.getService()!=null) {
+            if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+                apiGetMeetingDetails(activelist.getYnwUuid(),activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getId());
+            }
+        }
 
 
         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
@@ -2095,54 +2096,55 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
 
     }
-//    private void apiGetMeetingDetails(String uuid, String mode,int accountID) {
-//
-//
-//        ApiInterface apiService =
-//                ApiClient.getClient(mContext).create(ApiInterface.class);
-//
-//
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//
-//
-//        Call<TeleServiceCheckIn> call = apiService.getMeetingDetails(uuid,mode,accountID);
-//
-//        call.enqueue(new Callback<TeleServiceCheckIn>() {
-//            @Override
-//            public void onResponse(Call<TeleServiceCheckIn> call, Response<TeleServiceCheckIn> response) {
-//
-//                try {
-//
-//                   // if (mDialog.isShowing())
-//                      //  Config.closeDialog(mContext, mDialog);
-//
-//
-//                    if (response.code() == 200) {
-//
-//
-//
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<TeleServiceCheckIn> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//               // if (mDialog.isShowing())
-//                   // Config.closeDialog(mActivity, mDialog);
-//
-//            }
-//        });
-//
-//
-//    }
+    private void apiGetMeetingDetails(String uuid, String mode,int accountID) {
+
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+
+        Call<TeleServiceCheckIn> call = apiService.getMeetingDetails(uuid,mode,accountID);
+
+        call.enqueue(new Callback<TeleServiceCheckIn>() {
+            @Override
+            public void onResponse(Call<TeleServiceCheckIn> call, Response<TeleServiceCheckIn> response) {
+
+                try {
+
+                   // if (mDialog.isShowing())
+                      //  Config.closeDialog(mContext, mDialog);
+
+
+                    if (response.code() == 200) {
+                        teleServiceCheckIn = response.body();
+
+
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<TeleServiceCheckIn> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+               // if (mDialog.isShowing())
+                   // Config.closeDialog(mActivity, mDialog);
+
+            }
+        });
+
+
+    }
 
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {

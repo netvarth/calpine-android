@@ -26,6 +26,16 @@ public class ScheduleList {
     @SerializedName("availableSchedule")
     private NextAvailableSchedule availableSchedule;
 
+    public String getAvailableDate() {
+        return availableDate;
+    }
+
+    public void setAvailableDate(String availableDate) {
+        this.availableDate = availableDate;
+    }
+
+    String availableDate;
+
     public ScheduleList getProvider() {
         return provider;
     }

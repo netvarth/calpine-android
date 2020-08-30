@@ -760,6 +760,24 @@
                 android:orientation="horizontal"
                 android:visibility="gone">
 
+                <TextView
+                    android:id="@+id/txtavaildate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@color/blue"
+                    android:gravity="center"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
+                    android:paddingLeft="@dimen/padding3"
+                    android:paddingRight="@dimen/padding3"
+                    android:text="Available on"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/btnappointments"
