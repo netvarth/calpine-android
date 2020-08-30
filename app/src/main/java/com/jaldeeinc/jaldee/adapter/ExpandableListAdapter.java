@@ -14,14 +14,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 
-import androidx.core.app.ActivityCompat;
+import androidx.cardview.widget.CardView;
+
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -30,10 +33,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocation;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
+import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
 import com.jaldeeinc.jaldee.callback.HistoryAdapterCallback;
@@ -93,9 +96,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     long mins;
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
     SearchViewDetail mBusinessDataList;
-    String latitude,longitude;
+    String latitude, longitude;
     boolean isChecked = true;
     int accountID;
+    private TeleServiceCheckIn teleServiceCheckInResponse;
+    private MeetingDetailsWindow meetingDetailsWindow;
 
 
 //    // Used in checking for runtime permissions.
@@ -286,6 +291,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         return convertView;
     }
 
+    CardView cvGmeetDetails,cvZoomDetails,cvWhatsppDetails,cvPhoneDetails;
 
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View view, ViewGroup parent) {
@@ -297,7 +303,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         if (groupPosition == 1)
             header = "future";
         if (groupPosition == 2)
-            header ="old";
+            header = "old";
 
 
         if (view == null) {
@@ -344,6 +350,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         TextView tv_recom_liveloc = (TextView) view.findViewById(R.id.recomShareLiveLoc);
         LinearLayout liveTrackLayout = (LinearLayout) view.findViewById(R.id.liveTrackLayout);
         LinearLayout layout_checkin = (LinearLayout) view.findViewById(R.id.checkin);
+        cvGmeetDetails = view.findViewById(R.id.cv_GmeetDetails);
+        cvZoomDetails = view.findViewById(R.id.cv_ZoommeetDetails);
+        cvWhatsppDetails = view.findViewById(R.id.cv_whatsppDetails);
+        cvPhoneDetails = view.findViewById(R.id.cv_phoneMeetDetails);
 
 //        if(activelist.getWaitlistStatus().equalsIgnoreCase("failed")){
 //            layout_checkin.setVisibility(View.GONE);
@@ -352,9 +362,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 //            layout_checkin.setVisibility(View.VISIBLE);
 //        }
 
-
         if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getWaitlistStatus().equals("checkedIn") && header.equals("today")) {
-
 
             activelistLatest = activelist;
 //            if (activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
@@ -368,7 +376,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 //                    trackinLabel.setText("I am driving");
 //                }
 //            }
-
             if (activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
 //                travelDetailsLayout.setVisibility(View.VISIBLE);
                 if (activelist.getJaldeeStartTimeType() != null) {
@@ -518,13 +525,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
         latitude = SharedPreference.getInstance(mContext).getStringValue("latitudes", "");
         longitude = SharedPreference.getInstance(mContext).getStringValue("longitudes", "");
-        if (header.equals("today") && activelist.getLivetrack()!=null && activelist.getLivetrack().equals("true") || header.equals("future") && activelist.getLivetrack()!=null && activelist.getLivetrack().equals("true")) {
-            if(!latitude.equals("") && !longitude.equals("")){
-                distance(Double.parseDouble(activelist.getLattitude()),Double.parseDouble(activelist.getLongitude()),Double.parseDouble(latitude),Double.parseDouble(longitude));
-            }else{
-                distance(Double.parseDouble(activelist.getLattitude()),Double.parseDouble(activelist.getLongitude()),12.971599,77.594563);
+        if (header.equals("today") && activelist.getLivetrack() != null && activelist.getLivetrack().equals("true") || header.equals("future") && activelist.getLivetrack() != null && activelist.getLivetrack().equals("true")) {
+            if (!latitude.equals("") && !longitude.equals("")) {
+                distance(Double.parseDouble(activelist.getLattitude()), Double.parseDouble(activelist.getLongitude()), Double.parseDouble(latitude), Double.parseDouble(longitude));
+            } else {
+                distance(Double.parseDouble(activelist.getLattitude()), Double.parseDouble(activelist.getLongitude()), 12.971599, 77.594563);
             }
-
 
 
             String text = "Jaldee recommends you always";
@@ -535,19 +541,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
             Spannable spannable = new SpannableString(text2);
 
-            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), (text.length()), (text.length() + text3.length()) , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), (text.length()), (text.length() + text3.length()), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-            String text5 =  "You are ";
-            String text6 =  "sharing your arrival time ";
-            String text7 =  "with "+activelist.getBusinessName();
+            String text5 = "You are ";
+            String text6 = "sharing your arrival time ";
+            String text7 = "with " + activelist.getBusinessName();
 
             String text8 = text5 + text6 + text7;
 
             Spannable spannables = new SpannableString(text8);
 
-            spannables.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), (text5.length()), (text5.length() + text6.length()) , Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+            spannables.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_consu)), (text5.length()), (text5.length() + text6.length()), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
             liveTrackLayout.setVisibility(View.VISIBLE);
@@ -558,17 +563,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 tv_recom_liveloc.setVisibility(View.GONE);
                 tv_enable_loc.setVisibility(View.VISIBLE);
                 tv_recom_loc.setVisibility(View.VISIBLE);
-            }
-
-            else if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
+            } else if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
 
                 tv_recom_liveloc.setText(spannables, TextView.BufferType.SPANNABLE);
                 tv_recom_loc.setVisibility(View.GONE);
                 tv_enable_loc.setVisibility(View.GONE);
                 tv_recom_liveloc.setVisibility(View.VISIBLE);
-            }
-
-            else {
+            } else {
 
                 tv_recom_loc.setText("Oops!!, You are NOT sharing your arrival time with " + activelist.getBusinessName());
                 tv_recom_liveloc.setText(spannable, TextView.BufferType.SPANNABLE);
@@ -581,7 +582,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         } else {
             liveTrackLayout.setVisibility(View.GONE);
         }
-
 
 
 //        tv_icon_refresh.setOnClickListener(new View.OnClickListener() {
@@ -612,10 +612,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 intent.putExtra("title", activelist.getBusinessName());
                 intent.putExtra("terminology", "Check-in");
                 intent.putExtra("calcMode", activelist.getCalculationMode());
-                intent.putExtra("queueStartTime",activelist.getQueueStartTime());
-                intent.putExtra("queueEndTime",activelist.getQueueEndTime());
-                if(activelist.getJaldeeWaitlistDistanceTime()!=null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime()!=null){
-                    intent.putExtra("jaldeeDistance",activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().toString());}
+                intent.putExtra("queueStartTime", activelist.getQueueStartTime());
+                intent.putExtra("queueEndTime", activelist.getQueueEndTime());
+                if (activelist.getJaldeeWaitlistDistanceTime() != null && activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime() != null) {
+                    intent.putExtra("jaldeeDistance", activelist.getJaldeeWaitlistDistanceTime().getJaldeeDistanceTime().getJaldeeDistance().toString());
+                }
                 mContext.startActivity(intent);
             }
         });
@@ -709,6 +710,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                     ApiUpdateTravelMode();
                 }
             }
+
             private void ApiUpdateTravelMode() {
 
 
@@ -750,15 +752,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             }
         });
 
-
         tv_businessname.setText(Config.toTitleCase(activelist.getBusinessName()));
-       // apiGetMeetingDetails(activelist.getYnwUuid(),activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getId());
 
 
         icon_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag,"checkin");
+                callback.onMethodDelecteCheckinCallback(activelist.getYnwUuid(), activelist.getId(), mTodayFlag, mFutureFlag, mOldFlag, "checkin");
             }
         });
         Typeface tyface = Typeface.createFromAsset(mContext.getAssets(),
@@ -774,13 +774,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
 
         try {
-            if(activelist.getGoogleMapUrl()!=null){
-            String geoUri = activelist.getGoogleMapUrl();
-            if (activelist.getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
-                tv_place.setVisibility(View.VISIBLE);
-                tv_place.setText(activelist.getPlace());
+            if (activelist.getGoogleMapUrl() != null) {
+                String geoUri = activelist.getGoogleMapUrl();
+                if (activelist.getPlace() != null && geoUri != null && !geoUri.equalsIgnoreCase("")) {
+                    tv_place.setVisibility(View.VISIBLE);
+                    tv_place.setText(activelist.getPlace());
 
-            } }
+                }
+            }
         } catch (
                 Exception e) {
             e.printStackTrace();
@@ -821,10 +822,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             @Override
             public void onClick(View v) {
                 Config.logV("googlemap url--------" + activelist.getGoogleMapUrl());
-                if(activelist.getGoogleMapUrl()!=null){
-                String geoUri = activelist.getGoogleMapUrl();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
-                mContext.startActivity(intent);}
+                if (activelist.getGoogleMapUrl() != null) {
+                    String geoUri = activelist.getGoogleMapUrl();
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geoUri));
+                    mContext.startActivity(intent);
+                }
             }
         });
 
@@ -863,21 +865,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 icon_bill.setVisibility(View.GONE);
             }
 
-            }else{
-            if(!activelist.getPaymentStatus().equalsIgnoreCase("NotPaid")){
+        } else {
+            if (!activelist.getPaymentStatus().equalsIgnoreCase("NotPaid")) {
                 icon_bill.setVisibility(View.VISIBLE);
+            } else {
+                icon_bill.setVisibility(View.GONE);
             }
-            else{
-                icon_bill.setVisibility(View.GONE);}
-           }
-
-
+        }
 
 
         icon_bill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName())),activelist.getConsumer().getId());
+                callback.onMethodBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), String.valueOf(Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName())), activelist.getConsumer().getId());
             }
         });
 
@@ -913,8 +913,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 //            String firstword = "Batch :";
 //            tv_batchName.setText(firstword + " " + activelist.getBatchName());
 
- //       } else
-          if (activelist.getToken() != -1 && activelist.getToken() > 0) {
+        //       } else
+        if (activelist.getToken() != -1 && activelist.getToken() > 0) {
             layout_partySize.setVisibility(View.VISIBLE);
             tv_token.setVisibility(View.VISIBLE);
             String firstWord = "Token # ";
@@ -937,12 +937,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             tv_batchName.setVisibility(View.GONE);
         }
 
-//        if(activelist.getService()!=null) {
-//            if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
-//                Toast.makeText(mContext,"You took an appointment for virtual service",Toast.LENGTH_SHORT).show();
+//        if (activelist.getService().getVirtualCallingModes() != null) {
+//
+//            if (activelist.getService().getVirtualCallingModes().size() > 0) {
+//                apiGetMeetingDetails(activelist.getYnwUuid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getId());
 //            }
 //        }
-
 
         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
 
@@ -1748,7 +1748,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         icon_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getId()), activelist.getBusinessName(),"checkin");
+                callback.onMethodMessageCallback(activelist.getYnwUuid(), String.valueOf(activelist.getId()), activelist.getBusinessName(), "checkin");
             }
         });
         if (header.equalsIgnoreCase("old")) {
@@ -1959,9 +1959,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 // callback.onMethodActivePayIconCallback(activelist.getYnwUuid());
                 String consumer = Config.toTitleCase(activelist.getFirstName()) + " " + Config.toTitleCase(activelist.getLastName());
                 if (activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
-                    callbacks.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), activelist.getAmountDue(),activelist.getConsumer().getId());
+                    callbacks.onMethodActivePayIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), activelist.getAmountDue(), activelist.getConsumer().getId());
                 } else {
-                    callbacks.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), consumer,activelist.getConsumer().getId());
+                    callbacks.onMethodActiveBillIconCallback(activelist.getPaymentStatus(), activelist.getYnwUuid(), activelist.getBusinessName(), String.valueOf(activelist.getId()), consumer, activelist.getConsumer().getId());
                 }
             }
         });
@@ -2005,6 +2005,34 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
             }
         }
         Config.logV("Header Title" + header + "Title" + activelist.getBusinessName() + "Group" + groupPosition);
+
+
+        cvGmeetDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getCheckInTime(), activelist.getService().getName(), teleServiceCheckInResponse,activelist.getService().getVirtualCallingModes().get(childPosition).getCallingMode());
+                meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                meetingDetailsWindow.show();
+                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                meetingDetailsWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            }
+        });
+
+        cvZoomDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getCheckInTime(), activelist.getService().getName(), teleServiceCheckInResponse, activelist.getVirtualCallingModes().get(childPosition).getCallingMode());
+                meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                meetingDetailsWindow.show();
+                DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                int width = (int) (metrics.widthPixels * 1);
+                meetingDetailsWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+            }
+        });
+
         return view;
     }
 
@@ -2095,54 +2123,53 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
 
 
     }
-//    private void apiGetMeetingDetails(String uuid, String mode,int accountID) {
-//
-//
-//        ApiInterface apiService =
-//                ApiClient.getClient(mContext).create(ApiInterface.class);
-//
-//
-//        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
-//        mDialog.show();
-//
-//
-//        Call<TeleServiceCheckIn> call = apiService.getMeetingDetails(uuid,mode,accountID);
-//
-//        call.enqueue(new Callback<TeleServiceCheckIn>() {
-//            @Override
-//            public void onResponse(Call<TeleServiceCheckIn> call, Response<TeleServiceCheckIn> response) {
-//
-//                try {
-//
-//                   // if (mDialog.isShowing())
-//                      //  Config.closeDialog(mContext, mDialog);
-//
-//
-//                    if (response.code() == 200) {
-//
-//
-//
-//                    }
-//
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<TeleServiceCheckIn> call, Throwable t) {
-//                // Log error here since request failed
-//                Config.logV("Fail---------------" + t.toString());
-//               // if (mDialog.isShowing())
-//                   // Config.closeDialog(mActivity, mDialog);
-//
-//            }
-//        });
-//
-//
-//    }
+
+    private void apiGetMeetingDetails(String uuid, String mode, int accountID) {
+
+        ApiInterface apiService =
+                ApiClient.getClient(mContext).create(ApiInterface.class);
+
+        final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
+        mDialog.show();
+
+        Call<TeleServiceCheckIn> call = apiService.getMeetingDetails(uuid, mode, accountID);
+
+        call.enqueue(new Callback<TeleServiceCheckIn>() {
+            @Override
+            public void onResponse(Call<TeleServiceCheckIn> call, Response<TeleServiceCheckIn> response) {
+
+                try {
+
+                    mDialog.dismiss();
+                    if (response.code() == 200) {
+
+                        teleServiceCheckInResponse = response.body();
+                        if (teleServiceCheckInResponse != null) {
+
+                            cvGmeetDetails.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<TeleServiceCheckIn> call, Throwable t) {
+                // Log error here since request failed
+                Config.logV("Fail---------------" + t.toString());
+//                 if (mDialog.isShowing())
+//                 Config.closeDialog(get, mDialog);
+
+            }
+        });
+
+
+    }
 
 
     private double distance(double lat1, double lon1, double lat2, double lon2) {
@@ -2187,7 +2214,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
     }
-
 
 
 }

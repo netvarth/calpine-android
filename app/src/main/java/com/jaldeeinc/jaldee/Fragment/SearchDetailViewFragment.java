@@ -301,6 +301,15 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         tv_mImageViewTextnew.setTypeface(tyface);
         L_layout = row.findViewById(R.id.layout_type);
 
+        if (domainVirtual != null && domainVirtual.size() >0){
+            tv_Moredetails.setVisibility(View.VISIBLE);
+            llMDetails.setVisibility(View.VISIBLE);
+        }
+        else {
+            tv_Moredetails.setVisibility(View.GONE);
+            llMDetails.setVisibility(View.GONE);
+        }
+
         tv_Moredetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1419,7 +1428,11 @@ public class SearchDetailViewFragment extends RootFragment implements SearchLoca
         }
 
         if (getBussinessData.getServiceSector().getDisplayName() != null && getBussinessData.getServiceSubSector().getDisplayName() != null) {
-            tv_domain.setText(getBussinessData.getServiceSector().getDisplayName() + " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
+            if (getBussinessData.getServiceSector().getDisplayName().equalsIgnoreCase("Other / Miscellaneous")) {
+                tv_domain.setVisibility(View.GONE);
+            } else {
+                tv_domain.setText(getBussinessData.getServiceSector().getDisplayName() + " " + "(" + getBussinessData.getServiceSubSector().getDisplayName() + ")");
+            }
         }
         if (getBussinessData.getBusinessDesc() != null) {
             tv_desc.setVisibility(View.VISIBLE);

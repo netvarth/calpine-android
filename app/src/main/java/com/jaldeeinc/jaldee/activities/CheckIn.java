@@ -1608,7 +1608,7 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             type = "future";
         }
         if(queue.getServiceTime()!= null){
-            firstWord = "Next Available Time ";
+            firstWord = "Next Available Time  ";
             if (type != null) {
                 DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -1627,11 +1627,11 @@ public class CheckIn extends AppCompatActivity implements PaymentResultWithDataL
             }
         }
         else{
-            firstWord = "Est wait time";
+            firstWord = "Est wait time  ";
             secondWord =  Config.getTimeinHourMinutes(queue.getQueueWaitingTime());
         }
 
-        Spannable spannable = new SpannableString(firstWord +" "+ secondWord);
+        Spannable spannable = new SpannableString(firstWord + secondWord);
         Typeface tyface1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/Montserrat_Bold.otf");
         spannable.setSpan(new CustomTypefaceSpan("sans-serif", tyface1), firstWord.length(), firstWord.length() + secondWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.title_grey)), 0, firstWord.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
