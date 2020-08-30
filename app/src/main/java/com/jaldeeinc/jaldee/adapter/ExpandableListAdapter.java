@@ -291,8 +291,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         return convertView;
     }
 
-    CardView cvGmeetDetails, cvZoomDetails, cvWhatsppDetails, cvPhoneDetails;
-
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View view, ViewGroup parent) {
         // Getting child text
@@ -350,10 +348,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         TextView tv_recom_liveloc = (TextView) view.findViewById(R.id.recomShareLiveLoc);
         LinearLayout liveTrackLayout = (LinearLayout) view.findViewById(R.id.liveTrackLayout);
         LinearLayout layout_checkin = (LinearLayout) view.findViewById(R.id.checkin);
-        cvGmeetDetails = view.findViewById(R.id.cv_GmeetDetails);
-        cvZoomDetails = view.findViewById(R.id.cv_ZoommeetDetails);
-        cvWhatsppDetails = view.findViewById(R.id.cv_whatsppDetails);
-        cvPhoneDetails = view.findViewById(R.id.cv_phoneMeetDetails);
+        CardView cvGmeetDetails = view.findViewById(R.id.cv_GmeetDetails);
+        CardView cvZoomDetails = view.findViewById(R.id.cv_ZoommeetDetails);
+        CardView cvWhatsppDetails = view.findViewById(R.id.cv_whatsppDetails);
+        CardView cvPhoneDetails = view.findViewById(R.id.cv_phoneMeetDetails);
+        cvGmeetDetails.setVisibility(View.GONE);
+        cvZoomDetails.setVisibility(View.GONE);
+        cvWhatsppDetails.setVisibility(View.GONE);
+        cvPhoneDetails.setVisibility(View.GONE);
 
 //        if(activelist.getWaitlistStatus().equalsIgnoreCase("failed")){
 //            layout_checkin.setVisibility(View.GONE);
@@ -934,14 +936,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         } else {
             tv_token.setVisibility(View.GONE);
             tv_batchName.setVisibility(View.GONE);
-        }
-
-        if(header.equalsIgnoreCase("today") && !activelist.getWaitlistStatus().equalsIgnoreCase("done") && !activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
-            if (activelist.getService() != null) {
-                if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
-                    apiGetMeetingDetails(activelist.getYnwUuid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getId());
-                }
-            }
         }
 
         if (activelist.getWaitlistStatus().equalsIgnoreCase("cancelled")) {
@@ -1996,6 +1990,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         if (header.equalsIgnoreCase("old")) {
             travelDetailsLayout.setVisibility(View.GONE);
             icon_cancel.setVisibility(View.GONE);
+            cvGmeetDetails.setVisibility(View.GONE);
+            cvZoomDetails.setVisibility(View.GONE);
+            cvWhatsppDetails.setVisibility(View.GONE);
+            cvPhoneDetails.setVisibility(View.GONE);
         } else {
 
             if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn") || activelist.getWaitlistStatus().equalsIgnoreCase("arrived") || activelist.getWaitlistStatus().equalsIgnoreCase("prepaymentPending")) {
@@ -2004,14 +2002,63 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 icon_cancel.setVisibility(View.GONE);
             }
         }
+
         Config.logV("Header Title" + header + "Title" + activelist.getBusinessName() + "Group" + groupPosition);
 
+        if (header.equalsIgnoreCase("today")) {
+            if (activelist.getWaitlistStatus().equalsIgnoreCase("checkedIn") || activelist.getWaitlistStatus().equalsIgnoreCase("arrived") || activelist.getWaitlistStatus().equalsIgnoreCase("started")) {
+                if (activelist.getService() != null) {
+                    if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+                        if (activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                            cvGmeetDetails.setVisibility(View.VISIBLE);
+                            cvZoomDetails.setVisibility(View.GONE);
+                            cvWhatsppDetails.setVisibility(View.GONE);
+                            cvPhoneDetails.setVisibility(View.GONE);
+                        } else if (activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("ZoomMeet")) {
+                            cvZoomDetails.setVisibility(View.VISIBLE);
+                            cvGmeetDetails.setVisibility(View.GONE);
+                            cvWhatsppDetails.setVisibility(View.GONE);
+                            cvPhoneDetails.setVisibility(View.GONE);
+                        } else if (activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                            cvWhatsppDetails.setVisibility(View.VISIBLE);
+                            cvGmeetDetails.setVisibility(View.GONE);
+                            cvZoomDetails.setVisibility(View.GONE);
+                            cvPhoneDetails.setVisibility(View.GONE);
+                        } else if (activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
+                            cvPhoneDetails.setVisibility(View.VISIBLE);
+                            cvGmeetDetails.setVisibility(View.GONE);
+                            cvZoomDetails.setVisibility(View.GONE);
+                            cvPhoneDetails.setVisibility(View.GONE);
+                        }
+                        else {
+                            cvGmeetDetails.setVisibility(View.GONE);
+                            cvZoomDetails.setVisibility(View.GONE);
+                            cvWhatsppDetails.setVisibility(View.GONE);
+                            cvPhoneDetails.setVisibility(View.GONE);
+                        }
+                        apiGetMeetingDetails(activelist.getYnwUuid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getId());
+                    } else {
+
+                        cvGmeetDetails.setVisibility(View.GONE);
+                        cvZoomDetails.setVisibility(View.GONE);
+                        cvWhatsppDetails.setVisibility(View.GONE);
+                        cvPhoneDetails.setVisibility(View.GONE);
+                    }
+
+                }
+
+            }
+
+        } else {
+
+
+        }
 
         cvGmeetDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getCheckInTime(), activelist.getService().getName(), teleServiceCheckInResponse, activelist.getService().getVirtualCallingModes().get(childPosition).getCallingMode());
+                meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getCheckInTime(), activelist.getService().getName(), teleServiceCheckInResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode());
                 meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 meetingDetailsWindow.show();
                 DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
@@ -2120,8 +2167,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                 Config.logV("Location-----###########@@@@@@-------Fail--------" + t.toString());
             }
         });
-
-
     }
 
     private void apiGetMeetingDetails(String uuid, String mode, int accountID) {
@@ -2146,17 +2191,41 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
                         teleServiceCheckInResponse = response.body();
                         if (teleServiceCheckInResponse != null) {
 
-                            cvGmeetDetails.setVisibility(View.VISIBLE);
+//                            if (mode.equalsIgnoreCase("GoogleMeet")) {
+//                                cvGmeetDetails.setVisibility(View.VISIBLE);
+//                                cvZoomDetails.setVisibility(View.GONE);
+//                                cvWhatsppDetails.setVisibility(View.GONE);
+//                                cvPhoneDetails.setVisibility(View.GONE);
+//                            } else if (mode.equalsIgnoreCase("ZoomMeet")) {
+//                                cvZoomDetails.setVisibility(View.VISIBLE);
+//                                cvGmeetDetails.setVisibility(View.GONE);
+//                                cvWhatsppDetails.setVisibility(View.GONE);
+//                                cvPhoneDetails.setVisibility(View.GONE);
+//                            } else if (mode.equalsIgnoreCase("WhatsApp")) {
+//                                cvWhatsppDetails.setVisibility(View.VISIBLE);
+//                                cvGmeetDetails.setVisibility(View.GONE);
+//                                cvZoomDetails.setVisibility(View.GONE);
+//                                cvPhoneDetails.setVisibility(View.GONE);
+//                            } else if (mode.equalsIgnoreCase("Phone")) {
+//                                cvPhoneDetails.setVisibility(View.VISIBLE);
+//                                cvGmeetDetails.setVisibility(View.GONE);
+//                                cvZoomDetails.setVisibility(View.GONE);
+//                                cvPhoneDetails.setVisibility(View.GONE);
+//                            }
+//                            else {
+//                                cvGmeetDetails.setVisibility(View.GONE);
+//                                cvZoomDetails.setVisibility(View.GONE);
+//                                cvWhatsppDetails.setVisibility(View.GONE);
+//                                cvPhoneDetails.setVisibility(View.GONE);
+//                            }
+
+
                         }
-
-
                     }
-
-
-                } catch (Exception e) {
+                } catch (
+                        Exception e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override

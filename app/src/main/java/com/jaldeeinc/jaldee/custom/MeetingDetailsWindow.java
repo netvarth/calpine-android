@@ -51,7 +51,15 @@ public class MeetingDetailsWindow extends Dialog {
         }
 
         if (teleServiceCheckInResponse != null){
-            tvLink.setText(teleServiceCheckInResponse.getJoiningUrl());
+
+            if (teleServiceCheckInResponse.getJoiningUrl() != null){
+
+                tvLink.setText(teleServiceCheckInResponse.getJoiningUrl());
+            }
+            else if (teleServiceCheckInResponse.getStartingUl() != null){
+
+                tvLink.setText(teleServiceCheckInResponse.getStartingUl());
+            }
         }
 
         btJoin.setOnClickListener(new View.OnClickListener() {
