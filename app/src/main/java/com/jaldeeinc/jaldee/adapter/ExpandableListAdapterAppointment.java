@@ -867,7 +867,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 //                Toast.makeText(mContext,"You took an appointment for virtual service",Toast.LENGTH_SHORT).show();
 //            }
 //        }
-        apiGetMeetingDetails(activelist.getUid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getProviderAccount().getId());
+      //  apiGetMeetingDetails(activelist.getUid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getProviderAccount().getId());
 
 
         if (activelist.getApptStatus().equalsIgnoreCase("Cancelled") || activelist.getApptStatus().equalsIgnoreCase("Rejected") ) {
