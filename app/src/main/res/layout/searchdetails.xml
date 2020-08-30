@@ -584,7 +584,7 @@
 
 
                             <LinearLayout
-                                android:layout_marginRight="@dimen/dimen_5dp"
+                                android:layout_marginRight="@dimen/dimen_10dp"
                                 android:id="@+id/locationlayout"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -596,8 +596,8 @@
 
                                 <ImageView
                                     android:id="@+id/img_arrow"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="@dimen/dimen_20dp"
+                                    android:layout_height="@dimen/dimen_20dp"
                                     android:tint="@color/title_grey_light"
                                     android:layout_gravity="center"
                                     android:layout_marginStart="@dimen/dimen_8dp"

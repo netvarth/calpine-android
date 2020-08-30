@@ -474,24 +474,28 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             }
         });
 
-        myViewHolder.layout_exapnd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!searchLoclist.isExpandFlag()) {
-                    myViewHolder.mLayouthide.setVisibility(View.VISIBLE);
-                    myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_up);
-                    searchLoclist.setExpandFlag(true);
-                    myViewHolder.LexpandCheckin.setVisibility(View.GONE);
+        if (mSearchLocationList.size() >1) {
 
-                } else {
-                    myViewHolder.mLayouthide.setVisibility(View.GONE);
-                    myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_down);
-                    searchLoclist.setExpandFlag(false);
-                    myViewHolder.LexpandCheckin.setVisibility(View.GONE);
+            myViewHolder.layout_exapnd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!searchLoclist.isExpandFlag()) {
+                        myViewHolder.mLayouthide.setVisibility(View.VISIBLE);
+                        myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_up);
+                        searchLoclist.setExpandFlag(true);
+                        myViewHolder.LexpandCheckin.setVisibility(View.GONE);
 
+                    } else {
+                        myViewHolder.mLayouthide.setVisibility(View.GONE);
+                        myViewHolder.img_arrow.setImageResource(R.drawable.icon_angle_down);
+                        searchLoclist.setExpandFlag(false);
+                        myViewHolder.LexpandCheckin.setVisibility(View.GONE);
+
+                    }
                 }
-            }
-        });
+            });
+        }
+
         if (searchLoclist.getbSchedule() != null) {
             if (searchLoclist.getbSchedule().getTimespec().size() > 0) {
                 myViewHolder.txtworking.setVisibility(View.GONE); // Management asked to hide working hours

@@ -19,10 +19,12 @@ import androidx.core.app.ActivityCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -35,6 +37,8 @@ import com.google.gson.Gson;
 import com.jaldeeinc.jaldee.R;
 import com.jaldeeinc.jaldee.activities.CheckinShareLocationAppointment;
 import com.jaldeeinc.jaldee.callback.ActiveAdapterOnCallback;
+import com.jaldeeinc.jaldee.custom.MeetingDetailsWindow;
+import com.jaldeeinc.jaldee.custom.MeetingInfo;
 import com.jaldeeinc.jaldee.response.ActiveAppointment;
 import com.jaldeeinc.jaldee.response.SearchAWsResponse;
 import com.jaldeeinc.jaldee.response.SearchViewDetail;
@@ -94,6 +98,14 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
     List<SearchAWsResponse> mSearchResp = new ArrayList<>();
     SearchViewDetail mBusinessDataList;
     String latitude,longitude;
+    private TeleServiceCheckIn teleServiceCheckInResponse;
+    private TeleServiceCheckIn gMeetResponse;
+    private TeleServiceCheckIn zoomResponse;
+    private TeleServiceCheckIn whatsappResponse;
+    private TeleServiceCheckIn phoneresponse;
+
+    private MeetingDetailsWindow meetingDetailsWindow;
+    private MeetingInfo meetingInfo;
 
 
 
@@ -311,6 +323,14 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         TextView tv_recom_liveloc = (TextView) view.findViewById(R.id.recomShareLiveLoc);
         LinearLayout liveTrackLayout = (LinearLayout) view.findViewById(R.id.liveTrackLayout);
         LinearLayout layout_appointment = (LinearLayout) view.findViewById(R.id.appointment);
+        CardView cvGmeetDetails = view.findViewById(R.id.cv_GmeetDetails);
+        CardView cvZoomDetails = view.findViewById(R.id.cv_ZoommeetDetails);
+        CardView cvWhatsppDetails = view.findViewById(R.id.cv_whatsppDetails);
+        CardView cvPhoneDetails = view.findViewById(R.id.cv_phoneMeetDetails);
+        cvGmeetDetails.setVisibility(View.GONE);
+        cvZoomDetails.setVisibility(View.GONE);
+        cvWhatsppDetails.setVisibility(View.GONE);
+        cvPhoneDetails.setVisibility(View.GONE);
 
         if (activelist.getJaldeeApptDistanceTime() != null && activelist.getApptStatus().equalsIgnoreCase("Confirmed") && header.equalsIgnoreCase("today")) {
             activelistLatest = activelist;
@@ -867,7 +887,6 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
 //                Toast.makeText(mContext,"You took an appointment for virtual service",Toast.LENGTH_SHORT).show();
 //            }
 //        }
-        apiGetMeetingDetails(activelist.getUid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getProviderAccount().getId());
 
 
         if (activelist.getApptStatus().equalsIgnoreCase("Cancelled") || activelist.getApptStatus().equalsIgnoreCase("Rejected") ) {
@@ -1916,6 +1935,10 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         if (header.equalsIgnoreCase("old")) {
             travelDetailsLayout.setVisibility(View.GONE);
             icon_cancel.setVisibility(View.GONE);
+            cvGmeetDetails.setVisibility(View.GONE);
+            cvZoomDetails.setVisibility(View.GONE);
+            cvWhatsppDetails.setVisibility(View.GONE);
+            cvPhoneDetails.setVisibility(View.GONE);
         } else {
 
             if (activelist.getApptStatus().equalsIgnoreCase("Confirmed") || activelist.getApptStatus().equalsIgnoreCase("Arrived") || activelist.getApptStatus().equalsIgnoreCase("prepaymentPending")) {
@@ -1925,6 +1948,105 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
             }
         }
         Config.logV("Header Title" + header + "Title" + activelist.getProviderAccount().getBusinessName() + "Group" + groupPosition);
+
+        if (header.equalsIgnoreCase("today")) {
+            if (activelist.getApptStatus().equalsIgnoreCase("Confirmed") || activelist.getApptStatus().equalsIgnoreCase("Arrived") || activelist.getApptStatus().equalsIgnoreCase("Started")) {
+                if (activelist.getService() != null) {
+                    if (activelist.getService().getServiceType().equalsIgnoreCase("virtualService")) {
+                        apiGetMeetingDetails(activelist.getUid(), activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getProviderAccount().getId());
+
+                        if (activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("GoogleMeet")) {
+                            cvGmeetDetails.setVisibility(View.VISIBLE);
+                            cvZoomDetails.setVisibility(View.GONE);
+                            cvWhatsppDetails.setVisibility(View.GONE);
+                            cvPhoneDetails.setVisibility(View.GONE);
+                            cvGmeetDetails.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getApptTime(), activelist.getService().getName(), gMeetResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode());
+                                    meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    meetingDetailsWindow.show();
+                                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                                    int width = (int) (metrics.widthPixels * 1);
+                                    meetingDetailsWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+                            });
+                        } else if (activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Zoom")) {
+                            cvZoomDetails.setVisibility(View.VISIBLE);
+                            cvGmeetDetails.setVisibility(View.GONE);
+                            cvWhatsppDetails.setVisibility(View.GONE);
+                            cvPhoneDetails.setVisibility(View.GONE);
+                            cvZoomDetails.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    meetingDetailsWindow = new MeetingDetailsWindow(mContext, activelist.getApptTime(), activelist.getService().getName(), zoomResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode());
+                                    meetingDetailsWindow.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    meetingDetailsWindow.show();
+                                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                                    int width = (int) (metrics.widthPixels * 1);
+                                    meetingDetailsWindow.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+                            });
+
+                        } else if (activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("WhatsApp")) {
+                            cvWhatsppDetails.setVisibility(View.VISIBLE);
+                            cvGmeetDetails.setVisibility(View.GONE);
+                            cvZoomDetails.setVisibility(View.GONE);
+                            cvPhoneDetails.setVisibility(View.GONE);
+                            cvWhatsppDetails.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), whatsappResponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(),activelist.getPhoneNumber());
+                                    meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    meetingInfo.show();
+                                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                                    int width = (int) (metrics.widthPixels * 1);
+                                    meetingInfo.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+                            });
+
+                        } else if (activelist.getService().getVirtualCallingModes().get(0).getCallingMode().equalsIgnoreCase("Phone")) {
+                            cvPhoneDetails.setVisibility(View.VISIBLE);
+                            cvGmeetDetails.setVisibility(View.GONE);
+                            cvZoomDetails.setVisibility(View.GONE);
+                            cvWhatsppDetails.setVisibility(View.GONE);
+                            cvPhoneDetails.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    meetingInfo = new MeetingInfo(mContext, activelist.getApptTime(), activelist.getService().getName(), phoneresponse, activelist.getService().getVirtualCallingModes().get(0).getCallingMode(), activelist.getPhoneNumber());
+                                    meetingInfo.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    meetingInfo.show();
+                                    DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+                                    int width = (int) (metrics.widthPixels * 1);
+                                    meetingInfo.getWindow().setLayout(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                }
+                            });
+                        }
+                        else {
+                            cvGmeetDetails.setVisibility(View.GONE);
+                            cvZoomDetails.setVisibility(View.GONE);
+                            cvWhatsppDetails.setVisibility(View.GONE);
+                            cvPhoneDetails.setVisibility(View.GONE);
+                        }
+                    } else {
+
+                        cvGmeetDetails.setVisibility(View.GONE);
+                        cvZoomDetails.setVisibility(View.GONE);
+                        cvWhatsppDetails.setVisibility(View.GONE);
+                        cvPhoneDetails.setVisibility(View.GONE);
+                    }
+
+                }
+
+            }
+
+        } else {
+
+        }
         return view;
     }
 
@@ -2022,7 +2144,7 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
         final Dialog mDialog = Config.getProgressDialog(mContext, mContext.getResources().getString(R.string.dialog_log_in));
         mDialog.show();
 
-        Call<TeleServiceCheckIn> call = apiService.getMeetingDetails(uuid, mode, accountID);
+        Call<TeleServiceCheckIn> call = apiService.getMeetingDetailsAppointment(uuid, mode, accountID);
 
         call.enqueue(new Callback<TeleServiceCheckIn>() {
             @Override
@@ -2033,9 +2155,27 @@ public class ExpandableListAdapterAppointment extends BaseExpandableListAdapter 
                     mDialog.dismiss();
                     if (response.code() == 200) {
 
+                        teleServiceCheckInResponse = response.body();
+                        if (teleServiceCheckInResponse != null) {
 
+                            if (mode.equalsIgnoreCase("GoogleMeet")){
 
+                                gMeetResponse = teleServiceCheckInResponse;
+                            }
+                            else if (mode.equalsIgnoreCase("Zoom")){
 
+                                zoomResponse = teleServiceCheckInResponse;
+                            }
+                            else if (mode.equalsIgnoreCase("WhatsApp")){
+
+                                whatsappResponse = teleServiceCheckInResponse;
+                            }
+                            else if (mode.equalsIgnoreCase("Phone")){
+
+                                phoneresponse = teleServiceCheckInResponse;
+                            }
+
+                        }
                     }
                 } catch (
                         Exception e) {
