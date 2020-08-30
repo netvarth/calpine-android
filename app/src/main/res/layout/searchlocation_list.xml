@@ -821,16 +821,60 @@
                 android:id="@+id/donationList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding5"
-                android:layout_marginTop="@dimen/padding2"
-                android:layout_marginRight="@dimen/padding5"
-                android:gravity="left"
-                android:orientation="vertical"
-                android:textColor="@color/title_consu"
-                android:textSize="@dimen/txtsize_12"
-                android:visibility="visible">
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:paddingRight="@dimen/dimen_5dp"
+                android:visibility="gone">
 
+                <TextView
+                    android:id="@+id/tv_dntService1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
+                    android:text="Service1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tv_dntService2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:text="Service2"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/txtsize_12"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tv_dntSeeAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:justificationMode="inter_word"
+                    android:letterSpacing="0.03"
+                    android:lineSpacingExtra="@dimen/padding3"
+                    android:text="See All"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:textColor="@color/title_consu"
+                    android:textSize="@dimen/txtsize_title_term_small"
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
             </LinearLayout>
+
+
 
             <TextView
                 android:id="@+id/txtdntSeeAll"
@@ -843,6 +887,7 @@
                 android:letterSpacing="0.03"
                 android:lineSpacingExtra="@dimen/padding3"
                 android:text="See All"
+                android:visibility="gone"
                 android:textColor="@color/title_consu"
                 android:textSize="@dimen/txtsize_title_term_small"
                 android:textStyle="bold" />

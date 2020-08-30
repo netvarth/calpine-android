@@ -88,6 +88,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
         TextView txt_earliestAvailable, txt_apptservices, txt_dontservices, txtapptSeeAll, txtdntSeeAll;
         Button btn_appointments, btn_donations;
         TextView tvAppService1, tvAppService2, tvAppSeeAll, tvAvailDate;
+        TextView tvDntService1,tvDntService2,tvDntSeeAll;
 
         ArrayList<WorkingModel> workingModelArrayList = new ArrayList<>();
         String txtdataMon = "";
@@ -147,6 +148,9 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
             tvAppService2 = view.findViewById(R.id.tv_appservice2);
             tvAppSeeAll = view.findViewById(R.id.tv_appSeeAll);
             tvAvailDate = view.findViewById(R.id.txtavaildate);
+            tvDntService1 = view.findViewById(R.id.tv_dntService1);
+            tvDntService2 = view.findViewById(R.id.tv_dntService2);
+            tvDntSeeAll = view.findViewById(R.id.tv_dntSeeAll);
         }
     }
 
@@ -764,7 +768,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 });
 
                 Toast.makeText(mContext, "set single line", Toast.LENGTH_SHORT).show();
-            } else if (checkInServicesList.size() >= 2 && checkInServicesList.get(0).getName().length() <= 40 && checkInServicesList.get(1).getName().length() <= 40) {
+            } else if (checkInServicesList.size() >= 2 && checkInServicesList.get(0).getName().length() <= 20 && checkInServicesList.get(1).getName().length() <= 20) {
 
                 if (checkInServicesList.size() == 2) {
 
@@ -1132,7 +1136,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     });
 
 
-                } else if (apptServicesList.size() >= 2 && apptServicesList.get(0).getName().length() <= 40 && apptServicesList.get(1).getName().length() <= 40) {
+                } else if (apptServicesList.size() >= 2 && apptServicesList.get(0).getName().length() <= 20 && apptServicesList.get(1).getName().length() <= 20) {
 
                     if (apptServicesList.size() == 2) {
 
@@ -1278,6 +1282,11 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     }
 
                 }
+            }
+            else {
+
+                myViewHolder.txt_apptservices.setVisibility(View.GONE);
+                myViewHolder.LApp_Services.setVisibility(View.GONE);
             }
 
 //        for (int m = 0; m < aServicesList.size(); m++) {
@@ -1463,86 +1472,239 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                 myViewHolder.LDonation.setVisibility(View.VISIBLE);
                 myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
                 myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
+
                 if (gServicesList.size() > 0) {
-                    myViewHolder.LDont_Services.removeAllViews();
-                    //  myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
-                    int size = 0;
+
                     if (gServicesList.size() == 1) {
-                        size = 1;
-                    } else {
-                        if (gServicesList.size() == 2)
-                            size = 2;
-                        else
-                            size = 3;
-                    }
-                    for (int i = 0; i < size; i++) {
-                        TextView dynaText = new TextView(mContext);
-                        tyface = Typeface.createFromAsset(mContext.getAssets(),
-                                "fonts/Montserrat_Regular.otf");
-                        dynaText.setTypeface(tyface);
-                        dynaText.setText(gServicesList.get(i).toString());
-                        dynaText.setTextSize(13);
-                        dynaText.setPadding(5, 0, 5, 0);
-                        dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
-                        dynaText.setMaxLines(1);
-                        if (size > 2) {
-                            dynaText.setEllipsize(TextUtils.TruncateAt.END);
-                            dynaText.setMaxEms(10);
-                        }
-                        final int finalI = i;
-                        dynaText.setOnClickListener(new View.OnClickListener() {
+
+                        myViewHolder.tvDntService1.setVisibility(View.VISIBLE);
+                        myViewHolder.tvDntService2.setVisibility(View.GONE);
+                        myViewHolder.tvDntSeeAll.setVisibility(View.GONE);
+                        String name = gServicesList.get(0).getName();
+                        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                        myViewHolder.tvDntService1.setText(name);
+                        myViewHolder.tvDntService1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
-                                for (int i = 0; i < gServicesList.size(); i++) {
-                                    if (gServicesList.get(i).toString().toLowerCase().equalsIgnoreCase(gServicesList.get(finalI).toString().toLowerCase())) {
+                                Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                iService.putExtra("name", gServicesList.get(0).toString());
+                                iService.putExtra("minamount", String.valueOf(gServicesList.get(0).getMinDonationAmount()));
+                                iService.putExtra("maxamount", String.valueOf(gServicesList.get(0).getMaxDonationAmount()));
+                                iService.putExtra("multiples", String.valueOf(gServicesList.get(0).getMultiples()));
+                                iService.putExtra("servicegallery", gServicesList.get(0).getServicegallery());
+                                iService.putExtra("from", "dnt");
+                            }
+                        });
+
+                    } else if (gServicesList.size() >= 2 && gServicesList.get(0).getName().length() <= 20 && gServicesList.get(1).getName().length() <= 20) {
+
+                        if (gServicesList.size() == 2) {
+
+                            myViewHolder.tvDntService1.setVisibility(View.VISIBLE);
+                            myViewHolder.tvDntService2.setVisibility(View.VISIBLE);
+                            myViewHolder.tvDntSeeAll.setVisibility(View.GONE);
+                            String name1 = gServicesList.get(0).getName();
+                            name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                            myViewHolder.tvDntService1.setText(name1 + ",");
+                            String name2 = gServicesList.get(1).getName();
+                            name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                            myViewHolder.tvDntService2.setText(name2);
+                            myViewHolder.tvDntService1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                    iService.putExtra("name", gServicesList.get(0).toString());
+                                    iService.putExtra("minamount", String.valueOf(gServicesList.get(0).getMinDonationAmount()));
+                                    iService.putExtra("maxamount", String.valueOf(gServicesList.get(0).getMaxDonationAmount()));
+                                    iService.putExtra("multiples", String.valueOf(gServicesList.get(0).getMultiples()));
+                                    iService.putExtra("servicegallery", gServicesList.get(0).getServicegallery());
+                                    iService.putExtra("from", "dnt");
+                                    mContext.startActivity(iService);
+                                }
+                            });
+
+                            myViewHolder.tvDntService2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                    iService.putExtra("name", gServicesList.get(1).toString());
+                                    iService.putExtra("minamount", String.valueOf(gServicesList.get(1).getMinDonationAmount()));
+                                    iService.putExtra("maxamount", String.valueOf(gServicesList.get(1).getMaxDonationAmount()));
+                                    iService.putExtra("multiples", String.valueOf(gServicesList.get(1).getMultiples()));
+                                    iService.putExtra("servicegallery", gServicesList.get(1).getServicegallery());
+                                    iService.putExtra("from", "dnt");
+                                    mContext.startActivity(iService);
+                                }
+                            });
+
+                            // Toast.makeText(mContext, "set text with comma seperated without seemore", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            myViewHolder.tvDntService1.setVisibility(View.VISIBLE);
+                            myViewHolder.tvDntService2.setVisibility(View.VISIBLE);
+                            myViewHolder.tvDntSeeAll.setVisibility(View.VISIBLE);
+                            String name1 = gServicesList.get(0).getName();
+                            name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                            myViewHolder.tvDntService1.setText(name1 + ",");
+                            String name2 = gServicesList.get(1).getName();
+                            name2 = name2.substring(0, 1).toUpperCase() + name2.substring(1).toLowerCase();
+                            myViewHolder.tvDntService2.setText(name2 + ",");
+                            myViewHolder.tvDntService1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                    iService.putExtra("name", gServicesList.get(0).toString());
+                                    iService.putExtra("minamount", String.valueOf(gServicesList.get(0).getMinDonationAmount()));
+                                    iService.putExtra("maxamount", String.valueOf(gServicesList.get(0).getMaxDonationAmount()));
+                                    iService.putExtra("multiples", String.valueOf(gServicesList.get(0).getMultiples()));
+                                    iService.putExtra("servicegallery", gServicesList.get(0).getServicegallery());
+                                    iService.putExtra("from", "dnt");
+                                    mContext.startActivity(iService);
+                                }
+                            });
+
+                            myViewHolder.tvDntService2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+                                    iService.putExtra("name", gServicesList.get(1).toString());
+                                    iService.putExtra("minamount", String.valueOf(gServicesList.get(1).getMinDonationAmount()));
+                                    iService.putExtra("maxamount", String.valueOf(gServicesList.get(1).getMaxDonationAmount()));
+                                    iService.putExtra("multiples", String.valueOf(gServicesList.get(1).getMultiples()));
+                                    iService.putExtra("servicegallery", gServicesList.get(1).getServicegallery());
+                                    iService.putExtra("from", "dnt");
+                                    mContext.startActivity(iService);
+                                }
+                            });
+                            myViewHolder.tvDntSeeAll.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    adaptercallback.onMethodServiceCallback(checkInServicesList, mTitle, mSearchDepartmentList);
+                                }
+                            });
+                            //  Toast.makeText(mContext, "set text with comma seperated with seemore", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+
+                        for (int i = 0; i < checkInServicesList.size(); i++) {
+
+                            if (i == 0) {
+
+                                myViewHolder.tvDntService1.setVisibility(View.VISIBLE);
+                                String name1 = gServicesList.get(0).getName();
+                                name1 = name1.substring(0, 1).toUpperCase() + name1.substring(1).toLowerCase();
+                                myViewHolder.tvDntService1.setText(name1 + ",");
+                                myViewHolder.tvDntService1.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
                                         Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
-                                        iService.putExtra("name", gServicesList.get(i).toString());
-                                        iService.putExtra("minamount", String.valueOf(gServicesList.get(i).getMinDonationAmount()));
-                                        iService.putExtra("maxamount", String.valueOf(gServicesList.get(i).getMaxDonationAmount()));
-                                        iService.putExtra("multiples", String.valueOf(gServicesList.get(i).getMultiples()));
-                                        iService.putExtra("servicegallery", gServicesList.get(i).getServicegallery());
+                                        iService.putExtra("name", gServicesList.get(0).toString());
+                                        iService.putExtra("minamount", String.valueOf(gServicesList.get(0).getMinDonationAmount()));
+                                        iService.putExtra("maxamount", String.valueOf(gServicesList.get(0).getMaxDonationAmount()));
+                                        iService.putExtra("multiples", String.valueOf(gServicesList.get(0).getMultiples()));
+                                        iService.putExtra("servicegallery", gServicesList.get(0).getServicegallery());
                                         iService.putExtra("from", "dnt");
                                         mContext.startActivity(iService);
                                     }
-                                }
-                            }
-                        });
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        params.setMargins(0, 0, 20, 0);
+                                });
+                                myViewHolder.tvDntSeeAll.setVisibility(View.VISIBLE);
+                                myViewHolder.tvDntSeeAll.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        adaptercallback.onMethodServiceCallbackDonation(gServicesList, mTitle);
+                                    }
+                                });
 
-                        dynaText.setLayoutParams(params);
-                        myViewHolder.LDont_Services.addView(dynaText);
-                    }
-                    if (size > 3) {
-                        TextView dynaText = new TextView(mContext);
-                        dynaText.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // adaptercallback.onMethodServiceCallbackDonation(serviceNames, mTitle);
+                                // Toast.makeText(mContext, "set single line and see more", Toast.LENGTH_SHORT).show();
+                                break;
                             }
-                        });
-                        dynaText.setGravity(Gravity.CENTER);
-                        dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
-                        dynaText.setText(" ... ");
-                        myViewHolder.LDont_Services.addView(dynaText);
-                    } else {
-                        myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
-                        myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
-                    }
-                    if (gServicesList.size() > 3) {
-                        TextView dynaText = new TextView(mContext);
-                        myViewHolder.txtdntSeeAll.setVisibility(View.VISIBLE);
-                        myViewHolder.txtdntSeeAll.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                adaptercallback.onMethodServiceCallbackDonation(gServicesList, mTitle);
-                            }
-                        });
-                    } else {
-                        myViewHolder.txtdntSeeAll.setVisibility(View.GONE);
+
+                        }
+
                     }
                 }
+
+//                if (gServicesList.size() > 0) {
+//                    myViewHolder.LDont_Services.removeAllViews();
+//                    //  myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
+//                    int size = 0;
+//                    if (gServicesList.size() == 1) {
+//                        size = 1;
+//                    } else {
+//                        if (gServicesList.size() == 2)
+//                            size = 2;
+//                        else
+//                            size = 3;
+//                    }
+//                    for (int i = 0; i < size; i++) {
+//                        TextView dynaText = new TextView(mContext);
+//                        tyface = Typeface.createFromAsset(mContext.getAssets(),
+//                                "fonts/Montserrat_Regular.otf");
+//                        dynaText.setTypeface(tyface);
+//                        dynaText.setText(gServicesList.get(i).toString());
+//                        dynaText.setTextSize(13);
+//                        dynaText.setPadding(5, 0, 5, 0);
+//                        dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+//                        dynaText.setMaxLines(1);
+//                        if (size > 2) {
+//                            dynaText.setEllipsize(TextUtils.TruncateAt.END);
+//                            dynaText.setMaxEms(10);
+//                        }
+//                        final int finalI = i;
+//                        dynaText.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                //  ApiService(searchdetailList.getUniqueid(), serviceNames.get(finalI).toString(), searchdetailList.getTitle());
+//                                for (int i = 0; i < gServicesList.size(); i++) {
+//                                    if (gServicesList.get(i).toString().toLowerCase().equalsIgnoreCase(gServicesList.get(finalI).toString().toLowerCase())) {
+//                                        Intent iService = new Intent(v.getContext(), SearchServiceActivity.class);
+//                                        iService.putExtra("name", gServicesList.get(i).toString());
+//                                        iService.putExtra("minamount", String.valueOf(gServicesList.get(i).getMinDonationAmount()));
+//                                        iService.putExtra("maxamount", String.valueOf(gServicesList.get(i).getMaxDonationAmount()));
+//                                        iService.putExtra("multiples", String.valueOf(gServicesList.get(i).getMultiples()));
+//                                        iService.putExtra("servicegallery", gServicesList.get(i).getServicegallery());
+//                                        iService.putExtra("from", "dnt");
+//                                        mContext.startActivity(iService);
+//                                    }
+//                                }
+//                            }
+//                        });
+//                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                        params.setMargins(0, 0, 20, 0);
+//
+//                        dynaText.setLayoutParams(params);
+//                        myViewHolder.LDont_Services.addView(dynaText);
+//                    }
+//                    if (size > 3) {
+//                        TextView dynaText = new TextView(mContext);
+//                        dynaText.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                // adaptercallback.onMethodServiceCallbackDonation(serviceNames, mTitle);
+//                            }
+//                        });
+//                        dynaText.setGravity(Gravity.CENTER);
+//                        dynaText.setTextColor(mContext.getResources().getColor(R.color.black));
+//                        dynaText.setText(" ... ");
+//                        myViewHolder.LDont_Services.addView(dynaText);
+//                    } else {
+//                        myViewHolder.LDont_Services.setVisibility(View.VISIBLE);
+//                        myViewHolder.txt_dontservices.setVisibility(View.VISIBLE);
+//                    }
+//                    if (gServicesList.size() > 3) {
+//                        TextView dynaText = new TextView(mContext);
+//                        myViewHolder.txtdntSeeAll.setVisibility(View.VISIBLE);
+//                        myViewHolder.txtdntSeeAll.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                adaptercallback.onMethodServiceCallbackDonation(gServicesList, mTitle);
+//                            }
+//                        });
+//                    } else {
+//                        myViewHolder.txtdntSeeAll.setVisibility(View.GONE);
+//                    }
+//                }
+
                 else {
                     myViewHolder.LDonation.setVisibility(View.GONE);
                     myViewHolder.LDont_Services.setVisibility(View.GONE);
