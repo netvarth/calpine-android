@@ -1081,7 +1081,7 @@ public class SearchLocationAdapter extends RecyclerView.Adapter<SearchLocationAd
                     else {
                         myViewHolder.tvAvailDate.setText("Available on " + "\n" + mScheduleList.get(position).getAvailableSchedule().getAvailableDate());
                     }
-                    myViewHolder.tvAvailDate.setVisibility(View.VISIBLE);
+                    myViewHolder.tvAvailDate.setVisibility(View.GONE);
                     myViewHolder.LApp_Services.setVisibility(View.VISIBLE);
                     myViewHolder.txt_apptservices.setVisibility(View.VISIBLE);
                 } else {
